@@ -39,7 +39,8 @@ import org.ofbiz.commonapp.common.*;
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     Eric Pabst 
+ * @author     Eric Pabst
+ * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
  * @version    $Revision$
  * @since      2.0
  */
@@ -230,37 +231,37 @@ public class OrderReadHelper {
 
         if (orderStatusList == null) return "";
 
-        Set orderStatusIdSet = new HashSet();
         Iterator orderStatusIter = orderStatusList.iterator();
+        StringBuffer orderStatusIds = new StringBuffer(50);
+        boolean statusSet = false;
 
         while (orderStatusIter.hasNext()) {
             try {
                 GenericValue orderStatus = (GenericValue) orderStatusIter.next();
                 GenericValue statusItem = orderStatus.getRelatedOneCache("StatusItem");
 
-                if (statusItem != null) {
-                    orderStatusIdSet.add(statusItem.getString("description"));
+                if ( false == statusSet ) {
+                    statusSet = true;
                 } else {
-                    orderStatusIdSet.add(orderStatus.getString("statusId"));
+                    orderStatusIds.append( "/" );
+                }
+
+                if (statusItem != null) {
+                    orderStatusIds.append(statusItem.getString("description"));
+                } else {
+                    orderStatusIds.append(orderStatus.getString("statusId"));
                 }
             } catch (GenericEntityException gee) {
                 Debug.logWarning(gee, module);
             }
         }
-        Iterator orderStatusIdIter = orderStatusIdSet.iterator();
-        String orderStatusIds;
 
-        if (orderStatusIdIter.hasNext()) {
-            orderStatusIds = orderStatusIdIter.next().toString();
-            while (orderStatusIdIter.hasNext()) {
-                orderStatusIds += "/" + orderStatusIdIter.next().toString();
-            }
-        } else {
-            orderStatusIds = "(unspecified)";
+        if (false == statusSet) {
+            orderStatusIds.append("(unspecified)");
         }
-        return orderStatusIds;
+        return orderStatusIds.toString();
     }
-
+    
     public GenericValue getBillToPerson() {
         GenericDelegator delegator = orderHeader.getDelegator();
 
@@ -612,7 +613,11 @@ public class OrderReadHelper {
     }
 
     /**
-     * Checks to see if this user has read permission on the specified order     * @param userLogin The UserLogin value object to check     * @param orderHeader The OrderHeader for the specified order     * @return boolean True if we have read permission     */
+     * Checks to see if this user has read permission on the specified order
+     * @param userLogin The UserLogin value object to check
+     * @param orderHeader The OrderHeader for the specified order
+     * @return boolean True if we have read permission
+     */
     public static boolean hasPermission(Security security, GenericValue userLogin, GenericValue orderHeader) {
         if (userLogin == null || orderHeader == null)
             return false;
@@ -640,7 +645,8 @@ public class OrderReadHelper {
     /**
      * Checks to see if this user has read permission on this order
      * @param userLogin The UserLogin value object to check   
-     * @return boolean True if we have read permission     */
+     * @return boolean True if we have read permission
+     */
     public boolean hasPermission(Security security, GenericValue userLogin) {
         return OrderReadHelper.hasPermission(security, userLogin, orderHeader);
     }
