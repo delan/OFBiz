@@ -96,6 +96,62 @@ public class ContactMechWorker {
         }
     }
 
+    public static void getOrderContactMechValueMaps(PageContext pageContext, String orderId, String orderContactMechValueMapsAttr) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        Collection orderContactMechValueMaps = new LinkedList();
+
+        Iterator allOrderContactMechs = null;
+        try {
+            Collection tempCol = delegator.findByAnd("OrderContactMech", UtilMisc.toMap("orderId", orderId));
+            allOrderContactMechs = UtilMisc.toIterator(tempCol);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+
+        while(allOrderContactMechs != null && allOrderContactMechs.hasNext()) {
+            GenericValue orderContactMech = (GenericValue) allOrderContactMechs.next();
+            GenericValue contactMech = null;
+            try {
+                contactMech = orderContactMech.getRelatedOne("ContactMech");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+            if (contactMech != null) {
+                Map orderContactMechValueMap = new HashMap();
+                orderContactMechValueMaps.add(orderContactMechValueMap);
+                orderContactMechValueMap.put("contactMech", contactMech);
+                orderContactMechValueMap.put("orderContactMech", orderContactMech);
+
+                try {
+                    orderContactMechValueMap.put("contactMechType", contactMech.getRelatedOneCache("ContactMechType"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+
+                try {
+                    Collection partyContactMechPurposes = orderContactMech.getRelated("PartyContactMechPurpose");
+                    orderContactMechValueMap.put("partyContactMechPurposes", partyContactMechPurposes);
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+
+                try {
+                    if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
+                        orderContactMechValueMap.put("postalAddress", contactMech.getRelatedOne("PostalAddress"));
+                    } else if ("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
+                        orderContactMechValueMap.put("telecomNumber", contactMech.getRelatedOne("TelecomNumber"));
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+            }
+        }
+
+        if (orderContactMechValueMaps.size() > 0) {
+            pageContext.setAttribute(orderContactMechValueMapsAttr, orderContactMechValueMaps);
+        }
+    }
+
     public static void getContactMechAndRelated(PageContext pageContext, String partyId, String contactMechAttr, String contactMechIdAttr,
             String partyContactMechAttr, String partyContactMechPurposesAttr, String contactMechTypeIdAttr, String contactMechTypeAttr, String purposeTypesAttr,
             String postalAddressAttr, String telecomNumberAttr, String requestNameAttr, String donePageAttr, String tryEntityAttr, String contactMechTypesAttr) {

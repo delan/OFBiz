@@ -137,7 +137,7 @@ public class OrderServices {
                         "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
         toBeStored.add(order);
 
-        //set the orderId on all adjustments; this list will include order and item adjustments...
+        // set the orderId on all adjustments; this list will include order and item adjustments...
         List orderAdjustments = (List) context.get("orderAdjustments");
         Iterator iter = orderAdjustments.iterator();
         while (iter.hasNext()) {
@@ -150,10 +150,10 @@ public class OrderServices {
             }
             orderAdjustment.set("orderAdjustmentId", adjSeqId.toString());
             orderAdjustment.set("orderId", orderId);
-            //set the orderItemSeqId to _NA_ if not alredy set...
-            if (orderAdjustment.get("orderItemSeqId") == null || orderAdjustment.getString("orderItemSeqId").length() == 0) {
-                orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
-            }
+
+            if (orderAdjustment.get("orderItemSeqId") == null || orderAdjustment.getString("orderItemSeqId").length() == 0)
+                orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA); // set the orderItemSeqId to _NA_ if not alredy set...
+
             toBeStored.add(orderAdjustment);
         }
 
@@ -162,6 +162,28 @@ public class OrderServices {
         toBeStored.add(delegator.makeValue("OrderContactMech",
                 UtilMisc.toMap("contactMechId", shippingContactMechId,
                         "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
+
+        // set the order contact mechs; this list can store both order and item level mechs.
+        List orderContactMechs = (List) context.get("orderContactMechs");
+        if (orderContactMechs != null && orderContactMechs.size() > 0) {
+            Iterator ocmi = orderContactMechs.iterator();
+            while (ocmi.hasNext()) {
+                GenericValue ocm = (GenericValue) ocmi.next();
+                ocm.set("orderId", orderId);
+                toBeStored.add(ocm);
+            }
+        }
+
+        // set the item price info
+        List orderItemPriceInfo = (List) context.get("orderItemPriceInfo");
+        if (orderItemPriceInfo != null && orderItemPriceInfo.size() > 0) {
+            Iterator oipii = orderItemPriceInfo.iterator();
+            while (oipii.hasNext()) {
+                GenericValue oipi = (GenericValue) oipii.next();
+                oipi.set("orderId", orderId);
+                toBeStored.add(oipi);
+            }
+        }
 
         // set the shipment preference
         String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
@@ -178,7 +200,6 @@ public class OrderServices {
 
         // set the order items
         Iterator oi = orderItems.iterator();
-        //*cn*int seqId = 1;
         while (oi.hasNext()) {
             GenericValue orderItem = (GenericValue) oi.next();
             orderItem.set("orderId", orderId);
@@ -355,6 +376,33 @@ public class OrderServices {
         }
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         result.put("orderStatusId", statusId);
+        return result;
+    }
+
+    /** Service to update the order tracking number */
+    public static Map updateTrackingNumber(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
+        String trackingNumber = (String) context.get("trackingNumber");
+        if (orderItemSeqId == null || orderItemSeqId.length() == 0)
+            orderItemSeqId = DataModelConstants.SEQ_ID_NA;
+        try {
+            GenericValue shipPref = delegator.findByPrimaryKey("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
+            if (shipPref == null) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: No order shipment preference found!");
+            } else {
+                shipPref.set("trackingNumber", trackingNumber);
+                shipPref.store();
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not set tracking number (" + e.getMessage() + ").");
+        }
         return result;
     }
 
