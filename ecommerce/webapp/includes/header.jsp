@@ -64,6 +64,7 @@ function mClk(src){
     %>
     <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(headerControlPath + "/main")%>" class="buttontext">Main</a></td>
 	<td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(headerControlPath + "/catalog?catalog_id=CATALOG1")%>" class="buttontext">Catalog</a></td>
+	<td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(headerControlPath + "/orderhistory")%>" class="buttontext">Order History</a></td>
     <%if(headerUserLogin==null){%>
       <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(loginUrl)%>" class="buttontext">Login</a></td>
     <%}else{%>

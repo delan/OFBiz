@@ -82,6 +82,17 @@
 		<success>view:main</success>
 		<error>view:shippingAddress</error>
 	</request-map>
+	<request-map>
+		<uri>orderhistory</uri>
+            <secure>true</secure><auth>true</auth>
+		<success>view:orderhistory</success>
+	</request-map>
+	<request-map>
+		<uri>orderstatus</uri>
+            <secure>true</secure><auth>true</auth>
+		<success>view:orderstatus</success>
+	</request-map>
+
 
     <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
 
@@ -95,6 +106,8 @@
 	<view-map><view>category</view><mapped-page>/catalog/category.jsp</mapped-page></view-map>		
 	<view-map><view>product</view><mapped-page>/catalog/product.jsp</mapped-page></view-map>			
 	<view-map><view>shippingAddress</view><mapped-page>/shipping/shipping.jsp</mapped-page></view-map>
+	<view-map><view>orderhistory</view><mapped-page>/order/orderhistory.jsp</mapped-page></view-map>			
+	<view-map><view>orderstatus</view><mapped-page>/order/orderstatus.jsp</mapped-page></view-map>			
     <!-- end of view mappings -->
 
 </site-conf>
