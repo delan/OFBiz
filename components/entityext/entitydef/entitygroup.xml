@@ -26,11 +26,18 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  */
 -->
 
 <entitygroup>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.entity.group -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="EntityGroup" />
+    <entity-group group="org.ofbiz" entity="EntityGroupEntry" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.entity.synchronization -->
@@ -39,6 +46,8 @@
     <entity-group group="org.ofbiz" entity="EntitySync" />
     <entity-group group="org.ofbiz" entity="EntitySyncHistory" />
     <entity-group group="org.ofbiz" entity="EntitySyncInclude" />
+    <entity-group group="org.ofbiz" entity="EntitySyncIncludeGroup" />
+    <entity-group group="org.ofbiz" entity="EntitySyncInclGrpDetailView" />
     <entity-group group="org.ofbiz" entity="EntitySyncRemove" />
 </entitygroup>
 

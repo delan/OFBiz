@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.25 2004/02/09 22:48:43 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.26 2004/08/07 16:42:30 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -474,6 +474,11 @@ public class EntitySyncServices {
     protected static List makeEntityModelToUseList(GenericDelegator delegator, GenericValue entitySync) throws GenericEntityException {
         List entityModelToUseList = new LinkedList();
         List entitySyncIncludes = entitySync.getRelated("EntitySyncInclude");
+
+        // get these ones as well, and just add them to the main list, it will have an extra field but that shouldn't hurt anything in the code below
+        List entitySyncGroupIncludes = entitySync.getRelated("EntitySyncInclGrpDetailView");
+        entitySyncIncludes.addAll(entitySyncGroupIncludes);
+
         Iterator entityNameIter = delegator.getModelReader().getEntityNamesIterator();
         while (entityNameIter.hasNext()) {
             String entityName = (String) entityNameIter.next();
@@ -489,7 +494,7 @@ public class EntitySyncServices {
                 continue;
             }
             
-            // if no includes records, always include; otherwise check each one to make sure at least one matches
+            // if there are no includes records, always include; otherwise check each one to make sure at least one matches
             if (entitySyncIncludes.size() == 0) {
                 entityModelToUseList.add(modelEntity);
             } else {
