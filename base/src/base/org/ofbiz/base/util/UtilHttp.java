@@ -114,7 +114,7 @@ public class UtilHttp {
             if (parameterName.startsWith(prefix)) {
                 if (suffix != null && suffix.length() > 0) {
                     if (parameterName.endsWith(suffix)) {
-                        String key = parameterName.substring(prefix.length(), parameterName.length() - (suffix.length() - 1));
+                        String key = parameterName.substring(prefix.length(), parameterName.length() - (suffix.length()));
                         String value = request.getParameter(parameterName);
                         paramMap.put(key, value);
                     }
