@@ -90,7 +90,7 @@
         <td>&nbsp;&nbsp;</td>
         <td>
             <a href='<ofbiz:url>/EditProduct?productId=<ofbiz:entityfield attribute="idProduct" field="productId"/></ofbiz:url>' class='buttontext'>
-              <ofbiz:entityfield attribute="idProduct" field="productName"/>
+              <ofbiz:entityfield attribute="idProduct" field="internalName"/>
             </a> <span class='tabletext'>(ID Value was the actual productId of this product.)</span>
         </td>
     </ofbiz:if>
@@ -106,7 +106,7 @@
         <td>&nbsp;&nbsp;</td>
         <td>
             <a href='<ofbiz:url>/EditProduct?productId=<ofbiz:entityfield attribute="product" field="productId"/></ofbiz:url>' class='buttontext'>
-              <ofbiz:entityfield attribute="product" field="productName"/>
+              <ofbiz:entityfield attribute="product" field="internalName"/>
             </a> <span class='tabletext'>(ID Value was the <b><ofbiz:entityfield attribute="goodIdentificationType" field="description"/></b>.)</span>
         </td>
       </tr>

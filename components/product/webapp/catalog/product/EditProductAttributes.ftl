@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,7 +30,7 @@
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">${uiLabelMap.ProductAttributes} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists}</#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductAttributes} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists}</#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
     <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>

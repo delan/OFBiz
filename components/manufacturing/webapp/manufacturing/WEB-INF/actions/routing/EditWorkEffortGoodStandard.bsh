@@ -61,7 +61,7 @@ dynamicViewEntity.addViewLink("WEGS", "WE", Boolean.FALSE, ModelKeyMap.makeKeyMa
 dynamicViewEntity.addAlias("WE", "workEffortName", "workEffortName", null, null, null, null);
 dynamicViewEntity.addMemberEntity("PRD", "Product");
 dynamicViewEntity.addViewLink("WEGS", "PRD", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
-dynamicViewEntity.addAlias("PRD", "productName", "productName", null, null, null, null);
+dynamicViewEntity.addAlias("PRD", "internalName", "internalName", null, null, null, null);
 
 if ("Y".equals(byProduct)) {
 		 EntityListIterator eli = delegator.findListIteratorByCondition(dynamicViewEntity, EntityExpr("productId", EntityOperator.EQUALS, productId), null, null, null, null);
@@ -97,7 +97,7 @@ if (productId != null && workEffortId != null && fromDateString != null) {
 		updateRoutingProductLinkWrapper.putInContext("routingTemplate", routingTemplate);
 		if ("N".equals(byProduct)) {
 				updateRoutingProductLinkWrapper.putInContext("workEffortName", workEffortName);
-				updateRoutingProductLinkWrapper.putInContext("productName", routingProductLink.getRelatedOne("Product").getString("productName"));
+				updateRoutingProductLinkWrapper.putInContext("internalName", routingProductLink.getRelatedOne("Product").getString("internalName"));
 		}
 		context.put("routingProductLink", routingProductLink);
 		context.put("updateRoutingProductLinkWrapper", updateRoutingProductLinkWrapper);

@@ -112,7 +112,7 @@ server hardware, network connections).</div>
   	List createTestList = new ArrayList();
     calls = 1000; startTime = (double) System.currentTimeMillis();
     for (int i=0; i < calls; i++) { 
-        GenericValue dummy = delegator.makeValue("Product", UtilMisc.toMap("autoCreateKeywords", "N", "description", "Initial Description", "productName", "Auto-Test Name", "productId", "_~WRITE_TEST~_" + i)); 
+        GenericValue dummy = delegator.makeValue("Product", UtilMisc.toMap("autoCreateKeywords", "N", "description", "Initial Description", "internalName", "Auto-Test Name", "productId", "_~WRITE_TEST~_" + i)); 
         createTestList.add(dummy); 
         delegator.create(dummy);
     }

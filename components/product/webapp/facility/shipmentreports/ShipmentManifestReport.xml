@@ -86,7 +86,7 @@
 	<field name="carrierLastName" class="java.lang.String"/>
 	<field name="carrierGroupName" class="java.lang.String"/>
 	<field name="shipmentMethodDescription" class="java.lang.String"/>
-	<field name="productName" class="java.lang.String"/>
+	<field name="internalName" class="java.lang.String"/>
 		<group  name="ShipmentRouteSegment" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="true" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{shipmentRouteSegmentId}]]></groupExpression>
 			<groupHeader>
@@ -773,7 +773,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Bottom" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{productName} + " [" + $F{productId} + "]"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{internalName} + " [" + $F{productId} + "]"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -114,7 +114,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductProductName}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <div class="tabletext"><a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productName?if_exists}</a></div>
+          <div class="tabletext"><a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.internalName?if_exists}</a></div>
         </td>                
       </tr>
       <tr>
@@ -330,7 +330,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}">                      
                     <td width="45%">
                       <div class="tabletext">
-                        ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productId}&nbsp;-&nbsp;${product.productName?if_exists}</a> : ${product.description?if_exists}
+                        ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productId}&nbsp;-&nbsp;${product.internalName?if_exists}</a> : ${product.description?if_exists}
                       </div>                       
                     </td>
                   <#else>

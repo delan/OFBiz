@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -57,6 +57,10 @@
                 </td>
             </tr>
         </#list>
+        <tr>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductInternalName}:</div></td>
+            <td><input type="text" name="internalName" size="30" maxlength="60" class="inputBox"/></td>
+        </tr>
         <tr>
             <td width="15%"><div class="tabletext">${uiLabelMap.ProductProductName}:</div></td>
             <td><input type="text" name="productName" size="30" maxlength="60" class="inputBox"/></td>

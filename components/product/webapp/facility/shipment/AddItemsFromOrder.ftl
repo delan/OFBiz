@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -99,7 +99,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved?if_exists>
             <tr>
                 <td><div class="tabletext">${orderItem.orderItemSeqId}</div></td>
-                <td><div class="tabletext">${(product.productName)?if_exists} [${orderItem.productId?default("N/A")}]</div></td>
+                <td><div class="tabletext">${(product.internalName)?if_exists} [${orderItem.productId?default("N/A")}]</div></td>
                 <td>
                     <#if itemIssuances?has_content>
                         <#list itemIssuances as itemIssuance>

@@ -22,7 +22,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -130,7 +130,7 @@
         <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
-        <field name="productName" title="${uiLabelMap.ProductProductName}"><display/></field>
+        <field name="internalName" title="Internal Name"><display/></field>
         <field name="productTypeId" title="${uiLabelMap.ProductType}"><display/></field>
     </form>
 </forms>

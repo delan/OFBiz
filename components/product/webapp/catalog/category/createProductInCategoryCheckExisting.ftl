@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -51,6 +51,7 @@
     <table width="100%" cellpadding="1" cellspacing="0" border="1">
     <#list products as product>
         <tr>
+            <td><div class="tabletext">${product.internalName?default("-no internal name-")} [${product.productId}]</div></td>
             <td><div class="tabletext">${product.productName?default("-no name-")} [${product.productId}]</div></td>
             <td width="10%"><a href="<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductThisIsIt}]</a></td>
         </tr>
@@ -88,6 +89,13 @@
                 </td>
             </tr>
         </#list>
+        <tr>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductInternalName}:</div></td>
+            <td>
+                <input type="hidden" name="internalName" value="${requestParameters.internalName?if_exists}"/>
+                <div class="tabletext">&nbsp;${requestParameters.internalName?default("&nbsp;")}</div>
+            </td>
+        </tr>
         <tr>
             <td width="15%"><div class="tabletext">${uiLabelMap.ProductProductName}:</div></td>
             <td>

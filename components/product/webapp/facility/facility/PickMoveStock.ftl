@@ -21,7 +21,7 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version        $Revision: 1.4 $
+ *@version        $Revision: 1.5 $
  *@since          3.0
 -->
 
@@ -69,7 +69,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                     <#assign facilityLocationTypeEnumTo = (facilityLocationTo.getRelatedOneCache("TypeEnumeration"))?if_exists>
                                     <#assign totalQuantity = moveByOiirInfo.totalQuantity>
                                     <tr>
-                                        <td><div class="tabletext">${product.productName?if_exists} [${product.productId}]</div></td>
+                                        <td><div class="tabletext">${product.internalName?if_exists} [${product.productId}]</div></td>
                                         <td><div class="tabletext">${facilityLocationFrom.areaId?if_exists}:${facilityLocationFrom.aisleId?if_exists}:${facilityLocationFrom.sectionId?if_exists}:${facilityLocationFrom.levelId?if_exists}:${facilityLocationFrom.positionId?if_exists}<#if facilityLocationTypeEnumFrom?has_content>(${facilityLocationTypeEnumFrom.description})</#if>[${facilityLocationFrom.locationSeqId}]</div></td>
                                         <td><div class="tabletext">${facilityLocationTo.areaId?if_exists}:${facilityLocationTo.aisleId?if_exists}:${facilityLocationTo.sectionId?if_exists}:${facilityLocationTo.levelId?if_exists}:${facilityLocationTo.positionId?if_exists}<#if facilityLocationTypeEnumTo?has_content>(${facilityLocationTypeEnumTo.description})</#if>[${facilityLocationTo.locationSeqId}]</div></td>
                                         <td><div class="tabletext">${totalQuantity?string.number}</div></td>
@@ -94,7 +94,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                     <#assign facilityLocationTypeEnumTo = (facilityLocationTo.getRelatedOneCache("TypeEnumeration"))?if_exists>
                                     <#assign totalQuantity = moveByPflInfo.totalQuantity>
                                     <tr>
-                                        <td><div class="tabletext">${product.productName?if_exists} [${product.productId}]</div></td>
+                                        <td><div class="tabletext">${product.internalName?if_exists} [${product.productId}]</div></td>
                                         <td><div class="tabletext">${facilityLocationFrom.areaId?if_exists}:${facilityLocationFrom.aisleId?if_exists}:${facilityLocationFrom.sectionId?if_exists}:${facilityLocationFrom.levelId?if_exists}:${facilityLocationFrom.positionId?if_exists}<#if facilityLocationTypeEnumFrom?has_content>(${facilityLocationTypeEnumFrom.description})</#if>[${facilityLocationFrom.locationSeqId}]</div></td>
                                         <td><div class="tabletext">${facilityLocationTo.areaId?if_exists}:${facilityLocationTo.aisleId?if_exists}:${facilityLocationTo.sectionId?if_exists}:${facilityLocationTo.levelId?if_exists}:${facilityLocationTo.positionId?if_exists}<#if facilityLocationTypeEnumTo?has_content>(${facilityLocationTypeEnumTo.description})</#if>[${facilityLocationTo.locationSeqId}]</div></td>
                                         <td><div class="tabletext">${totalQuantity?string.number}</div></td>
