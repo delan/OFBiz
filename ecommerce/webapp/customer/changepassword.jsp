@@ -65,8 +65,8 @@
   </table>
   </form>
 
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Back]</a>
-    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Change]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
     <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
 
 <%@ include file="/includes/footer.jsp" %>

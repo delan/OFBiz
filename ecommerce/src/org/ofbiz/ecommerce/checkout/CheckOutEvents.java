@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2001/09/14 21:34:32  epabst
+ * added security code to confirmorder page
+ * cleaned up
+ *
  * Revision 1.12  2001/09/14 21:19:27  epabst
  * added security code to confirmorder page
  * cleaned up
@@ -232,6 +236,7 @@ public class CheckOutEvents {
         final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.securityCode");
     
         String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
+        if(controlPath == null) controlPath = "";
         try {
             java.net.URL url = new java.net.URL(request.getSession().getAttribute(SiteDefs.SERVER_ROOT_URL) + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
             HttpClient httpClient = new HttpClient(url);
@@ -240,7 +245,7 @@ public class CheckOutEvents {
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "error generating order confirmation, but it was recorded and will be processed.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
             return "error";
         }
     }

@@ -87,10 +87,11 @@
       <uri>emptycart</uri>
       <event-type>java</event-type>
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
-      <event-invoke>emptyCart</event-invoke>
+      <event-invoke>clearCart</event-invoke>
       <success>view:showcart</success>
       <error>view:showcart</error>
     </request-map>		
+
     <request-map>
       <uri>checkoutoptions</uri><secure>true</secure><auth>true</auth>
       <event-type>java</event-type>
@@ -105,7 +106,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>setCheckOutOptions</event-invoke> 
       <success>view:checkout</success>
-      <error>request:checkoutoptions</error>
+      <error>view:checkoutoptions</error>
     </request-map>		
     <request-map>
       <uri>createorder</uri><secure>true</secure><auth>true</auth>
@@ -113,7 +114,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>createOrder</event-invoke> 
       <success>request:renderconfirmorder</success>
-      <error>request:checkoutoptions</error>
+      <error>view:checkout</error>
     </request-map>		
     <request-map>
       <uri>renderconfirmorder</uri><secure>true</secure><auth>true</auth>
@@ -121,9 +122,9 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>renderConfirmOrder</event-invoke> 
       <success>request:emailorder</success>
-      <error>request:checkoutoptions</error>
+      <error>view:checkout</error>
     </request-map>		
-    <request-map><uri>confirmorder</uri><secure>false</secure><auth>false</auth><success>view:confirmorder</success></request-map>		
+    <request-map><uri>confirmorder</uri><secure>true</secure><auth>true</auth><success>view:confirmorder</success></request-map>		
     <request-map>
       <uri>emailorder</uri><secure>true</secure><auth>true</auth>
       <event-type>java</event-type>

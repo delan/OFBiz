@@ -167,7 +167,7 @@
   </form>
   </table>
 
-    &nbsp;<a href="<ofbiz:url>/<%=donePage%></ofbiz:url>" class="buttontext">[Done]</a>
+    &nbsp;<a href="<ofbiz:url>/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
     &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
     <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
 

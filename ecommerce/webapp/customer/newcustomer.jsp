@@ -49,7 +49,7 @@
       <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
         <tr>
           <td valign="middle" align="left">
-            <p class="head2"><font color="white">&nbsp;Name and Address</font>
+            <p class="head2"><font color="white">&nbsp;Name and Shipping Address</font>
           </td>
         </tr>
       </table>
@@ -117,7 +117,7 @@
           <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_STATE"))%></option>
           <%@ include file="/includes/states.jsp" %>
       </select>
-      * </td>
+    * </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Zip/Postal Code</font></div></td>
@@ -129,6 +129,7 @@
       <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Country</font></div></td>
       <td width="74%">
           <select name="CUSTOMER_COUNTRY" >
+            <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_COUNTRY"))%></option>
             <%@ include file="/includes/countries.jsp" %>
           </select>
       * </td>
@@ -158,7 +159,7 @@
       <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
         <tr>
           <td valign="middle" align="left">
-            <p class="head2"><font color="white">&nbsp;Phone Numbers and Email</font>
+            <p class="head2"><font color="white">&nbsp;Phone Numbers</font>
           </td>
         </tr>
       </table>
@@ -227,10 +228,38 @@
         </select>
     </td>
   </tr>
+</table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
+<br>
+
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+        <tr>
+          <td valign="middle" align="left">
+            <p class="head2"><font color="white">&nbsp;Email Address</font>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+        <tr>
+          <td>
+<table width="100%">
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Email address<BR>(allow solicitation?)</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_EMAIL" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_EMAIL"))%>" size="40" maxlength="80"> *
+        <input type="text" name="CUSTOMER_EMAIL" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_EMAIL"))%>" size="60" maxlength="255"> *
         <BR>
         <select name="CUSTOMER_EMAIL_ALLOW_SOL">
           <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_EMAIL_ALLOW_SOL"), "Y")%></option>

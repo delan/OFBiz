@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2001/09/13 03:38:58  jonesde
+ * Cleanups, a few bugs fixed, added index.jsp which forwards to control/main
+ *
  * Revision 1.19  2001/09/11 00:51:46  jonesde
  * A few changes to correspond with the moving of the KeywordSearch file, etc.
  *
@@ -158,8 +161,11 @@ public class CustomerEvents {
     if(!UtilValidate.isNotEmpty(lastName)) errMsg += "<li>Last name missing.";
     if(!UtilValidate.isNotEmpty(address1)) errMsg += "<li>Address Line 1 missing.";
     if(!UtilValidate.isNotEmpty(city)) errMsg += "<li>City missing.";
-    if(!UtilValidate.isNotEmpty(state)) errMsg += "<li>State missing.";
+    if(UtilValidate.isNotEmpty(country) && (country.equals("USA") || country.equals("CAN"))) {
+      if(!UtilValidate.isNotEmpty(state)) errMsg += "<li>State missing.";
+    }
     if(!UtilValidate.isNotEmpty(postalCode)) errMsg += "<li>Zip/Postal Code missing.";
+    if(!UtilValidate.isNotEmpty(country)) errMsg += "<li>Country missing.";
     if(!UtilValidate.isNotEmpty(email)) errMsg += "<li>Email missing.";
     if(!UtilValidate.isEmail(email)) errMsg += "<li>" + UtilValidate.isEmailMsg;
     

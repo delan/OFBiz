@@ -5,8 +5,9 @@
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
 <ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart" />  
-<%pageContext.setAttribute("cartIter", cart.iterator());%>
-
+<%if(cart != null) {%>
+  <%pageContext.setAttribute("cartIter", cart.iterator());%>
+<%}%>
 <BR>
 <TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
   <TR>
@@ -67,9 +68,10 @@
               <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
               <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
               <%if(microCart != null && microCart.size() > 0){%>
+                <a href="<ofbiz:url>/emptycart</ofbiz:url>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
                 <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
               <%}else{%>
-                [Checkout]
+                [Empty&nbsp;Cart] [Checkout]
               <%}%>
             </div>
           </td>
@@ -154,9 +156,10 @@
               <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
               <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
               <%if(microCart != null && microCart.size() > 0){%>
+                <a href="<ofbiz:url>/emptycart</ofbiz:url>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
                 <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
               <%}else{%>
-                [Checkout]
+                [Empty&nbsp;Cart] [Checkout]
               <%}%>
             </div>
           </td>
