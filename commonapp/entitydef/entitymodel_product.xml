@@ -367,6 +367,7 @@
       <alias entity-alias="PFA" name="productFeatureApplTypeId" />
       <alias entity-alias="PFA" name="fromDate" prim-key="true" />
       <alias entity-alias="PFA" name="thruDate" />
+      <alias entity-alias="PFA" name="sequenceNum" />
       <view-link entity-alias="PF" rel-entity-alias="PFA">
         <key-map field-name="productFeatureId" />
       </view-link>
@@ -378,7 +379,8 @@
       <field name="productFeatureId" type="id-ne"></field>
       <field name="productFeatureApplTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>	
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>	
       <prim-key field="productId" />	
       <prim-key field="productFeatureId" />	
       <prim-key field="fromDate" />
