@@ -122,6 +122,7 @@
   <PaymentMethodType description="Money Order" paymentMethodTypeId="MONEY_ORDER"/>  
   <PaymentMethodType description="Company Account" paymentMethodTypeId="COMPANY_ACCOUNT"/>
   <PaymentMethodType description="Billing Account" paymentMethodTypeId="EXT_BILLACT"/>
+  <PaymentMethodType description="COD" paymentMethodTypeId="EXT_COD"/>
   <PaymentMethodType description="Offline Payment" paymentMethodTypeId="EXT_OFFLINE"/>
   <PaymentMethodType description="PayPal" paymentMethodTypeId="EXT_PAYPAL"/>
   <PaymentMethodType description="WorldPay" paymentMethodTypeId="EXT_WORLDPAY"/>
