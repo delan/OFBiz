@@ -65,7 +65,7 @@ public class WfApplicationServices {
      * @throws GenericServiceException
      * @return Empty result
      */
-    public static Map activateAppliaction(DispatchContext ctx, Map context) {
+    public static Map activateApplication(DispatchContext ctx, Map context) {
         final String workEffortId = (String) context.get("workEffortId");
         final Map result = new HashMap();
 
@@ -87,7 +87,7 @@ public class WfApplicationServices {
         return result;
     }
 
-    public static Map getAppliactionContext(DispatchContext ctx, Map context) throws GenericServiceException {
+    public static Map getApplicationContext(DispatchContext ctx, Map context) throws GenericServiceException {
         final GenericDelegator delegator = ctx.getDelegator();
         final Map result = new HashMap();
         try {
@@ -102,7 +102,7 @@ public class WfApplicationServices {
         return result;
     }
 
-    public static Map completeAppliaction(DispatchContext ctx, Map context) throws GenericServiceException {
+    public static Map completeApplication(DispatchContext ctx, Map context) throws GenericServiceException {
         final GenericDelegator delegator = ctx.getDelegator();
         final String applicationId = (String) context.get("applicationId");
         final Map result = new HashMap();

@@ -80,21 +80,21 @@
     </service>
     
     <service name="wfActivateApplication" engine="java"
-            location="org.ofbiz.core.workflow.WfApplicationServices" invoke="activateAppliaction">
+            location="org.ofbiz.core.workflow.WfApplicationServices" invoke="activateApplication">
         <description>Activate a workflow assignment</description>
         <attribute name="workEffortId" type="String" mode="IN"/>
         <attribute name="applicationId" type="String" mode="OUT" optional="true"/>
     </service>
     
     <service name="wfGetApplicationContext" engine="java"
-            location="org.ofbiz.core.workflow.WfApplicationServices" invoke="getAppliactionContext">
+            location="org.ofbiz.core.workflow.WfApplicationServices" invoke="getApplicationContext">
         <description>Get the application Context</description>
         <attribute name="applicationId" type="String" mode="IN"/>
         <attribute name="applicationContext" type="java.util.Map" mode="OUT" optional="true"/>
     </service>
     
     <service name="wfCompleteApplication" engine="java"
-            location="org.ofbiz.core.workflow.WfApplicationServices" invoke="completeAppliaction">
+            location="org.ofbiz.core.workflow.WfApplicationServices" invoke="completeApplication">
         <description>Complete a workflow assignment</description>
         <attribute name="applicationId" type="String" mode="IN"/>
         <attribute name="result" type="java.util.Map" mode="IN" optional="true"/>
