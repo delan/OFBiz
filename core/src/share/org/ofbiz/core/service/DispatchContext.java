@@ -64,8 +64,6 @@ public class DispatchContext {
 
     protected static final String GLOBAL_KEY = "global.services";
     protected static UtilCache modelService = new UtilCache("ModelServices", 0, 0);
-    protected static String globalRoot =
-            UtilProperties.getPropertyValue("servicesengine", "global.rootPath");
 
     protected String name;
     protected Map attributes;
