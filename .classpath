@@ -71,9 +71,7 @@
 	<classpathentry kind="lib" path="components/jetty/lib/jasper-compiler.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/jython.jar"/>
 	<classpathentry kind="lib" path="components/jotm/lib/connector-1_5.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkxpdl-standard.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkutilities-xpdl.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkutilities-misc.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkutilities-map.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharktoolagent-standard.jar"/>
@@ -89,7 +87,6 @@
 	<classpathentry kind="lib" path="components/shark/lib/sharkcommonapi.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkclientapi.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkcaching-lru.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkauthentication-ldap.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkassignment-standard.jar"/>
 	<classpathentry kind="lib" path="base/lib/junit.jar"/>
 	<classpathentry kind="lib" path="components/minerva/build/lib/ofbiz-minerva.jar"/>
