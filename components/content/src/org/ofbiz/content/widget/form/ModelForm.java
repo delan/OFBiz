@@ -672,7 +672,7 @@ public class ModelForm {
         // render formatting wrapper close
         formStringRenderer.renderFormatListWrapperClose(buffer, context, this);
 
-        formStringRenderer.renderFormClose(buffer, context, this);
+        formStringRenderer.renderMultiFormClose(buffer, context, this);
     }
 
     public void renderHeaderRow(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {

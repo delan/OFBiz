@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public interface FormStringRenderer {
@@ -56,6 +56,7 @@ public interface FormStringRenderer {
     
     public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm);
     public void renderFormClose(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderMultiFormClose(StringBuffer buffer, Map context, ModelForm modelForm);
     
     public void renderFormatListWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm);
     public void renderFormatListWrapperClose(StringBuffer buffer, Map context, ModelForm modelForm);
