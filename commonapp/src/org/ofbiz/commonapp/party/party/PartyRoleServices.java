@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2002/01/26 20:34:44  jonesde
+ * Added party role service implementations
+ *
  * 
  */
 
@@ -68,7 +71,7 @@ public class PartyRoleServices {
         }
 
         try {
-            partyRole.store();
+            partyRole.create();
         } catch(GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could create party role (write failure): " + e.getMessage());
