@@ -1,11 +1,11 @@
 
-package org.ofbiz.commonapp.person;
+package org.ofbiz.commonapp.security.securitygroup;
 
 import java.io.*;
 
 /**
- * <p><b>Title:</b> Person Component - Person Person Type Entity
- * <p><b>Description:</b> Maps a Person to a Person Type; necessary so a person can be of multiple types.
+ * <p><b>Title:</b> Security Component - User Login Security Group Entity
+ * <p><b>Description:</b> Defines a permission available to a security group
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
@@ -27,60 +27,60 @@ import java.io.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon May 28 21:35:29 MDT 2001
+ *@created    Fri Jun 29 12:50:49 MDT 2001
  *@version    1.0
  */
-public class PersonPersonTypePK implements Serializable
+public class UserLoginSecurityGroupPK implements Serializable
 {
 
 
   /**
-   *  The variable of the USERNAME column of the PERSON_PERSON_TYPE table.
+   *  The variable of the USER_LOGIN_ID column of the USER_LOGIN_SECURITY_GROUP table.
    */
-  public String username;
+  public String userLoginId;
 
   /**
-   *  The variable of the TYPE_ID column of the PERSON_PERSON_TYPE table.
+   *  The variable of the GROUP_ID column of the USER_LOGIN_SECURITY_GROUP table.
    */
-  public String typeId;
+  public String groupId;
 
 
   /**
-   *  Constructor for the PersonPersonTypePK object
+   *  Constructor for the UserLoginSecurityGroupPK object
    */
-  public PersonPersonTypePK()
+  public UserLoginSecurityGroupPK()
   {
   }
 
   /**
-   *  Constructor for the PersonPersonTypePK object
+   *  Constructor for the UserLoginSecurityGroupPK object
    *
 
-   *@param  username                  Field of the USERNAME column.
-   *@param  typeId                  Field of the TYPE_ID column.
+   *@param  userLoginId                  Field of the USER_LOGIN_ID column.
+   *@param  groupId                  Field of the GROUP_ID column.
    */
-  public PersonPersonTypePK(String username, String typeId)
+  public UserLoginSecurityGroupPK(String userLoginId, String groupId)
   {
 
-    this.username = username;
-    this.typeId = typeId;
+    this.userLoginId = userLoginId;
+    this.groupId = groupId;
   }
 
   /**
-   *  Determines the equality of two PersonPersonTypePK objects, overrides the default equals
+   *  Determines the equality of two UserLoginSecurityGroupPK objects, overrides the default equals
    *
-   *@param  obj  The object (PersonPersonTypePK) to compare this two
+   *@param  obj  The object (UserLoginSecurityGroupPK) to compare this two
    *@return      boolean stating if the two objects are equal
    */
   public boolean equals(Object obj)
   {
     if(this.getClass().equals(obj.getClass()))
     {
-      PersonPersonTypePK that = (PersonPersonTypePK)obj;
+      UserLoginSecurityGroupPK that = (UserLoginSecurityGroupPK)obj;
       return
 
-            this.username.equals(that.username) &&
-            this.typeId.equals(that.typeId) &&
+            this.userLoginId.equals(that.userLoginId) &&
+            this.groupId.equals(that.groupId) &&
             true; //This "true" is a dummy thing to take care of the last &&, just for laziness sake.
     }
     return false;
@@ -93,7 +93,7 @@ public class PersonPersonTypePK implements Serializable
    */
   public int hashCode()
   {
-    return (username + "::" + typeId).hashCode();
+    return (userLoginId + "::" + groupId).hashCode();
   }
 
   /**
@@ -103,6 +103,6 @@ public class PersonPersonTypePK implements Serializable
    */
   public String toString()
   {
-    return username + "::" + typeId;
+    return userLoginId + "::" + groupId;
   }
 }

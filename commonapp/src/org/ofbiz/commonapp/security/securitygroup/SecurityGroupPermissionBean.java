@@ -29,10 +29,9 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 14:45:55 MDT 2001
+ *@created    Fri Jun 29 12:50:48 MDT 2001
  *@version    1.0
  */
-
 public class SecurityGroupPermissionBean implements EntityBean
 {
 

@@ -29,10 +29,9 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:35:27 MDT 2001
+ *@created    Fri Jun 29 12:50:46 MDT 2001
  *@version    1.0
  */
-
 public class SecurityGroupBean implements EntityBean
 {
 
@@ -99,9 +98,11 @@ public class SecurityGroupBean implements EntityBean
 
     try
     {
-
-  
-      this.description = valueObject.getDescription();
+      //check for null and if null do not set; this is the method for not setting certain fields while setting the rest quickly
+      // to set a field to null, use the individual setters
+    
+      if(valueObject.getDescription() != null)
+        this.description = valueObject.getDescription();
     }
     catch(java.rmi.RemoteException re)
     {

@@ -98,11 +98,12 @@ public class UtilCache
     ResourceBundle res = ResourceBundle.getBundle("cache");
     if(res != null)
     {
-      String value = res.getString(cacheName + ".maxSize");
+      String value = null;
       Long longValue = null;
+      try { value = res.getString(cacheName + ".maxSize"); } catch(Exception e) {}
       try { longValue = new Long(value); } catch(Exception e) {}
       if(longValue != null) maxSize = longValue.longValue();
-      value = res.getString(cacheName + ".expireTime");
+      try { value = res.getString(cacheName + ".expireTime"); } catch(Exception e) {}
       try { longValue = new Long(value); } catch(Exception e) {}
       if(longValue != null) expireTime = longValue.longValue();
     }
@@ -119,11 +120,12 @@ public class UtilCache
     ResourceBundle res = ResourceBundle.getBundle("cache");
     if(res != null)
     {
-      String value = res.getString("default.maxSize");
+      String value = null;
       Long longValue = null;
+      try { value = res.getString("default.maxSize"); } catch(Exception e) {}
       try { longValue = new Long(value); } catch(Exception e) {}
       if(longValue != null) maxSize = longValue.longValue();
-      value = res.getString("default.expireTime");
+      try { value = res.getString("default.expireTime"); } catch(Exception e) {}
       try { longValue = new Long(value); } catch(Exception e) {}
       if(longValue != null) expireTime = longValue.longValue();
     }

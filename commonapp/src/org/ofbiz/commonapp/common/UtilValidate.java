@@ -118,9 +118,16 @@ public class UtilValidate
   public static final String isHourMsg = "The Hour must be a number between 0 and 23.  Please reenter it now.";
   public static final String isMinuteMsg = "The Hour must be a number between 0 and 59.  Please reenter it now.";
   public static final String isSecondMsg = "The Hour must be a number between 0 and 59.  Please reenter it now.";
-  public static final String isTime = "The Time must be a valid time formed like: HH:MM or HH:MM:SS. Please reenter it now.";
-  public static final String isDate = "The Date must be a valid date formed like: MM/YY, MM/YYYY, MM/DD/YY, or MM/DD/YYYY. Please reenter it now.";
+  public static final String isTimeMsg = "The Time must be a valid time formed like: HH:MM or HH:MM:SS. Please reenter it now.";
+  public static final String isDateMsg = "The Date must be a valid date formed like: MM/YY, MM/YYYY, MM/DD/YY, or MM/DD/YYYY. Please reenter it now.";
   public static final String isDateAfterToday = "The Date must be a valid date after today, and formed like: MM/YY, MM/YYYY, MM/DD/YY, or MM/DD/YYYY. Please reenter it now.";
+  public static final String isIntegerMsg = "The Number must be a valid unsigned whole decimal number. Please reenter it now.";
+  public static final String isSignedIntegerMsg = "The Number must be a valid signed whole decimal number. Please reenter it now.";
+  public static final String isLongMsg = "The Number must be a valid unsigned whole decimal number. Please reenter it now.";
+  public static final String isSignedLongMsg = "The Number must be a valid signed whole decimal number. Please reenter it now.";
+  public static final String isFloatMsg = "The Number must be a valid unsigned decimal number. Please reenter it now.";
+  public static final String isSignedFloatMsg = "The Number must be a valid signed decimal number. Please reenter it now.";
+  public static final String isSignedDoubleMsg = "The Number must be a valid signed decimal number. Please reenter it now.";
 
   /** An array of ints representing the number of days in each month of the year.
    *  Note: February valies depending on the year */

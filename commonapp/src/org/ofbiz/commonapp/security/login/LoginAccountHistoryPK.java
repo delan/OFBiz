@@ -1,11 +1,11 @@
 
-package org.ofbiz.commonapp.security.person;
+package org.ofbiz.commonapp.security.login;
 
 import java.io.*;
 
 /**
- * <p><b>Title:</b> Security Component - Person Security Group Entity
- * <p><b>Description:</b> Defines a permission available to a security group
+ * <p><b>Title:</b> Login Account History Entity
+ * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
@@ -27,60 +27,60 @@ import java.io.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon May 28 21:32:52 MDT 2001
+ *@created    Fri Jun 29 16:05:29 MDT 2001
  *@version    1.0
  */
-public class PersonSecurityGroupPK implements Serializable
+public class LoginAccountHistoryPK implements Serializable
 {
 
 
   /**
-   *  The variable of the USERNAME column of the PERSON_SECURITY_GROUP table.
+   *  The variable of the USER_LOGIN_ID column of the LOGIN_ACCOUNT_HISTORY table.
    */
-  public String username;
+  public String userLoginId;
 
   /**
-   *  The variable of the GROUP_ID column of the PERSON_SECURITY_GROUP table.
+   *  The variable of the USER_LOGIN_SEQ_ID column of the LOGIN_ACCOUNT_HISTORY table.
    */
-  public String groupId;
+  public String userLoginSeqId;
 
 
   /**
-   *  Constructor for the PersonSecurityGroupPK object
+   *  Constructor for the LoginAccountHistoryPK object
    */
-  public PersonSecurityGroupPK()
+  public LoginAccountHistoryPK()
   {
   }
 
   /**
-   *  Constructor for the PersonSecurityGroupPK object
+   *  Constructor for the LoginAccountHistoryPK object
    *
 
-   *@param  username                  Field of the USERNAME column.
-   *@param  groupId                  Field of the GROUP_ID column.
+   *@param  userLoginId                  Field of the USER_LOGIN_ID column.
+   *@param  userLoginSeqId                  Field of the USER_LOGIN_SEQ_ID column.
    */
-  public PersonSecurityGroupPK(String username, String groupId)
+  public LoginAccountHistoryPK(String userLoginId, String userLoginSeqId)
   {
 
-    this.username = username;
-    this.groupId = groupId;
+    this.userLoginId = userLoginId;
+    this.userLoginSeqId = userLoginSeqId;
   }
 
   /**
-   *  Determines the equality of two PersonSecurityGroupPK objects, overrides the default equals
+   *  Determines the equality of two LoginAccountHistoryPK objects, overrides the default equals
    *
-   *@param  obj  The object (PersonSecurityGroupPK) to compare this two
+   *@param  obj  The object (LoginAccountHistoryPK) to compare this two
    *@return      boolean stating if the two objects are equal
    */
   public boolean equals(Object obj)
   {
     if(this.getClass().equals(obj.getClass()))
     {
-      PersonSecurityGroupPK that = (PersonSecurityGroupPK)obj;
+      LoginAccountHistoryPK that = (LoginAccountHistoryPK)obj;
       return
 
-            this.username.equals(that.username) &&
-            this.groupId.equals(that.groupId) &&
+            this.userLoginId.equals(that.userLoginId) &&
+            this.userLoginSeqId.equals(that.userLoginSeqId) &&
             true; //This "true" is a dummy thing to take care of the last &&, just for laziness sake.
     }
     return false;
@@ -93,7 +93,7 @@ public class PersonSecurityGroupPK implements Serializable
    */
   public int hashCode()
   {
-    return (username + "::" + groupId).hashCode();
+    return (userLoginId + "::" + userLoginSeqId).hashCode();
   }
 
   /**
@@ -103,6 +103,6 @@ public class PersonSecurityGroupPK implements Serializable
    */
   public String toString()
   {
-    return username + "::" + groupId;
+    return userLoginId + "::" + userLoginSeqId;
   }
 }

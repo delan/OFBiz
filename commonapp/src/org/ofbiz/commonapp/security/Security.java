@@ -5,8 +5,7 @@ import javax.servlet.http.*;
 import javax.servlet.*;
 
 import org.ofbiz.commonapp.common.*;
-import org.ofbiz.commonapp.person.*;
-import org.ofbiz.commonapp.security.person.*;
+import org.ofbiz.commonapp.security.login.*;
 import org.ofbiz.commonapp.security.securitygroup.*;
 
 /**
@@ -38,9 +37,9 @@ import org.ofbiz.commonapp.security.securitygroup.*;
  */
 public class Security
 {
-  /** Hashtable to cache a Collection of PersonSecurityGroup entities for each Person, by username.
+  /** Hashtable to cache a Collection of UserLoginSecurityGroup entities for each UserLogin, by userLoginId.
    */  
-  public static UtilCache personSecurityGroupByUsername = new UtilCache("PersonSecurityGroupByUsername");
+  public static UtilCache userLoginSecurityGroupByUserLoginId = new UtilCache("UserLoginSecurityGroupByUserLoginId");
 
   /** Hashtable to cache whether or not a certain SecurityGroupPermission row exists or not.
    * For each SecurityGroupPermissionPK there is a Boolean in the cache specifying whether or not it exists.
@@ -48,26 +47,26 @@ public class Security
    */  
   public static UtilCache securityGroupPermissionCache = new UtilCache("SecurityGroupPermissionCache");
   
-  /** Uses personSecurityGroupByUsername cache to speed up the finding of the person's security group list.
-   * @param username The username to find security groups by
-   * @return An iterator made from the Collection either cached or retrieved from the database through the PersonSecurityGroup Helper.
+  /** Uses userLoginSecurityGroupByUserLoginId cache to speed up the finding of the userLogin's security group list.
+   * @param userLoginId The userLoginId to find security groups by
+   * @return An iterator made from the Collection either cached or retrieved from the database through the UserLoginSecurityGroup Helper.
    */  
-  public static Iterator findPersonSecurityGroupByUsername(String username)
+  public static Iterator findUserLoginSecurityGroupByUserLoginId(String userLoginId)
   {
-    Collection collection = (Collection)personSecurityGroupByUsername.get(username);
+    Collection collection = (Collection)userLoginSecurityGroupByUserLoginId.get(userLoginId);
     if(collection == null) 
     {
-      collection = PersonSecurityGroupHelper.findByUsername(username);
-      //make an empty collection to speed up the case where a person belongs to no security groups
+      collection = UserLoginSecurityGroupHelper.findByUserLoginId(userLoginId);
+      //make an empty collection to speed up the case where a userLogin belongs to no security groups
       if(collection == null) collection = new LinkedList();
-      personSecurityGroupByUsername.put(username, collection);
+      userLoginSecurityGroupByUserLoginId.put(userLoginId, collection);
     }
     return collection.iterator();
   }
   
   /** Finds whether or not a SecurityGroupPermission row exists given a groupId and permission.
    * Uses the securityGroupPermissionCache to speed this up.
-   * The groupId,permission pair is cached instead of the username,permission pair to keep the cache small and to make it more changeable.
+   * The groupId,permission pair is cached instead of the userLoginId,permission pair to keep the cache small and to make it more changeable.
    * @param groupId The ID of the group
    * @param permission The name of the permission
    * @return boolean specifying whether or not a SecurityGroupPermission row exists
@@ -85,24 +84,24 @@ public class Security
     return exists.booleanValue();
   }
   
-  /** Checks to see if the currently logged in person has the passed permission.
+  /** Checks to see if the currently logged in userLogin has the passed permission.
    * @param permission Name of the permission to check.
-   * @param session The current HTTP session, contains the logged in person as an attribute.
+   * @param session The current HTTP session, contains the logged in userLogin as an attribute.
    * @throws RemoteException Standard RMI Remote Exception
-   * @return Returns true if the currently logged in person has the specified permission, otherwise returns false.
+   * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
    */  
   public static boolean hasPermission(String permission, HttpSession session) throws java.rmi.RemoteException
   {
-    Person person = (Person)session.getAttribute("PERSON");
-    if(person == null) return false;
+    UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN");
+    if(userLogin == null) return false;
 
-    Iterator iterator = findPersonSecurityGroupByUsername(person.getUsername());
-    PersonSecurityGroup personSecurityGroup = null;
+    Iterator iterator = findUserLoginSecurityGroupByUserLoginId(userLogin.getUserLoginId());
+    UserLoginSecurityGroup userLoginSecurityGroup = null;
 
     while(iterator.hasNext())
     {
-      personSecurityGroup = (PersonSecurityGroup)iterator.next();
-      if(securityGroupPermissionExists(personSecurityGroup.getGroupId(), permission)) return true;
+      userLoginSecurityGroup = (UserLoginSecurityGroup)iterator.next();
+      if(securityGroupPermissionExists(userLoginSecurityGroup.getGroupId(), permission)) return true;
     }
 
     return false;
@@ -111,28 +110,28 @@ public class Security
  /** Like hasPermission above, except it has functionality specific to Entity permissions. Checks the entity for the specified action, as well as for "_ADMIN" to allow for simplified general administration permission.
   * @param entity The name of the Entity corresponding to the desired permission.
   * @param action The action on the Entity corresponding to the desired permission.
-  * @param session The current HTTP session, contains the logged in person as an attribute.
+  * @param session The current HTTP session, contains the logged in userLogin as an attribute.
   * @throws RemoteException Standard RMI Remote Exception
-  * @return Returns true if the currently logged in person has the specified permission, otherwise returns false.
+  * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
   */ 
   public static boolean hasEntityPermission(String entity, String action, HttpSession session) throws java.rmi.RemoteException
   {
-    Person person = (Person)session.getAttribute("PERSON");
-    if(person == null) return false;
+    UserLogin userLogin = (UserLogin)session.getAttribute("USER_LOGIN");
+    if(userLogin == null) return false;
 
     //System.out.println("hasEntityPermission: entity=" + entity + ", action=" + action);
-    Iterator iterator = findPersonSecurityGroupByUsername(person.getUsername());
-    PersonSecurityGroup personSecurityGroup = null;
+    Iterator iterator = findUserLoginSecurityGroupByUserLoginId(userLogin.getUserLoginId());
+    UserLoginSecurityGroup userLoginSecurityGroup = null;
 
     while(iterator.hasNext())
     {
-      personSecurityGroup = (PersonSecurityGroup)iterator.next();
+      userLoginSecurityGroup = (UserLoginSecurityGroup)iterator.next();
       
-      //if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("hasEntityPermission: personSecurityGroup=" + personSecurityGroup.toString());
+      //if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("hasEntityPermission: userLoginSecurityGroup=" + userLoginSecurityGroup.toString());
 
       //always try _ADMIN first so that it will cache first, keeping the cache smaller
-      if(securityGroupPermissionExists(personSecurityGroup.getGroupId(), entity + "_ADMIN")) return true;
-      if(securityGroupPermissionExists(personSecurityGroup.getGroupId(), entity + action)) return true;
+      if(securityGroupPermissionExists(userLoginSecurityGroup.getGroupId(), entity + "_ADMIN")) return true;
+      if(securityGroupPermissionExists(userLoginSecurityGroup.getGroupId(), entity + action)) return true;
     }
 
     return false;

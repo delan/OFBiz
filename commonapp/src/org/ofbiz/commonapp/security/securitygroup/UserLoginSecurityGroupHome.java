@@ -1,5 +1,5 @@
 
-package org.ofbiz.commonapp.person;
+package org.ofbiz.commonapp.security.securitygroup;
 
 import java.rmi.*;
 import javax.ejb.*;
@@ -7,8 +7,8 @@ import java.util.*;
 import java.math.*;
 
 /**
- * <p><b>Title:</b> Person Component - Person Type Entity
- * <p><b>Description:</b> None
+ * <p><b>Title:</b> Security Component - User Login Security Group Entity
+ * <p><b>Description:</b> Defines a permission available to a security group
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
@@ -30,17 +30,34 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 12:51:18 MDT 2001
+ *@created    Fri Jun 29 12:50:49 MDT 2001
  *@version    1.0
  */
 
-public interface PersonTypeHome extends EJBHome
+public interface UserLoginSecurityGroupHome extends EJBHome
 {
 
-  public PersonType create(String typeId, String description) throws RemoteException, CreateException;
-  public PersonType create(String typeId) throws RemoteException, CreateException;
-  public PersonType findByPrimaryKey(java.lang.String primaryKey) throws RemoteException, FinderException;
+  public UserLoginSecurityGroup create(String userLoginId, String groupId) throws RemoteException, CreateException;
+  public UserLoginSecurityGroup findByPrimaryKey(org.ofbiz.commonapp.security.securitygroup.UserLoginSecurityGroupPK primaryKey) throws RemoteException, FinderException;
   public Collection findAll() throws RemoteException, FinderException;
 
+
+  /**
+   *  Finds UserLoginSecurityGroups by the following fields:
+   *
+
+   *@param  userLoginId                  Field for the USER_LOGIN_ID column.
+   *@return      Collection containing the found UserLoginSecurityGroups
+   */
+  public Collection findByUserLoginId(String userLoginId) throws RemoteException, FinderException;
+
+  /**
+   *  Finds UserLoginSecurityGroups by the following fields:
+   *
+
+   *@param  groupId                  Field for the GROUP_ID column.
+   *@return      Collection containing the found UserLoginSecurityGroups
+   */
+  public Collection findByGroupId(String groupId) throws RemoteException, FinderException;
 
 }

@@ -29,10 +29,9 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:37:53 MDT 2001
+ *@created    Fri Jun 29 12:50:47 MDT 2001
  *@version    1.0
  */
-
 public class SecurityPermissionValue implements SecurityPermission
 {
 

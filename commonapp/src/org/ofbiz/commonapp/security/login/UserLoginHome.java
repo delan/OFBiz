@@ -1,5 +1,5 @@
 
-package org.ofbiz.commonapp.person;
+package org.ofbiz.commonapp.security.login;
 
 import java.rmi.*;
 import javax.ejb.*;
@@ -7,7 +7,7 @@ import java.util.*;
 import java.math.*;
 
 /**
- * <p><b>Title:</b> Person Component - Person Type Attribute Entity
+ * <p><b>Title:</b> User Login Entity
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -30,34 +30,44 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 12:52:06 MDT 2001
+ *@created    Fri Jun 29 12:50:44 MDT 2001
  *@version    1.0
  */
 
-public interface PersonTypeAttributeHome extends EJBHome
+public interface UserLoginHome extends EJBHome
 {
 
-  public PersonTypeAttribute create(String typeId, String name) throws RemoteException, CreateException;
-  public PersonTypeAttribute findByPrimaryKey(org.ofbiz.commonapp.person.PersonTypeAttributePK primaryKey) throws RemoteException, FinderException;
+  public UserLogin create(String userLoginId, String partyId, String contactMechanismId, String currentUserId, String currentPassword) throws RemoteException, CreateException;
+  public UserLogin create(String userLoginId) throws RemoteException, CreateException;
+  public UserLogin findByPrimaryKey(java.lang.String primaryKey) throws RemoteException, FinderException;
   public Collection findAll() throws RemoteException, FinderException;
 
 
   /**
-   *  Finds PersonTypeAttributes by the following fields:
+   *  Finds UserLogins by the following fields:
    *
 
-   *@param  typeId                  Field for the TYPE_ID column.
-   *@return      Collection containing the found PersonTypeAttributes
+   *@param  partyId                  Field for the PARTY_ID column.
+   *@return      Collection containing the found UserLogins
    */
-  public Collection findByTypeId(String typeId) throws RemoteException, FinderException;
+  public Collection findByPartyId(String partyId) throws RemoteException, FinderException;
 
   /**
-   *  Finds PersonTypeAttributes by the following fields:
+   *  Finds UserLogins by the following fields:
    *
 
-   *@param  name                  Field for the NAME column.
-   *@return      Collection containing the found PersonTypeAttributes
+   *@param  contactMechanismId                  Field for the CONTACT_MECHANISM_ID column.
+   *@return      Collection containing the found UserLogins
    */
-  public Collection findByName(String name) throws RemoteException, FinderException;
+  public Collection findByContactMechanismId(String contactMechanismId) throws RemoteException, FinderException;
+
+  /**
+   *  Finds UserLogins by the following fields:
+   *
+
+   *@param  currentUserId                  Field for the CURRENT_USER_ID column.
+   *@return      Collection containing the found UserLogins
+   */
+  public Collection findByCurrentUserId(String currentUserId) throws RemoteException, FinderException;
 
 }

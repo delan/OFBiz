@@ -33,10 +33,9 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:31:45 MDT 2001
+ *@created    Fri Jun 29 12:50:48 MDT 2001
  *@version    1.0
  */
-
 public class SecurityGroupPermissionHelper
 {
 
@@ -295,10 +294,6 @@ public class SecurityGroupPermissionHelper
     SecurityGroupPermission securityGroupPermission = findByPrimaryKey(groupId, permissionId);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
     SecurityGroupPermission securityGroupPermissionValue = new SecurityGroupPermissionValue();
-
-    //When doing a setValueObject, everything gets copied over.  So, for all
-    //null fieldeters, we will just let it default to the original value.
-    securityGroupPermissionValue.setValueObject(securityGroupPermission);
 
 
   

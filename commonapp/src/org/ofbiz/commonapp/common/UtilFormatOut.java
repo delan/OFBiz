@@ -54,6 +54,23 @@ public class UtilFormatOut
 
   //------------------- quantity format handlers -------------------
   static DecimalFormat quantityDecimalFormat = new DecimalFormat("#,##0.###");
+  /** Formats an Long representing a quantity into a string
+   * @param quantity The quantity Long to be formatted
+   * @return A String with the formatted quantity
+   */  
+  public static String formatQuantity(Long quantity)
+  {
+    if(quantity == null) return "";
+    else return formatQuantity(quantity.doubleValue());
+  }
+  /** Formats an int representing a quantity into a string
+   * @param quantity The quantity long to be formatted
+   * @return A String with the formatted quantity
+   */  
+  public static String formatQuantity(long quantity)
+  {
+    return formatQuantity((double)quantity);
+  }
   /** Formats an Integer representing a quantity into a string
    * @param quantity The quantity Integer to be formatted
    * @return A String with the formatted quantity
@@ -68,6 +85,23 @@ public class UtilFormatOut
    * @return A String with the formatted quantity
    */  
   public static String formatQuantity(int quantity)
+  {
+    return formatQuantity((double)quantity);
+  }
+  /** Formats a Float representing a quantity into a string
+   * @param quantity The quantity Float to be formatted
+   * @return A String with the formatted quantity
+   */  
+  public static String formatQuantity(Float quantity)
+  {
+    if(quantity == null) return "";
+    else return formatQuantity(quantity.doubleValue());
+  }
+  /** Formats a float representing a quantity into a string
+   * @param quantity The quantity float to be formatted
+   * @return A String with the formatted quantity
+   */  
+  public static String formatQuantity(float quantity)
   {
     return formatQuantity((double)quantity);
   }

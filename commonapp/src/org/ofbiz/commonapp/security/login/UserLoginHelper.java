@@ -1,5 +1,5 @@
 
-package org.ofbiz.commonapp.security.person;
+package org.ofbiz.commonapp.security.login;
 
 import java.util.*;
 import javax.naming.InitialContext;
@@ -8,9 +8,9 @@ import javax.ejb.*;
 import org.ofbiz.commonapp.common.*;
 
 /**
- * <p><b>Title:</b> Security Component - Person Security Group Entity
- * <p><b>Description:</b> Defines a permission available to a security group
- * <p>The Helper class from the PersonSecurityGroup Entity EJB; acts as a proxy for the Home interface
+ * <p><b>Title:</b> User Login Entity
+ * <p><b>Description:</b> None
+ * <p>The Helper class from the UserLogin Entity EJB; acts as a proxy for the Home interface
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -33,31 +33,31 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:34:49 MDT 2001
+ *@created    Fri Jun 29 12:50:45 MDT 2001
  *@version    1.0
  */
-public class PersonSecurityGroupHelper
+public class UserLoginHelper
 {
 
   /**
-   *  A static variable to cache the Home object for the PersonSecurityGroup EJB
+   *  A static variable to cache the Home object for the UserLogin EJB
    */
-  public static PersonSecurityGroupHome personSecurityGroupHome = null;
+  public static UserLoginHome userLoginHome = null;
 
   /**
-   *  Initializes the personSecurityGroupHome, from a JNDI lookup, with a cached result,
+   *  Initializes the userLoginHome, from a JNDI lookup, with a cached result,
    *  checking for null each time.
    */
   public static void init()
   {
-    if(personSecurityGroupHome == null)
+    if(userLoginHome == null)
     {
       JNDIContext myJNDIContext = new JNDIContext();
       InitialContext initialContext = myJNDIContext.getInitialContext();
       try
       {
-        Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.security.person.PersonSecurityGroupHome");
-        personSecurityGroupHome = (PersonSecurityGroupHome)MyNarrow.narrow(homeObject, PersonSecurityGroupHome.class);
+        Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.security.login.UserLoginHome");
+        userLoginHome = (UserLoginHome)MyNarrow.narrow(homeObject, UserLoginHome.class);
       }
       catch(Exception e1)
       {
@@ -66,29 +66,12 @@ public class PersonSecurityGroupHelper
 
       if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
       {
-        System.out.println("personSecurityGroup home obtained " + personSecurityGroupHome);
+        System.out.println("userLogin home obtained " + userLoginHome);
       }
     }
   }
 
 
-
-  /**
-   *  Description of the Method
-   *
-
-   *@param  username                  Field of the USERNAME column.
-   *@param  groupId                  Field of the GROUP_ID column.
-   */
-  public static void removeByPrimaryKey(String username, String groupId)
-  {
-    if(username == null || groupId == null)
-    {
-      return;
-    }
-    PersonSecurityGroupPK primaryKey = new PersonSecurityGroupPK(username, groupId);
-    removeByPrimaryKey(primaryKey);
-  }
 
 
   /**
@@ -96,18 +79,18 @@ public class PersonSecurityGroupHelper
    *
    *@param  primaryKey  The primary key of the entity to remove.
    */
-  public static void removeByPrimaryKey(org.ofbiz.commonapp.security.person.PersonSecurityGroupPK primaryKey)
+  public static void removeByPrimaryKey(java.lang.String primaryKey)
   {
     if(primaryKey == null)
     {
       return;
     }
-    PersonSecurityGroup personSecurityGroup = findByPrimaryKey(primaryKey);
+    UserLogin userLogin = findByPrimaryKey(primaryKey);
     try
     {
-      if(personSecurityGroup != null)
+      if(userLogin != null)
       {
-        personSecurityGroup.remove();
+        userLogin.remove();
       }
     }
     catch(Exception e)
@@ -122,37 +105,19 @@ public class PersonSecurityGroupHelper
   }
 
 
-  /**
-   *  Description of the Method
-   *
-
-   *@param  username                  Field of the USERNAME column.
-   *@param  groupId                  Field of the GROUP_ID column.
-   *@return       Description of the Returned Value
-   */
-  public static PersonSecurityGroup findByPrimaryKey(String username, String groupId)
-  {
-    if(username == null || groupId == null)
-    {
-      return null;
-    }
-    PersonSecurityGroupPK primaryKey = new PersonSecurityGroupPK(username, groupId);
-    return findByPrimaryKey(primaryKey);
-  }
-
 
   /**
    *  Description of the Method
    *
    *@param  primaryKey  The primary key to find by.
-   *@return             The PersonSecurityGroup of primaryKey
+   *@return             The UserLogin of primaryKey
    */
-  public static PersonSecurityGroup findByPrimaryKey(org.ofbiz.commonapp.security.person.PersonSecurityGroupPK primaryKey)
+  public static UserLogin findByPrimaryKey(java.lang.String primaryKey)
   {
-    PersonSecurityGroup personSecurityGroup = null;
+    UserLogin userLogin = null;
     if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
     {
-      System.out.println("PersonSecurityGroupHelper.findByPrimaryKey: Field is:" + primaryKey);
+      System.out.println("UserLoginHelper.findByPrimaryKey: Field is:" + primaryKey);
     }
 
     if(primaryKey == null)
@@ -164,10 +129,10 @@ public class PersonSecurityGroupHelper
 
     try
     {
-      personSecurityGroup = (PersonSecurityGroup)MyNarrow.narrow(personSecurityGroupHome.findByPrimaryKey(primaryKey), PersonSecurityGroup.class);
-      if(personSecurityGroup != null)
+      userLogin = (UserLogin)MyNarrow.narrow(userLoginHome.findByPrimaryKey(primaryKey), UserLogin.class);
+      if(userLogin != null)
       {
-        personSecurityGroup = personSecurityGroup.getValueObject();
+        userLogin = userLogin.getValueObject();
 
       }
     }
@@ -181,7 +146,7 @@ public class PersonSecurityGroupHelper
         fe.printStackTrace();
       }
     }
-    return personSecurityGroup;
+    return userLogin;
   }
 
   /**
@@ -212,13 +177,13 @@ public class PersonSecurityGroupHelper
     Collection collection = null;
     if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
     {
-      System.out.println("PersonSecurityGroupHelper.findAll");
+      System.out.println("UserLoginHelper.findAll");
     }
     init();
 
     try
     {
-      collection = (Collection)MyNarrow.narrow(personSecurityGroupHome.findAll(), Collection.class);
+      collection = (Collection)MyNarrow.narrow(userLoginHome.findAll(), Collection.class);
     }
     catch(ObjectNotFoundException onfe)
     {
@@ -237,18 +202,21 @@ public class PersonSecurityGroupHelper
    *  Description of the Method
    *
 
-   *@param  username                  Field of the USERNAME column.
-   *@param  groupId                  Field of the GROUP_ID column.
+   *@param  userLoginId                  Field of the USER_LOGIN_ID column.
+   *@param  partyId                  Field of the PARTY_ID column.
+   *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
+   *@param  currentUserId                  Field of the CURRENT_USER_ID column.
+   *@param  currentPassword                  Field of the CURRENT_PASSWORD column.
    *@return                Description of the Returned Value
    */
-  public static PersonSecurityGroup create(String username, String groupId)
+  public static UserLogin create(String userLoginId, String partyId, String contactMechanismId, String currentUserId, String currentPassword)
   {
-    PersonSecurityGroup personSecurityGroup = null;
+    UserLogin userLogin = null;
     if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
     {
-      System.out.println("PersonSecurityGroupHelper.create: username, groupId: " + username + ", " + groupId);
+      System.out.println("UserLoginHelper.create: userLoginId: " + userLoginId);
     }
-    if(username == null || groupId == null)
+    if(userLoginId == null)
     {
       return null;
     }
@@ -256,16 +224,16 @@ public class PersonSecurityGroupHelper
 
     try
     {
-      personSecurityGroup = (PersonSecurityGroup)MyNarrow.narrow(personSecurityGroupHome.create(username, groupId), PersonSecurityGroup.class);
+      userLogin = (UserLogin)MyNarrow.narrow(userLoginHome.create(userLoginId, partyId, contactMechanismId, currentUserId, currentPassword), UserLogin.class);
     }
     catch(CreateException ce)
     {
       if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true"))
       {
-        System.out.println("Could not create personSecurityGroup with username, groupId: " + username + ", " + groupId);
+        System.out.println("Could not create userLogin with userLoginId: " + userLoginId);
         ce.printStackTrace();
       }
-      personSecurityGroup = null;
+      userLogin = null;
     }
     catch(Exception fe)
     {
@@ -274,37 +242,55 @@ public class PersonSecurityGroupHelper
         fe.printStackTrace();
       }
     }
-    return personSecurityGroup;
+    return userLogin;
   }
 
   /**
    *  Description of the Method
    *
 
-   *@param  username                  Field of the USERNAME column.
-   *@param  groupId                  Field of the GROUP_ID column.
+   *@param  userLoginId                  Field of the USER_LOGIN_ID column.
+   *@param  partyId                  Field of the PARTY_ID column.
+   *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
+   *@param  currentUserId                  Field of the CURRENT_USER_ID column.
+   *@param  currentPassword                  Field of the CURRENT_PASSWORD column.
    *@return                Description of the Returned Value
    */
-  public static PersonSecurityGroup update(String username, String groupId) throws java.rmi.RemoteException
+  public static UserLogin update(String userLoginId, String partyId, String contactMechanismId, String currentUserId, String currentPassword) throws java.rmi.RemoteException
   {
-    if(username == null || groupId == null)
+    if(userLoginId == null)
     {
       return null;
     }
-    PersonSecurityGroup personSecurityGroup = findByPrimaryKey(username, groupId);
+    UserLogin userLogin = findByPrimaryKey(userLoginId);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
-    PersonSecurityGroup personSecurityGroupValue = new PersonSecurityGroupValue();
-
-    //When doing a setValueObject, everything gets copied over.  So, for all
-    //null fieldeters, we will just let it default to the original value.
-    personSecurityGroupValue.setValueObject(personSecurityGroup);
+    UserLogin userLoginValue = new UserLoginValue();
 
 
   
   
+    if(partyId != null)
+    {
+      userLoginValue.setPartyId(partyId);
+    }
+  
+    if(contactMechanismId != null)
+    {
+      userLoginValue.setContactMechanismId(contactMechanismId);
+    }
+  
+    if(currentUserId != null)
+    {
+      userLoginValue.setCurrentUserId(currentUserId);
+    }
+  
+    if(currentPassword != null)
+    {
+      userLoginValue.setCurrentPassword(currentPassword);
+    }
 
-    personSecurityGroup.setValueObject(personSecurityGroupValue);
-    return personSecurityGroup;
+    userLogin.setValueObject(userLoginValue);
+    return userLogin;
   }
 
 
@@ -313,26 +299,26 @@ public class PersonSecurityGroupHelper
    *  Description of the Method
    *
 
-   *@param  username                  Field of the USERNAME column.
+   *@param  partyId                  Field of the PARTY_ID column.
    */
-  public static void removeByUsername(String username)
+  public static void removeByPartyId(String partyId)
   {
-    if(username == null)
+    if(partyId == null)
     {
       return;
     }
-    Iterator iterator = findByUsernameIterator(username);
+    Iterator iterator = findByPartyIdIterator(partyId);
 
     while(iterator.hasNext())
     {
       try
       {
-        PersonSecurityGroup personSecurityGroup = (PersonSecurityGroup) iterator.next();
+        UserLogin userLogin = (UserLogin) iterator.next();
         if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
         {
-          System.out.println("Removing personSecurityGroup with username:" + username);
+          System.out.println("Removing userLogin with partyId:" + partyId);
         }
-        personSecurityGroup.remove();
+        userLogin.remove();
       }
       catch(Exception e)
       {
@@ -348,12 +334,12 @@ public class PersonSecurityGroupHelper
    *  Description of the Method
    *
 
-   *@param  username                  Field of the USERNAME column.
+   *@param  partyId                  Field of the PARTY_ID column.
    *@return      Description of the Returned Value
    */
-  public static Iterator findByUsernameIterator(String username)
+  public static Iterator findByPartyIdIterator(String partyId)
   {
-    Collection collection = findByUsername(username);
+    Collection collection = findByPartyId(partyId);
     if(collection != null)
     {
       return collection.iterator();
@@ -365,29 +351,29 @@ public class PersonSecurityGroupHelper
   }
 
   /**
-   *  Finds PersonSecurityGroup records by the following fieldters:
+   *  Finds UserLogin records by the following fieldters:
    *
 
-   *@param  username                  Field of the USERNAME column.
+   *@param  partyId                  Field of the PARTY_ID column.
    *@return      Description of the Returned Value
    */
-  public static Collection findByUsername(String username)
+  public static Collection findByPartyId(String partyId)
   {
     init();
     if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
     {
-      System.out.println("findByUsername: username:" + username);
+      System.out.println("findByPartyId: partyId:" + partyId);
     }
 
     Collection collection = null;
-    if(username == null)
+    if(partyId == null)
     {
       return null;
     }
 
     try
     {
-      collection = (Collection) MyNarrow.narrow(personSecurityGroupHome.findByUsername(username), Collection.class);
+      collection = (Collection) MyNarrow.narrow(userLoginHome.findByPartyId(partyId), Collection.class);
     }
     catch(ObjectNotFoundException onfe)
     {
@@ -408,26 +394,26 @@ public class PersonSecurityGroupHelper
    *  Description of the Method
    *
 
-   *@param  groupId                  Field of the GROUP_ID column.
+   *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
    */
-  public static void removeByGroupId(String groupId)
+  public static void removeByContactMechanismId(String contactMechanismId)
   {
-    if(groupId == null)
+    if(contactMechanismId == null)
     {
       return;
     }
-    Iterator iterator = findByGroupIdIterator(groupId);
+    Iterator iterator = findByContactMechanismIdIterator(contactMechanismId);
 
     while(iterator.hasNext())
     {
       try
       {
-        PersonSecurityGroup personSecurityGroup = (PersonSecurityGroup) iterator.next();
+        UserLogin userLogin = (UserLogin) iterator.next();
         if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
         {
-          System.out.println("Removing personSecurityGroup with groupId:" + groupId);
+          System.out.println("Removing userLogin with contactMechanismId:" + contactMechanismId);
         }
-        personSecurityGroup.remove();
+        userLogin.remove();
       }
       catch(Exception e)
       {
@@ -443,12 +429,12 @@ public class PersonSecurityGroupHelper
    *  Description of the Method
    *
 
-   *@param  groupId                  Field of the GROUP_ID column.
+   *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
    *@return      Description of the Returned Value
    */
-  public static Iterator findByGroupIdIterator(String groupId)
+  public static Iterator findByContactMechanismIdIterator(String contactMechanismId)
   {
-    Collection collection = findByGroupId(groupId);
+    Collection collection = findByContactMechanismId(contactMechanismId);
     if(collection != null)
     {
       return collection.iterator();
@@ -460,29 +446,29 @@ public class PersonSecurityGroupHelper
   }
 
   /**
-   *  Finds PersonSecurityGroup records by the following fieldters:
+   *  Finds UserLogin records by the following fieldters:
    *
 
-   *@param  groupId                  Field of the GROUP_ID column.
+   *@param  contactMechanismId                  Field of the CONTACT_MECHANISM_ID column.
    *@return      Description of the Returned Value
    */
-  public static Collection findByGroupId(String groupId)
+  public static Collection findByContactMechanismId(String contactMechanismId)
   {
     init();
     if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
     {
-      System.out.println("findByGroupId: groupId:" + groupId);
+      System.out.println("findByContactMechanismId: contactMechanismId:" + contactMechanismId);
     }
 
     Collection collection = null;
-    if(groupId == null)
+    if(contactMechanismId == null)
     {
       return null;
     }
 
     try
     {
-      collection = (Collection) MyNarrow.narrow(personSecurityGroupHome.findByGroupId(groupId), Collection.class);
+      collection = (Collection) MyNarrow.narrow(userLoginHome.findByContactMechanismId(contactMechanismId), Collection.class);
     }
     catch(ObjectNotFoundException onfe)
     {
@@ -498,31 +484,31 @@ public class PersonSecurityGroupHelper
     return collection;
   }
 
+  
   /**
    *  Description of the Method
    *
 
-   *@param  username                  Field for the USERNAME column.
-   *@param  permissionId              Field for the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table.
+   *@param  currentUserId                  Field of the CURRENT_USER_ID column.
    */
-  public static void removeByUsernameAndPermissionId(String username, String permissionId)
+  public static void removeByCurrentUserId(String currentUserId)
   {
-    if(username == null || permissionId == null)
+    if(currentUserId == null)
     {
       return;
     }
-    Iterator iterator = findByUsernameAndPermissionIdIterator(username, permissionId);
+    Iterator iterator = findByCurrentUserIdIterator(currentUserId);
 
     while(iterator.hasNext())
     {
       try
       {
-        PersonSecurityGroup personSecurityGroup = (PersonSecurityGroup) iterator.next();
+        UserLogin userLogin = (UserLogin) iterator.next();
         if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
         {
-          System.out.println("Removing personSecurityGroup with username, permissionId:" + username + ", " + permissionId);
+          System.out.println("Removing userLogin with currentUserId:" + currentUserId);
         }
-        personSecurityGroup.remove();
+        userLogin.remove();
       }
       catch(Exception e)
       {
@@ -538,13 +524,12 @@ public class PersonSecurityGroupHelper
    *  Description of the Method
    *
 
-   *@param  username                  Field for the USERNAME column.
-   *@param  permissionId              Field for the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table.
+   *@param  currentUserId                  Field of the CURRENT_USER_ID column.
    *@return      Description of the Returned Value
    */
-  public static Iterator findByUsernameAndPermissionIdIterator(String username, String permissionId)
+  public static Iterator findByCurrentUserIdIterator(String currentUserId)
   {
-    Collection collection = findByUsernameAndPermissionId(username, permissionId);
+    Collection collection = findByCurrentUserId(currentUserId);
     if(collection != null)
     {
       return collection.iterator();
@@ -556,30 +541,29 @@ public class PersonSecurityGroupHelper
   }
 
   /**
-   *  Finds PersonSecurityGroup records by the following fieldters:
+   *  Finds UserLogin records by the following fieldters:
    *
 
-   *@param  username                  Field for the USERNAME column.
-   *@param  permissionId              Field for the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table.
+   *@param  currentUserId                  Field of the CURRENT_USER_ID column.
    *@return      Description of the Returned Value
    */
-  public static Collection findByUsernameAndPermissionId(String username, String permissionId)
+  public static Collection findByCurrentUserId(String currentUserId)
   {
     init();
     if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
     {
-      System.out.println("findByUsernameAndPermissionId: username, permissionId:" + username + ", " + permissionId);
+      System.out.println("findByCurrentUserId: currentUserId:" + currentUserId);
     }
 
     Collection collection = null;
-    if(username == null || permissionId == null)
+    if(currentUserId == null)
     {
       return null;
     }
 
     try
     {
-      collection = (Collection) MyNarrow.narrow(personSecurityGroupHome.findByUsernameAndPermissionId(username, permissionId), Collection.class);
+      collection = (Collection) MyNarrow.narrow(userLoginHome.findByCurrentUserId(currentUserId), Collection.class);
     }
     catch(ObjectNotFoundException onfe)
     {
@@ -594,4 +578,7 @@ public class PersonSecurityGroupHelper
 
     return collection;
   }
+
+
+
 }

@@ -1,13 +1,13 @@
 
-package org.ofbiz.commonapp.person;
+package org.ofbiz.commonapp.security.securitygroup;
 
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
 
 /**
- * <p><b>Title:</b> Person Component - Person Type Entity
- * <p><b>Description:</b> None
+ * <p><b>Title:</b> Security Component - User Login Security Group Entity
+ * <p><b>Description:</b> Defines a permission available to a security group
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
@@ -29,28 +29,27 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 12:51:25 MDT 2001
+ *@created    Fri Jun 29 12:50:49 MDT 2001
  *@version    1.0
  */
-
-public class PersonTypeBean implements EntityBean
+public class UserLoginSecurityGroupBean implements EntityBean
 {
 
   /**
-   *  The variable for the TYPE_ID column of the PERSON_TYPE table.
+   *  The variable for the USER_LOGIN_ID column of the USER_LOGIN_SECURITY_GROUP table.
    */
-  public String typeId;
+  public String userLoginId;
 
   /**
-   *  The variable for the DESCRIPTION column of the PERSON_TYPE table.
+   *  The variable for the GROUP_ID column of the USER_LOGIN_SECURITY_GROUP table.
    */
-  public String description;
+  public String groupId;
 
 
   EntityContext entityContext;
 
   /**
-   *  Sets the EntityContext attribute of the PersonTypeBean object
+   *  Sets the EntityContext attribute of the UserLoginSecurityGroupBean object
    *
    *@param  entityContext  The new EntityContext value
    */
@@ -63,64 +62,45 @@ public class PersonTypeBean implements EntityBean
 
   
   /**
-   *  Get the primary key TYPE_ID column of the PERSON_TYPE table.
+   *  Get the primary key USER_LOGIN_ID column of the USER_LOGIN_SECURITY_GROUP table.
    */
-  public String getTypeId()
+  public String getUserLoginId()
   {
-    return typeId;
+    return userLoginId;
   }
   
 
   
   /**
-   *  Get the value of the DESCRIPTION column of the PERSON_TYPE table.
+   *  Get the primary key GROUP_ID column of the USER_LOGIN_SECURITY_GROUP table.
    */
-  public String getDescription()
+  public String getGroupId()
   {
-    return description;
-  }
-  /**
-   *  Set the value of the DESCRIPTION column of the PERSON_TYPE table.
-   */
-  public void setDescription(String description)
-  {
-    this.description = description;
+    return groupId;
   }
   
 
 
   /**
-   *  Sets the values from ValueObject attribute of the PersonTypeBean object
+   *  Sets the values from ValueObject attribute of the UserLoginSecurityGroupBean object
    *
    *@param  valueObject  The new ValueObject value
    */
-  public void setValueObject(PersonType valueObject)
+  public void setValueObject(UserLoginSecurityGroup valueObject)
   {
-
-    try
-    {
-
-  
-      this.description = valueObject.getDescription();
-    }
-    catch(java.rmi.RemoteException re)
-    {
-      //This should NEVER happen just calling getters on a value object, so do nothing.
-      //The only reason these methods are declated to throw a RemoteException is to implement the corresponding EJBObject interface.
-    }
 
   }
 
   /**
-   *  Gets the ValueObject attribute of the PersonTypeBean object
+   *  Gets the ValueObject attribute of the UserLoginSecurityGroupBean object
    *
    *@return    The ValueObject value
    */
-  public PersonType getValueObject()
+  public UserLoginSecurityGroup getValueObject()
   {
     if(this.entityContext != null)
     {
-      return new PersonTypeValue((PersonType)this.entityContext.getEJBObject(), typeId, description);
+      return new UserLoginSecurityGroupValue((UserLoginSecurityGroup)this.entityContext.getEJBObject(), userLoginId, groupId);
     }
     else
     {
@@ -132,16 +112,16 @@ public class PersonTypeBean implements EntityBean
    *  Description of the Method
    *
 
-   *@param  typeId                  Field of the TYPE_ID column.
-   *@param  description                  Field of the DESCRIPTION column.
+   *@param  userLoginId                  Field of the USER_LOGIN_ID column.
+   *@param  groupId                  Field of the GROUP_ID column.
    *@return                      Description of the Returned Value
    *@exception  CreateException  Description of Exception
    */
-  public java.lang.String ejbCreate(String typeId, String description) throws CreateException
+  public org.ofbiz.commonapp.security.securitygroup.UserLoginSecurityGroupPK ejbCreate(String userLoginId, String groupId) throws CreateException
   {
 
-    this.typeId = typeId;
-    this.description = description;
+    this.userLoginId = userLoginId;
+    this.groupId = groupId;
     return null;
   }
 
@@ -149,37 +129,12 @@ public class PersonTypeBean implements EntityBean
    *  Description of the Method
    *
 
-   *@param  typeId                  Field of the TYPE_ID column.
-   *@return                      Description of the Returned Value
+   *@param  userLoginId                  Field of the USER_LOGIN_ID column.
+   *@param  groupId                  Field of the GROUP_ID column.
    *@exception  CreateException  Description of Exception
    */
-  public java.lang.String ejbCreate(String typeId) throws CreateException
+  public void ejbPostCreate(String userLoginId, String groupId) throws CreateException
   {
-    return ejbCreate(typeId, null);
-  }
-
-  /**
-   *  Description of the Method
-   *
-
-   *@param  typeId                  Field of the TYPE_ID column.
-   *@param  description                  Field of the DESCRIPTION column.
-   *@exception  CreateException  Description of Exception
-   */
-  public void ejbPostCreate(String typeId, String description) throws CreateException
-  {
-  }
-
-  /**
-   *  Description of the Method
-   *
-
-   *@param  typeId                  Field of the TYPE_ID column.
-   *@exception  CreateException  Description of Exception
-   */
-  public void ejbPostCreate(String typeId) throws CreateException
-  {
-    ejbPostCreate(typeId, null);
   }
 
   /**
