@@ -65,7 +65,7 @@
                         </#if>
                         -->
                         <td align=left>
-                          <input type="text" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#else>${autoUserLogin.userLoginId}</#if>' size="20">
+                          <input type="text" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>' size="20">
                         </td>
                       </tr>
                       <#if autoUserLogin?has_content>
@@ -112,7 +112,7 @@
               <tr>
                 <td valign='middle' align='center'>
                   <form method="POST" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style='margin: 0;'>
-                    <span class="tabletext">Username:&nbsp;</span><input type="text" size="20" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#else>${autoUserLogin.userLoginId}</#if>'>
+                    <span class="tabletext">Username:&nbsp;</span><input type="text" size="20" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>'>
                     <div><input type="submit" value="Get Password Hint" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" value="Email Password" name="EMAIL_PASSWORD"></div>
                   </form>
                 </td>
