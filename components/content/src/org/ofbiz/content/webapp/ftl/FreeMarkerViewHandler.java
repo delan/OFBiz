@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewHandler.java,v 1.5 2003/12/21 03:40:50 byersa Exp $
+ * $Id: FreeMarkerViewHandler.java,v 1.6 2003/12/23 12:34:17 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.content.webapp.ftl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -34,8 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.view.ViewHandler;
 import org.ofbiz.content.webapp.view.ViewHandlerException;
 
@@ -48,33 +47,18 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.WrappingTemplateModel;
-import freemarker.template.Environment;
-
-import freemarker.ext.beans.BeanModel;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
 
 
 /**
  * FreemarkerViewHandler - Freemarker Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.1
  */
 public class FreeMarkerViewHandler implements ViewHandler {
     
     public static final String module = FreeMarkerViewHandler.class.getName();
-    
-    public static OfbizUrlTransform ofbizUrl = new OfbizUrlTransform();
-    public static OfbizContentTransform ofbizContentUrl = new OfbizContentTransform();
-    public static OfbizCurrencyTransform ofbizCurrency = new OfbizCurrencyTransform();
-    public static SetRequestAttributeMethod setRequestAttribute = new SetRequestAttributeMethod();
-    public static EditRenderSubContentTransform  editRenderSubContent = new EditRenderSubContentTransform();
-    public static RenderSubContentTransform  renderSubContent = new RenderSubContentTransform();
-    public static RenderWrappedTextTransform  renderWrappedText = new RenderWrappedTextTransform();
-    public static LoopSubContentTransform  loopSubContent = new LoopSubContentTransform();
     
     protected ServletContext servletContext = null;
     protected Configuration config = null;
@@ -104,8 +88,10 @@ public class FreeMarkerViewHandler implements ViewHandler {
             throw new ViewHandlerException("Invalid template source");
         
         // make the root context (data model) for freemarker
-        SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());                         
-        prepOfbizRoot(root, request, response);
+        Map prepRoot = new HashMap();
+        prepOfbizRoot(prepRoot, request, response);
+        SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());
+        root.putAll(prepRoot);
                        
         // get the template
         Template template = null;
@@ -127,13 +113,11 @@ public class FreeMarkerViewHandler implements ViewHandler {
         }       
     }
     
-    public static void prepOfbizRoot(SimpleHash root, HttpServletRequest request, HttpServletResponse response) {
+    public static void prepOfbizRoot(Map root, HttpServletRequest request, HttpServletResponse response) {
         ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
         HttpSession session = request.getSession();
         
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-        
-        root.put("Static", wrapper.getStaticModels());
         
         // add in the OFBiz objects
         root.put("delegator", request.getAttribute("delegator"));
@@ -169,16 +153,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
         // add the TabLibFactory
         TaglibFactory JspTaglibs = new TaglibFactory(servletContext);
         root.put("JspTaglibs", JspTaglibs);
- 
-        // add the OFBiz transforms/methods
-        root.put("ofbizUrl", ofbizUrl);
-        root.put("ofbizContentUrl", ofbizContentUrl);
-        root.put("ofbizCurrency", ofbizCurrency);
-        root.put("setRequestAttribute", setRequestAttribute);
-        root.put("editRenderSubContent", editRenderSubContent);
-        root.put("renderSubContent", renderSubContent);
-        root.put("loopSubContent", loopSubContent);
-        root.put("renderWrappedText", renderWrappedText);
-    }
 
+        FreeMarkerWorker.addAllOfbizTransforms(root);
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.12 2003/12/11 05:09:47 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.13 2003/12/23 12:34:17 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -544,66 +544,58 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     /** go through the pks and for each one see if there is an entry in fields to set */
     public void setPKFields(Map fields) {
-        this.setPKFields(fields, true);
+        setAllFields(fields, true, null, Boolean.TRUE);
     }
 
     /** go through the pks and for each one see if there is an entry in fields to set */
     public void setPKFields(Map fields, boolean setIfEmpty) {
-        if (fields == null) {
-            return;
-        }
-        Iterator iter = this.getModelEntity().getPksIterator();
-
-        while (iter != null && iter.hasNext()) {
-            ModelField curField = (ModelField) iter.next();
-
-            if (fields.containsKey(curField.getName())) {
-                Object field = fields.get(curField.getName());
-
-                if (setIfEmpty) {
-                    // if empty string, set to null
-                    if (field != null && field instanceof String && ((String) field).length() == 0) {
-                        this.set(curField.getName(), null);
-                    } else {
-                        this.set(curField.getName(), field);
-                    }
-                } else {
-                    // okay, only set if not empty...
-                    if (field != null) {
-                        // if it's a String then we need to check length, otherwise set it because it's not null
-                        if (field instanceof String) {
-                            String fieldStr = (String) field;
-
-                            if (fieldStr.length() > 0) {
-                                this.set(curField.getName(), field);
-                            }
-                        } else {
-                            this.set(curField.getName(), field);
-                        }
-                    }
-                }
-                // this.set(curField.getName(), fields.get(curField.getName()));
-            }
-        }
+        setAllFields(fields, setIfEmpty, null, Boolean.TRUE);
     }
 
     /** go through the non-pks and for each one see if there is an entry in fields to set */
     public void setNonPKFields(Map fields) {
-        this.setNonPKFields(fields, true);
+        setAllFields(fields, true, null, Boolean.FALSE);
     }
 
     /** go through the non-pks and for each one see if there is an entry in fields to set */
     public void setNonPKFields(Map fields, boolean setIfEmpty) {
+        setAllFields(fields, setIfEmpty, null, Boolean.FALSE);
+    }
+    
+    
+    /** Intelligently sets fields on this entity from the Map of fields passed in
+     * @param fields The fields Map to get the values from
+     * @param setIfEmpty Used to specify whether empty/null values in the field Map should over-write non-empty values in this entity
+     * @param namePrefix If not null or empty will be pre-pended to each field name (upper-casing the first letter of the field name first), and that will be used as the fields Map lookup name instead of the field-name
+     * @param pks If null, get all values, if TRUE just get PKs, if FALSE just get non-PKs
+     */
+    public void setAllFields(Map fields, boolean setIfEmpty, String namePrefix, Boolean pks) {
         if (fields == null) {
             return;
         }
-        Iterator iter = this.getModelEntity().getNopksIterator();
-
+        Iterator iter = null;
+        if (pks != null) {
+            if (pks.booleanValue()) {
+                iter = this.getModelEntity().getPksIterator();
+            } else {
+                iter = this.getModelEntity().getNopksIterator();
+            }
+        } else {
+            iter = this.getModelEntity().getFieldsIterator();
+        }
+            
         while (iter != null && iter.hasNext()) {
             ModelField curField = (ModelField) iter.next();
-
-            if (fields.containsKey(curField.getName())) {
-                Object field = fields.get(curField.getName());
+            String fieldName = curField.getName();
+            String sourceFieldName = null;
+            if (UtilValidate.isNotEmpty(namePrefix)) {
+                sourceFieldName = namePrefix + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+            } else {
+                sourceFieldName = curField.getName();
+            }
+            
+            if (fields.containsKey(sourceFieldName)) {
+                Object field = fields.get(sourceFieldName);
 
                 // if (Debug.verboseOn()) Debug.logVerbose("Setting field " + curField.getName() + ": " + field + ", setIfEmpty = " + setIfEmpty, module);
                 if (setIfEmpty) {

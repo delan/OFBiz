@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.12 2003/12/23 07:24:05 jonesde Exp $
+ * $Id: DataResourceWorker.java,v 1.13 2003/12/23 12:34:17 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,6 +48,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.email.NotificationServices;
+import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -65,7 +66,7 @@ import freemarker.template.TemplateHashModel;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -298,29 +299,33 @@ public class DataResourceWorker {
     }
 
     public static void renderDataResourceAsText(GenericDelegator delegator, String dataResourceId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+        // TODO: is this really where the context comes from? where is it put there?
         Map context = (Map) templateContext.get("context");
         if (context == null) {
             context = new HashMap();
         }
 
-        String webSiteId = (String) context.get("webSiteId");
-        String https = (String) context.get("https");
         //if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, mimeTypeId:" + mimeTypeId, module);
-        if (UtilValidate.isEmpty(mimeTypeId))
+        if (UtilValidate.isEmpty(mimeTypeId)) {
             mimeTypeId = "text/html";
+        }
+        
+        // if the target mimeTypeId is not a text type, throw an exception
+        if (!mimeTypeId.startsWith("text/")) {
+            throw new GeneralException("The desired mime-type is not a text type, cannot render as text: " + mimeTypeId);
+        }
 
         GenericValue dataResource = null;
         if (view != null) {
-            Map dataResourceMap = new HashMap();
             String entityName = view.getEntityName();
-            if (entityName != null && !entityName.equals("DataResource")) {
-                SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn", view, dataResourceMap, new ArrayList(), locale);
+            dataResource = delegator.makeValue("DataResource", null);
+            if ("DataResource".equals(entityName)) {
+                dataResource.setAllFields(view, true, null, null);
+            } else {
+                dataResource.setAllFields(view, true, "dr", null);
             }
             //if (Debug.infoOn()) Debug.logInfo("in renderDAtaResource(work), dataResourceMap:" + dataResourceMap, "");
-            dataResource = delegator.makeValue("DataResource", dataResourceMap);
-            dataResource.setPKFields(view);
-            dataResource.setNonPKFields(view);
-            dataResourceId = (String) dataResource.get("dataResourceId");
+            dataResourceId = dataResource.getString("dataResourceId");
         }
 
         if (dataResource == null || dataResource.isEmpty()) {
@@ -332,70 +337,78 @@ public class DataResourceWorker {
         if (dataResource == null || dataResource.isEmpty()) {
             throw new GeneralException("DataResource not found with id=" + dataResourceId);
         }
-
-        String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
-        if (dataResourceTypeId == null) {
+        
+        String drMimeTypeId = dataResource.getString("mimeTypeId");
+        if (UtilValidate.isEmpty(drMimeTypeId)) {
+            drMimeTypeId = "text/plain";
+        }
+        
+        String dataTemplateTypeId = dataResource.getString("dataTemplateTypeId");
+        
+        // if this is a template, we need to get the full template text and interpret it, otherwise we should just write a bit at a time to the writer to better support large text
+        if (UtilValidate.isEmpty(dataTemplateTypeId) || "NONE".equals(dataTemplateTypeId)) {
+            writeDataResourceText(dataResource, mimeTypeId, locale, context, delegator, out);
+        } else {
+            // get the full text of the DataResource
+            String templateText = getDataResourceText(dataResource, mimeTypeId, locale, context, delegator);
+            if ("FTL".equals(dataTemplateTypeId)) {
+                try {
+                    FreeMarkerWorker.renderTemplate("DataResource:" + dataResourceId, templateText, context, out);
+                } catch (TemplateException e) {
+                    throw new GeneralException("Error rendering FTL template", e);
+                }
+            } else {
+                throw new GeneralException("The dataTemplateTypeId [" + dataTemplateTypeId + "] is not yet supported");
+            }
+        }
+    }
+    public static String getDataResourceText(GenericValue dataResource, String mimeTypeId, Locale locale, Map context, GenericDelegator delegator) throws IOException, GeneralException {
+        Writer outWriter = new StringWriter();
+        writeDataResourceText(dataResource, mimeTypeId, locale, context, delegator, outWriter);
+        return outWriter.toString();
+    }
+    
+    public static void writeDataResourceText(GenericValue dataResource, String mimeTypeId, Locale locale, Map context, GenericDelegator delegator, Writer outWriter) throws IOException, GeneralException {
+        String webSiteId = (String) context.get("webSiteId");
+        String https = (String) context.get("https");
+        
+        String dataResourceId = dataResource.getString("dataResourceId");
+        String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
+        if (UtilValidate.isEmpty(dataResourceTypeId)) {
             dataResourceTypeId = "SHORT_TEXT";
         }
         if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, dataResourceTypeId:" + dataResourceTypeId, module);
-
-        String dataTemplateTypeId = (String) dataResource.get("dataTemplateTypeId");
-        if (dataTemplateTypeId == null) {
-            dataTemplateTypeId = "NONE";
-        }
-
-        if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, dataTemplateTypeId:" + dataTemplateTypeId, module);
-        String text = null;
-        dataResourceId = (String) dataResource.get("dataResourceId");
-        if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, dataResourceId:" + dataResourceId, module);
-        String objectInfo = (String) dataResource.get("objectInfo");
-        if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, objectInfo:" + objectInfo, module);
-
-        if (dataTemplateTypeId.equals("FTL")) {
-            Configuration config = Configuration.getDefaultConfiguration();
-            //String templateName = (String) dataResource.get("dataResourceName");
-            if (templateContext == null) {
-                templateContext = new HashMap();
-                config.setObjectWrapper(BeansWrapper.getDefaultInstance());
-                try {
-                    config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
-                } catch (TemplateException e) {
-                    throw new GeneralException("Error setting datetime format", e);
-                }
-
-                BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-                TemplateHashModel staticModels = wrapper.getStaticModels();
-                templateContext.put("Static", staticModels);
-            }
-            String subContentId = (String) context.get("subContentId");
-            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, subContentId:" + subContentId, module);
-            if (UtilValidate.isNotEmpty(subContentId)) {
-                context.put("contentId", subContentId);
-                context.put("subContentId", null);
-            }
-            String subContentId2 = (String) context.get("subContentId");
-            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, subContentId2:" + subContentId2, module);
-            dataResource.set("dataTemplateTypeId", "NONE"); // Set so it won't come here again
-            StringWriter sOut = new StringWriter();
-            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, recalling renderDAtaResourceAsText to sOut", module);
-            renderDataResourceAsText(delegator, dataResourceId, sOut, templateContext, dataResource, locale, mimeTypeId);
-            String subContentId3 = (String) context.get("subContentId");
-            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, subContentId3:" + subContentId3, module);
-            //if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, sOut:" + sOut.toString(), module);
-            out.write(sOut.toString());
+        
+        if (dataResourceTypeId.equals("SHORT_TEXT")) {
+            String text = dataResource.getString("objectInfo");
+            outWriter.write(text);
         } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
             GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
-            text = (String) electronicText.get("textData");
-            out.write(text);
+            String text = electronicText.getString("textData");
+            outWriter.write(text);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+            // TODO: Is this where the image (or any binary) object URL is created? looks like it is just returning 
+            //the ID, maybe is okay, but maybe should create the whole image tag so that text and images can be 
+            //interchanged without changing the wrapping template, and so the wrapping template doesn't have to know what the root is, etc
+            /*
+            // decide how to render based on the mime-types
+            // TODO: put this in a separate method to be re-used for file objects as well...
+            if ("text/html".equals(mimeTypeId)) {
+            } else if ("text/plain".equals(mimeTypeId)) {
+            } else {
+                throw new GeneralException("The renderDataResourceAsText operation does not yet support the desired mime-type: " + mimeTypeId);
+            }
+            */
+            
             if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), mimeTypeId:" + mimeTypeId, module);
-            text = (String) dataResource.get("dataResourceId");
-            out.write(text);
+            String text = (String) dataResource.get("dataResourceId");
+            outWriter.write(text);
         } else if (dataResourceTypeId.equals("LINK")) {
-            text = objectInfo;
-            out.write(text);
+            String text = dataResource.getString("objectInfo");
+            outWriter.write(text);
         } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
-            URL url = new URL(objectInfo);
+            String text = null;
+            URL url = new URL(dataResource.getString("objectInfo"));
             if (url.getHost() != null) { // is absolute
                 InputStream in = url.openStream();
                 int c;
@@ -419,20 +432,18 @@ public class DataResourceWorker {
                 text = (String) url2.getContent();
                 if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(URL-REL), text:" + text, module);
             }
-            out.write(text);
+            outWriter.write(text);
         } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
             String rootDir = (String) context.get("rootDir");
-            renderFile(dataResourceTypeId, objectInfo, rootDir, out);
-        } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
-            text = (String) dataResource.get("objectInfo");
-            out.write(text);
+            renderFile(dataResourceTypeId, dataResource.getString("objectInfo"), rootDir, outWriter);
+        } else {
+            throw new GeneralException("The dataResourceTypeId [" + dataResourceTypeId + "] is not supported in renderDataResourceAsText");
         }
-        return;
     }
-    
-    
 
     public static void renderFile(String dataResourceTypeId, String objectInfo, String rootDir, Writer out) throws GeneralException, IOException {
+        // TODO: this method assumes the file is a text file, if it is an image we should respond differently, see the comment above for IMAGE_OBJECT type data resource
+        
         if (dataResourceTypeId.equals("LOCAL_FILE")) {
             File file = new File(objectInfo);
             if (!file.isAbsolute()) {

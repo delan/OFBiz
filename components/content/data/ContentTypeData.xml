@@ -117,16 +117,13 @@
 <#assign contentIdTo=wrapContentIdTo?if_exists/>
 <#assign mimeTypeId=wrapMimeTypeId?if_exists/>
 <#assign subContentId=wrapSubContentId?if_exists/>
-
-mapKey:${mapKey?if_exists}
 <div id="divTwo" class="wrapOuter">
 <div id="divOne" class="wrapInner">
-<@renderWrappedText />
+<@renderWrappedText/>
 </div>
-<a class="tabButton" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}') " >
-    Lookup    
-</a>
- 
+<div class="tabletext">
+${mapKey?if_exists}
+<a class="buttontext" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}')">[F]</a>
 <#assign ofbizRequest=""/>
 <#assign httpParams="contentIdTo=" + contentIdTo?if_exists + "&mapKey=" + mapKey?if_exists />
 <#if subDataResourceTypeId == "IMAGE_OBJECT">
@@ -138,11 +135,11 @@ mapKey:${mapKey?if_exists}
         <#assign ofbizRequest="EditLayoutSubContent" />
     </#if>
 </#if>
-<a class="tabButton" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>" >New</a>
+<a class="buttontext" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>">[N]</a>
 <#if subContentId?exists && (0 < subContentId?length)>
- 
-    <a class="tabButton" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drDataResourceId=${subDataResourceId?if_exists}</@ofbizUrl>" >Edit</a>
+    <a class="buttontext" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drDataResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[E]</a>
 </#if>
+</div>
 </div>]]></textData>
     </ElectronicText>
   <Content contentId="STDWRAP001" contentTypeId="DOCUMENT" dataResourceId="STDWRAP001" contentName="Standard SubContent Wrapper" description="Standard SubContent Wrapper" />
