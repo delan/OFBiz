@@ -38,7 +38,8 @@ public class UtilProperties {
 
     /** An instance of the generic cache for storing the ResourceBundle corresponding to each properties file
      */
-    static public UtilCache resCache = new UtilCache("UtilPropertiesCache");
+    static public UtilCache resCache = new UtilCache("UtilPropertiesResourceCache");
+    static public UtilCache urlCache = new UtilCache("UtilPropertiesUrlCache");
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
@@ -73,7 +74,7 @@ public class UtilProperties {
      */
     public static String getPropertyValue(String resource, String name, String defaultValue) {
         String value = getPropertyValue(resource, name);
-        if (value == null || value.length() <= 0)
+        if (value == null || value.length() == 0)
             return defaultValue;
         else
             return value;
@@ -95,8 +96,31 @@ public class UtilProperties {
      * @return The value of the property in the properties file
      */
     public static String getPropertyValue(String resource, String name) {
-        URL url = UtilURL.fromResource(resource);
-        return getPropertyValue(url, name);
+        if (resource == null || resource.length() <= 0) return "";
+        if (name == null || name.length() <= 0) return "";
+        FlexibleProperties properties = (FlexibleProperties) resCache.get(resource);
+        if (properties == null) {
+            try {
+                URL url = UtilURL.fromResource(resource);
+                if (url == null) return "";
+                properties = FlexibleProperties.makeFlexibleProperties(url);
+                resCache.put(resource, properties);
+            } catch (MissingResourceException e) {
+                Debug.log(e.getMessage());
+            }
+        }
+        if (properties == null) {
+            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource);
+            return "";
+        }
+
+        String value = null;
+        try {
+            value = properties.getProperty(name);
+        } catch (Exception e) {
+            Debug.log(e.getMessage());
+        }
+        return value == null ? "" : value;
     }
 
 //========= URL Based Methods ==========
@@ -158,11 +182,11 @@ public class UtilProperties {
     public static String getPropertyValue(URL url, String name) {
         if (url == null) return "";
         if (name == null || name.length() <= 0) return "";
-        FlexibleProperties properties = (FlexibleProperties) resCache.get(url);
+        FlexibleProperties properties = (FlexibleProperties) urlCache.get(url);
         if (properties == null) {
             try {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
-                resCache.put(url, properties);
+                urlCache.put(url, properties);
             } catch (MissingResourceException e) {
                 Debug.log(e.getMessage());
             }
@@ -194,11 +218,11 @@ public class UtilProperties {
         if (url == null) return "";
         if (name == null || name.length() <= 0) return "";
 
-        FlexibleProperties properties = (FlexibleProperties) resCache.get(url);
+        FlexibleProperties properties = (FlexibleProperties) urlCache.get(url);
         if (properties == null) {
             try {
                 properties = FlexibleProperties.makeFlexibleProperties(url);
-                resCache.put(url, properties);
+                urlCache.put(url, properties);
             } catch (MissingResourceException e) {
                 Debug.log(e.getMessage());
             }

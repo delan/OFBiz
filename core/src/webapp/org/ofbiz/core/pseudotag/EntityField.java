@@ -93,7 +93,6 @@ public class EntityField {
         }
         
         if (defaultStr == null) defaultStr = "";
-        String javaType = null;
         String fieldObjectType = null;
         Object fieldObject = null;
 
@@ -108,56 +107,31 @@ public class EntityField {
             if (valueObject == null) {
                 fieldObject = defaultStr;
                 fieldObjectType = "comment"; // Default for NULL objects.
-                javaType = "java.lang.String";
             } else {
-                // Get the Delegator from the ValueObject.
-                GenericDelegator delegator = null;
-                //try {
-                    delegator = valueObject.getDelegator();
-                //} catch (IllegalStateException e) {
-                //    throw new JspTagException("Delegator not found in ValueObject.");
-                //}
-
-                // Get the Entity Model from the ValueObject
-                ModelEntity entityModel = null;
-                //try {
-                    entityModel = valueObject.getModelEntity();
-                //} catch (IllegalStateException e) {
-                //    throw new JspTagException("ModelEntity not found in ValueObject.");
-                //}
-
-                // Get the field as an object.
+                ModelEntity entityModel = valueObject.getModelEntity();
                 fieldObject = valueObject.get(field);
 
                 // Get the Object Type.
                 if (fieldObject != null) {
                     ModelField fieldModel = entityModel.getField(field);
                     fieldObjectType = fieldModel.type;
-                    // Try to get the Field Type
-                    //try {
-                        ModelFieldType fieldType = delegator.getEntityFieldType(entityModel, fieldObjectType);
-                        javaType = fieldType.javaType;
-                    //} catch (GenericEntityException e) {
-                    //    throw new JspTagException("[EntityFieldTag] : Cannot get the ModelFieldType from the Delegator.");
-                    //}
                 } else {
                     //Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
                     fieldObject = defaultStr;
                     fieldObjectType = "comment"; // Default for NULL objects.
-                    javaType = "java.lang.String";
                 }
             }
         } else {
             // We should be either a 'currency' or a java type.
             fieldObject = pageContext.findAttribute(attribute);
-            javaType = type;
+            //javaType = type;
             // Set a default for NULL objects.
             if (fieldObject == null) {
                 //Debug.logWarning("[EntityFieldTag] : Null Object passed.");
                 fieldObject = defaultStr;
-                javaType = "java.lang.String";
+                //javaType = "java.lang.String";
             }
-            if (javaType.equalsIgnoreCase("currency")) {
+            if (type.equalsIgnoreCase("currency")) {
                 // Convert the String to a Double for standard processing.
                 if (fieldObject instanceof String) {
                     try {
@@ -168,7 +142,7 @@ public class EntityField {
                     }
                 }
                 // The default type for currency is Double.
-                javaType = "java.lang.Double";
+                //javaType = "java.lang.Double";
                 fieldObjectType = "currency-amount";
             }
         }
@@ -180,11 +154,9 @@ public class EntityField {
 
         // Format the Object based on its type.
         String fieldString = null;
-        if (javaType.equals("java.lang.Object") || javaType.equals("Object")) {
-            fieldString = fieldObject.toString();
-        } else if (javaType.equals("java.lang.String") || javaType.equals("String")) {
+        if (fieldObject instanceof java.lang.String) {
             fieldString = (String) fieldObject;
-        } else if (javaType.equals("java.lang.Double") || javaType.equals("Double")) {
+        } else if (fieldObject instanceof java.lang.Double) {
             Double doubleValue = (Double) fieldObject;
             NumberFormat nf = null;
             if (fieldObjectType.equals("currency-amount")) {
@@ -194,7 +166,7 @@ public class EntityField {
                 nf = NumberFormat.getNumberInstance(userLocale);
             }
             fieldString = nf.format(doubleValue);
-        } else if (javaType.equals("java.lang.Float") || javaType.equals("Float")) {
+        } else if (fieldObject instanceof java.lang.Float) {
             Float floatValue = (Float) fieldObject;
             NumberFormat nf = null;
             if (fieldObjectType.equals("currency-amount")) {
@@ -204,33 +176,35 @@ public class EntityField {
                 nf = NumberFormat.getNumberInstance(userLocale);
             }
             fieldString = nf.format(floatValue);
-        } else if (javaType.equals("java.lang.Long") || javaType.equals("Long")) {
+        } else if (fieldObject instanceof java.lang.Long) {
             Long longValue = (Long) fieldObject;
             NumberFormat nf = NumberFormat.getNumberInstance(userLocale);
             fieldString = nf.format(longValue);
-        } else if (javaType.equals("java.lang.Integer") || javaType.equals("Integer")) {
+        } else if (fieldObject instanceof java.lang.Integer) {
             Integer intValue = (Integer) fieldObject;
             NumberFormat nf = NumberFormat.getNumberInstance(userLocale);
             fieldString = nf.format(intValue);
-        } else if (javaType.equals("java.lang.Boolean") || javaType.equals("Boolean")) {
+        } else if (fieldObject instanceof java.lang.Boolean) {
             Boolean booleanValue = (Boolean) fieldObject;
             if (booleanValue.booleanValue())
                 fieldString = "Yes";
             else
                 fieldString = "No";
-        } else if (javaType.equals("java.sql.Timestamp")) {
+        } else if (fieldObject instanceof java.sql.Timestamp) {
             Date dateValue = (Date) fieldObject;
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
                     DateFormat.FULL, userLocale);
             fieldString = df.format(dateValue);
-        } else if (javaType.equals("java.sql.Time")) {
+        } else if (fieldObject instanceof java.sql.Time) {
             Date dateValue = (Date) fieldObject;
             DateFormat df = DateFormat.getTimeInstance(DateFormat.FULL, userLocale);
             fieldString = df.format(dateValue);
-        } else if (javaType.equals("java.sql.Date")) {
+        } else if (fieldObject instanceof java.sql.Date) {
             Date dateValue = (Date) fieldObject;
             DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, userLocale);
             fieldString = df.format(dateValue);
+        } else {
+            fieldString = fieldObject.toString();
         }
 
         JspWriter out = pageContext.getOut();
@@ -243,4 +217,3 @@ public class EntityField {
         }
     }
 }
-

@@ -54,7 +54,7 @@ public class GenericDelegator {
     String delegatorName;
 
     /** set this to true for better performance; set to false to be able to reload definitions at runtime throught he cache manager */
-    public static final boolean keepLocalReaders = false;
+    public static final boolean keepLocalReaders = true;
     ModelReader modelReader = null;
     ModelGroupReader modelGroupReader = null;
 

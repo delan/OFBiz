@@ -47,7 +47,7 @@ public class UtilURL {
     }
 
     public static URL fromResource(String resourceName) {
-        return fromResource(null, resourceName);
+        return fromResource(resourceName, null);
     }
 
     public static URL fromResource(Class contextClass, String resourceName) {
