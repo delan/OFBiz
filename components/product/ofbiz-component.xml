@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.9 2003/10/26 07:55:59 jonesde Exp $
+ *  $Id: ofbiz-component.xml,v 1.10 2003/12/07 18:02:16 ajzeneski Exp $
 -->
 
 <ofbiz-component name="product">
@@ -43,11 +43,13 @@
     <webapp name="catalog" 
             title="Catalog" 
             server="default-server" 
-            location="webapp/catalog" 
+            location="webapp/catalog"
+            base-permission="CATALOG"
             mount-point="/catalog"/>
     <webapp name="facility" 
             title="Facility" 
             server="default-server" 
-            location="webapp/facility" 
-            mount-point="/facility"/>                
+            location="webapp/facility"
+            base-permission="FACILITY"
+            mount-point="/facility"/>
 </ofbiz-component>
