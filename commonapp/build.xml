@@ -1,65 +1,144 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- ======================================================================= -->
-<!-- build-file for commonapp						     -->
-<!-- owieland, 2001-07-12                                                    -->
-<!-- Benoetigt ant 1.2 							     -->
-<!-- $Id$		-->
-<!-- ======================================================================= -->
+<?xml version="1.0"?>
 
-<project name="CommonApp" default="compile" basedir=".">
+<project name="Open For Business CommonApp Component" default="ear" basedir=".">
+
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <target name="init">
+		<property environment="env"                                 />
+        <property name="name"           value="commonapp"           />
+        <property name="src.dir"        value="src"                 />
+        <property name="etc.dir"        value="etc"                 />
+        <property name="lib.dir"        value="lib"                 />
+		<property name="doc.dir"        value="docs"                />
+        <property name="build.dir"      value="build"               />
+        <property name="build.compiler" value="classic"             /> 
+        <property name="pkg-dist.name"  value="${name}-pkg"         />
+		
+		<!-- Classpath setting -->
+		<property name="core.jar"       value="../core/build/core.jar"            />		
+		<property name="ejb.jar"        value="${env.JBOSS_HOME}/lib/ext/ejb.jar" />
+		<property name="classpath"      value="${env.CLASSPATH}:${lib.dir}:${core.jar}:${ejb.jar}" />
+		<echo message="classpath: ${classpath}" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Removes all created files and directories                          -->
+    <!-- ================================================================== -->
+
+    <target name="clean" depends="init">
+        <delete dir="${lib.dir}" />
+        <delete dir="${build.dir}" />
+    </target>
+
+	<target name="prepare-docs" depends="init">
+		<mkdir dir="${doc.dir}" />
+		<mkdir dir="${doc.dir}/api" />
+	</target>	
+
+
+    <!-- ================================================================== -->
+    <!-- Makes sure the needed directory structure is in place              -->
+    <!-- ================================================================== -->
+
+    <target name="prepare" depends="clean">
+        <mkdir dir="${lib.dir}" />
+		<mkdir dir="${lib.dir}/ejb" />
+		<mkdir dir="${lib.dir}/ejb/META-INF" />
+		<mkdir dir="${lib.dir}/j2ee" />
+		<mkdir dir="${lib.dir}/j2ee/META-INF" />
+        <mkdir dir="${build.dir}" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Compilation of the common application components                   -->
+    <!-- ================================================================== -->
+
+
+    <target name="classes" depends="prepare">
+        <javac srcdir="${src.dir}"
+		       classpath="${classpath}"
+               destdir="${lib.dir}" />               
+    </target>
+
+
+    <target name="jar" depends="classes">
+        <jar jarfile="${build.dir}/${name}.jar"
+             basedir="${lib.dir}" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Build the EJB jar and EAR                                          -->
+    <!-- ================================================================== -->
 	
-	<property name="Name" value="commonapp"/>
-	<property name="name" value="commonapp"/>
-	<property name="version" value="$Version$"/>
-
-	<property name="build.compiler" value="jikes"/>
-	<property name="build.compiler.emacs" value="true"/>
-	
-	<property name="build.dir" value="${basedir}/build"/>
-	<property name="classes.dir" value="${basedir}/build"/>	
-	
-	<property name="dist.dir" value="${basedir}/dist"/>
-	<property name="src.dir" value="${basedir}/src"/>
-	
-	<property name="jar.name" value="${name}-${version}.jar"/>
-	<property name="jar.file" value="${dist.dir}/${jar.name}"/>	
-	<property name="lib.dir" value="${basedir}/lib"/>
-
-	<property name="tar.file" value="${dist.dir}/${Name}-${version}.tar"/>
-	<property name="tgz.file" value="${dist.dir}/${Name}-${version}.tgz"/>
-
-	<property name="zip.file" value="${dist.dir}/${Name}-${version}.zip"/>	
-
-	<!-- =================================================================== -->
-	<!-- Prepares the build directory                                        -->
-	<!-- =================================================================== -->
-	<target name="prepare">
-		<mkdir dir="${build.dir}"/>
-		<mkdir dir="${dist.dir}"/>		
+	<target name="meta-info" depends="jar">
+		<copy file="${src.dir}/META-INF/ejb-jar.xml"
+		      tofile="${lib.dir}/ejb/META-INF/jboss.xml" />
+		<copy file="${src.dir}/META-INF/jboss.xml"
+		      tofile="${lib.dir}/ejb/META-INF/ejb-jar.xml" />
+		<copy file="${src.dir}/META-INF/jaws.xml"
+		      tofile="${lib.dir}/ejb/META-INF/jaws.xml" />
+		<copy file="${src.dir}/META-INF/application.xml"
+		      tofile="${lib.dir}/j2ee/META-INF/application.xml" />			  
 	</target>
 	
-	<!-- =================================================================== -->
-	<!-- Compiles the source code                                            -->
-	<!-- =================================================================== -->
-	<target name="compile" depends="prepare">
-		<javac srcdir="${src.dir}"
-		       	destdir="${build.dir}">
-		       	<classpath>
-	           		<pathelement location="${lib.dir}/j2ee.jar"/>
-	           		<pathelement location="${lib.dir}/log4j.jar"/>
-	         	</classpath>
-		</javac>    
+	<target name="ejb" depends="meta-info">
+		<jar jarfile="${lib.dir}/j2ee/${name}-ejb.jar"
+		     basedir="${lib.dir}/ejb" />
+	</target>
+			 
+	<target name="ear" depends="ejb">
+		<jar jarfile="${build.dir}/${name}.ear"
+		     basedir="${lib.dir}/j2ee" />
 	</target>
 
-	<!-- =================================================================== -->
-	<!-- Build distribution jar 						 -->
-	<!-- =================================================================== -->
-	<target name="dist" depends="compile">
-		<jar jarfile="${dist.dir}/${name}.jar"
-	         	basedir="${build.dir}"
-	        />
-        </target>
- </project>
+	
+    <!-- ================================================================== -->
+    <!-- Build JavaDoc                                                      -->
+    <!-- ================================================================== -->
+
+	<target name="docs" depends="prepare-docs">
+		<javadoc packagenames="org.ofbiz.*" classpath="${classpath}"
+		         sourcepath="${src.dir}" destdir="${doc.dir}/api" />
+	</target> 	
 
 
+    <!-- ================================================================== -->
+    <!-- Generates a GZip'ed tar source distribution                        -->
+    <!-- ================================================================== -->
 
+    <target name="pkg-dist" depends="prepare">
+
+        <mkdir dir="${build.dir}/${name}" />
+
+        <copy todir="${build.dir}/${name}">
+            <fileset dir="." includes="${src.dir}/**" />            
+            <fileset dir="." includes="build.xml" />
+        </copy>
+
+        <tar tarfile="${build.dir}/${pkg-dist.name}.tar"
+             basedir="${build.dir}"
+             includes="${name}/**" />
+
+        <gzip src="${build.dir}/${pkg-dist.name}.tar"
+              zipfile="${build.dir}/${pkg-dist.name}.tar.gz" />
+
+        <delete file="${build.dir}/${pkg-dist.name}.tar" />
+
+        <zip zipfile="${build.dir}/${pkg-dist.name}.zip"
+             basedir="${build.dir}"
+             includes="${name}/**" />
+
+        <delete dir="${build.dir}/${name}" />
+
+    </target>
+
+    <target name="all" depends="jar,pkg-dist" />
+
+</project>
