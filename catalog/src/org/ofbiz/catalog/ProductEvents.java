@@ -41,6 +41,8 @@ import org.ofbiz.commonapp.product.product.*;
  * @since      2.0
  */
 public class ProductEvents {
+    
+    public static final String module = ProductEvents.class.getName();
 
     /** Updates ProductKeyword information according to UPDATE_MODE parameter, only support CREATE and DELETE, no modify becuse all fields are PKs
      *@param request The HTTPRequest object for the current request
