@@ -35,13 +35,7 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.HttpClient;
-import org.ofbiz.base.util.HttpClientException;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.service.DispatchContext;
@@ -57,8 +51,8 @@ import org.apache.xml.serialize.OutputFormat;
 /**
  * ClearCommerce Payment Services (CCE 5.4)
  *
- * @author     <a href="mailto:joe.eckard@redrocketcorp.com">Joe Eckard</a>
- * @version    $Rev:$
+ * @author     <a href="mailto:eckardjf@pobox.com">J. Eckard</a>
+ * @version    $Rev$
  */
 public class CCPaymentServices {
 
@@ -77,9 +71,16 @@ public class CCPaymentServices {
             return ServiceUtil.returnError(cce.getMessage());
         }
 
-        List errorList = processMessageList(authResponseDoc);
-        if (UtilValidate.isNotEmpty(errorList)) {
-            return ServiceUtil.returnError(errorList);
+        if (getMessageListMaxSev(authResponseDoc) > 4) {
+            Map result = ServiceUtil.returnSuccess();
+            result.put("authResult", new Boolean(false));
+            result.put("processAmount", new Double(0.00));
+            result.put("authRefNum", getReferenceNum(authResponseDoc));
+            List messages = getMessageList(authResponseDoc);
+            if (UtilValidate.isNotEmpty(messages)) {
+                result.put("internalRespMsgs", messages);
+            }
+            return result;
         }
 
         return processAuthResponse(authResponseDoc);
@@ -97,9 +98,16 @@ public class CCPaymentServices {
             return ServiceUtil.returnError(cce.getMessage());
         }
 
-        List errorList = processMessageList(creditResponseDoc);
-        if (UtilValidate.isNotEmpty(errorList)) {
-            return ServiceUtil.returnError(errorList);
+        if (getMessageListMaxSev(creditResponseDoc) > 4) {
+            Map result = ServiceUtil.returnSuccess();
+            result.put("creditResult", new Boolean(false));
+            result.put("creditAmount", new Double(0.00));
+            result.put("creditRefNum", getReferenceNum(creditResponseDoc));
+            List messages = getMessageList(creditResponseDoc);
+            if (UtilValidate.isNotEmpty(messages)) {
+                result.put("internalRespMsgs", messages);
+            }
+            return result;
         }
 
         return processCreditResponse(creditResponseDoc);
@@ -114,7 +122,7 @@ public class CCPaymentServices {
         }
 
         Document captureRequestDoc = buildSecondaryTxRequest(context, authTransaction.getString("referenceNum"),
-                "PostAuth", (Double) context.get("processAmount"));
+                "PostAuth", (Double) context.get("captureAmount"));
 
         Document captureResponseDoc = null;
         try {
@@ -123,9 +131,16 @@ public class CCPaymentServices {
             return ServiceUtil.returnError(cce.getMessage());
         }
 
-        List errorList = processMessageList(captureResponseDoc);
-        if (UtilValidate.isNotEmpty(errorList)) {
-            return ServiceUtil.returnError(errorList);
+        if (getMessageListMaxSev(captureResponseDoc) > 4) {
+            Map result = ServiceUtil.returnSuccess();
+            result.put("captureResult", new Boolean(false));
+            result.put("captureAmount", new Double(0.00));
+            result.put("captureRefNum", getReferenceNum(captureResponseDoc));
+            List messages = getMessageList(captureResponseDoc);
+            if (UtilValidate.isNotEmpty(messages)) {
+                result.put("internalRespMsgs", messages);
+            }
+            return result;
         }
 
         return processCaptureResponse(captureResponseDoc);
@@ -148,12 +163,38 @@ public class CCPaymentServices {
             return ServiceUtil.returnError(cce.getMessage());
         }
 
-        List errorList = processMessageList(releaseResponseDoc);
-        if (UtilValidate.isNotEmpty(errorList)) {
-            return ServiceUtil.returnError(errorList);
+        if (getMessageListMaxSev(releaseResponseDoc) > 4) {
+            Map result = ServiceUtil.returnSuccess();
+            result.put("releaseResult", new Boolean(false));
+            result.put("releaseAmount", new Double(0.00));
+            result.put("releaseRefNum", getReferenceNum(releaseResponseDoc));
+            List messages = getMessageList(releaseResponseDoc);
+            if (UtilValidate.isNotEmpty(messages)) {
+                result.put("internalRespMsgs", messages);
+            }
+            return result;
         }
 
         return processReleaseResponse(releaseResponseDoc);
+    }
+
+    public static Map ccReleaseNoop(DispatchContext dctx, Map context) {
+
+        GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
+        GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        if (authTransaction == null) {
+            return ServiceUtil.returnError("No authorization transaction found; cannot release");
+        }
+
+        Map result = ServiceUtil.returnSuccess();
+        result.put("releaseResult", Boolean.valueOf(true));
+        result.put("releaseCode", authTransaction.getString("gatewayCode"));
+        result.put("releaseAmount", authTransaction.getDouble("amount"));
+        result.put("releaseRefNum", authTransaction.getString("referenceNum"));
+        result.put("releaseFlag", authTransaction.getString("gatewayFlag"));
+        result.put("releaseMessage", "Approved.");
+
+        return result;
     }
 
     public static Map ccRefund(DispatchContext dctx, Map context) {
@@ -176,17 +217,53 @@ public class CCPaymentServices {
             return ServiceUtil.returnError(cce.getMessage());
         }
 
-        List errorList = processMessageList(refundResponseDoc);
-        if (UtilValidate.isNotEmpty(errorList)) {
-            return ServiceUtil.returnError(errorList);
+        if (getMessageListMaxSev(refundResponseDoc) > 4) {
+            Map result = ServiceUtil.returnSuccess();
+            result.put("refundResult", new Boolean(false));
+            result.put("refundAmount", new Double(0.00));
+            result.put("refundRefNum", getReferenceNum(refundResponseDoc));
+            List messages = getMessageList(refundResponseDoc);
+            if (UtilValidate.isNotEmpty(messages)) {
+                result.put("internalRespMsgs", messages);
+            }
+            return result;
         }
 
         return processRefundResponse(refundResponseDoc);
     }
 
     public static Map ccReAuth(DispatchContext dctx, Map context) {
-        // TODO: implement as soon as an interface is defined - JFE 2004.03.25
-        return ServiceUtil.returnError("ClearCommerce ReAuth Service not implemented");
+
+        GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
+        GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        if (authTransaction == null) {
+            return ServiceUtil.returnError("No authorization transaction found; cannot re-auth.");
+        }
+
+        Document reauthRequestDoc = buildSecondaryTxRequest(context, authTransaction.getString("referenceNum"),
+                "RePreAuth", (Double) context.get("reauthAmount"));
+
+        Document reauthResponseDoc = null;
+        try {
+            reauthResponseDoc = sendRequest(reauthRequestDoc, (String) context.get("paymentConfig"));
+        } catch (ClearCommerceException cce) {
+            return ServiceUtil.returnError(cce.getMessage());
+        }
+
+        if (getMessageListMaxSev(reauthResponseDoc) > 4) {
+            Map result = ServiceUtil.returnSuccess();
+            result.put("reauthResult", new Boolean(false));
+            result.put("reauthAmount", new Double(0.00));
+            result.put("reauthRefNum", getReferenceNum(reauthResponseDoc));
+            List messages = getMessageList(reauthResponseDoc);
+            if (UtilValidate.isNotEmpty(messages)) {
+                result.put("internalRespMsgs", messages);
+            }
+            return result;
+        }
+
+        return processReAuthResponse(reauthResponseDoc);
+
     }
 
     private static Map processAuthResponse(Document responseDocument) {
@@ -228,6 +305,10 @@ public class CCPaymentServices {
             result.put("scoreCode", UtilXml.childElementValue(fraudInfoElement, "TotalScore"));
         }
 
+        List messages = getMessageList(responseDocument);
+        if (UtilValidate.isNotEmpty(messages)) {
+            result.put("internalRespMsgs", messages);
+        }
         return result;
     }
 
@@ -258,6 +339,10 @@ public class CCPaymentServices {
         result.put("creditFlag", UtilXml.childElementValue(procResponseElement, "Status"));
         result.put("creditMessage", UtilXml.childElementValue(procResponseElement, "CcReturnMsg"));
 
+        List messages = getMessageList(responseDocument);
+        if (UtilValidate.isNotEmpty(messages)) {
+            result.put("internalRespMsgs", messages);
+        }
         return result;
     }
 
@@ -288,6 +373,10 @@ public class CCPaymentServices {
         result.put("captureFlag", UtilXml.childElementValue(procResponseElement, "Status"));
         result.put("captureMessage", UtilXml.childElementValue(procResponseElement, "CcReturnMsg"));
 
+        List messages = getMessageList(responseDocument);
+        if (UtilValidate.isNotEmpty(messages)) {
+            result.put("internalRespMsgs", messages);
+        }
         return result;
     }
 
@@ -318,6 +407,10 @@ public class CCPaymentServices {
         result.put("releaseFlag", UtilXml.childElementValue(procResponseElement, "Status"));
         result.put("releaseMessage", UtilXml.childElementValue(procResponseElement, "CcReturnMsg"));
 
+        List messages = getMessageList(responseDocument);
+        if (UtilValidate.isNotEmpty(messages)) {
+            result.put("internalRespMsgs", messages);
+        }
         return result;
     }
 
@@ -348,49 +441,101 @@ public class CCPaymentServices {
         result.put("refundFlag", UtilXml.childElementValue(procResponseElement, "Status"));
         result.put("refundMessage", UtilXml.childElementValue(procResponseElement, "CcReturnMsg"));
 
+        List messages = getMessageList(responseDocument);
+        if (UtilValidate.isNotEmpty(messages)) {
+            result.put("internalRespMsgs", messages);
+        }
         return result;
     }
 
-    private static List processMessageList(Document responseDocument) {
+    private static Map processReAuthResponse(Document responseDocument) {
 
-        List errorList = new ArrayList();
+        Element engineDocElement = UtilXml.firstChildElement(responseDocument.getDocumentElement(), "EngineDoc");
+        Element orderFormElement = UtilXml.firstChildElement(engineDocElement, "OrderFormDoc");
+        Element transactionElement = UtilXml.firstChildElement(orderFormElement, "Transaction");
+        Element procResponseElement = UtilXml.firstChildElement(transactionElement, "CardProcResp");
+
+        Map result = ServiceUtil.returnSuccess();
+
+        String errorCode = UtilXml.childElementValue(procResponseElement, "CcErrCode");
+        if ("1".equals(errorCode)) {
+            result.put("reauthResult", Boolean.valueOf(true));
+            result.put("reauthCode", UtilXml.childElementValue(transactionElement, "AuthCode"));
+
+            Element currentTotalsElement = UtilXml.firstChildElement(transactionElement, "CurrentTotals");
+            Element totalsElement = UtilXml.firstChildElement(currentTotalsElement, "Totals");
+            String reauthAmountStr = UtilXml.childElementValue(totalsElement, "Total");
+            result.put("reauthAmount", new Double(Double.parseDouble(reauthAmountStr) / 100));
+        } else {
+            result.put("reauthResult", Boolean.valueOf(false));
+            result.put("reauthAmount", Double.valueOf("0.00"));
+        }
+
+        result.put("reauthRefNum", UtilXml.childElementValue(orderFormElement, "Id"));
+        result.put("reauthFlag", UtilXml.childElementValue(procResponseElement, "Status"));
+        result.put("reauthMessage", UtilXml.childElementValue(procResponseElement, "CcReturnMsg"));
+
+        List messages = getMessageList(responseDocument);
+        if (UtilValidate.isNotEmpty(messages)) {
+            result.put("internalRespMsgs", messages);
+        }
+        return result;
+    }
+
+    private static List getMessageList(Document responseDocument) {
+
+        List messageList = new ArrayList();
 
         Element engineDocElement = UtilXml.firstChildElement(responseDocument.getDocumentElement(), "EngineDoc");
         Element messageListElement = UtilXml.firstChildElement(engineDocElement, "MessageList");
-        List messageList = UtilXml.childElementList(messageListElement, "Message");
-
-        for (Iterator i = messageList.iterator(); i.hasNext();) {
-            Element messageElement = (Element) i.next();
-
-            int severity = Integer.parseInt(UtilXml.childElementValue(messageElement, "Sev"));
-
-            String message = "[" + UtilXml.childElementValue(messageElement, "Audience") + "] " +
-                    UtilXml.childElementValue(messageElement, "Text") + " (" + severity + ")";
-
-            /* Severity values
-             *
-             * 0 - Success
-             * 1 - Debug
-             * 2 - Informational
-             * 3 - Notice
-             * 4 - Warning
-             * 5 - Error
-             * 6 - Critical
-             * 7 - Alert
-             * 8 - Emergency
-             */
-
-            if (severity > 4) {
-                Debug.logError(message, module);
-                errorList.add(message);
-            } else if (severity > 2) {
-                Debug.logWarning(message, module);
-            } else {
-                Debug.logInfo(message, module);
+        List messageElementList = UtilXml.childElementList(messageListElement, "Message");
+        if (UtilValidate.isNotEmpty(messageElementList)) {
+            for (Iterator i = messageElementList.iterator(); i.hasNext();) {
+                Element messageElement = (Element) i.next();
+                int severity = 0;
+                try {
+                    severity = Integer.parseInt(UtilXml.childElementValue(messageElement, "Sev"));
+                } catch (NumberFormatException nfe) {
+                    Debug.logError("Error parsing message severity: " + nfe.getMessage(), module);
+                    severity = 9;
+                }
+                String message = "[" + UtilXml.childElementValue(messageElement, "Audience") + "] " +
+                        UtilXml.childElementValue(messageElement, "Text") + " (" + severity + ")";
+                messageList.add(message);
             }
         }
 
-        return errorList;
+        return messageList;
+    }
+
+    private static int getMessageListMaxSev(Document responseDocument) {
+
+        int maxSev = 0;
+
+        Element engineDocElement = UtilXml.firstChildElement(responseDocument.getDocumentElement(), "EngineDoc");
+        Element messageListElement = UtilXml.firstChildElement(engineDocElement, "MessageList");
+        String maxSevStr = UtilXml.childElementValue(messageListElement, "MaxSev");
+        if (UtilValidate.isNotEmpty(maxSevStr)) {
+            try {
+                maxSev = Integer.parseInt(maxSevStr);
+            } catch (NumberFormatException nfe) {
+                Debug.logError("Error parsing MaxSev: " + nfe.getMessage(), module);
+                maxSev = 9;
+            }
+        }
+        return maxSev;
+    }
+
+    private static String getReferenceNum(Document responseDocument) {
+        String referenceNum = null;
+        Element engineDocElement = UtilXml.firstChildElement(responseDocument.getDocumentElement(), "EngineDoc");
+        if (engineDocElement != null) {
+            Element orderFormElement = UtilXml.firstChildElement(engineDocElement, "OrderFormDoc");
+            if (orderFormElement != null) {
+                referenceNum = UtilXml.childElementValue(orderFormElement, "Id");
+            }
+        }
+        return referenceNum;
     }
 
     private static Document buildPrimaryTxRequest(Map context, String type, Double amount, String refNum) {
@@ -650,9 +795,10 @@ public class CCPaymentServices {
             throw new ClearCommerceException("ClearCommerce connection problem", hce);
         }
 
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("ClearCommerce response: " + response, module);
-        }
+        // Note: if Debug.verboseOn(), HttpClient will log this...
+        //if (Debug.verboseOn()) {
+        //    Debug.logVerbose("ClearCommerce response: " + response, module);
+        //}
 
         Document responseDocument = null;
         try {
