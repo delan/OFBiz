@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/02/02 12:01:47  jonesde
+ * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
+ *
  * Revision 1.1  2002/01/24 11:53:03  jonesde
  * Moved party specific worker here from party/contact
  *

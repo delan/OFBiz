@@ -704,6 +704,7 @@
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <alias entity-alias="WE" name="workEffortId"/>
       <alias entity-alias="WE" name="workEffortTypeId"/>
+      <alias entity-alias="WE" name="workEffortPurposeTypeId"/>
       <alias entity-alias="WE" name="workEffortParentId"/>
       <alias entity-alias="WE" name="currentStatusId"/>
       <alias entity-alias="WE" name="lastStatusUpdate"/>
@@ -1002,6 +1003,33 @@
         <key-map field-name="noteId"/>
       </relation>
     </entity>
+    <view-entity entity-name="WorkEffortNoteAndData"
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Work Effort Note And Note Data Entity">
+      <member-entity entity-alias="WEN" entity-name="WorkEffortNote"/>
+      <member-entity entity-alias="ND" entity-name="NoteData"/>
+      <alias entity-alias="WEN" name="workEffortId"/>
+      <alias entity-alias="WEN" name="noteId"/>
+      <alias entity-alias="ND" name="noteName"/>
+      <alias entity-alias="ND" name="noteInfo"/>
+      <alias entity-alias="ND" name="noteParty"/>
+      <alias entity-alias="ND" name="noteDateTime"/>
+      <view-link entity-alias="WEN" rel-entity-alias="ND">
+        <key-map field-name="noteId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="NoteData">
+        <key-map field-name="noteId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="noteParty"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="noteParty"/>
+      </relation>
+    </view-entity>
     <view-entity entity-name="WorkEffortPartyAssignByGroup"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment By Group Entity">

@@ -52,10 +52,11 @@ public class ProjectWorker {
       try {
         validWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign",
         UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
-                new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED"),
-                new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"),
-                new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"),
-                new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "PROJECT")),
+        new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED"),
+        new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"),
+        new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"),
+        new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "TASK"),
+        new EntityExpr("workEffortPurposeTypeId", EntityOperator.EQUALS, "WEPT_PROJECT")),
         UtilMisc.toList("priority"));
       } catch (GenericEntityException e) {
         Debug.logWarning(e);
@@ -66,7 +67,7 @@ public class ProjectWorker {
     
     pageContext.setAttribute(projectsAttrName, validWorkEfforts);
   }
-
+  
   public static void getAllAssignedProjects(PageContext pageContext, String projectsAttrName) {
     GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
     GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
@@ -76,7 +77,8 @@ public class ProjectWorker {
       try {
         validWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign",
         UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
-                new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "PROJECT")),
+        new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "TASK"),
+        new EntityExpr("workEffortPurposeTypeId", EntityOperator.EQUALS, "WEPT_PROJECT")),
         UtilMisc.toList("priority"));
       } catch (GenericEntityException e) {
         Debug.logWarning(e);
@@ -102,7 +104,7 @@ public class ProjectWorker {
       try {
         relatedWorkEfforts = delegator.findByAnd("WorkEffortAssoc",
         UtilMisc.toList(new EntityExpr("workEffortIdFrom", EntityOperator.EQUALS, projectWorkEffortId),
-        new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_PHASE")));
+        new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_BREAKDOWN")));
       } catch (GenericEntityException e) {
         Debug.logWarning(e);
       }
@@ -116,7 +118,8 @@ public class ProjectWorker {
           GenericValue workEffortAssoc = (GenericValue)relatedWorkEffortsIter.next();
           GenericValue workEffort = workEffortAssoc.getRelatedOne("ToWorkEffort");
           // only get phases
-          if("PHASE".equals(workEffort.getString("workEffortTypeId"))) {
+          if("TASK".equals(workEffort.getString("workEffortTypeId")) &&
+          ("WEPT_PHASE".equals(workEffort.getString("workEffortPurposeTypeId")))) {
             validWorkEfforts.add(workEffort);
           }
         }
@@ -129,7 +132,7 @@ public class ProjectWorker {
     
     pageContext.setAttribute(phasesAttrName, validWorkEfforts);
   }
-
+  
   public static void getAllPhaseTasks(PageContext pageContext, String tasksAttrName) {
     GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
     GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
@@ -144,7 +147,7 @@ public class ProjectWorker {
       try {
         relatedWorkEfforts = delegator.findByAnd("WorkEffortAssoc",
         UtilMisc.toList(new EntityExpr("workEffortIdFrom", EntityOperator.EQUALS, phaseWorkEffortId),
-        new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_TASK")));
+        new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_BREAKDOWN")));
       } catch (GenericEntityException e) {
         Debug.logWarning(e);
       }
@@ -170,6 +173,31 @@ public class ProjectWorker {
       return;
     
     pageContext.setAttribute(tasksAttrName, validWorkEfforts);
+  }
+  
+  public static void getTaskNotes(PageContext pageContext, String notesAttrName) {
+    GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+    GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    
+    String workEffortId = pageContext.getRequest().getParameter("workEffortId");
+    //if there was no parameter, check the request attribute, this may be a newly created entity
+    if (workEffortId == null)
+      workEffortId = (String) pageContext.getRequest().getAttribute("workEffortId");
+    
+    Collection notes = null;
+    if (userLogin != null && userLogin.get("partyId") != null) {
+      try {
+        notes = delegator.findByAnd("WorkEffortNoteAndData",
+        UtilMisc.toList(new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId)),
+        UtilMisc.toList("noteDateTime"));
+      } catch (GenericEntityException e) {
+        Debug.logWarning(e);
+      }
+    }
+    if (notes == null || notes.size() <= 0)
+      return;
+    
+    pageContext.setAttribute(notesAttrName, notes);
   }
   
 }

@@ -136,4 +136,21 @@
         <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
         <attribute name="quickAssignPartyId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="quickAssignPartyToWorkEffortWithRole" engine="simple"
+            location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="quickAssignPartyToWorkEffortWithRole">
+        <description>Quick Assign Party To WorkEffort as Owner</description>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+        <attribute name="quickAssignPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createWorkEffortNote" engine="simple"
+            location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortNote">
+        <description>Create a WorkEffort Note</description>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+        <attribute name="noteInfo" type="String" mode="IN" optional="false"/>
+        <attribute name="noteParty" type="String" mode="IN" optional="true"/>
+        <attribute name="noteName" type="String" mode="IN" optional="true"/>
+        <attribute name="noteId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
 </services>

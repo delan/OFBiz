@@ -149,4 +149,43 @@
             <create-value value-name="newWorkEffortPartyAssignment"/>
         </if-not-empty>
     </simple-method>
+    <simple-method method-name="quickAssignPartyToWorkEffortWithRole" short-description="Quick Assign Party To WorkEffort">
+        <if-not-empty field-name="quickAssignPartyId" map-name="parameters">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <!-- add a party assignment for the creator of the event, use the list method and let the EE do the update or create... -->
+            <make-value value-name="newPartyRole" entity-name="PartyRole"/>
+            <field-to-field field-name="quickAssignPartyId" map-name="parameters" to-field-name="partyId" to-map-name="newPartyRole"/>
+            <field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="newPartyRole"/>
+            <field-to-list field-name="newPartyRole" list-name="newPartyRoleList"/>
+            <store-list list-name="newPartyRoleList"/>
+            
+            <make-value value-name="newWorkEffortPartyAssignment" entity-name="WorkEffortPartyAssignment"/>
+            <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="newWorkEffortPartyAssignment"/>
+            <field-to-field field-name="quickAssignPartyId" map-name="parameters" to-field-name="partyId" to-map-name="newWorkEffortPartyAssignment"/>
+            <field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="newWorkEffortPartyAssignment"/>
+            <string-to-field string="CAL_ACCEPTED" field-name="statusId" map-name="newWorkEffortPartyAssignment"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newWorkEffortPartyAssignment"/>
+            <create-value value-name="newWorkEffortPartyAssignment"/>
+        </if-not-empty>
+    </simple-method>
+    <simple-method method-name="createWorkEffortNote" short-description="Create Work Effort Note">
+        <make-value value-name="newEntity" entity-name="NoteData"/>
+        <sequenced-id-to-env sequence-name="NoteData" env-name="noteId"/>
+        <to-string field-name="noteId"/>
+        <env-to-field env-name="noteId" map-name="newEntity"/>
+        <field-to-result field-name="noteId" result-name="noteId"/>
+        <field-to-field field-name="noteInfo" map-name="parameters" to-map-name="newEntity"/>
+        <field-to-field field-name="noteParty" map-name="parameters" to-map-name="newEntity"/>
+        <field-to-field field-name="noteName" map-name="parameters" to-map-name="newEntity"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="noteDateTime" map-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+        
+        <!-- create new status entry, and set lastStatusUpdate date -->
+        <make-value value-name="newWorkEffortNote" entity-name="WorkEffortNote"/>
+        <field-to-field field-name="noteId" map-name="newEntity" to-map-name="newWorkEffortNote"/>
+<!--        <string-to-field string="10000" field-name="workEffortId" map-name="newWorkEffortNote"/>-->
+        <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="newWorkEffortNote"/>
+        <create-value value-name="newWorkEffortNote"/>-->
+    </simple-method>
 </simple-methods>
