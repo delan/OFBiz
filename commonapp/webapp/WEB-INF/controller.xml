@@ -52,7 +52,7 @@
     </request-map>
 
     <request-map uri="WorkflowTest">
-        <event type="service" invoke="processOrder"/>
+        <event type="service" path="async" invoke="processOrder"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
