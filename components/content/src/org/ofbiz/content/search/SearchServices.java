@@ -1,5 +1,5 @@
 /*
- * $Id: SearchServices.java,v 1.4 2004/08/11 17:16:39 byersa Exp $
+ * $Id: SearchServices.java,v 1.5 2004/08/11 17:56:25 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.service.ServiceUtil;
  * SearchServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since 3.1
  * 
  *  
@@ -63,6 +63,7 @@ public class SearchServices {
         try {
             results = SearchWorker.indexTree(delegator, siteId, envContext, path);
         } catch (Exception e) {
+            Debug.logError(e, module);
             return ServiceUtil.returnError("Error indexing tree: " + e.toString());
         }
 	  	if (Debug.infoOn()) Debug.logInfo("in indexTree, results:" + results, module);
