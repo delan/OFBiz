@@ -35,11 +35,14 @@ import org.ofbiz.pos.screen.PosScreen;
  */
 public class NavagationEvents {
 
-    public static void showPosScreen(PosScreen pos) {        
+    public static void showPosScreen(PosScreen pos) {
+        ManagerEvents.mgrLoggedIn = false;
         pos.showPage("main/pospanel");
+        PosScreen.currentScreen.getInput().clear();
     }
 
     public static void showPayScreen(PosScreen pos) {
+        ManagerEvents.mgrLoggedIn = false;
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         if (trans.isEmpty()) {
             pos.showDialog("main/dialog/error/noitems");
@@ -51,7 +54,9 @@ public class NavagationEvents {
     }
 
     public static void showPromoScreen(PosScreen pos) {
+        ManagerEvents.mgrLoggedIn = false;
         pos.showPage("main/promopanel");
+        PosScreen.currentScreen.getInput().clear();
     }
 }
 

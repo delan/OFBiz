@@ -31,6 +31,7 @@ import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.xui.XuiSession;
+import org.ofbiz.entity.GenericValue;
 
 /**
  * 
@@ -43,40 +44,11 @@ public class SecurityEvents {
     public static final String module = SecurityEvents.class.getName();
 
     public static void login(PosScreen pos) {
-        XuiSession session = pos.getSession();
-        Output output = pos.getOutput();
-        Input input = pos.getInput();
-
-        String[] func = input.getLastFunction();
-        String text = input.value();
-        if (func == null || func[0].equals("LOGIN")) {
-            if (UtilValidate.isEmpty(func[1]) && UtilValidate.isEmpty(text)) {
-                output.print(Output.ULOGIN);
-            } else if (UtilValidate.isEmpty(func[1])) {
-                output.print(Output.UPASSW);
-            } else {
-                String username = func[1];
-                String password = text;
-                boolean passed = false;
-                try {
-                    session.checkLogin(username, password);
-                    passed = true;
-                } catch (XuiSession.UserLoginFailure e) {
-                    output.print(e.getMessage());
-                    input.clear();
-                }
-                if (passed) {
-                    pos.setLock(false);
-                    pos.refresh();
-                    input.clear();
-                    return;
-                }
-            }
-            input.setFunction("LOGIN");
-
-        } else {
-            Debug.log("Login function called but not prepared as a function!", module);
+        String[] func = pos.getInput().getFunction("LOGIN");
+        if (func == null) {
+            pos.getInput().setFunction("LOGIN", "");
         }
+        baseLogin(pos, false);
     }
 
     public static void logout(PosScreen pos) {
@@ -88,10 +60,78 @@ public class SecurityEvents {
     }
 
     public static void mgrLogin(PosScreen pos) {
-        pos.showPage("main/mgrpanel");
+        XuiSession session = pos.getSession();
+        if (session.hasRole(session.getUserLogin(), "MANAGER")) {
+            ManagerEvents.mgrLoggedIn = true;
+            pos.showPage("main/mgrpanel");
+        } else {
+            String[] func = pos.getInput().getFunction("MGRLOGIN");
+            if (func == null) {
+                pos.getInput().setFunction("MGRLOGIN", "");
+            }
+            baseLogin(pos, true);
+        }
     }
 
     public static void lock(PosScreen pos) {
         pos.setLock(true);
-    }    
+    }
+
+    private static void baseLogin(PosScreen pos, boolean mgr) {
+        XuiSession session = pos.getSession();
+        Output output = pos.getOutput();
+        Input input = pos.getInput();
+
+        String loginFunc = mgr ? "MGRLOGIN" : "LOGIN";
+        String[] func = input.getLastFunction();
+        String text = input.value();
+        if (func != null && func[0].equals(loginFunc)) {
+            if (UtilValidate.isEmpty(func[1]) && UtilValidate.isEmpty(text)) {
+                output.print(Output.ULOGIN);
+            } else if (UtilValidate.isEmpty(func[1])) {
+                output.print(Output.UPASSW);
+            } else {
+                String username = func[1];
+                String password = text;
+                if (!mgr) {
+                    boolean passed = false;
+                    try {
+                        session.login(username, password);
+                        passed = true;
+                    } catch (XuiSession.UserLoginFailure e) {
+                        output.print(e.getMessage());
+                        input.clear();
+                    }
+                    if (passed) {
+                        pos.setLock(false);
+                        pos.refresh();
+                        input.clear();
+                        return;
+                    }
+                } else {
+                    GenericValue mgrUl = null;
+                    try {
+                        mgrUl = session.checkLogin(username, password);
+                    } catch (XuiSession.UserLoginFailure e) {
+                        output.print(e.getMessage());
+                        input.clear();
+                    }
+                    if (mgrUl != null) {
+                        boolean isMgr = session.hasRole(mgrUl, "MANAGER");
+                        if (!isMgr) {
+                            output.print("User is not a valid manager!");
+                            input.clear();
+                        } else {
+                            ManagerEvents.mgrLoggedIn = true;
+                            pos.showPage("main/mgrpanel");
+                        }
+                    }
+                }
+            }
+            input.setFunction(loginFunc);
+
+        } else {
+            Debug.log("Login function called but not prepared as a function!", module);
+        }
+    }
 }
