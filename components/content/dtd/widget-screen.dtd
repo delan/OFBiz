@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.6 2004/06/29 15:55:17 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.7 2004/07/08 09:27:36 jonesde Exp $
 -->
 
 <!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific">
@@ -52,35 +52,45 @@
     <!ELEMENT entity-one ( field-map* )>
     <!ATTLIST entity-one
         entity-name CDATA #REQUIRED
-        cache ( true | false ) "true"
+        use-cache ( true | false ) "true"
         auto-field-map ( true | false ) "true"
     >
     
-    <!ELEMENT entity-and ( field-map+, order-by* )>
+    <!ELEMENT entity-and ( field-map+, order-by*, ( limit-range | limit-view )? )>
     <!ATTLIST entity-and
         entity-name CDATA #REQUIRED
-        cache ( true | false ) "false"
+        use-cache ( true | false ) "false"
         filter-by-date ( true | false | by-name ) "false"
+        list-name CDATA #REQUIRED
     >
 
-    <!ELEMENT entity-condition ( condition-list, order-by* )>
+    <!ELEMENT entity-condition ( ( condition | condition-list ), having-condition-list?, select-field*, order-by*, ( limit-range | limit-view )? )>
     <!ATTLIST entity-condition
         entity-name CDATA #REQUIRED
+        use-cache ( true | false ) "false"
         filter-by-date ( true | false | by-name ) "false"
+        distinct ( true | false ) "false"
+        list-name CDATA #REQUIRED
     >
-
         <!ELEMENT condition-list ( ( condition | condition-list )+ )>
         <!ATTLIST condition-list
-            cache ( and | or ) "and"
+            combine ( and | or ) "and"
         >
-    
+        <!ELEMENT having-condition-list ( ( condition | condition-list )+ )>
+        <!ATTLIST having-condition-list
+            combine ( and | or ) "and"
+        >
         <!ELEMENT condition EMPTY>
         <!ATTLIST condition
             field-name CDATA #REQUIRED
             operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) #REQUIRED
-            env-name CDATA #REQUIRED
+            env-name CDATA #IMPLIED
+            value CDATA #IMPLIED
         >
-        
+        <!ELEMENT select-field EMPTY>
+        <!ATTLIST select-field
+            field-name CDATA #REQUIRED
+        >
         <!ELEMENT order-by EMPTY>
         <!ATTLIST order-by
             field-name CDATA #REQUIRED
@@ -88,14 +98,13 @@
         
         <!ELEMENT limit-range EMPTY>
         <!ATTLIST limit-range
-            start-env-name CDATA #REQUIRED
-            size-env-name CDATA #REQUIRED
+            start CDATA #REQUIRED
+            size CDATA #REQUIRED
         >
-        
         <!ELEMENT limit-view EMPTY>
         <!ATTLIST limit-view
-            view-index-env-name CDATA #REQUIRED
-            view-size-env-name CDATA #REQUIRED
+            view-index CDATA #REQUIRED
+            view-size CDATA #REQUIRED
         >
         
         <!ELEMENT field-map EMPTY>
