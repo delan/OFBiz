@@ -33,8 +33,8 @@
     <tagclass>org.ofbiz.core.taglib.PrintTag</tagclass>
     <bodycontent>empty</bodycontent>
     <info>Prints an attribute from the pageContext, prints nothing if null.</info>
-    <attribute><name>attribute</name><required>true</required></attribute>
-    <attribute><name>default</name><required>false</required></attribute>
+    <attribute><name>attribute</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+    <attribute><name>default</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
   </tag>
 
   <tag>
@@ -79,8 +79,8 @@
     <tagclass>org.ofbiz.core.taglib.IfTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <info>Displays the body element if true.</info>
-    <attribute><name>name</name><required>true</required></attribute>
-    <attribute><name>value</name><required>false</required></attribute>
+    <attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+    <attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
     <attribute><name>type</name><required>false</required></attribute>
     <attribute><name>size</name><required>false</required></attribute>
   </tag>
@@ -90,8 +90,8 @@
      <tagclass>org.ofbiz.core.taglib.UnlessTag</tagclass>
      <bodycontent>JSP</bodycontent>
      <info>Displays the body element if false.</info>
-     <attribute><name>name</name><required>true</required></attribute>
-     <attribute><name>value</name><required>false</required></attribute>
+     <attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+     <attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
      <attribute><name>type</name><required>false</required></attribute>
      <attribute><name>size</name><required>false</required></attribute>
   </tag>
