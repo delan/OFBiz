@@ -88,7 +88,7 @@ public class OrderedSet extends AbstractSet {
         if (index == -1)
             return backedList.add(obj);
         else {
-            backedList.add(index, obj);
+            backedList.set(index, obj);
             return false;
         }
     }
