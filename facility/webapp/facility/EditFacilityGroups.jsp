@@ -203,7 +203,7 @@
   </script>
   <div class='head2'>Add FacilityGroupMember:</div>
   <div class='tabletext'>
-    Facility Group ID: <input type=text size='20' name='facilityGroupId'>
+    Facility Group ID: <input type=text class='inputBox' size='20' name='facilityGroupId'>
     From Date: <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' class="inputBox" name='fromDate'>
     <input type="submit" value="Add">
   </div>
