@@ -1,29 +1,40 @@
 /*
- * OrderHelper.java
- *
- * Created on August 28, 2001, 11:25 AM
+ * $Id$
+ * $Log$
  */
 
 package org.ofbiz.commonapp.order.order;
 
 import java.util.*;
-
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 /**
+ * <p><b>Title:</b> Order Reading Helper
+ * <p><b>Description:</b> Utility class for easily extracting important information from orders
+ * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * XXX
- * adjustment:  
- * order item/amount:  multiply by quantity (unit price adjustment)
- * order item/percentage: multiply by unit price * quantity
- * order header/amount: flat amount
- * order header/percentage: multiply by order subtotal (sum of item totals)
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * adjustments MUST only be a percentage or an amount
+ * <p>The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
  *
- * @author  epabst
- * @version 
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Eric Pabst
+ *@created    Sept 7, 2001
+ *@version    1.0
  */
 public class OrderReadHelper {
     private GenericValue orderHeader;
@@ -73,33 +84,16 @@ public class OrderReadHelper {
         return null;
     }
         
-    public double getShippingTotal() {
-        GenericHelper helper = orderHeader.getHelper();
-        Iterator shippingChargeIter = helper.findByAnd("OrderAdjustment", UtilMisc.toMap(
-              "orderId", orderHeader.getString("orderId"), 
-                "orderAdjustmentTypeId", "SHIPPING_CHARGES"), null).iterator();
-        double result = 0.0;
-        while (shippingChargeIter.hasNext()) {
-            GenericValue shippingCharge = (GenericValue) shippingChargeIter.next();
-            //FIXME should check percentage and watch for null amount
-            result += shippingCharge.getDouble("amount").doubleValue();
-        }
-        return result;
-    }
-    
     public double getTotalPrice() {
         if (totalPrice == null) {
             double total = getOrderItemsTotal();
-            Debug.log("getTotalPrice: itemsTotal=" + total);
             Iterator iter = getAdjustmentIterator();
             while (iter.hasNext()) {
                 Adjustment adjustment = (Adjustment) iter.next();
-                Debug.log("getTotalPrice: adjustment=" + adjustment.getAmount());
                 total += adjustment.getAmount();
             }
             totalPrice = new Double(total);
         }//else already set
-        Debug.log("getTotalPrice: result=" + totalPrice);
         return totalPrice.doubleValue();
     }
     
@@ -125,13 +119,10 @@ public class OrderReadHelper {
     
     public GenericValue getBillToPerson() {
         GenericHelper helper = orderHeader.getHelper();
-        Collection billToRoleList = helper.findByAnd("OrderRole", UtilMisc.toMap(
+        GenericEntity billToRole = getFirst(helper.findByAnd("OrderRole", UtilMisc.toMap(
                 "orderId", orderHeader.getString("orderId"), 
-                "roleTypeId", "BILL_TO_CUSTOMER"), null);
-        if (billToRoleList.size() > 0) {
-            GenericValue billToRole = (GenericValue) billToRoleList.iterator().next();
-            //XXX this will fail: 
-            //  return billToRole.getRelatedOne("Party").getRelatedOne("Person");
+                "roleTypeId", "BILL_TO_CUSTOMER"), null));
+        if (billToRole != null) {
             return helper.findByPrimaryKey("Person", UtilMisc.toMap("partyId", billToRole.getString("partyId")));
         } else {
             return null;
@@ -150,9 +141,8 @@ public class OrderReadHelper {
     
     public double getOrderItemTotal(GenericValue orderItem) {
         double result = orderItem.getDouble("unitPrice").doubleValue() * orderItem.getDouble("quantity").doubleValue();
-        Debug.log("getOrderItemTotal: itemTotal=" + result);
-        return result;
         //FIXME should include adjustments as well
+        return result;
     }
     
     /** Iterator of OrderReadHelper.Adjustment */

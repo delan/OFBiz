@@ -64,13 +64,8 @@ public class EntityTypeUtil
   }*/
     
   private static GenericValue getParentType(GenericValue typeValue) {
-      //XXX assumes Parent relation is "Parent<entityName>" and a 1 relation
-      Collection keys = typeValue.getRelatedCache("Parent" + typeValue.getEntityName());
-      if ((keys == null) || (keys.size() == 0)) {
-          return null;
-      } else {
-          return (GenericValue) keys.iterator().next();
-      }
+      //assumes Parent relation is "Parent<entityName>" 
+      return typeValue.getRelatedOneCache("Parent" + typeValue.getEntityName());
   }
 
   /**

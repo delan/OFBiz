@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/05 16:59:23  epabst
+ * use java.lang.Character.isXxx methods
+ *
  * Revision 1.6  2001/09/03 21:16:39  jonesde
  * Fixed little index problem with month number lookup.
  *

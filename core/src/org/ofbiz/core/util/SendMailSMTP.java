@@ -242,7 +242,7 @@ public class SendMailSMTP
   {
     out.write(toSay);
     out.flush();
-    Debug.log("SendMailSMTP: " + toSay);
+    //Debug.log("SendMailSMTP: " + toSay);
   }
 
   private String hear(boolean stop) throws IOException
