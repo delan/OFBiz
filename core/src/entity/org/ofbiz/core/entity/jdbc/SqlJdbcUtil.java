@@ -601,7 +601,7 @@ public class SqlJdbcUtil {
                 }
             }
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("SQL Exception while getting value: ", sqle);
+            throw new GenericDataSourceException("SQL Exception while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + ")", sqle);
         }
     }
 
