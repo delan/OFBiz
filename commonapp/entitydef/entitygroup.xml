@@ -269,6 +269,13 @@
     <entity-group group="org.ofbiz.commonapp" entity="Visit" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.website -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="WebSite" />
+    <entity-group group="org.ofbiz.commonapp" entity="WebPage" />
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.humanres.ability -->
   <!-- ========================================================= -->
 
@@ -484,6 +491,18 @@
     <entity-group group="org.ofbiz.commonapp" entity="PriorityType" />
     <entity-group group="org.ofbiz.commonapp" entity="RoleType" />
     <entity-group group="org.ofbiz.commonapp" entity="RoleTypeAttr" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.product.catalog -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalog" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategory" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategoryType" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogPromo" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogPromoAppl" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogPromoType" />
+    <entity-group group="org.ofbiz.commonapp" entity="WebSiteCatalog" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.category -->

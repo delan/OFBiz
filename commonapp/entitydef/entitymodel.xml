@@ -448,6 +448,15 @@
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId"/>
       </relation>
+      <relation type="many" title="From" rel-entity-name="ContentAssociation">
+        <key-map field-name="contentId" rel-field-name="contentIdFrom"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="ContentAssociation">
+        <key-map field-name="contentId" rel-field-name="contentIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="WebPage">
+        <key-map field-name="contentId"/>
+      </relation>
     </entity>
     <entity entity-name="ContentAssociation"
             package-name="org.ofbiz.commonapp.content.content"
@@ -459,6 +468,12 @@
       <field name="upperLeftCoordinate" type="numeric"></field>
       <prim-key field="contentIdFrom"/>
       <prim-key field="contentIdTo"/>
+      <relation type="one" title="From" rel-entity-name="Content">
+        <key-map field-name="contentIdFrom" rel-field-name="contentId"/>
+      </relation>
+      <relation type="one" title="To" rel-entity-name="Content">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </relation>
     </entity>
     <entity entity-name="ContentAttribute"
             package-name="org.ofbiz.commonapp.content.content"
@@ -1248,6 +1263,29 @@
       </relation>
       <relation type="many" rel-entity-name="ServerHit">
         <key-map field-name="visitId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.website -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="WebSite"
+            package-name="org.ofbiz.commonapp.content.website"
+            title="Web Site Entity">
+      <field name="webSiteId" type="id-ne"></field>
+      <field name="name" type="name"></field>
+      <prim-key field="webSiteId"/>
+    </entity>
+    <entity entity-name="WebPage"
+            package-name="org.ofbiz.commonapp.content.website"
+            title="Web Page Entity">
+      <field name="webPageId" type="id-ne"></field>
+      <field name="name" type="name"></field>
+      <field name="contentId" type="id"></field>
+      <prim-key field="webSiteId"/>
+      <relation type="one" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
       </relation>
     </entity>
 

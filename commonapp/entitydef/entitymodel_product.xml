@@ -43,6 +43,7 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
+  <!--  - org.ofbiz.commonapp.product.catalog -->
   <!--  - org.ofbiz.commonapp.product.category -->
   <!--  - org.ofbiz.commonapp.product.cost -->
   <!--  - org.ofbiz.commonapp.product.feature -->
@@ -53,6 +54,115 @@
   <!--  - org.ofbiz.commonapp.product.supplier -->
   <!-- ========================================================= -->
 
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.product.catalog -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProdCatalog"
+            package-name="org.ofbiz.commonapp.product.catalog"
+            title="Catalog Entity">
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="name" type="name"></field>
+      <field name="title" type="name"></field>
+      <field name="subtitle" type="description"></field>
+      <field name="inventoryFacilityId" type="id"></field>
+      <prim-key field="prodCatalogId"/>
+      <relation type="one" rel-entity-name="Facility">
+        <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogCategory"
+            package-name="org.ofbiz.commonapp.product.catalog"
+            title="Catalog Category Association Entity">
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="number"></field>
+      <field name="prodCatalogCategoryTypeId" type="id"></field>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" rel-entity-name="Catalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ProdCatalogCategoryType">
+        <key-map field-name="prodCatalogCategoryTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogCategoryType"
+            package-name="org.ofbiz.commonapp.product.catalog"
+            title="Catalog Category Association Type Entity">
+      <field name="prodCatalogCategoryTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="prodCatalogCategoryTypeId"/>
+      <relation type="many" rel-entity-name="ProdCatalogCategory">
+        <key-map field-name="prodCatalogCategoryTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogPromo"
+            package-name="org.ofbiz.commonapp.product.catalog"
+            title="Catalog Promotion Entity">
+      <field name="prodCatalogPromoId" type="id-ne"></field>
+      <field name="prodCatalogPromoTypeId" type="id-ne"></field>
+      <field name="promoText" type="description"></field>
+      <field name="orderTotalBoundary" type="currency-amount"></field>
+      <field name="discountQuantity" type="floating-point"></field>
+      <field name="productId" type="id"></field>
+      <prim-key field="prodCatalogPromoId"/>
+      <relation type="one" rel-entity-name="ProdCatalogPromoType">
+        <key-map field-name="prodCatalogPromoTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogPromoAppl"
+            package-name="org.ofbiz.commonapp.product.catalog"
+            title="Catalog Promotion Application Entity">
+      <field name="prodCatalogPromoId" type="id-ne"></field>
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="number"></field>
+      <prim-key field="prodCatalogPromoId"/>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" rel-entity-name="ProdCatalogPromo">
+        <key-map field-name="prodCatalogPromoId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogPromoType"
+            package-name="org.ofbiz.commonapp.product.catalog"
+            title="Catalog Promotion Type Entity">
+      <field name="prodCatalogPromoTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="prodCatalogPromoTypeId"/>
+      <relation type="many" rel-entity-name="ProdCatalogPromo">
+        <key-map field-name="prodCatalogPromoTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="WebSiteCatalog"
+            package-name="org.ofbiz.commonapp.product.catalog"
+            title="Web Site Catalog Association Entity">
+      <field name="webSiteId" type="id-ne"></field>
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="number"></field>
+      <prim-key field="webSiteId"/>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" rel-entity-name="WebSite">
+        <key-map field-name="webSiteId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.category -->
