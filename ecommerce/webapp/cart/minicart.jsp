@@ -5,15 +5,23 @@
 
 <%ShoppingCart miniShoppingCart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART);%>
 
-<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
-  <tr>
-    <td bgcolor='#678475' align=center
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+        <tr>
+          <td valign=middle align=center>
       <div class='boxhead'><b>Cart&nbsp;Summary</b></div>
-    </td>
-  </tr>
-
-  <tr>
-    <td bgcolor='white'>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+        <tr>
+          <td>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
 <%if(miniShoppingCart != null && miniShoppingCart.size() > 0){%>
     <tr>
@@ -57,7 +65,10 @@
     </tr>
 <%}%>
 </table>
-    </td>
-  </tr>
-</table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
 

@@ -5,10 +5,10 @@
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
 <BR>
-<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
-  <tr>
-    <td bgcolor="#678475">
-      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Quick Add</div>
@@ -19,29 +19,36 @@
           </td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <td bgcolor='white' colspan='2'>
-      <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="quickaddform" style='margin: 0;'>
-        <input type='text' name="product_id" value="<%=UtilFormatOut.checkNull(request.getParameter("product_id"))%>">
-        <input type='text' size="5" name="quantity" value="<%=UtilFormatOut.checkNull(request.getParameter("quantity"), "1")%>">
-        <input type='submit' value="Add To Cart">
-        <%-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> --%>
-      </form>      
-    </td>
-  </tr>
-</table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+        <tr>
+          <td>
+            <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="quickaddform" style='margin: 0;'>
+              <input type='text' name="product_id" value="<%=UtilFormatOut.checkNull(request.getParameter("product_id"))%>">
+              <input type='text' size="5" name="quantity" value="<%=UtilFormatOut.checkNull(request.getParameter("quantity"), "1")%>">
+              <input type='submit' value="Add To Cart">
+              <%-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> --%>
+            </form>      
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
 <script language="JavaScript">
 <!--
   document.quickaddform.product_id.focus();
 //-->
 </script>
 <BR>
-<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
-  <tr>
-    <td bgcolor="#678475">
-      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Shopping Cart</div>
@@ -53,15 +60,17 @@
           </td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <td bgcolor='white' colspan='2'>
-
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="white">
+        <tr>
+          <td>
 <ofbiz:if name="_SHOPPING_CART_">
   <ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart">  
     <FORM METHOD="POST" ACTION="<ofbiz:url>/modifycart</ofbiz:url>" name='cartform' style='margin: 0;'>
-      <TABLE width='100%' CELLSPACING="2" CELLPADDING="3" BORDER="0">
+      <table width='100%' CELLSPACING="0" CELLPADDING="4" BORDER="0">
         <TR> 
           <TD NOWRAP><div class='tabletext'><b>Product</b></div></TD>
           <TD NOWRAP align=center><div class='tabletext'><b>Quantity</b></div></TD>
@@ -91,14 +100,15 @@
         <TR> 
           <TD COLSPAN="3" ALIGN="right" valign=bottom> 
              <!-- <HR SIZE=1> -->
-            <div class='tabletext'>Cart Total:</div>
+            <div class='tabletext'><b>Cart Total:</b></div>
           </TD>
           <TD ALIGN="right" valign=bottom>
             <HR SIZE=1>
-            <div class='tabletext'><ofbiz:format type="c"><%= cart.getGrandTotal() %></ofbiz:format></div>
+            <div class='tabletext'><b><ofbiz:format type="c"><%= cart.getGrandTotal() %></ofbiz:format></b></div>
           </TD>
         </TR>
-      </TABLE>
+      </table>
+    </FORM>
 <%--
       <CENTER>
         <input type="checkbox" name="always_showcart" <%= cart.viewCartOnAdd() ? "checked" : "" %>>&nbsp;Always view cart after adding an item.
@@ -106,16 +116,21 @@
         <input type="submit" value="Update Cart">
       </CENTER>
 --%>
-    </FORM>
   </ofbiz:object>
 </ofbiz:if>
 <ofbiz:unless name="_SHOPPING_CART_">
   <div class='head2'>Your shopping cart is empty.</div>
 </ofbiz:unless>
-    </td>
-  </tr>
-  <tr>
-    <td bgcolor="#678475">
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+        <tr>
+          <td>
       <table width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td valign="middle" align="left">
@@ -128,9 +143,12 @@
           </td>
         </tr>
       </table>
-    </td>
-  </tr>
-</table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>

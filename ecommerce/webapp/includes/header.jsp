@@ -48,26 +48,26 @@ function mClk(src){
 
 <body>
 
-<TABLE width='100%' cellpadding='4' cellspacing='1' border='0' bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
   <TR>
-    <TD bgcolor='#678475'>
-      <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
-        <TR>
-          <TD align=left width='50%' >
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+        <tr>
+          <td align=left width='50%'>
             <div style="margin: 0; font-size: 24pt; font-weight: bold; color: white;">Open&nbsp;For&nbsp;Commerce</div>
             <div style="FONT-SIZE: 8pt; margin: 0; color: white;">Part&nbsp;of&nbsp;the&nbsp;Open&nbsp;For&nbsp;Business&nbsp;Family&nbsp;of&nbsp;Open&nbsp;Source&nbsp;Software</font></div>
           </TD>
           <TD align=right width='50%'>
 <%@ include file="/cart/microcart.jsp"%>
-          </TD>
-        </TR>
-      </TABLE>
+          </td>
+        </tr>
+      </table>
     </TD>
   </TR>
   <TR>
-    <TD bgcolor='#cccc99'>
-      <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
-        <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='#cccc99'>
+        <tr>
           <%
             String queryString = null;
             Enumeration parameterNames = request.getParameterNames();

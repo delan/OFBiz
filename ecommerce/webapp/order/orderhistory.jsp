@@ -61,10 +61,11 @@
   pageContext.setAttribute("orderHeaderList", orderHeaderList);
 %>
 <br>
-<table width='100%' border="0" bgcolor="black" cellpadding="4" cellspacing="1">
-  <tr>
-    <td bgcolor='#678475' align=left valign=center width='100%'>
-      <table width='100%' cellpadding='0' cellspacing='0' border='0'>
+
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+  <TR>
+    <TD width='100%'>
+      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
         <tr>
           <td align=left><div class="boxhead">Order History</div></td>
           <td align=right>
@@ -72,10 +73,13 @@
           </td>
         </tr>
       </table>      
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="center" bgcolor='white' width='100%'>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+        <tr>
+          <td>
   <table width="100%" cellpadding="3" cellspacing="0" border="0">
     <tr>
       <td width="30%">
@@ -120,9 +124,12 @@
       <tr><td colspan="8"><div class='head3'>No Orders Found</div></td></tr>
     </ofbiz:unless>
   </table>
-      </td>
-    </tr>
-  </table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
 <%-- <a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">&nbsp;[Back Home]</a> --%>
 <br>
 
