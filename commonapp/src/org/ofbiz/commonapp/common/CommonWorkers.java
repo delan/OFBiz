@@ -28,16 +28,20 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.jsp.*;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 /**
  * Common Workers
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */
 public class CommonWorkers {
+    
+    public final static String module = CommonWorkers.class.getName();
 
     public static String makeLoginUrl(PageContext pageContext) {
         return makeLoginUrl(pageContext, "checkLogin");
@@ -70,4 +74,40 @@ public class CommonWorkers {
 
         return loginUrl;
     }
+    
+    public static List getCountryList(GenericDelegator delegator) {
+        List geoList = new ArrayList();
+        String defaultCountry = UtilProperties.getPropertyValue("general.properties", "country.uom.id.default");
+        GenericValue defaultGeo = null;
+        if (defaultCountry != null && defaultCountry.length() > 0) { 
+            try {
+                defaultGeo = delegator.findByPrimaryKeyCache("Geo", UtilMisc.toMap("geoId", defaultCountry));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot lookup Geo", module);
+            }       
+        }        
+        Map findMap = UtilMisc.toMap("geoTypeId", "COUNTRY");
+        List sortList = UtilMisc.toList("geoName");
+        try {
+            geoList = delegator.findByAndCache("Geo", findMap, sortList);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot lookup Geo", module);
+        }        
+        if (defaultGeo != null) {
+            geoList.add(0, defaultGeo);
+        }        
+        return geoList;            
+    }
+    
+    public static List getStateList(GenericDelegator delegator) {
+        List geoList = new ArrayList();       
+        Map findMap = UtilMisc.toMap("geoTypeId", "STATE");
+        List sortList = UtilMisc.toList("geoName");
+        try {
+            geoList = delegator.findByAndCache("Geo", findMap, sortList);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot lookup Geo", module);
+        }                        
+        return geoList;            
+    }    
 }
