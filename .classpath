@@ -58,8 +58,6 @@
 	<classpathentry kind="lib" path="components/minerva/lib/jta_1.0.1.jar"/>
 	<classpathentry kind="lib" path="components/minerva/lib/jdbc2_0-stdext.jar"/>
 	<classpathentry kind="lib" path="components/service/lib/axis-ant.jar"/>
-	<classpathentry kind="lib" path="components/accounting/lib/cybersource/icswssecurity.jar"/>
-	<classpathentry kind="lib" path="components/accounting/lib/cybersource/icswsclients.jar"/>
 	<classpathentry kind="lib" path="components/jetty/lib/ant.jar"/>
 	<classpathentry kind="lib" path="components/jotm/lib/carol.jar"/>
 	<classpathentry kind="lib" path="components/jotm/lib/xapool.jar"/>
@@ -144,7 +142,6 @@
 	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-cluster.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-ant.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/catalina.jar"/>
-	<classpathentry kind="lib" path="components/manufacturing/lib/jep-2.24.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/lucene.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/xom-1.0d25.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/krysalis-barcode.jar"/>
