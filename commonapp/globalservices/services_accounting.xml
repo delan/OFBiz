@@ -82,6 +82,12 @@
         <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="setNewPaymentMethodAddress" engine="simple"
+            location="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="setPaymentMethodAddress" auth="true">
+        <description>Set the inital payment method address.</description>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+        <attribute name="newContactMechId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <service name="createPayment" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="createPayment" auth="true">

@@ -120,7 +120,7 @@
             <property-to-field resource="payment" property="sendFrom" field-name="sendFrom" map-name="emailParams"/>
             <property-to-field resource="payment" property="subject" field-name="subject" map-name="emailParams"/>
             <call-bsh><![CDATA[
-            String body = "Bad orders: " + org.ofbiz.core.Util.StringUtils.join(badOrders, ", ");
+            String body = "Bad orders: " + org.ofbiz.core.util.StringUtils.join(badOrders, ", ");
             emailParams.put("body", body);
             ]]></call-bsh>   
             <call-service service-name="sendMail" in-map-name="emailParams"/>
@@ -130,6 +130,10 @@
     <simple-method method-name="setPaymentMethodAddress" short-description="Set the initial payment method address">
         <make-value value-name="lookupPKMap" entity-name="PaymentMethod"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <if-empty field-name="contactMechId" map-name="lookupPKMap">
+            <!-- no contact mech id, try newContactMechId -->
+            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="lookupPKMap"/>
+        </if-empty>
         <find-by-primary-key entity-name="PaymentMethod" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <if-compare map-name="lookedUpValue" field-name="paymentMethodTypeId" operator="equals" value="CREDIT_CARD">
             <find-by-primary-key entity-name="CreditCard" map-name="lookupPKMap" value-name="mainValue"/>
