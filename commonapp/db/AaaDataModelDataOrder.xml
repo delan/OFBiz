@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <CustRequestType custRequestTypeId="RFB" description="Request For Bug Fix" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFF" description="Request For Feature" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFI" description="Request For Information" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFP" description="Request For Proposal" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFQ" description="Request For Quote" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFS" description="Request For Support" hasTable="N" parentTypeId=""/>
+
+  <OrderAdjustmentType description="Promotion" hasTable="N" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" parentTypeId=""/>
+  <OrderAdjustmentType description="Discount" hasTable="N" orderAdjustmentTypeId="DISCOUNT_ADJUSTMENT" parentTypeId=""/>
+  <OrderAdjustmentType description="Fee" hasTable="N" orderAdjustmentTypeId="FEE" parentTypeId=""/>
+  <OrderAdjustmentType description="Miscellaneous Charges" hasTable="N" orderAdjustmentTypeId="MISCELLANEOUS_CHARGE" parentTypeId=""/>
+  <OrderAdjustmentType description="Sales Tax" hasTable="N" orderAdjustmentTypeId="SALES_TAX" parentTypeId=""/>
+  <OrderAdjustmentType description="Shipping and Handling" hasTable="N" orderAdjustmentTypeId="SHIPPING_CHARGES" parentTypeId=""/>
+  <OrderAdjustmentType description="Surcharge" hasTable="N" orderAdjustmentTypeId="SURCHARGE_ADJUSTMENT" parentTypeId=""/>
+  <OrderAdjustmentType description="Additional Feature" hasTable="N" orderAdjustmentTypeId="ADDITIONAL_FEATURE" parentTypeId=""/>
+
+  <OrderItemType description="Purchase" hasTable="N" orderItemTypeId="PURCHASE_ORDER_ITEM" parentTypeId=""/>
+  <OrderItemType description="Sales" hasTable="N" orderItemTypeId="SALES_ORDER_ITEM" parentTypeId=""/>
+  <OrderItemType description="Work" hasTable="N" orderItemTypeId="WORK_ORDER_ITEM" parentTypeId=""/>
+
+  <OrderType description="Purchase" hasTable="N" orderTypeId="PURCHASE_ORDER" parentTypeId=""/>
+  <OrderType description="Sales" hasTable="N" orderTypeId="SALES_ORDER" parentTypeId=""/>
+  <OrderType description="Work" hasTable="N" orderTypeId="WORK_ORDER" parentTypeId=""/>
+
+  <QuoteType description="Other" hasTable="N" parentTypeId="" quoteTypeId="OTHER_QUOTE"/>
+  <QuoteType description="Product" hasTable="N" parentTypeId="" quoteTypeId="PRODUCT_QUOTE"/>
+  <QuoteType description="Proposal" hasTable="N" parentTypeId="" quoteTypeId="PROPOSAL"/>
+
+  <RequirementType description="Customer Requirement" hasTable="N" parentTypeId="" requirementTypeId="CUSTOMER_REQUIREMENT"/>
+  <RequirementType description="Internal Requirement" hasTable="N" parentTypeId="" requirementTypeId="INTERNAL_REQUIREMENT"/>
+  <RequirementType description="Product Requirement" hasTable="N" parentTypeId="" requirementTypeId="PRODUCT_REQUIREMENT"/>
+  <RequirementType description="Work Requirement" hasTable="N" parentTypeId="" requirementTypeId="WORK_REQUIREMENT"/>
+
+  <ShoppingListType description="Public Wish List" shoppingListTypeId="SLT_PUB_WISH_LIST"/>
+  <ShoppingListType description="Private Wish List" shoppingListTypeId="SLT_PRIV_WISH_LIST"/>
+  <ShoppingListType description="Gift Registry" shoppingListTypeId="SLT_GIFT_REG"/>
+  <ShoppingListType description="Baby Registry" shoppingListTypeId="SLT_BABY_REG"/>
+  <ShoppingListType description="Wedding Registry" shoppingListTypeId="SLT_WEDDING_REG"/>
+  <ShoppingListType description="Frequent Purchases" shoppingListTypeId="SLT_FREQ_PURCHASES"/>
+
+  <!-- order item inventory res status -->
+  <StatusType description="Order Item Inventory Res" hasTable="N" parentTypeId="" statusTypeId="ORDITM_INVRES_STTS"/>
+  <StatusItem description="Reserved" sequenceId="01" statusCode="RESERVED" statusId="OIIR_RESERVED" statusTypeId="ORDITM_INVRES_STTS"/>
+  <StatusItem description="Cancelled" sequenceId="02" statusCode="CANCELLED" statusId="OIIR_CANCELLED" statusTypeId="ORDITM_INVRES_STTS"/>
+  <StatusValidChange condition="" statusId="OIIR_RESERVED" statusIdTo="OIIR_CANCELLED" transitionName="Cancel Reservation"/>
+  
+  <!-- order and order item status -->
+  <StatusType description="Order" hasTable="N" parentTypeId="" statusTypeId="ORDER_STATUS"/>
+  <StatusType description="Order Item" hasTable="N" parentTypeId="ORDER_STATUS" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDER_ORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ORDER_APPROVED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ORDER_COMPLETED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ORDER_BACKORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ORDER_REJECTED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ITEM_ORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ITEM_APPROVED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ITEM_COMPLETED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ITEM_BACKORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ITEM_REJECTED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_APPROVED" transitionName="Approve Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_REJECTED" transitionName="Reject Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_COMPLETED" transitionName="Comlpete Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="ORDER_BACKORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Back Order"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Item"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_REJECTED" transitionName="Reject Item"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_COMPLETED" transitionName="Complete Item"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order Item"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order Item"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
+  <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item Back Order"/>
+
+  <WorkReqFulfType description="Implements" workReqFulfTypeId="WRF_IMPLEMENTS"/>
+  <WorkReqFulfType description="Fixes" workReqFulfTypeId="WRF_FIXES"/>
+  <WorkReqFulfType description="Deploys" workReqFulfTypeId="WRF_DEPLOYS"/>
+  <WorkReqFulfType description="Tests" workReqFulfTypeId="WRF_TESTS"/>
+  <WorkReqFulfType description="Delivers" workReqFulfTypeId="WRF_DELIVERS"/>
+</entity-engine-xml>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <QuantityBreakType description="Shipping Weight Break" quantityBreakTypeId="SHIP_WEIGHT"/>
+  <QuantityBreakType description="Shipping Quantity Break" quantityBreakTypeId="SHIP_QUANTITY"/>
+  <QuantityBreakType description="Shipping Price Break" quantityBreakTypeId="SHIP_PRICE"/>
+
+  <ShipmentContactMechType description="Ship-To Address" shipmentContactMechTypeId="SHIP_TO_ADDRESS"/>
+  <ShipmentContactMechType description="Ship-From Address" shipmentContactMechTypeId="SHIP_FROM_ADDRESS"/>
+  <ShipmentContactMechType description="Ship-To Telecom Number" shipmentContactMechTypeId="SHIP_TO_TELECOM"/>
+  <ShipmentContactMechType description="Ship-From Telecom Number" shipmentContactMechTypeId="SHIP_FROM_TELECOM"/>
+  <ShipmentContactMechType description="Ship-To E-Mail" shipmentContactMechTypeId="SHIP_TO_EMAIL"/>
+  <ShipmentContactMechType description="Ship-From E-Mail" shipmentContactMechTypeId="SHIP_TO_EMAIL"/>
+
+  <ShipmentMethodType description="Standard" shipmentMethodTypeId="standard"/>
+  <ShipmentMethodType description="Express" shipmentMethodTypeId="express"/>
+  <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
+  <ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
+  <ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
+  <ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+
+  <ShipmentType description="Incoming" hasTable="N" parentTypeId="" shipmentTypeId="INCOMING_SHIPMENT"/>
+  <ShipmentType description="Outgoing" hasTable="N" parentTypeId="" shipmentTypeId="OUTGOING_SHIPMENT"/>
+  <ShipmentType description="Customer Return" hasTable="N" parentTypeId="INCOMING_SHIPMENT" shipmentTypeId="CUSTOMER_RETURN"/>
+  <ShipmentType description="Customer Shipment" hasTable="N" parentTypeId="OUTGOING_SHIPMENT" shipmentTypeId="CUSTOMER_SHIPMENT"/>
+  <ShipmentType description="Purchase Shipment" hasTable="N" parentTypeId="INCOMING_SHIPMENT" shipmentTypeId="PURCHASE_SHIPMENT"/>
+  <ShipmentType description="Purchase Return" hasTable="N" parentTypeId="OUTGOING_SHIPMENT" shipmentTypeId="PURCHASE_RETURN"/>
+  <ShipmentType description="Drop Shipment" hasTable="N" parentTypeId="" shipmentTypeId="DROP_SHIPMENT"/>
+  <ShipmentType description="Transfer" hasTable="N" parentTypeId="" shipmentTypeId="TRANSFER"/>
+
+  <!-- shipment status -->
+  <StatusType description="Shipment" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Scheduled" sequenceId="01" statusCode="SCHEDULED" statusId="SHIPMENT_SCHEDULED" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Shipped" sequenceId="02" statusCode="SHIPPED" statusId="SHIPMENT_SHIPPED" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="In-Route" sequenceId="03" statusCode="INROUTE" statusId="SHIPMENT_INROUTE" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="SHIPMENT_DELIVERED" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="SHIPMENT_CANCELLED" statusTypeId="SHIPMENT_STATUS"/>
+</entity-engine-xml>

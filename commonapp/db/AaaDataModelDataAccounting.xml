@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <AcctgTransType acctgTransTypeId="INTERNAL_ACCTG_TRANS" description="Internal" hasTable="Y" parentTypeId=""/>
+  <AcctgTransType acctgTransTypeId="AMORTIZATION" description="Amorization" hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="DEPRECIATION" description="Depreciation" hasTable="Y" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="CAPITALIZATION" description="Capitalization" hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="ITEM_VARIANCE_ACCTG_" description="Item Variance" hasTable="Y" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="OTHER_INTERNAL_ACCTG" description="Other Internal" hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="EXTERNAL_ACCTG_TRANS" description="External" hasTable="Y" parentTypeId=""/>
+  <AcctgTransType acctgTransTypeId="OBLIGATION_ACCTG_TRA" description="Obligation" hasTable="N" parentTypeId="EXTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="CREDIT_LINE" description="Credit Line" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="CREDIT_MEMO" description="Credit Memo" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="NOTE" description="Note" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="OTHER_OBLIGATION" description="Other Obligation" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="SALES_ACCTG_TRANS" description="Sales" hasTable="Y" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="TAX_DUE" description="Tax Due" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="PAYMENT_ACCTG_TRANS" description="Payment" hasTable="Y" parentTypeId="EXTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="DISBURSEMENT_ACCTG_T" description="Disbursement" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="RECEIPT_ACCTG_TRANS" description="Receipt" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
+
+  <BudgetItemType budgetItemTypeId="REQUIREMENT_BUDGET_A" description="Requirement" hasTable="Y" parentTypeId=""/>
+
+  <BudgetType budgetTypeId="CAPITAL_BUDGET" description="Capital" hasTable="N" parentTypeId=""/>
+  <BudgetType budgetTypeId="OPERATING_BUDGET" description="Operating" hasTable="N" parentTypeId=""/>
+
+  <FinAccountTransType description="Deposit" finAccountTransTypeId="DEPOSIT" hasTable="N" parentTypeId=""/>
+  <FinAccountTransType description="Withdraw" finAccountTransTypeId="WITHDRAWAL" hasTable="N" parentTypeId=""/>
+  <FinAccountTransType description="Adjustment" finAccountTransTypeId="ADJUSTMENT" hasTable="N" parentTypeId=""/>
+
+  <FinAccountType description="Bank" finAccountTypeId="BANK_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <FinAccountType description="Investment" finAccountTypeId="INVESTMENT_ACCOUNT" hasTable="N" parentTypeId=""/>
+
+  <FixedAssetType description="Equipment" fixedAssetTypeId="EQUIPMENT" hasTable="N" parentTypeId=""/>
+  <FixedAssetType description="Other Fixed Asset" fixedAssetTypeId="OTHER_FIXED_ASSET" hasTable="N" parentTypeId=""/>
+  <FixedAssetType description="Property" fixedAssetTypeId="PROPERTY" hasTable="N" parentTypeId=""/>
+  <FixedAssetType description="Vehicle" fixedAssetTypeId="VEHICLE" hasTable="N" parentTypeId=""/>
+
+  <InvoiceItemType description="Purchase" hasTable="N" invoiceItemTypeId="PURCHASE_INVOICE_ITE" parentTypeId=""/>
+  <InvoiceItemType description="Sales" hasTable="N" invoiceItemTypeId="SALES_INVOICE_ITEM" parentTypeId=""/>
+
+  <InvoiceType description="Purchase" hasTable="N" invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
+  <InvoiceType description="Sales" hasTable="N" invoiceTypeId="SALES_INVOICE" parentTypeId=""/>
+
+  <PaymentMethodType description="Credit Card" paymentMethodTypeId="CREDIT_CARD"/>
+  <PaymentMethodType description="Gift Certificate" paymentMethodTypeId="GIFT_CERTIFICATE"/>
+  <PaymentMethodType description="Cash" paymentMethodTypeId="CASH"/>
+  <PaymentMethodType description="Electronic Funds Transfer" paymentMethodTypeId="EFT_ACCOUNT"/>
+  <PaymentMethodType description="Personal Check" paymentMethodTypeId="PERSONAL_CHECK"/>
+  <PaymentMethodType description="Certified Check" paymentMethodTypeId="CERTIFIED_CHECK"/>
+  <PaymentMethodType description="Money Order" paymentMethodTypeId="MONEY_ORDER"/>
+  <PaymentMethodType description="Offline Payment" paymentMethodTypeId="OFFLINE"/>
+
+  <PaymentType description="Disbursement" hasTable="N" parentTypeId="" paymentTypeId="DISBURSEMENT"/>
+  <PaymentType description="Pay Check" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="PAY_CHECK"/>
+  <PaymentType description="Receipt" hasTable="N" parentTypeId="" paymentTypeId="RECEIPT"/>
+
+  <StatusType description="Budget" hasTable="N" parentTypeId="" statusTypeId="BUDGET_STATUS"/>
+  <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
+  <StatusType description="Party Asset" hasTable="N" parentTypeId="" statusTypeId="PARTY_ASSET_STATUS"/>
+
+  <!-- order payment pref status -->
+  <StatusType description="Payment Preference" hasTable="N" parentTypeId="" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Not-Authorized" sequenceId="01" statusCode="NOT_AUTHORIZED" statusId="PAYMENT_NOT_AUTH" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Authorized" sequenceId="02" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Settled" sequenceId="03" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Declined" sequenceId="04" statusCode="DECLINED" statusId="PAYMENT_DECLINED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusValidChange condition="" statusId="PAYMENT_AUTHORIZED" statusIdTo="PAYMENT_SETTLED" transitionName="Payment Settled"/>
+</entity-engine-xml>
