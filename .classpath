@@ -54,7 +54,6 @@
 	<classpathentry kind="lib" path="components/entity/lib/jdbc/hsqldb.jar"/>
 	<classpathentry kind="lib" path="components/entity/lib/dbcp/commons-dbcp.jar"/>
 	<classpathentry kind="lib" path="components/entity/lib/dbcp/commons-pool.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jdbc/mm.mysql-2.0.14-bin.jar"/>
 	<classpathentry kind="lib" path="components/entity/lib/jdbc/p6spy.jar"/>
 	<classpathentry kind="lib" path="components/entity/lib/jdbc/postgresql.jar"/>
 	<classpathentry kind="lib" path="components/entity/lib/jdbc/sapdbc.jar"/>
@@ -81,7 +80,6 @@
 	<classpathentry kind="lib" path="components/jotm/lib/jotm.jar"/>
 	<classpathentry kind="lib" path="components/jotm/lib/jotm_jrmp_stubs.jar"/>
 	<classpathentry kind="lib" path="components/jotm/lib/jotm_iiop_stubs.jar"/>
-	<classpathentry kind="lib" path="components/jotm/lib/jonas_timer.jar"/>
 	<classpathentry kind="lib" path="components/jetty/lib/org.mortbay.jmx.jar"/>
 	<classpathentry kind="lib" path="components/jetty/lib/org.mortbay.jetty.jar"/>
 	<classpathentry kind="lib" path="components/jetty/lib/jmxtools.jar"/>
@@ -90,5 +88,27 @@
 	<classpathentry kind="lib" path="components/jetty/lib/jasper-compiler.jar"/>
 	<classpathentry kind="lib" path="base/lib/servlet.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/jython.jar"/>
+	<classpathentry kind="lib" path="components/jotm/lib/connector-1_5.jar"/>
+	<classpathentry kind="lib" path="components/jotm/lib/commons-cli.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkxpdl-standard.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkutilities-xpdl.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkutilities-misc.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkutilities-map.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharktoolagent-standard.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharksecurity-standard.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkscripting-standard.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkprocesslocking-memory.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharklogging-standard.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharklimitagent-timer.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkkernel-standard.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkinternalapi.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkcorbaserver.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkcorbaclientapi.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkcommonapi.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkclientapi.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkcaching-lru.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkauthentication-ldap.jar"/>
+	<classpathentry kind="lib" path="components/shark/lib/sharkassignment-standard.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
