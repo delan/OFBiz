@@ -34,7 +34,7 @@
         <make-value entity-name="DataResource" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateDataResource" short-description="Update a Data Resource">
@@ -466,7 +466,7 @@
     </simple-method>
 
     <!-- Methods for ElectronicText -->
-    <simple-method method-name="createElectronicText" short-description="Create Data Resource Role">
+    <simple-method method-name="createElectronicText" short-description="Create Electronic Text">
         <check-permission action="_CREATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run createElectronicText you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
@@ -474,9 +474,16 @@
         <make-value entity-name="ElectronicText" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="dataResourceId" map-name="newEntity">
+            <string-to-field string="ELECTRONIC_TEXT" field-name="dataResourceTypeId" map-name="serviceCtx"/>
+            <call-service service-name="createDataResource" in-map-name="serviceCtx">
+                <result-to-field result-name="dataResourceId" map-name="newEntity"/>
+            </call-service>
+        </if-empty>
         <create-value value-name="newEntity"/>
+        <field-to-result field-name="dataResourceId" map-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateElectronicText" short-description="Update Data Resource Role">
+    <simple-method method-name="updateElectronicText" short-description="Update Electronic Text">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run updateElectronicText you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
@@ -487,7 +494,7 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removeElectronicText" short-description="Remove Data Resource Role">
+    <simple-method method-name="removeElectronicText" short-description="Remove Electronic Text">
         <check-permission action="_DELETE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run removeElectronicText you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
@@ -497,6 +504,47 @@
         <find-by-primary-key entity-name="ElectronicText" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+
+    <!-- Methods for OtherDataResource -->
+    <simple-method method-name="createOtherDataResource" short-description="Create Other Data Resource">
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run createElectronicText you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="OtherDataResource" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="dataResourceId" map-name="newEntity">
+            <string-to-field string="OTHER_OBJECT" field-name="dataResourceTypeId" map-name="serviceCtx"/>
+            <call-service service-name="createDataResource" in-map-name="serviceCtx">
+                <result-to-field result-name="dataResourceId" map-name="newEntity"/>
+            </call-service>
+        </if-empty>
+        <create-value value-name="newEntity"/>
+        <field-to-result field-name="dataResourceId" map-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateOtherDataResource" short-description="Update Other Data Resource">
+        <check-permission action="_UPDATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run updateElectronicText you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="OtherDataResource" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="OtherDataResource" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeOtherDataResource" short-description="Remove Other Data Resource">
+        <check-permission action="_DELETE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run removeElectronicText you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="OtherDataResource" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="OtherDataResource" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
     <!-- 
     getElectronicText
     Passed a Content GenericValue or a contentId, this service returns the text data from
@@ -545,4 +593,5 @@
         <log level="always" message="result:${result}"/>
         <log level="always" message="parameters:${parameters}"/>
     </simple-method>
+
 </simple-methods>
