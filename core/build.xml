@@ -8,13 +8,20 @@
     <!-- ================================================================== -->
 
     <target name="init">
-        <property name="name"           value="ofbiz-core"          />
+	 	<property environment="env"                                 />
+        <property name="name"           value="core"                />
         <property name="src.dir"        value="src"                 />
         <property name="etc.dir"        value="etc"                 />
         <property name="lib.dir"        value="lib"                 />
+		<property name="doc.dir"        value="docs"                />
         <property name="build.dir"      value="build"               />
         <property name="build.compiler" value="classic"             /> 
         <property name="pkg-dist.name"  value="${name}-pkg"         />
+		
+		<!-- Classpath setting -->
+		<property name="servlet.jar"    value="${env.TOMCAT_HOME}/lib/servlet.jar" />
+		<property name="classpath"      value="${env.CLASSPATH}:${servlet.jar}"    />		
+		<echo message="classpath: ${classpath}" />
     </target>
 
 
@@ -36,6 +43,11 @@
         <mkdir dir="${lib.dir}" />
         <mkdir dir="${build.dir}" />
     </target>
+	
+	<target name="prepare-docs" depends="init">
+		<mkdir dir="${doc.dir}" />
+		<mkdir dir="${doc.dir}/api" />
+	</target>
 
 
     <!-- ================================================================== -->
@@ -43,16 +55,26 @@
     <!-- ================================================================== -->
 
 
-    <target name="core-classes" depends="prepare">
+    <target name="classes" depends="prepare">
         <javac srcdir="${src.dir}"
                destdir="${lib.dir}" />               
     </target>
 
 
-    <target name="jar" depends="core-classes">
+    <target name="jar" depends="classes">
         <jar jarfile="${build.dir}/${name}.jar"
              basedir="${lib.dir}" />
     </target>
+
+	
+    <!-- ================================================================== -->
+    <!-- Build JavaDoc                                                      -->
+    <!-- ================================================================== -->
+
+	<target name="docs" depends="prepare-docs">
+		<javadoc packagenames="org.ofbiz.*" classpath="${classpath}"
+		         sourcepath="${src.dir}" destdir="${doc.dir}/api" />
+	</target> 
 
 
     <!-- ================================================================== -->
