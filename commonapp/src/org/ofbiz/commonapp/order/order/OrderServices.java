@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.order.order;
-
 
 import java.util.*;
 
@@ -34,15 +32,14 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.product.catalog.*;
 
-
 /**
  * Order Processing Services
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    December 11, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 
 public class OrderServices {
@@ -85,7 +82,6 @@ public class OrderServices {
         while (itemIter.hasNext()) {
             // if the item is out of stock, return an error to that effect
             GenericValue orderItem = (GenericValue) itemIter.next();
-
             GenericValue product = null;
 
             try {
@@ -106,7 +102,8 @@ public class OrderServices {
 
             // check to see if introductionDate hasn't passed yet
             if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
-                String excMsg = UtilProperties.getMessage(resource, "product.not_yet_for_sale", new Object[] { getProductName(product, orderItem), product.getString("productId") }, locale);
+                String excMsg = UtilProperties.getMessage(resource, "product.not_yet_for_sale", 
+                		new Object[] { getProductName(product, orderItem), product.getString("productId") }, locale);
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
                 continue;
@@ -114,15 +111,18 @@ public class OrderServices {
 
             // check to see if salesDiscontinuationDate has passed
             if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
-                String excMsg = UtilProperties.getMessage(resource, "product.no_longer_for_sale", new Object[] { getProductName(product, orderItem), product.getString("productId") }, locale);
+                String excMsg = UtilProperties.getMessage(resource, "product.no_longer_for_sale", 
+                		new Object[] { getProductName(product, orderItem), product.getString("productId") }, locale);
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
                 continue;
             }
 
             if (CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator)) {
-                if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
-                    String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock", new Object[] { getProductName(product, orderItem), orderItem.getString("productId") }, locale);
+                if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), 
+                		orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
+                    String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock", 
+                    		new Object[] { getProductName(product, orderItem), orderItem.getString("productId") }, locale);
                     Debug.logWarning(invErrMsg);
                     errorMessages.add(invErrMsg);
                     continue;
@@ -144,9 +144,12 @@ public class OrderServices {
                     "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
                     "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
 
-        if (UtilValidate.isNotEmpty((String) context.get("visitId"))) order.set("visitId", context.get("visitId"));
+        if (UtilValidate.isNotEmpty((String) context.get("visitId"))) 
+        	order.set("visitId", context.get("visitId"));
+        	
         if (userLogin != null && userLogin.get("userLoginId") != null)
             order.set("createdBy", userLogin.getString("userLoginId"));
+            
         toBeStored.add(order);
 
         // set the orderId on all adjustments; this list will include order and item adjustments...
@@ -180,7 +183,6 @@ public class OrderServices {
 
             while (ocmi.hasNext()) {
                 GenericValue ocm = (GenericValue) ocmi.next();
-
                 ocm.set("orderId", orderId);
                 toBeStored.add(ocm);
             }
@@ -194,7 +196,6 @@ public class OrderServices {
 
             while (oicmi.hasNext()) {
                 GenericValue oicm = (GenericValue) oicmi.next();
-
                 oicm.set("orderId", orderId);
                 toBeStored.add(oicm);
             }
@@ -208,7 +209,6 @@ public class OrderServices {
 
             while (oshprefs.hasNext()) {
                 GenericValue orderShipmentPreference = (GenericValue) oshprefs.next();
-
                 orderShipmentPreference.set("orderId", orderId);
                 orderShipmentPreference.set("carrierRoleTypeId", "CARRIER");
                 if (orderShipmentPreference.get("orderItemSeqId") == null || orderShipmentPreference.getString("orderItemSeqId").length() == 0) {
@@ -220,17 +220,14 @@ public class OrderServices {
 
         // set the order items
         Iterator oi = orderItems.iterator();
-
         while (oi.hasNext()) {
             GenericValue orderItem = (GenericValue) oi.next();
-
             orderItem.set("orderId", orderId);
             toBeStored.add(orderItem);
         }
 
         // set the item price info; NOTE: this must be after the orderItems are stored for referential integrity
         List orderItemPriceInfo = (List) context.get("orderItemPriceInfos");
-
         if (orderItemPriceInfo != null && orderItemPriceInfo.size() > 0) {
             Iterator oipii = orderItemPriceInfo.iterator();
 
@@ -255,29 +252,25 @@ public class OrderServices {
 
         for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
             // make sure the party is in the role before adding it...
-            toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap(
-                        "partyId", partyId,
-                        "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
-            toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
-                        "orderId", orderId,
-                        "partyId", partyId,
-                        "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
+            toBeStored.add(delegator.makeValue("PartyRole", 
+            		UtilMisc.toMap("partyId", partyId, "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
+                                                
+            toBeStored.add(delegator.makeValue("OrderRole", 
+            		UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", USER_ORDER_ROLE_TYPES[i])));                                                                        
         }
 
-        // set the affiliate
+        // set the affiliate -- This is going to be removed...
         String affiliateId = (String) context.get("affiliateId");
-
         if (UtilValidate.isNotEmpty(affiliateId)) {
-            toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
-                        "orderId", orderId, "partyId", affiliateId, "roleTypeId", "AFFILIATE")));
+            toBeStored.add(delegator.makeValue("OrderRole", 
+            		UtilMisc.toMap("orderId", orderId, "partyId", affiliateId, "roleTypeId", "AFFILIATE")));                        
         }
 
         // set the distributor
         String distributorId = (String) context.get("distributorId");
-
         if (UtilValidate.isNotEmpty(distributorId)) {
-            toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
-                        "orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
+            toBeStored.add(delegator.makeValue("OrderRole", 
+            		UtilMisc.toMap("orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));                        
         }
 
         // set the order status
