@@ -86,7 +86,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
-        Boolean shipCharge = product().getBoolean("chargeShipping");
+        Boolean shipCharge = getProduct().getBoolean("chargeShipping");
         if (shipCharge == null)
             return true;
         else
@@ -105,12 +105,12 @@ public class ShoppingCartItem implements java.io.Serializable {
     
     /** Returns the item's description. */
     public String getName() {
-        return product().getString("productName");
+        return getProduct().getString("productName");
     }
     
     /** Returns the item's description. */
     public String getDescription() {
-        return product().getString("description");
+        return getProduct().getString("description");
     }
     
     /** Returns the item's comment. */
@@ -120,7 +120,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     
     /** Returns the item's unit weight */
     public double getWeight() {
-        Double weight = product().getDouble("weight");
+        Double weight = getProduct().getDouble("weight");
         if (weight == null)
             return 0;
         else 
@@ -135,7 +135,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the base price. */
     public double getBasePrice() {
         // todo calculate the price using price component.
-        Double defaultPrice = product().getDouble("defaultPrice");
+        Double defaultPrice = getProduct().getDouble("defaultPrice");
         if (defaultPrice != null)
             return defaultPrice.doubleValue();
         else
@@ -194,7 +194,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }      
     
     // Gets the Product entity if its not there
-    private GenericValue product() {
+    public GenericValue getProduct() {
         if (_product != null) 
             return _product;
         if (delegatorName == null || productId == null)
@@ -208,6 +208,4 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         return _product;
     }
-        
-        
 }
