@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
+import java.util.Set;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
@@ -373,5 +375,18 @@ public class DispatchContext implements Serializable {
 
         return globalMap;
     }
-}
 
+    public Set getAllServiceNames() {
+        Set serviceNames = new TreeSet();
+
+        Map globalServices = (Map) modelService.get(GLOBAL_KEY);
+        Map localServices = (Map) modelService.get(name);
+        if (globalServices != null) {
+            serviceNames.addAll(globalServices.keySet());
+        }
+        if (localServices != null) {
+            serviceNames.addAll(localServices.keySet());
+        }
+        return serviceNames;
+    }
+}

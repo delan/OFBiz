@@ -133,7 +133,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         int i = 0;
         
         call.setOperation(call.getOperationName().getLocalPart());
-        Vector vParams=new Vector();
+        Vector vParams = new Vector();
         Iterator iter = inModelParamList.iterator();
         while (iter.hasNext()) {
             ModelParam p = (ModelParam) iter.next();

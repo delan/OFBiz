@@ -32,6 +32,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.group.GroupModel;
@@ -243,8 +244,8 @@ public class ModelService implements Serializable {
         }        
     }
 
-    public Set getAllParamNames() {        
-        Set nameList = new TreeSet();
+    public Set getAllParamNames() {
+        Set nameList = new OrderedSet();
         Iterator i = this.contextParamList.iterator();
 
         while (i.hasNext()) {
@@ -255,7 +256,7 @@ public class ModelService implements Serializable {
     }
 
     public Set getInParamNames() {        
-        Set nameList = new TreeSet();        
+        Set nameList = new OrderedSet();
         Iterator i = this.contextParamList.iterator();
 
         while (i.hasNext()) {
@@ -268,7 +269,7 @@ public class ModelService implements Serializable {
     }
     
     public Set getOutParamNames() {
-        Set nameList = new TreeSet();        
+        Set nameList = new OrderedSet();
         Iterator i = this.contextParamList.iterator();
 
         while (i.hasNext()) {
@@ -563,9 +564,10 @@ public class ModelService implements Serializable {
      * Note: IN and OUT will also contains INOUT parameters.
      * @param mode The mode (IN/OUT/INOUT)
      * @param optional True if to include optional parameters
+     * @param internal True to include internal parameters
      * @return List of parameter names
      */
-    public List getParameterNames(String mode, boolean optional) {        
+    public List getParameterNames(String mode, boolean optional, boolean internal) {
         List names = new ArrayList();
 
         if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
@@ -581,11 +583,17 @@ public class ModelService implements Serializable {
 
             if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
                 if (optional || (!optional && !param.optional)) {
-                    names.add(param.name);
+                    if (internal || (!internal && !param.internal)) {
+                        names.add(param.name);
+                    }
                 }
             }
         }
         return names;
+    }
+
+    public List getParameterNames(String mode, boolean optional) {
+        return this.getParameterNames(mode, optional, true);
     }
 
     /**
