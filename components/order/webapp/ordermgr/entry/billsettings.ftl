@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <script language="javascript">
 <!-- //
 function shipBillAddr() {
@@ -33,9 +34,23 @@ function shipBillAddr() {
         window.location.replace("/ordermgr/control/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}");
     }
 }
+
+function toggleBillingAccount(box) {
+    var amountName = "amount_" + box.value;
+    box.checked = true;
+    box.form.elements[amountName].disabled = false;
+
+    for (var i = 0; i < box.form.elements[box.name].length; i++) {
+        if (!box.form.elements[box.name][i].checked) {
+            box.form.elements["amount_" + box.form.elements[box.name][i].value].disabled = true;
+        }
+    }
+}
+
 function makeExpDate() {
     document.billsetupform.expireDate.value = document.billsetupform.expMonth.options[document.billsetupform.expMonth.selectedIndex].value + "/" + document.billsetupform.expYear.options[document.billsetupform.expYear.selectedIndex].value;
-}// -->
+}
+// -->
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
@@ -90,21 +105,41 @@ function makeExpDate() {
                     </td>
                   </tr>
                   <tr><td colspan="3"><hr class='sepbar'></td></tr>                  
-                  <#if billingAccountList?has_content>                                                         
-                    <#list billingAccountList as billingAccount>                          
+                  <#if billingAccountList?has_content>
+                    <tr>
+                      <td width="1%" nowrap>
+                        <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT"></hr>
+                      </td>
+                      <td width="50%" nowrap>
+                        <span class="tabletext">Pay With Billing Account Only</span>
+                      </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                    <#list billingAccountList as billingAccount>
+                      <#assign availableAmount = billingAccount.accountLimit?double - billingAccount.accountBalance?double>
                       <tr>
-                        <td align="left" valign="top" width="1%" nowrap>                             
-                          <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT|${billingAccount.billingAccountId?if_exists}" <#if ((cart.getGrandTotal()?double + billingAccount.accountBalance?double) > billingAccount.accountLimit?double)>disabled<#elseif selectedBillingAccountId?default("") == billingAccount.billingAccountId>checked</#if>>
+                        <td align="left" valign="top" width="1%" nowrap>
+                          <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="${billingAccount.billingAccountId}" <#if (billingAccount.billingAccountId == selectedBillingAccount?default(""))>checked</#if>>
                         </td>
                         <td align="left" valign="top" width="99%" nowrap>
                           <div class="tabletext">
-                             Bill Account #<b>${billingAccount.billingAccountId}</b>&nbsp;(${(billingAccount.accountLimit?double - billingAccount.accountBalance)?string.currency})<br>
-                             ${billingAccount.description?if_exists} 
-                          </div> 
+                           ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${(availableAmount)?string.currency})<br>
+                           <b>Bill-Up To:</b> <input type="text" size="5" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
+                          </div>
                         </td>
                       </tr>
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
                     </#list>
+                    <tr>
+                      <td align="left" valign="top" width="1%" nowrap>
+                        <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="_NA" <#if (selectedBillingAccount?default("") == "N")>checked</#if>>
+                        <input type="hidden" name="_NA_amount" value="0.00">
+                      </td>
+                      <td align="left" valign="top" width="99%" nowrap>
+                        <div class="tabletext">No Billing Account</div>
+                       </td>
+                    </tr>
+                    <tr><td colspan="3"><hr class='sepbar'></td></tr>
                   </#if>                                    
                   <#if paymentMethodList?has_content>
                     <#list paymentMethodList as paymentMethod>
