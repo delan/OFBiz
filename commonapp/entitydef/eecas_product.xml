@@ -5,6 +5,7 @@
 
     <!-- Product Keyword Indexing ECAs -->
     <eca entity="Product" operation="create-store" event="return">
+        <condition field-name="autoCreateKeywords" operator="not-equals" value="N"/>
         <action service="indexProductKeywords" mode="sync" value-attr="productInstance"/>
     </eca>
     <eca entity="ProductAttribute" operation="create-store" event="return">
