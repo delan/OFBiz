@@ -32,6 +32,8 @@ contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 requestParams = UtilHttp.getParameterMap(request);
 searchCategoryId = requestParams.get("SEARCH_CATEGORY_ID");
 searchOperator = requestParams.get("SEARCH_OPERATOR");
+if (searchOperator == null) searchOperator = session.getAttribute("searchOperator");
+if (searchOperator == null) searchOperator = "OR";
 if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { 
     searchOperator = "OR"; 
 }
@@ -44,6 +46,7 @@ baseSearchStr = "~SEARCH_STRING="+keywordString+"/~SEARCH_OPERATOR="+searchOpera
 nextStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()+1);
 prevStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()-1);
 
+session.setAttribute("searchOperator", searchOperator);
 context.put("searchOperator", searchOperator);
 context.put("baseSearchStr", baseSearchStr);
 context.put("nextStr", nextStr);

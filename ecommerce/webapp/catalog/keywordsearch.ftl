@@ -25,7 +25,7 @@
 -->
 
 <div class='head1'>
-    Search Results for "${keywordString?if_exists}"
+    Search Results for "${requestAttributes.keywordString?if_exists}"
     where <#if searchOperator?default("or")?upper_case == "OR">any keyword<#else>all keywords</#if> matched.     
 </div>
 
