@@ -456,62 +456,69 @@ public class SimpleMethod {
         }
 
         if (methodContext.getMethodType() == MethodContext.EVENT) {
+            boolean forceError = false;
+            
             String tempErrorMsg = (String) methodContext.getEnv(eventErrorMessageName);
-
-            if (tempErrorMsg != null && tempErrorMsg.length() > 0) {
+            if (errorMsg.length() > 0 || (tempErrorMsg != null && tempErrorMsg.length() > 0)) {
                 errorMsg += tempErrorMsg;
                 methodContext.getRequest().setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
+                forceError = true;
             }
 
             String eventMsg = (String) methodContext.getEnv(eventEventMessageName);
-
             if (eventMsg != null && eventMsg.length() > 0) {
                 methodContext.getRequest().setAttribute(SiteDefs.EVENT_MESSAGE, eventMsg);
             }
 
             String response = (String) methodContext.getEnv(eventResponseCodeName);
-
-            if (response == null || response.length() == 0) {
-                Debug.logWarning("No response code string found, assuming success");
+            if (forceError) {
+                //override response code, always use error code
+                Debug.logInfo("Error messages found overriding response code for error; returning code [" + defaultErrorCode + "]");
+                response = defaultErrorCode;
+            } else if (response == null || response.length() == 0) {
+                Debug.logInfo("No response code string found, assuming success; returning code [" + defaultSuccessCode + "]");
                 response = defaultSuccessCode;
             }
             return response;
         } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+            boolean forceError = false;
+            
             String tempErrorMsg = (String) methodContext.getEnv(serviceErrorMessageName);
-
-            if (tempErrorMsg != null && tempErrorMsg.length() > 0) {
+            if (errorMsg.length() > 0 || (tempErrorMsg != null && tempErrorMsg.length() > 0)) {
                 errorMsg += tempErrorMsg;
                 methodContext.putResult(ModelService.ERROR_MESSAGE, errorMsg);
+                forceError = true;
             }
 
             List errorMsgList = (List) methodContext.getEnv(serviceErrorMessageListName);
-
             if (errorMsgList != null && errorMsgList.size() > 0) {
                 methodContext.putResult(ModelService.ERROR_MESSAGE_LIST, errorMsgList);
+                forceError = true;
             }
 
             Map errorMsgMap = (Map) methodContext.getEnv(serviceErrorMessageMapName);
-
             if (errorMsgMap != null && errorMsgMap.size() > 0) {
                 methodContext.putResult(ModelService.ERROR_MESSAGE_MAP, errorMsgMap);
+                forceError = true;
             }
 
             String successMsg = (String) methodContext.getEnv(serviceSuccessMessageName);
-
             if (successMsg != null && successMsg.length() > 0) {
                 methodContext.putResult(ModelService.SUCCESS_MESSAGE, successMsg);
             }
 
             List successMsgList = (List) methodContext.getEnv(serviceSuccessMessageListName);
-
             if (successMsgList != null && successMsgList.size() > 0) {
                 methodContext.putResult(ModelService.SUCCESS_MESSAGE_LIST, successMsgList);
             }
 
             String response = (String) methodContext.getEnv(serviceResponseMessageName);
-
-            if (response == null || response.length() == 0) {
-                Debug.logVerbose("No response code string found, assuming success");
+            if (forceError) {
+                //override response code, always use error code
+                Debug.logInfo("Error messages found overriding response code for error; returning code [" + defaultErrorCode + "]");
+                response = defaultErrorCode;
+            } else if (response == null || response.length() == 0) {
+                Debug.logInfo("No response code string found, assuming success; returning code [" + defaultSuccessCode + "]");
                 response = defaultSuccessCode;
             }
             methodContext.putResult(ModelService.RESPONSE_MESSAGE, response);
