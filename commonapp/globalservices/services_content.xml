@@ -66,6 +66,19 @@
         <description>Remove Content</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="checkContentPermission"
+        auth="false" engine="java" invoke="checkContentPermission"
+        location="org.ofbiz.commonapp.content.content.ContentPermissionServices" >
+        <description>Check for permission to perform operation on Content</description>
+        <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="roleTypeList" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="currentContent" optional="false" 
+                                     type="org.ofbiz.core.entity.GenericValue"/>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="OUT" name="permissionStatus" optional="true" type="String"/>
+    </service>
+
     
     <!--Content Assoc services.-->
     <service name="createContentAssoc" default-entity-name="ContentAssoc" engine="simple"
