@@ -528,6 +528,8 @@
             title="Shipment Package Entity">
       <field name="shipmentPackageId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>
+      <field name="trackingCode" type="short-varchar"></field>
+      <field name="boxNumber" type="short-varchar"></field>
       <prim-key field="shipmentPackageId"/>
       <relation type="many" rel-entity-name="ShipmentReceipt">
         <key-map field-name="shipmentPackageId"/>
