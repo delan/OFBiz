@@ -33,7 +33,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     -->
 
     <delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false">
-        <group-map group-name="org.ofbiz" datasource-name="localpostgres"/>
+        <group-map group-name="org.ofbiz" datasource-name="localhsql"/>
     </delegator>
     <delegator name="other" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main">
         <group-map group-name="org.ofbiz" datasource-name="localpostgres"/>
