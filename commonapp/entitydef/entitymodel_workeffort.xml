@@ -311,8 +311,8 @@
     <view-entity entity-name="WorkflowDataFieldsView" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Data Fields View Entity">	
-      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />	
-      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />
+      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />	
+      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />
       <alias entity-alias="WDF" name="dataFieldId" prim-key="true" />
       <alias entity-alias="WDF" name="dataFieldName" />
       <alias entity-alias="WDF" name="description" />
@@ -987,6 +987,9 @@
             title="Work Effort Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="workEffortTypeId" type="id"></field>
+      <field name="workflowPackageId" type="id"></field>
+      <field name="workflowProcessId" type="id"></field>
+      <field name="workflowActivityId" type="id"></field>
       <field name="currentStatusId" type="id"></field>
       <field name="lastStatusUpdate" type="date-time"></field>
       <field name="universalId" type="short-varchar"></field>
@@ -1073,6 +1076,18 @@
       </relation>
       <relation type="many" rel-entity-name="WorkEffortStatus">
         <key-map field-name="workEffortId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowPackage">
+        <key-map field-name="workflowPackageId" rel-field-name="packageId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowProcess">
+        <key-map field-name="workflowPackageId" rel-field-name="packageId" />
+        <key-map field-name="workflowProcessId" rel-field-name="processId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowActivity">
+        <key-map field-name="workflowPackageId" rel-field-name="packageId" />
+        <key-map field-name="workflowProcessId" rel-field-name="processId" />
+        <key-map field-name="workflowActivityId" rel-field-name="activityId" />
       </relation>
     </entity>	
     <view-entity entity-name="WorkEffortAndPartyAssign" 
