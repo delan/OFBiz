@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-	<property name="title">Log In</property>
-	<property name="group">welcome</property>
-	<page-action>./logic/logon.js</page-action>
-	<contentfile>/admin/logon.html</contentfile>
-	
-</page>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-	<template>/defaulttemplate.html</template>
-	<generator name="xslt">
-		<stylesheet>/news.html.xsl</stylesheet>
-	</generator>
-	<property name="title">News Page</property>
-
-</page>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<page>
-	<generator name="xslt">
-		<stylesheet>../../stylesheets/normal.html.xsl</stylesheet>
-		<generator name="velocity"/>
-	</generator>
-	<property name="editable">false</property>
-</page>

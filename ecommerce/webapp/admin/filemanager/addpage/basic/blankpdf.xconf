@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-	<template />
-	<generator name="pdf">
-		<generator name="xslt">
-			<stylesheet>pdf.xsl</stylesheet>
-		</generator>
-	</generator>		
-</page>
