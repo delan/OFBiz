@@ -11,7 +11,7 @@
         
         <!--auto-fields-service service-name="CreateProductCategoryLinkToProdCatalog"/-->
         
-	    <field name="prodCatalogId"><hidden value="${prodCatalogId}"/></field>
+        <field name="prodCatalogId"><hidden value="${prodCatalogId}"/></field>
         <field name="productCategoryTypeId"><hidden value="CATALOG_CATEGORY"/></field>
         <field use-when="productCategoryId!=null" name="productCategoryId" title="${uiLabelMap.ProductProductCategoryId}"  
             tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -31,17 +31,16 @@
         <field name="description"><text/></field>
         <field name="fromDate" use-when="productCategoryId==null" ><date-time/></field>
         <field name="Add" use-when="productCategoryId==null" widget-style="standardSubmit"><submit button-type="button"/></field>    
-	    <field name="Update" use-when="productCategoryId!=null" widget-style="standardSubmit"><submit button-type="button"/></field>    
+        <field name="Update" use-when="productCategoryId!=null" widget-style="standardSubmit"><submit button-type="button"/></field>    
        
     </form>
     
     <!-- edit the list of products selected by the primary category being the product STore Id. -->
     <form name="EditProducts" type="list" list-name="products" 
-         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <actions>
             <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
         </actions>
-       
         <field name="productId" widget-style="buttontext"><hyperlink target="EditProduct?productId=${productId}" description="${productId}"/></field>
         <field name="description"><display/></field>
         <field name="reservMaxPersons"><display/></field>
@@ -51,12 +50,10 @@
     </form>
     
     <form name="EditCategoryProducts" type="list" list-name="productCategoryMembers" 
-         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="updateCategoryProductMember">
-        
+             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="updateCategoryProductMember">
         <actions>
             <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
         </actions>
-       
         <field name="productCategoryId"><hidden/></field>
         <field name="p" title="${uiLabelMap.ProductId}" widget-style="buttontext"><hyperlink target="EditProduct?productId=${productId}" description="${productId}"/></field>
         <field name="productId" title="${uiLabelMap.ProductName}" widget-style="tabletext"><display-entity entity-name="Product"  key-field-name="productId" description="${productName}"/></field>
@@ -70,18 +67,18 @@
     </form>
     
     <form name="addProductToCategory" type="single" 
-         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="addCategoryProductMember">
-    <field name="productId"><lookup target-form-name="lookUpProduct"></lookup></field>        
-    <field name="fromDate"><date-time/></field>
-    <field name="submitButton" widget-style="standardSubmit"><submit button-type="button"/></field>    
+             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" target="addCategoryProductMember">
+        <field name="productId"><lookup target-form-name="lookUpProduct"></lookup></field>        
+        <field name="fromDate"><date-time/></field>
+        <field name="submitButton" widget-style="standardSubmit"><submit button-type="button"/></field>    
     </form>  
     <!-- Edit/Create a product --> 
     <form name="EditProduct" type="single"
             target="updateProduct" title="" default-map-name="product"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-<actions>
+        <actions>
                 <set field="productStoreId" value="${productStoreId}"/>
-</actions>
+        </actions>
         <alt-target use-when="product==null" target="createProduct"/>
 
         <field use-when="product==null" name="isCreate"><hidden value="true"/></field>
