@@ -24,29 +24,21 @@
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
       <attribute name="removeOldAssignments" type="String" mode="IN" optional="true"/>
-      <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
-      <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>  
   <service name="activateActivity" engine="java" 
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="activateActivity">
       <description>Attempt to initiate a workflow activity</description>
       <attribute name="workEffortId" type="String" mode="IN"/> 
-      <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
-      <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>  
   <service name="completeActivity" engine="java" 
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="completeActivity">
       <description>Attempt to complete a workflow activity</description>
       <attribute name="workEffortId" type="String" mode="IN"/> 
-      <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
-      <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>
   <service name="changeActivityState" engine="java"
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="changeActivityState">
       <description>Manually change the state of a workflow activity</description>
       <attribute name="workEffortId" type="String" mode="IN"/>     
-      <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
-      <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>
   <service name="acceptAssignment" engine="java"
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="acceptAssignment">
@@ -55,8 +47,6 @@
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
 	  <attribute name="fromDate" type="Timestamp" mode="IN"/>
-      <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
-      <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>
   <service name="completeAssignment" engine="java"
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="completeAssignment">
@@ -65,8 +55,6 @@
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
 	  <attribute name="fromDate" type="Timestamp" mode="IN"/>	  
-      <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
-      <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>  
   <service name="assignApprover" engine="java" 
     location="ServiceTest" invoke="testOne" validate="false"/>    
@@ -92,8 +80,6 @@
       <attribute name="carrierPartyId" type="String" mode="IN"/>
       <attribute name="maySplit" type="Boolean" mode="IN"/>
       <attribute name="creditCardId" type="String" mode="IN"/>
-      <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
-      <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>
   
 </services>
