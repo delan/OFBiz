@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.1
 -->
 
@@ -140,7 +140,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         </form>
         
         <br>
-        <form method="POST" action="<@ofbizUrl>/copyCategoryProductMembers</@ofbizUrl>" style="margin: 0;">
+        <form method="POST" action="<@ofbizUrl>/copyCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="copyCategoryProductMembersForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
@@ -155,6 +155,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             </select>
             <br>
             ${uiLabelMap.ProductOptionalFilterWithDate}: <input type=text size="20" name="validDate" class="inputBox">
+            <a href="javascript:call_cal(document.copyCategoryProductMembersForm.validDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <br>
             ${uiLabelMap.ProductIncludeSubCategories}?
             <select name="recurse" class="selectBox">
@@ -166,25 +167,27 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         </form>
         
         <br>
-        <form method="POST" action="<@ofbizUrl>/expireAllCategoryProductMembers</@ofbizUrl>" style="margin: 0;">
+        <form method="POST" action="<@ofbizUrl>/expireAllCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="expireAllCategoryProductMembersForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId}?if_exists">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">${uiLabelMap.ProductExpireAllProductMembers}:</div>
         <div class="tabletext">
             ${uiLabelMap.ProductOptionalExpirationDate}: <input type=text size="20" name="thruDate" class="inputBox">
-            <input type="submit" value="${uiLabelMap.CommonExpireAll}">
+            <a href="javascript:call_cal(document.expireAllCategoryProductMembersForm.thruDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+            &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonExpireAll}">
         </div>
         </form>
         <br>
-        <form method="POST" action="<@ofbizUrl>/removeExpiredCategoryProductMembers</@ofbizUrl>" style="margin: 0;">
+        <form method="POST" action="<@ofbizUrl>/removeExpiredCategoryProductMembers</@ofbizUrl>" style="margin: 0;" name="removeExpiredCategoryProductMembersForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
         <div class="head2">${uiLabelMap.ProductRemoveExpiredProductMembers}:</div>
         <div class="tabletext">
             ${uiLabelMap.ProductOptionalExpiredBeforeDate}: <input type=text size="20" name="validDate" class="inputBox">
-            <input type="submit" value="${uiLabelMap.CommonRemoveExpired}">
+            <a href="javascript:call_cal(document.removeExpiredCategoryProductMembersForm.validDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+            &nbsp;&nbsp;<input type="submit" value="${uiLabelMap.CommonRemoveExpired}">
         </div>
         </form>
     </#if>
