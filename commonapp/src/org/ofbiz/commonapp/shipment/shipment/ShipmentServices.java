@@ -125,7 +125,9 @@ public class ShipmentServices {
                     estimate.set("priceUnitPrice",Double.valueOf((String)context.get("pprice")));
                     storeAll.add(priceBreak);
                 }
-                catch ( Exception e ) { }
+                catch ( Exception e ) {
+                    Debug.logWarning(e);
+                }
             }
             else {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -139,7 +141,7 @@ public class ShipmentServices {
         }
         catch ( GenericEntityException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Problem reading product features: " + e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, "Problem reading product features: " + e.toString());
             return result;
         }
 
@@ -148,4 +150,24 @@ public class ShipmentServices {
         return result;
     }
 
+    public static Map removeShipmentEstimate(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String shipmentCostEstimateId = (String) context.get("shipmentCostEstimateId");
+
+        GenericValue estimate = null;
+        try {
+            estimate = delegator.findByPrimaryKey("ShipmentCostEstimate",UtilMisc.toMap("shipmentCostEstimateId", shipmentCostEstimateId));
+            if (estimate.get("weightBreakId") != null)
+                delegator.removeRelated("WeightQuantityBreak", estimate);
+            if (estimate.get("quantityBreakId") != null)
+                delegator.removeRelated("QuantityQuantityBreak", estimate);
+            if (estimate.get("priceBreakId") != null)
+                delegator.removeRelated("PriceQuantityBreak", estimate);
+            estimate.remove();
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            ServiceUtil.returnError("Problem removing entity or related entities (" + e.toString() + ")");
+        }
+        return ServiceUtil.returnSuccess();
+    }
 }

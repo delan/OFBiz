@@ -6,7 +6,7 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
-    <!-- Shipment Services -->
+    <!-- Shipment Estimate (Rate) Services -->
     <service name="createShipmentEstimate" engine="java"
                 location="org.ofbiz.commonapp.shipment.shipment.ShipmentServices" invoke="createShipmentEstimate" auth="true">
         <description>Create Shipment Estimate</description>
@@ -33,4 +33,9 @@
         <attribute name="shipmentCostEstimateId" type="String" mode="OUT"/>
     </service>
 
+    <service name="createShipmentEstimate" engine="java"
+                location="org.ofbiz.commonapp.shipment.shipment.ShipmentServices" invoke="createShipmentEstimate" auth="true">
+        <description>Remove Shipment Estimate</description>
+        <attribute name="shipMethod" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

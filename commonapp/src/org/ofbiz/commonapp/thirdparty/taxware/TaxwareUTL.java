@@ -32,9 +32,9 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.datafile.*;
 import org.ofbiz.core.util.*;
 
+// supplied by Taxware UTL 2.1 -- This is not valid Java
+// This will not compile with JDK 1.4.x+
 import taxcommon;
-
-// supplied by Taxware UTL 2.1
 
 /**
  * TaxwareUTL - Taxware Universal Tax Link
