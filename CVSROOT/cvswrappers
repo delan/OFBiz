@@ -48,5 +48,7 @@
 *.PPT -k 'b'
 *.sxi -k 'b'
 *.SXI -k 'b'
+*.VSD -k 'b'
 *.vsd -k 'b'
-*.VSD -k -b'
+*.jasper -k 'b'
+
