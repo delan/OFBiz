@@ -300,12 +300,13 @@ public class SqlJdbcUtil {
         try {
             //checking to see if the object is null is really only necessary for the numbers
             int typeValue = getType(fieldType);
-            if (typeValue <= 4) {
+            if (typeValue <= 4 || typeValue == 10) {
                 switch (typeValue) {
                     case 1: entity.dangerousSetNoCheckButFast(curField, rs.getString(ind)); break;
                     case 2: entity.dangerousSetNoCheckButFast(curField, rs.getTimestamp(ind)); break;
                     case 3: entity.dangerousSetNoCheckButFast(curField, rs.getTime(ind)); break;
                     case 4: entity.dangerousSetNoCheckButFast(curField, rs.getDate(ind)); break;
+                    case 10: entity.dangerousSetNoCheckButFast(curField, rs.getObject(ind)); break;
                 }
             } else {
                 if (rs.getObject(ind) == null) {
@@ -366,6 +367,7 @@ public class SqlJdbcUtil {
                 case 7: sqlP.setValue((java.lang.Float) fieldValue); break;
                 case 8: sqlP.setValue((java.lang.Double) fieldValue); break;
                 case 9: sqlP.setValue((java.lang.Boolean) fieldValue); break;
+                case 10: sqlP.setValue(fieldValue); break;
             }
         } catch (SQLException sqle) {
             throw new GenericDataSourceException( "SQL Exception while setting value: ", sqle);
@@ -392,6 +394,8 @@ public class SqlJdbcUtil {
         fieldTypeMap.put( "Double",             new Integer( 8 ));
         fieldTypeMap.put( "java.lang.Boolean",  new Integer( 9 ));
         fieldTypeMap.put( "Boolean",            new Integer( 9 ));
+        fieldTypeMap.put( "java.lang.Object",   new Integer( 10 ));
+        fieldTypeMap.put( "Object",             new Integer( 10 ));
     }
 
     public static int getType(String fieldType) throws GenericNotImplementedException {

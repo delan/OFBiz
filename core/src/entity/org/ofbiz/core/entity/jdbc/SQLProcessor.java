@@ -561,6 +561,22 @@ public class SQLProcessor {
         _ind ++;
     }
     
+    /**
+     * Set the next binding variable of the currently active prepared statement.
+     *
+     * @param field
+     *
+     * @throws SQLException
+     */
+    public void setValue(Object field) throws SQLException {
+        if (field != null)
+            _ps.setObject(_ind, field, Types.JAVA_OBJECT);
+        else
+            _ps.setNull(_ind, Types.JAVA_OBJECT);
+        
+        _ind ++;
+    }
+    
     protected void finalize() throws Throwable {
         try {
             this.close();
