@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
  *
  * 
@@ -149,6 +149,8 @@ public class ContentManagementServices {
         electronicText.setNonPKFields(context);
         String textData = (String)electronicText.get("textData");
 
+        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+
         // get user info for multiple use
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
         String userLoginId = (String)userLogin.get("userLoginId");
@@ -201,6 +203,13 @@ public class ContentManagementServices {
                             Debug.logVerbose("in persistContentAndAssoc. " + e.getMessage(),"");
                             return ServiceUtil.returnError(e.getMessage());
                         }
+                    } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+                        if (byteWrapper != null) {
+                            context.put("dataResourceId", dataResourceId);
+                            thisResult = DataServices.createImageMethod(dctx, context);
+                        } else {
+                            return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
+                        }
                     } else {
                         if (UtilValidate.isNotEmpty(textData)) {
                             context.put("dataResourceId", dataResourceId);
@@ -220,6 +229,8 @@ public class ContentManagementServices {
                         } catch(GenericServiceException e) {
                             return ServiceUtil.returnError(e.getMessage());
                         }
+                    } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+                        thisResult = DataServices.updateImageMethod(dctx, context);
                     } else {
                         thisResult = DataServices.updateElectronicTextMethod(dctx, context);
                     }
@@ -262,14 +273,22 @@ public class ContentManagementServices {
 
         boolean contentExists = true;
         if (UtilValidate.isNotEmpty(contentTypeId) ) {
-            if (UtilValidate.isEmpty(contentId)) {
+            if (UtilValidate.isEmpty(contentId)) 
                 contentExists = false;
+            else {
+                try {
+                    GenericValue val = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+                    if (val == null)
+                        contentExists = false;
+                } catch(GenericEntityException e) {
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+            }
+            if (contentExists) {
+                Map thisResult = ContentServices.updateContentMethod(dctx, context);
+            } else {
                 Map thisResult = ContentServices.createContentMethod(dctx, context);
                 contentId = (String)thisResult.get("contentId");
-            //Debug.logVerbose("contentId(create):" + contentId, null);
-            } else {
-                Map thisResult = ContentServices.updateContentMethod(dctx, context);
-            //Debug.logVerbose("contentId(update):" + contentId, null);
             }
             result.put("contentId", contentId);
             context.put("contentId", contentId);

@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.8 2004/01/11 06:27:04 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.9 2004/01/17 03:57:46 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -381,8 +381,8 @@ public class ContentPermissionServices {
         boolean isMember = false;
         String partyIdFrom = (String)partyRelationshipValues.get("partyIdFrom") ;
         String partyIdTo = (String)partyRelationshipValues.get("partyIdTo") ;
-        String roleTypeIdFrom = "CONTENT_PERMISSION_GROUP_MEMBER";
-        String roleTypeIdTo = "CONTENT_PERMISSION_GROUP";
+        String roleTypeIdFrom = "PERMISSION_GROUP_MEMBER";
+        String roleTypeIdTo = "PERMISSION_GROUP";
         Timestamp fromDate = UtilDateTime.nowTimestamp();
         Timestamp thruDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), 1);
 

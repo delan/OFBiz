@@ -44,7 +44,7 @@ import javax.servlet.http.HttpSession;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  *
  * 
@@ -103,7 +103,7 @@ public class LayoutEvents {
             context.put("textData", formInput.get("textData"));
             String contentPurposeTypeId = (String)formInput.get("contentPurposeTypeId");
             if (UtilValidate.isNotEmpty(contentPurposeTypeId)){
-                context.put("contentPurposeTypeId", UtilMisc.toList(contentPurposeTypeId));
+                context.put("contentPurposeList", UtilMisc.toList(contentPurposeTypeId));
             }
     
             Map result = dispatcher.runSync("persistContentAndAssoc", context);
