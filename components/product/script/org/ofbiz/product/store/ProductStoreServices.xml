@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
 -->
 
@@ -31,20 +31,20 @@
 	<simple-method method-name="createProductStore" short-description="Create a Product Store">
 		<check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductStore you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
 		<check-errors/>
-		
+
 		<make-value value-name="newEntity" entity-name="ProductStore"/>
 		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-		
+
 		<sequenced-id-to-env sequence-name="ProductStore" env-name="productStoreId"/>
 		<to-string field-name="productStoreId"/>
 		<env-to-field env-name="productStoreId" map-name="newEntity"/>
-		
+
 		<field-to-result field-name="productStoreId" result-name="productStoreId"/>
 		<create-value value-name="newEntity"/>
-		
+
 		<!-- create the ProductStoreFacility record -->
 		<now-timestamp-to-env env-name="nowTimestamp"/>
-		
+
 		<if-not-empty field-name="inventoryFacilityId" map-name="newEntity">
 			<make-value value-name="storeFacility" entity-name="ProductStoreFacility"/>
 			<field-to-field field-name="inventoryFacilityId" map-name="newEntity" to-field-name="facilityId" to-map-name="storeFacility"/>
@@ -56,13 +56,13 @@
 	<simple-method method-name="updateProductStore" short-description="Update a Product Store">
 		<check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductStore you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
 		<check-errors/>
-		
+
 		<field-to-field field-name="productStoreId" map-name="parameters" to-map-name="lookupPKMap"/>
 		<find-by-primary-key entity-name="ProductStore" map-name="lookupPKMap" value-name="store"/>
 		<field-to-env env-name="oldFacilityId" field-name="inventoryFacilityId" map-name="store"/>
 		<set-nonpk-fields map-name="parameters" value-name="store"/>
 		<store-value value-name="store"/>
-		
+
 		<!-- update the ProductStoreFacility record -->
 		<now-timestamp-to-env env-name="nowTimestamp"/>
 		<if-compare-field field-name="inventoryFacilityId" map-name="store" operator="not-equals" to-field-name="oldFacilityId">
@@ -81,8 +81,8 @@
 			<field-to-field field-name="inventoryFacilityId" map-name="store" to-field-name="facilityId" to-map-name="storeFacility"/>
 			<field-to-field field-name="productStoreId" map-name="store" to-map-name="storeFacility"/>
 			<env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="storeFacility"/>
-			<create-value value-name="storeFacility"/>			
-		</if-compare-field>		
+			<create-value value-name="storeFacility"/>
+		</if-compare-field>
 	</simple-method>
 
     <!-- ProductStore and ProdCatalog services -->
@@ -93,12 +93,12 @@
         <make-value value-name="newEntity" entity-name="ProductStoreCatalog"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <if-empty field-name="fromDate" map-name="newEntity">
             <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
         </if-empty>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductStoreCatalog" short-description="Update ProductStoreCatalog">
@@ -120,41 +120,41 @@
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
-    
+
     <!-- ProductStore Payment Setting Services -->
 	<simple-method method-name="createProductStorePaymentSetting" short-description="Create a Product Store Payment Setting">
 		<check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductStorePaymentSetting you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
 		<check-errors/>
-		
+
 		<make-value value-name="newEntity" entity-name="ProductStorePaymentSetting"/>
 		<set-pk-fields map-name="parameters" value-name="newEntity"/>
-		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>				
-		<create-value value-name="newEntity"/>		
+		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+		<create-value value-name="newEntity"/>
 	</simple-method>
 	<simple-method method-name="updateProductStorePaymentSetting" short-description="Update a Product Store Payment Setting">
 		<check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductStorePaymentSetting you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
 		<check-errors/>
-		
+
 		<make-value value-name="lookupPKMap" entity-name="ProductStorePaymentSetting"/>
-		<set-pk-fields map-name="parameters" value-name="lookupPKMap"/>		
+		<set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
 		<find-by-primary-key entity-name="ProductStorePaymentSetting" map-name="lookupPKMap" value-name="setting"/>
 		<set-nonpk-fields map-name="parameters" value-name="setting"/>
-		<store-value value-name="setting"/>		
-	</simple-method> 
+		<store-value value-name="setting"/>
+	</simple-method>
 	<simple-method method-name="deleteProductStorePaymentSetting" short-description="Delete a Product Store Payment Setting">
 		<check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductStorePaymentSetting you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
 		<check-errors/>
-		
+
 		<make-value value-name="lookupPKMap" entity-name="ProductStorePaymentSetting"/>
-		<set-pk-fields map-name="parameters" value-name="lookupPKMap"/>		
+		<set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
 		<find-by-primary-key entity-name="ProductStorePaymentSetting" map-name="lookupPKMap" value-name="setting"/>
 		<set-nonpk-fields map-name="parameters" value-name="setting"/>
 		<remove-value value-name="setting"/>
 	</simple-method>
-	
+
     <!-- ProductStore Email Services -->
     <simple-method method-name="createProductStoreEmail" short-description="Create Product Store Email Setting">
-        <check-permission permission="CATALOG" action="_CREATE">        	
+        <check-permission permission="CATALOG" action="_CREATE">
         	<fail-message message="Security Error: to run createProductStoreEmail you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/>
         </check-permission>
         <check-errors/>
@@ -162,11 +162,11 @@
         <make-value value-name="newEntity" entity-name="ProductStoreEmailSetting"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
-    </simple-method>    
+    </simple-method>
     <simple-method method-name="updateProductStoreEmail" short-description="Update Product Store Email Setting">
-        <check-permission permission="CATALOG" action="_UPDATE">        	
+        <check-permission permission="CATALOG" action="_UPDATE">
         	<fail-message message="Security Error: to run updateProductStoreEmail you must have the CATALOG_UPDATE or CAtALOG_ADMIN permission"/>
         </check-permission>
         <check-errors/>
@@ -188,10 +188,10 @@
         <find-by-primary-key entity-name="ProductStoreEmailSetting" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
-    
+
     <!-- ProductStore Carrier Shipment Services -->
     <simple-method method-name="createProductStoreShipMeth" short-description="Create Product Store Carrier Shipment Method">
-        <check-permission permission="CATALOG" action="_CREATE">        	
+        <check-permission permission="CATALOG" action="_CREATE">
         	<fail-message message="Security Error: to run createProductStoreShipMeth you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/>
         </check-permission>
         <check-errors/>
@@ -199,11 +199,11 @@
         <make-value value-name="newEntity" entity-name="ProductStoreShipmentMeth"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
-    </simple-method>    
+    </simple-method>
     <simple-method method-name="updateProductStoreShipMeth" short-description="Update Product Store Carrier Shipment Method">
-        <check-permission permission="CATALOG" action="_UPDATE">        	
+        <check-permission permission="CATALOG" action="_UPDATE">
         	<fail-message message="Security Error: to run updateProductStoreShipMeth you must have the CATALOG_UPDATE or CAtALOG_ADMIN permission"/>
         </check-permission>
         <check-errors/>
@@ -225,7 +225,7 @@
         <find-by-primary-key entity-name="removeProductStoreShipMeth" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
-    
+
     <!-- Product Store Role Services -->
     <simple-method method-name="createProductStoreRole" short-description="Create ProductStoreRole">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductStoreRole you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
@@ -234,14 +234,14 @@
         <make-value value-name="newEntity" entity-name="ProductStoreRole"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <if-empty field-name="fromDate" map-name="newEntity">
             <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
         </if-empty>
-        
+
         <create-value value-name="newEntity"/>
-    </simple-method>    
+    </simple-method>
     <simple-method method-name="removeProductStoreRole" short-description="Remove ProductStoreRole">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductStoreRole you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -250,42 +250,41 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        
+
         <if-empty field-name="thruDate" map-name="lookedUpValue">
             <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="lookedUpValue"/>
-        </if-empty>                
+        </if-empty>
         <store-value value-name="lookedUpValue"/>
-    </simple-method>      	   
-    
-        <!-- Product Store Keyword Override Services -->
+    </simple-method>
+
+    <!-- Product Store Keyword Override Services -->
     <simple-method method-name="createProductStoreKeywordOvrd" short-description="Create a ProductStoreKeywordOvrd">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run removeProductStoreRole you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductStoreKeywordOvrd you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
-        
+
         <make-value value-name="newEntity" entity-name="ProductStoreKeywordOvrd"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductStoreKeywordOvrd" short-description="Update a ProductStoreKeywordOvrd">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run removeProductStoreRole you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductStoreKeywordOvrd you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
-        
-        <make-value value-name="newEntity" entity-name="ProductStoreKeywordOvrd"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductStoreKeywordOvrd"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removeProductStoreKeywordOvrd" short-description="Remove a ProductStoreKeywordOvrd">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductStoreRole you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+    <simple-method method-name="deleteProductStoreKeywordOvrd" short-description="Delete a ProductStoreKeywordOvrd">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductStoreKeywordOvrd you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
-        
-        <make-value value-name="newEntity" entity-name="ProductStoreKeywordOvrd"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductStoreKeywordOvrd"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
-    
 </simple-methods>
