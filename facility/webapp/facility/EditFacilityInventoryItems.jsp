@@ -121,12 +121,12 @@
   <%if (curInventoryItemType != null) pageContext.setAttribute("curInventoryItemType", curInventoryItemType);%>
   <%boolean isQuantity = inventoryItem.get("quantityOnHand") != null && (inventoryItem.get("serialNumber") == null || inventoryItem.getString("serialNumber").length() == 0);%>
   <tr valign="middle">
-    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditProduct?productId=<ofbiz:entityfield attribute="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'><ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></a></div></td>
+    <td><div class='tabletext'>&nbsp;<a href='/catalog/control/EditProduct?productId=<ofbiz:entityfield attribute="inventoryItem" field="productId"/>' class='buttontext'><ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></a></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="curInventoryItemType" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="dateReceived"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="expireDate"/></div></td>
-    <td><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:entityfield attribute="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>
+    <td><a href='/catalog/control/EditProduct?productId=<ofbiz:entityfield attribute="inventoryItem" field="productId"/>' class='buttontext'>
         <ofbiz:entityfield attribute="inventoryItem" field="productId"/></a></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="lotId"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="binNumber"/></div></td>
@@ -159,7 +159,7 @@
         <td>&nbsp;</td>
     <%}%>
     <td>
-      <a href='<ofbiz:url>/EditInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/EditInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/>&facilityId=<%=facilityId%></ofbiz:url>' class="buttontext">
       [Edit]</a>
     </td>
     <td>
