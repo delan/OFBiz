@@ -22,15 +22,15 @@
   <QuantityBreakType description="Shipping Price Break" quantityBreakTypeId="SHIP_PRICE"/>
   <ShipmentCostEstimate orderFlatPrice="5.0" orderItemFlatPrice="0.0"
     orderPricePercent="0.0" shipmentCostEstimateId="9000"
-    shipmentMethodTypeId="AIR" weightBreakId="9000" weightUnitPrice="0.2"/>
+    shipmentMethodTypeId="AIR" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9000" weightUnitPrice="0.2"/>
   <ShipmentCostEstimate orderFlatPrice="3.0" orderItemFlatPrice="0.0"
     orderPricePercent="0.0" shipmentCostEstimateId="9001"
-    shipmentMethodTypeId="GROUND" weightBreakId="9003" weightUnitPrice="0.1"/>
-  <ShipmentCostEstimate orderFlatPrice="5.0" orderItemFlatPrice="0.0"
+    shipmentMethodTypeId="GROUND" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9003" weightUnitPrice="0.1"/>
+  <ShipmentCostEstimate orderFlatPrice="5.0" orderItemFlatPrice="0.0" carrierPartyId="Company" carrierRoleTypeId="CARRIER"
     orderPricePercent="0.0" shipmentCostEstimateId="9002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
   <ShipmentCostEstimate orderFlatPrice="10.0" orderItemFlatPrice="0.0"
     orderPricePercent="0.0" shipmentCostEstimateId="9003"
-    shipmentMethodTypeId="NEXT_DAY" weightBreakId="9009" weightUnitPrice="0.35"/>
+    shipmentMethodTypeId="NEXT_DAY" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9009" weightUnitPrice="0.35"/>
 </entity-engine-xml>
 
 
