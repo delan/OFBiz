@@ -40,31 +40,11 @@
 
 <html>
   <head>
-  <base href="<%=session.getAttribute(SiteDefs.SERVER_ROOT_URL)%>">
-  <title>Confirmation Page</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  
-  <style>
-      p {
-          MARGIN: 0.2em;
-          FONT-FAMILY: Helvetica,sans-serif;
-          FONT-SIZE: 10pt;
-      }
-  
-    .head1 {font-family: Helvetica,sans-serif; margin: 0; font-size: 15pt; font-weight: bold; COLOR: #3A4C37;}
-    .head2 {font-family: Helvetica,sans-serif; margin: 0; font-size: 12pt; font-weight: bold; COLOR: #000000;}
-    .head3 {font-family: Helvetica,sans-serif; margin: 0; font-size: 10pt; font-weight: bold; COLOR: #000000;}
-    .tabletext {FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+      <base href="<%=session.getAttribute(SiteDefs.SERVER_ROOT_URL)%>">
+      <title>Confirmation Page</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
-    .boxhead {font-family: Helvetica,sans-serif; margin: 0; font-size: 12pt; font-weight: bold; COLOR: #FFFFFF; }
-
-    .button	{border-style: outset; border-color: #9999CC; border-width: 2px; background-color: #dddddd; padding-right: 5px; padding-left: 5px;}
-    A.buttontext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: blue; }
-    A.buttontext:hover {color: red;}
-
-    A.buttontextbig {font-family: Helvetica,sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: blue; }
-    A.buttontextbig:hover {color: red;}
-  </style>
+      <link rel="stylesheet" href="<%=serverRoot + request.getContextPath()%>/includes/maincss.css" type="text/css">
   </head>
   <body bgcolor="white">
   <a name="top"></a>
