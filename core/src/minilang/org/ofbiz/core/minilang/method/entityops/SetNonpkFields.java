@@ -71,7 +71,7 @@ public class SetNonpkFields extends MethodOperation {
         if (theMap == null) {
             Debug.logWarning("In set-nonpk-fields could not find map with name " + mapName + ", not setting any fields");
         } else {
-            value.setNonPKFields(theMap);
+            value.setNonPKFields(theMap, false);
         }
         return true;
     }

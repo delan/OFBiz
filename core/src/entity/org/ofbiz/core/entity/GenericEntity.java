@@ -317,11 +317,32 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     /** go through the non-pks and for each one see if there is an entry in fields to set */
     public void setNonPKFields(Map fields) {
+        this.setNonPKFields(fields, true);
+    }
+    
+    /** go through the non-pks and for each one see if there is an entry in fields to set */
+    public void setNonPKFields(Map fields, boolean setIfEmpty) {
         Iterator iter = this.getModelEntity().getNopksIterator();
         while (iter != null && iter.hasNext()) {
             ModelField curField = (ModelField) iter.next();
             if (fields.containsKey(curField.getName())) {
-                this.set(curField.getName(), fields.get(curField.getName()));
+                Object field = fields.get(curField.getName());
+                if (setIfEmpty) {
+                    this.set(curField.getName(), field);
+                } else {
+                    //okay, only set if not empty...
+                    if (field != null) {
+                        //if it's a String then we need to check length, otherwise set it because it's not null
+                        if (field instanceof String) {
+                            String fieldStr = (String) field;
+                            if (fieldStr.length() > 0) {
+                                this.set(curField.getName(), field);
+                            }
+                        } else {
+                            this.set(curField.getName(), field);
+                        }
+                    }
+                }
             }
         }
     }
