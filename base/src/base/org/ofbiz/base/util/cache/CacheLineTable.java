@@ -49,10 +49,10 @@ import org.apache.commons.collections.map.HashedMap;
 public class CacheLineTable implements Serializable {
 
     public static final String module = CacheLineTable.class.getName();
-    protected static jdbm.RecordManager jdbmMgr = null;
+    protected static transient jdbm.RecordManager jdbmMgr = null;
 
+    protected transient jdbm.htree.HTree fileTable = null;
     protected AbstractHashedMap memoryTable = null;
-    protected jdbm.htree.HTree fileTable = null;
     protected String fileStore = null;
     protected String cacheName = null;
     protected int maxInMemory = 0;
@@ -67,7 +67,7 @@ public class CacheLineTable implements Serializable {
                 synchronized (this) {
                     if (CacheLineTable.jdbmMgr == null) {
                         try {
-                            CacheLineTable.jdbmMgr = jdbm.RecordManagerFactory.createRecordManager(fileStore);
+                            CacheLineTable.jdbmMgr = new JdbmRecordManager(fileStore);
                         } catch (IOException e) {
                             Debug.logError(e, module);
                         }
@@ -82,6 +82,7 @@ public class CacheLineTable implements Serializable {
                     } else {
                         this.fileTable = jdbm.htree.HTree.createInstance(CacheLineTable.jdbmMgr);
                         CacheLineTable.jdbmMgr.setNamedObject(cacheName, this.fileTable.getRecid());
+                        CacheLineTable.jdbmMgr.commit();
                     }
                 } catch (IOException e) {
                     Debug.logError(e, module);
@@ -95,7 +96,8 @@ public class CacheLineTable implements Serializable {
         memoryTable.put(key, value);
         if (fileTable != null) {
             try {
-                fileTable.put(key, value);
+                fileTable.put(key, value);                
+                CacheLineTable.jdbmMgr.commit();
             } catch (IOException e) {
                 Debug.logError(e, module);
             }
