@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Common Application Components Order Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- Tracking Code Services -->
+    <service name="interfaceTrackingCode" engine="interface" location="" invoke="">
+        <attribute name="trackingCodeId" type="String" mode="IN" optional="false"/>
+        <attribute name="trackingCodeTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="marketingCampaignId" type="String" mode="IN" optional="true"/>
+        <attribute name="redirectUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="trackableLifetime" type="Long" mode="IN" optional="true"/>
+        <attribute name="billableLifetime" type="Long" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="groupId" type="String" mode="IN" optional="true"/>
+        <attribute name="subgroupId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createTrackingCode" engine="simple"
+            location="org/ofbiz/commonapp/marketing/trackingcode/TrackingCodeServices.xml" invoke="createTrackingCode" auth="true">
+        <description>Create a TrackingCode record</description>
+        <implements service="interfaceTrackingCode"/>
+    </service>
+    <service name="updateTrackingCode" engine="simple"
+            location="org/ofbiz/commonapp/marketing/trackingcode/TrackingCodeServices.xml" invoke="updateTrackingCode" auth="true">
+        <description>Update a TrackingCode record</description>
+        <implements service="interfaceTrackingCode"/>
+    </service>
+</services>

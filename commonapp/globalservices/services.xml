@@ -16,12 +16,12 @@
     
     <service name="groupTest" engine="group" location="testGroup"/>
 
-	<service name="testHttp" engine="http" 
-			location="http://localhost:8080/commonapp/control/httpService" invoke="testScv">
-		<description>HTTP service wrapper around the test service</description>
-		<attribute name="message" type="String" mode="IN" optional="true"/>
-		<attribute name="resp" type="String" mode="OUT"/>
-	</service>
+    <service name="testHttp" engine="http" 
+            location="http://localhost:8080/commonapp/control/httpService" invoke="testScv">
+        <description>HTTP service wrapper around the test service</description>
+        <attribute name="message" type="String" mode="IN" optional="true"/>
+        <attribute name="resp" type="String" mode="OUT"/>
+    </service>
 	
     <service name="testSoap" engine="soap" export="true"
             location="http://nagoya.apache.org:5049/axis/servlet/AxisServlet" invoke="echoString">
@@ -145,4 +145,20 @@
         <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
     </service>
     
+    <!-- DataSource Services -->
+    <service name="interfaceDataSource" engine="interface" location="" invoke="">
+        <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
+        <attribute name="dataSourceTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createDataSource" engine="simple"
+            location="org/ofbiz/commonapp/common/datasource/DataSourceServices.xml" invoke="createDataSource" auth="true">
+        <description>Create a DataSource record</description>
+        <implements service="interfaceDataSource"/>
+    </service>
+    <service name="updateDataSource" engine="simple"
+            location="org/ofbiz/commonapp/common/datasource/DataSourceServices.xml" invoke="updateDataSource" auth="true">
+        <description>Update a DataSource record</description>
+        <implements service="interfaceDataSource"/>
+    </service>
 </services>
