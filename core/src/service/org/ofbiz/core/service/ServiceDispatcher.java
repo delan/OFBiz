@@ -310,18 +310,28 @@ public class ServiceDispatcher {
             return context;
         }
 
-        // check for a username/password
         if (context.containsKey("login.username")) {
+            // check for a username/password, if there log the user in and make the userLogin object
             String username = (String) context.get("login.username");
             if (context.containsKey("login.password")) {
                 String password = (String) context.get("login.password");
-                context.put("userLogin",
-                            getLoginObject(service, localName, username, password));
+                context.put("userLogin", getLoginObject(service, localName, username, password));
                 context.remove("login.password");
             } else {
                 context.put("userLogin", getLoginObject(service, localName, username, null));
             }
             context.remove("login.username");
+        } else {
+            //if a userLogin object is there, make sure the given username/password exists in our local database
+            GenericValue userLogin = (GenericValue) context.get("userLogin");
+            if (userLogin != null) {
+                GenericValue newUserLogin = getLoginObject(service, localName, userLogin.getString("userLoginId"), userLogin.getString("currentPassword"));
+                if (newUserLogin == null) {
+                    //uh oh, couldn't validate that one...
+                    //we'll have to remove it from the incoming context which will cause an auth error later if auth is required
+                    context.remove("userLogin");
+                }
+            }
         }
         return context;
     }
@@ -339,10 +349,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
         Map result = engine.runSync(model, context);
 
-        GenericValue value = null;
-        if (result.containsKey("userLogin") && result.get("userLogin") != null)
-            value = (GenericValue) result.get("userLogin");
-
+        GenericValue value = (GenericValue) result.get("userLogin");
         return value;
     }
 }
