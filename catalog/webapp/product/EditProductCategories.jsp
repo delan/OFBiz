@@ -110,18 +110,21 @@
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addProductToCategory</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/addProductToCategory</ofbiz:url>" style='margin: 0;' name='addProductCategoryMemberForm'>
   <input type="hidden" name="productId" value="<%=productId%>">
   <input type="hidden" name="useValues" value="true">
 
-  <div class='head2'>Add ProductCategoryMember (select Category, enter optional From Date):</div>
+  <script language='JavaScript'>
+      function setPcmFromDate() { document.addProductCategoryMemberForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
+  </script>
+  <div class='head2'>Add ProductCategoryMember (select Category, enter From Date):</div>
   <br>
   <select name="productCategoryId">
   <ofbiz:iterator name="category" property="categoryCol">
     <option value='<ofbiz:entityfield attribute="category" field="productCategoryId"/>'><ofbiz:entityfield attribute="category" field="description"/> [<ofbiz:entityfield attribute="category" field="productCategoryId"/>]</option>
   </ofbiz:iterator>
   </select>
-  <input type=text size='20' name='fromDate'>
+  <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
   <input type="submit" value="Add">
 </form>
 <%}%>

@@ -188,14 +188,17 @@
   </table>
 </ofbiz:if>
 <br>
-<form method="POST" action="<ofbiz:url>/addCategoryProductMember</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/addCategoryProductMember</ofbiz:url>" style='margin: 0;' name='addProductCategoryMemberForm'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="useValues" value="true">
 
+  <script language='JavaScript'>
+      function setPcmFromDate() { document.addProductCategoryMemberForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
+  </script>
   <div class='head2'>Add ProductCategoryMember:</div>
   <div class='tabletext'>
     Product ID: <input type=text size='20' name='productId'>
-    Optional From Date: <input type=text size='20' name='fromDate'>
+    From Date: <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
     <input type="submit" value="Add">
   </div>
 </form>

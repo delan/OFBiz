@@ -201,6 +201,18 @@
         <attribute name="linkImageUrlTwo" type="String" mode="IN" optional="true"/>
     </service>
 
+    <service name="safeAddProductToCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
+        <description>Add Product To Category</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+    </service>
+
     <service name="addProductToCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
         <description>Add Product To Category</description>

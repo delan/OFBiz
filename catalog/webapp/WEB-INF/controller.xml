@@ -133,7 +133,7 @@
     	<response name="success" type="view" value="EditCategoryProducts"/>
     </request-map>
     <request-map uri="addCategoryProductMember"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="addProductToCategory"/>
+        <event type="service" path="" invoke="safeAddProductToCategory"/>
         <response name="success" type="view" value="EditCategoryProducts"/>
         <response name="error" type="view" value="EditCategoryProducts"/>
     </request-map>
@@ -215,7 +215,7 @@
     	<response name="success" type="view" value="EditProductCategories"/>
     </request-map>
     <request-map uri="addProductToCategory"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="addProductToCategory"/>
+        <event type="service" path="" invoke="safeAddProductToCategory"/>
         <response name="success" type="view" value="EditProductCategories"/>
         <response name="error" type="view" value="EditProductCategories"/>
     </request-map>
