@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  */
 -->
 
@@ -48,6 +48,7 @@
   <!--  - org.ofbiz.content.document -->
   <!--  - org.ofbiz.content.preference -->
   <!--  - org.ofbiz.content.subscription -->
+  <!--  - org.ofbiz.content.survey -->
   <!--  - org.ofbiz.content.visit -->
   <!--  - org.ofbiz.content.website -->
   <!-- ========================================================= -->
@@ -905,6 +906,57 @@
       </relation>
     </entity>
 
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.content.survey -->
+  <!-- ========================================================= -->
+
+  <entity entity-name="Survey"
+          package-name="org.ofbiz.content.survey"
+          title="Survey Entity">
+    <field name="surveyId" type="id-ne"/>
+    <field name="description" type="description"/>
+    <field name="isAnonymous" type="indicator"/>
+    <field name="allowMultiple" type="indicator"/>
+    <prim-key field="surveyId"/>
+    <relation type="many" rel-entity-name="SurveyTrigger">
+      <key-map field-name="surveyId"/>
+    </relation>
+  </entity>
+  <entity entity-name="SurveyApplType"
+          package-name="org.ofbiz.content.survey"
+          title="Survey Application Type Entity">
+    <field name="surveyApplTypeId" type="id-ne"/>
+    <field name="description" type="description"/>
+    <prim-key field="surveyApplTypeId"/>
+    <relation type="many" rel-entity-name="SurveyTrigger">
+      <key-map field-name="surveyApplTypeId"/>
+    </relation>
+  </entity>
+  <entity entity-name="SurveyQuestionType"
+          package-name="org.ofbiz.content.survey"
+          title="Survey Question Type Entity">
+    <field name="surveyQuestionTypeId" type="id-ne"/>
+    <field name="description" type="description"/>
+    <prim-key field="surveyQuestionTypeId"/>
+  </entity>
+  <entity entity-name="SurveyTrigger"
+          package-name="org.ofbiz.content.survey"
+          title="Survey Trigger Entity">
+    <field name="surveyId" type="id-ne"/>
+    <field name="surveyApplTypeId" type="id-ne"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <prim-key field="surveyId"/>
+    <prim-key field="surveyApplTypeId"/>
+    <prim-key field="fromDate"/>
+    <relation type="one" fk-name="SRVYTRG_SRVY" rel-entity-name="Survey">
+      <key-map field-name="surveyId"/>
+    </relation>
+    <relation type="one" fk-name="SRVYTRG_SRVYAPT" rel-entity-name="SurveyApplType">
+      <key-map field-name="surveyApplTypeId"/>
+    </relation>
+  </entity>
+  
   <!-- ========================================================= -->
   <!-- org.ofbiz.content.visit -->
   <!-- ========================================================= -->
