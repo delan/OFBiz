@@ -72,7 +72,8 @@ public class ModelReader
     {
       synchronized(ModelReader.class) 
       { 
-        //must check if null again as one of the blocked threads can still enter 
+        //must check if null again as one of the blocked threads can still enter
+        reader = (ModelReader)readers.get(tempModelName);
         if(reader == null)
         {
           reader = new ModelReader(tempModelName);
