@@ -1,5 +1,5 @@
 /*
- * $Id: GenericWebEvent.java,v 1.2 2003/08/19 20:54:12 jonesde Exp $
+ * $Id: GenericWebEvent.java,v 1.3 2004/02/07 09:40:54 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.security.Security;
  * Web Event for doing updates on Generic Entities
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class GenericWebEvent {
@@ -122,28 +122,14 @@ public class GenericWebEvent {
                 Debug.logWarning(e, module);
                 errMsg += "<li> Fatal error: field type \"" + field.getType() + "\" not found";
             }
-            if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {
-                String fvalDate = request.getParameter(field.getName() + "_DATE");
-                String fvalTime = request.getParameter(field.getName() + "_TIME");
+            String fval = request.getParameter(field.getName());
 
-                if (fvalDate != null && fvalDate.length() > 0) {
-                    try {
-                        findByEntity.setString(field.getName(), fvalDate + " " + fvalTime);
-                    } catch (Exception e) {
-                        errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType();
-                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
-                    }
-                }
-            } else {
-                String fval = request.getParameter(field.getName());
-
-                if (fval != null && fval.length() > 0) {
-                    try {
-                        findByEntity.setString(field.getName(), fval);
-                    } catch (Exception e) {
-                        errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
-                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
-                    }
+            if (fval != null && fval.length() > 0) {
+                try {
+                    findByEntity.setString(field.getName(), fval);
+                } catch (Exception e) {
+                    errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
+                    Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
                 }
             }
         }
@@ -174,28 +160,14 @@ public class GenericWebEvent {
                 Debug.logWarning(e, module);
                 errMsg += "<li> Fatal error: field type \"" + field.getType() + "\" not found";
             }
-            if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {
-                String fvalDate = request.getParameter(field.getName() + "_DATE");
-                String fvalTime = request.getParameter(field.getName() + "_TIME");
+            String fval = request.getParameter(field.getName());
 
-                if (fvalDate != null && fvalDate.length() > 0) {
-                    try {
-                        findByEntity.setString(field.getName(), fvalDate + " " + fvalTime);
-                    } catch (Exception e) {
-                        errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType();
-                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
-                    }
-                }
-            } else {
-                String fval = request.getParameter(field.getName());
-
-                if (fval != null && fval.length() > 0) {
-                    try {
-                        findByEntity.setString(field.getName(), fval);
-                    } catch (Exception e) {
-                        errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
-                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
-                    }
+            if (fval != null && fval.length() > 0) {
+                try {
+                    findByEntity.setString(field.getName(), fval);
+                } catch (Exception e) {
+                    errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
+                    Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
                 }
             }
         }

@@ -26,7 +26,7 @@
 
 <%@ page import="java.text.*, java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.entity.model.*" %>
+<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -69,8 +69,6 @@
   }
   curFindString = UtilFormatOut.encodeQuery(curFindString);
 
-  Collection resultCol = null;
-  Object[] resultArray = (Object[])session.getAttribute("CACHE_SEARCH_RESULTS");
 %>
 <%
 //--------------
@@ -86,32 +84,27 @@
   try { viewSize = Integer.valueOf(viewSizeString).intValue(); }
   catch (NumberFormatException nfe) { viewSize = 10; }
 
-//--------------
-  String resultArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
-  if (resultArray == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0) {
-    Debug.log("-=-=-=-=- Current Array not found in session, getting new one...");
-    Debug.log("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
-
-    if ("true".equals(find)) {
-      resultCol = delegator.findByAnd(findByEntity.getEntityName(), findByEntity.getAllFields(), null);
-      if(resultCol != null) resultArray = resultCol.toArray();
-    } else {
-      resultCol = new LinkedList();
-      resultArray = resultCol.toArray();
-    }
-
-    if (resultArray != null) {
-      session.setAttribute("CACHE_SEARCH_RESULTS", resultArray);
-      session.setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
-    }
-  }
-//--------------
   int lowIndex = viewIndex*viewSize+1;
   int highIndex = (viewIndex+1)*viewSize;
   int arraySize = 0;
-  if (resultArray!=null) arraySize = resultArray.length;
-  if (arraySize<highIndex) highIndex=arraySize;
-  //Debug.log("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
+  List resultPartialList = null;
+//--------------
+  if ("true".equals(find)) {
+    EntityCondition condition = new EntityFieldMap(findByEntity, EntityOperator.AND);
+    arraySize = (int) delegator.findCountByCondition(findByEntity.getEntityName(), condition, null);
+    if (arraySize < highIndex) highIndex = arraySize;
+    if ((highIndex - lowIndex + 1) > 0) {
+      EntityFindOptions efo = new EntityFindOptions();
+      efo.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
+      EntityListIterator resultEli = null;
+      //new ArrayList(findByEntity.getPrimaryKey().keySet())
+      resultEli = delegator.findListIteratorByCondition(findByEntity.getEntityName(), condition, null, null, null, efo);
+      resultPartialList = resultEli.getPartialList(lowIndex, highIndex - lowIndex + 1);
+      resultEli.close();
+    }
+  }
+//--------------
+  Debug.log("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
 <h3 style='margin:0;'>Find <%=modelEntity.getEntityName()%>s</h3>
 <%-- Note: you may use the '%' character as a wildcard for String fields. --%>
@@ -136,7 +129,7 @@
 </form>
 <b><%=modelEntity.getEntityName()%>s found by: <%=findByEntity.toString()%></b><br>
 <b><%=modelEntity.getEntityName()%>s curFindString: <%=curFindString%></b><br>
-<%if (hasCreatePermission){%>
+<%if (hasCreatePermission) {%>
   <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=modelEntity.getEntityName()%>]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
@@ -171,12 +164,11 @@
     <%}%>
     </tr>
 <%
- if (resultArray != null && resultArray.length > 0) {
-  int loopIndex;
-  //for (loopIndex=resultArray.length-1; loopIndex>=0 ; loopIndex--)
-  for (loopIndex=lowIndex; loopIndex<=highIndex; loopIndex++) {
-    GenericValue value = (GenericValue)resultArray[loopIndex-1];
-    if (value != null) {
+ if (resultPartialList != null) {
+  //int loopIndex = lowIndex;
+  Iterator resultPartialIter = resultPartialList.iterator();
+  while (resultPartialIter.hasNext()) {
+    GenericValue value = (GenericValue) resultPartialIter.next();
 %>
     <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
       <td>
@@ -185,13 +177,7 @@
           for (int pknum = 0; pknum < modelEntity.getPksSize(); pknum++) {
             ModelField pkField = modelEntity.getPk(pknum);
             ModelFieldType type = delegator.getEntityFieldType(modelEntity, pkField.getType());
-            if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")){
-              String dtStr = value.getTimestamp(pkField.getName()).toString();
-              findString += "&" + pkField.getName() + "_DATE=" + dtStr.substring(0, dtStr.indexOf(' '));
-              findString += "&" + pkField.getName() + "_TIME=" + dtStr.substring(dtStr.indexOf(' ') + 1);
-            } else {
-              findString += "&" + pkField.getName() + "=" + value.get(pkField.getName());
-            }
+            findString += "&" + pkField.getName() + "=" + value.get(pkField.getName());
           }
         %>
         <a href='<ofbiz:url>/ViewGeneric?<%=findString%></ofbiz:url>' class="buttontext">[View]</a>
@@ -206,24 +192,24 @@
       <%ModelFieldType type = delegator.getEntityFieldType(modelEntity, field.getType());%>
       <td>
         <div class="tabletext">
-      <%if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")){%>
+      <%if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {%>
         <%java.sql.Timestamp dtVal = value.getTimestamp(field.getName());%>
         <%=dtVal==null?"":dtVal.toString()%>
-      <%} else if(type.getJavaType().equals("Date") || type.getJavaType().equals("java.sql.Date")){%>
+      <%} else if(type.getJavaType().equals("Date") || type.getJavaType().equals("java.sql.Date")) {%>
         <%java.sql.Date dateVal = value.getDate(field.getName());%>
         <%=dateVal==null?"":dateVal.toString()%>
-      <%} else if(type.getJavaType().equals("Time") || type.getJavaType().equals("java.sql.Time")){%>
+      <%} else if(type.getJavaType().equals("Time") || type.getJavaType().equals("java.sql.Time")) {%>
         <%java.sql.Time timeVal = value.getTime(field.getName());%>
         <%=timeVal==null?"":timeVal.toString()%>
-      <%}else if(type.getJavaType().indexOf("Integer") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Integer)value.get(field.getName()))%>
-      <%}else if(type.getJavaType().indexOf("Long") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Long)value.get(field.getName()))%>
-      <%}else if(type.getJavaType().indexOf("Double") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Double)value.get(field.getName()))%>
-      <%}else if(type.getJavaType().indexOf("Float") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Float)value.get(field.getName()))%>
-      <%}else if(type.getJavaType().indexOf("String") >= 0){%>
+      <%} else if(type.getJavaType().indexOf("Integer") >= 0) {%>
+        <%=UtilFormatOut.safeToString((Integer)value.get(field.getName()))%>
+      <%} else if(type.getJavaType().indexOf("Long") >= 0) {%>
+        <%=UtilFormatOut.safeToString((Long)value.get(field.getName()))%>
+      <%} else if(type.getJavaType().indexOf("Double") >= 0) {%>
+        <%=UtilFormatOut.safeToString((Double)value.get(field.getName()))%>
+      <%} else if(type.getJavaType().indexOf("Float") >= 0) {%>
+        <%=UtilFormatOut.safeToString((Float)value.get(field.getName()))%>
+      <%} else if(type.getJavaType().indexOf("String") >= 0) {%>
         <%=UtilFormatOut.checkNull((String)value.get(field.getName()))%>
       <%}%>
         &nbsp;</div>
@@ -231,12 +217,11 @@
     </tr>
   <%}%>
 <%
-   }
  } else {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
 <td colspan="<%=modelEntity.getFieldsSize() + 2%>">
-<h3>No <%=modelEntity.getEntityName()%>s Found.</h3>
+<h3>No <%=modelEntity.getEntityName()%> records Found.</h3>
 </td>
 </tr>
 <%}%>

@@ -60,20 +60,10 @@
   for(int fnum = 0; fnum < entity.getPksSize(); fnum++) {
     ModelField field = entity.getPk(fnum);
     ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());
-    if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {
-      String fvalDate = request.getParameter(field.getName() + "_DATE");
-      String fvalTime = request.getParameter(field.getName() + "_TIME");
-      if(fvalDate != null && fvalDate.length() > 0) {
-        curFindString = curFindString + "&" + field.getName() + "_DATE=" + fvalDate;
-        curFindString = curFindString + "&" + field.getName() + "_TIME=" + fvalTime;
-        findByPK.setString(field.getName(), fvalDate + " " + fvalTime);
-      }
-    } else {
-      String fval = request.getParameter(field.getName());
-      if(fval != null && fval.length() > 0) {
-        curFindString = curFindString + "&" + field.getName() + "=" + fval;
-        findByPK.setString(field.getName(), fval);
-      }
+    String fval = request.getParameter(field.getName());
+    if(fval != null && fval.length() > 0) {
+      curFindString = curFindString + "&" + field.getName() + "=" + fval;
+      findByPK.setString(field.getName(), fval);
     }
   }
   curFindString = UtilFormatOut.encodeQuery(curFindString);
@@ -91,10 +81,8 @@
 </STYLE>
 <SCRIPT language='JavaScript'>  
 var numTabs=<%=entity.getRelationsSize()+2%>;
-function ShowTab(lname) 
-{
-  for(inc=1; inc <= numTabs; inc++)
-  {
+function ShowTab(lname) {
+  for(inc=1; inc <= numTabs; inc++) {
     document.getElementById('tab' + inc).className = (lname == 'tab' + inc) ? 'ontab' : 'offtab';
     document.getElementById('lnk' + inc).className = (lname == 'tab' + inc) ? 'onlnk' : 'offlnk';
     document.getElementById('area' + inc).className = (lname == 'tab' + inc) ? 'topcontainer' : 'topcontainerhidden';
@@ -106,11 +94,11 @@ function ShowTab(lname)
 </div>
 
 <a href='<ofbiz:url>/FindGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Find <%=entityName%>]</a>
-<%if(hasCreatePermission){%>
+<%if (hasCreatePermission) {%>
   <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=entityName%>]</a>
 <%}%>
-<%if(value != null){%>
-  <%if(hasDeletePermission){%>
+<%if (value != null) {%>
+  <%if (hasDeletePermission) {%>
     <a href='<ofbiz:url>/UpdateGeneric?UPDATE_MODE=DELETE&<%=curFindString%></ofbiz:url>' class="buttontext">[Delete this <%=entityName%>]</a>
   <%}%>
 <%}%>
@@ -120,13 +108,13 @@ function ShowTab(lname)
   <td id='tab1' class='ontab'>
     <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk>View <%=entityName%></a>
   </td>
-  <%if(hasUpdatePermission || hasCreatePermission){%>
+  <%if (hasUpdatePermission || hasCreatePermission) {%>
   <td id='tab2' class='offtab'>
     <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk>Edit <%=entityName%></a>
   </td>
   <%}%>
 </tr>
-<%if(value != null){%>
+<%if (value != null) {%>
 <tr>
   <%for(int tabIndex = 0; tabIndex < entity.getRelationsSize(); tabIndex++){%>
     <%ModelRelation relation = entity.getRelation(tabIndex);%>
@@ -166,13 +154,13 @@ function ShowTab(lname)
         <%java.sql.Time timeVal = value.getTime(field.getName());%>
         <%=timeVal==null?"":timeVal.toString()%>
       <%}else if(type.getJavaType().indexOf("Integer") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Integer)value.get(field.getName()))%>
+        <%=UtilFormatOut.safeToString((Integer)value.get(field.getName()))%>
       <%}else if(type.getJavaType().indexOf("Long") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Long)value.get(field.getName()))%>
+        <%=UtilFormatOut.safeToString((Long)value.get(field.getName()))%>
       <%}else if(type.getJavaType().indexOf("Double") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Double)value.get(field.getName()))%>
+        <%=UtilFormatOut.safeToString((Double)value.get(field.getName()))%>
       <%}else if(type.getJavaType().indexOf("Float") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Float)value.get(field.getName()))%>
+        <%=UtilFormatOut.safeToString((Float)value.get(field.getName()))%>
       <%}else if(type.getJavaType().indexOf("String") >= 0){%>
         <%=UtilFormatOut.checkNull((String)value.get(field.getName()))%>
       <%}%>
@@ -194,8 +182,7 @@ function ShowTab(lname)
 <%
   String lastUpdateMode = request.getParameter("UPDATE_MODE");
   if((session.getAttribute("_ERROR_MESSAGE_") != null || request.getAttribute("_ERROR_MESSAGE_") != null) && 
-      lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
-  {
+      lastUpdateMode != null && !lastUpdateMode.equals("DELETE")) {
     //if we are updating and there is an error, don't use the entity data for the fields, use parameters to get the old value
     useValue = false;
   }
@@ -203,74 +190,69 @@ function ShowTab(lname)
 <form action='<ofbiz:url>/UpdateGeneric?entityName=<%=entityName%></ofbiz:url>' method="POST" name="updateForm" style="margin:0;">
 <table cellpadding="2" cellspacing="2" border="0">
 
-<%if(value == null){%>
-  <%if(hasCreatePermission){%>
+<%if (value == null) {%>
+  <%if (hasCreatePermission) {%>
     You may create a <%=entityName%> by entering the values you want, and clicking Update.
-    <input type="hidden" name="UPDATE_MODE" value="CREATE">
-    <%for(int fnum = 0; fnum < entity.getPksSize();fnum++){%>
+    <input type="hidden" name="UPDATE_MODE" value="CREATE"/>
+    <%for (int fnum = 0; fnum < entity.getPksSize();fnum++) {%>
       <%ModelField field = entity.getPk(fnum);%>
       <%ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());%>
     <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td valign="top"><div class="tabletext"><b><%=field.getName()%></b></div></td>
       <td valign="top">
         <div class="tabletext">
-      <%if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")){%>
+      <%if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {%>
         <%
-          String dateString = null;
-          String timeString = null;
-          if(findByPK.get(field.getName()) != null){
+          String dateTimeString = null;
+          if (findByPK != null && useValue) {
             java.sql.Timestamp dtVal = findByPK.getTimestamp(field.getName());
             if(dtVal != null) {
-              String dtStr = dtVal.toString();
-              dateString = dtStr.substring(0, dtStr.indexOf(' '));
-              timeString = dtStr.substring(dtStr.indexOf(' ') + 1);
+              dateTimeString = dtVal.toString();
             }
-          } else {
-            dateString = request.getParameter(field.getName() + "_DATE");
-            timeString = request.getParameter(field.getName() + "_TIME");
+          } else if (!useValue) {
+            dateTimeString = request.getParameter(field.getName());
           }
         %>
-        Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.getName()%>_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
-        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>_DATE, null);" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
-        Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.getName()%>_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
+        DateTime(YYYY-MM-DD HH:mm:SS.sss):<input class='editInputBox' type="text" name="<%=field.getName()%>" size="24" value="<%=UtilFormatOut.checkNull(dateTimeString)%>">
+        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>, '<%=UtilFormatOut.checkNull(dateTimeString)%>');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
       <%} else if(type.getJavaType().equals("Date") || type.getJavaType().equals("java.sql.Date")){%>
         <%
           String dateString = null;
-          if(findByPK.get(field.getName()) != null){
+          if (findByPK != null && useValue) {
             java.sql.Date dateVal = value.getDate(field.getName());
             dateString = dateVal==null?"":dateVal.toString();
-          } else {
+          } else if (!useValue) {
             dateString = request.getParameter(field.getName());
           }
         %>
         Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.getName()%>" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
-        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>, null);" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
+        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>, '<%=UtilFormatOut.checkNull(dateString)%>');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
       <%} else if(type.getJavaType().equals("Time") || type.getJavaType().equals("java.sql.Time")){%>
         <%
           String timeString = null;
-          if(findByPK.get(field.getName()) != null){
+          if (findByPK != null && useValue) {
             java.sql.Time timeVal = value.getTime(field.getName());
             timeString = timeVal==null?"":timeVal.toString();
-          } else {
+          } else if (!useValue) {
             timeString = request.getParameter(field.getName());
           }
         %>
         Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.getName()%>" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%}else if(type.getJavaType().indexOf("Integer") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=findByPK.get(field.getName())!=null?UtilFormatOut.formatQuantity((Integer)findByPK.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(findByPK!=null&&useValue)?UtilFormatOut.safeToString((Integer)findByPK.get(field.getName())):(useValue?"":UtilFormatOut.checkNull(request.getParameter(field.getName())))%>">
       <%}else if(type.getJavaType().indexOf("Long") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=findByPK.get(field.getName())!=null?UtilFormatOut.formatQuantity((Long)findByPK.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>"> 
+        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(findByPK!=null&&useValue)?UtilFormatOut.safeToString((Long)findByPK.get(field.getName())):(useValue?"":UtilFormatOut.checkNull(request.getParameter(field.getName())))%>"> 
       <%}else if(type.getJavaType().indexOf("Double") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=findByPK.get(field.getName())!=null?UtilFormatOut.formatQuantity((Double)findByPK.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>"> 
+        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(findByPK!=null&&useValue)?UtilFormatOut.safeToString((Double)findByPK.get(field.getName())):(useValue?"":UtilFormatOut.checkNull(request.getParameter(field.getName())))%>"> 
       <%}else if(type.getJavaType().indexOf("Float") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=findByPK.get(field.getName())!=null?UtilFormatOut.formatQuantity((Float)findByPK.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(findByPK!=null&&useValue)?UtilFormatOut.safeToString((Float)findByPK.get(field.getName())):(useValue?"":UtilFormatOut.checkNull(request.getParameter(field.getName())))%>">
       <%}else if(type.getJavaType().indexOf("String") >= 0){%>
         <%if(type.stringLength() <= 80){%>
-        <input class='editInputBox' type="text" size="<%=type.stringLength()%>" maxlength="<%=type.stringLength()%>" name="<%=field.getName()%>" value="<%=findByPK.get(field.getName())!=null?UtilFormatOut.checkNull((String)findByPK.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
+        <input class='editInputBox' type="text" size="<%=type.stringLength()%>" maxlength="<%=type.stringLength()%>" name="<%=field.getName()%>" value="<%=(findByPK!=null&&useValue)?UtilFormatOut.checkNull((String)findByPK.get(field.getName())):(useValue?"":UtilFormatOut.checkNull(request.getParameter(field.getName())))%>">
         <%} else if(type.stringLength() <= 255){%>
-          <input class='editInputBox' type="text" size="80" maxlength="<%=type.stringLength()%>" name="<%=field.getName()%>" value="<%=findByPK.get(field.getName())!=null?UtilFormatOut.checkNull((String)findByPK.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
+          <input class='editInputBox' type="text" size="80" maxlength="<%=type.stringLength()%>" name="<%=field.getName()%>" value="<%=(findByPK!=null&&useValue)?UtilFormatOut.checkNull((String)findByPK.get(field.getName())):(useValue?"":UtilFormatOut.checkNull(request.getParameter(field.getName())))%>">
         <%} else {%>
-          <textarea cols="60" rows="3" maxlength="<%=type.stringLength()%>" name="<%=field.getName()%>"><%=findByPK.get(field.getName())!=null?UtilFormatOut.checkNull((String)findByPK.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%></textarea>
+          <textarea cols="60" rows="3" maxlength="<%=type.stringLength()%>" name="<%=field.getName()%>"><%=(findByPK!=null&&useValue)?UtilFormatOut.checkNull((String)findByPK.get(field.getName())):(useValue?"":UtilFormatOut.checkNull(request.getParameter(field.getName())))%></textarea>
         <%}%>
       <%}%>
         &nbsp;</div>
@@ -292,33 +274,36 @@ function ShowTab(lname)
       <td valign="top"><div class="tabletext"><b><%=field.getName()%></b></div></td>
       <td valign="top">
         <div class="tabletext">
-      <%if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")){%>
+      <%if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {%>
         <%java.sql.Timestamp dtVal = value.getTimestamp(field.getName());%>
         <%String dtStr = dtVal==null?"":dtVal.toString();%>
-        <input type="hidden" name="<%=field.getName()%>_DATE" value="<%=dtStr.substring(0, dtStr.indexOf(' '))%>">
-        <input type="hidden" name="<%=field.getName()%>_TIME" value="<%=dtStr.substring(dtStr.indexOf(' ') + 1)%>">
+        <input type="hidden" name="<%=field.getName()%>" value="<%=dtStr%>">
         <%=dtStr%>
-      <%} else if(type.getJavaType().equals("Date") || type.getJavaType().equals("java.sql.Date")){%>
+      <%} else if(type.getJavaType().equals("Date") || type.getJavaType().equals("java.sql.Date")) {%>
         <%java.sql.Date dateVal = value.getDate(field.getName());%>
         <input type="hidden" name="<%=field.getName()%>" value="<%=dateVal==null?"":dateVal.toString()%>">
         <%=dateVal==null?"":dateVal.toString()%>
-      <%} else if(type.getJavaType().equals("Time") || type.getJavaType().equals("java.sql.Time")){%>
+      <%} else if(type.getJavaType().equals("Time") || type.getJavaType().equals("java.sql.Time")) {%>
         <%java.sql.Time timeVal = value.getTime(field.getName());%>
         <input type="hidden" name="<%=field.getName()%>" value="<%=timeVal==null?"":timeVal.toString()%>">
         <%=timeVal==null?"":timeVal.toString()%>
-      <%}else if(type.getJavaType().indexOf("Integer") >= 0){%>
-        <input type="hidden" name="<%=field.getName()%>" value="<%=(Integer)value.get(field.getName())%>">
-        <%=UtilFormatOut.formatQuantity((Integer)value.get(field.getName()))%>
-      <%}else if(type.getJavaType().indexOf("Long") >= 0){%>
-        <input type="hidden" name="<%=field.getName()%>" value="<%=(Long)value.get(field.getName())%>">
-        <%=UtilFormatOut.formatQuantity((Long)value.get(field.getName()))%>
-      <%}else if(type.getJavaType().indexOf("Double") >= 0){%>
-        <input type="hidden" name="<%=field.getName()%>" value="<%=(Double)value.get(field.getName())%>">
-        <%=UtilFormatOut.formatQuantity((Double)value.get(field.getName()))%>
-      <%}else if(type.getJavaType().indexOf("Float") >= 0){%>
-        <input type="hidden" name="<%=field.getName()%>" value="<%=(Float)value.get(field.getName())%>">
-        <%=UtilFormatOut.formatQuantity((Float)value.get(field.getName()))%>
-      <%}else if(type.getJavaType().indexOf("String") >= 0){%>
+      <%} else if(type.getJavaType().indexOf("Integer") >= 0) {%>
+        <%Integer numVal = (Integer) value.get(field.getName());%>
+        <input type="hidden" name="<%=field.getName()%>" value="<%=numVal==null?"":numVal.toString()%>">
+        <%=numVal==null?"":numVal.toString()%>
+      <%} else if(type.getJavaType().indexOf("Long") >= 0) {%>
+        <%Long numVal = (Long) value.get(field.getName());%>
+        <input type="hidden" name="<%=field.getName()%>" value="<%=numVal==null?"":numVal.toString()%>">
+        <%=numVal==null?"":numVal.toString()%>
+      <%} else if(type.getJavaType().indexOf("Double") >= 0) {%>
+        <%Double numVal = (Double) value.get(field.getName());%>
+        <input type="hidden" name="<%=field.getName()%>" value="<%=numVal==null?"":numVal.toString()%>">
+        <%=numVal==null?"":numVal.toString()%>
+      <%} else if(type.getJavaType().indexOf("Float") >= 0) {%>
+        <%Float numVal = (Float) value.get(field.getName());%>
+        <input type="hidden" name="<%=field.getName()%>" value="<%=numVal==null?"":numVal.toString()%>">
+        <%=numVal==null?"":numVal.toString()%>
+      <%} else if(type.getJavaType().indexOf("String") >= 0) {%>
         <input type="hidden" name="<%=field.getName()%>" value="<%=UtilFormatOut.checkNull((String)value.get(field.getName()))%>">
         <%=UtilFormatOut.checkNull((String)value.get(field.getName()))%>
       <%}%>
@@ -334,7 +319,6 @@ function ShowTab(lname)
 <%} //end if value == null %>
 
 <%if (showFields) {%>
-
     <%for (int fnum = 0; fnum < entity.getNopksSize(); fnum++) {%>
       <%ModelField field = entity.getNopk(fnum);%>
       <%ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());%>
@@ -344,30 +328,25 @@ function ShowTab(lname)
         <div class="tabletext">
       <%if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {%>
         <%
-          String dateString = null;
-          String timeString = null;
+          String dateTimeString = null;
           if (value != null && useValue) {
-            java.sql.Timestamp dtVal = findByPK.getTimestamp(field.getName());
-            if (dtVal != null) {
-              String dtStr = dtVal.toString();
-              dateString = dtStr.substring(0, dtStr.indexOf(' '));
-              timeString = dtStr.substring(dtStr.indexOf(' ') + 1);
+            java.sql.Timestamp dtVal = value.getTimestamp(field.getName());
+            if(dtVal != null) {
+              dateTimeString = dtVal.toString();
             }
-          } else {
-            dateString = request.getParameter(field.getName() + "_DATE");
-            timeString = request.getParameter(field.getName() + "_TIME");
+          } else if (!useValue) {
+            dateTimeString = request.getParameter(field.getName());
           }
         %>
-        Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.getName()%>_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
-        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>_DATE, null);" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
-        Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.getName()%>_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
+        DateTime(YYYY-MM-DD HH:mm:SS.sss):<input class='editInputBox' type="text" name="<%=field.getName()%>" size="24" value="<%=UtilFormatOut.checkNull(dateTimeString)%>">
+        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>, '<%=UtilFormatOut.checkNull(dateTimeString)%>');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
       <%} else if (type.getJavaType().equals("Date") || type.getJavaType().equals("java.sql.Date")) {%>
         <%
           String dateString = null;
           if (value != null && useValue) {
             java.sql.Date dateVal = value.getDate(field.getName());
             dateString = dateVal==null?"":dateVal.toString();
-          } else {
+          } else if (!useValue) {
             dateString = request.getParameter(field.getName());
           }
         %>
@@ -376,22 +355,22 @@ function ShowTab(lname)
       <%} else if (type.getJavaType().equals("Time") || type.getJavaType().equals("java.sql.Time")) {%>
         <%
           String timeString = null;
-          if(value != null && useValue){
+          if (value != null && useValue) {
             java.sql.Time timeVal = value.getTime(field.getName());
             timeString = timeVal==null?"":timeVal.toString();
-          } else {
+          } else if (!useValue) {
             timeString = request.getParameter(field.getName());
           }
         %>
         Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.getName()%>" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%}else if (type.getJavaType().indexOf("Integer") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(value!=null&&useValue)?UtilFormatOut.formatQuantity((Integer)value.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(value!=null&&useValue)?UtilFormatOut.safeToString((Integer)value.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
       <%}else if (type.getJavaType().indexOf("Long") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(value!=null&&useValue)?UtilFormatOut.formatQuantity((Long)value.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(value!=null&&useValue)?UtilFormatOut.safeToString((Long)value.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
       <%}else if (type.getJavaType().indexOf("Double") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(value!=null&&useValue)?UtilFormatOut.formatQuantity((Double)value.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(value!=null&&useValue)?UtilFormatOut.safeToString((Double)value.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
       <%}else if (type.getJavaType().indexOf("Float") >= 0){%>
-        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(value!=null&&useValue)?UtilFormatOut.formatQuantity((Float)value.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
+        <input class='editInputBox' type="text" size="20" name="<%=field.getName()%>" value="<%=(value!=null&&useValue)?UtilFormatOut.safeToString((Float)value.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
       <%}else if (type.getJavaType().indexOf("String") >= 0){%>
         <%if (type.stringLength() <= 80){%>
         <input class='editInputBox' type="text" size="<%=type.stringLength()%>" maxlength="<%=type.stringLength()%>" name="<%=field.getName()%>" value="<%=(value!=null&&useValue)?UtilFormatOut.checkNull((String)value.get(field.getName())):UtilFormatOut.checkNull(request.getParameter(field.getName()))%>">
@@ -470,13 +449,13 @@ function ShowTab(lname)
           <%java.sql.Time timeVal = valueRelated.getTime(field.getName());%>
           <%=timeVal==null?"":timeVal.toString()%>
         <%}else if(type.getJavaType().indexOf("Integer") >= 0){%>
-          <%=UtilFormatOut.formatQuantity((Integer)valueRelated.get(field.getName()))%>
+          <%=UtilFormatOut.safeToString((Integer)valueRelated.get(field.getName()))%>
         <%}else if(type.getJavaType().indexOf("Long") >= 0){%>
-          <%=UtilFormatOut.formatQuantity((Long)valueRelated.get(field.getName()))%>
+          <%=UtilFormatOut.safeToString((Long)valueRelated.get(field.getName()))%>
         <%}else if(type.getJavaType().indexOf("Double") >= 0){%>
-          <%=UtilFormatOut.formatQuantity((Double)valueRelated.get(field.getName()))%>
+          <%=UtilFormatOut.safeToString((Double)valueRelated.get(field.getName()))%>
         <%}else if(type.getJavaType().indexOf("Float") >= 0){%>
-          <%=UtilFormatOut.formatQuantity((Float)valueRelated.get(field.getName()))%>
+          <%=UtilFormatOut.safeToString((Float)valueRelated.get(field.getName()))%>
         <%}else if(type.getJavaType().indexOf("String") >= 0){%>
           <%=UtilFormatOut.checkNull((String)valueRelated.get(field.getName()))%>
         <%}%>
@@ -536,42 +515,33 @@ function ShowTab(lname)
     </tr>
     <%
      int relatedLoopCount = 0;
-     if(relatedIterator != null && relatedIterator.hasNext())
-     {
-      while(relatedIterator != null && relatedIterator.hasNext())
-      {
+     if (relatedIterator != null && relatedIterator.hasNext()) {
+      while (relatedIterator != null && relatedIterator.hasNext()) {
         relatedLoopCount++; //if(relatedLoopCount > 10) break;
         <%=relatedEntity.getEntityName()%> valueRelated = (<%=relatedEntity.getEntityName()%>)relatedIterator.next();
-        if(valueRelated != null)
-        {
+        if(valueRelated != null) {
     %>
     <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-  <%for(i=0;i<relatedEntity.fields.size();i++){%>
+  <%for (i=0;i<relatedEntity.fields.size();i++) {%>
       <td>
         <div class="tabletext"><%if(((ModelField)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || ((ModelField)relatedEntity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       <%{
-        String dateString = null;
-        String timeString = null;
-        if(valueRelated != null)
-        {
+        String dateTimeString = null;
+        if (valueRelated != null) {
           java.sql.Timestamp timeStamp = valueRelated.get<%=GenUtil.upperFirstChar(((ModelField)relatedEntity.fields.elementAt(i)).getFieldName())%>();
-          if(timeStamp  != null)
-          {
-            dateString = UtilDateTime.toDateString(timeStamp);
-            timeString = UtilDateTime.toTimeString(timeStamp);
+          if (timeStamp  != null) {
+            dateTimeString = timeStamp.toString();
           }
         }
       %>
       <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
-      <%}%><%} else if(((ModelField)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || ((ModelField)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+      <%}%><%} else if(((ModelField)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || ((ModelField)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")) {%>
       <%{
         String dateString = null;
         String timeString = null;
-        if(valueRelated != null)
-        {
+        if (valueRelated != null) {
           java.util.Date date = valueRelated.get<%=GenUtil.upperFirstChar(((ModelField)relatedEntity.fields.elementAt(i)).getFieldName())%>();
-          if(date  != null)
-          {
+          if (date  != null) {
             dateString = UtilDateTime.toDateString(date);
             timeString = UtilDateTime.toTimeString(date);
           }
@@ -579,7 +549,7 @@ function ShowTab(lname)
       %>
       <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
       <%}%><%}else if(((ModelField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((ModelField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((ModelField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((ModelField)relatedEntity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      <%=UtilFormatOut.formatQuantity(valueRelated.get<%=GenUtil.upperFirstChar(((ModelField)relatedEntity.fields.elementAt(i)).getFieldName())%>())%><%}else{%>
+      <%=UtilFormatOut.safeToString(valueRelated.get<%=GenUtil.upperFirstChar(((ModelField)relatedEntity.fields.elementAt(i)).getFieldName())%>())%><%}else{%>
       <%=UtilFormatOut.checkNull(valueRelated.get<%=GenUtil.upperFirstChar(((ModelField)relatedEntity.fields.elementAt(i)).getFieldName())%>())%><%}%>
         &nbsp;</div>
       </td>
@@ -587,7 +557,7 @@ function ShowTab(lname)
       <td>
         <a href="<%=response.encodeURL(controlPath + "/View<%=relatedEntity.getEntityName()%>?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks, "Related")%>)%>" class="buttontext">[View]</a>
       </td>
-      <%if(relatedDeletePerm){%>
+      <%if (relatedDeletePerm) {%>
         <td>
           <a href="<%=response.encodeURL(controlPath + "/Update<%=relatedEntity.getEntityName()%>?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks, "Related")%> + "&" + <%=entity.httpArgList(entity.pks)%> + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
@@ -595,7 +565,7 @@ function ShowTab(lname)
     </tr>
     <%}%>
   <%}%>
-<%}else{%>
+<%} else {%>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
 <td colspan="<%=relatedEntity.fields.size() + 2%>">
 <h3>No <%=relatedEntity.getEntityName()%>s Found.</h3>
@@ -613,13 +583,13 @@ Displaying <%=relatedLoopCount%> entities.
   <%}%>
 <%}%>
 </div>
-<%if((hasUpdatePermission || hasCreatePermission) && !useValue){%>
+<%if ((hasUpdatePermission || hasCreatePermission) && !useValue) {%>
   <SCRIPT language='JavaScript'>  
     ShowViewTab("edit");
   </SCRIPT>
 <%}%>
 <br>
-<%}else{%>
+<%} else {%>
   <h3>You do not have permission to view this page (<%=entity.getPlainTableName()%>_ADMIN, or <%=entity.getPlainTableName()%>_VIEW needed).</h3>
 <%}%>
-<%} catch (Exception e) { Debug.log(e); throw e; }%>
+<%} catch (Exception e) { Debug.log(e); throw e;%><%}%>
