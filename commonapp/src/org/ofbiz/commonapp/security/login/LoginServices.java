@@ -26,6 +26,11 @@ package org.ofbiz.commonapp.security.login;
 import java.util.*;
 import java.sql.*;
 
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
@@ -57,17 +62,14 @@ public class LoginServices {
         boolean isServiceAuth = context.get("isServiceAuth") != null && ((Boolean) context.get("isServiceAuth")).booleanValue();
 
         String username = (String) context.get("login.username");
-
         if (username == null) username = (String) context.get("username");
         String password = (String) context.get("login.password");
-
         if (password == null) password = (String) context.get("password");
         
         // get the visitId for the history entity
         String visitId = (String) context.get("visitId");
 
         String errMsg = "";
-
         if (username == null || username.length() <= 0) {
             errMsg = "Username missing.";
         } else if (password == null || password.length() <= 0) {
@@ -131,7 +133,6 @@ public class LoginServices {
 
                             // reset failed login count if necessry
                             Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
-
                             if (currentFailedLogins != null && currentFailedLogins.longValue() > 0) {
                                 userLogin.set("successiveFailedLogins", new Long(0));
                             } else {
@@ -141,26 +142,29 @@ public class LoginServices {
 
                             successfulLogin = "Y";
                             
-                            // get the UserLoginSession
-                            GenericValue userLoginSession = null;
-                            Map userLoginSessionMap = null;
-                            try {
-                            	userLoginSession = userLogin.getRelatedOne("UserLoginSession");
-                            	if (userLoginSession != null) {
-                            		Object o = XmlSerializer.deserialize(userLoginSession.getString("sessionData"), delegator);
-                            		if (o instanceof Map)
-                            			userLoginSessionMap = (Map) o;
-                            	}
-                            } catch (GenericEntityException ge) {
-                            	Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " + 
-                            			userLogin.getString("userLoginId"), module);
-                            } catch (Exception e) {
-                            	Debug.logWarning(e, "Problems deserializing UserLoginSession", module);                            
+                            if (!isServiceAuth) {
+                                // get the UserLoginSession if this is not a service auth
+                                GenericValue userLoginSession = null;
+                                Map userLoginSessionMap = null;
+                                try {
+                                	userLoginSession = userLogin.getRelatedOne("UserLoginSession");
+                                	if (userLoginSession != null) {
+                                		Object deserObj = XmlSerializer.deserialize(userLoginSession.getString("sessionData"), delegator);
+                                		//don't check, just cast, if it fails it will get caught and reported below; if (deserObj instanceof Map)
+                                        userLoginSessionMap = (Map) deserObj;
+                                	}
+                                } catch (GenericEntityException ge) {
+                                	Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " + 
+                                			userLogin.getString("userLoginId"), module);
+                                } catch (Exception e) {
+                                	Debug.logWarning(e, "Problems deserializing UserLoginSession", module);                            
+                                }
+                                
+                                // return the UserLoginSession Map
+                                if (userLoginSessionMap != null) {
+                                    result.put("userLoginSession", userLoginSessionMap);
+                                }
                             }
-                            
-                            // return the UserLoginSession Map
-                            if (userLoginSessionMap != null)
-                            	result.put("userLoginSession", userLoginSessionMap);
 
                             result.put("userLogin", userLogin);
                             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -206,28 +210,66 @@ public class LoginServices {
                             successfulLogin = "N";
                         }
 
-                        if (doStore) {
-                            try {
-                                userLogin.store();
-                            } catch (GenericEntityException e) {
-                                Debug.logWarning(e);
-                            }
-                        }
-
-                        if ("true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history"))) {
-                            boolean createHistory = true;
-
-                            if (isServiceAuth && !"true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history.on.service.auth"))) {
-                                createHistory = false;
-                            }
-
-                            if (createHistory) {
+                        // this section is being done in its own transaction rather than in the 
+                        //current/existing transaction because we may return error and we don't 
+                        //want that to stop this from getting stored 
+                        TransactionManager txMgr = TransactionFactory.getTransactionManager();
+                        Transaction parentTx = null;
+                        boolean beganTransaction = false;
+                        
+                        try {
+                            if (txMgr != null) {
                                 try {
-                                    delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username, "visitId", visitId,
-                                            "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
-                                            "partyId", userLogin.get("partyId"), "successfulLogin", successfulLogin));
+                                    parentTx = txMgr.suspend();
+                                    beganTransaction = TransactionUtil.begin();
+                                } catch (SystemException se) {
+                                    Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
+                                } catch (GenericTransactionException e) {
+                                    Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage());
+                                }
+                            }
+                        
+                            if (doStore) {
+                                try {
+                                    userLogin.store();
                                 } catch (GenericEntityException e) {
                                     Debug.logWarning(e);
+                                }
+                            }
+
+                            if ("true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history"))) {
+                                boolean createHistory = true;
+
+                                if (isServiceAuth && !"true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history.on.service.auth"))) {
+                                    createHistory = false;
+                                }
+
+                                if (createHistory) {
+                                    try {
+                                        delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username, "visitId", visitId,
+                                                "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
+                                                "partyId", userLogin.get("partyId"), "successfulLogin", successfulLogin));
+                                    } catch (GenericEntityException e) {
+                                        Debug.logWarning(e);
+                                    }
+                                }
+                            }
+                            
+                            try {
+                                TransactionUtil.commit(beganTransaction);
+                            } catch (GenericTransactionException e) {
+                                Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage());
+                            }
+                        } finally {
+                            // resume/restore parent transaction                        
+                            if (parentTx != null) {
+                                try {
+                                    txMgr.resume(parentTx);
+                                    Debug.logVerbose("Resumed the parent transaction.", module);
+                                } catch (InvalidTransactionException ite) {
+                                    Debug.logError(ite, "Cannot resume transaction: " + ite.getMessage());
+                                } catch (SystemException se) {
+                                    Debug.logError(se, "Unexpected transaction error: " + se.getMessage());
                                 }
                             }
                         }
@@ -316,7 +358,6 @@ public class LoginServices {
         checkNewPassword(null, null, currentPassword, currentPasswordVerify, passwordHint, errorMessageList, true);
 
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
-
         userLoginToCreate.set("passwordHint", passwordHint);
         userLoginToCreate.set("partyId", partyId);
         userLoginToCreate.set("currentPassword", useEncryption ? HashEncrypt.getHash(currentPassword) : currentPassword);
