@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.entity.transaction;
 
+
 import javax.naming.*;
 import javax.transaction.*;
 import org.w3c.dom.Element;
@@ -31,6 +32,7 @@ import org.w3c.dom.Element;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.util.*;
+
 
 /**
  * Central source for Tyrex JTA objects from JNDI
@@ -54,19 +56,22 @@ public class JNDIFactory implements TransactionFactoryInterface {
                     try {
                         Element rootElement = EntityConfigUtil.getXmlRootElement();
                         Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
+
                         if (transactionFactoryElement == null) {
                             throw new GenericEntityConfException("ERROR: no transaction-factory definition was found in entityengine.xml");
                         }
-                        
+
                         Element txMgrElement = UtilXml.firstChildElement(transactionFactoryElement, "transaction-manager-jndi");
-                        
+
                         String jndiName = txMgrElement.getAttribute("jndi-name");
                         String jndiServerName = txMgrElement.getAttribute("jndi-server-name");
+
                         if (jndiName != null && jndiName.length() > 0) {
                             //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 
                             try {
                                 InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
+
                                 if (ic != null) {
                                     transactionManager = (TransactionManager) ic.lookup(jndiName);
                                 }
@@ -95,19 +100,22 @@ public class JNDIFactory implements TransactionFactoryInterface {
                     try {
                         Element rootElement = EntityConfigUtil.getXmlRootElement();
                         Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
+
                         if (transactionFactoryElement == null) {
                             throw new GenericEntityConfException("ERROR: no transaction-factory definition was found in entityengine.xml");
                         }
-                        
+
                         Element userTxElement = UtilXml.firstChildElement(transactionFactoryElement, "user-transaction-jndi");
-                        
+
                         String jndiName = userTxElement.getAttribute("jndi-name");
                         String jndiServerName = userTxElement.getAttribute("jndi-server-name");
+
                         if (jndiName != null && jndiName.length() > 0) {
                             //Debug.logVerbose("[JNDIFactory.getTransactionManager] Trying JNDI name " + jndiName, module);
 
                             try {
                                 InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
+
                                 if (ic != null) {
                                     userTransaction = (UserTransaction) ic.lookup(jndiName);
                                 }
