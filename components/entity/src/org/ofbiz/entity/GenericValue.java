@@ -33,6 +33,7 @@ import java.util.Iterator;
 
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelRelation;
 import org.ofbiz.entity.model.ModelKeyMap;
@@ -427,6 +428,7 @@ public class GenericValue extends GenericEntity {
                             ModelKeyMap mkm = (ModelKeyMap) keyMapIter.next();
                             newValue.set(mkm.getRelFieldName(), this.get(mkm.getFieldName()));
                         }
+                        if (Debug.infoOn()) Debug.logInfo("Creating place holder value : " + newValue, module);
                         newValue.create();
                     } else {
                         return false;
