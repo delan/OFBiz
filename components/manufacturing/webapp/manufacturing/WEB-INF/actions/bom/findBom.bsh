@@ -20,7 +20,8 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Jacopo Cappellato (tiz@sastau.it)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 */
 
@@ -34,7 +35,6 @@ import org.ofbiz.manufacturing.bom.*;
 
 delegator = request.getAttribute("delegator");
 
-
 // get the part types
 bomTypes = delegator.findByAnd("ProductAssocType", UtilMisc.toMap("parentTypeId", "PRODUCT_COMPONENT"), UtilMisc.toList("productAssocTypeId", "description"));
 context.put("bomTypes", bomTypes);
@@ -45,7 +45,6 @@ if (currentBomTypeId != null && currentBomTypeId.length() > 0) {
     currentBomType = delegator.findByPrimaryKeyCache("ProductAssocType", UtilMisc.toMap("productAssocTypeId", currentBomTypeId));
     context.put("currentPartBomTypeId", currentBomType);
 }
-
 // create the fromDate for calendar
 fromCal = Calendar.getInstance();
 fromCal.setTime(new java.util.Date());
@@ -57,11 +56,8 @@ fromTs = new Timestamp(fromCal.getTimeInMillis());
 fromStr = fromTs.toString();
 fromStr = fromStr.substring(0, fromStr.indexOf('.'));
 context.put("fromDateStr", fromStr);
-
-
 // get the lookup flag
 lookupFlag = request.getParameter("lookupFlag");
-
 // blank param list
 paramList = "";
 
@@ -74,11 +70,10 @@ if (lookupFlag != null) {
     lookupErrorMessage = null;   
     andExprs = new ArrayList();
     entityName = "PartBom"; 
-           
+     
     // now do the filtering
     if (lookupErrorMessage == null) {
         productId = request.getParameter("productId");
-        partIdFor = request.getParameter("partId");
         partBomTypeId = request.getParameter("partBomTypeId");
         fromDate = request.getParameter("fromDate");
         rootQuantity = request.getParameter("rootQuantity");
@@ -93,13 +88,7 @@ if (lookupFlag != null) {
             paramList = paramList + "&productId=" + productId;
         }
 
-        if (partIdFor != null && partIdFor.length() > 0) {
-            paramList = paramList + "&partId=" + partIdFor;
-        }
-
-        if ((partIdFor != null && partIdFor.length() > 0) ||
-            (productId != null && productId.length() > 0)) {
-        
+        if((productId != null && productId.length() > 0)) {
             if (partBomTypeId != null) {
                 rootQuantityFloat = 0.0;
                 if (rootQuantity != null && rootQuantity.length() > 0) {
@@ -110,12 +99,10 @@ if (lookupFlag != null) {
                         rootQuantityFloat = 1.0;
                     }
                     paramList = paramList + "&rootQuantity=" + rootQuantity;
-                    
                 }
-
                 paramList = paramList + "&partBomTypeId=" + partBomTypeId;
-
-                tree = new ItemConfigurationTree(productId, partIdFor, partBomTypeId, new Date(), delegator);
+                //tree = new ItemConfigurationTree(productId, partIdFor, partBomTypeId, new Date(), delegator);
+                tree = new ItemConfigurationTree(productId, partBomTypeId, new Date(), delegator);
                 tree.setRootQuantity((float)rootQuantityFloat);
                 treeArray = new ArrayList();
                 tree.print(treeArray);
@@ -123,16 +110,13 @@ if (lookupFlag != null) {
                 tree.sumQuantities(treeQty);
             }
         }
-
     }
-    
+
     context.put("tree", treeArray);
     context.put("treeQty", treeQty.values());
-    
     if (lookupErrorMessage != null) {
         context.put("lookupErrorMessage", lookupErrorMessage);
     }
 }
 
 context.put("paramList", paramList);
-
