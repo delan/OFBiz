@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/12/09 00:50:36  jonesde
+ * Added partyId and roleTypeId to readParticipant
+ *
  * Revision 1.10  2001/12/04 09:56:54  jonesde
  * Fixed some bugs, now works fine with updated test file
  *
@@ -609,8 +612,11 @@ public class XpdlReader {
         List transitionRestrictions = UtilXml.childElementList(transitionRestrictionsElement, "TransitionRestriction");
         readTransitionRestrictions(transitionRestrictions, activityValue);
 
-        //for not set the canStart to always be true
-        activityValue.set("canStart", "Y");
+        //ExtendedAttributes?
+        activityValue.set("acceptAllAssignments", getExtendedAttributeValue(activityElement, "acceptAllAssignments", "N"));
+        activityValue.set("completeAllAssignments", getExtendedAttributeValue(activityElement, "completeAllAssignments", "N"));
+        //by default set the canStart to always be true
+        activityValue.set("canStart", getExtendedAttributeValue(activityElement, "canStart", "Y"));
     }
 
     protected void readSubFlow(Element subFlowElement, String packageId, String processId, String activityId) throws DefinitionParserException {
@@ -875,8 +881,8 @@ public class XpdlReader {
                 participantValue.set("description", UtilXml.childElementValue(participantElement, "Description"));
 
                 //ExtendedAttributes
-                participantValue.set("partyId", getExtendedAttributeValue(participantElement, "partyId"), false);
-                participantValue.set("roleTypeId", getExtendedAttributeValue(participantElement, "roleTypeId"), false);
+                participantValue.set("partyId", getExtendedAttributeValue(participantElement, "partyId", null), false);
+                participantValue.set("roleTypeId", getExtendedAttributeValue(participantElement, "roleTypeId", null), false);
             }
 
             //regardless of whether the participant was created, create a participant list entry
@@ -1034,16 +1040,16 @@ public class XpdlReader {
          */
     }
     
-    protected String getExtendedAttributeValue(Element element, String name) {
+    protected String getExtendedAttributeValue(Element element, String name, String defaultValue) {
         if (element == null || name == null) 
-            return null;
+            return defaultValue;
             
         Element extendedAttributesElement = UtilXml.firstChildElement(element, "ExtendedAttributes");
         if (extendedAttributesElement == null)
-            return null;
+            return defaultValue;
         List extendedAttributes = UtilXml.childElementList(extendedAttributesElement, "ExtendedAttribute");
         if (extendedAttributes == null || extendedAttributes.size() == 0)
-            return null;
+            return defaultValue;
         
         Iterator iter = extendedAttributes.iterator();
         while (iter.hasNext()) {
@@ -1053,7 +1059,7 @@ public class XpdlReader {
                 return extendedAttribute.getAttribute("Value");
             }
         }
-        return null;
+        return defaultValue;
     }
 
     // ---------------------------------------------------------
