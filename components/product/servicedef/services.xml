@@ -712,12 +712,13 @@
 		location="org.ofbiz.product.feature.ProductFeatureServices"	invoke="getProductFeaturesByType">
 		<description>
 			Returns a map of productFeatureTypeId -> List of ProductFeatures.  If supplied with a productFeatureCategoryId,
-			the returned result is that of all product features in that category.  Otherwise, if supplied with a productId,
-			the returned result is that of all features applied to that particular product.
-			If the optional productFeatureApplTypeId is specified, only features with application of that type will be returned
-			(this would only make sense along with a productId parameter.)
+			the returned result is that of all product features in that category.  Otherwise, if supplied with a productFeatureGroupId,
+			the result is all features of that feature group.  Otherwise, if there is a productId, the returned result is that of all features 
+			applied to that product.  If the optional productFeatureApplTypeId is specified, only features with application of that type 
+			will be returned (this would only make sense along with a productId parameter.)
 		</description>
 		<attribute type="String" mode="IN" name="productFeatureCategoryId" optional="true"/>
+		<attribute type="String" mode="IN" name="productFeatureGroupId" optional="true"/>
 		<attribute type="String" mode="IN" name="productId" optional="true"/>
         <attribute type="String" mode="IN" name="productFeatureApplTypeId" optional="true"/>
 		<attribute type="Map" mode="OUT" name="productFeaturesByType" optional="false"/>

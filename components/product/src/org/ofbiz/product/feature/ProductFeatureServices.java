@@ -61,10 +61,10 @@ public class ProductFeatureServices {
     public static final String resource = "ProductUiLabels";
     
     /*
-     * Parameters: productFeatureCategoryId, productId, productFeatureApplTypeId
+     * Parameters: productFeatureCategoryId, productFeatureGroupId, productId, productFeatureApplTypeId
      * Result: productFeaturesByType, a Map of all product features from productFeatureCategoryId, group by productFeatureType -> List of productFeatures
-     * If the parameter were productFeatureCategoryId, the results are from ProductFeatures.  If productFeatureCategoryId were null and there were a productId,
-     * the results are from ProductFeatureAndAppl.
+     * If the parameter were productFeatureCategoryId, the results are from ProductFeatures.  If productFeatureCategoryId were null and there were a productFeatureGroupId,
+     * the results are from ProductFeatureGroupAndAppl.  Otherwise, if there is a productId, the results are from ProductFeatureAndAppl.
      * The optional productFeatureApplTypeId causes results to be filtered by this parameter--only used in conjunction with productId.
      */
     public static Map getProductFeaturesByType(DispatchContext dctx, Map context) {
@@ -82,15 +82,21 @@ public class ProductFeatureServices {
         String fieldToSearch = "productFeatureCategoryId";
         List orderBy = UtilMisc.toList("productFeatureTypeId", "description");
         
-        if (valueToSearch == null) {
+        if (valueToSearch == null && context.get("productFeatureGroupId") != null) {
+            entityToSearch = "ProductFeatureGroupAndAppl";
+            fieldToSearch = "productFeatureGroupId";
+            valueToSearch = (String) context.get("productFeatureGroupId");
+            // use same orderBy as with a productFeatureCategoryId search
+        } else if (valueToSearch == null && context.get("productId") != null){
             entityToSearch = "ProductFeatureAndAppl";
             fieldToSearch = "productId";
             valueToSearch = (String) context.get("productId");
             orderBy = UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description");
         }
         
-        if (valueToSearch == null)
-            return ServiceUtil.returnError("This service requires either a productId or a productFeatureCategoryId to run.");
+        if (valueToSearch == null) {
+            return ServiceUtil.returnError("This service requires a productId, a productFeatureGroupId, or a productFeatureCategoryId to run.");
+        }
         
         try {
             // get all product features in this feature category
