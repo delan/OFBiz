@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -104,9 +104,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <#assign colSize = productKeywords.size()/3 + 1>
                     <#assign kIdx = 0>
                     <tr>                        
-                        <#import "java.lang.Number.Long" as Long>
-                        <#assign relevancy = productKeyword.relevancyWeight in Long>
-                        <td align=right><#if relevancy?exists>${Static["org.ofbiz.base.util.UtilFormatOut"].formatQuantity(relevancy)}</#if>&nbsp;</td>
+                        <td align=right>${(productKeyword.relevancyWeight)?if_exists}&nbsp;</td>
                         <td align=left>&nbsp;${(productKeyword.keyword)?if_exists}</td>
                         <td>&nbsp;&nbsp;</td>
                         <td align=left>
