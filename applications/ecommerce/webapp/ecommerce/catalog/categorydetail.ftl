@@ -26,13 +26,10 @@
 -->
 
 <#if productCategory?exists>
-<table border="0" cellpadding="3">
-  <tr>
-    <td colspan="2">
-      <div class="head1">
+    <div class="head1">
         ${productCategory.description?if_exists}
         <#if hasQuantities?exists>
-          <form method="POST" action="<@ofbizUrl>/addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
+          <form method="POST" action="<@ofbizUrl>addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
             <input type='hidden' name='add_category_id' value='${productCategory.productCategoryId}'>            
             <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
             <#if requestParameters.category_id?exists><input type='hidden' name='category_id' value='${requestParameters.category_id}'></#if>
@@ -42,13 +39,9 @@
             <a href="javascript:document.thecategoryform.submit()" class="buttontext"><nobr>[${uiLabelMap.ProductAddProductsUsingDefaultQuantities}]</nobr></a>
           </form>
         </#if>
-        <a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductSearchinCategory}</a>
-      </div>
-    </td>
-  </tr>
+        <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductSearchinCategory}</a>
+    </div>
   <#if productCategory.categoryImageUrl?exists || productCategory.longDescription?exists>
-  <tr>
-    <td align="left" valign="top" width="0">
       <div class="tabletext">
         <#if productCategory.categoryImageUrl?exists>
           <img src='<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>' vspace='5' hspace='5' border='1' height='100' align='left'>
@@ -57,16 +50,11 @@
           ${productCategory.longDescription}
         </#if>
       </div>
-    </td>
-  </tr>
   </#if>
-</table>
 </#if>
 
 <#if productCategoryMembers?has_content>
-<table border="0" cellpadding="2">
-  <tr>
-    <td align="right">
+    <div style="text-align: right;">
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
       <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
@@ -87,37 +75,29 @@
           | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </b>
-    </td>
-  </tr>
-</table>
+    </div>
 
-<center>
-  <table border="0" cellpadding="0" cellspacing="0">    
-    <#assign startIndex = viewSize * viewIndex>
-    <#if highIndex < listSize>
-      <#assign endIndex = highIndex - 1>
-    <#else>
-      <#assign endIndex = listSize - 1>
-    </#if>
-    
-    <#list productCategoryMembers[startIndex..endIndex] as productCategoryMember>              
-      <tr><td><hr class='sepbar'></td></tr>
-      <tr>
-        <td>
-          ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
-          ${setRequestAttribute("productCategoryMember", productCategoryMember)} 
-          ${setRequestAttribute("listIndex", productCategoryMember_index)}         
-          ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
-        </td>
-      </tr>
-    </#list>
-    <tr><td colspan="2"><hr class='sepbar'></td></tr>
-  </table>
-</center>
+    <div style="text-align: center;">
+        <#assign startIndex = viewSize * viewIndex>
+        <#if highIndex < listSize>
+          <#assign endIndex = highIndex - 1>
+        <#else>
+          <#assign endIndex = listSize - 1>
+        </#if>
+        
+        <#list productCategoryMembers[startIndex..endIndex] as productCategoryMember>              
+            <div><hr class='sepbar'/></div>
+            <div>
+              ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
+              ${setRequestAttribute("productCategoryMember", productCategoryMember)} 
+              ${setRequestAttribute("listIndex", productCategoryMember_index)}         
+              ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
+            </div>
+        </#list>
+        <div><hr class='sepbar'/></div>
+    </div>
 
-<table border="0" cellpadding="2">
-  <tr>
-    <td align=right>
+    <div style="text-align: right;">
       <#-- Start Page Select Drop-Down -->
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
       <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
@@ -138,19 +118,9 @@
           | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </b>
-    </td>
-  </tr>
-</table>
+    </div>
 
 <#else>
-<table border="0" cellpadding="2">
-  <tr>
-    <td colspan="2"><hr class='sepbar'></td>
-  </tr>
-  <tr>
-    <td>
-      <div class='tabletext'>${uiLabelMap.ProductNoProductsInThisCategory}.</DIV>
-    </td>
-  </tr>
-</table>
+    <div><hr class='sepbar'/></div>
+    <div class='tabletext'>${uiLabelMap.ProductNoProductsInThisCategory}</div>
 </#if>
