@@ -196,7 +196,7 @@ function insertImageName(size,ext) {
     <td width="20%" align=right valign=top><div class="tabletext"><b>Detail Template</b></div></td>
     <td>&nbsp;</td>
     <td width="80%" colspan='4' valign=top>
-        <input type="text" <ofbiz:inputvalue entityAttr='product' field='detailTemplate' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+        <input type="text class="inputBox" <ofbiz:inputvalue entityAttr='product' field='detailTemplate' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
         <br><span class='tabletext'>If not specified defaults to "/catalog/productdetail.jsp"</span>
     </td>
   </tr>
@@ -210,7 +210,7 @@ function insertImageName(size,ext) {
     </td>
     <td>&nbsp;</td>
     <td width="80%" colspan='4' valign=top>
-      <input type="text" <ofbiz:inputvalue entityAttr='product' field='smallImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255" style='font-size: x-small;'>
+      <input type="text class="inputBox" <ofbiz:inputvalue entityAttr='product' field='smallImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%>
         <div>
           <span class='tabletext'>Insert Default Image URL: </span>
@@ -229,7 +229,7 @@ function insertImageName(size,ext) {
     </td>
     <td>&nbsp;</td>
     <td width="80%" colspan='4' valign=top>
-      <input type="text" <ofbiz:inputvalue entityAttr='product' field='mediumImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255" style='font-size: x-small;'>
+      <input type="text class="inputBox" <ofbiz:inputvalue entityAttr='product' field='mediumImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%>
         <div>
           <span class='tabletext'>Insert Default Image URL: </span>
@@ -248,7 +248,7 @@ function insertImageName(size,ext) {
     </td>
     <td>&nbsp;</td>
     <td width="80%" colspan='4' valign=top>
-      <input type="text" <ofbiz:inputvalue entityAttr='product' field='largeImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255" style='font-size: x-small;'>
+      <input type="text class="inputBox" <ofbiz:inputvalue entityAttr='product' field='largeImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%>
         <div>
           <span class='tabletext'>Insert Default Image URL: </span>
@@ -267,7 +267,7 @@ function insertImageName(size,ext) {
     </td>
     <td>&nbsp;</td>
     <td width="80%" colspan='4' valign=top>
-      <input type="text" <ofbiz:inputvalue entityAttr='product' field='detailImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255" style='font-size: x-small;'>
+      <input type="text class="inputBox" <ofbiz:inputvalue entityAttr='product' field='detailImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%>
         <div>
           <span class='tabletext'>Insert Default Image URL: </span>
@@ -280,7 +280,7 @@ function insertImageName(size,ext) {
 
   <tr>
     <td colspan='2'>&nbsp;</td>
-    <td><input type="submit" name="Update" value="Update" style='font-size: x-small;'></td>
+    <td><input type="submit" name="Update" value="Update"></td>
     <td colspan='3'>&nbsp;</td>
   </tr>
 </table>
@@ -294,15 +294,15 @@ function insertImageName(size,ext) {
 </SCRIPT>
 <div class='head3'>Upload Image</div>
 <form method="POST" enctype="multipart/form-data" action="<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=small</ofbiz:url>" name='imageUploadForm'>
-    <input type="file" size="50" name="fname" style='font-size: x-small;'>
+    <input type="file" size="50" name="fname">
     <br>
     <span class='tabletext'>
-        <input type=RADIO name='upload_file_type_bogus' value='small' checked onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=small</ofbiz:url>");'>Small
-        <input type=RADIO name='upload_file_type_bogus' value='medium' onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=medium</ofbiz:url>");'>Medium
-        <input type=RADIO name='upload_file_type_bogus' value='large' onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=large</ofbiz:url>");'>Large
-        <input type=RADIO name='upload_file_type_bogus' value='detail' onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=detail</ofbiz:url>");'>Detail
+        <input class='radioButton' type=RADIO name='upload_file_type_bogus' value='small' checked onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=small</ofbiz:url>");'>Small
+        <input class='radioButton' type=RADIO name='upload_file_type_bogus' value='medium' onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=medium</ofbiz:url>");'>Medium
+        <input class='radioButton' type=RADIO name='upload_file_type_bogus' value='large' onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=large</ofbiz:url>");'>Large
+        <input class='radioButton' type=RADIO name='upload_file_type_bogus' value='detail' onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=detail</ofbiz:url>");'>Detail
     </span>
-    <input type="submit" value="Upload Image" style='font-size: x-small;'>
+    <input type="submit" value="Upload Image">
 </form>
 <%}%>
 <%}else{%>

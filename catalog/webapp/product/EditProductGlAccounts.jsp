@@ -99,7 +99,7 @@
         <FORM method=POST action='<ofbiz:url>/updateProductGlAccount</ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="productGlAccount" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productGlAccount" field="productGlAccountTypeId" fullattrs="true"/>>
-	        <select name="glAccountId" style='font-size: x-small;'>
+	        <select class='selectBox' name="glAccountId">
 	        	<%if (curGlAccount != null) {%>
 	                <option value='<ofbiz:entityfield attribute="curGlAccount" field="glAccountId"/>'><ofbiz:entityfield attribute="curGlAccount" field="accountCode"/> <ofbiz:entityfield attribute="curGlAccount" field="accountName"/><%--[<ofbiz:entityfield attribute="curGlAccount" field="glAccountId"/>]--%></option>
 	                <option value='<ofbiz:entityfield attribute="curGlAccount" field="glAccountId"/>'>-----</option>
@@ -108,7 +108,7 @@
 	                <option value='<ofbiz:entityfield attribute="glAccount" field="glAccountId"/>'><ofbiz:entityfield attribute="glAccount" field="accountCode"/> <ofbiz:entityfield attribute="glAccount" field="accountName"/><%--[<ofbiz:entityfield attribute="glAccount" field="glAccountId"/>]--%></option>
 	            </ofbiz:iterator>
 	        </select>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="productGlAccount" field="idValue" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="productGlAccount" field="idValue" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -127,13 +127,13 @@
     <div class='head2'>Add GL Account:</div>
     <div class='tabletext'>
         Account Type:
-        <select name="productGlAccountTypeId" style='font-size: x-small;'>
+        <select name="productGlAccountTypeId" class='selectBox'>
             <ofbiz:iterator name="productGlAccountType" property="productGlAccountTypes">
                 <option value='<ofbiz:entityfield attribute="productGlAccountType" field="productGlAccountTypeId"/>'><ofbiz:entityfield attribute="productGlAccountType" field="description"/><%--[<ofbiz:entityfield attribute="productGlAccountType" field="productGlAccountTypeId"/>]--%></option>
             </ofbiz:iterator>
         </select>
         GL Account: 
-        <select name="glAccountId" style='font-size: x-small;'>
+        <select name="glAccountId" class='inputBox'>
             <ofbiz:iterator name="glAccount" property="glAccounts">
                 <option value='<ofbiz:entityfield attribute="glAccount" field="glAccountId"/>'><ofbiz:entityfield attribute="glAccount" field="accountCode"/> <ofbiz:entityfield attribute="glAccount" field="accountName"/><%--[<ofbiz:entityfield attribute="glAccount" field="glAccountId"/>]--%></option>
             </ofbiz:iterator>

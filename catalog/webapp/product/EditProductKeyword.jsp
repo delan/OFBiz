@@ -93,8 +93,8 @@
               <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
                 <input type="hidden" name="UPDATE_MODE" value="CREATE">
                 <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
-                <span class='tabletext'>Keyword: </span><input type="text" size="20" name="KEYWORD" value="" style='font-size: x-small;'>
-                <span class='tabletext'>Weight: </span><input type="text" size="4" name="relevancyWeight" value="1" style='font-size: x-small;'>
+                <span class='tabletext'>Keyword: </span><input type="text" size="20" name="KEYWORD" value="" class='inputBox'>
+                <span class='tabletext'>Weight: </span><input type="text" size="4" name="relevancyWeight" value="1" class='inputBox'>
                 <input type="submit" value="Add" style='font-size: x-small;'>
               </form>
           </td>

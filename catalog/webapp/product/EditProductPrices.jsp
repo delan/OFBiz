@@ -127,9 +127,9 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="currencyUomId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productPrice" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%if (hasExpired) {%> color: red;<%}%>'>
+            <input type='text' class='inputBox' size='22' <ofbiz:inputvalue entityAttr="productPrice" field="thruDate" fullattrs="true"/> style='<%if (hasExpired) {%> color: red;<%}%>'>
             <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
-            <input type=text size='8' <ofbiz:inputvalue entityAttr="productPrice" field="price" fullattrs="true"/> style='font-size: x-small;'>
+            <input type='text' class='inputBox' size='8' <ofbiz:inputvalue entityAttr="productPrice" field="price" fullattrs="true"/>>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -152,20 +152,20 @@
     <div class='head2'>Add Price:</div>
     <div class='tabletext'>
         Price Type:
-        <select name="productPriceTypeId" style='font-size: x-small;'>
+        <select name="productPriceTypeId" class='selectBox'>
             <ofbiz:iterator name="productPriceType" property="productPriceTypes">
                 <option value='<ofbiz:entityfield attribute="productPriceType" field="productPriceTypeId"/>'><ofbiz:entityfield attribute="productPriceType" field="description"/><%--[<ofbiz:entityfield attribute="productPriceType" field="productPriceTypeId"/>]--%></option>
             </ofbiz:iterator>
         </select>
         Currency:
-        <select name="currencyUomId" style='font-size: x-small;'>
+        <select name="currencyUomId" class='selectBox'>
             <ofbiz:iterator name="currencyUom" property="currencyUoms">
                 <%boolean isDefault = defaultCurrencyUomId.equals(currencyUom.getString("uomId"));%>
                 <option value='<ofbiz:entityfield attribute="currencyUom" field="uomId"/>' <%if (isDefault) {%>selected<%}%>><ofbiz:entityfield attribute="currencyUom" field="description"/> [<ofbiz:entityfield attribute="currencyUom" field="uomId"/>]</option>
             </ofbiz:iterator>
         </select>
         Facility Group:
-        <select name="facilityGroupId" style='font-size: x-small;'>
+        <select name="facilityGroupId" class='selectBox'>
             <ofbiz:iterator name="facilityGroup" property="facilityGroups">
                 <%boolean isDefault = "_NA_".equals(facilityGroup.getString("facilityGroupId"));%>
                 <option value='<ofbiz:entityfield attribute="facilityGroup" field="facilityGroupId"/>' <%if (isDefault) {%>selected<%}%>><ofbiz:entityfield attribute="facilityGroup" field="facilityGroupName"/><%-- [<ofbiz:entityfield attribute="facilityGroup" field="facilityGroupId"/>]--%></option>
@@ -173,8 +173,8 @@
         </select>
     </div>
     <div class='tabletext'>
-        From Date: <a href='#' onclick='setPpcFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate' style='font-size: x-small;'>
-        Price: <input type=text size='8' name='price' style='font-size: x-small;'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
+        From Date: <a href='#' onclick='setPpcFromDate()' class='buttontext'>[Now]</a> <input type='text' size='22' name='fromDate' class='inputBox'>
+        Price: <input type='text' size='8' name='price' class='inputBox'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
     </div>
 
 </form>

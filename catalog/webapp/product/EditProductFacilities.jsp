@@ -94,8 +94,8 @@
         <FORM method=POST action='<ofbiz:url>/updateProductFacility</ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="productFacility" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productFacility" field="facilityId" fullattrs="true"/>>
-            <input type=text size='10' <ofbiz:inputvalue entityAttr="productFacility" field="minimumStock" fullattrs="true"/> style='font-size: x-small;'>
-            <input type=text size='10' <ofbiz:inputvalue entityAttr="productFacility" field="reorderQuantity" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='10' <ofbiz:inputvalue entityAttr="productFacility" field="minimumStock" fullattrs="true"/> class='inputBox'>
+            <input type=text size='10' <ofbiz:inputvalue entityAttr="productFacility" field="reorderQuantity" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -114,13 +114,13 @@
     <div class='head2'>Add Facility:</div>
     <div class='tabletext'>
         Facility:
-        <select name="facilityId" style='font-size: x-small;'>
+        <select name="facilityId" class='selectBox'>
             <ofbiz:iterator name="facility" property="facilities">
                 <option value='<ofbiz:entityfield attribute="facility" field="facilityId"/>'><ofbiz:entityfield attribute="facility" field="facilityName"/><%--[<ofbiz:entityfield attribute="facility" field="facilityId"/>]--%></option>
             </ofbiz:iterator>
         </select>
-        Minimum&nbsp;Stock:&nbsp;<input type=text size='10' name='minimumStock' style='font-size: x-small;'>
-        Reorder&nbsp;Quantity:&nbsp;<input type=text size='10' name='reorderQuantity' style='font-size: x-small;'>
+        Minimum&nbsp;Stock:&nbsp;<input type=text size='10' name='minimumStock' class='inputBox'>
+        Reorder&nbsp;Quantity:&nbsp;<input type=text size='10' name='reorderQuantity' class='inputBox'>
         <input type="submit" value="Add" style='font-size: x-small;'>
     </div>
 

@@ -94,7 +94,7 @@
         <FORM method=POST action='<ofbiz:url>/updateGoodIdentification</ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="goodIdentification" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="goodIdentification" field="goodIdentificationTypeId" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="goodIdentification" field="idValue" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="goodIdentification" field="idValue" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -113,12 +113,12 @@
     <div class='head2'>Add ID:</div>
     <div class='tabletext'>
         ID Type:
-        <select name="goodIdentificationTypeId" style='font-size: x-small;'>
+        <select name="goodIdentificationTypeId" class='selectBox'>
             <ofbiz:iterator name="goodIdentificationType" property="goodIdentificationTypes">
                 <option value='<ofbiz:entityfield attribute="goodIdentificationType" field="goodIdentificationTypeId"/>'><ofbiz:entityfield attribute="goodIdentificationType" field="description"/><%--[<ofbiz:entityfield attribute="goodIdentificationType" field="goodIdentificationTypeId"/>]--%></option>
             </ofbiz:iterator>
         </select>
-        ID Value: <input type=text size='20' name='idValue' style='font-size: x-small;'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
+        ID Value: <input type=text size='20' name='idValue' class='inputBox'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
     </div>
 
 </form>

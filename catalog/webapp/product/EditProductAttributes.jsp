@@ -90,9 +90,9 @@
         <FORM method=POST action='<ofbiz:url>/UpdateProductAttribute?UPDATE_MODE=UPDATE</ofbiz:url>'>
             <input type=hidden name='PRODUCT_ID' value='<ofbiz:entityfield attribute="productAttribute" field="productId"/>'>
             <input type=hidden name='ATTRIBUTE_NAME' value='<ofbiz:entityfield attribute="productAttribute" field="attrName"/>'>
-            <input type=text size='50' name='ATTRIBUTE_VALUE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrValue'/>" style='font-size: x-small;'>
-            <input type=text size='15' name='ATTRIBUTE_TYPE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrType'/>" style='font-size: x-small;'>
-            <INPUT type=submit value='Update' style='font-size: x-small;'>
+            <input type='text' class='inputBox' size='50' name='ATTRIBUTE_VALUE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrValue'/>">
+            <input type='text' class='inputBox' size='15' name='ATTRIBUTE_TYPE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrType'/>">
+            <INPUT type=submit value='Update'>
         </FORM>
     </td>
     <td>
@@ -110,10 +110,10 @@
 
   <div class='head2'>Add ProductAttribute (enter Name, Value and Type):</div>
   <br>
-  <input type="text" name="ATTRIBUTE_NAME" size="15" style='font-size: x-small;'>&nbsp;
-  <input type="text" name="ATTRIBUTE_VALUE" size="50" style='font-size: x-small;'>&nbsp;
-  <input type="text" name="ATTRIBUTE_TYPE" size="15" style='font-size: x-small;'>&nbsp;
-  <input type="submit" value="Add" style='font-size: x-small;'>
+  <input type='text' class='inputBox' name="ATTRIBUTE_NAME" size="15">&nbsp;
+  <input type='text' class='inputBox' name="ATTRIBUTE_VALUE" size="50">&nbsp;
+  <input type='text' class='inputBox' name="ATTRIBUTE_TYPE" size="15">&nbsp;
+  <input type="submit" value="Add">
 </form>
 <%}%>
 <br>

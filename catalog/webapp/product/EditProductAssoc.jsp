@@ -96,18 +96,18 @@ try {
     <tr>
       <td align=right><div class="tabletext">Product ID</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="<%=UtilFormatOut.checkNull(productId)%>" style='font-size: x-small;'></td>
+      <td><input type="text" class="inputBox" name="PRODUCT_ID" size="20" maxlength="40" value="<%=UtilFormatOut.checkNull(productId)%>"></td>
     </tr>
     <tr>
       <td align=right><div class="tabletext">Product ID To</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="PRODUCT_ID_TO" size="20" maxlength="40" value="<%=UtilFormatOut.checkNull(productIdTo)%>" style='font-size: x-small;'></td>
+      <td><input type="text" class="inputBox" name="PRODUCT_ID_TO" size="20" maxlength="40" value="<%=UtilFormatOut.checkNull(productIdTo)%>"></td>
     </tr>
     <tr>
       <td align=right><div class="tabletext">Association Type ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <select name="PRODUCT_ASSOC_TYPE_ID" size=1 style='font-size: x-small;'>
+        <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size=1>
           <%if (productAssocTypeId != null && productAssocTypeId.length() > 0) {%>
             <%GenericValue curAssocType = delegator.findByPrimaryKey("ProductAssocType", UtilMisc.toMap("productAssocTypeId", productAssocTypeId));%>
             <%if (curAssocType != null) {%>
@@ -128,7 +128,7 @@ try {
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
       <td>
-        <div class='tabletext'><input type="text" name="FROM_DATE" size="22" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>" style='font-size: x-small;'>(Will be set to now if empty)</div>
+        <div class='tabletext'><input type="text" class="inputBox" name="FROM_DATE" size="22" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>">(Will be set to now if empty)</div>
       </td>
     </tr>
   <%}else{%>
@@ -136,18 +136,18 @@ try {
     <tr>
       <td align=right><div class="tabletext">Product ID</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="" style='font-size: x-small;'></td>
+      <td><input type="text" class="inputBox" name="PRODUCT_ID" size="20" maxlength="40" value=""></td>
     </tr>
     <tr>
       <td align=right><div class="tabletext">Product ID To</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="PRODUCT_ID_TO" size="20" maxlength="40" value="" style='font-size: x-small;'></td>
+      <td><input type="text" class="inputBox" name="PRODUCT_ID_TO" size="20" maxlength="40" value=""></td>
     </tr>
     <tr>
       <td align=right><div class="tabletext">Association Type ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <select name="PRODUCT_ASSOC_TYPE_ID" size=1 style='font-size: x-small;'>
+        <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size=1>
           <%-- <option value=''>&nbsp;</option> --%>
           <%Iterator assocTypeIter = UtilMisc.toIterator(assocTypes);%>
           <%while(assocTypeIter != null && assocTypeIter.hasNext()) {%>
@@ -161,7 +161,7 @@ try {
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
       <td>
-        <div class='tabletext'><input type="text" name="FROM_DATE" size="22" maxlength="40" value="" style='font-size: x-small;'>(Will be set to now if empty)</div>
+        <div class='tabletext'><input type="text" class="inputBox" name="FROM_DATE" size="22" maxlength="40" value="">(Will be set to now if empty)</div>
       </td>
     </tr>
   <%}%>
@@ -201,38 +201,38 @@ try {
     <td width="26%" align=right><div class="tabletext">Thru Date</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <div class='tabletext'><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30" style='font-size: x-small;'></div>
+      <div class='tabletext'><input type="text" class="inputBox" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30"></div>
     </td>
   </tr>
   <tr>
     <%fieldName = "sequenceNum";%><%paramName = "SEQUENCE_NUM";%>    
     <td width="26%" align=right><div class="tabletext">SequenceNum</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(productAssoc.getLong(fieldName)):request.getParameter(paramName))%>" size="5" maxlength="10" style='font-size: x-small;'></td>
+    <td width="74%"><input type="text" class="inputBox" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(productAssoc.getLong(fieldName)):request.getParameter(paramName))%>" size="5" maxlength="10"></td>
   </tr>
   <tr>
     <%fieldName = "reason";%><%paramName = "REASON";%>    
     <td width="26%" align=right><div class="tabletext">Reason</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productAssoc.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="255" style='font-size: x-small;'></td>
+    <td width="74%"><input type="text" class="inputBox" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productAssoc.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="255"></td>
   </tr>
   <tr>
     <%fieldName = "instruction";%><%paramName = "INSTRUCTION";%>    
     <td width="26%" align=right><div class="tabletext">Instruction</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productAssoc.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="255" style='font-size: x-small;'></td>
+    <td width="74%"><input type="text" class="inputBox" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productAssoc.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="255"></td>
   </tr>
 
   <tr>
     <%fieldName = "quantity";%><%paramName = "QUANTITY";%>    
     <td width="26%" align=right><div class="tabletext">Quantity</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(productAssoc.getDouble(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="15" style='font-size: x-small;'></td>
+    <td width="74%"><input type="text" class="inputBox" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(productAssoc.getDouble(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="15"></td>
   </tr>
 
   <tr>
     <td colspan='2'>&nbsp;</td>
-    <td align=left><input type='submit' value='<%=isCreate?"Create":"Update"%>' style='font-size: x-small;'></td>
+    <td align=left><input type='submit' value='<%=isCreate?"Create":"Update"%>'></td>
   </tr>
 </table>
 </form>
