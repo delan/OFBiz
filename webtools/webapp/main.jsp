@@ -121,7 +121,11 @@
                 <li><div class='tabletext'>Misc. Setup</div>
                 <ul>
                   <%if(security.hasPermission("PERIOD_MAINT", session)){%>
-                    <li><a href="<ofbiz:url>/EditCustomTimePeriod</ofbiz:url>" class='buttontext'>Edit Custom Time Period</a>
+                    <li><a href="<ofbiz:url>/EditCustomTimePeriod</ofbiz:url>" class='buttontext'>Edit Custom Time Periods</a>
+                  <%}%>
+                  <%if(security.hasPermission("ENUM_STATUS_MAINT", session)){%>
+                    <li><a href="<ofbiz:url>/EditEnumerationTypes</ofbiz:url>" class='buttontext'>Edit Enumerations</a>
+                    <li><a href="<ofbiz:url>/EditStatusTypes</ofbiz:url>" class='buttontext'>Edit Status Options</a>
                   <%}%>
                 </ul>
               <%}%>
