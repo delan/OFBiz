@@ -67,5 +67,44 @@ public class RecurrenceInfo {
         // Get the exception date list
         eDateList = RecurrenceUtil.split(info.getString("exceptionDateTimes"),",");
     }
+    
+    /** Returns the startDate Date object. */
+    public Date getStartDate() {
+        return this.startDate;
+    }
+    
+    /** Returns the long value of the startDate. */
+    public long getStartTime() {
+        return this.startDate.getTime();
+    }
         
+    /** Returns a recurrence rule iterator */
+    public Iterator getRecurrenceRuleIterator() {
+        return rRulesList.iterator();
+    }
+    
+    /** Returns a recurrence date iterator */
+    public Iterator getRecurrenceDateIterator() {
+        return rDateList.iterator();
+    }
+    
+    /** Returns a exception recurrence iterator */
+    public Iterator getExceptionRuleIterator() {
+        return eRulesList.iterator();
+    }
+    
+    /** Returns a exception date iterator */
+    public Iterator getExceptionDateIterator() {
+        return eDateList.iterator();
+    }
+
+    /** Returns the next recurrence from now. */
+    public long next() throws RecurrenceRuleException {
+        return next(now());
+    }
+    
+    /** Returns the next recurrence from the specified time. */
+    public long next(long previous) throws RecurrenceRuleException {
+        return 0;
+    }    
 }

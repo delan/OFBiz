@@ -73,22 +73,7 @@ public class RecurrenceRule {
         byMonthList = RecurrenceUtil.split(rule.getString("byMonthList"),",");
         bySetPosList = RecurrenceUtil.split(rule.getString("bySetPosList"),",");        
     }
-        
-    /** Gets the end time of the recurrence rule or 0 if none. */
-    public long getEndTime() {
-        if ( rule == null )
-            return -1;
-        long time = 0;
-        java.sql.Timestamp stamp = null;
-        stamp = rule.getTimestamp("until");
-        if ( stamp != null ) {
-            long nanos = (long) stamp.getNanos();
-            time = stamp.getTime();
-            time += (nanos / 1000000);
-        }
-        return time;
-    }
-                                 
+                                         
     /** Gets the current date/time. */
     private long now() {
         return (new Date()).getTime();
@@ -115,14 +100,38 @@ public class RecurrenceRule {
         return false;
     }
     
-    /** Returns the next recurrence from now. */
-    public long next() throws RecurrenceRuleException {
-        return next(now());
+    /** Gets the end time of the recurrence rule or 0 if none. */
+    public long getEndTime() {
+        if ( rule == null )
+            return -1;
+        long time = 0;
+        java.sql.Timestamp stamp = null;
+        stamp = rule.getTimestamp("until");
+        if ( stamp != null ) {
+            long nanos = (long) stamp.getNanos();
+            time = stamp.getTime();
+            time += (nanos / 1000000);
+        }
+        return time;
     }
     
-    /** Returns the next recurrence from the specified time. */
-    public long next(long previous) throws RecurrenceRuleException {
+    /** Get the number of times this recurrence will run. */
+    public int getCount() {
+        if ( rule.get("count") != null ) 
+            return rule.getInteger("count").intValue();
         return 0;
+    }
+    
+    /** Returns the frequency of the recurrence. */
+    public String getFrequency() {
+        return rule.getString("frequency").toUpperCase();
+    }
+    
+    /** Returns the interval of the frequency. */
+    public int getInterval() {
+        if ( rule.get("interval") == null )
+            return 1;
+        return rule.getInteger("interval").intValue();
     }
     
 }
