@@ -33,10 +33,10 @@ public class RegionStack {
     private RegionStack() { } // no instantiations
     
     public static Stack getStack(PageContext pc) {
-        Stack s = (Stack) pc.getAttribute("region-stack", PageContext.APPLICATION_SCOPE);
+        Stack s = (Stack) pc.getAttribute("region-stack", PageContext.REQUEST_SCOPE);
         if(s == null) {
             s = new Stack();
-            pc.setAttribute("region-stack", s, PageContext.APPLICATION_SCOPE);
+            pc.setAttribute("region-stack", s, PageContext.REQUEST_SCOPE);
         }
         return s;
     }
