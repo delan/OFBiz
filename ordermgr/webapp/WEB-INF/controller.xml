@@ -61,26 +61,30 @@
     </request-map>
 
     <request-map uri="main">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
     <request-map uri="orderview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderview"/>
     </request-map>
+    <request-map uri="orderlist">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderlist"/>
+    </request-map>
     
     <request-map uri="changeOrderStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="changeOrderStatus"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="error"/>
+        <response name="success" type="view" value="orderlist"/>
+        <response name="error" type="view" value="orderview"/>
     </request-map>
 
     <request-map uri="changeDelegator">
-	    <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
-	    <response name="success" type="view" value="main"/>
-	    <response name="error" type="view" value="error"/>
-	</request-map>
+        <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -89,5 +93,6 @@
     <view-map name="login" type="region"/>
 
     <view-map name="orderview" type="region"/>
+    <view-map name="orderlist" type="region"/>
     <!-- end of view mappings -->
 </site-conf>

@@ -98,10 +98,10 @@
 <%Collection statusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",orderHeader.getString("statusId")));%>
 <%if (statusChange != null) pageContext.setAttribute("statusChange", statusChange);%>
   
-<%@ include file="orderinformation.jsp" %>
-<%@ include file="orderitems.jsp" %>
+<%@ include file="/order/orderinformation.jsp" %>
+<br>
+<%@ include file="/order/orderitems.jsp" %>
 
-  </form>
 </ofbiz:if> <%-- OrderHeader --%>
 <ofbiz:unless name="orderHeader">
 <h3>The specified order was not found, please try again.</h3>

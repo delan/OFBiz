@@ -65,76 +65,8 @@
               <BR>
             </ofbiz:unless>
 
-<DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of Order related information.</DIV>
-<br>
-<div class="tabletext"><b>New Orders:</b></div>
-<!-- Insert in here -->
-<center>
-  <table width="95%" border="0" class="edittable">
-    <tr>
-      <td>
-        
-        <%
-          //Collection orderRoleCollection = delegator.findByAnd("OrderRole",
-          //   UtilMisc.toMap("partyId", "%", "roleTypeId", "PLACING_CUSTOMER"), null);
-          //Collection orderHeaderList = EntityUtil.orderBy(EntityUtil.getRelated("OrderHeader", orderRoleCollection), UtilMisc.toList("orderDate DESC"));
-          Collection orderHeaderList = delegator.findAll("OrderHeader");
-          pageContext.setAttribute("orderHeaderList", orderHeaderList);
-        %>
-        
-        <table width="100%" cellpadding="3" cellspacing="0" border="0">
-          <tr class="viewOneTR1">
-            <td width="25%">
-              <div class="tabletext"><b>Date</b></div>
-            </td>
-            <td width="15%">
-              <div class="tabletext"><b><nobr>Order #</nobr></b></div>
-            </td>
-            <td width="25%">
-              <div class="tabletext"><b>Amount</b></div>
-            </td>
-            <td width="25%">
-              <div class="tabletext"><b>Status</b></div>
-            </td>   
-            <td width="10%"><div class="tabletext">&nbsp;</div></td>                              
-          </tr>
-          <%String rowClass = "viewManyTR2";%>
-          <ofbiz:iterator name="orderHeader" property="orderHeaderList">
-          
-	        <%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
-	        <%pageContext.setAttribute("totalPrice", new Double(order.getTotalPrice()));%>
-	        <%pageContext.setAttribute("orderStatus", order.getStatusString());%>          
-            <%rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";%> 
-                   
-          <tr class="<%=rowClass%>">
-            <td>
-              <div class="tabletext"><nobr><ofbiz:entityfield attribute="orderHeader" field="orderDate"/></nobr></div>
-            </td>
-            <td>
-              <div class="tabletext"><ofbiz:entityfield attribute="orderHeader" field="orderId"/></div>
-            </td>            
-            <td>
-              <div class="tabletext"><ofbiz:field attribute="totalPrice" type="currency"/></div>
-            </td>
-            <td>
-              <div class="tabletext"><ofbiz:entityfield attribute="orderHeader" field="statusId"/></div>
-            </td>
-            <td align=right>
-              <a href="<ofbiz:url>/orderview?order_id=<ofbiz:entityfield attribute="orderHeader" field="orderId"/></ofbiz:url>" class='buttontext'>[View]</a>
-            </td>
-          </tr>
-          </ofbiz:iterator>
-          <ofbiz:unless name="orderHeaderList" size="0">
-          <tr><td colspan="8"><div class='head3'>No Orders Found</div></td></tr>
-          </ofbiz:unless>
-        </table>
-                
-      </td>
-    </tr>
-  </table>
-</center>
-<!-- Between here -->
-<br>
+            <DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of Order related information.</DIV>
+            <br>
           </td>
         </tr>
       </table>

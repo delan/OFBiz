@@ -45,6 +45,10 @@
 
     <define id='orderview' region='MAIN_REGION'>
         <put section='title'>View Order Page</put>
-        <put section='content' content='/orderview.jsp'/>
+        <put section='content' content='/order/orderview.jsp'/>
+    </define>
+    <define id='orderlist' region='MAIN_REGION'>
+        <put section='title'>Order List Page</put>
+        <put section='content' content='/order/orderlist.jsp'/>
     </define>
 </regions>
