@@ -98,6 +98,7 @@ public class ScreenFactory {
             synchronized (ScreenFactory.class) {
                 modelScreenMap = (Map) screenLocationCache.get(resourceName);
                 if (modelScreenMap == null) {
+                    long startTime = System.currentTimeMillis();
                     ClassLoader loader = Thread.currentThread().getContextClassLoader();
                     if (loader == null) {
                         loader = ScreenFactory.class.getClassLoader();
@@ -110,8 +111,9 @@ public class ScreenFactory {
                     }
                     Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true);
                     modelScreenMap = readScreenDocument(screenFileDoc);
-                    Debug.logInfo("Got " + modelScreenMap.size() + " screen definitions from the location: " + screenFileUrl.toExternalForm(), module);
                     screenLocationCache.put(resourceName, modelScreenMap);
+                    double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
+                    Debug.logInfo("Got " + modelScreenMap.size() + " screens in " + totalSeconds + "s from: " + screenFileUrl.toExternalForm(), module);
                 }
             }
         }

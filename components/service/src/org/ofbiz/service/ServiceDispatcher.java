@@ -240,8 +240,10 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public Map runSync(String localName, ModelService modelService, Map context, boolean validateOut) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        UtilTimer timer = null;
         if (Debug.timingOn()) {
-            UtilTimer.timerLog(localName + " / " + modelService.name, "Sync service started...", module);
+            timer = new UtilTimer(localName + " / " + modelService.name, true);
+            // not thread safe: UtilTimer.timerLog(localName + " / " + modelService.name, "Sync service started...", module);
         }
         boolean debugging = checkDebug(modelService, 1, true);
         if (Debug.verboseOn()) {
@@ -429,8 +431,9 @@ public class ServiceDispatcher {
 
             checkDebug(modelService, 0, debugging);
             rs.setEndStamp();
-            if (Debug.timingOn()) {
-                UtilTimer.closeTimer(localName + " / " + modelService.name, "Sync service finished...", module);
+            if (timer != null) {
+                timer.setLog(true);
+                timer.timerString("Sync service finished", module);
             }
             return result;
         } catch (Throwable t) {
