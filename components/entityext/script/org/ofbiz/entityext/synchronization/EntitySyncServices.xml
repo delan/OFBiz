@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
 -->
 
@@ -59,9 +59,14 @@
         <make-value value-name="newEntity" entity-name="EntitySyncHistory"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <now-timestamp-to-env env-name="newEntity.startDate"/>
-        <field-to-result field-name="startDate" map-name="newEntity"/>
+        <field-to-result field-name="newEntity.startDate" result-name="startDate"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
+        
+        <!-- also set the lastHistoryStartDate on the EntitySync -->
+        <entity-one entity-name="EntitySync" value-name="entitySync"/>
+        <env-to-env env-name="newEntity.startDate" to-env-name="entitySync.lastHistoryStartDate"/>
+        <store-value value-name="entitySync"/>
     </simple-method>
     <simple-method method-name="updateEntitySyncHistory" short-description="Update EntitySyncHistory">
         <check-permission permission="ENTITY_SYNC" action="_UPDATE"><fail-message message="Security Error: to run updateEntitySyncHistory you must have the ENTITY_SYNC_UPDATE or ENTITY_SYNC_ADMIN permission"/></check-permission>

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  */
 -->
 
@@ -82,6 +82,7 @@
       <field name="entitySyncId" type="id-ne"></field>
       <field name="runStatusId" type="id-ne"></field>
       <field name="lastSuccessfulSynchTime" type="date-time"></field>
+      <field name="lastHistoryStartDate" type="date-time"></field>
       <field name="syncSplitMillis" type="numeric"></field>
       <field name="targetServiceName" type="long-varchar"></field>
       <field name="targetDelegatorName" type="long-varchar"></field>
@@ -89,6 +90,10 @@
       <prim-key field="entitySyncId"/>
       <relation type="many" rel-entity-name="EntitySyncInclGrpDetailView">
         <key-map field-name="entitySyncId"/>
+      </relation>
+      <relation type="one-nofk" title="Last" rel-entity-name="EntitySyncHistory">
+        <key-map field-name="entitySyncId"/>
+        <key-map field-name="lastHistoryStartDate" rel-field-name="startDate"/>
       </relation>
     </entity>
     <entity entity-name="EntitySyncHistory"
