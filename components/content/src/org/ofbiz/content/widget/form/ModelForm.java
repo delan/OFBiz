@@ -84,14 +84,17 @@ public class ModelForm {
     protected String defaultTitleStyle;
     protected String defaultWidgetStyle;
     protected String defaultTooltipStyle;
-    protected String defaultRequiredFieldStyle;
     protected String itemIndexSeparator;
     protected FlexibleStringExpander paginateTarget;
     protected boolean separateColumns = false;
     protected String listIteratorName;
     protected boolean paginate = true;
+    protected boolean cssStyling = false;
     protected boolean useRowSubmit = false;
     protected FlexibleStringExpander targetWindowExdr;
+    protected String defaultRequiredFieldStyle;
+    protected boolean skipStart = false;
+    protected boolean skipEnd = false;
 
     protected List altTargets = new LinkedList();
     protected List autoFieldsServices = new LinkedList();
@@ -114,6 +117,21 @@ public class ModelForm {
      * with conditions is not possible.
      */
     protected Map fieldMap = new HashMap();
+
+    /** This is a list of FieldGroups in the order they were created.
+     * Can also include Banner objects.
+     */
+    protected List fieldGroupList = new ArrayList();
+    
+    /** This Map is keyed with the field name and has a FieldGroup for the value.
+     * Can also include Banner objects.
+     */
+    protected Map fieldGroupMap = new HashMap();
+    
+    /** This field group will be the "catch-all" group for fields that are not
+     *  included in an explicit field-group.
+     */
+    protected FieldGroup defaultFieldGroup;
     
     public static String DEFAULT_TARGET_TYPE = "intra-app";
     public static int DEFAULT_PAGE_SIZE = 100;
@@ -228,16 +246,20 @@ public class ModelForm {
             this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
         if (this.defaultTooltipStyle == null || formElement.hasAttribute("default-tooltip-style"))
             this.defaultTooltipStyle = formElement.getAttribute("default-tooltip-style");
-        if (this.defaultRequiredFieldStyle == null || formElement.hasAttribute("default-required-field-style"))
-            this.defaultRequiredFieldStyle = formElement.getAttribute("default-required-field-style");
         if (this.itemIndexSeparator == null || formElement.hasAttribute("item-index-separator"))
             this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
         if (this.paginateTarget == null || formElement.hasAttribute("paginate-target"))
             this.paginateTarget = new FlexibleStringExpander(formElement.getAttribute("paginate-target"));
         if (this.targetType == null || formElement.hasAttribute("target-type"))
             this.targetType = formElement.getAttribute("target-type");
+        if (this.defaultRequiredFieldStyle == null || formElement.hasAttribute("default-required-field-style"))
+            this.defaultRequiredFieldStyle = formElement.getAttribute("default-required-field-style");
+
         
-        paginate = "true".equals(formElement.getAttribute("true"));
+        this.paginate = "true".equals(formElement.getAttribute("paginate"));
+        this.cssStyling = "true".equals(formElement.getAttribute("css-styling"));
+        this.skipStart = "true".equals(formElement.getAttribute("skip-start"));
+        this.skipEnd = "true".equals(formElement.getAttribute("skip-end"));
         if (formElement.hasAttribute("separate-columns")) {
             String sepColumns = formElement.getAttribute("separate-columns");
             if (sepColumns != null && sepColumns.equalsIgnoreCase("true"))
@@ -296,15 +318,36 @@ public class ModelForm {
             //Debug.logInfo("Added field " + modelFormField.getName() + " from def, mapName=" + modelFormField.getMapName(), module);
         }
 
+        // Create the default field group
+        defaultFieldGroup = new FieldGroup(null, this);
         // get the sort-order
         Element sortOrderElement = UtilXml.firstChildElement(formElement, "sort-order");
         if (sortOrderElement != null) {
+            FieldGroup lastFieldGroup = new FieldGroup(null, this);
+            this.fieldGroupList.add(lastFieldGroup);
             // read in sort-field
-            List sortFieldElements = UtilXml.childElementList(sortOrderElement, "sort-field");
+            List sortFieldElements = UtilXml.childElementList(sortOrderElement);
             Iterator sortFieldElementIter = sortFieldElements.iterator();
             while (sortFieldElementIter.hasNext()) {
                 Element sortFieldElement = (Element) sortFieldElementIter.next();
-                this.sortOrderFields.add(sortFieldElement.getAttribute("name"));
+                String tagName = sortFieldElement.getTagName();
+                if (tagName.equals("sort-field")) {
+                    String fieldName = sortFieldElement.getAttribute("name");
+                    this.sortOrderFields.add(fieldName );
+                    this.fieldGroupMap.put(fieldName, lastFieldGroup);
+                } else if (tagName.equals("banner")) {
+                    Banner thisBanner = new Banner(sortFieldElement, this);
+                    this.fieldGroupList.add(thisBanner);
+                    
+                    lastFieldGroup = new FieldGroup(null, this);
+                    this.fieldGroupList.add(lastFieldGroup);
+                } else if (tagName.equals("field-group")) {
+                    FieldGroup thisFieldGroup = new FieldGroup(sortFieldElement, this);
+                    this.fieldGroupList.add(thisFieldGroup);
+                    
+                    lastFieldGroup = new FieldGroup(null, this);
+                    this.fieldGroupList.add(lastFieldGroup);
+                }
             }
         }
 
@@ -528,15 +571,16 @@ public class ModelForm {
         Iterator fieldIter = null;
 
         Set alreadyRendered = new TreeSet();
-
+        FieldGroup lastFieldGroup = null;
         // render form open
-        formStringRenderer.renderFormOpen(buffer, context, this);
+        if (!skipStart) formStringRenderer.renderFormOpen(buffer, context, this);
 
         // render all hidden & ignored fields
         this.renderHiddenIgnoredFields(buffer, context, formStringRenderer, alreadyRendered);
 
         // render formatting wrapper open
-        formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, this);
+        // This should be covered by fieldGroup.renderStartString
+        //formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, this);
 
         // render each field row, except hidden & ignored rows
         fieldIter = this.fieldList.iterator();
@@ -549,13 +593,43 @@ public class ModelForm {
         if (fieldIter.hasNext()) {
             nextFormField = (ModelFormField) fieldIter.next();
         }
-
+        
+        FieldGroup currentFieldGroup = null;
+        String currentFieldGroupName = null;
+        String lastFieldGroupName = null;
+        if (currentFormField != null) {
+            currentFieldGroup = (FieldGroup)fieldGroupMap.get(currentFormField.getFieldName()); 
+            if (currentFieldGroup == null) {
+                currentFieldGroup = defaultFieldGroup;
+            }
+            if (currentFieldGroup != null) {
+                currentFieldGroupName = currentFieldGroup.getId();
+            } 
+        }
+        
+            
         boolean isFirstPass = true;
         while (currentFormField != null) {
             // do the check/get next stuff at the beginning so we can still use the continue stuff easily
             // don't do it on the first pass though...
             if (isFirstPass) {
                 isFirstPass = false;
+                List inbetweenList = getInbetweenList(lastFieldGroup, currentFieldGroup);
+                Iterator iter = inbetweenList.iterator();
+                while (iter.hasNext()) {
+                    Object obj = iter.next(); 
+                    if (obj instanceof ModelForm.Banner) {
+                        ((ModelForm.Banner)obj).renderString(buffer, context, formStringRenderer);   
+                    } else {
+                        // no need to open and close an empty table, so skip that call
+                        formStringRenderer.renderFieldGroupOpen(buffer, context, (FieldGroup)obj);
+                        formStringRenderer.renderFieldGroupClose(buffer, context, (FieldGroup)obj);
+                    }
+                }
+                if (currentFieldGroup != null && (lastFieldGroup == null || !lastFieldGroupName.equals(currentFieldGroupName))) {
+                        currentFieldGroup.renderStartString(buffer, context, formStringRenderer);
+                        lastFieldGroup = currentFieldGroup;
+                }
             } else {
                 if (fieldIter.hasNext()) {
                     // at least two loops left
@@ -574,6 +648,40 @@ public class ModelForm {
                     // nextFormField is already null
                     break;
                 }
+                currentFieldGroup = null;
+                if (currentFormField != null) {
+                    currentFieldGroup = (FieldGroup)fieldGroupMap.get(currentFormField.getFieldName()); 
+                }
+                if (currentFieldGroup == null) {
+                    currentFieldGroup = defaultFieldGroup;
+                }
+                currentFieldGroupName = currentFieldGroup.getId();
+                
+                if (lastFieldGroup != null ) {
+                    lastFieldGroupName = lastFieldGroup.getId();
+                    if (!lastFieldGroupName.equals(currentFieldGroupName)) {
+                        lastFieldGroup.renderEndString(buffer, context, formStringRenderer);
+                        
+                        List inbetweenList = getInbetweenList(lastFieldGroup, currentFieldGroup);
+                        Iterator iter = inbetweenList.iterator();
+                        while (iter.hasNext()) {
+                            Object obj = iter.next(); 
+                            if (obj instanceof ModelForm.Banner) {
+                                ((ModelForm.Banner)obj).renderString(buffer, context, formStringRenderer);   
+                            } else {
+                                // no need to open and close an empty table, so skip that call
+                                formStringRenderer.renderFieldGroupOpen(buffer, context, (FieldGroup)obj);
+                                formStringRenderer.renderFieldGroupClose(buffer, context, (FieldGroup)obj);
+                            }
+                        }
+                    }
+                }
+                
+                if (currentFieldGroup != null && (lastFieldGroup == null || !lastFieldGroupName.equals(currentFieldGroupName))) {
+                        currentFieldGroup.renderStartString(buffer, context, formStringRenderer);
+                        lastFieldGroup = currentFieldGroup;
+                }
+            
             }
 
             ModelFormField.FieldInfo fieldInfo = currentFormField.getFieldInfo();
@@ -634,7 +742,7 @@ public class ModelForm {
 
             // render title (unless this is a submit or a reset field)
             if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.SUBMIT && fieldInfo.getFieldType() != ModelFormField.FieldInfo.RESET) {
-                formStringRenderer.renderSingleFormFieldTitle(buffer, context, currentFormField);
+                formStringRenderer.renderFieldTitle(buffer, context, currentFormField);
             } else {
                 formStringRenderer.renderFormatEmptySpace(buffer, context, this);
             }
@@ -658,11 +766,15 @@ public class ModelForm {
         // always render row formatting close after the end
         formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
 
+        if (lastFieldGroup != null) {
+            lastFieldGroup.renderEndString(buffer, context, formStringRenderer);
+        }
         // render formatting wrapper close
-        formStringRenderer.renderFormatSingleWrapperClose(buffer, context, this);
+        // should be handled by renderEndString
+        //formStringRenderer.renderFormatSingleWrapperClose(buffer, context, this);
 
         // render form close
-        formStringRenderer.renderFormClose(buffer, context, this);
+        if (!skipEnd) formStringRenderer.renderFormClose(buffer, context, this);
     }
 
     public void renderListFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, int positions) {
@@ -1074,6 +1186,14 @@ public class ModelForm {
     public Map getDefaultMap(Map context) {
         return (Map) this.defaultMapName.get(context);
     }
+    
+    /**
+     * @return
+     */
+    public String getDefaultRequiredFieldStyle() {
+        return this.defaultRequiredFieldStyle;
+    }
+
 
     /**
      * @return
@@ -1101,13 +1221,6 @@ public class ModelForm {
      */
     public String getDefaultTooltipStyle() {
         return this.defaultTooltipStyle;
-    }
-
-    /**
-     * @return
-     */
-    public String getDefaultRequiredFieldStyle() {
-        return this.defaultRequiredFieldStyle;
     }
 
     /**
@@ -1373,6 +1486,18 @@ public class ModelForm {
     public boolean getPaginate() {
         return this.paginate;
     }
+
+    public boolean getCssStyling() {
+        return this.cssStyling;
+    }
+    
+    public boolean getSkipStart() {
+        return this.skipStart;
+    }
+    
+    public boolean getSkipEnd() {
+        return this.skipEnd;
+    }
     
     public void setPaginate(boolean val) {
         paginate = val;
@@ -1499,6 +1624,45 @@ public class ModelForm {
     	return this.multiSubmitField;
     }
 
+    public List getInbetweenList(FieldGroup startFieldGroup, FieldGroup endFieldGroup) {
+        ArrayList inbetweenList = new ArrayList();
+        boolean firstFound = false;
+        String startFieldGroupId = null;
+        String endFieldGroupId = null;
+        if (endFieldGroup != null) {
+            endFieldGroupId = endFieldGroup.getId();   
+        }
+        if (startFieldGroup == null) {
+            firstFound = true;
+        } else {
+            startFieldGroupId = startFieldGroup.getId();   
+        }
+        Iterator iter = fieldGroupList.iterator();
+        while (iter.hasNext()) {
+            Object obj = iter.next();
+            if (obj instanceof ModelForm.Banner) {
+                if (firstFound) inbetweenList.add(obj);   
+            } else {
+                FieldGroup fieldGroup = (FieldGroup)obj;
+                String fieldGroupId = fieldGroup.getId();
+                if (!firstFound) {
+                    if (fieldGroupId.equals(startFieldGroupId)) {
+                        firstFound = true;
+                        continue;
+                    }
+                }
+                if (firstFound) {
+                    if (fieldGroupId.equals(endFieldGroupId)) {
+                        break;
+                    } else {
+                        inbetweenList.add(fieldGroup);   
+                    }
+                }
+            }
+        }
+        return inbetweenList;
+    }
+    
     public static class AltTarget {
         public String useWhen;
         public String target;
@@ -1527,6 +1691,94 @@ public class ModelForm {
             this.entityName = element.getAttribute("entity-name");
             this.mapName = element.getAttribute("map-name");
             this.defaultFieldType = element.getAttribute("default-field-type");
+        }
+    }
+
+    public static class FieldGroup {
+        public String id;
+        public String style;
+        protected ModelForm modelForm;
+        protected static int baseSeqNo = 0;
+        protected static String baseId = "_G";
+        public FieldGroup(Element sortOrderElement, ModelForm modelForm) {
+          
+            this.modelForm = modelForm;
+            if (sortOrderElement != null) {
+                this.id = sortOrderElement.getAttribute("id");
+                if (UtilValidate.isEmpty(this.id)) {
+                    String lastGroupId = baseId + baseSeqNo++ + "_";
+                    this.setId(lastGroupId);
+                }
+                this.style = sortOrderElement.getAttribute("style");
+                List sortFieldElements = UtilXml.childElementList(sortOrderElement, "sort-field");
+                Iterator sortFieldElementIter = sortFieldElements.iterator();
+                while (sortFieldElementIter.hasNext()) {
+                    Element sortFieldElement = (Element) sortFieldElementIter.next();
+                    modelForm.sortOrderFields.add(sortFieldElement.getAttribute("name"));
+                    modelForm.fieldGroupMap.put(sortFieldElement.getAttribute("name"), this);
+                }
+            } else {
+                String lastGroupId = baseId + baseSeqNo++ + "_";
+                this.setId(lastGroupId);
+            }
+        }
+        
+        public String getId() {
+            return this.id;   
+        }
+        
+        public void setId( String id) {
+            this.id = id;   
+        }
+        
+        public String getStyle() {
+            return this.style;   
+        }
+        
+        public void renderStartString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderFieldGroupOpen(buffer, context, this);
+            formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, modelForm);
+        }
+        
+        public void renderEndString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderFormatSingleWrapperClose(buffer, context, modelForm);
+            formStringRenderer.renderFieldGroupClose(buffer, context, this);
+        }
+    }
+
+    public static class Banner {
+        protected ModelForm modelForm;
+        public FlexibleStringExpander style;
+        public FlexibleStringExpander text;
+        public FlexibleStringExpander textStyle;
+        public FlexibleStringExpander leftText;
+        public FlexibleStringExpander leftTextStyle;
+        public FlexibleStringExpander rightText;
+        public FlexibleStringExpander rightTextStyle;
+        
+        public Banner(Element sortOrderElement, ModelForm modelForm) {
+          
+            this.modelForm = modelForm;
+            this.style = new FlexibleStringExpander(sortOrderElement.getAttribute("style"));
+            this.text = new FlexibleStringExpander(sortOrderElement.getAttribute("text"));
+            this.textStyle = new FlexibleStringExpander(sortOrderElement.getAttribute("text-style"));
+            this.leftText = new FlexibleStringExpander(sortOrderElement.getAttribute("left-text"));
+            this.leftTextStyle = new FlexibleStringExpander(sortOrderElement.getAttribute("left-text-style"));
+            this.rightText = new FlexibleStringExpander(sortOrderElement.getAttribute("right-text"));
+            this.rightTextStyle = new FlexibleStringExpander(sortOrderElement.getAttribute("right-text-style"));
+        }
+        
+        
+        public String getStyle(Map context) { return this.style.expandString(context); }
+        public String getText(Map context) { return this.text.expandString(context); }
+        public String getTextStyle(Map context) { return this.textStyle.expandString(context); }
+        public String getLeftText(Map context) { return this.leftText.expandString(context); }
+        public String getLeftTextStyle(Map context) { return this.leftTextStyle.expandString(context); }
+        public String getRightText(Map context) { return this.rightText.expandString(context); }
+        public String getRightTextStyle(Map context) { return this.rightTextStyle.expandString(context); }
+        
+        public void renderString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderBanner(buffer, context, this);
         }
     }
 

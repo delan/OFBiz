@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.io.StringWriter;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -190,13 +191,15 @@ public class ContentServices {
      * reflection performance penalty.
      */
     public static Map createContent(DispatchContext dctx, Map context) {
+        /*
         context.put("entityOperation", "_CREATE");
         List targetOperationList = ContentWorker.prepTargetOperationList(context, "_CREATE");
 
         List contentPurposeList = ContentWorker.prepContentPurposeList(context);
         context.put("targetOperationList", targetOperationList);
-        context.put("contentPurposeList", contentPurposeList);
-        context.put("skipPermissionCheck", null);
+        context.put("contentPurposeList", contentPurposeList); // for checking permissions
+        //context.put("skipPermissionCheck", null);
+        */
 
         Map result = createContentMethod(dctx, context);
         return result;
@@ -227,13 +230,6 @@ public class ContentServices {
 
         GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", contentId));
         content.setNonPKFields(context);
-        context.put("currentContent", content);
-        if (Debug.infoOn()) Debug.logInfo("in createContentMethod, context: " + context, null);
-
-        Map permResults = ContentWorker.callContentPermissionCheckResult(delegator, dispatcher, context);
-        String permissionStatus = (String) permResults.get("permissionStatus");
-
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             String userLoginId = (String) userLogin.get("userLoginId");
             String createdByUserLogin = userLoginId;
@@ -246,6 +242,13 @@ public class ContentServices {
             content.put("createdDate", createdDate);
             content.put("lastModifiedDate", lastModifiedDate);
 
+        context.put("currentContent", content);
+        if (Debug.infoOn()) Debug.logInfo("in createContentMethod, context: " + context, null);
+
+        Map permResults = ContentWorker.callContentPermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String) permResults.get("permissionStatus");
+
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             try {
                 content.create();
             } catch (GenericEntityException e) {
@@ -798,10 +801,10 @@ public class ContentServices {
         if (templateContext != null && UtilValidate.isEmpty(mapKey)) {
             mapKey = (String) templateContext.get("mapKey");
         }
-        String subContentId = (String) context.get("subContentId");
-        if (templateContext != null && UtilValidate.isEmpty(subContentId)) {
-            subContentId = (String) templateContext.get("subContentId");
-        }
+        //String subContentId = (String) context.get("subContentId");
+        //if (templateContext != null && UtilValidate.isEmpty(subContentId)) {
+            //subContentId = (String) templateContext.get("subContentId");
+        //}
         String mimeTypeId = (String) context.get("mimeTypeId");
         if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
             mimeTypeId = (String) templateContext.get("mimeTypeId");
@@ -816,13 +819,16 @@ public class ContentServices {
         }
 
         Writer out = (Writer) context.get("outWriter");
+        Writer outWriter = new StringWriter();
 
         if (templateContext == null) {
             templateContext = new HashMap();
         }
 
         try {
-            results = ContentWorker.renderSubContentAsText(delegator, contentId, out, mapKey, subContentId, subContentDataResourceView, templateContext, locale, mimeTypeId, userLogin, fromDate);
+            results = ContentWorker.renderSubContentAsTextCache(delegator, contentId, outWriter, mapKey, subContentDataResourceView, templateContext, locale, mimeTypeId, userLogin, fromDate);
+            out.write(outWriter.toString());
+            results.put("textData", outWriter.toString());
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering sub-content text", module);
             return ServiceUtil.returnError(e.toString());
@@ -863,9 +869,12 @@ public class ContentServices {
             templateContext = new HashMap();
         }
 
+        Writer outWriter = new StringWriter();
         GenericValue view = null;
         try {
-            results = ContentWorker.renderContentAsText(delegator, contentId, out, templateContext, view, locale, mimeTypeId);
+            results = ContentWorker.renderContentAsTextCache(delegator, contentId, outWriter, templateContext, view, locale, mimeTypeId);
+            out.write(outWriter.toString());
+            results.put("textData", outWriter.toString());
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering sub-content text", module);
             return ServiceUtil.returnError(e.toString());

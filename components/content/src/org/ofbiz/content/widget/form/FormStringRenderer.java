@@ -98,4 +98,7 @@ public interface FormStringRenderer {
     public void renderFileField(StringBuffer buffer, Map context, ModelFormField.FileField textField);
     public void renderPasswordField(StringBuffer buffer, Map context, ModelFormField.PasswordField textField);
     public void renderImageField(StringBuffer buffer, Map context, ModelFormField.ImageField textField);
+    public void renderBanner(StringBuffer buffer, Map context, ModelForm.Banner banner);
+    public void renderFieldGroupOpen(StringBuffer buffer, Map context, ModelForm.FieldGroup fieldGroup);
+    public void renderFieldGroupClose(StringBuffer buffer, Map context, ModelForm.FieldGroup fieldGroup);
 }

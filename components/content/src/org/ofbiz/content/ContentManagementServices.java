@@ -202,6 +202,11 @@ public class ContentManagementServices {
             List tmpPurposes = StringUtil.split(contentPurposeString, "|");
             contentPurposeList.addAll(tmpPurposes);
         }
+        
+        if (contentPurposeList != null ) {
+            context.put("contentPurposeList", contentPurposeList);   
+            context.put("contentPurposeString", null);   
+        }
         //if (Debug.infoOn()) Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, null);
         if (Debug.infoOn()) Debug.logInfo("in persist... textData(0):" + context.get("textData"), null);
         
@@ -269,6 +274,7 @@ public class ContentManagementServices {
         // Do update and create permission checks on DataResource if warranted.
         boolean updatePermOK = false;
         boolean createPermOK = false;
+
 
         boolean dataResourceExists = true;
         if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceTypeId(0):" + dataResourceTypeId, null);
@@ -441,7 +447,7 @@ public class ContentManagementServices {
                 //targetOperations.add("CONTENT_UPDATE");
                     Map contentContext = new HashMap();
                 	ModelService contentModel = dispatcher.getDispatchContext().getModelService("updateContent");
-                	Map ctx = contentModel.makeValid(content, "IN");
+                	Map ctx = contentModel.makeValid(context, "IN");
                     contentContext.putAll(ctx);
                     contentContext.put("userLogin", userLogin);
                     contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
@@ -458,7 +464,7 @@ public class ContentManagementServices {
                 //targetOperations.add("CONTENT_CREATE");
                     Map contentContext = new HashMap();
                 	ModelService contentModel = dispatcher.getDispatchContext().getModelService("createContent");
-                	Map ctx = contentModel.makeValid(content, "IN");
+                	Map ctx = contentModel.makeValid(context, "IN");
                     contentContext.putAll(ctx);
                     contentContext.put("userLogin", userLogin);
                     contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));

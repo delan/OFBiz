@@ -57,6 +57,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
     HttpServletRequest request;
     HttpServletResponse response;
+    protected String lastFieldGroupId = "";
+
     public static final String module = HtmlFormRenderer.class.getName();
 
     protected HtmlFormRenderer() {}
@@ -1797,5 +1799,84 @@ public class HtmlFormRenderer implements FormStringRenderer {
         return retStr;
     }
     
+     public void renderFieldGroupOpen(StringBuffer buffer, Map context, ModelForm.FieldGroup fieldGroup) {
+         String style = fieldGroup.getStyle(); 
+         if (UtilValidate.isNotEmpty(style)) {
+                buffer.append("<div");
+                buffer.append(" class=\"");
+                buffer.append(style);
+                buffer.append("\">");
+         }
+     }
+     
+     public void renderFieldGroupClose(StringBuffer buffer, Map context, ModelForm.FieldGroup fieldGroup) {
+         String style = fieldGroup.getStyle(); 
+         if (UtilValidate.isNotEmpty(style)) {
+             buffer.append("</div>");
+         }
+     }
+     
+     public void renderBanner(StringBuffer buffer, Map context, ModelForm.Banner banner) {
+         buffer.append("<table width=\"100%\"><tr>");
+         String style = banner.getStyle(context);
+         String leftStyle = banner.getLeftTextStyle(context);
+         if (UtilValidate.isEmpty(leftStyle)) leftStyle = style;
+         String rightStyle = banner.getRightTextStyle(context);
+         if (UtilValidate.isEmpty(rightStyle)) rightStyle = style;
+         
+         String leftText = banner.getLeftText(context);
+         if (UtilValidate.isNotEmpty(leftText)) {
+             buffer.append("<td align=\"left\">");
+             if (UtilValidate.isNotEmpty(leftStyle)) {
+                buffer.append("<div");
+                buffer.append(" class=\"");
+                buffer.append(leftStyle);
+                buffer.append("\"");
+                buffer.append(">" );
+             }
+             buffer.append(leftText);
+             if (UtilValidate.isNotEmpty(leftStyle)) {
+                 buffer.append("</div>");
+             }
+             buffer.append("</td>");
+         }
+         
+         String text = banner.getText(context);
+         if (UtilValidate.isNotEmpty(text)) {
+             buffer.append("<td align=\"center\">");
+             if (UtilValidate.isNotEmpty(style)) {
+                buffer.append("<div");
+                buffer.append(" class=\"");
+                buffer.append(style);
+                buffer.append("\"");
+                buffer.append(">" );
+             }
+             buffer.append(text);
+             if (UtilValidate.isNotEmpty(style)) {
+                 buffer.append("</div>");
+             }
+             buffer.append("</td>");
+         }
+         
+         String rightText = banner.getRightText(context);
+         if (UtilValidate.isNotEmpty(rightText)) {
+             buffer.append("<td align=\"right\">");
+             if (UtilValidate.isNotEmpty(rightStyle)) {
+                buffer.append("<div");
+                buffer.append(" class=\"");
+                buffer.append(rightStyle);
+                buffer.append("\"");
+                buffer.append(">" );
+             }
+             buffer.append(rightText);
+             if (UtilValidate.isNotEmpty(rightStyle)) {
+                 buffer.append("</div>");
+             }
+             buffer.append("</td>");
+         }
+         
+         
+         buffer.append("</tr></table>");
+     }
  
 }

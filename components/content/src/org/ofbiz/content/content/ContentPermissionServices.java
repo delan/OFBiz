@@ -140,6 +140,8 @@ public class ContentPermissionServices {
         }
         
         StdAuxiliaryValueGetter auxGetter = new StdAuxiliaryValueGetter( "ContentPurpose",  "contentPurposeTypeId", "contentId");
+        // Sometimes permissions need to be checked before an entity is created, so 
+        // there needs to be a method for setting a purpose list
         auxGetter.setList(passedPurposes);
         //Debug.logInfo("passedPurposes(b):" + passedPurposes, "");
         List targetOperations = (List) context.get("targetOperationList"); 
@@ -162,8 +164,7 @@ public class ContentPermissionServices {
         List passedRoles = (List) context.get("roleTypeList"); 
         if (passedRoles == null) passedRoles = new ArrayList();
         roleGetter.setList(passedRoles);
-        // If the current user created the content, then add "_OWNER_" as one of
-        //   the contentRoles that is in effect.
+        
         String entityAction = (String) context.get("entityOperation");
         if (entityAction == null) entityAction = "_ADMIN";
         if (userLogin != null && entityAction != null) {
@@ -183,7 +184,7 @@ public class ContentPermissionServices {
            if (UtilValidate.isNotEmpty(quickList)) entityIds.addAll(quickList);
         }
         try {
-            boolean check = checkPermissionMethod(delegator, partyId,  "Content", entityIds, auxGetter, roleGetter, permCondGetter );
+            boolean check = checkPermissionMethod(delegator, partyId,  "Content", entityIds, auxGetter, roleGetter, permCondGetter, userLogin );
             if (check)
                 results.put("permissionStatus", "granted");
             else
@@ -568,8 +569,11 @@ public class ContentPermissionServices {
         
         return passed;
     }
-    public static boolean checkPermissionMethod(GenericDelegator delegator, String partyId,  String entityName, List entityIdList, AuxiliaryValueGetter auxiliaryValueGetter, RelatedRoleGetter relatedRoleGetter, PermissionConditionGetter permissionConditionGetter ) throws GenericEntityException {
+    public static boolean checkPermissionMethod(GenericDelegator delegator, String partyId,  String entityName, List entityIdList, AuxiliaryValueGetter auxiliaryValueGetter, RelatedRoleGetter relatedRoleGetter, PermissionConditionGetter permissionConditionGetter, GenericValue userLogin ) throws GenericEntityException {
 
+        if (relatedRoleGetter != null) {
+            relatedRoleGetter.setUserLogin(userLogin);
+        }
         permissionConditionGetter.init(delegator);
         if (Debug.verboseOn()) Debug.logVerbose(permissionConditionGetter.dumpAsText(), module);
         boolean passed = false;
@@ -643,7 +647,6 @@ public class ContentPermissionServices {
 
         // Check with roles.
         if (relatedRoleGetter != null) {
-            // Check with just purposes next.
             iter = entityIdList.iterator();
             while (iter.hasNext()) {
                 GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
@@ -661,7 +664,6 @@ public class ContentPermissionServices {
             return true;
         
         if (relatedRoleGetter != null) {
-            // Check with just purposes next.
             iter = entityIdList.iterator();
             while (iter.hasNext()) {
                 GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
@@ -822,7 +824,7 @@ public class ContentPermissionServices {
             if (checkAncestors) {
                 relatedRoleGetter.initWithAncestors(delegator, entity, partyId);
             } else {
-                relatedRoleGetter.init(delegator, entityId, partyId);
+                relatedRoleGetter.init(delegator, entityId, partyId, entity);
             }
             roleValueList =   relatedRoleGetter.getList();
             if (Debug.verboseOn()) Debug.logVerbose(relatedRoleGetter.dumpAsText(), module);
@@ -1370,10 +1372,12 @@ public class ContentPermissionServices {
     }
     
     public interface RelatedRoleGetter {
-        public void init(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException;
+        public void init(GenericDelegator delegator, String entityId, String partyId, GenericValue entity) throws GenericEntityException;
         public void initWithAncestors(GenericDelegator delegator, GenericValue entity, String partyId) throws GenericEntityException;
         public List getList();
         public String dumpAsText();
+        public boolean isOwner(GenericValue entity);
+        public void setUserLogin(GenericValue userLogin);
     }
     
     public static class StdRelatedRoleGetter implements RelatedRoleGetter {
@@ -1385,6 +1389,7 @@ public class ContentPermissionServices {
         protected String roleEntityIdName;
         protected String roleEntityName;
         protected String ownerEntityFieldName;
+        protected GenericValue userLogin;
         
         public StdRelatedRoleGetter () {
             
@@ -1424,10 +1429,17 @@ public class ContentPermissionServices {
             this.roleIdList = lst;
         }
         
-        public void init(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException {
+        public void setUserLogin(GenericValue userLogin) {
+            this.userLogin = userLogin;   
+        }
+        
+        public void init(GenericDelegator delegator, String entityId, String partyId, GenericValue entity) throws GenericEntityException {
             
             List lst = ContentWorker.getUserRolesFromList(delegator, UtilMisc.toList(entityId), partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
             this.roleIdList.addAll(lst);
+            if (isOwner(entity)) {
+                this.roleIdList.add("OWNER");   
+            }
            return;
         }
         
@@ -1440,6 +1452,28 @@ public class ContentPermissionServices {
                this.roleIdList.addAll(lst);
            }
            return;
+        }
+        
+        public boolean isOwner( GenericValue entity) {
+            boolean isOwner = false;
+            if (entity == null || this.userLogin == null) {
+                return isOwner;   
+            }
+            GenericDelegator delegator = entity.getDelegator();
+            ModelEntity modelEntity = delegator.getModelEntity(entityName);
+            if (modelEntity.getField("createdByUserLogin") == null) {
+                return isOwner;
+            }
+            if ( entity.get("createdByUserLogin") != null) {
+                String userLoginId = (String)this.userLogin.get("userLoginId");
+                String userLoginIdCB = (String)entity.get("createdByUserLogin");
+                //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId + ": userLoginIdCB:" + userLoginIdCB + ":", null);
+                if (userLoginId.equals(userLoginIdCB)) {
+                    isOwner = true;
+                    //if (Debug.infoOn()) Debug.logInfo("in getUserRoles, passedRoles(0):" + passedRoles, null);
+                }
+            }
+            return isOwner;
         }
         
         public String dumpAsText() {
