@@ -28,4 +28,7 @@
             <store-value value-name="lookedUpValue"/>
         </if-compare-field>
     </simple-method>
+
+    <simple-method method-name="deleteRequirement" short-description="Delete a requirement">
+    </simple-method>
 </simple-methods>
