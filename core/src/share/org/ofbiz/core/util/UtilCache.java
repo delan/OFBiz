@@ -54,7 +54,7 @@ public class UtilCache {
     /** A list of the elements order by Least Recent Use */
     public LinkedList keyLRUList = new LinkedList();
     /** A hashtable containing a CacheLine object with a value and a loadTime for each element. */
-    public Map cacheLineTable = new WeakHashMap();
+    public Map cacheLineTable = new HashMap();
     /** A count of the number of cache hits */
     protected long hitCount = 0;
     /** A count of the number of cache misses */
@@ -208,7 +208,7 @@ public class UtilCache {
             keyLRUList.remove(key);
             keyLRUList.addFirst(key);
         }
-        return line.value;
+        return line.getValue();
     }
 
     /** Removes an element from the cache according to the specified key
@@ -220,7 +220,7 @@ public class UtilCache {
             UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
             cacheLineTable.remove(key);
             keyLRUList.remove(key);
-            return line.value;
+            return line.getValue();
         } else {
             missCount++;
             return null;
@@ -339,15 +339,22 @@ public class UtilCache {
      * @return True is the cache contains an element corresponding to the specified key, otherwise false
      */
     public boolean containsKey(Object key) {
-        if (hasExpired(key)) {
+        UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+        if (hasExpired(line)) {
             remove(key);
+            line = null;
         }
-        return cacheLineTable.containsKey(key);
+        if (line != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /** Returns a boolean specifying whether or not the element corresponding to the key has expired.
      * Only returns true if element is in cache and has expired. Error conditions return false, if no expireTable entry, returns true.
      * Always returns false if expireTime <= 0.
+     * Also, if SoftReference in the CacheLine object has been cleared by the gc return true.
      *
      * @param key The key for the element, used to reference it in the hastables and LRU linked list
      * @return True is the element corresponding to the specified key has expired, otherwise false
@@ -365,6 +372,7 @@ public class UtilCache {
         if (line == null) return false;
         
         if (line.loadTime <= 0) return true;
+        if (line.getValue() == null) return true;
         if ((line.loadTime + expireTime) < System.currentTimeMillis()) {
             return true;
         } else {
@@ -372,7 +380,7 @@ public class UtilCache {
         }
     }
     
-    /** Clears all expired cache entries */
+    /** Clears all expired cache entries; also clear any cache entries where the SoftReference in the CacheLine object has been cleared by the gc */
     public void clearExpired() {
         Iterator keys = cacheLineTable.keySet().iterator();
         while (keys.hasNext()) {
@@ -504,18 +512,22 @@ public class UtilCache {
         return "success";
     }
     
-    protected static class CacheLine {
-        public Object value = null;
+    public static class CacheLine {
+        public java.lang.ref.SoftReference valueSoftRef = null;
         public long loadTime = 0;
         
         public CacheLine(Object value) {
-            this.value = value;
+            this.valueSoftRef = new java.lang.ref.SoftReference(value);
         }
         
         public CacheLine(Object value, long loadTime) {
-            this.value = value;
+            this.valueSoftRef = new java.lang.ref.SoftReference(value);
             this.loadTime = loadTime;
+        }
+        
+        public Object getValue() {
+            if (valueSoftRef == null) return null;
+            return valueSoftRef.get();
         }
     }
 }
-
