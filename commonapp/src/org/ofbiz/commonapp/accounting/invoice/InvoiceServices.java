@@ -48,6 +48,11 @@ public class InvoiceServices {
         GenericDelegator delegator = dctx.getDelegator();
         String orderId = (String) context.get("orderId");
         List billItems = (List) context.get("billItems");
+        
+        if (billItems == null || billItems.size() == 0) {
+            Debug.logVerbose("No items to invoice; not creating; returning success", module);
+            return ServiceUtil.returnSuccess();
+        }
 
         List toStore = new LinkedList();
         GenericValue orderHeader = null;
@@ -270,6 +275,7 @@ public class InvoiceServices {
                 GenericValue orderItemBill = delegator.makeValue("OrderItemBilling", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
                 orderItemBill.set("orderId", orderItem.get("orderId"));
                 orderItemBill.set("orderItemSeqId", orderItem.get("orderItemSeqId"));
+                orderItemBill.set("itemIssuanceId", itemIssuance.getString("itemIssuanceId"));
                 orderItemBill.set("quantity", invoiceItem.get("quantity"));
                 orderItemBill.set("amount", invoiceItem.get("amount"));
                 toStore.add(orderItemBill);
@@ -409,12 +415,29 @@ public class InvoiceServices {
         Iterator itemsIter = itemsIssued.iterator();
         while (itemsIter.hasNext()) {
             GenericValue itemIssuance = (GenericValue) itemsIter.next();
-            String orderId = (String) itemIssuance.get("orderId");
+            String itemIssuanceId = itemIssuance.getString("itemIssuanceId");
+            String orderId = itemIssuance.getString("orderId");
+            String orderItemSeqId = (String) itemIssuance.getString("orderItemSeqId");
             List itemsByOrder = (List) shippedOrderItems.get(orderId);
             if (itemsByOrder == null) {
                 itemsByOrder = new ArrayList();
             }
-            itemsByOrder.add(itemIssuance);
+            // check and make sure we haven't already billed for this item
+            Map billFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "itemIssuanceId", itemIssuanceId);
+            List itemBillings = null;
+            try {                
+                itemBillings = delegator.findByAnd("OrderItemBilling", billFields);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem looking up OrderItemBilling records for : " + billFields, module);
+                return ServiceUtil.returnError("Problem getting OrderItemBilling records");
+            }
+            
+            // if none found, then okay to bill
+            if (itemBillings == null || itemBillings.size() == 0) {
+                itemsByOrder.add(itemIssuance);
+            }
+
+            // update the map with modified listh            
             shippedOrderItems.put(orderId, itemsByOrder);
         }
         
@@ -424,7 +447,7 @@ public class InvoiceServices {
         while (ordersIter.hasNext()) {
             String orderId = (String) ordersIter.next();
             List billItems = (List) shippedOrderItems.get(orderId);
-            Map serviceContext = UtilMisc.toMap("orderId", orderId, "billItems", billItems);
+            Map serviceContext = UtilMisc.toMap("orderId", orderId, "billItems", billItems, "userLogin", context.get("userLogin"));
             try {
                 Map result = dispatcher.runSync("createInvoiceForOrder", serviceContext);
                 invoicesCreated.add(result.get("invoiceId"));
