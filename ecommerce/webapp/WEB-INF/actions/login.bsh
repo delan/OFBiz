@@ -26,7 +26,8 @@
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.commonapp.common.CommonWorkers;
 
-context.put("autoUserLogin", session.getAttribute("autoUserLogin"));
+if (session.getAttribute("autoUserLogin") != null)
+    context.put("autoUserLogin", session.getAttribute("autoUserLogin"));
 context.put("autoLogoutUrl", CommonWorkers.makeLoginUrl(request, "autoLogout")); 
 
 previousParams = session.getAttribute(SiteDefs.PREVIOUS_PARAMS);
