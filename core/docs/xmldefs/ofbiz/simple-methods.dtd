@@ -44,7 +44,7 @@
 <!ENTITY % CallJavaOperations "call-object-method | call-class-method | create-object">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field | webapp-property-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
-<!ENTITY % EnvOperations "map-to-map | field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | string-to-list | to-string | clear-field | iterate | iterate-map | first-from-list">
+<!ENTITY % EnvOperations "map-to-map | field-to-field | field-to-list | list-to-list | env-to-env | env-to-field | field-to-env | string-to-field | string-to-list | to-string | clear-field | iterate | iterate-map | first-from-list">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | make-next-seq-id | set-current-user-login">
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | get-related-one | get-related | filter-list-by-and | filter-list-by-date | order-value-list">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-related | remove-by-and | clear-cache-line | clear-entity-caches | set-pk-fields | set-nonpk-fields">
@@ -341,6 +341,16 @@ Error messages go on the error list and are handled with the check-errors tag.
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     list-name CDATA #REQUIRED
+>
+<!ELEMENT list-to-list EMPTY>
+<!ATTLIST list-to-list
+    list-name CDATA #REQUIRED
+    to-list-name CDATA #REQUIRED
+>
+<!ELEMENT env-to-env EMPTY>
+<!ATTLIST env-to-env
+    env-name CDATA #REQUIRED
+    to-env-name CDATA #REQUIRED
 >
 <!ELEMENT env-to-field EMPTY>
 <!ATTLIST env-to-field
