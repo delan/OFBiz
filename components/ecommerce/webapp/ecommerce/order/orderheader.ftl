@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -37,6 +37,11 @@
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;Order&nbsp;<#if orderHeader?has_content>#${orderHeader.orderId}&nbsp;</#if>Information</div>
                 </td>
+                <#if returnLink?default("N") == "Y">
+                  <td valign="middle" align="right" nowrap>
+                    <a href="<@ofbizUrl>/makeReturn?order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">Request Return</a>
+                  </td>
+                </#if>
               </tr>
             </table>
           </td>

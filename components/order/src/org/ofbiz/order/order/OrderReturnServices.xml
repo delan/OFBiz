@@ -23,25 +23,45 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
 -->
 
 <simple-methods>
     <simple-method method-name="createReturnHeader" short-description="Create a ReturnHeader">
-        <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
+    	<if>
+    	  <condition>
+    	    <and>
+    	      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+    	      <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="parameters"/></not>
+    	    </and>
+    	  </condition>
+    	  <then>
+    	    <add-error><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
+    	  </then>
+    	</if>
         <check-errors/>
         
         <make-value value-name="newEntity" entity-name="ReturnHeader"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
         
         <sequenced-id-to-env sequence-name="ReturnHeader" env-name="returnId"/>
         <to-string field-name="returnId"/>
         <env-to-field env-name="returnId" map-name="newEntity"/>
         <field-to-result field-name="returnId" result-name="returnId"/>
         
-        <if-empty field-name="entryDate" map-name="newEntity">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
+        <if>
+          <condition>
+          	<not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+          </condition>
+          <then>
+          	<string-to-field field-name="statusId" map-name="newEntity" string="RETURN_REQUESTED"/>
+          	<env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
+          </then>
+        </if>        
+        
+        <if-empty field-name="entryDate" map-name="newEntity">            
             <env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
         </if-empty>        
         
@@ -49,7 +69,9 @@
             <string-to-field string="RETURN_REQUESTED" field-name="statusId" map-name="newEntity"/>
         </if-empty>  
         
-        <create-value value-name="newEntity"/>      
+        <create-value value-name="newEntity"/>
+        <string-to-field field-name="responseMessage" string="Return Request #${returnId} was created successfully."/>
+        <field-to-result field-name="responseMessage" result-name="successMessage"/>
     </simple-method>
     <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
@@ -63,13 +85,39 @@
     </simple-method>
     
     <simple-method method-name="createReturnItem" short-description="Create Return Item">
-        <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
-        <check-errors/>
+    	<field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+    	<find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
+    	
+    	<if>
+    	  <condition>
+    	    <and>
+    	      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+    	      <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="returnHeader"/></not>
+    	    </and>
+    	  </condition>
+    	  <then>
+    	    <add-error><fail-message message="Security Error: to run createReturnItem you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
+    	  </then>
+    	</if>
+        <check-errors/>    	        
+        
+        <if-compare field-name="returnQuantity" map-name="parameters" operator="equals" value="0" type="Double">
+        	<return response-code="success"/>
+        </if-compare>
         
         <make-value value-name="itemLookup" entity-name="OrderItem"/>
         <set-pk-fields map-name="parameters" value-name="itemLookup"/>
         <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>
         
+        <if>
+          <condition>
+          	<not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+          </condition>
+          <then>
+          	<field-to-field field-name="unitPrice" map-name="orderItem" to-field-name="returnPrice" to-map-name="parameters"/>
+          </then>
+        </if>
+        	                    
         <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
             <add-error><fail-message message="Return quantity cannot exceed the ordered quantity."/></add-error>
         </if-compare-field>

@@ -10,6 +10,7 @@
     <handler name="bsf" type="request" class="org.ofbiz.content.webapp.event.BsfEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.content.webapp.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
+    <handler name="service-multi" type="request" class="org.ofbiz.content.webapp.event.ServiceMultiEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
 
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
@@ -412,7 +413,24 @@
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cancelOrderItem"/>
         <response name="success" type="view" value="orderstatus"/>
         <response name="error" type="view" value="orderstatus"/>
+    </request-map>
+    
+    <request-map uri="makeReturn">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="requestreturn"/>
     </request-map>    
+    <request-map uri="requestReturn">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createReturnHeader"/>
+        <response name="success" type="request" value="setReturnItems"/>
+        <response name="error" type="view" value="orderstatus"/>
+    </request-map>
+    <request-map uri="setReturnItems">
+        <security https="true" auth="true" direct-request="false"/>
+        <event type="service-multi" invoke="createReturnItem"/>
+        <response name="success" type="view" value="orderstatus"/>
+        <response name="error" type="view" value="orderstatus"/>
+    </request-map>        
 
     <request-map uri="newcustomer">
         <security https="true" auth="false"/>
@@ -631,7 +649,8 @@
     <view-map name="ordercomplete" type="jpublish" page="/order/ordercomplete.ftl"/>
     <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
     <view-map name="orderhistory" type="jpublish" page="/order/orderhistory.ftl"/>
-    <view-map name="orderstatus" type="jpublish" page="/order/orderstatus.ftl"/> 
+    <view-map name="orderstatus" type="jpublish" page="/order/orderstatus.ftl"/>
+    <view-map name="requestreturn" type="jpublish" page="/order/requestreturn.ftl"/> 
 
     <view-map name="viewprofile" type="jpublish" page="/customer/viewprofile.ftl"/>
     <view-map name="newcustomer" type="jpublish" page="/customer/newcustomer.ftl"/>

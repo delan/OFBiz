@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -81,7 +81,15 @@
                         <#assign returns = orderItem.getRelated("ReturnItem")?if_exists>
                         <#if returns?has_content>
                           <#list returns as return>
-                            <div class='tabletext'><font color="red"><b>Returned</b></font> (#${return.returnId})</div>
+                            <#assign returnHeader = return.getRelatedOne("ReturnHeader")>
+                            <#if returnHeader.statusId != "RETURN_CANCELLED">
+                              <#if returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "RETURN_APPROVED">
+                                <#assign displayState = "Return Pending">
+                              <#else>
+                                <#assign displayState = "Returned">
+                              </#if>
+                              <div class='tabletext'><font color="red"><b>${displayState}</b></font> (#${return.returnId})</div>
+                            </#if>
                           </#list>
                         </#if>
                       </#if>
