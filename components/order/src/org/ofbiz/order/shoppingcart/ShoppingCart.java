@@ -117,7 +117,8 @@ public class ShoppingCart implements Serializable {
     public static class CartPaymentInfo implements Serializable, Comparable {
         public String paymentMethodTypeId = null;
         public String paymentMethodId = null;
-        public String refNum = null;
+        public String postalCode = null;
+        public String[] refNum = new String[2];
         public Double amount = null;
         public boolean singleUse = false;
 
@@ -148,8 +149,12 @@ public class ShoppingCart implements Serializable {
                 p = delegator.makeValue("OrderPaymentPreference", new HashMap());
                 p.set("paymentMethodTypeId", valueObj.getString("paymentMethodTypeId"));
                 p.set("paymentMethodId", paymentMethodId);
-                p.set("manualRefNum", refNum);
+                p.set("billingPostalCode", postalCode);
                 p.set("maxAmount", amount);
+                if (refNum != null) {
+                    p.set("manualRefNum", refNum[0]);
+                    p.set("manualAuthCode", refNum[1]);
+                }
                 if (paymentMethodId != null) {
                     p.set("statusId", "PAYMENT_NOT_AUTH");
                 } else if (paymentMethodTypeId != null) {
@@ -175,7 +180,7 @@ public class ShoppingCart implements Serializable {
                     if (pmCmp == 0) {
                         if (this.refNum != null) {
                             if (that.refNum != null) {
-                                return this.refNum.compareTo(that.refNum);
+                                return this.refNum[0].compareTo(that.refNum[0]);
                             } else {
                                 return 1;
                             }
@@ -198,7 +203,7 @@ public class ShoppingCart implements Serializable {
                     if (pmtCmp == 0) {
                         if (this.refNum != null) {
                             if (that.refNum != null) {
-                                return this.refNum.compareTo(that.refNum);
+                                return this.refNum[0].compareTo(that.refNum[0]);
                             } else {
                                 return 1;
                             }
@@ -749,7 +754,7 @@ public class ShoppingCart implements Serializable {
     /** Creates a CartPaymentInfo object */
     public CartPaymentInfo makePaymentInfo(String id, String refNum, Double amount) {
         CartPaymentInfo inf = new CartPaymentInfo();
-        inf.refNum = refNum;
+        inf.refNum[0] = refNum;
         inf.amount = amount;
 
         if (!isPaymentMethodType(id)) {
@@ -801,14 +806,15 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Locates an existing (or creates a new) CartPaymentInfo object */
-    public CartPaymentInfo getPaymentInfo(String id, String refNum, Double amount) {
+    public CartPaymentInfo getPaymentInfo(String id, String refNum, String authCode, Double amount) {
         CartPaymentInfo thisInf = this.makePaymentInfo(id, refNum, amount);
         Iterator i = paymentInfo.iterator();
         while (i.hasNext()) {
             CartPaymentInfo inf = (CartPaymentInfo) i.next();
             if (inf.compareTo(thisInf) == 0) {
                 // update the info
-                inf.refNum = refNum;
+                inf.refNum[0] = refNum;
+                inf.refNum[1] = authCode;
                 inf.amount = amount;
                 return inf;
             }
@@ -820,12 +826,12 @@ public class ShoppingCart implements Serializable {
 
     /** Locates an existing (or creates a new) CartPaymentInfo object */
     public CartPaymentInfo getPaymentInfo(String id) {
-        return this.getPaymentInfo(id, null, null);
+        return this.getPaymentInfo(id, null, null, null);
     }
 
     /** adds a payment method/payment method type */
-    public void addPaymentAmount(String id, Double amount, String refNum, boolean isSingleUse, boolean replace) {
-        CartPaymentInfo inf = this.getPaymentInfo(id, refNum, amount);
+    public void addPaymentAmount(String id, Double amount, String refNum, String authCode, boolean isSingleUse, boolean replace) {
+        CartPaymentInfo inf = this.getPaymentInfo(id, refNum, authCode, amount);
         inf.singleUse = isSingleUse;
         if (replace) {
             paymentInfo.remove(inf);
@@ -836,7 +842,7 @@ public class ShoppingCart implements Serializable {
 
     /** adds a payment method/payment method type */
     public void addPaymentAmount(String id, Double amount, boolean isSingleUse) {
-        this.addPaymentAmount(id, amount, null, isSingleUse, true);
+        this.addPaymentAmount(id, amount, null, null, isSingleUse, true);
     }
 
     /** adds a payment method/payment method type */
@@ -864,12 +870,13 @@ public class ShoppingCart implements Serializable {
         return this.getPaymentInfo(id).amount;
     }
 
-    public void addPaymentRef(String id, String ref) {
-        this.getPaymentInfo(id).refNum = ref;
+    public void addPaymentRef(String id, String ref, String authCode) {
+        this.getPaymentInfo(id).refNum[0] = ref;
+        this.getPaymentInfo(id).refNum[1] = authCode;
     }
 
     public String getPaymentRef(String id) {
-        return this.getPaymentInfo(id).refNum;
+        return this.getPaymentInfo(id).refNum[0];
     }
 
     /** returns the total payment amounts */
