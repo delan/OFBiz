@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   To refer to this DTD in your XML file, use the following declaration:
-<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-screen.dtd">
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Screen Widget//EN" "http://www.ofbiz.org/dtds/widget-screen.dtd">
 -->
 
 <!--
@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.2 2004/06/27 05:02:07 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.3 2004/06/27 13:09:39 jonesde Exp $
 -->
 
 <!ENTITY % AllWidgets "container | include-screen | decorator-screen | decorator-parent | composite-screen | composite-section | composite-parent | label | form | menu | tree | content | sub-content | platform-specific">
