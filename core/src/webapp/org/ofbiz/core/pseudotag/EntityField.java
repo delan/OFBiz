@@ -177,7 +177,7 @@ public class EntityField {
         } else if (fieldObject instanceof java.lang.Double) {
             Double doubleValue = (Double) fieldObject;
             NumberFormat nf = null;
-            if (fieldObjectType.equals("currency-amount")) {
+            if ("currency-amount".equals(fieldObjectType)) {
                 //TODO: convert currency to current Locale
                 nf = NumberFormat.getCurrencyInstance(userLocale);
             } else {
@@ -187,7 +187,7 @@ public class EntityField {
         } else if (fieldObject instanceof java.lang.Float) {
             Float floatValue = (Float) fieldObject;
             NumberFormat nf = null;
-            if (fieldObjectType.equals("currency-amount")) {
+            if ("currency-amount".equals(fieldObjectType)) {
                 //TODO: convert currency to current Locale
                 nf = NumberFormat.getCurrencyInstance(userLocale);
             } else {
@@ -204,10 +204,11 @@ public class EntityField {
             fieldString = nf.format(intValue);
         } else if (fieldObject instanceof java.lang.Boolean) {
             Boolean booleanValue = (Boolean) fieldObject;
-            if (booleanValue.booleanValue())
+            if (booleanValue.booleanValue()) {
                 fieldString = "Yes";
-            else
+            } else {
                 fieldString = "No";
+            }
         } else if (fieldObject instanceof java.sql.Timestamp) {
             Date dateValue = (Date) fieldObject;
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
