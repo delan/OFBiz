@@ -82,6 +82,12 @@
 		<field name="destinationContactMechId" title="Destination Postal Address Id" 
                 tooltip="To: ${destinationPostalAddress.toName}, Attn: ${destinationPostalAddress.attnName}, ${destinationPostalAddress.address1}, ${destinationPostalAddress.address2}, ${destinationPostalAddress.city}, ${destinationPostalAddress.stateProvinceGeoId}, ${destinationPostalAddress.postalCode}, ${destinationPostalAddress.countryGeoId}" tooltip-style="tabletext">
         </field>
+		<field name="originTelecomNumberId" title="Origin Phone Number Id" 
+                tooltip="${originTelecomNumber.countryCode}  ${originTelecomNumber.areaCode} ${originTelecomNumber.contactNumber}" tooltip-style="tabletext">
+        </field>
+		<field name="destinationTelecomNumberId" title="Destination Phone Number Id" 
+                tooltip="${destinationTelecomNumber.countryCode}  ${destinationTelecomNumber.areaCode} ${destinationTelecomNumber.contactNumber}" tooltip-style="tabletext">
+        </field>
 
 		<field name="partyIdTo" title="To Party" tooltip="${toPerson.firstName} ${toPerson.middleName} ${toPerson.lastName} ${toPartyGroup.groupName}" tooltip-style="tabletext"/>
 		<field name="partyIdFrom" title="From Party" tooltip="${fromPerson.firstName} ${fromPerson.middleName} ${fromPerson.lastName} ${fromPartyGroup.groupName}" tooltip-style="tabletext"/>

@@ -103,6 +103,14 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         </td>
     </tr>
     <tr>
+        <td width="20%" align="right"><span class="tableheadtext">Phone Numbers</span></td>
+        <td><span class="tabletext">&nbsp;</span></td>
+        <td width="80%" align="left">
+            <div class="tabletext"><span class="tableheadtext">Origin:&nbsp;</span>${shipment.originTelecomNumberId?if_exists}&nbsp;<#if originTelecomNumber?has_content>[${originTelecomNumber.countryCode?if_exists}  ${originTelecomNumber.areaCode?if_exists} ${originTelecomNumber.contactNumber?if_exists}]</#if></div>
+            <div class="tabletext"><span class="tableheadtext">Destination:&nbsp;</span>${shipment.destinationTelecomNumberId?if_exists}&nbsp;<#if destinationTelecomNumber?has_content>[${destinationTelecomNumber.countryCode?if_exists}  ${destinationTelecomNumber.areaCode?if_exists} ${destinationTelecomNumber.contactNumber?if_exists}]</#if></div>
+        </td>
+    </tr>
+    <tr>
         <td width="20%" align="right"><span class="tableheadtext">Created</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left">
@@ -209,6 +217,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <div class="tableheadtext">Carrier-ShipmentMethod</div>
             <div class="tableheadtext">Origin-Destination Facility</div>
             <div class="tableheadtext">Origin-Destination Address ID</div>
+            <div class="tableheadtext">Origin-Destination Phone ID</div>
         </td>
         <td>
             <div class="tableheadtext">Estimated (Start-Arrive)</div>
@@ -226,6 +235,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <#assign carrierPartyGroup = shipmentRouteSegmentData.carrierPartyGroup?if_exists>
     <#assign originPostalAddress = shipmentRouteSegmentData.originPostalAddress?if_exists>
     <#assign destPostalAddress = shipmentRouteSegmentData.destPostalAddress?if_exists>
+    <#assign originTelecomNumber = shipmentRouteSegmentData.originTelecomNumber?if_exists>
+    <#assign destTelecomNumber = shipmentRouteSegmentData.destTelecomNumber?if_exists>
     <tr>
         <td><div class="tabletext">${shipmentRouteSegment.shipmentRouteSegmentId}</div></td>
         <td>
@@ -242,6 +253,14 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <div class="tabletext">
                 Dest: <b>${shipmentRouteSegment.destContactMechId?if_exists}</b>
                 <#if destPostalAddress?has_content>[To: ${destPostalAddress.toName?if_exists}, Attn: ${destPostalAddress.attnName?if_exists}, ${destPostalAddress.address1?if_exists}, ${destPostalAddress.address2?if_exists}, ${destPostalAddress.city?if_exists}, ${destPostalAddress.stateProvinceGeoId?if_exists}, ${destPostalAddress.postalCode?if_exists}, ${destPostalAddress.countryGeoId?if_exists}]</#if>
+            </div>
+            <div class="tabletext">
+                Origin: <b>${shipmentRouteSegment.originTelecomNumberId?if_exists}</b>
+                <#if originTelecomNumber?has_content>[${originTelecomNumber.countryCode?if_exists}  ${originTelecomNumber.areaCode?if_exists} ${originTelecomNumber.contactNumber?if_exists}]</#if>
+            </div>
+            <div class="tabletext">
+                Dest: <b>${shipmentRouteSegment.destTelecomNumberId?if_exists}</b>
+                <#if destTelecomNumber?has_content>[${destTelecomNumber.countryCode?if_exists}  ${destTelecomNumber.areaCode?if_exists} ${destTelecomNumber.contactNumber?if_exists}]</#if>
             </div>
         </td>
         <td>

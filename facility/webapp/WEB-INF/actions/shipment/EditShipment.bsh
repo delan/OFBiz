@@ -47,6 +47,8 @@ if (shipment != null) {
     currentStatus = shipment.getRelatedOne("StatusItem");
     originPostalAddress = shipment.getRelatedOne("OriginPostalAddress");
     destinationPostalAddress = shipment.getRelatedOne("DestinationPostalAddress");
+    originTelecomNumber = shipment.getRelatedOne("OriginTelecomNumber");
+    destinationTelecomNumber = shipment.getRelatedOne("DestinationTelecomNumber");
     toPerson = shipment.getRelatedOne("ToPerson");
     toPartyGroup = shipment.getRelatedOne("ToPartyGroup");
     fromPerson = shipment.getRelatedOne("FromPerson");
@@ -55,6 +57,8 @@ if (shipment != null) {
     editShipmentWrapper.putInContext("currentStatus", currentStatus);
     editShipmentWrapper.putInContext("originPostalAddress", originPostalAddress);
     editShipmentWrapper.putInContext("destinationPostalAddress", destinationPostalAddress);
+    editShipmentWrapper.putInContext("originTelecomNumber", originTelecomNumber);
+    editShipmentWrapper.putInContext("destinationTelecomNumber", destinationTelecomNumber);
     editShipmentWrapper.putInContext("toPerson", toPerson);
     editShipmentWrapper.putInContext("toPartyGroup", toPartyGroup);
     editShipmentWrapper.putInContext("fromPerson", fromPerson);
@@ -63,6 +67,8 @@ if (shipment != null) {
     context.put("currentStatus", currentStatus);
     context.put("originPostalAddress", originPostalAddress);
     context.put("destinationPostalAddress", destinationPostalAddress);
+    context.put("originTelecomNumber", originTelecomNumber);
+    context.put("destinationTelecomNumber", destinationTelecomNumber);
     context.put("toPerson", toPerson);
     context.put("toPartyGroup", toPartyGroup);
     context.put("fromPerson", fromPerson);
