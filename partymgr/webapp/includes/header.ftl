@@ -25,14 +25,32 @@
 -->
 
 <#assign security = requestAttributes.security>
+<#assign unselectedLeftClassName = "headerButtonLeft">
+<#assign unselectedRightClassName = "headerButtonRight">
+<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
+<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
+
 <div class="apptitle">&nbsp;Party Manager Application&nbsp;</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerButtonLeft">Main</a></div>  
-
-  <#if requestAttributes.userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
-  <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
+  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>   
+  <div class="col"><a href="<@ofbizUrl>/findparty</@ofbizUrl>" class="${selectedLeftClassMap.find?default(unselectedLeftClassName)}">Find&nbsp;Party</a></div>
+  <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
+  <div class="col"><a href="<@ofbizUrl>/editpartygroup?create_new=Y</@ofbizUrl>" class="${selectedLeftClassMap.newGroup?default(unselectedLeftClassName)}">New&nbsp;Group</a></div>
   </#if>
+  <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
+  <div class="col"><a href="<@ofbizUrl>/editperson?create_new=Y</@ofbizUrl>" class="${selectedLeftClassMap.newPerson?default(unselectedLeftClassName)}">New&nbsp;Person</a></div>
+  </#if>
+  <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
+  <div class="col"><a href="<@ofbizUrl>/newcustomer</@ofbizUrl>" class="${selectedLeftClassMap.newCustomer?default(unselectedLeftClassName)}">New&nbsp;Customer</a></div>
+  </#if>
+  <div class="col"><a href="<@ofbizUrl>/showvisits</@ofbizUrl>" class="${selectedLeftClassMap.visits?default(unselectedLeftClassName)}">Visits</a></div>
+  <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
+  <div class="col"><a href="<@ofbizUrl>/FindSecurityGroup</@ofbizUrl>" class="${selectedLeftClassMap.security?default(unselectedLeftClassName)}">Security</a></div>
+  </#if>    
+  <#if userLogin?has_content>
+  	<div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${unselectedRightClassName}">Logout</a></div>
+  <#else>
+    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
+  </#if>  
   <div class="col-fill">&nbsp;</div>
 </div>
