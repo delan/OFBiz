@@ -54,15 +54,7 @@ public class StoreList extends MethodOperation {
         
         if (values == null) {
             String errMsg = "In store-list a value list was not found with the specified listName: " + listName + ", not storing";
-            Debug.logWarning(errMsg);
-            if (methodContext.getMethodType() == MethodContext.EVENT) {
-                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
-            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
-            }
-            return false;
+            Debug.logInfo(errMsg);
         }
 
         try {
