@@ -38,8 +38,6 @@
   ModelReader reader = delegator.getModelReader();
   ModelEntity entity = reader.getModelEntity(entityName);
   TreeSet entSet = new TreeSet(reader.getEntityNames());
-  Collection typesCol = delegator.getEntityFieldTypeNames(entity);
-  TreeSet types = new TreeSet(typesCol);
   String errorMsg = "";
 
   String event = request.getParameter("event");
@@ -48,10 +46,13 @@
     if(entity == null)
     {
       entity = new ModelEntity();
-      entity.tableName = request.getParameter("tableName");
-      entity.entityName = ModelUtil.dbNameToClassName(entity.tableName);
+      entity.entityName = request.getParameter("entityName");
+      entity.tableName = ModelUtil.javaNameToDbName(entity.entityName);
       reader.entityCache.put(entity.entityName, entity);
       entityName = entity.entityName;
+      
+      String entityGroup = request.getParameter("entityGroup");
+      delegator.getModelGroupReader().getGroupCache().put(entityName, entityGroup);
     }
   }
   else if("updateEntity".equals(event))
@@ -62,6 +63,9 @@
     entity.copyright = request.getParameter("copyright");
     entity.author = request.getParameter("author");
     entity.version = request.getParameter("version");
+
+    String entityGroup = request.getParameter("entityGroup");
+    delegator.getModelGroupReader().getGroupCache().put(entityName, entityGroup);
   }
   else if("removeField".equals(event))
   {
@@ -81,12 +85,10 @@
   }
   else if("addField".equals(event))
   {
-    String colName = request.getParameter("colName");
-    String fieldType = request.getParameter("fieldType");
     ModelField field = new ModelField();
-    field.colName = colName;
-    field.name = ModelUtil.dbNameToVarName(colName);
-    field.type = fieldType;
+    field.name = request.getParameter("name");
+    field.colName = ModelUtil.javaNameToDbName(field.name);
+    field.type = request.getParameter("fieldType");
     entity.fields.add(field);
   }
   else if("addRelation".equals(event))
@@ -207,6 +209,10 @@
     }
     else errorMsg = errorMsg + "<li> Could not find related entity " + relation.relEntityName + ", no reverse relation added.";
   }
+
+  Collection typesCol = delegator.getEntityFieldTypeNames(entity);
+  TreeSet types = null;
+  if(typesCol != null) types = new TreeSet(typesCol);
 %>
 
 <html>
@@ -240,11 +246,13 @@ The following errors occurred:
   </SELECT>
   <INPUT type=SUBMIT value='Edit Specified Entity'>
 </FORM>
+<hr>
 <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?event=addEntity")%>' style='margin: 0;'>
-  Table Name: <INPUT type=TEXT size='60' name='tableName'>
+  Entity Name (Java style): <INPUT type=TEXT size='60' name='entityName'><br>
+  Entity Group: <INPUT type=TEXT size='60' name='entityGroup' value='org.ofbiz.commonapp'>
   <INPUT type=SUBMIT value='Create Entity'>
 </FORM>
-
+<hr>
 <%if(entity == null){%>
   <H4>Entity not found with name "<%=entityName%>"</H4>
 <%}else{%>
@@ -256,17 +264,20 @@ Entity Name: <%=entityName%><br>
 Column Name: <%=entity.tableName%><br>
 
 <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateEntity")%>' style='margin: 0;'>
-  <INPUT type=text size='80' name='packageName' value='<%=entity.packageName%>'> (Package Name)
+  <INPUT type=text size='60' name='packageName' value='<%=entity.packageName%>'> (Package Name)
   <BR>
-  <INPUT type=text size='80' name='title' value='<%=entity.title%>'> (Title)
+  <INPUT type=text size='60' name='title' value='<%=entity.title%>'> (Title)
   <BR>
-  <INPUT type=text size='80' name='description' value='<%=entity.description%>'> (Description)
+  <INPUT type=text size='60' name='description' value='<%=entity.description%>'> (Description)
   <BR>
-  <INPUT type=text size='80' name='copyright' value='<%=entity.copyright%>'> (Copyright)
+  <INPUT type=text size='60' name='copyright' value='<%=entity.copyright%>'> (Copyright)
   <BR>
-  <INPUT type=text size='80' name='author' value='<%=entity.author%>'> (Author)
+  <INPUT type=text size='60' name='author' value='<%=entity.author%>'> (Author)
   <BR>
-  <INPUT type=text size='80' name='version' value='<%=entity.version%>'> (Version)
+  <INPUT type=text size='60' name='version' value='<%=entity.version%>'> (Version)
+  <BR>
+  <INPUT type=text size='60' name='entityGroup' value='<%=UtilFormatOut.checkNull(delegator.getModelGroupReader().getEntityGroupName(entityName))%>'> (Group)
+  <BR>(This group is for the "<%=delegator.getDelegatorName()%>" delegator)
   <BR>
   <INPUT type=submit value='Update Entity'>
 </FORM>
@@ -284,8 +295,8 @@ Column Name: <%=entity.tableName%><br>
             <INPUT type=CHECKBOX name='primaryKey'<%=field.isPk?" checked":""%>>
             <SELECT name='fieldType'>
               <OPTION selected><%=field.type%></OPTION>
-              <%Iterator iter = types.iterator();%>
-              <%while(iter.hasNext()){ String typeName = (String)iter.next();%>
+              <%Iterator iter = UtilMisc.toIterator(types);%>
+              <%while(iter != null && iter.hasNext()){ String typeName = (String)iter.next();%>
                 <OPTION><%=typeName%></OPTION>
               <%}%>
             </SELECT>
@@ -298,11 +309,11 @@ Column Name: <%=entity.tableName%><br>
   </TABLE>
 
 <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=addField")%>'>
-  Add new field with <u>Column Name</u> and field type.<BR>
-  <INPUT type=text size='40' maxlength='30' name='colName'>
+  Add new field with <u>Field Name (Java style)</u> and field type.<BR>
+  <INPUT type=text size='40' maxlength='30' name='name'>
   <SELECT name='fieldType'>
-    <%Iterator iter = types.iterator();%>
-    <%while(iter.hasNext()){ String typeName = (String)iter.next();%>
+    <%Iterator iter = UtilMisc.toIterator(types);%>
+    <%while(iter != null && iter.hasNext()){ String typeName = (String)iter.next();%>
       <OPTION><%=typeName%></OPTION>
     <%}%>
   </SELECT>
