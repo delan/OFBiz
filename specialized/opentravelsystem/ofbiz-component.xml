@@ -54,6 +54,13 @@
     -->
     
     <!-- web applications; will be mounted when using the embedded Jetty container -->
+
+    <webapp name="OpenTravelSystemWebsite"
+        title="Open Travel System Website"
+        server="default-server"
+        location="webapp/website"
+        mount-point="/opentravelsystem"
+        app-bar-display="false"/>
        
     <webapp name="hotelbackend"
         title="Hotel demo site Admininstrator backend"

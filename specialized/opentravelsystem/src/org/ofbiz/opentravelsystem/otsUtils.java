@@ -60,6 +60,11 @@ public class otsUtils {
 	}
 	
 	public static long explode(GenericValue topEntityName, String child1EntityName, String child2EntityName, PrintWriter writer)	{
+		return explode( topEntityName, child1EntityName,child2EntityName, null, writer);
+	}
+
+		
+	public static long explode(GenericValue topEntityName, String child1EntityName, String child2EntityName,String child3EntityName, PrintWriter writer)	{
 		List children1 = null;
 		long numberWritten = 0;
 		try { children1 = topEntityName.getRelated(child1EntityName); 
@@ -78,6 +83,18 @@ public class otsUtils {
 						while (psr2.hasNext())	{
 							GenericValue child2 = (GenericValue) psr2.next();
 							child2.writeXmlText(writer,""); numberWritten++;
+							if (child3EntityName != null)	{
+								List children3 = null;
+								try { children3 = child2.getRelated(child3EntityName); 
+								} catch (GenericEntityException e) { Debug.logError(e, "Problems reading entity: " + child3EntityName, module);}
+								if (children3 != null && children3.size() > 0)	{
+									Iterator psr3 = children3.iterator();
+									while (psr3.hasNext())	{
+										GenericValue child3 = (GenericValue) psr3.next();
+										child3.writeXmlText(writer,""); numberWritten++;
+									}
+								}
+							}
 						}
 					}
 				}
@@ -148,6 +165,10 @@ public class otsUtils {
 			request.setAttribute("_ERROR_MESSAGE_","Product Store: " + productStoreId + " not found");
 			return "error";
 		}
+		
+		// get the orders placed
+		
+		
 		
 		// retrieve the access users. When it is a group, retrieve its users
 		List productStoreRoles = null;
@@ -254,9 +275,11 @@ public class otsUtils {
 			msgs.append("No products found for primary category: " + productStoreId + "\n");
 		}
 		else	{
+			// get product information
 			Iterator p = products.iterator();
 			while (p.hasNext()){
 				GenericValue product = (GenericValue) p.next();
+				// save product info
 				product.writeXmlText(writer, ""); numberWritten++;
 				// get relation to fixedAsset and check if fixed asset is in the Productstore fixed asset group
 				List fixedAssetProducts = null;
@@ -285,6 +308,10 @@ public class otsUtils {
 				numberWritten += explode(product, "ProductPrice",writer);
 				// and seles tax
 				numberWritten += explode(product, "SimpleSalesTaxLookup",writer);
+				// try to get product content
+				numberWritten += explode(product, "ProductContent", "Content", "DataResource", writer);
+				// product reviews
+				numberWritten += explode(product, "ProductReview", "StatusItem", writer);
 			}
 		}
 		

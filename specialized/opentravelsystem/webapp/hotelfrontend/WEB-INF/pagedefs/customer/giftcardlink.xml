@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main_lr</template>
-    <property name="title">Gift Card Link</property>
-    <content-action name="/customer/giftcardlink.bsh"/>
-</page>
