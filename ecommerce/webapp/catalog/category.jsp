@@ -39,13 +39,13 @@
     </ofbiz:iterator>
   </table>
 </center>
---%>
 <ofbiz:if name="productList">
   <hr>
   <b>Products:</b>
   <hr>
   <br>
 </ofbiz:if>
+--%>
 
 <ofbiz:if name="productList">
 <table border="0" width="100%" cellpadding="2">
