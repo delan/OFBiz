@@ -134,16 +134,16 @@
   <ProductCategoryType description="Mix and Match" hasTable="N" parentTypeId="" productCategoryTypeId="MIXMATCH_CATEGORY"/>
   <ProductCategoryType description="Cross Sell" hasTable="N" parentTypeId="" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
 
-  <ProductContentType description="Digital Download" hasTable="N" parentTypeId="" productCategoryTypeId="DIGITAL_DOWNLOAD"/>
-  <ProductContentType description="Fulfillment Email" hasTable="N" parentTypeId="" productCategoryTypeId="FULFILLMENT_EMAIL"/>
-  <ProductContentType description="Product Name" hasTable="N" parentTypeId="" productCategoryTypeId="PRODUCT_NAME"/>
-  <ProductContentType description="Description" hasTable="N" parentTypeId="" productCategoryTypeId="DESCRIPTION"/>
-  <ProductContentType description="Long Description" hasTable="N" parentTypeId="" productCategoryTypeId="LONG_DESCRIPTION"/>
-  <ProductContentType description="Small Image" hasTable="N" parentTypeId="" productCategoryTypeId="SMALL_IMAGE"/>
-  <ProductContentType description="Medium Image" hasTable="N" parentTypeId="" productCategoryTypeId="MEDIUM_IMAGE"/>
-  <ProductContentType description="Large Image" hasTable="N" parentTypeId="" productCategoryTypeId="LARGE_IMAGE"/>
-  <ProductContentType description="Detail Image" hasTable="N" parentTypeId="" productCategoryTypeId="DETAIL_IMAGE"/>
-  
+  <ProductContentType description="Digital Download" hasTable="N" parentTypeId="" productContentTypeId="DIGITAL_DOWNLOAD"/>
+  <ProductContentType description="Fulfillment Email" hasTable="N" parentTypeId="" productContentTypeId="FULFILLMENT_EMAIL"/>
+  <ProductContentType description="Product Name" hasTable="N" parentTypeId="" productContentTypeId="PRODUCT_NAME"/>
+  <ProductContentType description="Description" hasTable="N" parentTypeId="" productContentTypeId="DESCRIPTION"/>
+  <ProductContentType description="Long Description" hasTable="N" parentTypeId="" productContentTypeId="LONG_DESCRIPTION"/>
+  <ProductContentType description="Small Image" hasTable="N" parentTypeId="" productContentTypeId="SMALL_IMAGE"/>
+  <ProductContentType description="Medium Image" hasTable="N" parentTypeId="" productContentTypeId="MEDIUM_IMAGE"/>
+  <ProductContentType description="Large Image" hasTable="N" parentTypeId="" productContentTypeId="LARGE_IMAGE"/>
+  <ProductContentType description="Detail Image" hasTable="N" parentTypeId="" productContentTypeId="DETAIL_IMAGE"/>
+
   <ProductFeatureApplType description="Optional" hasTable="N" parentTypeId="" productFeatureApplTypeId="OPTIONAL_FEATURE"/>
   <ProductFeatureApplType description="Required" hasTable="N" parentTypeId="" productFeatureApplTypeId="REQUIRED_FEATURE"/>
   <ProductFeatureApplType description="Selectable" hasTable="N" parentTypeId="" productFeatureApplTypeId="SELECTABLE_FEATURE"/>
