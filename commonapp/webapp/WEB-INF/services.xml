@@ -18,14 +18,19 @@
   <!-- Workflow services -->
   <service name="assignActivity" engine="java" 
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="assignActivity">
+      <description>Assign a new party or role to a workflow activity</description>
       <attribute name="workEffortId" type="String" mode="IN"/>
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+      <attribute name="newPartyId" type="String" mode="IN"/>
+      <attribute name="newRoleTypeId" type="String" mode="IN" optional="true"/>
+      <attribute name="removeOldAssignments" type="String" mode="IN" optional="true"/>
       <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
       <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>  
   <service name="activateActivity" engine="java" 
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="activateActivity">
+      <description>Attempt to initiate a workflow activity</description>
       <attribute name="workEffortId" type="String" mode="IN"/>
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
@@ -34,6 +39,7 @@
   </service>  
   <service name="completeActivity" engine="java" 
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="completeActivity">
+      <description>Attempt to complete a workflow activity</description>
       <attribute name="workEffortId" type="String" mode="IN"/>
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
@@ -42,13 +48,32 @@
   </service>
   <service name="changeActivityState" engine="java"
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="changeActivityState">
+      <description>Manually change the state of a workflow activity</description>
       <attribute name="workEffortId" type="String" mode="IN"/>
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
       <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
       <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
   </service>
-  
+  <service name="acceptAssignment" engine="java"
+    location="org.ofbiz.core.workflow.WorkflowClient" invoke="acceptAssignment">
+      <description>Accept a workflow assignment</description>
+      <attribute name="workEffortId" type="String" mode="IN"/>
+      <attribute name="partyId" type="String" mode="IN"/>
+      <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+      <attribute name="newPartyId" type="Sting" mode="IN" optional="true"/>
+      <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
+      <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
+  </service>
+  <service name="completeAssignment" engine="java"
+    location="org.ofbiz.core.workflow.WorkflowClient" invoke="completeAssignment">
+      <description>Complete a workflow assignment</description>
+      <attribute name="workEffortId" type="String" mode="IN"/>
+      <attribute name="partyId" type="String" mode="IN"/>
+      <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+      <attribute name="errorMessage" type="String" mode="OUT" optional="true"/>
+      <attribute name="responseMessage" type="String" mode="OUT" optional="true"/>
+  </service>  
   <service name="assignApprover" engine="java" 
     location="ServiceTest" invoke="testOne" validate="false"/>    
   
@@ -59,6 +84,7 @@
   </service>
   <service name="storeOrder" engine="java" validate="false" 
     location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
+      <description>Creates order entities</description>
       <attribute name="partyId" type="String" mode="IN"/>
       <attribute name="distributorId" type="String" mode="IN" optional="true"/>
       <attribute name="orderItems" type="java.util.List" mode="IN"/>
