@@ -129,7 +129,8 @@ public class ShoppingCart implements java.io.Serializable {
     // =======================================================================
 
     /** Add an item to the shopping cart, or if already there, increase the quantity.
-     *  @return the new/increased item index
+     * @return the new/increased item index
+     * @throws CartItemModifyException
      */
     public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
         // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
@@ -149,6 +150,14 @@ public class ShoppingCart implements java.io.Serializable {
 
         // Add the new item to the shopping cart if it wasn't found.
         return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), getDelegator(), productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
+    }
+    
+    /** Add a non-product item to the shopping cart.     
+     * @return the new item index
+     * @throws CartItemModifyException
+     */
+    public int addNonProductItem(GenericDelegator delegator, String itemType, String description, double price, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), delegator, itemType, description, price, quantity, attributes, prodCatalogId, dispatcher, this, true));
     }
 
     /** Add an item to the shopping cart. */

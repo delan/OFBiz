@@ -23,17 +23,30 @@
  */
 package org.ofbiz.commonapp.order.shoppingcart;
 
-import java.util.*;
-import java.text.*;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
-
-import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.security.Security;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.UtilFormatOut;
+import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilMisc;
 
 /**
  * Shopping cart events.
@@ -49,10 +62,16 @@ public class ShoppingCartEvents {
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");        
         ShoppingCart cart = getCartObject(request);
 
         String productId = null;
+        String itemType = null;
+        String itemDescription = null; 
+     
+        String priceStr = null;
+        double price = 0.00;
+        
         String quantityStr = null;
         double quantity = 0;
         Map attributes = null;
@@ -69,11 +88,36 @@ public class ShoppingCartEvents {
         } else if (paramMap.containsKey("add_product_id")) {
             productId = (String) paramMap.remove("add_product_id");
         }
+        
         if (productId == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "No add_product_id passed, not adding anything to cart.");
-            return "error";
+            // before returning error; check make sure we aren't adding a special item type
+            if (paramMap.containsKey("ADD_ITEM_TYPE")) {
+                itemType = (String) paramMap.remove("ADD_ITEM_TYPE");
+            } else if (paramMap.containsKey("add_item_type")) {
+                itemType = (String) paramMap.remove("add_item_type");
+            } else {            
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "No product information passed, not adding anything to cart.");
+                return "success"; // not critical return to same page
+            }
+        }
+        
+        // check for an itemDescription
+        if (paramMap.containsKey("ADD_ITEM_DESCRIPTION")) {
+            itemDescription = (String) paramMap.remove("ADD_ITEM_DESCRIPTION");
+        } else if (paramMap.containsKey("add_item_description")) {
+            itemDescription = (String) paramMap.remove("add_item_description");
         }
 
+        // get the override price
+        if (paramMap.containsKey("PRICE")) {
+            priceStr = (String) paramMap.remove("PRICE");
+        } else if (paramMap.containsKey("price")) {
+            priceStr = (String) paramMap.remove("price");
+        }
+        if (priceStr == null) 
+            priceStr = "0.00";  // default price is 0.00
+            
+        // get the quantity
         if (paramMap.containsKey("QUANTITY")) {
             quantityStr = (String) paramMap.remove("QUANTITY");
         } else if (paramMap.containsKey("quantity")) {
@@ -82,16 +126,32 @@ public class ShoppingCartEvents {
         if (quantityStr == null)
             quantityStr = "1";  // default quantity is 1
 
+        // parse the price
+        try {
+            price = NumberFormat.getNumberInstance().parse(priceStr).doubleValue();
+        } catch (Exception e) {
+            Debug.logWarning(e, "Problems parsing price string: " + priceStr, module);
+            price = 0.00;   
+        }
+        
         // parse the quantity
         try {
-            quantity = Double.parseDouble(quantityStr);
-        } catch (NumberFormatException nfe) {
+            quantity = NumberFormat.getNumberInstance().parse(quantityStr).doubleValue();
+        } catch (Exception e) {
+            Debug.logWarning(e, "Problems parsing quantity string: " + quantityStr, module);
             quantity = 1;
         }
         
+        // price sanity check
+        if (productId == null && price < 0) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Price must be a positive number.");
+            return "error";
+        }
+        
+        // quantity sanity check
         if (quantity < 0) {
-        	request.setAttribute(SiteDefs.ERROR_MESSAGE, "Quantity must be a positive number.");
-        	return "error";
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Quantity must be a positive number.");
+            return "error";
         }
 
         // Create a HashMap of product attributes - From ShoppingCartItem.attributeNames[]
@@ -103,7 +163,13 @@ public class ShoppingCartEvents {
         }
         
         try {
-            int itemId = cart.addOrIncreaseItem(productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+            int itemId;
+            if (productId != null) {            
+                itemId = cart.addOrIncreaseItem(productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+            } else {
+                itemId = cart.addNonProductItem(delegator, itemType, itemDescription, price, quantity, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+            } 
+            
             if (shoppingListId != null && shoppingListItemSeqId != null) {
                 ShoppingCartItem item = cart.findCartItem(itemId);
                 item.setShoppingList(shoppingListId, shoppingListItemSeqId);
@@ -414,7 +480,7 @@ public class ShoppingCartEvents {
                     if (o.toUpperCase().startsWith("PRICE")) {
                         if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
                             ShoppingCartItem item = cart.findCartItem(index);
-                            item.setBasePrice(quantity);
+                            item.setBasePrice(quantity); // this is quanity because the parsed number variable is the same as quantity
                         }                       
                     }
 

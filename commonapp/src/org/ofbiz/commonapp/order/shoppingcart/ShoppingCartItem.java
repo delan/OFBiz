@@ -57,6 +57,7 @@ import org.ofbiz.core.util.UtilValidate;
  */
 public class ShoppingCartItem implements java.io.Serializable {
 
+    public static String module = ShoppingCartItem.class.getName();
     public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId" };
     
     private transient GenericDelegator delegator = null;
@@ -69,7 +70,6 @@ public class ShoppingCartItem implements java.io.Serializable {
     private String productId = null;
     private String itemType = null;
     private String itemComment = null;
-    private String itemName = null;         // special field for non-product items
     private String itemDescription = null;  // special field for non-product items
     private double quantity = 0.0;
     private double basePrice = 0.0;
@@ -84,12 +84,22 @@ public class ShoppingCartItem implements java.io.Serializable {
     private List itemAdjustments = new LinkedList();
     private boolean isPromo = false;
 
-    /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
-        return makeItem(cartLocation, product, quantity, null, null, prodCatalogId, dispatcher, cart);
-    }
-
-    /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
+    /** 
+     * Makes a ShoppingCartItem and adds it to the cart.
+     * NOTE: This method will get the product entity and check to make sure it can be purchased.
+     * 
+     * @param cartLocation The location to place this item; null will place at the end
+     * @param delegator GenericDelegator used to lookup the product
+     * @param productId The primary key of the product being added
+     * @param quantity The quantity to add
+     * @param additionalProductFeatureAndAppls Product feature/appls map
+     * @param attributes All unique attributes for this item (NOT features)
+     * @param prodCatalogId The catalog this item was added from
+     * @param dispatcher LocalDispatcher object for doing promotions, etc
+     * @param cart The parent shopping cart object this item will belong to
+     * @return a new ShoppingCartItem object
+     * @throws CartItemModifyException
+     */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericDelegator delegator, String productId, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         GenericValue product = null;
 
@@ -116,15 +126,25 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw new CartItemModifyException(excMsg);
         }        
 
-        return makeItem(cartLocation, product, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart);
-    }
-
-    /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         return makeItem(cartLocation, product, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart, true);
     }
 
-    /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
+    /** 
+     * Makes a ShoppingCartItem and adds it to the cart. 
+     * WARNING: This method does not check if the product is in a purchase category.     
+     * 
+     * @param cartLocation The location to place this item; null will place at the end
+     * @param product The product entity relating to the product being added
+     * @param quantity The quantity to add
+     * @param additionalProductFeatureAndAppls Product feature/appls map
+     * @param attributes All unique attributes for this item (NOT features)
+     * @param prodCatalogId The catalog this item was added from
+     * @param dispatcher LocalDispatcher object for doing promotions, etc
+     * @param cart The parent shopping cart object this item will belong to
+     * @param doPromotions Indicates if we should run promotions
+     * @return a new ShoppingCartItem object
+     * @throws CartItemModifyException
+     */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
         ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, cart.getWebSiteId());
 
@@ -172,17 +192,58 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         return newItem;
     }
+    
+    /**
+     * Makes a non-product ShoppingCartItem and adds it to the cart. 
+     * NOTE: This is only for non-product items; items without a product entity (work items, bulk items, etc)
+     * 
+     * @param cartLocation The location to place this item; null will place at the end
+     * @param delegator Delegator used for this item
+     * @param itemType The OrderItemTypeId for the item being added
+     * @param itemDescription The optional description of the item
+     * @param basePrice The price for this item
+     * @param quantity The quantity to add
+     * @param attributes All unique attributes for this item (NOT features)
+     * @param prodCatalogId The catalog this item was added from
+     * @param dispatcher LocalDispatcher object for doing promotions, etc
+     * @param cart The parent shopping cart object this item will belong to
+     * @param doPromotions Indicates if we should run promotions
+     * @return a new ShoppingCartItem object
+     * @throws CartItemModifyException
+     */
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericDelegator delegator, String itemType, String itemDescription, double basePrice, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
+        ShoppingCartItem newItem = new ShoppingCartItem(delegator, itemType, itemDescription, basePrice, attributes, prodCatalogId, cart.getWebSiteId());
+        
+        // add to cart before setting quantity so that we can get order total, etc
+        if (cartLocation == null) {
+            cart.addItemToEnd(newItem);
+        } else {
+            cart.addItem(cartLocation.intValue(), newItem);
+        }       
+        
+        try {
+            newItem.setQuantity(quantity, dispatcher, cart, doPromotions);
+        } catch (CartItemModifyException e) {
+            cart.removeEmptyCartItems();
+            throw e;
+        }
+                 
+        return newItem;
+    }    
 
     /** Clone an item. */
     public ShoppingCartItem(ShoppingCartItem item) {
-        this.delegator = item.getDelegator();
-        this._product = item.getProduct();
+        try {
+            this._product = item.getProduct();
+        } catch (IllegalStateException e) {
+            this._product = null;
+        }
+        this.delegator = item.getDelegator();      
         this.delegatorName = delegator.getDelegatorName();
         this.prodCatalogId = getProdCatalogId();
         this.productId = item.getProductId();
         this.itemType = item.getItemType();
-        this.itemComment = item.getItemComment();
-        this.itemDescription = item.getItemDescription();
+        this.itemComment = item.getItemComment();                
         this.quantity = item.getQuantity();
         this.basePrice = item.getBasePrice();
         this.listPrice = item.getListPrice();
@@ -195,9 +256,11 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.contactMechIdsMap = item.getOrderItemContactMechIds() == null ? null : new HashMap(item.getOrderItemContactMechIds());
         this.orderItemPriceInfos = item.getOrderItemPriceInfos() == null ? null : new LinkedList(item.getOrderItemPriceInfos());
         this.itemAdjustments = item.getAdjustments() == null ? null : new LinkedList(item.getAdjustments());
+        if (this._product == null)
+            this.itemDescription = item.getName();
     }
 
-    /** can't create shopping cart item with no parameters */
+    /** Cannot create shopping cart item with no parameters */
     protected ShoppingCartItem() {}
 
     /** Creates new ShoppingCartItem object. */
@@ -216,12 +279,15 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
     
     /** Creates new ShopingCartItem object. */
-    protected ShoppingCartItem(String itemTypeId, String description, Map attributes, String prodCatalogId, String webSiteId) {      
+    protected ShoppingCartItem(GenericDelegator delegator, String itemTypeId, String description, double basePrice, Map attributes, String prodCatalogId, String webSiteId) {
+        this.delegator = delegator;      
         this.itemType = itemTypeId;
         this.itemDescription = description;
+        this.basePrice = basePrice;
         this.attributes = attributes;
         this.prodCatalogId = prodCatalogId;
         this.webSiteId = webSiteId;
+        this.delegatorName = delegator.getDelegatorName();
     }
 
     public String getProdCatalogId() {
@@ -270,8 +336,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.quantity = quantity;
         this.updatePrice(dispatcher, cart);
 
-        // apply/unapply promotions
-        if (doPromotions) {
+        // apply/unapply promotions - only for sales orders
+        if (doPromotions && cart.getOrderType().equals("SALES_ORDER")) {
             org.ofbiz.commonapp.product.promo.ProductPromoWorker.doPromotions(prodCatalogId, cart, this, oldQuantity, getDelegator(), dispatcher);
         }
     }
@@ -311,21 +377,6 @@ public class ShoppingCartItem implements java.io.Serializable {
     public double getQuantity() {
         return quantity;
     }
-
-    /** Sets the item description. */
-    public void setItemDescription(String description) {
-        this.itemDescription = description;        
-    }
-    
-    /** Sets the item name. */
-    public void setItemName(String name) {
-        this.itemName = name;
-    }
-    
-    /** Returns the item name (special field for non-product items). */
-    public String getItemName() {
-        return itemName;
-    }
     
     /** Sets the item comment. */
     public void setItemComment(String itemComment) {
@@ -336,12 +387,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     public String getItemComment() {
         return itemComment;
     }
-        
-    /** Returns the item description (special field for non-product items). */
-    public String getItemDescription() {
-       return itemDescription;
-    }
-    
+            
     /** Sets the item type. */
     public void setItemType(String itemType) {
         this.itemType = itemType;
@@ -350,6 +396,20 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the item type. */
     public String getItemType() {
         return itemType;
+    }
+    
+    /** Returns the item type description. */
+    public String getItemTypeDescription() {
+        GenericValue itemType = null;
+        try {
+            GenericDelegator delegator = this.getDelegator();
+            itemType = this.getDelegator().findByPrimaryKeyCache("OrderItemType", UtilMisc.toMap("orderItemTypeId", this.getItemType()));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, "Problems getting OrderItemType for: " + this.getItemType(), module);
+        }
+        if (itemType != null)
+            return itemType.getString("description");
+        return null;
     }
 
     public void setOrderItemSeqId(String orderItemSeqId) {
@@ -379,23 +439,33 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
-        Boolean shipCharge = getProduct().getBoolean("chargeShipping");
-
-        if (shipCharge == null) {
-            return true;
+        if (_product != null) {        
+            Boolean shipCharge = getProduct().getBoolean("chargeShipping");
+    
+            if (shipCharge == null) {
+                return true;
+            } else {
+                return shipCharge.booleanValue();
+            }
         } else {
-            return shipCharge.booleanValue();
+            // we don't ship non-product items
+            return false;
         }
     }
 
     /** Returns true if tax charges apply to this item. */
     public boolean taxApplies() {
-        Boolean taxable = getProduct().getBoolean("taxable");
-
-        if (taxable == null) {
-            return true;
+        if (_product != null) {        
+            Boolean taxable = getProduct().getBoolean("taxable");
+    
+            if (taxable == null) {
+                return true;
+            } else {
+                return taxable.booleanValue();
+            }
         } else {
-            return taxable.booleanValue();
+            // we do tax non-product items
+            return true;
         }
     }
 
@@ -406,44 +476,57 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item's description. */
     public String getName() {
-        String productName = getProduct().getString("productName");
-        
-        // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
-        if (UtilValidate.isEmpty(productName)) {
-            GenericValue parentProduct = this.getParentProduct();
-            if (parentProduct != null) productName = parentProduct.getString("productName");
+        if (_product != null) {       
+            String productName = getProduct().getString("productName");
+            
+            // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
+            if (UtilValidate.isEmpty(productName)) {
+                GenericValue parentProduct = this.getParentProduct();
+                if (parentProduct != null) productName = parentProduct.getString("productName");
+            }
+            
+            return productName;
+        } else {
+            return itemDescription;
         }
-        
-        return productName;
     }
 
     /** Returns the item's description. */
     public String getDescription() {
-        String description = getProduct().getString("description");
-        
-        // if the description is null or empty, see if there is an associated virtual product and get the description of that product
-        if (UtilValidate.isEmpty(description)) {
-            GenericValue parentProduct = this.getParentProduct();
-            if (parentProduct != null) description = parentProduct.getString("description");
+        if (_product != null) {        
+            String description = getProduct().getString("description");
+            
+            // if the description is null or empty, see if there is an associated virtual product and get the description of that product
+            if (UtilValidate.isEmpty(description)) {
+                GenericValue parentProduct = this.getParentProduct();
+                if (parentProduct != null) description = parentProduct.getString("description");
+            }
+            
+            return description;
+        } else {
+            return null;
         }
-        
-        return description;
     }
 
     /** Returns the item's unit weight */
     public double getWeight() {
-        Double weight = getProduct().getDouble("weight");
-
-        // if the weight is null, see if there is an associated virtual product and get the weight of that product
-        if (weight == null) {
-            GenericValue parentProduct = this.getParentProduct();
-            if (parentProduct != null) weight = parentProduct.getDouble("weight");
-        }
-        
-        if (weight == null) {
-            return 0;
+        if (_product != null) {        
+            Double weight = getProduct().getDouble("weight");
+    
+            // if the weight is null, see if there is an associated virtual product and get the weight of that product
+            if (weight == null) {
+                GenericValue parentProduct = this.getParentProduct();
+                if (parentProduct != null) weight = parentProduct.getDouble("weight");
+            }
+            
+            if (weight == null) {
+                return 0;
+            } else {
+                return weight.doubleValue();
+            }
         } else {
-            return weight.doubleValue();
+            // non-product items have 0 weight
+            return 0;
         }
     }
 
@@ -697,6 +780,11 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Compares the specified object with this cart item. */
     public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, boolean isPromo) {
+        if (this.productId == null || productId == null) {
+            // all non-product items are unique
+            return false; 
+        }
+        
         if (!this.productId.equals(productId)) {
             return false;
         }
