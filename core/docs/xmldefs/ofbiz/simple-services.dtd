@@ -28,9 +28,9 @@
 *This is the DTD for the Open For Business Simple Service definition XML file.
 -->
 
-<!ELEMENT simple-events ( simple-event* )>
-<!ELEMENT simple-event ( ( simple-map-processor | check-errors | service )* )>
-<!ATTLIST simple-event
+<!ELEMENT simple-services ( simple-service* )>
+<!ELEMENT simple-service ( ( simple-map-processor | check-errors | service )* )>
+<!ATTLIST simple-service
     event-name CDATA #REQUIRED
     short-description CDATA #REQUIRED
     login-required ( true | false ) "true"
