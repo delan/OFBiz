@@ -45,22 +45,22 @@ public class MethodContext {
     public static final int EVENT = 1;
     public static final int SERVICE = 2;
 
-    int methodType;
+    protected int methodType;
 
-    Map env = new HashMap();
-    Map parameters;
-    Locale locale;
-    ClassLoader loader;
-    LocalDispatcher dispatcher;
-    GenericDelegator delegator;
-    Security security;
-    GenericValue userLogin;
+    protected Map env = new HashMap();
+    protected Map parameters;
+    protected Locale locale;
+    protected ClassLoader loader;
+    protected LocalDispatcher dispatcher;
+    protected GenericDelegator delegator;
+    protected Security security;
+    protected GenericValue userLogin;
 
-    HttpServletRequest request = null;
-    HttpServletResponse response = null;
+    protected HttpServletRequest request = null;
+    protected HttpServletResponse response = null;
 
-    Map results = null;
-    DispatchContext ctx;
+    protected Map results = null;
+    protected DispatchContext ctx;
 
     public MethodContext(HttpServletRequest request, HttpServletResponse response, ClassLoader loader) {
         this.methodType = MethodContext.EVENT;
@@ -274,8 +274,9 @@ public class MethodContext {
         return this.userLogin;
     }
 
-    public void setUserLogin(GenericValue userLogin) {
+    public void setUserLogin(GenericValue userLogin, String userLoginEnvName) {
         this.userLogin = userLogin;
+        this.putEnv(userLoginEnvName, userLogin);
     }
 
     public Object getResult(String key) {

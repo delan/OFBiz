@@ -239,38 +239,38 @@ public class SimpleMethod {
     }
 
     // Member fields begin here...
-    List methodOperations = new LinkedList();
-    Map parentSimpleMethodsMap;
-    String methodName;
-    String shortDescription;
-    String defaultErrorCode;
-    String defaultSuccessCode;
+    protected List methodOperations = new LinkedList();
+    protected Map parentSimpleMethodsMap;
+    protected String methodName;
+    protected String shortDescription;
+    protected String defaultErrorCode;
+    protected String defaultSuccessCode;
 
-    String parameterMapName;
+    protected String parameterMapName;
 
     // event fields
-    String eventRequestName;
-    String eventResponseName;
-    String eventResponseCodeName;
-    String eventErrorMessageName;
-    String eventEventMessageName;
+    protected String eventRequestName;
+    protected String eventResponseName;
+    protected String eventResponseCodeName;
+    protected String eventErrorMessageName;
+    protected String eventEventMessageName;
 
     // service fields
-    String serviceResponseMessageName;
-    String serviceErrorMessageName;
-    String serviceErrorMessageListName;
-    String serviceErrorMessageMapName;
-    String serviceSuccessMessageName;
-    String serviceSuccessMessageListName;
+    protected String serviceResponseMessageName;
+    protected String serviceErrorMessageName;
+    protected String serviceErrorMessageListName;
+    protected String serviceErrorMessageMapName;
+    protected String serviceSuccessMessageName;
+    protected String serviceSuccessMessageListName;
 
-    boolean loginRequired = true;
-    boolean useTransaction = true;
+    protected boolean loginRequired = true;
+    protected boolean useTransaction = true;
 
-    String localeName;
-    String delegatorName;
-    String securityName;
-    String dispatcherName;
-    String userLoginName;
+    protected String localeName;
+    protected String delegatorName;
+    protected String securityName;
+    protected String dispatcherName;
+    protected String userLoginName;
 
     public SimpleMethod(Element simpleMethodElement, Map parentSimpleMethodsMap) {
         this.parentSimpleMethodsMap = parentSimpleMethodsMap;
@@ -432,6 +432,10 @@ public class SimpleMethod {
 
     public String getDispatcherEnvName() {
         return this.dispatcherName;
+    }
+
+    public String getUserLoginEnvName() {
+        return this.userLoginName;
     }
 
     /** Execute the Simple Method operations */

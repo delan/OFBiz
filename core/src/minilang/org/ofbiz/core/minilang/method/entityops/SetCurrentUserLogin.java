@@ -53,7 +53,7 @@ public class SetCurrentUserLogin extends MethodOperation {
             return true;
         }
 
-        methodContext.setUserLogin(userLogin);
+        methodContext.setUserLogin(userLogin, this.simpleMethod.getUserLoginEnvName());
         return true;
     }
 }
