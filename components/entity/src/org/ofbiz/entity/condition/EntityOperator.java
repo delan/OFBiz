@@ -1,5 +1,5 @@
 /*
- * $Id: EntityOperator.java,v 1.4 2004/07/06 23:40:42 doogie Exp $
+ * $Id: EntityOperator.java,v 1.5 2004/07/07 00:15:25 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
@@ -40,7 +42,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.0
  */
 public abstract class EntityOperator extends EntityConditionBase {
@@ -176,7 +178,10 @@ public abstract class EntityOperator extends EntityConditionBase {
         return this.idInt == otherOper.idInt;
     }
 
-
+    public boolean entityMatches(GenericEntity entity, Object lhs, Object rhs) {
+        return mapMatches(entity.getDelegator(), entity, lhs, rhs);
+    }
+    
     protected void appendRHSList(List entityConditionParams, StringBuffer whereStringBuffer, ModelField field, Object rhs) {
         whereStringBuffer.append('(');
 
@@ -197,7 +202,7 @@ public abstract class EntityOperator extends EntityConditionBase {
         whereStringBuffer.append(')');
     }
 
-    public abstract boolean entityMatches(GenericEntity entity, Object lhs, Object rhs);
+    public abstract boolean mapMatches(GenericDelegator delegator, Map map, Object lhs, Object rhs);
     public abstract void validateSql(ModelEntity entity, Object lhs, Object rhs) throws GenericModelException;
     public abstract void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, Object rhs, Object lhs);
 }

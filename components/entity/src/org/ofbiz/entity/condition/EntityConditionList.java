@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionList.java,v 1.5 2004/07/06 23:40:41 doogie Exp $
+ * $Id: EntityConditionList.java,v 1.6 2004/07/07 00:15:24 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,9 @@ package org.ofbiz.entity.condition;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
@@ -35,7 +37,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * Encapsulates a list of EntityConditions to be used as a single EntityCondition combined as specified
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class EntityConditionList extends EntityCondition {
@@ -78,8 +80,8 @@ public class EntityConditionList extends EntityCondition {
         operator.validateSql(modelEntity, conditionList);
     }
 
-    public boolean entityMatches(GenericEntity entity) {
-        return operator.entityMatches(entity, conditionList);
+    public boolean mapMatches(GenericDelegator delegator, Map map) {
+        return operator.mapMatches(delegator, map, conditionList);
     }
 
     public boolean equals(Object obj) {

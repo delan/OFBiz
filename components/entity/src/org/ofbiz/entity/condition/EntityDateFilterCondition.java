@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDateFilterCondition.java,v 1.2 2004/04/23 01:42:16 doogie Exp $
+ * $Id: EntityDateFilterCondition.java,v 1.3 2004/07/07 00:15:24 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,9 +25,11 @@
 package org.ofbiz.entity.condition;
 
 import java.util.List;
+import java.util.Map;
 import java.sql.Timestamp;
 
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
@@ -52,9 +54,9 @@ public class EntityDateFilterCondition extends EntityCondition {
         condition.checkCondition(modelEntity);
     }
 
-    public boolean entityMatches(GenericEntity entity) {    
+    public boolean mapMatches(GenericDelegator delegator, Map map) {    
         EntityCondition condition = makeCondition();
-        return condition.entityMatches(entity);
+        return condition.mapMatches(delegator, map);
     }
 
     public boolean equals(Object obj) {

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.8 2004/07/06 23:54:38 doogie Exp $
+ * $Id: EntityExpr.java,v 1.9 2004/07/07 00:15:24 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +27,9 @@ package org.ofbiz.entity.condition;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
@@ -37,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -146,8 +148,8 @@ public class EntityExpr extends EntityCondition {
         return sql.toString();
     }
 
-    public boolean entityMatches(GenericEntity entity) {
-        return operator.entityMatches(entity, lhs, rhs);
+    public boolean mapMatches(GenericDelegator delegator, Map map) {
+        return operator.mapMatches(delegator, map, lhs, rhs);
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {

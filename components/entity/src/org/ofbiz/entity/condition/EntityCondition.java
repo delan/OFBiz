@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCondition.java,v 1.6 2004/07/06 23:40:41 doogie Exp $
+ * $Id: EntityCondition.java,v 1.7 2004/07/07 00:15:24 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,9 @@ package org.ofbiz.entity.condition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.model.ModelEntity;
@@ -43,7 +45,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public abstract class EntityCondition extends EntityConditionBase {
@@ -55,5 +57,9 @@ public abstract class EntityCondition extends EntityConditionBase {
 
     abstract public void checkCondition(ModelEntity modelEntity) throws GenericModelException;
 
-    abstract public boolean entityMatches(GenericEntity entity);
+    public boolean entityMatches(GenericEntity entity) {
+        return mapMatches(entity.getDelegator(), entity);
+    }    
+
+    abstract public boolean mapMatches(GenericDelegator delegator, Map map);
 }
