@@ -24,6 +24,7 @@
  */
 package org.ofbiz.content.webapp.ftl;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -38,20 +39,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
-import freemarker.core.Environment;
-import freemarker.ext.beans.BeanModel;
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import freemarker.template.SimpleScalar;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateHashModel;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
@@ -67,6 +57,18 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
+
+import freemarker.core.Environment;
+import freemarker.ext.beans.BeanModel;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
+import freemarker.template.SimpleScalar;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 //import com.clarkware.profiler.Profiler;
 
 
@@ -112,19 +114,31 @@ public class FreeMarkerWorker {
     public static UtilCache cachedLocationTemplates = new UtilCache("template.ftl.location", 0, 0, false);
 
     public static void renderTemplateAtLocation(String location, Map context, Writer outWriter) throws MalformedURLException, TemplateException, IOException {
-        URL locationUrl = FlexibleLocation.resolveLocation(location);
-        Reader locationReader = new InputStreamReader(locationUrl.openStream());
-        
-        if (context == null) {
-            context = new HashMap();
+        Template template = (Template) cachedTemplates.get(location);
+        if (template == null) {
+            synchronized (FreeMarkerWorker.class) {
+                template = (Template) cachedTemplates.get(location);
+                if (template == null) {
+                    URL locationUrl = FlexibleLocation.resolveLocation(location);
+                    Reader locationReader = new InputStreamReader(locationUrl.openStream());
+                    
+                    if (context == null) {
+                        context = new HashMap();
+                    }
+                    
+                    Configuration config = makeDefaultOfbizConfig();
+                    String locationString = locationUrl.getPath();
+                    //Debug.logInfo("FreeMarker render: locationString=" + locationString, module);
+                    //DEJ20050104 Don't know what to do here, FreeMarker does some funky stuff when loading includes and can't find a way to make it happy...
+                    template = new Template(locationString, locationReader, config);            
+                    // add the OFBiz transforms/methods
+                    addAllOfbizTransforms(context);
+                    
+                    cachedTemplates.put(location, template);
+                }
+            }
         }
         
-        Configuration config = makeDefaultOfbizConfig();
-        Template template = new Template(locationUrl.toExternalForm(), locationReader, config);            
-        // add the OFBiz transforms/methods
-        addAllOfbizTransforms(context);
-        
-        cachedTemplates.put(location, template);
         // process the template with the given data and write
         // the email body to the String buffer
         template.process(context, outWriter);
@@ -153,7 +167,6 @@ public class FreeMarkerWorker {
     }
  
     public static Template getTemplateCached(String dataResourceId) {
-
         Template t = (Template)cachedTemplates.get("DataResource:" + dataResourceId);
         return t;
     }
@@ -191,10 +204,11 @@ public class FreeMarkerWorker {
         context.put("renderContentAsText", renderContentAsText);
     }
     
-    public static Configuration makeDefaultOfbizConfig() throws TemplateException {
+    public static Configuration makeDefaultOfbizConfig() throws TemplateException, IOException {
         Configuration config = Configuration.getDefaultConfiguration();            
         config.setObjectWrapper(BeansWrapper.getDefaultInstance());
         config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+        //config.setDirectoryForTemplateLoading(new File("/"));
         return config;
     }
     
