@@ -1,5 +1,5 @@
 /*
- * $Id: Scanner.java,v 1.5 2004/08/15 21:26:42 ajzeneski Exp $
+ * $Id: Scanner.java,v 1.6 2004/08/19 18:49:14 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.2
  */
 public class Scanner extends GenericDevice {
@@ -45,8 +45,8 @@ public class Scanner extends GenericDevice {
     protected String deviceName = null;
     protected int timeout = -1;
 
-    public Scanner(String deviceName, int timeout, PosScreen screen) {
-        super(deviceName, timeout, screen);
+    public Scanner(String deviceName, int timeout) {
+        super(deviceName, timeout);
         this.control = new jpos.Scanner();
     }
 
@@ -90,12 +90,12 @@ public class Scanner extends GenericDevice {
             }
 
             // stuff the data to the Input component
-            screen.getInput().clearInput();
-            screen.getInput().appendString(new String(data));
+            PosScreen.currentScreen.getInput().clearInput();
+            PosScreen.currentScreen.getInput().appendString(new String(data));
 
             // call the PLU event - maybe make this configurable
             try {
-                ButtonEventConfig.invokeButtonEvent("menuSku", screen);
+                ButtonEventConfig.invokeButtonEvent("menuSku", PosScreen.currentScreen);
             } catch (ButtonEventConfig.ButtonEventException e) {
                 Debug.logError(e, module);
             } catch (ButtonEventConfig.ButtonEventNotFound e) {

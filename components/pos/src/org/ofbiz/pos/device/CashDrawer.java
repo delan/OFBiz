@@ -1,5 +1,5 @@
 /*
- * $Id: CashDrawer.java,v 1.2 2004/08/15 21:26:41 ajzeneski Exp $
+ * $Id: CashDrawer.java,v 1.3 2004/08/19 18:49:14 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,21 +26,20 @@ package org.ofbiz.pos.device;
 
 import jpos.JposException;
 
-import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.base.util.Debug;
 
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.2
  */
 public class CashDrawer extends GenericDevice {
 
     public static final String module = CashDrawer.class.getName();
 
-    public CashDrawer(String deviceName, int timeout, PosScreen screen) {
-        super(deviceName, timeout, screen);
+    public CashDrawer(String deviceName, int timeout) {
+        super(deviceName, timeout);
         this.control = new jpos.CashDrawer();
     }
 

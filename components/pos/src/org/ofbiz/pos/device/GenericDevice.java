@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDevice.java,v 1.1 2004/08/06 20:55:10 ajzeneski Exp $
+ * $Id: GenericDevice.java,v 1.2 2004/08/19 18:49:14 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,27 +27,23 @@ package org.ofbiz.pos.device;
 import jpos.BaseControl;
 import jpos.JposException;
 
-import org.ofbiz.pos.screen.PosScreen;
-
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public abstract class GenericDevice implements JposDevice {
 
     public static final String module = GenericDevice.class.getName();
 
-    protected PosScreen screen = null;
     protected BaseControl control = null;
     protected String deviceName = null;
     protected int timeout = -1;
 
-    public GenericDevice(String deviceName, int timeout, PosScreen screen) {
+    public GenericDevice(String deviceName, int timeout) {
         this.deviceName = deviceName;
         this.timeout = timeout;
-        this.screen = screen;
     }
 
     public void open() throws JposException {
