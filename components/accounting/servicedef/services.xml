@@ -178,7 +178,8 @@
         <!-- these two will be assembled into a expireDate by buildCcExpireDate on an ECA if needed -->
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>
         <attribute name="expYear" type="String" mode="IN" optional="true"/>
-        <override name="nameOnCard" optional="false"/>
+        <override name="firstNameOnCard" optional="false"/>
+        <override name="lastNameOnCard" optional="false"/>
         <override name="cardType" optional="false"/>
         <override name="cardNumber" optional="false"/>
         <override name="expireDate" optional="false"/>
@@ -337,7 +338,8 @@
         <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="transactionType" type="String" mode="IN" optional="false"/>
-        <attribute name="nameOnCard" type="String" mode="IN" optional="false"/>
+        <attribute name="firstNameOnCard" type="String" mode="IN" optional="false"/>
+        <attribute name="lastNameOnCard" type="String" mode="IN" optional="false"/>
         <attribute name="cardType" type="String" mode="IN" optional="false"/>
         <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
         <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
@@ -429,6 +431,7 @@
         <attribute name="authRefNum" type="String" mode="OUT" optional="false"/>
         <attribute name="authFlag" type="String" mode="OUT" optional="true"/>
         <attribute name="authMessage" type="String" mode="OUT" optional="true"/>
+        <attribute name="cvCode" type="String" mode="OUT" optional="true"/>
         <attribute name="avsCode" type="String" mode="OUT" optional="true"/>
         <attribute name="scoreCode" type="String" mode="OUT" optional="true"/>
         <attribute name="captureCode" type="String" mode="OUT" optional="true"/>

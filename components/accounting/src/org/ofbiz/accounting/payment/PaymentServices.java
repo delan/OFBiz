@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentServices.java,v 1.6 2004/02/06 00:31:27 jonesde Exp $
+ * $Id: PaymentServices.java,v 1.7 2004/06/25 23:23:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class PaymentServices {
@@ -177,7 +177,8 @@ public class PaymentServices {
         newPm.set("partyId", partyId);
         newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
         newPm.set("thruDate", context.get("thruDate"));
-        newCc.set("nameOnCard", context.get("nameOnCard"));
+        newCc.set("firstNameOnCard", context.get("firstNameOnCard"));
+        newCc.set("lastNameOnCard", context.get("lastNameOnCard"));
         newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
         newCc.set("cardType", context.get("cardType"));
         newCc.set("cardNumber", context.get("cardNumber"));
@@ -349,7 +350,8 @@ public class PaymentServices {
         newPm.set("partyId", partyId);
         newPm.set("fromDate", context.get("fromDate"), false);
         newPm.set("thruDate", context.get("thruDate"));
-        newCc.set("nameOnCard", context.get("nameOnCard"));
+        newCc.set("firstNameOnCard", context.get("firstNameOnCard"));
+        newCc.set("lastNameOnCard", context.get("lastNameOnCard"));
         newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
         newCc.set("cardType", context.get("cardType"));
         newCc.set("cardNumber", context.get("cardNumber"));

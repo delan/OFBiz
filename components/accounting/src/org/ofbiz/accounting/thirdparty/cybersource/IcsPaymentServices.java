@@ -1,5 +1,5 @@
 /*
- * $Id: IcsPaymentServices.java,v 1.9 2004/02/05 21:39:39 ajzeneski Exp $
+ * $Id: IcsPaymentServices.java,v 1.10 2004/06/25 23:23:33 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,15 +34,15 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.*;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 
-import com.cybersource.ws.client.axis.basic.Client;
-import com.cybersource.ws.client.axis.basic.BasicClientException;
-import com.cybersource.ws.client.axis.AxisFaultException;
+import com.cybersource.ws.client.Client;
+import com.cybersource.ws.client.ClientException;
+import com.cybersource.ws.client.FaultException;
 
 /**
  * CyberSource WS Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  */
 public class IcsPaymentServices {
@@ -64,11 +64,11 @@ public class IcsPaymentServices {
         Map reply = null;
         try {
             reply = Client.runTransaction(request, props);
-        } catch (AxisFaultException e) {
-            Debug.logError(e, "ERROR: Exception from Axis to CyberSource", module);
-            Debug.logError(e.getAxisFault(), "Axis Fault : " + e.getAxisFault().getFaultString(), module);
+        } catch (FaultException e) {
+            Debug.logError(e, "ERROR: Fault from CyberSource", module);
+            Debug.logError(e, "Fault : " + e.getFaultString(), module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
-        } catch (BasicClientException e) {
+        } catch (ClientException e) {
             Debug.logError(e, "ERROR: CyberSource Client exception : " + e.getMessage(), module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
         }
@@ -99,10 +99,10 @@ public class IcsPaymentServices {
         Map reply = null;
         try {
             reply = Client.runTransaction(request, props);
-        } catch (AxisFaultException e) {
-            Debug.logError(e, "ERROR: Exception from Axis to CyberSource", module);
+        } catch (FaultException e) {
+            Debug.logError(e, "ERROR: Fault from CyberSource", module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
-        } catch (BasicClientException e) {
+        } catch (ClientException e) {
             Debug.logError(e, "ERROR: CyberSource Client exception : " + e.getMessage(), module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
         }
@@ -129,10 +129,10 @@ public class IcsPaymentServices {
         Map reply = null;
         try {
             reply = Client.runTransaction(request, props);
-        } catch (AxisFaultException e) {
-            Debug.logError(e, "ERROR: Exception from Axis to CyberSource", module);
+        } catch (FaultException e) {
+            Debug.logError(e, "ERROR: Fault from CyberSource", module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
-        } catch (BasicClientException e) {
+        } catch (ClientException e) {
             Debug.logError(e, "ERROR: CyberSource Client exception : " + e.getMessage(), module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
         }
@@ -159,10 +159,10 @@ public class IcsPaymentServices {
         Map reply = null;
         try {
             reply = Client.runTransaction(request, props);
-        } catch (AxisFaultException e) {
-            Debug.logError(e, "ERROR: Exception from Axis to CyberSource", module);
+        } catch (FaultException e) {
+            Debug.logError(e, "ERROR: Fault from CyberSource", module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
-        } catch (BasicClientException e) {
+        } catch (ClientException e) {
             Debug.logError(e, "ERROR: CyberSource Client exception : " + e.getMessage(), module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
         }
@@ -183,10 +183,10 @@ public class IcsPaymentServices {
         Map reply = null;
         try {
             reply = Client.runTransaction(request, props);
-        } catch (AxisFaultException e) {
-            Debug.logError(e, "ERROR: Exception from Axis to CyberSource", module);
+        } catch (FaultException e) {
+            Debug.logError(e, "ERROR: Fault from CyberSource", module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
-        } catch (BasicClientException e) {
+        } catch (ClientException e) {
             Debug.logError(e, "ERROR: CyberSource Client exception : " + e.getMessage(), module);
             return ServiceUtil.returnError("Unable to communicate with CyberSource");
         }
@@ -203,38 +203,56 @@ public class IcsPaymentServices {
             configString = "payment.properties";
         }
 
-        String merchantId = UtilProperties.getPropertyValue(configString, "payment.cybersource.merchantID");
-        String serverUrl = UtilProperties.getPropertyValue(configString, "payment.cybersource.serverURL");
+        String merchantId = UtilProperties.getPropertyValue(configString, "payment.cybersource.merchantID");       
+        String targetApi = UtilProperties.getPropertyValue(configString, "payment.cybersource.api.version");
+        String production = UtilProperties.getPropertyValue(configString, "payment.cybersource.production");
+        String enableLog = UtilProperties.getPropertyValue(configString, "payment.cybersource.log");
+        String logSize = UtilProperties.getPropertyValue(configString, "payment.cybersource.log.size");
+        String logFile = UtilProperties.getPropertyValue(configString, "payment.cybersource.log.file");
+        String logDir = UtilProperties.getPropertyValue(configString, "payment.cybersource.log.dir");
 
         String keysPath = UtilProperties.getPropertyValue(configString, "payment.cybersource.keysDir");
         String keysFile = UtilProperties.getPropertyValue(configString, "payment.cybersource.keysFile");
-        String demo = UtilProperties.getPropertyValue(configString, "payment.cybersource.demo", "N");
-        demo = "Y".equalsIgnoreCase(demo) ? "true" : "false";
 
         // create some properties for CS Client
         Properties props = new Properties();
         props.put("merchantID", merchantId);
-        props.put("cybersourceURL", serverUrl);
-        props.put("keysDir", keysPath);
+        props.put("keysDirectory", keysPath);
+        props.put("targetAPIVersion", targetApi);
+        props.put("sendToProduction", production);
+        props.put("enableLog", enableLog);
+        props.put("logDirectory", logDir);
+        props.put("logFilename", logFile);
+        props.put("logMaximumSize", logSize);
 
         if (keysFile != null && keysFile.length() > 0) {
-            props.put("keyFilename", keysFile);
+            props.put("alternateKeyFilename", keysFile);
         }
-        props.put("demo", demo);
         //Debug.logInfo("Created CyberSource Properties : " + props, module);
 
         return props;
     }
 
     private static Map buildAuthRequest(Map context) {
+        String configString = (String) context.get("paymentConfig");
+        String currency = (String) context.get("currency");
+        if (configString == null) {
+            configString = "payment.properties";
+        }
+
         // make the request map
+        String capture = UtilProperties.getPropertyValue(configString, "payment.cybersource.autoBill", "false");
         String orderId = (String) context.get("orderId");
+
         Map request = new HashMap();
         request.put("ccAuthService_run", "true");              // run auth service
+        request.put("ccCaptureService_run", capture);          // run capture service (i.e. sale)
         request.put("merchantReferenceCode", orderId);         // set the order ref number
+        request.put("purchaseTotals_currency", currency);      // set the order currency
         appendFullBillingInfo(request, context);               // add in all address info
         appendItemLineInfo(request, context, "processAmount"); // add in the item info
         appendAvsRules(request, context);                      // add in the AVS flags and decline codes
+
         return request;
     }
 
@@ -347,16 +365,13 @@ public class IcsPaymentServices {
             request.put("businessRules_declineAVSFlags", avsCodes);
         }
 
-        String avsIgnore = UtilProperties.getPropertyValue(configString, "payment.cybersource.avsDeclineCodes", "N");
-        avsIgnore = "Y".equalsIgnoreCase(avsIgnore) ? "true" : "false";
+        String avsIgnore = UtilProperties.getPropertyValue(configString, "payment.cybersource.avsDeclineCodes", "false");
         request.put("businessRules_ignoreAVS", avsIgnore);
     }
 
     private static void appendFullBillingInfo(Map request, Map context) {
         // person info
         GenericValue person = (GenericValue) context.get("contactPerson");
-        request.put("billTo_firstName", person.getString("firstName"));
-        request.put("billTo_lastName", person.getString("lastName"));
 
         // contact info
         GenericValue email = (GenericValue) context.get("contactEmail");
@@ -368,16 +383,26 @@ public class IcsPaymentServices {
 
         // phone number seems to not be used; possibly only for reporting.
 
-        // payment Info
+        // CC payment info
         GenericValue creditCard = (GenericValue) context.get("creditCard");
         if (creditCard != null) {
             List expDateList = StringUtil.split(creditCard.getString("expireDate"), "/");
 
+            request.put("billTo_firstName", creditCard.getString("firstNameOnCard"));
+            request.put("billTo_lastName", creditCard.getString("lastNameOnCard"));
             request.put("card_accountNumber", creditCard.getString("cardNumber"));
             request.put("card_expirationMonth", expDateList.get(0));
             request.put("card_expirationYear", expDateList.get(1));
         } else {
             Debug.logWarning("CreditCard not defined; Cybersource will fail.", module);
+        }
+
+        // CCV info
+        String cvNum = (String) context.get("cardSecurityCode");
+        String cvSet = UtilValidate.isEmpty(cvNum) ? "1" : "0";
+        request.put("card_cvIndicator", cvSet);
+        if ("1".equals(cvNum)) {
+            request.put("card_cvNumber", cvNum);
         }
 
         // payment contact info
@@ -403,9 +428,8 @@ public class IcsPaymentServices {
         // order shipping information
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
         if (shippingAddress != null) {
-            // TODO: add first/last name
-            //request.put("shipTo_firstName", "");
-            //request.put("shipTo_lastName", "");
+            request.put("shipTo_firstName", person.get("firstName"));
+            request.put("shipTo_lastName", person.get("lastName"));
 
             request.put("shipTo_street1", shippingAddress.getString("address1"));
             if (shippingAddress.get("address2") != null) {
@@ -500,8 +524,11 @@ public class IcsPaymentServices {
         result.put("authRefNum", reply.get("requestID"));
         result.put("authFlag", reply.get("ccAuthReply_reasonCode"));
         result.put("authMessage", reply.get("ccAuthReply_processorResponse"));
+        result.put("cvCode", reply.get("ccAuthReply_cvCode"));
         result.put("avsCode", reply.get("ccAuthReply_avsCode"));
         result.put("scoreCode", reply.get("ccAuthReply_authFactorCode"));
+        result.put("captureRefNum", reply.get("requestID")); // maybe use something else here?
+        result.put("captureCode", reply.get("ccCaptureReply_reconciliationID"));
     }
 
     private static void processCaptureResult(Map reply, Map result) {
