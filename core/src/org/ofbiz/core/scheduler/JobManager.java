@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/23 19:16:15  azeneski
+ * Fixed up finalize() method to not debug everytime.
+ *
  * Revision 1.2  2001/07/23 18:05:00  azeneski
  * Fixed runaway thread in the job scheduler.
  *
@@ -23,6 +26,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.servlet.ServletContext;
 
+import org.ofbiz.core.entity.GenericHelper;
 import org.ofbiz.core.util.ConfigXMLReader;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
@@ -57,6 +61,7 @@ public class JobManager {
     
     protected ServletContext context;
     protected JobScheduler js;
+    protected GenericHelper helper;
     protected SortedSet queue;
     
     /** Create a new empty JobManager. */
@@ -65,8 +70,9 @@ public class JobManager {
     }
     
     /** Creates a new JobManager Object. Will look for the XML scheduler file in the ServletContext. */
-    public JobManager(ServletContext context) {
+    public JobManager(ServletContext context, GenericHelper helper) {
         this.context = context;
+        this.helper = helper;
         HashMap config = null;
         String configFileUrl = null;
         try {
@@ -82,7 +88,8 @@ public class JobManager {
     }
     
     /** Creates a new JobManager object, using the HashMap of jobs to schedule. */
-    public JobManager(HashMap config) {
+    public JobManager(HashMap config, GenericHelper helper) {
+        this.helper = helper;
         init(config);
     }
     

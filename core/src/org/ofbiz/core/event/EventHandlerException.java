@@ -1,15 +1,12 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2001/07/15 16:36:42  azeneski
- * Initial Import
- *
  */
 
-package org.ofbiz.core.control;
+package org.ofbiz.core.event;
 
 /**
- * <p><b>Title:</b> EventException.java
+ * <p><b>Title:</b> EventHandlerException.java
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -31,15 +28,15 @@ package org.ofbiz.core.control;
  *
  * @author Andy Zeneski (jaz@zsolv.com)
  * @version 1.0
- * Created on June 28, 2001, 10:12 PM
+ * Created on August 24, 2001, 8:28 PM
  */
-public class EventException extends Exception {
+public class EventHandlerException extends Exception {
 
-    public EventException(String str) {
+    public EventHandlerException(String str) {
         super(str);
     }
 
-    public EventException() {
+    public EventHandlerException() {
         super();
     }
 }

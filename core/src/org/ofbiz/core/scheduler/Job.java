@@ -1,6 +1,11 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/23 21:20:51  azeneski
+ * Added support for HTTP GET/POST events in job scheduler.
+ * Fixed a bug in the XML parser which caused the parser to die
+ * when a empty element was found.
+ *
  * Revision 1.2  2001/07/23 18:05:00  azeneski
  * Fixed runaway thread in the job scheduler.
  *
@@ -12,12 +17,12 @@
 package org.ofbiz.core.scheduler;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Date;
 import java.util.Calendar;
-import java.lang.reflect.*;
 
-import org.ofbiz.core.util.HttpClient;
+import org.ofbiz.core.event.EventHandler;
+import org.ofbiz.core.event.EventHandlerException;
 import org.ofbiz.core.util.Debug;
 
 /**
@@ -65,11 +70,11 @@ public class Job implements Comparable, Serializable {
     private String eventType;
     private String eventPath;
     private String eventMethod;
-    private HashMap parameters;
-    private HashMap headers;
+    private Map parameters;
+    private Map headers;
     
     /** Creates a new Job object. */
-    public Job( String jobName, Date startDate, Date endDate, int interval, int intervalType, boolean isRepeated, String eventType, String eventPath, String eventMethod, HashMap parameters, HashMap headers ) {
+    public Job( String jobName, Date startDate, Date endDate, int interval, int intervalType, boolean isRepeated, String eventType, String eventPath, String eventMethod, Map parameters, Map headers ) {
         this.jobName =jobName;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -161,50 +166,12 @@ public class Job implements Comparable, Serializable {
         String eventResult = null;
         runCount++;
         if ( eventType != null && eventPath != null && eventMethod != null ) {
-            if ( eventType.compareToIgnoreCase("java") == 0 ) {
-                // Java Event implemented via reflection
-                try {
-                    Class[] paramTypes = new Class[] {HashMap.class};
-                    Object[] params = new Object[] {parameters};
-                    Class c = Class.forName(eventPath);
-                    Method m = c.getMethod(eventMethod, paramTypes);
-                    eventResult = (String) m.invoke(null,params);
-                }
-                catch ( Exception e ) {
-                    Debug.log(e,"Job Event - Problems Processing Event.");
-                }
+            try {
+                EventHandler eh = new EventHandler(eventType,eventPath,eventMethod);
+                eventResult = eh.invoke(parameters,parameters);
             }
-            else if ( eventType.compareToIgnoreCase("get") == 0 ) {
-                // HTTP GET implemented via HttpClient
-                try {
-                    HttpClient http = new HttpClient(eventPath, parameters, headers);
-                    eventResult = http.get();
-                }
-                catch ( Exception e ) {
-                    Debug.log(e,"Job Event - Problems Processing Event.");
-                }
-            }
-            else if ( eventType.compareToIgnoreCase("post") == 0 ) {
-                // HTTP POST implemented via HttpClient
-                try {
-                    HttpClient http = new HttpClient(eventPath, parameters, headers);
-                    eventResult = http.post();
-                }
-                catch ( Exception e ) {
-                    Debug.log(e,"Job Event - Problems Processing Event.");
-                }
-            }
-            else if ( eventType.compareToIgnoreCase("javascript") == 0 ) {
-                //to be implemented later through IBM BSF
-            }
-            else if ( eventType.compareToIgnoreCase("jpython") == 0 ) {
-                //to be implemented later through IBM BSF
-            }
-            else if ( eventType.compareToIgnoreCase("netrexx") == 0 ) {
-                //to be implemented later through IBM BSF
-            }
-            else if ( eventType != null ) {
-                Debug.log("Job Event - Unknown event type: " + eventType);
+            catch ( EventHandlerException e ) {
+                Debug.log(e,"Event Error - ");
             }
         }
     }

@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/08/24 17:14:34  azeneski
+ * Removed plain text attribute and created a defination in SiteDefs.
+ * NOTE: Need to update all pages/events which use the old name!
+ *
  * Revision 1.9  2001/08/24 02:39:48  azeneski
  * Added logging of some initial client headers for application use.
  *
@@ -85,9 +89,9 @@ public class ControlServlet extends HttpServlet {
     
     public void init(ServletConfig config) throws ServletException {
       super.init(config);
-      getRequestHandler();
-      jm = new JobManager(getServletContext());
       
+      // setup the request handler
+      getRequestHandler();          
       //initialize the entity & security stuff
       String serverName = config.getServletContext().getInitParameter(SiteDefs.ENTITY_SERVER_NAME);
       if(serverName == null || serverName.length() <= 0) serverName = "default";
@@ -96,8 +100,10 @@ public class ControlServlet extends HttpServlet {
       Security security = new Security(helper);
       if(security == null) Debug.logError("[ControlServlet.init] ERROR: security create failed for serverName \"" + serverName + "\"");
       //put these two in the "application" scope
-      getServletContext().setAttribute(SiteDefs.ENTITY_HELPER, helper);
-      getServletContext().setAttribute(SiteDefs.SECURITY_OBJECT, security);
+      getServletContext().setAttribute("helper", helper);
+      getServletContext().setAttribute("security", security);
+      // setup the job scheduler
+       jm = new JobManager(getServletContext(),helper);
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -111,9 +117,7 @@ public class ControlServlet extends HttpServlet {
 
         // Setup the CONTROL_PATH for JSP dispatching. 
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
-        Debug.log("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
-        /** Setup the SERVLET_CONTEXT for events. */
-        request.setAttribute(SiteDefs.SERVLET_CONTEXT,getServletContext());
+        Debug.log("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));                
         request.setAttribute(SiteDefs.JOB_MANAGER,jm);
         
         // Store some first hit client info for later.
@@ -133,21 +137,19 @@ public class ControlServlet extends HttpServlet {
         }
         
         // for convenience, and necessity with event handlers, make security and helper available in the session:
-        GenericHelper helper = (GenericHelper)session.getAttribute(SiteDefs.ENTITY_HELPER);
-        Security security = (Security)session.getAttribute(SiteDefs.SECURITY_OBJECT);
+        GenericHelper helper = (GenericHelper)session.getAttribute("helper");
+        Security security = (Security)session.getAttribute("security");
         if(helper == null)
         {
-          helper = (GenericHelper)getServletContext().getAttribute(SiteDefs.ENTITY_HELPER);
-          if(helper == null) Debug.logError("[ControlServlet] ERROR: helper not found in ServletContext");
-          session.setAttribute(SiteDefs.ENTITY_HELPER,helper);
-          session.setAttribute("helper", helper);  // TO BE REMOVED ASAP!!
+          helper = (GenericHelper)getServletContext().getAttribute("helper");
+          if(helper == null) Debug.logError("[ControlServlet] ERROR: helper not found in ServletContext");          
+          session.setAttribute("helper", helper);  
         }
         if(security == null)
         {
-          security = (Security)getServletContext().getAttribute(SiteDefs.SECURITY_OBJECT);
-          if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
-          session.setAttribute(SiteDefs.SECURITY_OBJECT,security);
-          session.setAttribute("security", security); // TO BE REMOVED ASAP!!
+          security = (Security)getServletContext().getAttribute("security");
+          if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");          
+          session.setAttribute("security", security); 
         }
         
         try {
