@@ -538,14 +538,13 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         context.put("previousActivity", workEffortId);
         this.setProcessContext(context);
 
-        // set the estimatedStartDate
+        // set the actualStartDate
         try {
             GenericValue v = getRuntimeObject();
-
-            v.set("estimatedStartDate", UtilDateTime.nowTimestamp());
+            v.set("actualStartDate", UtilDateTime.nowTimestamp());
             v.store();
         } catch (GenericEntityException e) {
-            Debug.logWarning("Could not set 'estimatedStartDate'.", module);
+            Debug.logWarning("Could not set 'actualStartDate'.", module);
             e.printStackTrace();
         }
 

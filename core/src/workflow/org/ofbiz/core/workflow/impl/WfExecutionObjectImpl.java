@@ -106,7 +106,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         dataMap.put("workEffortName", valueObject.getString("objectName"));
         dataMap.put("description", valueObject.getString("description"));
         dataMap.put("createdDate", new Timestamp((new Date()).getTime()));
-        dataMap.put("actualStartDate", dataMap.get("createdDate"));
+        dataMap.put("estimatedStartDate", dataMap.get("createdDate"));
         dataMap.put("lastModifiedDate", dataMap.get("createdDate"));
         dataMap.put("priority", valueObject.getLong("objectPriority"));
         dataMap.put("currentStatusId", WfUtil.getOFBStatus("open.not_running.not_started"));

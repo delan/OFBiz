@@ -129,6 +129,16 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 
         if (Debug.verboseOn()) 
             Debug.logVerbose("[WfProcess.start] : Started the workflow process.", module);
+            
+        // set the actualStartDate
+        try {
+            GenericValue v = getRuntimeObject();
+            v.set("actualStartDate", UtilDateTime.nowTimestamp());
+            v.store();
+        } catch (GenericEntityException e) {
+            Debug.logWarning("Could not set 'actualStartDate'.", module);
+            e.printStackTrace();
+        }            
         startActivity(start);
     }
   
