@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.37 2004/05/10 17:41:41 jonesde Exp $
+ * $Id: OrderServices.java,v 1.38 2004/05/21 22:16:31 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -74,7 +74,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.37 $
+ * @version    $Revision: 1.38 $
  * @since      2.0
  */
 
@@ -1486,6 +1486,12 @@ public class OrderServices {
     /** Service to email a customer with order changes */
     public static Map prepareOrderChange(DispatchContext ctx, Map context) {
         context.put("emailType", "PRDS_ODR_CHANGE");
+        return prepareOrderEmail(ctx, context);
+    }
+
+    /** Service to email a customer with order payment retry results */
+    public static Map prepareOrderPayRetry(DispatchContext ctx, Map context) {
+        context.put("emailType", "PRDS_ODR_PAYRETRY");
         return prepareOrderEmail(ctx, context);
     }
 
