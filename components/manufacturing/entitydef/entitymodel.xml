@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  */
 -->
 
@@ -75,18 +75,6 @@
   <!-- org.ofbiz.manufacturing.techdata -->
   <!-- ========================================================= -->
 
-    <entity entity-name="TechDataMachineGroup"
-            package-name="org.ofbiz.manufacturing.techdata"
-            title="Tech Data Machine Group"
-            author="Olivier Heintz">
-      <description>Used to group similar machine, a routing operation is done on a machine group</description>
-      <field name="machineGroupId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="machineGroupId"/>
-      <relation type="many"  rel-entity-name="TechDataMachine">
-        <key-map field-name="machineGroupId"/>
-      </relation>
-    </entity>
     <entity entity-name="TechDataCalendarWeek"
             package-name="org.ofbiz.manufacturing.techdata"
             title="Week definition entity"
@@ -137,7 +125,7 @@
       <relation type="many"  rel-entity-name="TechDataCalendarExcWeek">
         <key-map field-name="calendarId"/>
       </relation>
-      <relation type="many"  rel-entity-name="TechDataMachine">
+      <relation type="many"  rel-entity-name="FixedAsset">
         <key-map field-name="calendarId"/>
       </relation>
     </entity>
@@ -174,23 +162,6 @@
       </relation>
       <relation type="one" fk-name="EXC_WEEK_WEEK" rel-entity-name="TechDataCalendarWeek">
         <key-map field-name="calendarWeekId"/>
-      </relation>
-    </entity>
-    <entity entity-name="TechDataMachine"
-            package-name="org.ofbiz.manufacturing.techdata"
-            title="Machine entity">
-      <description>A machine is a element of a machineGroup, which is used by the operation entity or routing entity. This is used by the delay and capacity calculation.
-      </description>
-      <field name="machineId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <field name="machineGroupId" type="id-ne"></field>
-      <field name="calendarId" type="id-ne"></field>
-      <prim-key field="machineId"/>
-      <relation type="one" fk-name="MACHINE_MACHINE_GROUP" rel-entity-name="TechDataMachineGroup">
-        <key-map field-name="machineGroupId"/>
-      </relation>
-      <relation type="one" fk-name="MACHINE_CALENDAR" rel-entity-name="TechDataCalendar">
-        <key-map field-name="calendarId"/>
       </relation>
     </entity>
 </entitymodel>
