@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -53,16 +53,16 @@ ${pages.get("/product/ProductTabBar.ftl")}
 	            <td><div class="tabletext"><#if facilityLocation?exists>${facilityLocation.areaId}:${facilityLocation.aisleId}:${facilityLocation.sectionId}:${facilityLocation.levelId}:${facilityLocation.positionId}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</div></td>
 	            <td align="center">
 	                <FORM method=POST action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
-	                    <input type=hidden name="productId" value="${(productFacilityLocation.productId)?if_exists}">
-	                    <input type=hidden name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}">
-	                    <input type=hidden name="locationSeqId" value="${(productFacilityLocation.facilityId)?if_exists}">
-	                    <input type=text size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)?if_exists}" class="inputBox">
-	                    <input type=text size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)?if_exists}" class="inputBox">
-	                    <INPUT type=submit value="Update" style="font-size: x-small;">
+	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">
+	                    <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}">
+	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.facilityId)?if_exists}">
+	                    <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)?if_exists}" class="inputBox">
+	                    <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)?if_exists}" class="inputBox">
+	                    <INPUT type="submit" value="Update" style="font-size: x-small;">
 	                </FORM>
 	            </td>
 	            <td align="center">
-	            <a href="<@ofbizUrl>/deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">
+	            <a href="<@ofbizUrl>/deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}&locationSeqId=${(productFacilityLocation.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
 	            [Delete]</a>
 	            </td>
 	        </tr>
@@ -72,7 +72,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <form method="POST" action="<@ofbizUrl>/createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
             <input type="hidden" name="productId" value="${productId?if_exists}">
             <input type="hidden" name="useValues" value="true">
-            <div class="head2">Add Facility:</div>
+            <div class="head2">Add Facility Location:</div>
             <div class="tabletext">
                 Facility:
                 <select name="facilityId" class="selectBox">

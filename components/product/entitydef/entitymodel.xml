@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  */
 -->
 
@@ -2226,6 +2226,10 @@
         <key-map field-name="locationTypeEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFacilityLocation">
         <key-map field-name="facilityId"/>
         <key-map field-name="locationSeqId"/>
       </relation>

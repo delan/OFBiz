@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -41,16 +41,18 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-String productId = request.getParameter("productId");
-context.put("productId", productId);
+productId = request.getParameter("productId");
 
-GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-if (product != null) context.put("product", product);
+product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 
-Collection productInventoryItems = delegator.findByAnd("InventoryItem", 
+productInventoryItems = delegator.findByAnd("InventoryItem", 
         UtilMisc.toMap("productId", productId), 
-        UtilMisc.toList("statusId", "quantityOnHand", "serialNumber"));
-if (productInventoryItems != null) context.put("productInventoryItems", productInventoryItems);
+        UtilMisc.toList("facilityId", "-receivedDate", "inventoryItemId"));
 
-String externalLoginKey = LoginEvents.getExternalLoginKey(request);
-context.put("externalLoginKey", externalLoginKey);
+showEmpty = "true".equals(request.getParameter("showEmpty"));
+
+context.put("productId", productId);
+context.put("product", product);
+context.put("productInventoryItems", productInventoryItems);
+context.put("showEmpty", showEmpty);
+

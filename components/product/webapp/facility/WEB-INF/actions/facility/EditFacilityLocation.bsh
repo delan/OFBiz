@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
  */
 
@@ -46,27 +46,29 @@ facilityLocation = null;
 if (UtilValidate.isEmpty(facilityId) && UtilValidate.isNotEmpty((String) request.getAttribute("facilityId"))) {
     facilityId = (String) request.getAttribute("facilityId");
 }
-context.put("facilityId", facilityId);
 
 if (UtilValidate.isEmpty(locationSeqId) && UtilValidate.isNotEmpty((String) request.getAttribute("locationSeqId"))) {
     locationSeqId = (String) request.getAttribute("locationSeqId");
 }
-context.put("locationSeqId", locationSeqId);
 
 if (facilityId != null && locationSeqId != null) {
-    facilityLocation = delegator.findByPrimaryKey("FacilityLocation", 
-            UtilMisc.toMap("facilityId", facilityId, "locationSeqId", locationSeqId));
+    facilityLocation = delegator.findByPrimaryKey("FacilityLocation", UtilMisc.toMap("facilityId", facilityId, "locationSeqId", locationSeqId));
 }
 if (facilityId != null) {
     facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
 }
-context.put("facility", facility);
-
-if (facilityLocation == null) {
-    tryEntity = false;
-} else {
-    context.put("facilityLocation", facilityLocation);       
-}   
 
 locationTypeEnums = delegator.findByAnd("Enumeration", UtilMisc.toMap("enumTypeId", "FACLOC_TYPE"));
+
+// ProductFacilityLocation stuff
+productFacilityLocations = null;
+if (facilityLocation != null) {
+	productFacilityLocations = facilityLocation.getRelated("ProductFacilityLocation", null, UtilMisc.toList("productId"));
+}
+
+context.put("facilityId", facilityId);
+context.put("locationSeqId", locationSeqId);
+context.put("facility", facility);
+context.put("facilityLocation", facilityLocation);       
 context.put("locationTypeEnums", locationTypeEnums);
+context.put("productFacilityLocations", productFacilityLocations);
