@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/12/09 12:18:12  jonesde
+ * Added some task/activity workers
+ *
  * Revision 1.8  2001/11/14 13:51:37  jonesde
  * Fixed tryEntity bug on error
  *
@@ -301,9 +304,16 @@ public class WorkEffortWorker {
         Collection validWorkEfforts = null;
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
-                validWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign", 
-                        UtilMisc.toMap("partyId", userLogin.get("partyId"), "workEffortTypeId", "ACTIVITY"),
-                        UtilMisc.toList("priority"));
+                List constraints = new LinkedList();
+                constraints.add(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
+                constraints.add(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "ACTIVITY"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_DECLINED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_DELEGATED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
+                constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
+                constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"));
+                constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
+                validWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign", constraints, UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
             }
@@ -322,7 +332,11 @@ public class WorkEffortWorker {
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
                 validWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign", 
-                        UtilMisc.toMap("partyId", userLogin.get("partyId"), "workEffortTypeId", "TASK"),
+                        UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
+                        new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "TASK"),
+                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_DECLINED"),
+                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_DELEGATED"),
+                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED")),
                         UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
