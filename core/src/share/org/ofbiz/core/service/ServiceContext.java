@@ -37,6 +37,7 @@ import java.util.*;
 public class ServiceContext {
     
     protected Map modelServices;
+    protected Map attributes;
     protected Collection readers;
     protected ClassLoader loader;
     
@@ -44,9 +45,28 @@ public class ServiceContext {
     public ServiceContext(Collection readers, ClassLoader loader) {
         this.readers = readers;
         this.loader = loader;
+        this.attributes = new HashMap();
         this.addReaders(readers);        
     }
     
+    /** Returns the service attribute for the given name, or null if there is no attribute by that name.
+     *@param name a String specifying the name of the attribute
+     *@return an Object conatining the value of the attribute, or null if there is no attribute by that name.
+     */
+    public Object getAttribute(String name) {
+        if ( attributes.containsKey(name) )
+            return attributes.get(name);
+        return null;
+    }
+    
+    /** Binds an object to a given attribute name in this context.
+     *@param name a String specifying the name of the attribute
+     *@param object an Object representing the attribute to be bound.
+     */
+    public void setAttribute(String name, Object object) {
+        attributes.put(name,object);
+    }
+     
     /** Gets the classloader of this context
      *@return ClassLoader of the context
      */
