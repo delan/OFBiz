@@ -23,8 +23,10 @@
  */
 package org.ofbiz.core.widget.form;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.model.ModelEntity;
 import org.ofbiz.core.entity.model.ModelField;
@@ -32,7 +34,12 @@ import org.ofbiz.core.service.GenericServiceException;
 import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.service.ModelParam;
 import org.ofbiz.core.service.ModelService;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.util.BshUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.FlexibleMapAccessor;
+import org.ofbiz.core.util.UtilValidate;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Element;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -160,11 +167,60 @@ public class ModelForm {
      *   use the same form definitions for many types of form UIs
      */
     public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
-        // TODO: based on the type of form, render form headers/footers/wrappers and call individual field renderers
-        // NOTE: for display and hyperlink with also hidden set to true: iterate through field list, find these and hidden fields and render them
         if ("single".equals(this.type)) {
+            // render form open
+            formStringRenderer.renderFormOpen(buffer, context, this);
             
+            // render all hidden & ignored fields
+            Iterator fieldIter = this.fieldList.iterator();
+            while (fieldIter.hasNext()) {
+                ModelFormField modelFormField = (ModelFormField) fieldIter.next();
+                ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+
+                // render hidden/ignored field widget
+                if (fieldInfo instanceof ModelFormField.HiddenField) {
+                    formStringRenderer.renderHiddenField(buffer, context, (ModelFormField.HiddenField) fieldInfo);
+                } else if (fieldInfo instanceof ModelFormField.IgnoredField) {
+                    formStringRenderer.renderIgnoredField(buffer, context, (ModelFormField.IgnoredField) fieldInfo);
+                } else if (fieldInfo instanceof ModelFormField.DisplayField) {
+                    // TODO: for display and hyperlink with also hidden set to true: iterate through field list, find these and hidden fields and render them
+                } else if (fieldInfo instanceof ModelFormField.HyperlinkField) {
+                } else {
+                    continue;
+                }
+            }
+            
+            // render formatting wrapper open
+            formStringRenderer.renderFormatWrapperOpen(buffer, context, this);
+            
+            // TODO: render each field row, except hidden & ignored rows
+            {
+                // TODO: render row formatting open
+                
+                // TODO: render title formatting open
+                
+                // TODO: render title (unless this is a submit field
+                
+                // TODO: render title formatting close
+                
+                // TODO: render separator
+                
+                // TODO: render widget formatting open
+                
+                // TODO: render widget
+                
+                // TODO: render widget formatting close
+                
+                // TODO: render row formatting close
+            }
+            
+            // render formatting wrapper close
+            formStringRenderer.renderFormatWrapperClose(buffer, context, this);
+            
+            // render form close
+            formStringRenderer.renderFormClose(buffer, context, this);
         } else if ("list".equals(this.type)) {
+            // TODO: render list/tabular type forms
         } else {
             throw new IllegalArgumentException("The type " + this.getType() + " is not supported for form with name " + this.getName());
         }
