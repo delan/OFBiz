@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.15 2004/07/06 21:54:41 doogie Exp $
+ * $Id: ModelEntity.java,v 1.16 2004/07/07 05:17:16 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class ModelEntity extends ModelInfo implements Comparable {
@@ -126,7 +126,10 @@ public class ModelEntity extends ModelInfo implements Comparable {
         NodeList fieldList = entityElement.getElementsByTagName("field");
         for (int i = 0; i < fieldList.getLength(); i++) {
             ModelField field = reader.createModelField((Element) fieldList.item(i));
-            if (field != null) this.fields.add(field);
+            if (field != null) {
+                field.setModelEntity(this);
+                this.fields.add(field);
+            }
         }
         
         // if applicable automatically add the STAMP_FIELD and STAMP_TX_FIELD fields
@@ -138,12 +141,14 @@ public class ModelEntity extends ModelInfo implements Comparable {
         if (!this.noAutoStamp && !this.isField(STAMP_TX_FIELD)) {
             ModelField newField = reader.createModelField(STAMP_TX_FIELD, "date-time", null, false);
             newField.setIsAutoCreatedInternal(true);
+            newField.setModelEntity(this);
             this.fields.add(newField);
             
             // also add an index for this field
             String indexName = ModelUtil.shortenDbName(this.tableName + "_TXSTMP", 18);
             ModelIndex txIndex = new ModelIndex(this, indexName, false);
             txIndex.addIndexField(ModelEntity.STAMP_TX_FIELD);
+            txIndex.setModelEntity(this);
             indexes.add(txIndex);
         }
 
@@ -151,17 +156,20 @@ public class ModelEntity extends ModelInfo implements Comparable {
         if ((this.doLock || !this.noAutoStamp) && !this.isField(CREATE_STAMP_FIELD)) {
             ModelField newField = reader.createModelField(CREATE_STAMP_FIELD, "date-time", null, false);
             newField.setIsAutoCreatedInternal(true);
+            newField.setModelEntity(this);
             this.fields.add(newField);
         }
         if (!this.noAutoStamp && !this.isField(CREATE_STAMP_TX_FIELD)) {
             ModelField newField = reader.createModelField(CREATE_STAMP_TX_FIELD, "date-time", null, false);
             newField.setIsAutoCreatedInternal(true);
+            newField.setModelEntity(this);
             this.fields.add(newField);
             
             // also add an index for this field
             String indexName = ModelUtil.shortenDbName(this.tableName + "_TXCRTS", 18);
             ModelIndex txIndex = new ModelIndex(this, indexName, false);
             txIndex.addIndexField(ModelEntity.CREATE_STAMP_TX_FIELD);
+            txIndex.setModelEntity(this);
             indexes.add(txIndex);
         }
 
@@ -226,7 +234,10 @@ public class ModelEntity extends ModelInfo implements Comparable {
             Element relationElement = (Element) relationList.item(i);
             if (relationElement.getParentNode() == entityElement) {
                 ModelRelation relation = reader.createRelation(this, relationElement);
-                if (relation != null) this.relations.add(relation);
+                if (relation != null) {
+                    relation.setModelEntity(this);
+                    this.relations.add(relation);
+                }
             }
         }
     }
@@ -237,6 +248,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
             Element indexElement = (Element) indexList.item(i);
             if (indexElement.getParentNode() == entityElement) {
                 ModelIndex index = new ModelIndex(this, indexElement);
+                index.setModelEntity(this);
                 this.indexes.add(index);
             }
         }
@@ -464,6 +476,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
 
     public void addField(ModelField field) {
         if (field == null) return;
+        field.setModelEntity(this);
         this.fields.add(field);
 
         if (field.isPk) {
@@ -552,6 +565,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
     }
 
     public void addRelation(ModelRelation relation) {
+        relation.setModelEntity(this);
         this.relations.add(relation);
     }
 
@@ -581,6 +595,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
     }
 
     public void addIndex(ModelIndex index) {
+        index.setModelEntity(this);
         this.indexes.add(index);
     }
 
