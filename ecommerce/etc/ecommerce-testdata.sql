@@ -1,14 +1,14 @@
 
-INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED)
-  VALUES ('GZ-2644','101','Round Gizmo','','Round Gizmo w/ Lights','A small round gizmo with multi-colored lights. Works great in the dark. Small and compact.',47.99,100.000000);
-INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED)
-  VALUES ('GZ-8544','102','Big Gizmo','','Big Gizmo w/ Legs','A large gizmo with legs. Walks on its own. Does not require a power supply.',269.99,100.000000);
-INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED)
-  VALUES ('WG-1111','201111','Micro Chrome Widget','','Micro Widget - Chrome Colored','This micro chrome widget makes a perfect gift. This one is so small that it floats in air.',59.99,50.000000);
-INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED)
-  VALUES ('WG-5569','201','Tiny Chrome Widget','','Tiny Chrome Widget','This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required.',59.99,50.000000);
-INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED)
-  VALUES ('WG-9943','202','Giant Widget','','Giant Widget With Wheels','This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item.',549.99,10.000000);
+INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED, WEIGHT)
+  VALUES ('GZ-2644','101','Round Gizmo','','Round Gizmo w/ Lights','A small round gizmo with multi-colored lights. Works great in the dark. Small and compact.',47.99,100.000000,7.00000);
+INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED, WEIGHT)
+  VALUES ('GZ-8544','102','Big Gizmo','','Big Gizmo w/ Legs','A large gizmo with legs. Walks on its own. Does not require a power supply.',269.99,100.000000,12.00000);
+INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED, WEIGHT)
+  VALUES ('WG-1111','201111','Micro Chrome Widget','','Micro Widget - Chrome Colored','This micro chrome widget makes a perfect gift. This one is so small that it floats in air.',59.99,50.000000,2.00000);
+INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED, WEIGHT)
+  VALUES ('WG-5569','201','Tiny Chrome Widget','','Tiny Chrome Widget','This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required.',59.99,50.000000,4.00000);
+INSERT INTO PRODUCT (PRODUCT_ID, PRIMARY_PRODUCT_CATEGORY_ID, NAME, COMMENT, DESCRIPTION, LONG_DESCRIPTION, DEFAULT_PRICE, QUANTITY_INCLUDED, WEIGHT)
+  VALUES ('WG-9943','202','Giant Widget','','Giant Widget With Wheels','This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item.',549.99,10.000000,22.00000);
 
 INSERT INTO PRODUCT_ASSOC (PRODUCT_ID, PRODUCT_ID_TO, PRODUCT_ASSOC_TYPE_ID, QUANTITY, FROM_DATE, THRU_DATE, REASON, INSTRUCTION) 
   VALUES ('WG-5569','WG-9943','PRODUCT_UPGRADE',1.0,'2001-01-01 12:00:00.000',null,'A little bit more expensive, but worth every penny!','');

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/28 21:57:53  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.5  2001/09/05 00:56:24  jonesde
  * Added getName to cart item, and uses it in the minicart because description is too long; should use in real cart too.
  *
@@ -61,7 +64,6 @@ public class ShoppingCartItem implements Serializable {
     private String itemComment;
     private double discountAmount;
     private double quantity;            
-    private boolean shippingApplies;
     private Map features;
     private Map attributes;
     private int type;
@@ -78,8 +80,7 @@ public class ShoppingCartItem implements Serializable {
         this.quantity = quantity;
         this.attributes = features;
         this.discountAmount = 0.00;
-        this.itemComment = null;
-        this.shippingApplies = true;
+        this.itemComment = null;        
         this.type = 0;
         this.attributes = new HashMap();
     }
@@ -98,12 +99,7 @@ public class ShoppingCartItem implements Serializable {
     public void setComment(String itemComment) {
         this.itemComment = itemComment;
     }
-    
-    /** Specifies if shipping applies to this item. */
-    public void setShippingApplies(boolean shippingApplies) {
-        this.shippingApplies = shippingApplies;
-    }
-    
+        
     /** Sets an item attribute. */
     public void setAttribute(String name, String value) {
         attributes.put(name,value);
@@ -111,7 +107,11 @@ public class ShoppingCartItem implements Serializable {
     
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
-        return shippingApplies;
+        Boolean shipCharge = product.getBoolean("chargeShipping");
+        if ( shipCharge == null )
+            return true;
+        else
+            return shipCharge.booleanValue();      
     }
     
     /** Return a specific attribute. */
@@ -139,6 +139,15 @@ public class ShoppingCartItem implements Serializable {
         return itemComment;
     }
     
+    /** Returns the item's unit weight */
+    public double getWeight() {
+        Double weight = product.getDouble("weight");
+        if ( weight == null )
+            return 0;
+        else 
+            return weight.doubleValue();
+    }
+                
     /** Returns the quantity. */
     public double getQuantity() {
         return quantity;

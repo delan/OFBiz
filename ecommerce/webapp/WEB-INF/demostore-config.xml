@@ -103,6 +103,13 @@
     <request-map uri="checkout">
       <security https="true" auth="true"/>
       <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="setCheckOutOptions"/>
+      <response name="success" type="request" value="calcShipping"/>
+      <response name="error" type="view" value="checkoutoptions"/>
+    </request-map>
+    
+    <request-map uri="calcShipping">
+      <security https="true" auth="true"/>
+      <event type="java" path="org.ofbiz.ecommerce.checkout.ShippingEvents" invoke="calcShipping"/>
       <response name="success" type="view" value="checkout"/>
       <response name="error" type="view" value="checkoutoptions"/>
     </request-map>
@@ -111,7 +118,7 @@
       <security https="true" auth="false"/>
       <response name="success" type="request" value="createorder"/>
     </request-map>
-
+    
     <request-map uri="createorder">
       <security https="true" auth="true"/>
       <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="createOrder"/>
