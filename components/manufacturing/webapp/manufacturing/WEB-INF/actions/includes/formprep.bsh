@@ -63,9 +63,9 @@ import javax.servlet.http.*;
 dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 delegator = (GenericDelegator) request.getAttribute("delegator");
 
-formDefFile = page.getProperty("formDefFile");
-singleFormName = page.getProperty("singleFormName");
-entityName = page.getProperty("entityName");
+formDefFile = page.get("formDefFile");
+singleFormName = page.get("singleFormName");
+entityName = page.get("entityName");
 //String defaultMapName = page.getProperty("defaultMapName");
 //if( defaultMapName == null) defaultMapName = "currentValue";
 defaultMapName = "currentValue";

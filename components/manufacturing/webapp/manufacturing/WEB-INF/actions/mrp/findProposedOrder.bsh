@@ -69,7 +69,7 @@ delegator = (GenericDelegator) request.getAttribute("delegator");
 // field from the user query 
 Map inputFields = UtilHttp.getParameterMap(request);
 //preload the query 
-staticConditionsStr = page.getProperty("staticConditions");
+staticConditionsStr = page.get("staticConditions");
 if (staticConditionsStr != null && staticConditionsStr.length() > 0) {
     String [] staticConditions = BshUtil.eval("String [] cond=" 
                       + staticConditionsStr + "; return cond;",new HashMap());
@@ -80,7 +80,7 @@ if (staticConditionsStr != null && staticConditionsStr.length() > 0) {
 
 String hideSearch = inputFields.get("hideSearch");
 context.put("hideSearch", hideSearch);
-String showListIfSelection = page.getProperty("showListIfSelection");
+String showListIfSelection = page.get("showListIfSelection");
 
 if (UtilValidate.isEmpty(showListIfSelection) || showListIfSelection.equals("Y") || (UtilValidate.isNotEmpty(hideSearch) && hideSearch.equals("Y"))) {
     context.put("showList", "Y");
@@ -132,7 +132,7 @@ if (UtilValidate.isEmpty(showListIfSelection) || showListIfSelection.equals("Y")
     
     // create the orderBy
     List orderByList = null;
-    String orderBy  = page.getProperty("orderBy");
+    String orderBy  = page.get("orderBy");
     if (UtilValidate.isNotEmpty(orderBy)) {
         orderByList = StringUtil.split(orderBy,"|");
     }
