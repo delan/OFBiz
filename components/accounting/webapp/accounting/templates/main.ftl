@@ -22,11 +22,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@author     Olivier.Heintz@nereide.biz (migration to UiLabelMap)
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
 <#assign layoutSettings = requestAttributes.layoutSettings>
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <html>
 <head>
     <#assign layoutSettings = requestAttributes.layoutSettings>
@@ -44,15 +46,15 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="headerboxtop">
         <tr>
           <#if layoutSettings.headerImageUrl?exists>
-          <td align=left width="1%"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>"></td>
+          <td align="left" width="1%"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>"></td>
           </#if>       
           <td align="right" width="1%" nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background="${layoutSettings.headerRightBackgroundUrl}"</#if>>
             <#if requestAttributes.person?has_content>
-              <div class="insideHeaderText">Welcome&nbsp;${requestAttributes.person.firstName?if_exists}&nbsp;${requestAttributes.person.lastName?if_exists}!</div>
+              <div class="insideHeaderText">${uiLabelMap.CommonWelcome}&nbsp;${requestAttributes.person.firstName?if_exists}&nbsp;${requestAttributes.person.lastName?if_exists}!</div>
             <#elseif requestAttributes.partyGroup?has_content>
-              <div class="insideHeaderText">Welcome&nbsp;${requestAttributes.partyGroup.groupName?if_exists}!</div>
+              <div class="insideHeaderText">${uiLabelMap.CommonWelcome}&nbsp;${requestAttributes.partyGroup.groupName?if_exists}!</div>
             <#else>
-              <div class="insideHeaderText">Welcome!</div>
+              <div class="insideHeaderText">${uiLabelMap.CommonWelcome}!</div>
             </#if>
             <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
             <div class="insideHeaderText">
