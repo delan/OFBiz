@@ -89,3 +89,5 @@ function mClk(src){
     </TD>
   </TR>
 </TABLE>
+
+<%@ include file='/includes/appbar.jsp' %>

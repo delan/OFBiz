@@ -56,6 +56,7 @@
 <BR>
 <%}%>
 <DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of Order Manager related information.</DIV>
+<DIV class='tabletext'>NOTE: This application is currently empty, so don't bother looking for anything.</DIV>
     </TD>
   </TR>
 </TABLE>
