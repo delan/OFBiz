@@ -6,23 +6,21 @@
       <%String smallImageUrl = product.getString("smallImageUrl");%>
       <%if(smallImageUrl == null || smallImageUrl.length() <= 0) smallImageUrl = "/images/defaultImage.jpg";%>
         <a href="<ofbiz:url>/product?product_id=<%= product.getString("productId") %></ofbiz:url>">
-          <img src="<%=smallImageUrl%>" align="left" height="50" width="50" border='0'>
+          <img src="<%=smallImageUrl%>" align="left" height="50" width="50" class='imageborder' border='0'>
         </a>
     </td>
     <td align="left" valign="top" width="100%">
-      <div align="right">
-        <div class="itemtext">
+        <div class="tabletext">
           <a href="<ofbiz:url>/product?product_id=<%= product.getString("productId") %></ofbiz:url>" class="buttontext"><%=product.getString("name")%></a>
         </div>
 
-        <div class="itemtext">
+        <div class="tabletext">
           <p><nobr>
             <b><%=product.getString("productId")%></b>,
             <b><%=UtilFormatOut.formatPrice(product.getDouble("defaultPrice"))%></b>
             , Reg. <%=UtilFormatOut.formatPrice(product.getDouble("defaultPrice"))%>
           </nobr></p>
         </div>
-      </div>
     </td>
     <td>
       <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="the<%=UtilFormatOut.formatQuantity(listIndex)%>form" style='margin: 0;'>
