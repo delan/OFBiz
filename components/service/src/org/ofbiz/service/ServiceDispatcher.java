@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.5 2003/09/25 21:52:58 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.6 2003/10/30 20:30:34 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -456,45 +456,116 @@ public class ServiceDispatcher {
      */
     public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
         boolean debugging = checkDebug(service, 1, true);
-        // check the locale
-        this.checkLocale(context);
-        
-        // get eventMap once for all calls for speed, don't do event calls if it is null
-        Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
-
-        DispatchContext ctx = (DispatchContext) localContext.get(localName);
-
-        // pre-auth ECA
-        if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, null, false);
-
-        context = checkAuth(localName, context, service);
-        Object userLogin = context.get("userLogin");
-
-        if (service.auth && userLogin == null)
-            throw new ServiceAuthException("User authorization is required for this service : " + service.name);
-
-        // setup the engine
-        GenericEngine engine = getGenericEngine(service.engineName);
-        
-        // pre-validate ECA
-        if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, null, false);
-
-        // validate the context
-        if (service.validate) {
-            try {
-                service.validate(context, ModelService.IN_PARAM);
-            } catch (ServiceValidationException e) {
-                throw new GenericServiceException("Context (in runAsync : " + service.name + ") does not match expected requirements: ", e);
-            }
-        }
-
         if (Debug.verboseOn()) {
-            Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
+            Debug.logVerbose("[ServiceDispatcher.runAsync] : prepareing service " + service.name + " [" + service.location + "/" + service.invoke +
                 "] (" + service.engineName + ")", module);
         }
 
-        engine.runAsync(localName, service, context, requester, persist);
-        checkDebug(service, 0, debugging);
+        // check the locale
+        this.checkLocale(context);
+
+        // for isolated transactions
+        TransactionManager tm = TransactionFactory.getTransactionManager();
+        Transaction parentTransaction = null;
+
+        // start the transaction
+        boolean beganTrans = false;
+        if (service.useTransaction) {
+            try {
+                beganTrans = TransactionUtil.begin(service.transactionTimeout);
+            } catch (GenericTransactionException te) {
+                throw new GenericServiceException("Cannot start the transaction.", te.getNested());
+            }
+
+            // isolate the transaction if defined
+            if (service.requireNewTransaction && !beganTrans) {
+                try {
+                    parentTransaction = tm.suspend();
+                } catch (SystemException se) {
+                    Debug.logError(se, "Problems suspending current transaction", module);
+                    throw new GenericServiceException("Problems suspending transaction, see logs");
+                }
+
+                // now start a new transaction
+                try {
+                    beganTrans = TransactionUtil.begin(service.transactionTimeout);
+                } catch (GenericTransactionException gte) {
+                    throw new GenericServiceException("Cannot start the transaction.", gte.getNested());
+                }
+            }
+        }
+        
+        // needed for events
+        DispatchContext ctx = (DispatchContext) localContext.get(localName);
+
+        try {
+            // get eventMap once for all calls for speed, don't do event calls if it is null
+            Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
+
+            // pre-auth ECA
+            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, null, false);
+
+            context = checkAuth(localName, context, service);
+            Object userLogin = context.get("userLogin");
+
+            if (service.auth && userLogin == null)
+                throw new ServiceAuthException("User authorization is required for this service : " + service.name);
+
+            // setup the engine
+            GenericEngine engine = getGenericEngine(service.engineName);
+
+            // pre-validate ECA
+            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, null, false);
+
+            // validate the context
+            if (service.validate) {
+                try {
+                    service.validate(context, ModelService.IN_PARAM);
+                } catch (ServiceValidationException e) {
+                    throw new GenericServiceException("Context (in runAsync : " + service.name + ") does not match expected requirements: ", e);
+                }
+            }
+
+            // run the service
+            if (requester != null) {
+                engine.runAsync(localName, service, context, requester, persist);
+            } else {
+                engine.runAsync(localName, service, context, persist);
+            }
+
+            // always try to commit the transaction since we don't know in this case if its was an error or not
+            try {
+                TransactionUtil.commit(beganTrans);
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, "Could not commit transaction", module);
+                throw new GenericServiceException("Commit transaction failed");
+            }
+
+            // resume the parent transaction
+            if (parentTransaction != null) {
+                try {
+                    tm.resume(parentTransaction);
+                } catch (InvalidTransactionException ite) {
+                    Debug.logWarning(ite, "Invalid transaction, not resumed", module);
+                } catch (IllegalStateException ise) {
+                    Debug.logError(ise, "Trouble resuming parent transaction", module);
+                    throw new GenericServiceException("Resume transaction exception, see logs");
+                } catch (SystemException se) {
+                    Debug.logError(se, "Trouble resuming parent transaction", module);
+                    throw new GenericServiceException("Resume transaction exception, see logs");
+                }
+            }
+
+            checkDebug(service, 0, debugging);
+        } catch (Throwable t) {
+            try {
+                TransactionUtil.rollback(beganTrans);
+            } catch (GenericTransactionException te) {
+                Debug.logError(te, "Cannot rollback transaction", module);
+            }
+            checkDebug(service, 0, debugging);
+            throw new GenericServiceException("Service [" + service.name + "] Failed: ", t);
+        }
     }
 
     /**
@@ -507,46 +578,7 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService service, Map context, boolean persist) throws GenericServiceException {
-        boolean debugging = checkDebug(service, 1, true);
-        // check the locale
-        this.checkLocale(context);
-        
-        // get eventMap once for all calls for speed, don't do event calls if it is null
-        Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
-
-        DispatchContext ctx = (DispatchContext) localContext.get(localName);
-
-        // pre-auth ECA
-        if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, null, false);
-
-        context = checkAuth(localName, context, service);
-        Object userLogin = context.get("userLogin");
-
-        if (service.auth && userLogin == null)
-            throw new ServiceAuthException("User authorization is required for this service : " + service.name);
-
-        // setup the engine
-        GenericEngine engine = getGenericEngine(service.engineName);
-
-        // pre-validate ECA
-        if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, null, false);
-
-        // validate the context
-        if (service.validate) {
-            try {
-                service.validate(context, ModelService.IN_PARAM);
-            } catch (ServiceValidationException e) {
-                throw new GenericServiceException("Context (in runAsync : " + service.name + ") does not match expected requirements: ", e);
-            }
-        }
-
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
-                "] (" + service.engineName + ")", module);
-        }
-
-        engine.runAsync(localName, service, context, persist);
-        checkDebug(service, 0, debugging);
+        this.runAsync(localName, service, context, null, persist);
     }
 
     /**
