@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.16 2003/08/20 05:05:42 ajzeneski Exp $
+ *  $Id: build.xml,v 1.17 2003/08/20 07:00:36 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -438,6 +438,34 @@
         <ant dir="components/webtools" target="docs" inheritAll="false"/>                                                    
         
         <echo message="[docs] ========== Done Building (JavaDocs) =========="/>              
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- WebSite Targets                                                    -->
+    <!-- ================================================================== -->
+       
+    <target name="update-website">
+        <cvs command="update -P -d website" compression="true"/>
+    </target>
+    
+    <target name="init-website" depends="update-website">
+        <property name="site.dir" value="${basedir}/site"/>
+    </target>    
+    
+    <target name="build-website" depends="init-website">
+        <delete dir="${site.dir}"/>
+        <mkdir dir="${site.dir}"/>
+        <copy todir="${site.dir}">
+            <fileset dir="${basedir}/website"/>
+        </copy>
+        <antcall target="copy-dtds"/>
+    </target>
+    
+    <target name="copy-dtds">        
+        <mkdir dir="${site.dir}/dtds"/>
+        <copy todir="${site.dir}/dtds" flatten="true" overwrite="true">
+            <fileset dir="${basedir}" includes="**/*.dtd"/>
+        </copy>
     </target>
     
     <!-- ================================================================== -->
