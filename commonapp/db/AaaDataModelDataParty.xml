@@ -119,7 +119,7 @@
   <RoleType description="Workflow" hasTable="N" parentTypeId="" roleTypeId="WORKFLOW_ROLE"/>
   <RoleType description="Workflow Owner" hasTable="N" parentTypeId="WORKFLOW_ROLE" roleTypeId="WF_OWNER"/>
 
-  <PartyClassificationType description="" hasTable="N" parentTypeId="" partyClassificationTypeId="EEOC_CLASSIFICATION"/>
+  <!-- <PartyClassificationType description="" hasTable="N" parentTypeId="" partyClassificationTypeId="EEOC_CLASSIFICATION"/> -->
   <PartyClassificationType description="Minority" hasTable="N" parentTypeId="" partyClassificationTypeId="MINORITY_CLASSIFICAT"/>
   <PartyClassificationType description="Income" hasTable="N" parentTypeId="" partyClassificationTypeId="INCOME_CLASSIFICATIO"/>
   <PartyClassificationType description="Industry" hasTable="N" parentTypeId="" partyClassificationTypeId="INDUSTRY_CLASSIFICAT"/>
