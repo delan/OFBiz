@@ -153,4 +153,29 @@
         <find-by-primary-key entity-name="Vendor" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+
+    <!-- party profile default -->
+    <simple-method method-name="setPartyProfileDefaults" short-description="Sets Party Profile Defaults">
+        <!-- check make sure we have permission to set this -->
+        <if-empty map-name="parameters" field-name="partyId">
+            <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
+        </if-empty>
+        <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
+            <check-permission permission="PARTYMGR" action="_UPDATE">
+				<fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
+            </check-permission>
+        </if-compare-field>
+
+        <!-- lookup existing value -->
+        <field-to-field field-name="partyId" map-name="parameters" to-map-name="defLookup"/>
+        <find-by-primary-key map-name="defLookup" value-name="ppDefs" entity-name="PartyProfileDefault"/>
+        <if-empty field-name="ppDefs">
+            <make-value value-name="ppDefs" entity-name="PartyProfileDefault" map-name="defLookup"/>
+            <create-value value-name="ppDefs"/>
+        </if-empty>
+
+        <!-- update the fields -->
+        <set-nonpk-fields value-name="ppDefs" map-name="parameters" set-if-null="false"/>
+        <store-value value-name="ppDefs"/>
+    </simple-method>
 </simple-methods>

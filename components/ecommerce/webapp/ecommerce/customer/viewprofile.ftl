@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -140,6 +140,8 @@
         <th>${uiLabelMap.CommonInformation}</th>
         <th colspan='2'>${uiLabelMap.PartySolicitingOk}?</th>
         <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
       </tr>
       <#list partyContactMechValueMaps as partyContactMechValueMap>
         <#assign contactMech = partyContactMechValueMap.contactMech?if_exists>
@@ -157,6 +159,11 @@
                     <div class="tabletext">
                       <#if contactMechPurposeType?exists>
                         <b>${contactMechPurposeType.description}</b>
+                        <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
+                          <span class="buttontextdisabled">[Is Default]</span>
+                        <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
+                          <a href='<@ofbizUrl>/setprofiledefault/viewprofile?defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">[Set Default]</a>
+                        </#if>
                       <#else>
                         <b>${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
                       </#if>
@@ -220,11 +227,11 @@
             </td>
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(${partyContactMech.allowSolicitation?if_exists})</b></div></td>
             <td width="5">&nbsp;</td>
-            <td align="right" valign="top" nowrap width="1%">
+            <td align="right" valign="top" nowrap width="1%" nowrap>
               <div><a href='<@ofbizUrl>/editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
               [${uiLabelMap.CommonUpdate}]</a>&nbsp;</div>
             </td>
-            <td align="right" valign="top" width="1%">
+            <td align="right" valign="top" width="1%" nowrap>
               <div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
               [${uiLabelMap.CommonExpire}]</a>&nbsp;&nbsp;</div>
             </td>
@@ -331,9 +338,17 @@
                                     [${uiLabelMap.CommonUpdate}]</a></div>
                                   </td>
                               </#if>
-                              <td align="right" valign="top" width='1%'>
+                              <td align="right" valign="top" width='1%' nowrap>
                                 <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                 [${uiLabelMap.CommonExpire}]</a></div>
+                              </td>
+                              <td align="right" valign="top" width='1%' nowrap>
+                                <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
+                                  <div class="buttontextdisabled">[Is Default]</span>
+                                <#else>
+                                  <div><a href='<@ofbizUrl>/setprofiledefautl/viewprofile?defaultPayMeth=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                  [Set Default]</a></div>
+                                </#if>
                               </td>
                             </tr>
                         </#list>

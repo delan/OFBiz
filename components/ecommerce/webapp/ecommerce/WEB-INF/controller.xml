@@ -787,6 +787,13 @@
         <response name="error" type="view" value="editperson"/>
     </request-map>
 
+    <request-map uri="setprofiledefault">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setPartyProfileDefaults"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
+
     <request-map uri="changepassword">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="changepassword"/>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.1
 */
 
@@ -59,6 +59,15 @@ if (cart != null) {
     shipTotal = cart.getShippableTotal();
 }
 
+profiledefs = delegator.findByPrimaryKey("PartyProfileDefault", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
+context.put("profiledefs", profiledefs);
+if (profiledefs.get("defaultShipAddr") != null) {
+    cart.setShippingContactMechId(profiledefs.get("defaultShipAddr"));
+}
+if (profiledefs.get("defaultPayMeth") != null) {
+    cart.setPaymentMethodAmount(profiledefs.get("defaultPayMeth"), null);
+}
+
 context.put("shoppingCart", cart);
 context.put("userLogin", userLogin);
 context.put("productStoreId", productStoreId);
@@ -68,6 +77,8 @@ context.put("carrierShipmentMethodList", ProductStoreWorker.getAvailableStoreShi
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
 context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, UtilMisc.toList("paymentMethodTypeId")), true));
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
+
+
 
 billingAccountRoleList = delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "roleTypeId", "BILL_TO_CUSTOMER"));
 billingAccountRoleList = EntityUtil.filterByDate(billingAccountRoleList);

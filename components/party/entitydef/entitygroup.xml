@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  */
 -->
 
@@ -108,6 +108,7 @@
     <entity-group group="org.ofbiz" entity="PartyIcsAvsOverride" />
     <entity-group group="org.ofbiz" entity="PartyNote" />
     <entity-group group="org.ofbiz" entity="PartyNoteView" />
+    <entity-group group="org.ofbiz" entity="PartyProfileDefault" />
     <entity-group group="org.ofbiz" entity="PartyRelationship" />
     <entity-group group="org.ofbiz" entity="PartyRelationshipType" />
     <entity-group group="org.ofbiz" entity="PartyRole" />
