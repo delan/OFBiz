@@ -90,32 +90,21 @@
   if(findByPK.isPrimaryKey()) value = delegator.findByPrimaryKey(findByPK);
   if(value == null) useValue = false;
 %>
-
 <br>
 <SCRIPT language='JavaScript'>  
-function ShowViewTab(lname) 
+var numTabs=<%=entity.relations.size()+2%>;
+function ShowTab(lname) 
 {
-    document.all.viewtab.className = (lname == 'view') ? 'ontab' : 'offtab';
-    document.all.viewlnk.className = (lname == 'view') ? 'onlnk' : 'offlnk';
-    document.all.viewarea.style.visibility = (lname == 'view') ? 'visible' : 'hidden';
-
-    document.all.edittab.className = (lname == 'edit') ? 'ontab' : 'offtab';
-    document.all.editlnk.className = (lname == 'edit') ? 'onlnk' : 'offlnk';
-    document.all.editarea.style.visibility = (lname == 'edit') ? 'visible' : 'hidden';
+  for(inc=1; inc <= numTabs; inc++)
+  {
+    document.getElementById('tab' + inc).className = (lname == 'tab' + inc) ? 'ontab' : 'offtab';
+    document.getElementById('lnk' + inc).className = (lname == 'tab' + inc) ? 'onlnk' : 'offlnk';
+    document.getElementById('area' + inc).className = (lname == 'tab' + inc) ? 'topcontainer' : 'topcontainerhidden';
+  }
 }
 </SCRIPT>
-<table cellpadding='0' cellspacing='0'><tr>  
-  <td id=viewtab class=ontab>
-    <a href='javascript:ShowViewTab("view")' id=viewlnk class=onlnk>View <%=entityName%></a>
-  </td>
-  <%if(hasUpdatePermission || hasCreatePermission){%>
-  <td id=edittab class=offtab>
-    <a href='javascript:ShowViewTab("edit")' id=editlnk class=offlnk>Edit <%=entityName%></a>
-  </td>
-  <%}%>
-</table>
 <div style='color: white; background-color: black; padding:3;'>
-  <b>View Entity: <%=entityName%> with primary key <%=findByPK.toString()%></b>
+  <b>View Entity: <%=entityName%> with PK: <%=findByPK.toString()%></b>
 </div>
 
 <a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName)%>" class="buttontext">[Find <%=entityName%>]</a>
@@ -127,13 +116,36 @@ function ShowViewTab(lname)
     <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?UPDATE_MODE=DELETE&" + curFindString)%>" class="buttontext">[Delete this <%=entityName%>]</a>
   <%}%>
 <%}%>
-
-<%if(value == null){%>
-<div style='width:auto;height:400px;overflow:visible;'>
-<%}else{%>
-<div style='width:auto;height:200px;overflow:auto;border-style:inset;'>
+<br>
+<br>
+<table cellpadding='0' cellspacing='0'><tr>  
+  <td id='tab1' class='ontab'>
+    <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk>View <%=entityName%></a>
+  </td>
+  <%if(hasUpdatePermission || hasCreatePermission){%>
+  <td id='tab2' class='offtab'>
+    <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk>Edit <%=entityName%></a>
+  </td>
+  <%}%>
+</tr>
+<%if(value != null){%>
+<tr>
+  <%for(int tabIndex=0;tabIndex<entity.relations.size();tabIndex++){%>
+    <%ModelRelation relation = (ModelRelation)entity.relations.get(tabIndex);%>
+    <%if(security.hasEntityPermission(relation.relTableName, "_VIEW", session)){%>
+      <td id='tab<%=tabIndex+3%>' class='offtab'>
+        <a href='javascript:ShowTab("tab<%=tabIndex+3%>")' id='lnk<%=tabIndex+3%>' class='offlnk'>
+          <%=relation.title%><%=relation.relEntityName%></a>
+      </td>
+    <%}%>
+    <%if((tabIndex+1)%5 == 0){%></tr><tr><%}%>
+  <%}%>
+</tr>
 <%}%>
-  <DIV id=viewarea style="VISIBILITY: visible; POSITION: absolute" width="1%">
+</table>
+<div class='topouter'>
+  <DIV id='area1' class='topcontainer' width="1%">
+
 <table border="0" cellspacing="2" cellpadding="2">
 <%if(value == null){%>
 <tr class="<%=rowClass1%>"><td><h3>Specified <%=entityName%> was not found.</h3></td></tr>
@@ -172,9 +184,10 @@ function ShowViewTab(lname)
 <%} //end if value == null %>
 </table>
   </div>
+
 <%GenericValue valueSave = value;%>
 <%if(hasUpdatePermission || hasCreatePermission){%>
-  <DIV id=editarea style="VISIBILITY: hidden; POSITION: absolute" width="1%">
+  <DIV id='area2' class='topcontainerhidden' width="1%">
 <%boolean showFields = true;%>
 <%if(value == null && (findByPK.getAllFields().size() > 0)){%>
     <%=entity.entityName%> with primary key <%=findByPK.toString()%> not found.<br>
@@ -402,41 +415,8 @@ function ShowViewTab(lname)
 </form>
   </div>
 <%}%>
-</div>
-<%if((hasUpdatePermission || hasCreatePermission) && !useValue){%>
-  <SCRIPT language='JavaScript'>  
-    ShowViewTab("edit");
-  </SCRIPT>
-<%}%>
+<%-- ======================================================================== --%>
 
-<br>
-<SCRIPT language='JavaScript'>  
-var numTabs=<%=entity.relations.size()%>;
-function ShowTab(lname) 
-{
-  for(inc=1; inc <= numTabs; inc++)
-  {
-    document.all['tab' + inc].className = (lname == 'tab' + inc) ? 'ontab' : 'offtab';
-    document.all['lnk' + inc].className = (lname == 'tab' + inc) ? 'onlnk' : 'offlnk';
-    document.all['area' + inc].style.visibility = (lname == 'tab' + inc) ? 'visible' : 'hidden';
-  }
-}
-</SCRIPT>
-<%if(value != null){%>
-<table cellpadding='0' cellspacing='0'><tr>
-  <%for(int tabIndex=0;tabIndex<entity.relations.size();tabIndex++){%>
-    <%ModelRelation relation = (ModelRelation)entity.relations.get(tabIndex);%>
-    <%if(security.hasEntityPermission(relation.relTableName, "_VIEW", session)){%>
-      <td id=tab<%=tabIndex+1%> class=<%=(tabIndex==0?"ontab":"offtab")%>>
-        <a href='javascript:ShowTab("tab<%=tabIndex+1%>")' id=lnk<%=tabIndex+1%> class=<%=(tabIndex==0?"onlnk":"offlnk")%>>
-          <%=relation.title%><%=relation.relEntityName%></a>
-      </td>
-    <%}%>
-    <%if((tabIndex+1)%5 == 0){%></tr><tr><%}%>
-  <%}%>
-</tr></table>
-<%}%>
-  
 <%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%>
   <%ModelRelation relation = (ModelRelation)entity.relations.get(relIndex);%>
     <%ModelEntity relatedEntity = reader.getModelEntity(relation.relEntityName);%>
@@ -448,9 +428,9 @@ function ShowTab(lname)
     <%Iterator tempIter = UtilMisc.toIterator(value.getRelated(relation.title + relatedEntity.entityName));%>
     <%GenericValue valueRelated = null;%>
     <%if(tempIter != null && tempIter.hasNext()) valueRelated = (GenericValue)tempIter.next();%>
-  <DIV id=area<%=relIndex+1%> style="VISIBILITY: <%=(relIndex==0?"visible":"hidden")%>; POSITION: absolute" width="100%">
-    <div class=areaheader>
-     <b><%=relation.title%></b> Related Entity: <b><%=relatedEntity.entityName%></b> with primary key: <%=valueRelated!=null?valueRelated.getPrimaryKey().toString():"entity not found!"%>
+  <DIV id='area<%=relIndex+3%>' class='topcontainerhidden' width="100%">
+    <div class='areaheader'>
+     <b><%=relation.title%></b> Related Entity: <b><%=relatedEntity.entityName%></b> with PK: <%=valueRelated!=null?valueRelated.getPrimaryKey().toString():"entity not found!"%>
     </div>
     <%
       String findString = "entityName=" + relatedEntity.entityName;
@@ -471,7 +451,7 @@ function ShowTab(lname)
     <%}else{%>
       <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + findString)%>" class="buttontext">[View <%=relatedEntity.entityName%>]</a>
     <%}%>
-  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
+  <div style='width: 100%; overflow: visible; border-style: none;'>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(valueRelated == null){%>
       <tr class="<%=rowClass1%>"><td><b>Specified <%=relatedEntity.entityName%> entity was not found.</b></td></tr>
@@ -521,7 +501,7 @@ function ShowTab(lname)
   <%if(security.hasEntityPermission(relatedEntity.tableName, "_VIEW", session)){%>    
     <%-- Iterator relatedIterator = UtilMisc.toIterator(delegator.findBy<%=relation.keyMapRelatedUpperString("And","")%>(value.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.entityName) + ".get", "()")%>)); --%>
     <%Iterator relatedIterator = UtilMisc.toIterator(value.getRelated(relation.title + relatedEntity.entityName));%>
-  <DIV id=area<%=relIndex+1%> style="VISIBILITY: <%=(relIndex==0?"visible":"hidden")%>; POSITION: absolute" width="100%">
+  <DIV id=area<%=relIndex+3%> class='topcontainerhidden' width="100%">
     <div class=areaheader>
       <b><%=relation.title%></b> Related Entities: <b><%=relatedEntity.entityName%></b> with 
     </div>
@@ -541,7 +521,7 @@ function ShowTab(lname)
     <%String curFindString = "SEARCH_TYPE=<%=relation.keyMapRelatedUpperString("And","")%>";%>
     <%for(int j=0;j<relation.keyMaps.size();j++){%><%curFindString = curFindString + "&SEARCH_PARAMETER<%=j+1%>=" + value.get<%=GenUtil.upperFirstChar(((ModelKeyMap)relation.keyMaps.elementAt(j)).fieldName)%><%}%>();%>
     <a href="<%=response.encodeURL(controlPath + "/FindGeneric?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find <%=relatedEntity.entityName%>]</a>
-  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
+  <div style='width:100%;overflow:visible;border-style:none;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
   <%for(i=0;i<relatedEntity.fields.size();i++){%>
@@ -629,7 +609,12 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- End ModelRelation for <%=relation.relatedEjbName%>, type: many --%>
   <%}%>
 <%}%>
-
+</div>
+<%if((hasUpdatePermission || hasCreatePermission) && !useValue){%>
+  <SCRIPT language='JavaScript'>  
+    ShowViewTab("edit");
+  </SCRIPT>
+<%}%>
 <br>
 <%}else{%>
   <h3>You do not have permission to view this page (<%=entity.tableName%>_ADMIN, or <%=entity.tableName%>_VIEW needed).</h3>

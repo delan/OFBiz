@@ -26,6 +26,9 @@
   a.offlnk {FONT-SIZE: 9pt; FONT: bold; COLOR: blue; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none;padding: 2;}
   a.offlnk:hover {COLOR: red;}
   .areaheader {FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT: bold; color: white; width: 100%; background-color: black; padding: 2;}
+  .topouter { overflow: visible; border-style: none; }
+  .topcontainer { POSITION: absolute; VISIBILITY: visible; width: 90%; border-style: none; }
+  .topcontainerhidden { POSITION: absolute; VISIBILITY: hidden; }
 
   .edittable {  border-color: #000000 #000000 #003333; border-style: solid; border-top-width: thin; border-right-width: thin; border-bottom-width: thin; border-left-width: thin}
   .viewOneTR1 {background-color: #99CCFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
