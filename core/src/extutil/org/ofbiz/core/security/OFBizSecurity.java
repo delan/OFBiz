@@ -196,53 +196,96 @@ public class OFBizSecurity extends Security {
     /**
      * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.ofbiz.core.entity.GenericValue)
      */
-    public boolean hasRolePermission(String application, String action, String primaryKey, String role, GenericValue userLogin) {        
+    public boolean hasRolePermission(String application, String action, String primaryKey, String role, GenericValue userLogin) {
+        List roles = null;
+        if (role != null && !role.equals(""))
+            roles = UtilMisc.toList(role);
+        return hasRolePermission(application, action, primaryKey, roles, userLogin);
+    }    
+                
+    /**
+     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.util.List, javax.servlet.http.HttpSession)
+     */
+    public boolean hasRolePermission(String application, String action, String primaryKey, List roles, HttpSession session) {
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+        return hasRolePermission(application, action, primaryKey, roles, userLogin);
+    }    
+    
+    /**
+     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.util.List, org.ofbiz.core.entity.GenericValue)
+     */
+    public boolean hasRolePermission(String application, String action, String primaryKey, List roles, GenericValue userLogin) {
         String entityName = null;
-        Map fields = null;
-              
+        EntityCondition condition = null;
+        
+        if (userLogin == null)
+            return false;
+            
         // quick test for special cases where were just want to check the permission (find screens)              
-        if (primaryKey.equals("") && role.equals("")) {
+        if (primaryKey.equals("") && roles == null) {
             if (hasEntityPermission(application, action, userLogin)) return true;
             if (hasEntityPermission(application, action + "_ROLE", userLogin)) return true;
-        }
-                
-        // now get the role info for this application
+        }            
+        
         Map simpleRoleMap = (Map) OFBizSecurity.simpleRoleEntity.get(application);
         if (simpleRoleMap != null) {
             entityName = (String) simpleRoleMap.get("name");
             String pkey = (String) simpleRoleMap.get("pkey");
-            if (pkey != null) 
-                fields = UtilMisc.toMap(pkey, primaryKey, "roleTypeId", role, "partyId", userLogin.getString("partyId"));
+            if (pkey != null) {
+                List expressions = new ArrayList();
+                Iterator i = roles.iterator();
+                while (i.hasNext()) {
+                    String role = (String) i.next();
+                    expressions.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, role));                    
+                }
+                EntityExprList exprList = new EntityExprList(expressions, EntityOperator.OR);
+                EntityExpr keyExpr = new EntityExpr(pkey, EntityOperator.EQUALS, primaryKey);
+                EntityExpr partyExpr = new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.getString("partyId"));
+                List joinList = UtilMisc.toList(exprList, keyExpr, partyExpr);
+                condition = new EntityConditionList(joinList, EntityOperator.AND);                
+            }
+            
         }
         
-        return hasRolePermission(application, action, entityName, fields, userLogin);
+        return hasRolePermission(application, action, entityName, condition, userLogin);                      
     }
     
     /**
-     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.util.Map, org.ofbiz.core.entity.GenericValue)
+     * Like hasEntityPermission above, this checks the specified action, as well as for "_ADMIN" to allow for simplified
+     * general administration permission, but also checks action_ROLE and validates the user is a member for the
+     * application.
+     *
+     * @param application The name of the application corresponding to the desired permission.
+     * @param action The action on the application corresponding to the desired permission.
+     * @param entityName The name of the role entity to use for validation.
+     * @param fields Map of primary key fields to lookup in entityName.
+     * @param userLogin The userLogin object for user to check against.
+     * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
      */
-    public boolean hasRolePermission(String application, String action, String entityName, Map fields, GenericValue userLogin) {
+    public boolean hasRolePermission(String application, String action, String entityName, EntityCondition condition, GenericValue userLogin) {
         if (userLogin == null) return false;
         
         // first check the standard permission
         if (hasEntityPermission(application, action, userLogin)) return true;
         
         // make sure we have what's needed for role security
-        if (entityName == null || fields == null || fields.size() == 0) return false;
+        if (entityName == null || condition == null) return false;
         
         // now check the user for the role permission
         if (hasEntityPermission(application, action + "_ROLE", userLogin)) {
             // we have the permission now, we check to make sure we are allowed access
-            GenericValue roleTest = null;
+            List roleTest = null;
             try {
-                roleTest = delegator.findByPrimaryKey(entityName, fields);
+                //Debug.logInfo("Doing Role Security Check on [" + entityName + "]" + "using [" + condition + "]", module);
+                roleTest = delegator.findByCondition(entityName, condition, null, null);
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Problems doing role security lookup on entity [" + entityName + "] using fields [" + fields + "]", module);
+                Debug.logError(e, "Problems doing role security lookup on entity [" + entityName + "] using [" + condition + "]", module);
                 return false;
             }
             
             // if we pass all tests
-            if (roleTest != null) return true;
+            //Debug.logInfo("Found (" + (roleTest == null ? 0 : roleTest.size()) + ") matches :: " + roleTest, module);
+            if (roleTest != null && roleTest.size() > 0) return true;
         }
         
         return false;
