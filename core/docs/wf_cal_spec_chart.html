@@ -12,22 +12,52 @@ Comparison chart:
     <TH>Entity</TH><TH>Work Effort</TH><TH>WfMC/OMG</TH><TH>vCalendar</TH>
   </TR>
   <TR><TD>WorkEffort</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
-  <TR><TD>&nbsp;</TD><TD>workEffortId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>workEffortId</TD><TD>key</TD><TD>&nbsp;</TD></TR>
   <TR><TD>&nbsp;</TD><TD>workEffortDefId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
   <TR><TD>&nbsp;</TD><TD>workEffortTypeId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>currentStatusId</TD><TD>state</TD><TD>Status</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>lastStatusUpdate</TD><TD>last_state_time</TD><TD>&nbsp;</TD></TR>
+
+  <TR><TD>&nbsp;</TD><TD>universalId</TD><TD>&nbsp;</TD><TD>UniqueIdentifier</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>scopeId</TD><TD>&nbsp;</TD><TD>Classification</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>priority</TD><TD>priority</TD><TD>Priority</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>workEffortName</TD><TD>name</TD><TD>Summary</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>description</TD><TD>description</TD><TD>Description</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>locationDesc</TD><TD>&nbsp;</TD><TD>Location</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>revisionNumber</TD><TD>&nbsp;</TD><TD>SequenceNumber</TD></TR>
+
   <TR><TD>&nbsp;</TD><TD>assetId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
   <TR><TD>&nbsp;</TD><TD>fixedAssetId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
   <TR><TD>&nbsp;</TD><TD>facilityId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
-  <TR><TD>&nbsp;</TD><TD>estimatedStartDate</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
-  <TR><TD>&nbsp;</TD><TD>estimatedCompletionDate</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
-  <TR><TD>&nbsp;</TD><TD>estimatedHours</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
-  <TR><TD>&nbsp;</TD><TD>totalHoursAllowed</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>createdDate</TD><TD>&nbsp;</TD><TD>DateTimeCreated</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>lastModifiedDate</TD><TD>&nbsp;</TD><TD>LastModified</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>estimatedStartDate</TD><TD>&nbsp;</TD><TD>DateTimeStart</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>estimatedCompletionDate</TD><TD>&nbsp;</TD><TD>DateTimeDue,DateTimeEnd</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>estimatedMilliSeconds</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>totalMilliSecondsAllowed</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
   <TR><TD>&nbsp;</TD><TD>totalMoneyAllowed</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
   <TR><TD>&nbsp;</TD><TD>moneyUomId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
   <TR><TD>&nbsp;</TD><TD>actualStartDate</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
-  <TR><TD>&nbsp;</TD><TD>actualCompletionDate</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
-  <TR><TD>&nbsp;</TD><TD>actualHours</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>actualCompletionDate</TD><TD>&nbsp;</TD><TD>DateTimeCompleted</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>actualMilliSeconds</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
   <TR><TD>&nbsp;</TD><TD>specialTerms</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>recurrenceInfoId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+
+  <TR><TD>&nbsp;</TD><TD>timeTransparency</TD><TD>&nbsp;</TD><TD>TimeTransparency</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>infoUrl</TD><TD>&nbsp;</TD><TD>URL</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>contextId</TD><TD>context</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>resultId</TD><TD>result</TD><TD>&nbsp;</TD></TR>
+
+  <TR><TD>RecurrenceInfo</TD><TD>&nbsp;</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>recurrenceInfoId</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>startDateTime</TD><TD>&nbsp;</TD><TD>DateTimeStart</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>endDateTime</TD><TD>&nbsp;</TD><TD>DateTimeDue,DateTimeEnd</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>exceptionDateTimes</TD><TD>&nbsp;</TD><TD>ExceptionDateTimes</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>exceptionRule</TD><TD>&nbsp;</TD><TD>ExceptionRule</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>recurrenceDateTimes</TD><TD>&nbsp;</TD><TD>RecurrenceDateTimes</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>recurrenceRule</TD><TD>&nbsp;</TD><TD>RecurrenceRule</TD></TR>
+  <TR><TD>&nbsp;</TD><TD>NOT STORED, CALCULATED</TD><TD>&nbsp;</TD><TD>NumberRecurrences</TD></TR>
+
 </TABLE>
 <hr>
 <pre>
@@ -68,7 +98,7 @@ RelatedTo* opt
 Resources opt - Resource Name/Id list
 
 UniqueIdentifier opt
-Classification - AccessClass opt - (PUBLIC | PRIVATE | CONFIDENTIAL)
+Classification - AccessClass opt - (PUBLIC | PRIVATE | CONFIDENTIAL) (scope/class done)
 Priority mand
 Summary mand
 Description mand
