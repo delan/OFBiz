@@ -1496,6 +1496,7 @@
             location="org.ofbiz.product.product.ProductServices" invoke="prodFindFeatureTypes">
         <description>Gets a Set of product features (distinct)</description>
         <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="productFeatureApplTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="featureSet" type="java.util.Set" mode="OUT"/>
     </service>
     <service name="getProductVariantTree" engine="java"
