@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -47,7 +47,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
-            <form name="returnItems" method="post" action="<@ofbizUrl>/requestReturn</@ofbizUrl>">
+            <form name="selectAllForm" method="post" action="<@ofbizUrl>/requestReturn</@ofbizUrl>">
               <input type="hidden" name="_checkGlobalScope" value="Y">
               <input type="hidden" name="_useRowSubmit" value="Y">
               <input type="hidden" name="fromPartyId" value="${party.partyId}">
@@ -154,7 +154,7 @@
                   <tr><td colspan="6"><hr class="sepbar"></td></tr>
                   <tr>
                     <td colspan="6" align="right">
-                      <a href="javascript:document.returnItems.submit();" class="buttontext">${uiLabelMap.OrderReturnSelectedItems}</a>
+                      <a href="javascript:document.selectAllForm.submit();" class="buttontext">${uiLabelMap.OrderReturnSelectedItems}</a>
                     </td>
                   </tr>
                 <#else>
