@@ -16,6 +16,9 @@ cvs update
 cd ../partymgr
 echo "--- partymgr ---"
 cvs update
+cd ../workeffort
+echo "--- workeffort ---"
+cvs update
 cd ../setup
 echo "--- setup ---"
 cvs update
