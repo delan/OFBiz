@@ -36,16 +36,23 @@ public class ObjectType {
     /** Loads a class with the current thread's context classloader 
      * @param className The name of the class to load
      */
-    public static Class loadClass(String className) throws SecurityException, ClassNotFoundException {
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        Class c = loader.loadClass(className);
+    public static Class loadClass(String className) throws ClassNotFoundException {
+        ClassLoader loader = null;
+        Class c = null;
+        try {
+            loader = Thread.currentThread().getContextClassLoader();
+            c = loader.loadClass(className);
+        }
+        catch ( Exception e ) {
+            c = Class.forName(className);
+        }            
         return c;
     }
     
     /** Returns an instance of the specified class
      * @param className Name of the class to instantiate
      */
-    public static Object getInstance(String className) throws SecurityException, ClassNotFoundException,
+    public static Object getInstance(String className) throws ClassNotFoundException,
     InstantiationException, IllegalAccessException {
         Class c = loadClass(className);
         Object o = c.newInstance();
@@ -56,7 +63,7 @@ public class ObjectType {
      * @param obj Object to test
      * @param interfaceName Name of the interface to test against
      */
-    public static boolean interfaceOf(Object obj, String interfaceName) throws SecurityException, ClassNotFoundException {
+    public static boolean interfaceOf(Object obj, String interfaceName) throws ClassNotFoundException {
         Class interfaceClass = loadClass(interfaceName);
         return interfaceOf(obj,interfaceClass);
     }
@@ -90,7 +97,7 @@ public class ObjectType {
      * @param obj Object to test
      * @param parentName Name of the parent class to test against
      */    
-    public static boolean isOrSubOf(Object obj, String parentName) throws SecurityException, ClassNotFoundException {
+    public static boolean isOrSubOf(Object obj, String parentName) throws ClassNotFoundException {
         Class parentClass = loadClass(parentName);
         return isOrSubOf(obj,parentClass);
     }
@@ -121,7 +128,7 @@ public class ObjectType {
      * @param obj Object to test
      * @param typeName Name of the class to test against
      */
-    public static boolean instanceOf(Object obj, String typeName) throws SecurityException, ClassNotFoundException {
+    public static boolean instanceOf(Object obj, String typeName) throws ClassNotFoundException {
         Class typeClass = loadClass(typeName);
         return instanceOf(obj,typeClass);
     }

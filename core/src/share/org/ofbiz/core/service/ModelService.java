@@ -5,7 +5,6 @@
 package org.ofbiz.core.service;
 
 import java.util.*;
-import java.lang.reflect.*;
 import org.ofbiz.core.util.*;
 
 /**
