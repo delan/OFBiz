@@ -2,7 +2,8 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.commonapp.product.category.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
-<%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", UtilProperties.getPropertyValue(application.getResource("/WEB-INF/ecommerce.properties"), "catalog.id.default"));%>
+<%String defaultTopCategory = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/ecommerce.properties"), "catalog.id.default");%>
+<%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", CategoryWorker.getCatalogTopCategory(pageContext, defaultTopCategory));%>
 <%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));%>
 <%CategoryWorker.setTrail(pageContext, curCategoryId);%>
 
