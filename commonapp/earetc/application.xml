@@ -12,6 +12,7 @@
     <module><web><web-uri>webtools.war</web-uri><context-root>/webtools</context-root></web></module>
     <module><web><web-uri>commonapp.war</web-uri><context-root>/commonapp</context-root></web></module>
     <module><web><web-uri>ecommerce.war</web-uri><context-root>/ecommerce</context-root></web></module>
+    <module><web><web-uri>images.war</web-uri><context-root>/images</context-root></web></module>
     <module><web><web-uri>catalog.war</web-uri><context-root>/catalog</context-root></web></module>
     <module><web><web-uri>partymgr.war</web-uri><context-root>/partymgr</context-root></web></module>
     <module><web><web-uri>ordermgr.war</web-uri><context-root>/ordermgr</context-root></web></module>
