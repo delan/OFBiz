@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 <simple-methods>
@@ -161,10 +161,20 @@
         <if-compare field-name="orderTypeId" map-name="orderHeader" operator="not-equals" value="SALES_ORDER">
             <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the order is not a Sales Order for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}] (should call the issueOrderItemToShipment service)" list-name="error_list"/>
         </if-compare>
+
+        <!-- make sure specified quantity is not empty -->
+        <if-empty field-name="parameters.quantity">
+            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue is empty for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
+        </if-empty>
+        <!-- make sure specified quantity is not less than or equal to 0 -->
+        <if-compare field-name="parameters.quantity" operator="less-equals" value="0" type="Double">
+            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is less than or equal to 0 for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
+        </if-compare-field>
         <!-- make sure specified quantity is not greater than reserved quantity left to be issued, ie orderItemInventoryRes.quantity -->
         <if-compare-field field-name="parameters.quantity" operator="greater" to-field-name="orderItemInventoryRes.quantity" type="Double">
             <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is greater than the quantity left to issue [${orderItemInventoryRes.quantity}] for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
         </if-compare-field>
+
         <check-errors/>
 
         <!-- get orderItem -->
