@@ -27,7 +27,6 @@ import java.util.*;
 import javax.naming.*;
 
 import org.ofbiz.core.config.*;
-import org.ofbiz.core.util.*;
 
 /**
  * JNDIContextFactory - central source for JNDI Contexts by helper name

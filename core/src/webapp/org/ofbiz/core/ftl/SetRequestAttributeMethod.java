@@ -28,8 +28,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.ofbiz.core.util.*;
-
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.Environment;
 import freemarker.template.SimpleScalar;

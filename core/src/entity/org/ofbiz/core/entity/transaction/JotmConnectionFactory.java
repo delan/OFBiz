@@ -26,7 +26,6 @@ package org.ofbiz.core.entity.transaction;
 
 import java.util.*;
 import java.sql.*;
-import javax.sql.*;
 import org.w3c.dom.Element;
 
 import org.ofbiz.core.entity.*;

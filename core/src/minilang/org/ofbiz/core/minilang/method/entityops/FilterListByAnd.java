@@ -26,7 +26,6 @@ package org.ofbiz.core.minilang.method.entityops;
 import java.util.*;
 
 import org.w3c.dom.*;
-import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;

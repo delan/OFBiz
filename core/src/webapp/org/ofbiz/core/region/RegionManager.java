@@ -26,13 +26,18 @@
 package org.ofbiz.core.region;
 
 
-import java.util.*;
-import java.net.*;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.w3c.dom.*;
-
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.config.*;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilValidate;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 
 /**

@@ -23,7 +23,6 @@
  */
 package org.ofbiz.core.minilang;
 
-import java.io.*;
 import java.util.*;
 
 import com.ibm.bsf.*;

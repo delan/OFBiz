@@ -27,21 +27,14 @@ package org.ofbiz.core.ftl;
 import java.io.*;
 import java.util.*;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.*;
 
 import org.jpublish.JPublishContext;
 import org.jpublish.Page;
-import org.jpublish.SiteContext;
 import org.jpublish.view.ViewRenderException;
 
-import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.*;
-
-import com.anthonyeden.lib.config.Configuration;
-import com.anthonyeden.lib.config.ConfigurationException;
-import org.jpublish.view.freemarker.JPublishTemplateLoader;
 
 import org.ofbiz.core.util.*;
 

@@ -25,14 +25,19 @@
  */
 package org.ofbiz.core.region;
 
-import java.net.*;
-import javax.servlet.*;
-import javax.servlet.jsp.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 
-import org.ofbiz.core.control.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.view.*;
+import org.ofbiz.core.control.RequestHandler;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.UtilJ2eeCompat;
+import org.ofbiz.core.view.ViewHandler;
+import org.ofbiz.core.view.ViewHandlerException;
 
 /**
  * A section is content with a name that implements Content.render. 

@@ -24,7 +24,6 @@
  */
 package org.ofbiz.core.view;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,30 +32,27 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.jpublish.JPublishContext;
 import org.jpublish.Page;
-import org.jpublish.Repository;
 import org.jpublish.SiteContext;
 import org.jpublish.Template;
 import org.jpublish.page.PageInstance;
 import org.jpublish.view.ViewRenderException;
 import org.jpublish.view.ViewRenderer;
 import org.ofbiz.core.entity.GenericValue;
-import org.ofbiz.core.ftl.FreeMarkerViewRenderer;
 import org.ofbiz.core.security.Security;
 import org.ofbiz.core.util.Debug;
 
 import com.anthonyeden.lib.config.Configuration;
 import com.anthonyeden.lib.config.ConfigurationException;
 import com.anthonyeden.lib.config.XMLConfiguration;
-import com.anthonyeden.lib.util.IOUtilities;
 
 /**
  * Generic JPublish View Renderer - This is in testing; for use in wrapping other renderers

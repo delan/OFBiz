@@ -27,8 +27,6 @@ package org.ofbiz.core.util;
 import java.sql.*;
 import java.util.*;
 
-import org.ofbiz.core.util.*;
-
 /**
  * MapComparator.java
  * 

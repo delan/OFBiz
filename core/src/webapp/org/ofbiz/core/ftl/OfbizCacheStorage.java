@@ -23,11 +23,9 @@
  */
 package org.ofbiz.core.ftl;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.ofbiz.core.util.UtilCache;
 
 import freemarker.cache.CacheStorage;
-import org.ofbiz.core.util.*;
 
 /**
  * A custom cache wrapper for caching FreeMarker templates

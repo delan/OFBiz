@@ -28,14 +28,12 @@ import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 import java.sql.*;
-import org.w3c.dom.Element;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.util.*;
 
 import org.objectweb.jotm.Jotm;
-import org.objectweb.jotm.TraceTm;
 import org.objectweb.transaction.jta.TMService;
 
 /**

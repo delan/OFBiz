@@ -23,12 +23,9 @@
  */
 package org.ofbiz.core.minilang.method.conditional;
 
-import java.util.*;
-
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
-import org.ofbiz.core.minilang.method.*;
 
 /**
  * Creates Conditional objects according to the element that is passed.

@@ -24,14 +24,15 @@
  */
 package org.ofbiz.core.ftl;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
-import org.ofbiz.core.control.*;
-import org.ofbiz.core.taglib.*;
-import org.ofbiz.core.util.*;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.ofbiz.core.taglib.ContentUrlTag;
 
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.Environment;

@@ -24,15 +24,10 @@
  */
 package org.ofbiz.core.entity;
 
-import java.util.*;
 import java.sql.*;
-import javax.sql.*;
-import javax.naming.*;
 import org.w3c.dom.Element;
 
-import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.entity.transaction.*;
-import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 
 /**

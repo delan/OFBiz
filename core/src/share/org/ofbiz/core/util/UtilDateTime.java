@@ -24,7 +24,6 @@
 package org.ofbiz.core.util;
 
 import java.util.*;
-import java.lang.*;
 
 /**
  * Utility class for handling java.util.Date, the java.sql data/time classes and related information

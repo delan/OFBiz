@@ -24,11 +24,15 @@
  */
 package org.ofbiz.core.workflow.impl;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.workflow.*;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.workflow.EvaluationException;
+import org.ofbiz.core.workflow.TransitionCondition;
 
 
 /**
