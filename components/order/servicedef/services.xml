@@ -148,15 +148,15 @@
     <service name="storeOrder" engine="java" validate="true" auth="true"
             location="org.ofbiz.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
-        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="visitId" type="String" mode="IN" optional="true"/>
         <attribute name="affiliateId" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="distributorId" type="String" mode="IN" optional="true"/>
         <attribute name="orderTypeId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="orderItems" type="java.util.List" mode="IN"/>
-        <attribute name="orderAdjustments" type="java.util.List" mode="IN"/>
+        <attribute name="orderItems" type="java.util.List" mode="IN" optional="false"/>
+        <attribute name="orderAdjustments" type="java.util.List" mode="IN" optional="false"/>
         <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="shippingAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="firstAttemptOrderId" type="String" mode="IN" optional="true"/>
@@ -171,8 +171,8 @@
         <attribute name="orderProductPromoUses" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemSurveyResponses" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="trackingCodeOrders" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="orderId" type="String" mode="OUT"/>
-        <attribute name="statusId" type="String" mode="OUT"/>
+        <attribute name="orderId" type="String" mode="OUT" optional="false"/>
+        <attribute name="statusId" type="String" mode="OUT" optional="false"/>
     </service>
 
     <service name="createOrderItemBilling" engine="simple"
