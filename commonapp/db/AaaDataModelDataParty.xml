@@ -72,72 +72,72 @@
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_BILLING" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_PAYMENT" contactMechTypeId="TELECOM_NUMBER"/>
 
-  <RoleType description="Not Applicable" hasTable="N" parentTypeId="" roleTypeId="_NA_"/>
   <RoleType description="Administrator" hasTable="N" parentTypeId="" roleTypeId="ADMIN"/>
-  <RoleType description="Limited Administrator" hasTable="N" parentTypeId="" roleTypeId="LTD_ADMIN"/>
-  <RoleType description="Contact" hasTable="N" parentTypeId="" roleTypeId="CONTACT"/>
-  <RoleType description="Prospect" hasTable="N" parentTypeId="" roleTypeId="PROSPECT"/>
-  <RoleType description="Shareholder" hasTable="N" parentTypeId="" roleTypeId="SHAREHOLDER"/>
-  <RoleType description="Person" hasTable="N" parentTypeId="" roleTypeId="PERSON_ROLE"/>
-  <RoleType description="Employee" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="EMPLOYEE"/>
-  <RoleType description="Sales Representative" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SALES_REP"/>
-  <RoleType description="Family Member" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="FAMILY_MEMBER"/>
   <RoleType description="Affiliate" hasTable="N" parentTypeId="SALES_REP" roleTypeId="AFFILIATE"/>
-  <RoleType description="Manager" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="MANAGER"/>
-  <RoleType description="Cashier" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="CASHIER"/>
-  <RoleType description="Receiver" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="RECEIVER"/>
-  <RoleType description="Stocker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="STOCKER"/>
-  <RoleType description="Worker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="WORKER"/>
-  <RoleType description="Order Clerk" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="ORDER_CLERK"/>
-  <RoleType description="Contractor" hasTable="N" parentTypeId="" roleTypeId="CONTRACTOR"/>
-  <RoleType description="Client" hasTable="N" parentTypeId="" roleTypeId="CLIENT"/>
-  <RoleType description="Customer" hasTable="N" parentTypeId="" roleTypeId="CUSTOMER"/>
-  <RoleType description="End-User Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="END_USER_CUSTOMER"/>
-  <RoleType description="Ship-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="SHIP_TO_CUSTOMER"/>
-  <RoleType description="Bill-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="BILL_TO_CUSTOMER"/>
-  <RoleType description="Placing Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="PLACING_CUSTOMER"/>
-  <RoleType description="Vendor" hasTable="N" parentTypeId="" roleTypeId="VENDOR"/>
-  <RoleType description="Ship-From Vendor" hasTable="N" parentTypeId="" roleTypeId="SHIP_FROM_VENDOR"/>
-  <RoleType description="Bill-From Vendor" hasTable="N" parentTypeId="" roleTypeId="BILL_FROM_VENDOR"/>
-  <RoleType description="Organization" hasTable="N" parentTypeId="" roleTypeId="ORGANIZATION_ROLE"/>
-  <RoleType description="Partner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="PARTNER"/>
-  <RoleType description="Supplier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SUPPLIER"/>
-  <RoleType description="Supplier Agent" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SUPPLIER_AGENT"/>
-  <RoleType description="Competitor" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="COMPETITOR"/>
-  <RoleType description="Hosehold" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="HOUSEHOLD"/>
-  <RoleType description="Association" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ASSOCIATION"/>
-  <RoleType description="Regulatory Agency" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="REGULATORY_AGENCY"/>
-  <RoleType description="Internal Organization" hasTable="Y" parentTypeId="ORGANIZATION_ROLE" roleTypeId="INTERNAL_ORGANIZATIO"/>
-  <RoleType description="Carrier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="CARRIER"/>
-  <RoleType description="Union" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="UNION"/>
-  <RoleType description="Other Internal" hasTable="N" parentTypeId="INTERNAL_ORGANIZATIO" roleTypeId="OTHER_INTERNAL_ORGAN"/>
-  <RoleType description="Distribution Channel" hasTable="N" parentTypeId="" roleTypeId="DISTRIBUTION_CHANNEL"/>
-  <RoleType description="Distributor" hasTable="N" parentTypeId="DISTRIBUTION_CHANNEL" roleTypeId="DISTRIBUTOR"/>
   <RoleType description="Agent" hasTable="N" parentTypeId="DISTRIBUTION_CHANNEL" roleTypeId="AGENT"/>
-  <RoleType description="Organization Unit" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ORGANIZATION_UNIT"/>
-  <RoleType description="Other Organization Unit" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="OTHER_ORGANIZATION_U"/>
-  <RoleType description="Parent Organization" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="PARENT_ORGANIZATION"/>
-  <RoleType description="Department" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="DEPARTMENT"/>
-  <RoleType description="Division" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="DIVISION"/>
-  <RoleType description="Subsidiary" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="SUBSIDIARY"/>
+  <RoleType description="Association" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ASSOCIATION"/>
   <RoleType description="Automated Agent" hasTable="N" parentTypeId="" roleTypeId="AUTOMATED_AGENT_ROLE"/>
-  <RoleType description="Consumer" hasTable="N" parentTypeId="" roleTypeId="CONSUMER"/>
-  <RoleType description="Hosting Server" hasTable="N" parentTypeId="" roleTypeId="HOSTING_SERVER"/>
-  <RoleType description="ISP" hasTable="N" parentTypeId="" roleTypeId="ISP"/>
-  <RoleType description="Referrer" hasTable="N" parentTypeId="" roleTypeId="REFERRER"/>
-  <RoleType description="Subscriber" hasTable="N" parentTypeId="" roleTypeId="SUBSCRIBER"/>
-  <RoleType description="Visitor" hasTable="N" parentTypeId="" roleTypeId="VISITOR"/>
-  <RoleType description="Web Master" hasTable="N" parentTypeId="" roleTypeId="WEB_MASTER"/>
-  <RoleType description="Requesting Party" hasTable="N" parentTypeId="" roleTypeId="REQ_REQUESTER"/>
-  <RoleType description="Request Manager" hasTable="N" parentTypeId="" roleTypeId="REQ_MANAGER"/>
-  <RoleType description="Request Taker" hasTable="N" parentTypeId="" roleTypeId="REQ_TAKER"/>
-  <RoleType description="Calendar" hasTable="N" parentTypeId="" roleTypeId="CALENDAR_ROLE"/>
+  <RoleType description="Bill-From Vendor" hasTable="N" parentTypeId="" roleTypeId="BILL_FROM_VENDOR"/>
+  <RoleType description="Bill-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="BILL_TO_CUSTOMER"/>
   <RoleType description="Calendar Attendee" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_ATTENDEE"/>
+  <RoleType description="Calendar Delegate" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_DELEGATE"/>
   <RoleType description="Calendar Organizer" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_ORGANIZER"/>
   <RoleType description="Calendar Owner" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_OWNER"/>
-  <RoleType description="Calendar Delegate" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_DELEGATE"/>
-  <RoleType description="Workflow" hasTable="N" parentTypeId="" roleTypeId="WORKFLOW_ROLE"/>
+  <RoleType description="Calendar" hasTable="N" parentTypeId="" roleTypeId="CALENDAR_ROLE"/>
+  <RoleType description="Carrier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="CARRIER"/>
+  <RoleType description="Cashier" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="CASHIER"/>
+  <RoleType description="Client" hasTable="N" parentTypeId="" roleTypeId="CLIENT"/>
+  <RoleType description="Competitor" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="COMPETITOR"/>
+  <RoleType description="Consumer" hasTable="N" parentTypeId="" roleTypeId="CONSUMER"/>
+  <RoleType description="Contact" hasTable="N" parentTypeId="" roleTypeId="CONTACT"/>
+  <RoleType description="Contractor" hasTable="N" parentTypeId="" roleTypeId="CONTRACTOR"/>
+  <RoleType description="Customer" hasTable="N" parentTypeId="" roleTypeId="CUSTOMER"/>
+  <RoleType description="Department" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="DEPARTMENT"/>
+  <RoleType description="Distribution Channel" hasTable="N" parentTypeId="" roleTypeId="DISTRIBUTION_CHANNEL"/>
+  <RoleType description="Distributor" hasTable="N" parentTypeId="DISTRIBUTION_CHANNEL" roleTypeId="DISTRIBUTOR"/>
+  <RoleType description="Division" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="DIVISION"/>
+  <RoleType description="Employee" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="EMPLOYEE"/>
+  <RoleType description="End-User Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="END_USER_CUSTOMER"/>
+  <RoleType description="Family Member" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="FAMILY_MEMBER"/>
+  <RoleType description="Hosehold" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="HOUSEHOLD"/>
+  <RoleType description="Hosting Server" hasTable="N" parentTypeId="" roleTypeId="HOSTING_SERVER"/>
+  <RoleType description="ISP" hasTable="N" parentTypeId="" roleTypeId="ISP"/>
+  <RoleType description="Internal Organization" hasTable="Y" parentTypeId="ORGANIZATION_ROLE" roleTypeId="INTERNAL_ORGANIZATIO"/>
+  <RoleType description="Limited Administrator" hasTable="N" parentTypeId="" roleTypeId="LTD_ADMIN"/>
+  <RoleType description="Manager" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="MANAGER"/>
+  <RoleType description="Not Applicable" hasTable="N" parentTypeId="" roleTypeId="_NA_"/>
+  <RoleType description="Order Clerk" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="ORDER_CLERK"/>
+  <RoleType description="Organization Unit" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ORGANIZATION_UNIT"/>
+  <RoleType description="Organization" hasTable="N" parentTypeId="" roleTypeId="ORGANIZATION_ROLE"/>
+  <RoleType description="Other Internal" hasTable="N" parentTypeId="INTERNAL_ORGANIZATIO" roleTypeId="OTHER_INTERNAL_ORGAN"/>
+  <RoleType description="Other Organization Unit" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="OTHER_ORGANIZATION_U"/>
+  <RoleType description="Parent Organization" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="PARENT_ORGANIZATION"/>
+  <RoleType description="Partner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="PARTNER"/>
+  <RoleType description="Person" hasTable="N" parentTypeId="" roleTypeId="PERSON_ROLE"/>
+  <RoleType description="Placing Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="PLACING_CUSTOMER"/>
+  <RoleType description="Prospect" hasTable="N" parentTypeId="" roleTypeId="PROSPECT"/>
+  <RoleType description="Receiver" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="RECEIVER"/>
+  <RoleType description="Referrer" hasTable="N" parentTypeId="" roleTypeId="REFERRER"/>
+  <RoleType description="Regulatory Agency" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="REGULATORY_AGENCY"/>
+  <RoleType description="Request Manager" hasTable="N" parentTypeId="" roleTypeId="REQ_MANAGER"/>
+  <RoleType description="Request Taker" hasTable="N" parentTypeId="" roleTypeId="REQ_TAKER"/>
+  <RoleType description="Requesting Party" hasTable="N" parentTypeId="" roleTypeId="REQ_REQUESTER"/>
+  <RoleType description="Sales Representative" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SALES_REP"/>
+  <RoleType description="Shareholder" hasTable="N" parentTypeId="" roleTypeId="SHAREHOLDER"/>
+  <RoleType description="Ship-From Vendor" hasTable="N" parentTypeId="" roleTypeId="SHIP_FROM_VENDOR"/>
+  <RoleType description="Ship-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="SHIP_TO_CUSTOMER"/>
+  <RoleType description="Stocker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="STOCKER"/>
+  <RoleType description="Subscriber" hasTable="N" parentTypeId="" roleTypeId="SUBSCRIBER"/>
+  <RoleType description="Subsidiary" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="SUBSIDIARY"/>
+  <RoleType description="Supplier Agent" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SUPPLIER_AGENT"/>
+  <RoleType description="Supplier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SUPPLIER"/>
+  <RoleType description="Union" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="UNION"/>
+  <RoleType description="Vendor" hasTable="N" parentTypeId="" roleTypeId="VENDOR"/>
+  <RoleType description="Visitor" hasTable="N" parentTypeId="" roleTypeId="VISITOR"/>
+  <RoleType description="Web Master" hasTable="N" parentTypeId="" roleTypeId="WEB_MASTER"/>
+  <RoleType description="Worker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="WORKER"/>
   <RoleType description="Workflow Owner" hasTable="N" parentTypeId="WORKFLOW_ROLE" roleTypeId="WF_OWNER"/>
+  <RoleType description="Workflow" hasTable="N" parentTypeId="" roleTypeId="WORKFLOW_ROLE"/>
 
   <!-- <PartyClassificationType description="" hasTable="N" parentTypeId="" partyClassificationTypeId="EEOC_CLASSIFICATION"/> -->
   <PartyClassificationType description="Minority" hasTable="N" parentTypeId="" partyClassificationTypeId="MINORITY_CLASSIFICAT"/>
