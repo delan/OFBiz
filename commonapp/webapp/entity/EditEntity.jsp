@@ -104,14 +104,17 @@
   {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     String type = request.getParameter("type");
+    String title = request.getParameter("title");
 
     ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
     relation.type = type;
+    relation.title = title;
   }
   else if("removeRelation".equals(event))
   {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
-    entity.relations.removeElementAt(relNum);
+    if(relNum < entity.relations.size() && relNum >= 0) entity.relations.removeElementAt(relNum);
+    else errorMsg = errorMsg + "<li> Relation number " + relNum + " is out of bounds.";
   }
   else if("updateKeyMap".equals(event))
   {
@@ -231,11 +234,13 @@ Column Name: <%=entity.tableName%><br>
         <td align="left"><%=relation.title%><b><%=relation.relEntityName%></b></td>
         <td align="left"><b><%=relation.relTableName%></b></td>
         <td>
+          <INPUT type=TEXT name='title' value='<%=relation.title%>'>
           <SELECT name='type'>
             <OPTION selected><%=relation.type%></OPTION>
-            <OPTION><%="one".equals(relation.type)?"many":"one"%></OPTION>
+            <OPTION>&nbsp;</OPTION>
+            <OPTION>one</OPTION>
+            <OPTION>many</OPTION>
           </SELECT>
-          (<%=relation.type%>)
         </td>
         <td>
           <INPUT type=SUBMIT value='Set'>

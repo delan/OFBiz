@@ -65,7 +65,8 @@
 <body bgcolor="#FFFFFF">
 <div align="left">
 
-<%-- <a href="<%=response.encodeURL(controlPath + "/sitemap")%>" class='listtext'>Go to Site Map</A><BR> --%>
+<a href="<%=response.encodeURL(controlPath + "/sitemap")%>" target='main' class='listtext'>Go to Site Map</A><BR>
+<a href="<%=response.encodeURL(controlPath + "/view/entityref_main")%>" target="entityFrame" class='listtext'>Entity Reference Main Page</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" target="entityFrame" class='listtext'>Generate Entity Model XML</A>
 <HR>
 

@@ -41,14 +41,12 @@
 	}
 %>
 <FRAMESET cols="30%,70%">
-<FRAME src="<%= list %>" name="entityListFrame">
-<FRAME src="<%= main %>" name="entityFrame">
+<FRAME src="<%=response.encodeURL(list)%>" name="entityListFrame">
+<FRAME src="<%=response.encodeURL(main)%>" name="entityFrame">
 </FRAMESET>
 <NOFRAMES>
-<H2>
-Frame Alert</H2>
-
-<P>
-This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
+<H2>Frame Alert</H2>
+<P>This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
 <BR>
+</NOFRAMES>
 </HTML>
