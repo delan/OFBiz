@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Order Entry</property>
+    <property name="headerItem">orderentry</property>
+    <property name="leftbar">/includes/entry_left.ftl</property>
+    <property name="rightbar">/includes/entry_right.ftl</property>
+    <content-action name="/entry/setAdditionalParty.bsh"/>
+    <content-action name="/entry/additionalPartyListing.bsh"/>
+</page>

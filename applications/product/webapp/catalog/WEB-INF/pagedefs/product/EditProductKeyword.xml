@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Edit Product Keywords</property>
+    <property name="titleProperty">PageTitleEditProductKeywords</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="tabButtonItem">EditProductKeyword</property>
+    <content-action name="/product/EditProductKeyword.bsh"/>
+</page>

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Rev:$
+ * @since      2.2
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <simple-method method-name="createReturnHeader" short-description="Create a ReturnHeader">
+    	<if>
+    	  <condition>
+    	    <and>
+    	      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+    	      <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="parameters"/></not>
+    	    </and>
+    	  </condition>
+    	  <then>
+    	    <add-error><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
+    	  </then>
+    	</if>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ReturnHeader"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+
+        <sequenced-id-to-env sequence-name="ReturnHeader" env-name="returnId"/>
+        <to-string field-name="returnId"/>
+        <env-to-field env-name="returnId" map-name="newEntity"/>
+        <field-to-result field-name="returnId" result-name="returnId"/>
+
+        <if>
+          <condition>
+          	<not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+          </condition>
+          <then>
+          	<string-to-field field-name="statusId" map-name="newEntity" string="RETURN_REQUESTED"/>
+          	<env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
+          </then>
+        </if>
+
+        <if-empty field-name="entryDate" map-name="newEntity">
+            <env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
+        </if-empty>
+
+        <if-empty field-name="statusId" map-name="newEntity">
+            <string-to-field string="RETURN_REQUESTED" field-name="statusId" map-name="newEntity"/>
+        </if-empty>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdBy" to-map-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+        <string-to-field field-name="responseMessage" string="Return Request #${returnId} was created successfully."/>
+        <field-to-result field-name="responseMessage" result-name="successMessage"/>
+    </simple-method>
+    <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
+
+        <field-to-result field-name="returnHeader.statusId" result-name="currentStatusId"/>
+        <set-nonpk-fields map-name="parameters" value-name="returnHeader"/>
+        <store-value value-name="returnHeader"/>
+    </simple-method>
+
+    <simple-method method-name="createReturnItem" short-description="Create Return Item">
+    	<field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+    	<find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
+
+    	<if>
+    	  <condition>
+    	    <and>
+    	      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+    	      <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="returnHeader"/></not>
+    	    </and>
+    	  </condition>
+    	  <then>
+    	    <add-error><fail-message message="Security Error: to run createReturnItem you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
+    	  </then>
+    	</if>
+        <check-errors/>
+
+        <if-compare field-name="returnQuantity" map-name="parameters" operator="equals" value="0" type="Double">
+            <add-error><fail-message message="No return quantity available; previous returns may exist."/></add-error>
+        	<check-errors/>
+        </if-compare>
+
+        <make-value value-name="itemLookup" entity-name="OrderItem"/>
+        <set-pk-fields map-name="parameters" value-name="itemLookup"/>
+        <if-not-empty field-name="orderItemSeqId" map-name="parameters">
+            <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>
+        </if-not-empty>
+
+        <if-not-empty field-name="orderItem">
+            <field-to-field field-name="orderItem" to-map-name="serviceContext"/>
+            <call-service service-name="getReturnableQuantity" in-map-name="serviceContext">
+                <result-to-field result-name="returnableQuantity" field-name="returnableQuantity"/>
+                <result-to-field result-name="returnablePrice" field-name="returnablePrice"/>
+            </call-service>
+
+            <if>
+                <condition>
+          	        <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+                </condition>
+                <then>
+          	        <field-to-field field-name="returnablePrice" to-field-name="returnPrice" to-map-name="parameters"/>
+                </then>
+            </if>
+
+            <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="returnableQuantity" type="Double">
+                <add-error><fail-message message="Requested return quantity [${parameters.returnQuantity}] not available; previous returns may exist [${returnableQuantity}]."/></add-error>
+            </if-compare-field>
+
+            <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
+                <add-error><fail-message message="Return quantity [${parameters.returnQuantity}] cannot exceed the ordered quantity [${orderItem.quantity}]."/></add-error>
+            </if-compare-field>
+
+            <if-compare-field field-name="returnPrice" map-name="parameters" operator="greater" to-field-name="returnablePrice" type="Double">
+                <add-error><fail-message message="Return price [${parameters.returnPrice}] cannot exceed the purchase price [${returnablePrice}]."/></add-error>
+            </if-compare-field>
+            <check-errors/>
+
+            <else>
+                <if-compare field-name="returnItemType" map-name="parameters" operator="not-equals" type="String" value="ADJUSTMENT">
+                    <add-error><fail-message message="Illegal returnItemType passed."/></add-error>
+                    <check-errors/>
+                </if-compare>
+            </else>
+        </if-not-empty>
+
+        <make-value value-name="newEntity" entity-name="ReturnItem"/>
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="newEntity"/>
+
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupMap"/>
+        <string-to-list string="-returnItemSeqId" list-name="orderBy"/>
+        <find-by-and entity-name="ReturnItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
+        <if-empty field-name="currentItems">
+            <string-to-field string="1" field-name="returnItemSeqId" map-name="newEntity"/>
+        <else>
+           <first-from-list entry-name="newestItem" list-name="currentItems"/>
+           <calculate field-name="returnItemSeqId" map-name="newEntity" type="Integer">
+               <calcop field-name="returnItemSeqId" map-name="newestItem" operator="add">
+                   <number value="1"/>
+               </calcop>
+           </calculate>
+        </else>
+        </if-empty>
+        <to-string field-name="returnItemSeqId" map-name="newEntity" numeric-padding="5"/>
+
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <field-to-result field-name="returnItemSeqId" map-name="newEntity" result-name="returnItemSeqId"/>
+        <log level="always" message="Return Item Seq ID: ${newEntity.returnItemSeqId}"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateReturnItem" short-description="Update Return Item">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
+
+        <field-to-result field-name="returnItem.statusId" result-name="currentStatusId"/>
+        <set-nonpk-fields map-name="parameters" value-name="returnItem"/>
+        <store-value value-name="returnItem"/>
+    </simple-method>
+    <simple-method method-name="removeReturnItem" short-description="Remove Return Item">
+        <check-permission permission="ORDERMGR" action="_DELETE"><fail-message message="Security Error: to run removeReturnItem you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="headerPKMap"/>
+        <find-by-primary-key entity-name="ReturnHeader" map-name="headerPKMap" value-name="returnHeader"/>
+        <if-compare field-name="statusId" map-name="returnHeader" operator="not-equals" type="String" value="RETURN_REQUESTED">
+            <add-error><fail-message message="Cannot remove items once return is approved"/></add-error>
+            <check-errors/>
+        </if-compare>
+
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
+
+        <remove-value value-name="returnItem"/>
+    </simple-method>
+
+    <simple-method method-name="updateReturnStatusFromReceipt" short-description="Update Return Status From ShipmentReceipt">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
+        <find-by-and entity-name="ShipmentReceipt" map-name="lookupPKMap" list-name="shipmentReceipts"/>
+        <iterate list-name="shipmentReceipts" entry-name="receipt">
+          <if-empty field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
+            <calculate field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
+              <number value="0"/>
+            </calculate>
+          </if-empty>
+          <calculate field-name="${receipt.returnItemSeqId}" map-name="totalsMap" type="Double">
+            <calcop field-name="${receipt.returnItemSeqId}" map-name="totalsMap" operator="add">
+              <calcop field-name="quantityAccepted" map-name="receipt" operator="get"/>
+              <calcop field-name="quantityRejected" map-name="receipt" operator="get"/>
+            </calcop>
+          </calculate>
+          <field-to-field field-name="returnId" map-name="receipt" to-map-name="newLookupMap"/>
+          <field-to-field field-name="returnItemSeqId" map-name="receipt" to-map-name="newLookupMap"/>
+          <find-by-primary-key entity-name="ReturnItem" map-name="newLookupMap" value-name="returnItem"/>
+          <if-compare-field field-name="returnQuantity" map-name="returnItem" operator="greater-equals" to-field-name="${receipt.returnItemSeqId}" to-map-name="totalsMap" type="Double">
+            <!-- update the status for the item -->
+            <string-to-field field-name="statusId" map-name="returnItem" string="RETURN_RECEIVED"/>
+            <store-value value-name="returnItem"/>
+            <!-- create status change history -->
+            <make-value entity-name="ReturnStatus" value-name="newValue"/>
+            <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
+            <env-to-field env-name="returnStatusId" map-name="newValue"/>
+
+            <field-to-field field-name="returnItemSeqId" map-name="returnItem" to-map-name="newValue"/>
+            <field-to-field field-name="returnId" map-name="returnItem" to-map-name="newValue"/>
+            <field-to-field field-name="statusId" map-name="returnItem" to-map-name="newValue"/>
+
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+
+            <create-value value-name="newValue"/>
+          </if-compare-field>
+        </iterate>
+
+        <!-- check to see if all items have been received -->
+        <string-to-field string="true" field-name="allReceived"/>
+        <find-by-and entity-name="ReturnItem" map-name="lookupPKMap" list-name="allReturnItems"/>
+        <iterate list-name="allReturnItems" entry-name="item">
+          <if-compare field-name="statusId" map-name="item" operator="not-equals" value="RETURN_RECEIVED">
+            <if-not-empty field-name="orderItemSeqId" map-name="item">
+                <!-- non-order items (i.e. adjustments) are not received -->
+                <string-to-field string="false" field-name="allReceived"/>
+            </if-not-empty>
+          </if-compare>
+        </iterate>
+        <if-compare field-name="allReceived" operator="equals" value="true">
+          <!-- update the return header -->
+          <string-to-field field-name="statusId" map-name="returnHeader" string="RETURN_RECEIVED"/>
+          <store-value value-name="returnHeader"/>
+          <!-- create the status history -->
+          <make-value entity-name="ReturnStatus" value-name="newValue"/>
+          <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
+          <env-to-field env-name="returnStatusId" map-name="newValue"/>
+
+          <field-to-field field-name="returnId" map-name="returnHeader" to-map-name="newValue"/>
+          <field-to-field field-name="statusId" map-name="returnHeader" to-map-name="newValue"/>
+
+          <now-timestamp-to-env env-name="nowTimestamp"/>
+          <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+
+          <create-value value-name="newValue"/>
+        </if-compare>
+
+        <!-- return the current return header status -->
+        <field-to-result field-name="statusId" map-name="returnHeader" result-name="returnHeaderStatus"/>
+    </simple-method>
+    
+    <simple-method method-name="quickReturnFromOrder" short-description="Create Quick Return From Order">
+        <if>
+    	  <condition>
+    	    <and>
+    	      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+    	      <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="parameters"/></not>
+    	    </and>
+    	  </condition>
+    	  <then>
+    	    <add-error><fail-message message="Security Error: to run quickReturnFromOrder you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
+    	  </then>
+    	</if>
+        <check-errors/>
+
+        <!-- get primary information from the order header -->
+        <entity-one entity-name="OrderHeader" value-name="orderHeader">
+            <field-map env-name="parameters.orderId" field-name="orderId"/>
+        </entity-one>
+
+        <!-- find the bill to customer; for return's fromPartyId -->
+        <entity-condition entity-name="OrderRole" list-name="orderRoles">
+            <condition-list combine="and">
+                <condition-expr field-name="orderId" operator="equals" env-name="orderHeader.orderId"/>
+                <condition-expr field-name="roleTypeId" operator="equals" value="BILL_TO_CUSTOMER"/>
+            </condition-list>
+        </entity-condition>
+        <first-from-list entry-name="orderRole" list-name="orderRoles"/>
+
+        <!-- create the return header -->
+        <field-to-field field-name="originFacilityId" map-name="orderHeader" to-field-name="destinationFacilityId" to-map-name="createHeaderCtx"/>
+        <field-to-field field-name="partyId" map-name="orderRole" to-field-name="fromPartyId" to-map-name="createHeaderCtx"/>
+        <string-to-field string="Y" field-name="needsInventoryReceive" map-name="updateHeaderCtx"/>
+
+        <if-empty field-name="destinationFacilityId" map-name="createHeaderCtx">
+            <get-related-one value-name="orderHeader" relation-name="ProductStore" to-value-name="productStore"/>
+            <field-to-field field-name="inventoryFacilityId" map-name="productStore" to-field-name="destinationFacilityId" to-map-name="createHeaderCtx"/>
+        </if-empty>
+
+        <call-service service-name="createReturnHeader" in-map-name="createHeaderCtx" include-user-login="true">
+            <result-to-field result-name="returnId"/>
+        </call-service>
+
+        <!-- get the available to return order items -->
+        <entity-condition entity-name="OrderItem" list-name="orderItems">
+            <condition-list combine="and">
+                <condition-expr field-name="orderId" operator="equals" env-name="orderHeader.orderId"/>
+                <condition-expr field-name="statusId" operator="equals" value="ITEM_COMPLETED"/>
+            </condition-list>
+        </entity-condition>
+
+        <if-empty field-name="returnReasonId" map-name="parameters">
+            <string-to-field string="RTN_NOT_WANT" field-name="returnReasonId" map-name="parameters"/>
+        </if-empty>
+        <if-empty field-name="returnTypeId" map-name="parameters">
+            <string-to-field string="RTN_REFUND" field-name="returnTypeId" map-name="parameters"/>
+        </if-empty>
+
+        <!-- create the return items -->
+        <calculate field-name="returnTotal" type="Double"><number value="0.0"/></calculate>
+        <iterate entry-name="orderItem" list-name="orderItems">
+            <string-to-field string="ITEM" field-name="returnItemType" map-name="newItemCtx"/>
+            <field-to-field field-name="returnId" to-map-name="newItemCtx"/>
+            <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="newItemCtx"/>
+            <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="newItemCtx"/>
+            <env-to-field env-name="orderItem.orderId" field-name="orderId" map-name="newItemCtx"/>
+            <env-to-field env-name="orderItem.orderItemSeqId" field-name="orderItemSeqId" map-name="newItemCtx"/>
+            <env-to-field env-name="orderItem.itemDescription" field-name="description" map-name="newItemCtx"/>
+
+            <!-- get the returnable price and quantity -->
+            <field-to-field field-name="orderItem" to-map-name="itemCheckMap"/>
+            <call-service service-name="getReturnableQuantity" in-map-name="itemCheckMap">
+                <result-to-field result-name="returnableQuantity" field-name="returnQuantity" map-name="newItemCtx"/>
+                <result-to-field result-name="returnablePrice" field-name="returnPrice" map-name="newItemCtx"/>
+            </call-service>
+
+            <!-- add in the item amount for a calc total -->
+            <calculate field-name="returnTotal">
+        	    <calcop field-name="returnTotal" operator="add">
+        	        <calcop operator="multiply">
+        	            <calcop operator="get" field-name="returnPrice" map-name="newItemCtx"/>
+                        <calcop operator="get" field-name="returnQuantity" map-name="newItemCtx"/>
+                    </calcop>
+                </calcop>
+        	</calculate>
+
+            <!-- create the return item -->
+            <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
+        </iterate>
+
+        <!-- get the order shipping total -->
+        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="shippingCtx"/>
+        <call-service service-name="getOrderShippingAmount" in-map-name="shippingCtx" include-user-login="true">
+            <result-to-field result-name="shippingAmount"/>
+        </call-service>
+        <log level="always" message="Order #${orderHeader.orderId} shipping total - ${shippingAmount}"/>
+
+        <!-- create the shipping return adjustment -->
+        <if-compare field-name="shippingAmount" operator="greater" value="0.00" type="Double">
+            <log level="always" message="shipping amount is greater than 0"/>
+
+            <string-to-field string="Shipping Adjustment" field-name="description" map-name="shipItemCtx"/>
+            <string-to-field string="ADJUSTMENT" field-name="returnItemType" map-name="shipItemCtx"/>
+
+            <field-to-field field-name="returnId" to-map-name="shipItemCtx"/>
+            <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="shipItemCtx"/>
+            <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="shipItemCtx"/>
+            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="shipItemCtx"/>
+
+            <env-to-field env-name="orderHeader.orderId" field-name="orderId" map-name="shipItemCtx"/>
+            <env-to-field env-name="shippingAmount" field-name="returnPrice" map-name="shipItemCtx"/>
+
+            <calculate field-name="returnQuantity" map-name="shipItemCtx" type="Double">
+                <number value="1"/>
+            </calculate>
+
+            <!-- add in the item amount for a calc total -->
+            <calculate field-name="returnTotal" type="Double">
+        	    <calcop field-name="returnTotal" operator="add">
+        	        <calcop operator="multiply">
+        	            <calcop operator="get" field-name="returnPrice" map-name="shipItemCtx"/>
+                        <calcop operator="get" field-name="returnQuantity" map-name="shipItemCtx"/>
+                    </calcop>
+                </calcop>
+        	</calculate>
+
+            <!-- create the shipping adjustment return item -->
+            <call-service service-name="createReturnItem" in-map-name="shipItemCtx" include-user-login="true"/>
+        </if-compare>
+
+        <!-- get the order total - return total diff -->
+        <calculate field-name="totalDiff" type="Double" decimal-format="##0.00">
+            <calcop operator="subtract">
+                <calcop operator="get" field-name="grandTotal" map-name="orderHeader"/>
+                <calcop operator="get" field-name="returnTotal"/>
+            </calcop>
+        </calculate>
+        <log level="always" message="OrderTotal [${orderHeader.grandTotal}] - ReturnTotal [${returnTotal}] Diff = [${totalDiff}]"/>
+
+        <!-- create the balance adjustment -->
+        <if-compare field-name="totalDiff" operator="not-equals" value="0" type="Double">
+            <log level="always" message="diff amount is not 0"/>
+
+            <string-to-field string="Balance Adjustment" field-name="description" map-name="balanceItemCtx"/>
+            <string-to-field string="ADJUSTMENT" field-name="returnItemType" map-name="balanceItemCtx"/>
+
+            <field-to-field field-name="returnId" to-map-name="balanceItemCtx"/>
+            <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="balanceItemCtx"/>
+            <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="balanceItemCtx"/>
+            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="balanceItemCtx"/>
+
+            <env-to-field env-name="orderHeader.orderId" field-name="orderId" map-name="balanceItemCtx"/>
+            <env-to-field env-name="totalDiff" field-name="returnPrice" map-name="balanceItemCtx"/>
+
+            <calculate field-name="returnQuantity" map-name="balanceItemCtx" type="Double">
+                <number value="1"/>
+            </calculate>
+
+            <!-- create the shipping adjustment return item -->
+            <call-service service-name="createReturnItem" in-map-name="balanceItemCtx" include-user-login="true"/>
+        </if-compare>
+
+        <!-- update the header status -->
+        <string-to-field string="RETURN_ACCEPTED" field-name="statusId" map-name="updateHeaderCtx"/>
+        <field-to-field field-name="returnId" to-map-name="updateHeaderCtx"/>
+        <call-service service-name="updateReturnHeader" in-map-name="updateHeaderCtx" include-user-login="true"/>
+
+        <!-- auto-receive this return if we passed in the flag -->
+        <if-compare field-name="receiveReturn" map-name="parameters" operator="equals" value="true" type="Boolean">
+            <field-to-field field-name="returnId" to-map-name="receiveCtx"/>
+            <call-service service-name="quickReceiveReturn" in-map-name="receiveCtx"/>
+        <else>
+            <!-- update the header status -->
+            <log level="info" message="Receive flag not set; will handle receiving on entity-sync"/>            
+        </else>
+        </if-compare>
+
+        <field-to-result field-name="returnId"/>
+    </simple-method>
+</simple-methods>

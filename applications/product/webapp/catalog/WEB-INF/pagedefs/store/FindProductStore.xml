@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Product Store List</property>
+    <property name="titleProperty">PageTitleEditProductStoreList</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="headerItem">store</property>
+    <content-action name="/store/FindProductStore.bsh"/>
+</page>

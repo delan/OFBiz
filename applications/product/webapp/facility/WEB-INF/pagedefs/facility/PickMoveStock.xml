@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Picking: Move Stock</property>
+    <property name="titleProperty">PageTitlePickingMoveStock</property>
+    <property name="headerItem">facility</property>
+    <property name="tabButtonItem">PicklistOptions</property>
+    <content-action name="/facility/PickMoveStock.bsh"/>
+</page>

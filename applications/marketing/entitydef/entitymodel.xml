@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ *  Title: Entity Generator Definitions for the General Data Model
+ *  Description: None
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Rev$
+ */
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <copyright>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org</copyright>
+    <author>None</author>
+    <version>1.0</version>
+
+  <!-- ========================================================= -->
+  <!-- ======================== Data Model ===================== -->
+  <!-- The modules in this file are as follows:                  -->
+  <!--  - org.ofbiz.marketing.campaign -->
+  <!--  - org.ofbiz.marketing.contact -->
+  <!--  - org.ofbiz.marketing.tracking -->
+  <!-- ========================================================= -->
+
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.marketing.campaign -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="MarketingCampaign"
+            package-name="org.ofbiz.marketing.campaign"
+            title="Marketing Campaign Entity">
+      <field name="marketingCampaignId" type="id-ne"></field>
+      <field name="parentCampaignId" type="id"></field>
+      <field name="campaignName" type="name"></field>
+      <field name="campaignSummary" type="very-long"></field>
+      <prim-key field="marketingCampaignId"/>
+      <relation type="one" fk-name="MKTGCPN_PRNT" title="Parent" rel-entity-name="MarketingCampaign">
+        <key-map field-name="parentCampaignId" rel-field-name="marketingCampaignId"/>
+      </relation>
+    </entity>
+    <entity entity-name="MarketingCampaignNote"
+            package-name="org.ofbiz.marketing.campaign"
+            title="Marketing Campaign Note Entity">
+      <field name="marketingCampaignId" type="id-ne"></field>
+      <field name="noteId" type="id-ne"></field>
+      <prim-key field="marketingCampaignId"/>
+      <prim-key field="noteId"/>
+      <relation type="one" fk-name="MKTGCPN_NOTE_CMPN" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="one" fk-name="MKTGCPN_NOTE_NOTE" rel-entity-name="NoteData">
+        <key-map field-name="noteId"/>
+      </relation>
+    </entity>
+    <entity entity-name="MarketingCampaignPrice"
+            package-name="org.ofbiz.marketing.campaign"
+            title="Marketing Campaign Price Entity">
+      <field name="marketingCampaignId" type="id-ne"></field>
+      <field name="productPriceRuleId" type="id-ne"></field>
+      <prim-key field="marketingCampaignId"/>
+      <prim-key field="productPriceRuleId"/>
+      <relation type="one" fk-name="MKTGCPN_PRICE_MC" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="one" fk-name="MKTGCPN_PRICE_PP" rel-entity-name="ProductPriceRule">
+        <key-map field-name="productPriceRuleId"/>
+      </relation>
+    </entity>
+    <entity entity-name="MarketingCampaignPromo"
+            package-name="org.ofbiz.marketing.campaign"
+            title="Marketing Campaign Promo Entity">
+      <field name="marketingCampaignId" type="id-ne"></field>
+      <field name="productPromoId" type="id-ne"></field>
+      <prim-key field="marketingCampaignId"/>
+      <prim-key field="productPromoId"/>
+      <relation type="one" fk-name="MKTGCPN_PROMO_MC" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="one" fk-name="MKTGCPN_PROMO_PP" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+    </entity>
+    <entity entity-name="MarketingCampaignRole"
+            package-name="org.ofbiz.marketing.campaign"
+            title="Marketing Campaign Role Entity">
+      <field name="marketingCampaignId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <prim-key field="marketingCampaignId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="MKTGCPN_ROLE_MC" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="one" fk-name="MKTGCPN_ROLE_PR" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.marketing.contact -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ContactList"
+            package-name="org.ofbiz.marketing.contact"
+            title="Contact List Entity">
+      <field name="contactListId" type="id-ne"></field>
+      <field name="contactListTypeId" type="id-ne"></field>
+      <field name="contactListName" type="id-ne"></field>
+      <field name="marketingCampaignId" type="id"></field>
+      <field name="comments" type="comment"></field>
+      <field name="description" type="description"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="contactListId"/>
+      <relation type="one" fk-name="CNCT_LST_MKCMPN" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="one" fk-name="CNCT_LST_TYP" rel-entity-name="ContactListType">
+        <key-map field-name="contactListTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ContactListParty"
+            package-name="org.ofbiz.marketing.contact"
+            title="Contact List Party Entity">
+      <field name="contactListId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="contactListId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="CNCT_LSTPTY_CLST" rel-entity-name="ContactList">
+        <key-map field-name="contactListId"/>
+      </relation>
+      <relation type="one" fk-name="CNCT_LSTPTY_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ContactListType"
+            package-name="org.ofbiz.marketing.contact"
+            title="Contact List Type Entity">
+      <field name="contactListTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="contactListTypeId"/>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.marketing.tracking -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="TrackingCode"
+            package-name="org.ofbiz.marketing.tracking"
+            title="Tracking Code Entity">
+      <field name="trackingCodeId" type="id-ne"></field>
+      <field name="trackingCodeTypeId" type="id-ne"></field>
+      <field name="marketingCampaignId" type="id"></field>
+      <field name="redirectUrl" type="url"></field>
+      <field name="overrideLogo" type="url"></field>
+      <field name="overrideCss" type="url"></field>
+      <field name="prodCatalogId" type="id"></field>
+      <field name="comments" type="comment"></field>
+      <field name="description" type="description"></field>
+      <field name="trackableLifetime" type="numeric"></field>
+      <field name="billableLifetime" type="numeric"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="groupId" type="id"></field>
+      <field name="subgroupId" type="id"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="trackingCodeId"/>
+      <relation type="one" fk-name="TKNG_COD_MKCMPN" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_COD_TYP" rel-entity-name="TrackingCodeType">
+        <key-map field-name="trackingCodeTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="TrackingCodeOrder"
+            package-name="org.ofbiz.marketing.tracking"
+            title="Tracking Code Visit Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="trackingCodeTypeId" type="id-ne"></field>
+      <field name="trackingCodeId" type="id-ne"></field>
+      <field name="isBillable" type="indicator"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="trackingCodeTypeId"/>
+      <relation type="one" fk-name="TKNG_CODODR_ODR" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_CODODR_TKCD" rel-entity-name="TrackingCode">
+        <key-map field-name="trackingCodeId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_CODODR_TYP" rel-entity-name="TrackingCodeType">
+        <key-map field-name="trackingCodeTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="TrackingCodeType"
+            package-name="org.ofbiz.marketing.tracking"
+            title="Tracking Code Type Entity">
+      <field name="trackingCodeTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="trackingCodeTypeId"/>
+    </entity>
+    <entity entity-name="TrackingCodeVisit"
+            package-name="org.ofbiz.marketing.tracking"
+            title="Tracking Code Visit Entity">
+      <field name="trackingCodeId" type="id-ne"></field>
+      <field name="visitId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="sourceEnumId" type="id"></field>
+      <prim-key field="trackingCodeId"/>
+      <prim-key field="visitId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="TKNG_CODVST_TKCD" rel-entity-name="TrackingCode">
+        <key-map field-name="trackingCodeId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_CODVST_VST" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="one" fk-name="TKNG_CODVST_SRCEM" rel-entity-name="Enumeration">
+        <key-map field-name="sourceEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+</entitymodel>
+

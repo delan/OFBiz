@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2004 The Open For Business Project and repected authors.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:">Oswin Ondarza</a>
+ * @author     Olivier.Heintz@nereide.biz (migration to UiLabel) 
+ * @version 1.0
+ -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <!-- PostalAddressBoundary methods -->
+    <simple-method method-name="createPostalAddressBoundary" short-description="Create Postal Address Boundary">
+        <check-permission permission="PARTYMGR" action="_CREATE"><fail-property resource="PartyUiLabels" property="PartyCreatePostalAddressBoundaryPermissionError"/></check-permission>
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="PostalAddressBoundary"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>        
+        <find-by-primary-key entity-name="PostalAddressBoundary" map-name="newEntity" value-name="PostalAddressBoundaryValue"/>        
+        <if-empty map-name="PostalAddressBoundaryValue" field-name="geoId">
+            <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+            <create-value value-name="newEntity"/>
+        <else>
+            <string-to-field field-name="respond_code" string="error"/>
+            <string-to-field field-name="error_message" string="The Boundary already exists, cannot create."/>
+            <field-to-list field-name="error_message" list-name="error_list" />
+            <check-errors/>
+        </else>
+        </if-empty>
+    </simple-method>   
+    <simple-method method-name="deletePostalAddressBoundary" short-description="Delete a  Postal Address Boundary">
+        <check-permission permission="PARTYMGR" action="_DELETE"><fail-property resource="PartyUiLabels" property="PartyRemovePostalAddressBoundaryPermissionError"/></check-permission>
+        <check-errors/>           
+        <make-value entity-name="PostalAddressBoundary" value-name="PostalAddressBoundaryValue" />
+        <set-pk-fields value-name="PostalAddressBoundaryValue" map-name="parameters"/>
+        <set-nonpk-fields value-name="PostalAddressBoundaryValue" map-name="parameters"/>
+        <remove-by-and entity-name="PostalAddressBoundary" map-name="PostalAddressBoundaryValue"/>
+    </simple-method> 
+    <simple-method method-name="getPostalAddressBoundary" short-description="Get Postal Address Boundary">
+        <check-permission permission="PARTYMGR" action="_VIEW"><fail-property resource="PartyUiLabels" property="PartyViewPostalAddressBoundaryPermissionError"/></check-permission>
+        <check-errors/>
+        <!-- search for all Boundary associations from a PostalAddress--> 
+        <make-value entity-name="PostalAddressBoundary" value-name="PostalAddressBoundaryValue"/>
+        <set-pk-fields value-name="PostalAddressBoundaryValue" map-name="parameters"/>
+        <find-by-and entity-name="PostalAddressBoundary" map-name="PostalAddressBoundaryValue" list-name="resultSet"/>
+        <iterate entry-name="registro" list-name="resultSet">
+            <!-- Search the Geo of the association -->
+            <make-value entity-name="Geo" value-name="geoValue" />
+            <set-pk-fields value-name="geoValue" map-name="registro"/>
+            <find-by-primary-key entity-name="Geo" map-name="geoValue" value-name="geoValue"/>
+            <!--make-value entity-name="GeoType" value-name="geoTypeValue" />
+            <set-pk-fields value-name="geoTypeValue" map-name="geoValue"/>
+            <find-by-primary-key entity-name="GeoType" map-name="geoTypeValue" value-name="geoTypeValue"/>
+            
+            <call-bsh><![CDATA[
+                return org.ofbiz.base.util.UtilMisc.toMap("geoContext", new java.util.HashMap(geoValue));
+            ]]></call-bsh>
+            <field-to-field map-name="geoTypeValue" field-name="description" to-map-name="geoContext"/-->
+
+            <field-to-list field-name="geoValue" list-name="geoList" />
+        </iterate>       
+        <if-not-empty field-name="geoList">   
+            <field-to-result field-name="geoList"  result-name="geos"/>
+        </if-not-empty>         
+    </simple-method>
+
+    <!-- PartyClassification methods -->
+    <simple-method method-name="createPartyClassification" short-description="create a PartyClassification">
+        <check-permission permission="PARTYMGR" action="_CREATE"><fail-property resource="PartyUiLabels" property="PartyCreatePartyClassificationPermissionError"/></check-permission>
+        <check-errors/>
+        
+        <make-value entity-name="PartyClassification" value-name="PartyClassificationValue"/>
+        <now-timestamp-to-env env-name="now"/>
+        <env-to-field map-name="parameters" field-name="fromDate" env-name="now"/> 
+        
+        <set-pk-fields map-name="parameters" value-name="PartyClassificationValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="PartyClassificationValue" />        
+        <create-value value-name="PartyClassificationValue" />  
+    </simple-method>   
+    <simple-method method-name="deletePartyClassification" short-description="delete a PartyClassification">
+        <check-permission permission="PARTYMGR" action="_DELETE"><fail-property resource="PartyUiLabels" property="PartyRemovePartyClassificationPermissionError"/></check-permission>
+        <check-errors/>
+        <make-value entity-name="PartyClassification" value-name="PartyClassificationMap"/>
+        <set-pk-fields value-name="PartyClassificationMap" map-name="parameters"/>
+        <find-by-primary-key entity-name="PartyClassification" map-name="PartyClassificationMap" value-name="PartyClassificationValue" />
+        <now-timestamp-to-env env-name="now"/>
+        <env-to-field map-name="PartyClassificationValue" field-name="thruDate" env-name="now"/> 
+        <store-value value-name="PartyClassificationValue"/>        
+    </simple-method>
+    
+    <!-- PartyRelationship methods -->
+    <simple-method method-name="removePartyRelationship" short-description="Remove PartyRelationship">      
+        <check-permission permission="PARTYMGR" action="_DELETE"><fail-property resource="PartyUiLabels" property="PartyRemovePartyRelationshipPermissionError"/></check-permission>
+        <check-errors/>   
+    
+        <make-value entity-name="PartyRelationship" value-name="relationshipMap"/>
+        <set-pk-fields map-name="parameters" value-name="relationshipMap" />
+        <find-by-primary-key entity-name="PartyRelationship" map-name="relationshipMap" value-name="relationshipValue" />
+        <remove-value value-name="relationshipValue" />
+    </simple-method>
+
+    <!-- Vendor Party services -->
+    <simple-method method-name="createVendor" short-description="createVendorcreateVendor">
+        <check-permission permission="PARTYMGR" action="_CREATE">
+        	<fail-property resource="PartyUiLabels" property="PartyCreateAddWebSiteRolePermissionError"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="Vendor"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateWebSiteRole" short-description="Update WebSite Role">
+        <check-permission permission="PARTYMGR" action="_UPDATE">
+        	<fail-property resource="PartyUiLabels" property="PartyUpdateWebSiteRolePermissionError"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="Vendor"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="Vendor" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeWebSiteRole" short-description="Remove WebSite Role">
+        <check-permission permission="PARTYMGR" action="_DELETE">
+        	<fail-property resource="PartyUiLabels" property="PartyRemoveWebSiteRolePermissionError"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="Vendor"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="Vendor" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- party profile default -->
+    <simple-method method-name="setPartyProfileDefaults" short-description="Sets Party Profile Defaults">
+        <!-- check make sure we have permission to set this -->
+        <if-empty map-name="parameters" field-name="partyId">
+            <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
+        </if-empty>
+        <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
+            <check-permission permission="PARTYMGR" action="_UPDATE">
+				<fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
+            </check-permission>
+        </if-compare-field>
+
+        <!-- lookup existing value -->
+        <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="defLookup"/>
+        <field-to-field field-name="partyId" map-name="parameters" to-map-name="defLookup"/>
+        <find-by-primary-key map-name="defLookup" value-name="ppDefs" entity-name="PartyProfileDefault"/>
+        <if-empty field-name="ppDefs">
+            <make-value value-name="ppDefs" entity-name="PartyProfileDefault" map-name="defLookup"/>
+            <create-value value-name="ppDefs"/>
+        </if-empty>
+
+        <!-- update the fields -->
+        <set-nonpk-fields value-name="ppDefs" map-name="parameters" set-if-null="false"/>
+        <store-value value-name="ppDefs"/>
+    </simple-method>
+    
+    <!-- create party content -->
+    <simple-method method-name="createPartyContent" short-description="Creates Party Associated Content" login-required="false">
+        <!-- make sure we are logged in when passing a partyId -->
+        <if-not-empty field-name="partyId" map-name="parameters">
+            <if-empty field-name="userLogin" map-name="parameters">
+                <add-error><fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/></add-error>
+                <check-errors/>
+            </if-empty>
+        </if-not-empty>
+
+        <!-- check permission when creating content on behalf of another party -->
+        <if-empty field-name="partyId" map-name="parameters">
+            <if-not-empty field-name="userLogin" map-name="parameters">
+                <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
+                <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
+                    <check-permission permission="PARTYMGR" action="_UPDATE">
+				        <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
+                    </check-permission>
+                </if-compare-field>
+            </if-not-empty>
+        </if-empty>
+
+
+        <!-- find the sub directory file location -->
+        <call-class-method class-name="org.ofbiz.content.data.DataResourceWorker" method-name="getDataResourceContentUploadPath" ret-field-name="uploadPath"/>
+        <log level="always" message="[createPartyContent] - Found Subdir : ${uploadPath}"/>
+
+        <!-- locate the file extension to use based on mime-type -->
+        <field-to-field field-name="_uploadedFile_contentType" map-name="parameters" to-field-name="mimeTypeId" to-map-name="extenLookup"/>
+        <find-by-and entity-name="FileExtension" map-name="extenLookup" list-name="extensions"/>
+        <first-from-list entry-name="extension" list-name="extensions"/>
+
+        <!-- create the data resource object -->
+        <sequenced-id-to-env sequence-name="DataResource" env-name="dataResourceId"/>
+        <make-value value-name="dataResource" entity-name="DataResource"/>
+        <env-to-field env-name="dataResourceId" map-name="dataResource"/>
+        <field-to-field field-name="_uploadedFile_fileName" map-name="parameters" to-field-name="dataResourceName" to-map-name="dataResource"/>
+        <field-to-field field-name="_uploadedFile_contentType" map-name="parameters" to-field-name="mimeTypeId" to-map-name="dataResource"/>
+        <field-to-field field-name="dataCategoryId" map-name="parameters" to-map-name="dataResource"/>
+        <field-to-field field-name="statusId" map-name="parameters" to-map-name="dataResource"/>
+
+        <string-to-field string="${uploadPath}/${dataResource.dataResourceId}" field-name="objectInfo" map-name="dataResource"/>
+        <if-not-empty field-name="extension">
+            <string-to-field string="${uploadPath}/${dataResource.dataResourceId}.${extension.fileExtensionId}" field-name="objectInfo" map-name="dataResource"/>
+        </if-not-empty>
+
+        <string-to-field string="LOCAL_FILE" field-name="dataResourceTypeId" map-name="dataResource"/>
+        <create-value value-name="dataResource"/>
+
+        <!-- create content record -->
+        <sequenced-id-to-env sequence-name="Content" env-name="contentId"/>
+        <make-value value-name="content" entity-name="Content"/>
+        <env-to-field env-name="contentId" map-name="content"/>
+        <field-to-field field-name="_uploadedFile_fileName" map-name="parameters" to-field-name="contentName" to-map-name="content"/>
+        <field-to-field field-name="_uploadedFile_contentType" map-name="parameters" to-field-name="mimeTypeId" to-map-name="content"/>
+        <field-to-field field-name="dataResourceId" map-name="dataResource" to-map-name="content"/>
+        <field-to-field field-name="contentTypeId" map-name="parameters" to-map-name="content"/>
+        <field-to-field field-name="statusId" map-name="parameters" to-map-name="content"/>
+        <string-to-field string="${parameters.locale}" field-name="localeString" map-name="content"/>
+        <create-value value-name="content"/>
+
+        <!-- create the content role -->
+        <if-not-empty field-name="partyId" map-name="parameters">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <make-value value-name="contentRole" entity-name="ContentRole"/>
+            <field-to-field field-name="contentId" map-name="content" to-map-name="contentRole"/>
+            <field-to-field field-name="partyId" map-name="parameters" to-map-name="contentRole"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="contentRole"/>
+            <string-to-field string="OWNER" field-name="roleTypeId" map-name="contentRole"/>
+
+            <!-- check party role -->
+            <make-value value-name="partyRole" entity-name="PartyRole"/>
+            <set-pk-fields value-name="partyRole" map-name="contentRole"/>
+            <find-by-and entity-name="PartyRole" map-name="partyRole" list-name="pRoles"/>
+            <if-empty field-name="pRoles">
+                <create-value value-name="partyRole"/>
+            </if-empty>
+            <create-value value-name="contentRole"/>
+        </if-not-empty>
+        
+        <!-- store the file -->
+        <set-service-fields service-name="createAnonFile" map-name="dataResource" to-map-name="fileCtx"/>
+        <field-to-field field-name="parameters.uploadedFile" to-field-name="fileCtx.binData"/>
+        <field-to-field field-name="dataResource" to-field-name="fileCtx.dataResource"/>
+        <call-service service-name="createAnonFile" in-map-name="fileCtx" include-user-login="true"/>
+
+        <field-to-result field-name="contentId" map-name="content"/>
+    </simple-method>
+</simple-methods>

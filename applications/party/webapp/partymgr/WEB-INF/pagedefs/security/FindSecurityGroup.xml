@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Security Groups List</property>
+    <property name="title-property">PageTitleSecurityGroupsList</property>
+    <property name="headerItem">security</property>
+    <content-action name="/security/FindSecurityGroup.bsh"/>
+</page>

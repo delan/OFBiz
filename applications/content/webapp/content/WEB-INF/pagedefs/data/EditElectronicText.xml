@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="permission">CONTENTMGR</property>    
+    <property name="title">Edit ElectronicText</property>
+    <property name="headerItem">Data</property>    
+    <property name="subMenu">/data/data_menu.ftl</property>    
+    <property name="formDefFile">/data/DataResourceForms.xml</property>    
+    <property name="editFormName">EditElectronicText</property>    
+    <property name="addFormName">AddElectronicText</property>    
+    <property name="entityName">ElectronicText</property>    
+    <property name="currentEntityPropertyName">parentEntityName</property>    
+    <property name="parentEntityName">DataResource</property>    
+    <property name="priKeyName">dataResourceId</property>    
+    <property name="defaultMapName">currentValue</property>    
+    <property name="allowedResourceType">ELECTRONIC_TEXT</property>    
+    <property name="permissionType">simple</property>    
+    <page-action name="/includes/permprep.bsh"/>
+    <page-action name="/includes/currentvalprep.bsh"/>
+    <content-action name="/data/checkresourcetype.bsh" />
+    <content-action name="/includes/relatedoneprep.bsh" />
+</page>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Edit Category Content</property>
+    <property name="titleProperty">PageTitleEditCategoryContent</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="tabButtonItem">EditCategoryContent</property>
+    <content-action name="/category/EditCategoryContent.bsh"/>
+</page>

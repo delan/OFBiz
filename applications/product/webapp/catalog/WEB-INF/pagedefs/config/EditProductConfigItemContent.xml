@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Edit ProductConfigItem Content</property>
+    <property name="titleProperty">PageTitleEditProductConfigItemContent</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="tabButtonItem">EditProductConfigItemContent</property>
+    <property name="headerItem">configs</property>
+    <content-action name="/config/EditProductConfigItemContent.bsh"/>
+</page>

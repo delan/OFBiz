@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Order Reports</property>
+    <property name="headerItem">reports</property> 
+    <content-action name="/reports/reportlist.bsh"/>  
+</page>

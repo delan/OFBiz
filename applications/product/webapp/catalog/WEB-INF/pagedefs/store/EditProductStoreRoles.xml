@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Edit Product Store Roles</property>
+    <property name="titleProperty">PageTitleEditProductStoreRoles</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="headerItem">store</property>
+    <property name="tabButtonItem">EditProductStoreRoles</property>    
+    <content-action name="/store/EditProductStoreRoles.bsh"/>
+</page>

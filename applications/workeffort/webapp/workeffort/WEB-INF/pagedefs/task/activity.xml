@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Activity</property>
+    <property name="headerItem">task</property>
+    <content-action name="/task/activity.bsh"/>
+</page>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Edit Facility Group Roles</property>
+    <property name="titleProperty">PageTitleEditFacilityGroupRoles</property>
+    <property name="headerItem">facilityGroup</property>
+    <property name="tabButtonItem">EditFacilityGroupRoles</property>
+    <content-action name="/group/EditFacilityGroupRoles.bsh"/>
+</page>

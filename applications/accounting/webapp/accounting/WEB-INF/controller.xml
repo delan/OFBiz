@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/site-conf.xsd">
+    <description>Accounting Manager Module Site Configuration File</description>
+    <owner>The Open For Business Project Copyright (c) 2002</owner>
+    <errorpage>/error/error.jsp</errorpage>
+    
+    <!-- event handlers -->
+    <handler name="java" type="request" class="org.ofbiz.webapp.event.JavaEventHandler"/>
+    <handler name="soap" type="request" class="org.ofbiz.webapp.event.SOAPEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.webapp.event.ServiceEventHandler"/>
+    <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
+
+    <!-- view handlers -->
+    <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>        
+
+    <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
+    <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
+    <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
+    
+    <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
+    <handler name="datavision" type="view" class="org.ofbiz.webapp.view.DataVisionViewHandler"/>
+    <handler name="jasperreportspdf" type="view" class="org.ofbiz.webapp.view.JasperReportsPdfViewHandler"/>
+    <handler name="jasperreportsxml" type="view" class="org.ofbiz.webapp.view.JasperReportsXmlViewHandler"/>
+        
+    <preprocessor>
+        <!-- Events to run on every request before security (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
+    </preprocessor>
+    <postprocessor>
+        <!-- Events to run on every request after all other processing (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/> -->
+    </postprocessor>
+
+    <!-- Security Mappings -->
+    <request-map uri="checkLogin" edit="false">
+        <description>Verify a user is logged in.</description>
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
+        <response name="success" type="view" value="main" />
+        <response name="error" type="view" value="login" />
+    </request-map>
+
+    <request-map uri="login">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="login"/>
+    </request-map>
+
+    <request-map uri="logout">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="logout"/>
+        <response name="success" type="request" value="checkLogin"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    <!-- End of Security Mappings -->
+
+    <!-- Request Mappings -->
+    <request-map uri="view">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    <request-map uri="authview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    
+    <request-map uri="changeDelegator">
+        <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="changeDelegator"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    <request-map uri="setSessionLocale">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    
+    <request-map uri="main">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="main"/>
+    </request-map>
+    
+    <!-- Billing Account requests -->
+    <request-map uri="FindBillingAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindBillingAccount"/>
+    </request-map>    
+    <request-map uri="EditBillingAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBillingAccount"/>
+    </request-map>
+    <request-map uri="createBillingAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBillingAccount"/>
+        <response name="success" type="view" value="EditBillingAccount"/>
+        <response name="error" type="view" value="EditBillingAccount"/>
+    </request-map> 
+    <request-map uri="updateBillingAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBillingAccount"/>
+        <response name="success" type="view" value="EditBillingAccount"/>
+        <response name="error" type="view" value="EditBillingAccount"/>
+    </request-map>
+
+    <request-map uri="EditBillingAccountRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+    </request-map>
+    <request-map uri="createBillingAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBillingAccountRole"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+        <response name="error" type="view" value="EditBillingAccountRoles"/>
+    </request-map> 
+    <request-map uri="updateBillingAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBillingAccountRole"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+        <response name="error" type="view" value="EditBillingAccountRoles"/>
+    </request-map>  
+    
+    <request-map uri="EditBillingAccountTerms">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
+    </request-map>
+    <request-map uri="createBillingAccountTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBillingAccountTerm"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
+    </request-map> 
+    <request-map uri="updateBillingAccountTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBillingAccountTerm"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
+    </request-map>
+    <request-map uri="removeBillingAccountTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeBillingAccountTerm"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
+    </request-map>        
+    <request-map uri="BillingAccountInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BillingAccountInvoices"/>
+    </request-map>      
+    <request-map uri="BillingAccountPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BillingAccountPayments"/>
+    </request-map>       
+    
+    <!-- invoice requests -->
+    <request-map uri="findInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findInvoices"/>
+    </request-map>
+    <request-map uri="viewInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editInvoice"/>
+    </request-map>      
+    <request-map uri="createInvoiceItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceItem"/>
+        <response name="success" type="view" value="editInvoice"/>
+    </request-map>    
+    <request-map uri="invoicePayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoicePayments"/>
+    </request-map>
+    
+    <!-- payment requests -->
+    <request-map uri="findPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findPayment"/>
+    </request-map>
+    <request-map uri="editPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editPayment"/>
+    </request-map> 
+    <request-map uri="createPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPayment"/>
+        <response name="success" type="view" value="editPayment"/>
+    </request-map>
+    <request-map uri="updatePayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePayment"/>
+        <response name="success" type="view" value="editPayment"/>
+    </request-map>
+    <request-map uri="createPaymentApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentApplication"/>
+        <response name="success" type="view" value="editPayment"/>
+    </request-map>
+
+    <request-map uri="manualETx">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="manualTx"/>
+    </request-map>
+    <request-map uri="processManualCcTx">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="manualForcedCcTransaction"/>
+        <response name="success" type="view" value="manualTx"/>
+    </request-map>
+
+    <!-- GlAccount requests -->
+    <request-map uri="createGlJournalEntry">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccountRole"/>
+        <response name="success" type="view" value="EditGlJournalEntry"/>
+        <response name="error" type="view" value="EditGlJournalEntry"/>
+	</request-map>
+	
+    <request-map uri="EditGlJournalEntry">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlJournalEntry"/>
+    </request-map>
+
+    <request-map uri="AssignGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AssignGlAccount"/>
+    </request-map>
+
+    <request-map uri="GlAccountNavigate">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountNavigate"/>
+    </request-map>
+    <request-map uri="ListGlobalGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListGlobalGlAccount"/>
+    </request-map>
+    <request-map uri="FindGlobalGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGlobalGlAccount"/>
+    </request-map>
+    <request-map uri="AddGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddGlAccount"/>
+    </request-map> 
+    <request-map uri="EditGlobalGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlobalGlAccount"/>
+    </request-map> 
+    <request-map uri="createGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccount"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/>
+    </request-map>
+    <request-map uri="updateGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccount"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/>
+    </request-map>
+
+    <request-map uri="EditGlobalGlAccountOrganizations">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
+    </request-map> 
+
+    <request-map uri="createGlAccountOrganization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccountOrganization"/>
+        <response name="success" type="view" value="ListGlAccountOrganization"/>
+        <response name="error" type="view" value="EditGlobalGlAccountOrganizations"/>
+    </request-map>
+
+    <request-map uri="ListGlAccountOrganization">
+        <!-- security https="true" auth="true"/ -->
+        <response name="success" type="view" value="ListGlAccountOrganization"/>
+    </request-map>
+
+    <request-map uri="updateGlAccountOrganization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
+        <response name="error" type="view" value="EditGlobalGlAccountOrganizations"/>
+    </request-map>
+
+    <request-map uri="EditGlobalGlAccountRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
+    </request-map> 
+    <request-map uri="createGlAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccountRole"/>
+        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
+        <response name="error" type="view" value="EditGlobalGlAccountRoles"/>
+    </request-map>
+    <request-map uri="updateGlAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccountRole"/>
+        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
+        <response name="error" type="view" value="EditGlobalGlAccountRoles"/>
+    </request-map>
+    
+    <!-- =============== Fixed Asset mapping =================-->
+    <request-map uri="ListFixedAssets"><!-- show a tabular list -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssets"/>
+    </request-map>
+    <request-map uri="EditFixedAsset"> <!-- add/create command -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAsset"/>
+    </request-map>
+   <request-map uri="createFixedAsset"> <!-- create new -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAsset"/>
+        <response name="error" type="view" value="EditFixedAsset"/>
+    </request-map>
+    <request-map uri="updateFixedAsset"><!-- update existing -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAsset"/>
+        <response name="error" type="view" value="EditFixedAsset"/>
+    </request-map>
+
+   <!-- ================ Fixed Asset to Product Requests ================= -->
+    <request-map uri="ListFixedAssetProducts"><!-- show a tabular list of products connected -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
+    </request-map>
+    <request-map uri="addFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="addFixedAssetProduct"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
+        <response name="error" type="view" value="ListFixedAssetProducts"/>
+    </request-map>
+    <request-map uri="updateFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="updateFixedAssetProduct"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
+        <response name="error" type="view" value="ListFixedAssetProducts"/>
+    </request-map>
+    <request-map uri="removeFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="removeFixedAssetProduct"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
+        <response name="error" type="view" value="ListFixedAssetProducts"/>
+    </request-map>
+
+   <!-- ================ Fixed Asset Calendar Requests ================= -->
+    <request-map uri="ListFixedAssetCalendar"><!-- show a tabular list of products connected -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetCalendar"/>
+    </request-map>
+    <request-map uri="updateFixedAssetCalendar">
+        <security https="true" auth="true"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="updateFixedAssetCalendar"/>
+        <response name="success" type="view" value="ListFixedAssetCalendar"/>
+        <response name="error" type="view" value="ListFixedAssetCalendar"/>
+    </request-map>
+   <!-- ================ FixedAsset Roles Requests ================= -->
+    <request-map uri="ListFixedAssetParties"><!-- show a tabular list of products connected -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetParties"/>
+    </request-map>
+    <request-map uri="EditFixedAssetParties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAssetParties"/>
+    </request-map>
+    <request-map uri="addPartyToFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="addPartyToFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetParties"/>
+        <response name="error" type="view" value="EditFixedAssetParties"/>
+    </request-map>
+    <request-map uri="updatePartyToFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyToFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetParties"/>
+        <response name="error" type="view" value="EditFixedAssetParties"/>
+    </request-map>
+    <request-map uri="removePartyFromFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removePartyFromFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetParties"/>
+        <response name="error" type="view" value="EditFixedAssetParties"/>
+    </request-map>    
+
+    <!-- ================ FixedAsset Rollup Requests ================= -->
+    <request-map uri="ListFixedAssetRollUp"><!-- show a tabular list of products connected -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetRollUp"/>
+    </request-map>
+    <request-map uri="EditFixedAssetRollup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAssetRollup"/>
+    </request-map>
+    <request-map uri="addFixedAssetToFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="safeAddFixedAssetToFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetRollup"/>
+        <response name="error" type="view" value="EditFixedAssetRollup"/>
+    </request-map>
+    <request-map uri="updateFixedAssetToFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFixedAssetToFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetRollup"/>
+        <response name="error" type="view" value="EditFixedAssetRollup"/>
+    </request-map>
+    <request-map uri="removeFixedAssetFromFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeFixedAssetFromFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetRollup"/>
+        <response name="error" type="view" value="EditFixedAssetRollup"/>
+    </request-map>
+    
+    <!-- =============== Agreement mapping =================-->
+    <request-map uri="FindAgreement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindAgreement"/>
+    </request-map>
+    <request-map uri="EditAgreement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAgreement"/>
+    </request-map>
+    <request-map uri="ListAgreementItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListAgreementItems"/>
+    </request-map>
+    <request-map uri="EditAgreementItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAgreementItem"/>
+    </request-map>
+    <request-map uri="ListAgreementTerms">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListAgreementTerms"/>
+    </request-map>
+    <request-map uri="EditAgreementTerm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAgreementTerm"/>
+    </request-map>
+    
+    <request-map uri="createAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createAgreement"/>
+        <response name="success" type="view" value="EditAgreement"/>
+    </request-map>
+    <request-map uri="updateAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateAgreement"/>
+        <response name="success" type="view" value="EditAgreement"/>
+    </request-map>
+    <request-map uri="cancelAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelAgreement"/>
+        <response name="success" type="view" value="FindAgreement"/>
+    </request-map>
+    <request-map uri="createAgreementItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createAgreementItem"/>
+        <response name="success" type="view" value="EditAgreementItem"/>
+    </request-map>
+    <request-map uri="updateAgreementItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateAgreementItem"/>
+        <response name="success" type="view" value="EditAgreementItem"/>
+    </request-map>
+    <request-map uri="removeAgreementItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeAgreementItem"/>
+        <response name="success" type="view" value="ListAgreementItems"/>
+    </request-map>
+    <request-map uri="createAgreementTerm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createAgreementTerm"/>
+        <response name="success" type="view" value="EditAgreementTerm"/>
+    </request-map>
+    <request-map uri="updateAgreementTerm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateAgreementTerm"/>
+        <response name="success" type="view" value="EditAgreementTerm"/>
+    </request-map>
+    <request-map uri="removeAgreementTerm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeAgreementTerm"/>
+        <response name="success" type="view" value="ListAgreementTerms"/>
+    </request-map>
+
+    <!-- ================ Entity Lookup Requests ================= -->
+    <request-map uri="LookupProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProduct"/>
+    </request-map>
+    <request-map uri="LookupPerson">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupPerson"/>
+    </request-map>
+    <request-map uri="LookupPartyGroup">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupPartyGroup"/>
+    </request-map>
+    <request-map uri="LookupPartyName">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupPartyName"/>
+    </request-map>
+    <request-map uri="LookupFixedAsset">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupFixedAsset"/>
+    </request-map>
+
+    <!-- end of request mappings -->
+
+    <!-- View Mappings -->
+    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
+    <view-map name="login" type="screen" page="component://accounting/widget/CommonScreens.xml#login"/>
+    
+    <view-map name="FindBillingAccount" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#FindBillingAccount"/>
+    <view-map name="EditBillingAccount" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#EditBillingAccount"/>
+    <view-map name="EditBillingAccountRoles" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#EditBillingAccountRoles"/>
+    <view-map name="EditBillingAccountTerms" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#EditBillingAccountTerms"/>
+    <view-map name="BillingAccountInvoices" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#BillingAccountInvoices"/>
+    <view-map name="BillingAccountPayments" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#BillingAccountPayments"/>
+    
+    <view-map name="findInvoices" type="jpublish" page="/invoice/findInvoices.ftl"/>
+    <view-map name="editInvoice" type="jpublish" page="/invoice/editInvoice.ftl"/>
+    <view-map name="invoicePayments" type="jpublish" page="/invoice/invoicePayments.ftl"/>
+    
+    <view-map name="findPayment" type="jpublish" page="/payment/findPayment.ftl"/>
+    <view-map name="editPayment" type="jpublish" page="/payment/editPayment.ftl"/>
+    <view-map name="manualTx" type="jpublish" page="/payment/manualTx.ftl"/>
+
+    <!-- view-map name="FindGlobalGlAccount" type="jpublish" page="/chartofaccounts/FindGlobalGlAccount.ftl"/ -->
+    <!-- New Screen Widget for EditGlobalGlAccount -->
+    <view-map name="EditGlJournalEntry" type="screen" page="component://accounting/widget/AccountingScreens.xml#EditGlJournalEntry"/>
+    <view-map name="AddGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
+    <view-map name="FindGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccounts"/>
+    <view-map name="ListGlobalGlAccounts" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccounts"/>
+    <view-map name="ListGlAccountOrganization" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccountOrganization"/>
+    <view-map name="GlAccountNavigate" type="screen" page="component://accounting/widget/AccountingScreens.xml#GlAccountNavigate"/>
+    <view-map name="AssignGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AssignGlAccount"/>
+ 
+    <!-- view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#EditGlobalGlAccount"/ -->
+    <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
+    <!-- view-map name="EditGlobalGlAccount" type="jpublish" page="/chartofaccounts/EditGlobalGlAccount.ftl"/ -->
+    <view-map name="EditGlobalGlAccountOrganizations" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountOrganizations.ftl"/>
+    <view-map name="EditGlobalGlAccountRoles" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountRoles.ftl"/>
+    
+    <view-map name="ListFixedAssets" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssets"/> 
+    <view-map name="EditFixedAsset" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAsset"/> 
+    <view-map name="ListFixedAssetProducts" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetProducts"/> 
+    <view-map name="addFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#addFixedAssetProduct"/> 
+    <view-map name="updateFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#updateFixedAssetProduct"/> 
+    <view-map name="removeFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#removeFixedAssetProduct"/> 
+    <view-map name="ListFixedAssetCalendar" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetCalendar"/> 
+    <view-map name="updateFixedAssetCalendar" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#updateFixedAssetCalendar"/> 
+    <view-map name="ListFixedAssetParties" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetParties"/> 
+    <view-map name="ListFixedAssetsRollUp" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetRollUp"/> 
+
+    <view-map name="FindAgreement" type="screen" page="component://accounting/widget/AgreementScreens.xml#FindAgreement"/>
+    <view-map name="EditAgreement" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreement"/>
+    <view-map name="ListAgreementItems" type="screen" page="component://accounting/widget/AgreementScreens.xml#ListAgreementItems"/>
+    <view-map name="EditAgreementItem" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementItem"/>
+    <view-map name="ListAgreementTerms" type="screen" page="component://accounting/widget/AgreementScreens.xml#ListAgreementTerms"/>
+    <view-map name="EditAgreementTerm" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementTerm"/>
+
+    <!-- Lookup request mappings -->
+    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
+    <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
+    <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
+    <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
+    <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
+        
+    <!-- end of view mappings -->
+</site-conf>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Pending Communications</property>
+    <property name="headerItem">comm</property>
+    <page-action name="/communication/pendingCommunications.bsh"/>
+</page>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Edit DataResource ProductFeatures</property>
+    <property name="permission">CONTENTMGR</property>
+    <property name="headerItem">Data</property>
+    <property name="subMenu">/data/data_menu.ftl</property>
+    <property name="formDefFile">/data/DataResourceForms.xml</property>
+    <property name="singleFormName">AddDataResourceProductFeature</property>
+    <property name="listFormName">ListDataResourceProductFeature</property>
+    <property name="entityName">ProductFeatureDataResource</property>
+    <property name="currentEntityPropertyName">parentEntityName</property>
+    <property name="parentEntityName">DataResource</property>
+    <property name="defaultMapName">currentValue</property>
+    <property name="permissionType">simple</property>
+    <page-action name="/includes/permprep.bsh"/>
+    <page-action name="/includes/currentvalprep.bsh"/>
+    <content-action name="/includes/relatedprep.bsh" />
+    <content-action name="/includes/formprep.bsh" />
+</page>

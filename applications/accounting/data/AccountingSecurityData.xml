@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <!-- Payment Processors security -->
+    <!-- Target file: components/accounting/data/AccountingSecurityData.xml -->
+    <SecurityPermission description="View operations in the Payment Processors Setup." permissionId="PAYPROC_VIEW"/>
+    <SecurityPermission description="Create operations in the Payment Processors Setup." permissionId="PAYPROC_CREATE"/>
+    <SecurityPermission description="Delete operations in the Payment Processors Setup." permissionId="PAYPROC_DELETE"/>
+    <SecurityPermission description="ALL operations in the Payment Processors Setup." permissionId="PAYPROC_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PAYPROC_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PAYPROC_VIEW"/>
+
+    <!-- Payment Information security -->
+    <!-- Target file: components/accounting/data/AccountingSecurityData.xml -->
+    <SecurityPermission description="View Payment Information." permissionId="PAY_INFO_VIEW"/>
+    <SecurityPermission description="Create Payment Information." permissionId="PAY_INFO_CREATE"/>
+    <SecurityPermission description="Update Payment Information." permissionId="PAY_INFO_UPDATE"/>
+    <SecurityPermission description="Delete Payment Information." permissionId="PAY_INFO_DELETE"/>
+    <SecurityPermission description="ALL Payment Information Operations." permissionId="PAY_INFO_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PAY_INFO_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PAY_INFO_VIEW"/>
+
+    <!-- Accounting Manager security -->
+    <!-- Target file: components/accounting/data/AccountingSecurityData.xml -->
+    <SecurityPermission description="View operations in the Accounting Manager." permissionId="ACCOUNTING_VIEW"/>
+    <SecurityPermission description="Create operations in the Accounting Manager." permissionId="ACCOUNTING_CREATE"/>
+    <SecurityPermission description="Update operations in the Accounting Manager." permissionId="ACCOUNTING_UPDATE"/>
+    <SecurityPermission description="Delete operations in the Accounting Manager." permissionId="ACCOUNTING_DELETE"/>
+    <SecurityPermission description="ALL operations in the Accounting Manager." permissionId="ACCOUNTING_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ACCOUNTING_VIEW"/>
+
+    <!-- Manual Payment security -->
+    <!-- Target file: components/accounting/data/AccountingSecurityData.xml -->
+    <SecurityPermission description="Manual Payment Transaction." permissionId="MANUAL_PAYMENT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUAL_PAYMENT"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUAL_PAYMENT"/>
+
+</entity-engine-xml>

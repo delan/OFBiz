@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Edit Product Promos</property>
+    <property name="titleProperty">PageTitleEditProductPromos</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="headerItem">promos</property>    
+    <property name="tabButtonItem">EditProductPromo</property>
+    <content-action name="/promo/EditProductPromo.bsh"/>
+</page>

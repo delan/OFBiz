@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Olivier Heintz (olivier.heintz@nereide.biz)
+ * @version    $Rev$
+ * @since      2.0
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <simple-method method-name="createBillingAccount" short-description="Create Billing Account">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountPermissionError"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="BillingAccount"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="BillingAccount" env-name="billingAccountId"/>
+        <to-string field-name="billingAccountId"/>
+        <env-to-field env-name="billingAccountId" map-name="newEntity"/>
+        <field-to-result field-name="billingAccountId" result-name="billingAccountId"/>  
+                      
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>      
+                  
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateBillingAccount" short-description="Update Billing Account">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-property resource="AccountingUiLabels" property="AccountingUpdateBillingAccountPermissionError"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="lookupPKMap" entity-name="BillingAccount"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="BillingAccount" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="createBillingAccountRole" short-description="Create Billing Account Role">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountRolePermissionError"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="BillingAccountRole"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>             
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateBillingAccountRole" short-description="Update Billing Account Role">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-property resource="AccountingUiLabels" property="AccountingUpdateBillingAccountRolePermissionError"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="lookupPKMap" entity-name="BillingAccountRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="BillingAccountRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>    
+    <simple-method method-name="createBillingAccountTerm" short-description="Create Billing Account Term">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountTermPermissionError"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="BillingAccountTerm"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="BillingAccountTerm" env-name="billingAccountTermId"/>
+        <to-string field-name="billingAccountTermId"/>
+        <env-to-field env-name="billingAccountTermId" map-name="newEntity"/>
+        <field-to-result field-name="billingAccountTermId" result-name="billingAccountTermId"/>          
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateBillingAccountTerm" short-description="Update Billing Account Term">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-property resource="AccountingUiLabels" property="AccountingUpdateBillingAccountTermPermissionError"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="lookupPKMap" entity-name="BillingAccountTerm"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="BillingAccountTerm" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>    
+    <simple-method method-name="removeBillingAccountTerm" short-description="Remove Billing Account Term">
+        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-property resource="AccountingUiLabels" property="AccountingDeleteBillingAccountTermPermissionError"/></check-permission>
+        <check-errors/>
+        
+        <make-value entity-name="BillingAccountTerm" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="BillingAccountTerm" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>        
+    
+    <simple-method method-name="deletePaymentMethod" short-description="Delete Payment Method">
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
+                processor-name="deletePaymentMethod" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <call-service service-name="deletePaymentMethod" in-map-name="context">
+            <default-message>Payment Method successfully deleted.</default-message></call-service>
+    </simple-method>
+
+    <!-- CreditCard events -->
+    <simple-method method-name="createCreditCard" short-description="Create Credit Card">
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
+                processor-name="createCreditCard" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <call-service service-name="createCreditCard" in-map-name="context">
+            <default-message>Credit Card successfully created.</default-message>
+            <result-to-request result-name="paymentMethodId"/>
+        </call-service>
+        <if-compare map-name="parameters" field-name="contactMechId" operator="equals" value="_NEW_">
+            <string-to-field string="address" field-name="_response_code_"/>
+            <string-to-field string="POSTAL_ADDRESS" field-name="preContactMechTypeId"/>
+            <string-to-field string="BILLING_LOCATION" field-name="contactMechPurposeTypeId"/>
+            <field-to-request field-name="DONE_PAGE"/>
+            <field-to-request field-name="preContactMechTypeId"/>
+            <field-to-request field-name="contactMechPurposeTypeId"/>
+        </if-compare>
+    </simple-method>
+    <simple-method method-name="updateCreditCard" short-description="Update Credit Card">
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
+                processor-name="updateCreditCard" in-map-name="parameters" out-map-name="context"/>
+        <!-- before check-errors also call createCreditCard, which completes the checking, etc for updateCreditCard -->
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
+                processor-name="createCreditCard" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <call-service service-name="updateCreditCard" in-map-name="context">
+            <default-message>Credit Card Info successfully updated.</default-message>
+            <result-to-request result-name="newPaymentMethodId" request-name="paymentMethodId"/>
+        </call-service>
+        <if-compare map-name="parameters" field-name="contactMechId" operator="equals" value="_NEW_">
+            <string-to-field string="address" field-name="_response_code_"/>
+            <string-to-field string="POSTAL_ADDRESS" field-name="preContactMechTypeId"/>
+            <string-to-field string="BILLING_LOCATION" field-name="contactMechPurposeTypeId"/>
+            <field-to-request field-name="DONE_PAGE"/>
+            <field-to-request field-name="preContactMechTypeId"/>
+            <field-to-request field-name="contactMechPurposeTypeId"/>
+        </if-compare>
+    </simple-method>
+
+    <!-- EftAccount events -->
+    <simple-method method-name="createEftAccount" short-description="Create EFT Account">
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
+                processor-name="createEftAccount" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <call-service service-name="createEftAccount" in-map-name="context">
+            <default-message>EFT Account successfully created.</default-message>
+            <result-to-request result-name="paymentMethodId"/></call-service>
+    </simple-method>
+    <simple-method method-name="updateEftAccount" short-description="Update EFT Account">
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
+                processor-name="updateEftAccount" in-map-name="parameters" out-map-name="context"/>
+        <!-- before check-errors also call createEftAccount, which completes the checking, etc for updateEftAccount -->
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
+                processor-name="createEftAccount" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <call-service service-name="updateEftAccount" in-map-name="context">
+            <default-message>EFT Account Info successfully updated.</default-message>
+            <result-to-request result-name="newPaymentMethodId" request-name="paymentMethodId"/></call-service>
+    </simple-method>
+
+    <simple-method method-name="captureAll" short-description="Capture Payments for Orders" login-required="false">
+        <field-to-field field-name="orderStatusId" map-name="parameters" to-map-name="orderLookup" />
+        <field-to-field field-name="currency" map-name="parameters" to-map-name="captureParams" />
+        <string-to-field string="PAYMENT_AUTHORIZED" field-name="paymentStatusId" map-name="orderLookup" />
+        <find-by-and entity-name="OrderHeaderAndPaymentPref" map-name="orderLookup" list-name="orderHeaderAndPaymentPrefs" />
+        <iterate entry-name="orderHeaderAndPaymentPref" list-name="orderHeaderAndPaymentPrefs" >
+            <field-to-field map-name="orderHeaderAndPaymentPref" field-name="orderId" to-map-name="captureParams" />
+            <call-service service-name="capturePayment" in-map-name="captureParams" error-code="ignore-error">
+                <result-to-field map-name="captureResult" result-name="responseMessage" />
+            </call-service>
+            <if-compare map-name="captureResult" operator="equals" field-name="responseMessage" value="error">
+                <field-to-list map-name="orderHeaderAndPaymentPref" field-name="orderId" list-name="badOrders" />
+            </if-compare>
+        </iterate>
+        <if-not-empty field-name="badOrders">
+            <string-to-field string="mail.smtp.host" field-name="sendType" map-name="emailParams" />
+
+            <property-to-field resource="payment" property="mailhost" field-name="sendVia" map-name="emailParams"/>
+            <property-to-field resource="payment" property="sendTo" field-name="sendTo" map-name="emailParams"/>
+            <property-to-field resource="payment" property="sendFrom" field-name="sendFrom" map-name="emailParams"/>
+            <property-to-field resource="payment" property="subject" field-name="subject" map-name="emailParams"/>
+            <call-bsh><![CDATA[
+            String body = "Bad orders: " + org.ofbiz.base.util.StringUtils.join(badOrders, ", ");
+            emailParams.put("body", body);
+            ]]></call-bsh>   
+            <call-service service-name="sendMail" in-map-name="emailParams"/>
+        </if-not-empty>       
+     </simple-method>        
+            
+    <simple-method method-name="setPaymentMethodAddress" short-description="Set the initial payment method address">
+        <make-value value-name="lookupPKMap" entity-name="PaymentMethod"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="PaymentMethod" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <if-compare map-name="lookedUpValue" field-name="paymentMethodTypeId" operator="equals" value="CREDIT_CARD">
+            <find-by-primary-key entity-name="CreditCard" map-name="lookupPKMap" value-name="mainValue"/>
+            <clone-value value-name="mainValue" new-value-name="savedValue"/>
+            <set-nonpk-fields map-name="parameters" value-name="mainValue"/>
+            <if-compare-field field-name="mainValue" operator="not-equals" to-field-name="savedValue" type="Object">
+                <store-value value-name="mainValue"/>
+            </if-compare-field>
+        </if-compare>
+        <if-compare map-name="lookedUpValue" field-name="paymentMethodTypeId" operator="equals" value="EFT_ACCOUNT">
+            <find-by-primary-key entity-name="CreditCard" map-name="lookupPKMap" value-name="mainValue"/>
+            <clone-value value-name="mainValue" new-value-name="savedValue"/>
+            <set-nonpk-fields map-name="parameters" value-name="mainValue"/>
+            <if-compare-field field-name="mainValue" operator="not-equals" to-field-name="savedValue" type="Object">
+                <store-value value-name="mainValue"/>
+            </if-compare-field>
+        </if-compare>
+    </simple-method>
+    <simple-method method-name="updatePaymentMethodAddress" short-description="Update payment method addresses" use-transaction="false">
+        <!-- find all CreditCard and EftAccount instances that use the current contactMechId and update them
+            through the updateCreditCard or updateEftAccount services to use the newContactMechId -->
+        <field-to-field field-name="contactMechId" map-name="parameters" to-map-name="lookupMap"/>
+        
+        <find-by-and entity-name="CreditCard" map-name="lookupMap" list-name="creditCards"/>
+        <iterate entry-name="creditCard" list-name="creditCards">
+            <set-service-fields service-name="updateCreditCard" map-name="creditCard" to-map-name="uccMap"/>
+            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="uccMap"/>
+            <field-to-field field-name="partyId" map-name="parameters" to-field-name="partyId" to-map-name="uccMap"/>
+            <!-- use the service so it will expire the old card and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
+            <call-service service-name="updateCreditCard" in-map-name="uccMap" break-on-error="false"/>
+        </iterate>
+        
+        <find-by-and entity-name="EftAccount" map-name="lookupMap" list-name="eftAccounts"/>
+        <iterate entry-name="eftAccount" list-name="eftAccounts">
+            <map-to-map map-name="eftAccount" to-map-name="ueaMap"/>
+            <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="ueaMap"/>
+            <field-to-field field-name="partyId" map-name="parameters" to-field-name="partyId" to-map-name="ueaMap"/>
+            <!-- use the service so it will expire the old account and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
+            <call-service service-name="updateEftAccount" in-map-name="ueaMap" break-on-error="false"/>
+        </iterate>
+    </simple-method>
+    
+    <simple-method method-name="createPayment" short-description="Create a Payment">        
+        <if>
+          <condition>
+              <and>
+                  <not><if-has-permission permission="PAY_INFO" action="_UPDATE"/></not>
+                  <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdFrom" to-map-name="parameters"/></not>
+                  <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdTo" to-map-name="parameters"/></not>
+              </and>                
+          </condition>
+          <then>
+              <add-error>
+                  <fail-property resource="AccountingUiLabels" property="AccountingCreatePaymentPermissionError"/>
+              </add-error>
+          </then>
+        </if>
+        <check-errors/>
+        
+        <make-value entity-name="Payment" value-name="payment"/>
+        <sequenced-id-to-env sequence-name="Payment" env-name="paymentId"/>
+        <to-string field-name="paymentId"/>
+        <env-to-field env-name="paymentId" map-name="payment"/>
+        
+        <set-nonpk-fields map-name="parameters" value-name="payment"/>
+
+        <if-empty field-name="effectiveDate" map-name="parameters">
+            <now-timestamp-to-env env-name="timestamp"/>
+            <env-to-field env-name="timestamp" field-name="effectiveDate" map-name="payment"/>
+        </if-empty>
+        
+        <create-value value-name="payment"/>
+        <field-to-result field-name="paymentId" map-name="payment" result-name="paymentId"/>
+    </simple-method>
+    
+    <simple-method method-name="updatePayment" short-description="Update a Payment">
+        <make-value entity-name="Payment" value-name="lookupPayment"/>
+        <set-pk-fields value-name="lookupPayment" map-name="parameters"/>
+        
+        <find-by-primary-key entity-name="Payment" map-name="lookupPayment" value-name="payment"/>
+        <if>
+          <condition>
+              <and>
+              <not>
+                  <if-has-permission permission="PAY_INFO" action="_UPDATE"/>                 
+                </not>
+                <not>
+                    <if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdFrom" to-map-name="payment"/>
+                </not>
+                <not>
+                    <if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdTo" to-map-name="payment"/>
+                </not>
+              </and>                
+          </condition>
+          <then>
+            <add-error>
+              <fail-property resource="AccountingUiLabels" property="AccountingUpdatePaymentPermissionError"/>
+            </add-error>
+          </then>
+        </if>
+        <check-errors/>
+        <set-nonpk-fields map-name="parameters" value-name="payment"/>
+        <if-empty field-name="effectiveDate" map-name="parameters">
+            <now-timestamp-to-env env-name="timestamp"/>
+            <env-to-field env-name="timestamp" field-name="effectiveDate" map-name="payment"/>
+        </if-empty>
+        <store-value value-name="payment"/>
+    </simple-method>
+    
+    <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
+        <if-empty field-name="invoiceId" map-name="parameters">
+            <if-empty field-name="billingAccountId" map-name="parameters">
+                <add-error><fail-property resource="AccountingUiLabels" property="AccountingBothInvoiceIdBillingAccountIdEmptyError"/></add-error>
+                <check-errors/>
+            </if-empty>
+        </if-empty>
+
+        <make-value entity-name="PaymentApplication" value-name="paymentAppl"/>
+        <set-nonpk-fields map-name="parameters" value-name="paymentAppl"/>
+        
+        <if-not-empty field-name="invoiceId" map-name="parameters">
+            <field-to-field field-name="invoiceId" map-name="parameters" to-map-name="invoiceLookup"/>
+            <find-by-primary-key entity-name="Invoice" map-name="invoiceLookup" value-name="invoice"/>
+            <if-not-empty field-name="billingAccountId" map-name="invoice">
+                <field-to-field field-name="billingAccountId" map-name="invoice" to-map-name="paymentAppl"/>
+            </if-not-empty>
+        </if-not-empty>
+        
+        <sequenced-id-to-env sequence-name="PaymentApplication" env-name="paymentApplicationId"/>
+        <to-string field-name="paymentApplicationId"/>
+        <env-to-field env-name="paymentApplicationId" field-name="paymentApplicationId" map-name="paymentAppl"/>
+        
+        <create-value value-name="paymentAppl"/>
+        <field-to-result field-name="paymentApplicationId" map-name="paymentAppl"/>
+    </simple-method>
+</simple-methods>

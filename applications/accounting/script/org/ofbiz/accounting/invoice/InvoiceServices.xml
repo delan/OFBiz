@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Rev$
+ * @since      2.1
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <simple-method method-name="createInvoice" short-description="Create a Invoice">
+        <make-value value-name="newEntity" entity-name="Invoice"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="Invoice" env-name="invoiceId"/>
+        <to-string field-name="invoiceId"/>
+        <env-to-field env-name="invoiceId" map-name="newEntity"/>
+        <field-to-result field-name="invoiceId" result-name="invoiceId"/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="invoiceDate" map-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="createInvoiceItem" short-description="Create a Invoice Item">
+        <make-value value-name="newEntity" entity-name="InvoiceItem"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="createInvoiceRole" short-description="Create a Invoice Role">
+        <make-value value-name="newEntity" entity-name="InvoiceRole"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="datetimeReceived" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="datetimePerformed" map-name="newEntity"/>
+        </if-empty>        
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    
+    <simple-method method-name="setInvoiceStatus" short-description="Set The Invoice Status">
+    	<field-to-field field-name="invoiceId" map-name="parameters" to-map-name="lookupPKMap"/>
+    	<find-by-primary-key entity-name="Invoice" map-name="lookupPKMap" value-name="invoice"/>
+    	
+    	<field-to-field field-name="statusId" map-name="invoice" to-map-name="changeLookup" to-field-name="statusId"/>
+    	<field-to-field field-name="statusId" map-name="parameters" to-map-name="changeLookup" to-field-name="statusIdTo"/>
+    	
+    	<if-compare-field field-name="statusId" map-name="invoice" operator="not-equals" to-field-name="statusId" to-map-name="parameters">
+    	    <find-by-primary-key entity-name="StatusValidChange" map-name="changeLookup" value-name="statusChange"/>
+    	
+    	    <if-empty field-name="statusChange">
+                <add-error><fail-message message="Status is not a valid change"/></add-error>
+                <log level="error" message="Cannot change from ${invoice.statusId} to ${parameters.statusId}"/>
+                <check-errors/>
+            </if-empty>
+        
+            <field-to-field field-name="statusId" map-name="parameters" to-field-name="statusId" to-map-name="invoice"/>
+            <store-value value-name="invoice"/>
+    	
+            <make-value value-name="newEntity" entity-name="InvoiceStatus"/>
+            <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+            <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+            <if-empty field-name="statusDate" map-name="newEntity">
+                <now-timestamp-to-env env-name="nowTimestamp"/>
+                <env-to-field env-name="nowTimestamp" field-name="statusDate" map-name="newEntity"/>
+            </if-empty>        
+        
+            <create-value value-name="newEntity"/>
+        </if-compare-field>
+    </simple-method>
+    
+    <simple-method method-name="createInvoiceTerm" short-description="Create a Invoice Term">
+        <make-value value-name="newEntity" entity-name="InvoiceTerm"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="InvoiceTerm" env-name="invoiceTermId"/>
+        <to-string field-name="invoiceTermId"/>
+        <env-to-field env-name="invoiceTermId" map-name="newEntity"/>
+        <field-to-result field-name="invoiceTermId" result-name="invoiceTermId"/>
+      
+        <create-value value-name="newEntity"/>    	
+    </simple-method>        
+</simple-methods>

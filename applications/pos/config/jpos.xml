@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JposEntries PUBLIC "-//JavaPOS//DTD//EN" "jpos/res/jcl.dtd">
+<!--
+$Id$
+-->
+
+<JposEntries>
+    <!-- Generic POSKeyboard Device Implementation (included w/ OFBiz) -->
+    <JposEntry logicalName="GenericKeyboard">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.KeyboardService"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="POSKeyboard" version="1.7"/>
+        <product description="Generic Keyboard Device" name="Keyboard" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+        <prop name="key.VK_ESCAPE" type="String" value="501"/>
+        <prop name="key.VK_ENTER" type="String" value="500"/>
+        <prop name="key.VK_F1" type="String" value="201"/>
+        <prop name="key.VK_F2" type="String" value="202"/>
+        <prop name="key.VK_F2+CTRL" type="String" value="203"/>
+        <prop name="key.VK_F3" type="String" value="204"/>
+        <prop name="key.VK_F3+CTRL" type="String" value="205"/>
+        <prop name="key.VK_F3+SHIFT" type="String" value="210"/>
+        <prop name="key.VK_F4" type="String" value="401"/>
+        <prop name="key.VK_F5" type="String" value="402"/>
+        <prop name="key.VK_F6" type="String" value="206"/>
+        <prop name="key.VK_F6+CTRL" type="String" value="207"/>
+        <prop name="key.VK_F7" type="String" value="604"/>
+        <prop name="key.VK_F7+CTRL" type="String" value="605"/>
+        <prop name="key.VK_F7+CTRL+SHIFT" type="String" value="220"/>
+        <prop name="key.VK_F8" type="String" value="208"/>
+        <prop name="key.VK_F9" type="String" value="209"/>
+        <prop name="key.VK_F10" type="String" value="223"/>
+        <prop name="key.VK_F10+SHIFT" type="String" value="222"/>
+        <prop name="key.VK_F10+CTRL" type="String" value="224"/>
+        <prop name="key.VK_F11" type="String" value="211"/>
+        <prop name="key.VK_F12" type="String" value="212"/>
+        <prop name="key.VK_F12+CTRL" type="String" value="221"/>
+    </JposEntry>
+
+    <!-- Generic Keyboard Wedge Scanner Device (included w/ OFBiz) -->
+    <JposEntry logicalName="GenericScanner">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.ScannerKybService"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="Scanner" version="1.7"/>
+        <product description="Generic Keyboard Wedge Scanner" name="KybScanner" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+        <prop name="BarcodeTypePosition" type="String" value="Prefix"/>
+        <prop name="CodeType:CODE11" type="String" value="M"/>
+        <prop name="CodeType:CODE39" type="String" value="A"/>
+        <prop name="CodeType:CODE93" type="String" value="H"/>
+        <prop name="CodeType:CODE128" type="String" value="G"/>
+        <prop name="CodeType:CODABAR" type="String" value="K"/>
+        <prop name="CodeType:I2OF5" type="String" value="I"/>
+        <prop name="CodeType:ID2OF5" type="String" value="J"/>
+        <prop name="CodeType:MSI" type="String" value="F"/>
+        <prop name="CodeType:UPCA" type="String" value="B"/>
+        <prop name="CodeType:UPCE" type="String" value="C"/>
+        <prop name="CodeType:EAN13" type="String" value="E"/>
+        <prop name="CodeType:EAN8" type="String" value="D"/>
+    </JposEntry>
+
+    <!-- Generic Keyboard Wedge MSR Device (included w/ OFBiz) -->
+    <JposEntry logicalName="GenericMsr">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.MsrKybService"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="MSR" version="1.7"/>
+        <product description="Generic Keyboard Wedge Msr" name="KybMsr" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+    </JposEntry>
+
+    <!-- Button Triggered Test MSR Device (included w/ OFBiz) -->
+    <JposEntry logicalName="TestMsr">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.MsrTestService"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="MSR" version="1.7"/>
+        <product description="Button Triggered Test Msr" name="TestMsr" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+    </JposEntry>
+
+    <!-- Null POSPrinter (included w/ OFBiz) -->
+    <JposEntry logicalName="NullReceipt">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.NullPosPrinter"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="Scanner" version="1.2"/>
+        <product description="Null POSPrinter " name="NullPOSPrinter" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+    </JposEntry>
+
+    <!-- Null CashDrawer (included w/ OFBiz) -->
+    <JposEntry logicalName="NullCashDrawer">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.NullCashDrawer"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="Scanner" version="1.2"/>
+        <product description="Null CashDrawer " name="NullPOSPrinter" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+    </JposEntry>
+
+    <!-- Star TSP600 POSPrinter (requires starjavapos.jar) -->
+    <JposEntry logicalName="StarTSP600">
+        <creation factoryClass="com.starmicronics.javapos.StarJposServiceInstanceFactory" serviceClass="com.starmicronics.javapos.StarJPOSPOSPrinter"/>
+        <vendor name="Star Micronics Co., Ltd." url="http://www.star-micronics.co.jp"/>
+        <jpos category="POSPrinter" version="1.4a"/>
+        <product description="Thermal receipt printer" name="TSP600" url="http://www.star-micronics.co.jp"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+        <prop name="portName" type="String" value="COM2"/>
+        <prop name="errorResponseTimeout" type="Long" value="5000"/>
+        <prop name="capLogoStore" type="Boolean" value="false"/>
+        <prop name="statusTimeout" type="Long" value="500"/>
+        <prop name="timeout" type="Long" value="10000"/>
+        <prop name="starModel" type="String" value="TSP600"/>
+        <prop name="capRecRaster" type="Boolean" value="true"/>
+        <prop name="deviceClassName" type="String" value="com.starmicronics.javapos.DeviceTSP613"/>
+        <prop name="portSettings" type="String" value="9600,none,8,1,hdwr"/>
+        <prop name="statusTimeDelay" type="Long" value="500"/>
+    </JposEntry>
+
+    <!-- Star TSP600 Connected CashDrawer (requires startjavapos.jar) -->
+    <JposEntry logicalName="StarTSP600CashDrawer">
+        <creation factoryClass="com.starmicronics.javapos.StarJposServiceInstanceFactory" serviceClass="com.starmicronics.javapos.StarJPOSCashDrawer"/>
+        <vendor name="Star Micronics Co., Ltd." url="http://www.star-micronics.co.jp"/>
+        <jpos category="CashDrawer" version="1.4a"/>
+        <product description="Printer controlled Cash Drawer" name="TSP600" url="http://www.star-micronics.co.jp"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+        <prop name="portName" type="String" value="COM2"/>
+        <prop name="errorResponseTimeout" type="Long" value="5000"/>
+        <prop name="statusTimeout" type="Long" value="500"/>
+        <prop name="timeout" type="Long" value="10000"/>
+        <prop name="starModel" type="String" value="TSP600"/>
+        <prop name="deviceClassName" type="String" value="com.starmicronics.javapos.DeviceTSP613"/>
+        <prop name="portSettings" type="String" value="9600,none,8,1,hdwr"/>
+        <prop name="statusTimeDelay" type="Long" value="500"/>
+        <prop name="cashDrawer1" type="Boolean" value="true"/>
+        <prop name="drawerClosedOnSignalLow" type="Boolean" value="false"/>
+    </JposEntry>
+
+</JposEntries>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Rev:$
+ * @since      2.0
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <simple-method method-name="createOrderAdjustment" short-description="Create a ShipmentReceipt">
+        <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createOrderAdjustment you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="OrderAdjustment"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <sequenced-id-to-env sequence-name="OrderAdjustment" env-name="orderAdjustmentId"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="orderAdjustmentId" map-name="newEntity"/>
+        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>                
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
+        <field-to-result field-name="orderAdjustmentId" result-name="orderAdjustmentId"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="createOrderItemBilling" short-description="Create an OrderItemBilling">
+        <make-value entity-name="OrderItemBilling" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="createNotificationLog" short-description="Log an order notification" login-required="false">
+        <make-value entity-name="OrderNotification" value-name="orderNotification"/>
+        <sequenced-id-to-env sequence-name="OrderNotification" env-name="orderNotificationId"/>
+        <env-to-field env-name="orderNotificationId" map-name="orderNotification"/>
+
+        <field-to-field field-name="orderId" map-name="parameters" to-map-name="orderNotification"/>
+        <field-to-field field-name="emailType" map-name="parameters" to-map-name="orderNotification"/>
+
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="notificationDate" map-name="orderNotification"/>
+        <create-value value-name="orderNotification"/>
+    </simple-method>
+
+    <simple-method method-name="updateOrderStatusFromReceipt" short-description="Update Order Status From ShipmentReceipt">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateOrderStatusFromReceipt you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="orderId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="OrderHeader" map-name="lookupPKMap" value-name="orderHeader"/>
+        <find-by-and entity-name="ShipmentReceipt" map-name="lookupPKMap" list-name="shipmentReceipts"/>
+        <iterate list-name="shipmentReceipts" entry-name="receipt">
+          <if-empty field-name="${receipt.orderItemSeqId}" map-name="totalsMap">
+            <calculate field-name="${receipt.orderItemSeqId}" map-name="totalsMap">
+              <number value="0"/>
+            </calculate>
+          </if-empty>
+          <calculate field-name="${receipt.orderItemSeqId}" map-name="totalsMap" type="Double">
+            <calcop field-name="${receipt.orderItemSeqId}" map-name="totalsMap" operator="add">
+              <calcop field-name="quantityAccepted" map-name="receipt" operator="get"/>
+              <calcop field-name="quantityRejected" map-name="receipt" operator="get"/>
+            </calcop>
+          </calculate>
+          <field-to-field field-name="orderId" map-name="receipt" to-map-name="newLookupMap"/>
+          <field-to-field field-name="orderItemSeqId" map-name="receipt" to-map-name="newLookupMap"/>
+          <find-by-primary-key entity-name="OrderItem" map-name="newLookupMap" value-name="orderItem"/>
+          <if-compare field-name="statusId" map-name="orderItem" operator="not-equals" value="ITEM_COMPLETED">
+          <if-compare-field field-name="quantity" map-name="orderItem" operator="less-equals" to-field-name="${receipt.orderItemSeqId}" to-map-name="totalsMap" type="Double">
+            <!-- update the status for the item -->
+            <string-to-field field-name="statusId" map-name="orderItem" string="ITEM_COMPLETED"/>
+            <store-value value-name="orderItem"/>
+            <!-- create status change history -->
+            <make-value entity-name="OrderStatus" value-name="newValue"/>
+            <sequenced-id-to-env sequence-name="OrderStatus" env-name="orderStatusId"/>
+            <env-to-field env-name="orderStatusId" map-name="newValue"/>
+
+            <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="newValue"/>
+            <field-to-field field-name="orderId" map-name="orderItem" to-map-name="newValue"/>
+            <field-to-field field-name="statusId" map-name="orderItem" to-map-name="newValue"/>
+
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+
+            <create-value value-name="newValue"/>
+          </if-compare-field>
+          </if-compare>
+        </iterate>
+
+        <!-- check to see if all items have been received -->
+        <string-to-field string="true" field-name="allReceived"/>
+        <find-by-and entity-name="OrderItem" map-name="lookupPKMap" list-name="allReturnItems"/>
+        <iterate list-name="allReturnItems" entry-name="item">
+          <if-compare field-name="statusId" map-name="item" operator="not-equals" value="ITEM_RECEIVED">
+            <string-to-field string="false" field-name="allReceived"/>
+          </if-compare>
+        </iterate>
+
+        <if-compare field-name="allReceived" operator="equals" value="true">
+          <!-- update the order header -->
+          <string-to-field field-name="statusId" map-name="orderHeader" string="ORDER_COMPLETED"/>
+          <store-value value-name="orderHeader"/>
+          <!-- create the status history -->
+          <make-value entity-name="OrderStatus" value-name="newValue"/>
+          <sequenced-id-to-env sequence-name="OrderStatus" env-name="orderStatusId"/>
+          <env-to-field env-name="orderStatusId" map-name="newValue"/>
+
+          <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="newValue"/>
+          <field-to-field field-name="statusId" map-name="orderHeader" to-map-name="newValue"/>
+
+          <now-timestamp-to-env env-name="nowTimestamp"/>
+          <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+
+          <create-value value-name="newValue"/>
+        </if-compare>
+
+        <!-- return the current return header status -->
+        <field-to-result field-name="statusId" map-name="orderHeader" result-name="currentStatusId"/>
+    </simple-method>
+</simple-methods>

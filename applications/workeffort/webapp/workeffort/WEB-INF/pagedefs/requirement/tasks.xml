@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Requirements Tasks</property>
+    <property name="headerItem">requirement</property>
+    <content-action name="/requirement/tasks.bsh"/>
+</page>

@@ -1,0 +1,11 @@
+import java.util.*;
+import org.ofbiz.security.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.service.*;
+import org.ofbiz.workeffort.workeffort.*;
+
+delegator = request.getAttribute("delegator");
+
+Collection requirements = delegator.findAll("Requirement", UtilMisc.toList("requirementTypeId", "requiredByDate"));
+if (requirements != null && requirements.size() > 0) context.put("requirements", requirements);

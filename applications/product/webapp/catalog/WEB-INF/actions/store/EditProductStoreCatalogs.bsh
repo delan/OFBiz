@@ -1,0 +1,65 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones
+ *@version    $Rev$
+ *@since      2.2
+ */
+
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.widget.html.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+String productStoreId = request.getParameter("productStoreId");
+GenericValue productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+List productStoreCatalogs = null;
+List productStoreCatalogDatas = new LinkedList();
+if (productStore != null) {
+    productStoreCatalogs = productStore.getRelated("ProductStoreCatalog", null, UtilMisc.toList("sequenceNum", "productStoreId"));
+    Iterator productStoreCatalogIter = productStoreCatalogs.iterator();
+    while (productStoreCatalogIter.hasNext()) {
+        GenericValue productStoreCatalog = (GenericValue) productStoreCatalogIter.next();
+        Map productStoreCatalogData = new HashMap();
+        productStoreCatalogData.put("productStoreCatalog", productStoreCatalog);
+        productStoreCatalogData.put("prodCatalog", productStoreCatalog.getRelatedOne("ProdCatalog"));
+        productStoreCatalogDatas.add(productStoreCatalogData);
+    }
+}
+
+HtmlFormWrapper updateProductStoreCatalogWrapper = new HtmlFormWrapper("/store/ProductStoreForms.xml", "UpdateProductStoreCatalog", request, response);
+updateProductStoreCatalogWrapper.putInContext("productStoreCatalogDatas", productStoreCatalogDatas);
+
+HtmlFormWrapper createProductStoreCatalogWrapper = new HtmlFormWrapper("/store/ProductStoreForms.xml", "CreateProductStoreCatalog", request, response);
+createProductStoreCatalogWrapper.putInContext("productStore", productStore);
+
+context.put("productStoreId", productStoreId);
+context.put("productStore", productStore);
+context.put("updateProductStoreCatalogWrapper", updateProductStoreCatalogWrapper);
+context.put("createProductStoreCatalogWrapper", createProductStoreCatalogWrapper);

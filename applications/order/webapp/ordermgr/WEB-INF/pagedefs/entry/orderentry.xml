@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Order Entry</property>
+    <property name="headerItem">orderentry</property>
+    <page-action name="/entry/showcart.bsh"/>
+    <content-action name="/entry/showpromotext.bsh"/>
+</page>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Edit Product Good Identifications</property>
+    <property name="titleProperty">PageTitleEditProductGoodIdentifications</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="tabButtonItem">EditProductGoodIdentifications</property>
+    <content-action name="/product/EditProductGoodIdentifications.bsh"/>
+</page>
