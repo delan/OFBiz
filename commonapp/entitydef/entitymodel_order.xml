@@ -654,7 +654,7 @@
       <relation type="one" fk-name="ORDER_ITEM_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="mant" rel-entity-name="StatusValidChange">
+      <relation type="many" rel-entity-name="StatusValidChange">
         <key-map field-name="statusId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_SYST" title="Sync" rel-entity-name="StatusItem">
