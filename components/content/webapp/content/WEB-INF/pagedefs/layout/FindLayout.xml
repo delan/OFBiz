@@ -11,7 +11,7 @@
     <property name="listName">entityList</property>    
     <property name="permission">CONTENTMGR</property>    
     <property name="permissionType">none</property>    
-    <property name="staticConditions">{"contentTypeId","TEMPLATE"}</property>    
+    <property name="staticConditions">{"contentTypeId","DOCUMENT"}</property>    
     <content-action name="/includes/formprep.bsh"/>
     <content-action name="/includes/findprep.bsh"/>
     <content-action name="/includes/pagelistprep.bsh"/>
