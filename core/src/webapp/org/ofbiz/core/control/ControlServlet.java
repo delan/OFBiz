@@ -240,9 +240,9 @@ public class ControlServlet extends HttpServlet {
             }
         }
 
-        if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
-
         ServerHitBin.countRequest(webappName + "." + rname, request, requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
+        
+        if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
     }
 
     private RequestHandler getRequestHandler() {

@@ -454,8 +454,15 @@ public class ServerHitBin {
                 return;
             }
 
+            String visitId = VisitHandler.getVisitId(request.getSession());
+            if (visitId == null || visitId.length() == 0) {
+                //no visit info stored, so don't store the ServerHit
+                Debug.logWarning("Could not find a visitId, so not storing ServerHit. This is probably a configuration error. If you turn of persistance of visits you should also turn off persistence of hits.");
+                return;
+            }
+            
             GenericValue serverHit = delegator.makeValue("ServerHit", null);
-            serverHit.set("visitId", VisitHandler.getVisitId(request.getSession()));
+            serverHit.set("visitId", visitId);
             serverHit.set("hitStartDateTime", new java.sql.Timestamp(startTime));
             serverHit.set("hitTypeId", ServerHitBin.typeIds[this.type]);
             if (userLogin != null) {
