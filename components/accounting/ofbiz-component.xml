@@ -21,13 +21,13 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.8 2004/04/06 18:59:22 jonesde Exp $
+ *  $Id: ofbiz-component.xml,v 1.9 2004/04/12 18:16:51 jonesde Exp $
 -->
 
 <ofbiz-component name="accounting">
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
-    <classpath type="jar" location="script"/>
+    <classpath type="dir" location="script"/>
     <classpath type="dir" location="config"/>
     <classpath type="jar" location="lib/cybersource/*"/>
     <classpath type="jar" location="lib/worldpay/*"/>
