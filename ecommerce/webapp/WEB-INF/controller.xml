@@ -251,6 +251,20 @@
     	<response name="error" type="view" value="checkout"/>
     </request-map>
     
+    <request-map uri="callPayPal">
+    	<security https="true" auth="true"/>
+    	<event type="java" path="org.ofbiz.commonapp.thirdparty.paypal.PayPalEvents" invoke="callPayPal"/>
+    	<response name="success" type="none"/>
+    	<response name="error" type="view" value="checkout"/>
+    </request-map>    
+
+    <request-map uri="payPalNotify">
+    	<security https="true" auth="true"/>
+    	<event type="java" path="org.ofbiz.commonapp.thirdparty.paypal.PayPalEvents" invoke="payPalIPN"/>
+    	<response name="success" type="none"/>
+    	<response name="error" type="view" value="checkout"/>
+    </request-map>            
+    
     <request-map uri="confirmorder">
         <response name="success" type="view" value="confirmorder"/>
     </request-map>
