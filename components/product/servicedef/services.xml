@@ -1570,7 +1570,8 @@
         <attribute name="listSize" type="Integer" mode="OUT" optional="false"/>
     </service>
 
-    <!-- Product content services -->
+    <!-- Product content services -->  
+    
     <service name="createProductContent" default-entity-name="ProductContent" engine="simple"
                 location="org/ofbiz/product/product/ProductContentServices.xml" invoke="createProductContent" auth="true">
         <description>Add Content To Product</description>
@@ -1648,6 +1649,48 @@
         <attribute name="textDataResourceId" type="String" mode="IN" optional="true"/>
         <attribute name="text" type="String" mode="IN" optional="true"/>
     </service>
+    
+   <!-- Category content services -->
+    <service name="createCategoryContent" default-entity-name="ProductCategoryContent" engine="simple"
+                location="org/ofbiz/product/category/CategoryContentServices.xml" invoke="createCategoryContent" auth="true">
+        <description>Add Content To Category</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true" />
+        <!--<override name="contentId" optional="true" mode="INOUT" />-->
+    </service>
+    <service name="updateCategoryContent" default-entity-name="ProductCategoryContent" engine="simple"
+                location="org/ofbiz/product/category/CategoryContentServices.xml" invoke="updateCategoryContent" auth="true">
+        <description>Update Content To Category</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeCategoryContent" default-entity-name="ProductCategoryContent" engine="simple"
+                location="org/ofbiz/product/category/CategoryContentServices.xml" invoke="removeCategoryContent" auth="true">
+        <description>Remove Content From Category</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="createSimpleTextContentForCategory" default-entity-name="ProductCategoryContent" engine="simple"
+            location="org/ofbiz/product/category/CategoryContentServices.xml" invoke="createSimpleTextContentForCategory" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" entity-name="Content" optional="true"/>
+        <attribute name="text" type="String" mode="IN" optional="false"/>
+        <override name="contentId" optional="true"/>
+    </service>
+    <service name="updateSimpleTextContentForCategory" default-entity-name="ProductCategoryContent" engine="simple"
+            location="org/ofbiz/product/category/CategoryContentServices.xml" invoke="updateSimpleTextContentForCategory" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" entity-name="Content" optional="true"/>
+        <attribute name="textDataResourceId" type="String" mode="IN" optional="true"/>
+        <attribute name="text" type="String" mode="IN" optional="true"/>
+    </service>
+
 
     <!-- ProductFeatureDataResource services -->
     <service name="createProductFeatureDataResource" default-entity-name="ProductFeatureDataResource" engine="simple"

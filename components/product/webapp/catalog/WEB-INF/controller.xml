@@ -337,7 +337,47 @@
         <response name="success" type="view" value="EditCategoryParties"/>
         <response name="error" type="view" value="EditCategoryParties"/>
     </request-map>
-
+    
+ <!-- ================ Category Content Requests ================= -->
+    <request-map uri="EditCategoryContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="updateCategoryContent">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateCategory"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    
+ <!-- ================ Category Content Assoc Requests ================= -->
+    <request-map uri="EditCategoryContentContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategoryContentContent"/>
+    </request-map>
+    <request-map uri="prepareAddContentToCategory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategoryContentContent"/>
+    </request-map>
+    <request-map uri="addContentToCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createCategoryContent"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="updateContentToCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateCategoryContent"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="removeContentFromCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeCategoryContent"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    
     <!-- ================ Product Requests ================= -->
     <request-map uri="EditProduct">
         <security https="true" auth="true"/>
@@ -385,7 +425,57 @@
         <response name="success" type="view" value="EditProductPrices"/>
         <response name="error" type="view" value="EditProductPrices"/>
     </request-map>
+  <!-- ================ Category Content Requests ================= -->
 
+    <request-map uri="EditCategoryContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="updateCategoryContent">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductCategory"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+     <!-- ================ Category Content Assoc Requests ================= -->
+    <request-map uri="EditCategoryContentContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategoryContentContent"/>
+    </request-map>
+    <request-map uri="prepareAddContentToCategory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategoryContentContent"/>
+    </request-map>
+    <request-map uri="addContentToCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createCategoryContent"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="updateContentToCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateCategoryContent"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="removeContentFromCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeCategoryContent"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="updateSimpleTextContentForCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSimpleTextContentForCategory"/>
+        <response name="success" type="view" value="EditCategoryContentContent"/>
+        <response name="error" type="view" value="EditCategoryContentContent"/>
+    </request-map>
+    <request-map uri="createSimpleTextContentForCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSimpleTextContentForCategory"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContentContent"/>
+    </request-map>
     <!-- ================ Product Content Requests ================= -->
     <request-map uri="EditProductContent">
         <security https="true" auth="true"/>
@@ -1497,6 +1587,8 @@
     <view-map name="keywordsearch" type="jpublish" page="/find/keywordsearch.ftl"/>
 
     <view-map name="EditCategory" type="jpublish" page="/category/EditCategory.ftl"/>
+    <view-map name="EditCategoryContent" type="jpublish" page="/category/EditCategoryContent.ftl"/>
+    <view-map name="EditCategoryContentContent" type="jpublish" page="/category/EditCategoryContentContent.ftl"/>
     <view-map name="EditCategoryRollup" type="jpublish" page="/category/EditCategoryRollup.ftl"/>
     <view-map name="EditCategoryProducts" type="jpublish" page="/category/EditCategoryProducts.ftl"/>
     <view-map name="EditCategoryProdCatalogs" type="jpublish" page="/category/EditCategoryProdCatalogs.ftl"/>
