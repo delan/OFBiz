@@ -142,7 +142,8 @@ public class GenericDAO {
         
         PreparedStatement ps = null;
         String sql = "INSERT INTO " + modelEntity.getTableName() + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
-        modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
+                modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
+        Debug.logVerbose("[GenericDAO.singleInsert] sql=" + sql + "\nEntity=" + entity, module);
         try {
             ps = connection.prepareStatement(sql);
             
@@ -252,8 +253,10 @@ public class GenericDAO {
         }
         
         //no non-primaryKey fields, update doesn't make sense, so don't do it
-        if (fieldsToSave.size() <= 0)
+        if (fieldsToSave.size() <= 0) {
+            Debug.logInfo("Trying to do an update on an entity with no non-PK fields, returning having done nothing; entity=" + entity);
             return;
+        }
         
         if (modelEntity.lock()) {
             GenericEntity entityCopy = new GenericEntity(entity);
@@ -271,6 +274,8 @@ public class GenericDAO {
         
         String sql = "UPDATE " + modelEntity.getTableName() + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
         makeWhereStringAnd(modelEntity.getPksCopy(), entity);
+        Debug.logVerbose("[GenericDAO.singleUpdate] sql=" + sql + "\nEntity=" + entity, module);
+
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(sql);
@@ -428,7 +433,7 @@ public class GenericDAO {
         sql += makeFromClause(modelEntity);
         sql += makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
         
-        //Debug.logInfo(" select: sql=" + sql);
+        Debug.logVerbose("[GenericDAO.select] sql=" + sql, module);
         try {
             ps = connection.prepareStatement(sql);
             
