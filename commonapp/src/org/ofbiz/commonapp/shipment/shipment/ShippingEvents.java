@@ -67,15 +67,17 @@ public class ShippingEvents {
         //}
         String shippingContactMechId = cart.getShippingContactMechId();
         String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
-        if (shipmentMethodTypeId == null) {
+        String carrierPartyId = cart.getCarrierPartyId();
+        if (shipmentMethodTypeId == null || carrierPartyId == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>Please Select a Shipping Method");
             return "error";
         }
-        
+
         // Get the ShipmentCostEstimate(s)
         Collection estimates = null;
         try {
-            estimates = delegator.findByAnd("ShipmentCostEstimate",UtilMisc.toMap("shipmentMethodTypeId",shipmentMethodTypeId),null);
+            Map fields = UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER");
+            estimates = delegator.findByAnd("ShipmentCostEstimate", fields);
         }
         catch ( GenericEntityException e ) {
             Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.");
@@ -112,7 +114,9 @@ public class ShippingEvents {
             GenericValue thisEstimate = (GenericValue) i.next();
             String toGeo = thisEstimate.getString("geoIdTo");
             // Make sure we have a valid GEOID.
-            if (toGeo == null || toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) || toGeo.equals(shipAddress.getString("stateProvinceGeoId")) || toGeo.equals(shipAddress.getString("postalCodeGeoId"))) {
+            if (toGeo == null || toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) ||
+                    toGeo.equals(shipAddress.getString("stateProvinceGeoId")) ||
+                    toGeo.equals(shipAddress.getString("postalCodeGeoId"))) {
                 GenericValue wv = null;
                 GenericValue qv = null;
                 GenericValue pv = null;
@@ -181,7 +185,7 @@ public class ShippingEvents {
             return "success";
         }
         
-        // Calculate priotity based on available data.
+        // Calculate priority based on available data.
         double PRIORITY_PARTY = UtilProperties.getPropertyNumber(ecommercePropertiesUrl, "shipping.priority.partyId");
         double PRIORITY_ROLE = UtilProperties.getPropertyNumber(ecommercePropertiesUrl, "shipping.priority.roleTypeId");
         double PRIORITY_GEO = UtilProperties.getPropertyNumber(ecommercePropertiesUrl, "shipping.priority.geoId");
