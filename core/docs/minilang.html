@@ -1480,6 +1480,12 @@ environment using the specified value-name.</p>
     entity fields.</td>
 </tr>
 <tr>
+    <td>delegator-name</td><td>N</td>
+    <td>By default this operation is done using the delegator that is part of
+    the simple-method calling context. This allows you to override the default 
+    delegator by naming an alternate delegator.</td>
+</tr>
+<tr>
     <td>use-cache</td><td>N</td>
     <td>Specifies whether or not the delegator's cache should be searched before
     going to the database. This results in much faster retreival times, but can
@@ -1519,11 +1525,27 @@ placed in the method environment using the specified list-name.</p>
     strings specifying fields to order the results by.</td>
 </tr>
 <tr>
+    <td>delegator-name</td><td>N</td>
+    <td>By default this operation is done using the delegator that is part of
+    the simple-method calling context. This allows you to override the default 
+    delegator by naming an alternate delegator.</td>
+</tr>
+<tr>
     <td>use-cache</td><td>N</td>
     <td>Specifies whether or not the delegator's cache should be searched before
     going to the database. This results in much faster retreival times, but can
     return stale data that is not the most current in the database. Must be 
     "true" or "false", defaults to "false".</td>
+</tr>
+<tr>
+    <td>use-iterator</td><td>N</td>
+    <td>Specifies whether or not to use the EntityListIterator when doing the
+    query. This is much more efficient for large data sets because the results
+    are read incrementaly instead of all at once. Note that when using this the
+    use-cache setting will be ignored. Also note that an EntityListIterator must
+    be closed when you are finished, but this is done automatically by the
+    <code>iterate</code> operation. Must be "true" or "false", defaults to 
+    "false".</td>
 </tr>
 </table>
 

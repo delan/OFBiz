@@ -433,6 +433,7 @@ engine and facilitate related operations.
     entity-name CDATA #REQUIRED
     map-name CDATA #REQUIRED
     use-cache ( true | false ) "false"
+    delegator-name CDATA #IMPLIED
 >
 <!ELEMENT find-by-and EMPTY>
 <!ATTLIST find-by-and
@@ -440,7 +441,9 @@ engine and facilitate related operations.
     entity-name CDATA #REQUIRED
     map-name CDATA #REQUIRED
     order-by-list-name CDATA #IMPLIED
+    delegator-name CDATA #IMPLIED
     use-cache ( true | false ) "false"
+    use-iterator ( true | false ) "false"
 >
 <!ELEMENT filter-list-by-and EMPTY>
 <!ATTLIST filter-list-by-and

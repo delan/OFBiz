@@ -43,6 +43,7 @@ public class FindByPrimaryKey extends MethodOperation {
     String valueName;
     String entityName;
     String mapName;
+    String delegatorName;
     boolean useCache;
 
     public FindByPrimaryKey(Element element, SimpleMethod simpleMethod) {
@@ -50,16 +51,22 @@ public class FindByPrimaryKey extends MethodOperation {
         valueName = element.getAttribute("value-name");
         entityName = element.getAttribute("entity-name");
         mapName = element.getAttribute("map-name");
+        delegatorName = element.getAttribute("delegator-name");
 
         useCache = "true".equals(element.getAttribute("use-cache"));
     }
 
     public boolean exec(MethodContext methodContext) {
+        GenericDelegator delegator = methodContext.getDelegator();
+        if (delegatorName != null && delegatorName.length() > 0) {
+            delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        }
+
         try {
             if (this.useCache) {
-                methodContext.putEnv(valueName, methodContext.getDelegator().findByPrimaryKeyCache(entityName, (Map) methodContext.getEnv(mapName)));
+                methodContext.putEnv(valueName, delegator.findByPrimaryKeyCache(entityName, (Map) methodContext.getEnv(mapName)));
             } else {
-                methodContext.putEnv(valueName, methodContext.getDelegator().findByPrimaryKey(entityName, (Map) methodContext.getEnv(mapName)));
+                methodContext.putEnv(valueName, delegator.findByPrimaryKey(entityName, (Map) methodContext.getEnv(mapName)));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e);
