@@ -36,6 +36,7 @@ import java.net.*;
  */
 public class HttpClient {
     
+    private int timeout = 30000;
     private boolean lineFeed = true;
     private boolean followRedirects = true;
     
@@ -85,6 +86,11 @@ public class HttpClient {
         this.headers = headers;
     }
 
+    /** Sets the timeout for waiting for the connection (default 30sec) */
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+    
     /** Enables this request to follow redirect 3xx codes (default true) */
      public void followRedirects(boolean followRedirects) {
         this.followRedirects = followRedirects;
@@ -266,7 +272,7 @@ public class HttpClient {
         // Create the URL and open the connection.
         try {
             requestUrl = new URL(url);
-            con = requestUrl.openConnection();
+            con = URLConnector.openConnection(requestUrl, timeout);
             if ((con instanceof HttpURLConnection))                 
                 ((HttpURLConnection) con).setInstanceFollowRedirects(followRedirects);
             
@@ -285,14 +291,12 @@ public class HttpClient {
                 while (i.hasNext()) {
                     String headerName = (String) i.next();
                     String headerValue = (String) headers.get(headerName);
-
                     con.setRequestProperty(headerName, headerValue);
                 }
             }
 
             if (method.equalsIgnoreCase("post")) {
                 DataOutputStream out = new DataOutputStream(con.getOutputStream());
-
                 out.writeBytes(arguments);
                 out.flush();
                 out.close();
