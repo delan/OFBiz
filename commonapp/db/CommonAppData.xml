@@ -3,9 +3,9 @@
   <Party partyId="admin"/>
   <PartyAttribute attrName="GOOD_ADMIN" attrValue="Definately not" partyId="admin"/>
   <PartyAttribute attrName="KNOWS_OFBIZ" attrValue="Yes, definately" partyId="admin"/>
-  <PartyClassification fromDate="2-11-30 00:00:00.0"
+  <PartyClassification fromDate="2000-11-30 00:00:00.0"
     partyClassificationTypeId="" partyId="admin" partyTypeId="ADMIN_1" thruDate=""/>
-  <PartyClassification fromDate="2-11-30 00:00:00.0"
+  <PartyClassification fromDate="2000-11-30 00:00:00.0"
     partyClassificationTypeId="" partyId="admin" partyTypeId="ADMIN_21" thruDate=""/>
   <PartyType description="" hasTable="N" parentTypeId="ADMIN_PARENT_1" partyTypeId="ADMIN_1"/>
   <PartyType description="" hasTable="N" parentTypeId="ADMIN_PARENT_1" partyTypeId="ADMIN_2"/>
