@@ -126,4 +126,26 @@
         <attribute name="noteId" type="String" mode="OUT" optional="false"/>
     </service>
     
+    <!-- Services for finding Assigned WorkEfforts -->
+    <service name="getWorkEffortAssignedTasks" engine="java"
+            location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortAssignedTasks">
+        <description>Get WorkEffort Assigned Tasks</description>
+        <attribute name="tasks" type="java.util.List" mode="OUT" optional="false"/>
+    </service>
+    <service name="getWorkEffortAssignedActivities" engine="java"
+            location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortAssignedActivities">
+        <description>Get WorkEffort Assigned Activities</description>
+        <attribute name="activities" type="java.util.List" mode="OUT" optional="false"/>
+    </service>
+    <service name="getWorkEffortAssignedActivitiesByRole" engine="java"
+            location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortAssignedActivitiesByRole">
+        <description>Get WorkEffort Assigned Activities By Role</description>
+        <attribute name="roleActivities" type="java.util.List" mode="OUT" optional="false"/>
+    </service>
+    <service name="getWorkEffortAssignedActivitiesByGroup" engine="java"
+            location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortAssignedActivitiesByGroup">
+        <description>Get WorkEffort Assigned Activities By Group</description>
+        <attribute name="groupActivities" type="java.util.List" mode="OUT" optional="false"/>
+    </service>
+    
 </services>
