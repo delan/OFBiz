@@ -94,9 +94,10 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
             Template template = fmConfig.getTemplate(path, page.getLocale());
             template.setObjectWrapper(BeansWrapper.getDefaultInstance());
             template.process(viewContext, out);
-        } catch(IOException e){
+        } catch(IOException e) {
             throw e;
-        } catch(Exception e){
+        } catch(Exception e) {
+            Debug.logError(e, "Exception from FreeMarker", module);
             throw new ViewRenderException(e);
         }
     }
