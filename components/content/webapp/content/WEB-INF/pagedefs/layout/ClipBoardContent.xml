@@ -14,9 +14,6 @@
     <property name="permissionType">simple</property>    
     <page-action name="/includes/findprep.bsh"/>
     <page-action name="/includes/mruprep.bsh"/>
-    <content-action name="/layout/addcontentidto.bsh"/>
-    <!--<page-action name="/includes/pagelistprep.bsh"/>-->
-    <!--<content-action name="/data/dataresourcepagelist.bsh"/>-->
     <content-action name="/includes/pagelistprep.bsh"/>
     <content-action name="/layout/lookupprep.bsh"/>
 </page>

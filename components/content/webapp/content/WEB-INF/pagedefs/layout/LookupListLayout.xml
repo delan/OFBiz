@@ -12,6 +12,6 @@
     <property name="permissionType">none</property>    
     <property name="staticConditions">{"caContentIdTo","TEMPLATE_MASTER"}</property>    
     <content-action name="/includes/staticfind.bsh"/>
-    <content-action name="/layout/addcontentidto.bsh"/>
     <content-action name="/includes/pagelistprep.bsh"/>
+    <content-action name="/layout/addcontentidto.bsh"/>
 </page>
