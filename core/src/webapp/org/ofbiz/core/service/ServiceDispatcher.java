@@ -40,9 +40,9 @@ import org.ofbiz.core.scheduler.*;
  */
 public class ServiceDispatcher {
 
-    Map modelServices;
-    GenericDelegator delegator;
-    JobManager jm;
+    protected Map modelServices;
+    protected GenericDelegator delegator;
+    protected JobManager jm;
     
     ServiceDispatcher(GenericDelegator delegator, Collection readerURLs) {
         this.addReaders(readerURLs);
