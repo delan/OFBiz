@@ -57,6 +57,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <field-type name="hsql" loader="fieldfile" location="fieldtypehsql.xml"/>
     <field-type name="derby" loader="fieldfile" location="fieldtypederby.xml"/>
     <field-type name="cloudscape" loader="fieldfile" location="fieldtypecloudscape.xml"/>
+    <field-type name="axion" loader="fieldfile" location="fieldtypeaxion.xml"/>
     <field-type name="mysql" loader="fieldfile" location="fieldtypemysql.xml"/>
     <field-type name="postgres" loader="fieldfile" location="fieldtypepostgres.xml"/>
     <field-type name="postgres72" loader="fieldfile" location="fieldtypepostgres72.xml"/>
@@ -135,6 +136,21 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/CloudscapeDataSource" isolation-level="Serializable"/> -->
+    </datasource>
+
+    <datasource name="localaxion"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            field-type-name="axion"
+            check-on-start="true"
+            add-missing-on-start="true"
+            use-pk-constraint-names="false">
+        <read-data reader-name="main"/>
+        <inline-jdbc
+                jdbc-driver="org.axiondb.jdbc.AxionDriver"
+                jdbc-uri="jdbc:axiondb:ofbiz:data/axion/ofbiz"
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"
+                isolation-level="ReadCommitted"/>
     </datasource>
 
     <datasource name="localmysql"
