@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/12/29 12:26:08  jonesde
+ * Finished moving WorkEffort functionality to services, party assignment still needs to be done
+ *
  * Revision 1.8  2001/12/23 13:47:12  jonesde
  * Fixed a bug stopping a new workeffort from being handled correctly, caused in the refactoring our preStoreOther earlier
  *
@@ -104,11 +107,9 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            // check for error message(s)
-            String errorMessage = ServiceUtil.makeHtmlErrorMessage(result);
-            if (errorMessage != null)
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
-
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort successfully deleted.");
+            //always do this last, may override defaults EVENT_MESSAGE
+            ServiceUtil.getHtmlMessages(request, result);
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         }
@@ -252,11 +253,10 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            // check for error message(s)
-            String errorMessage = ServiceUtil.makeHtmlErrorMessage(result);
-            if (errorMessage != null)
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
-
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort successfully created.");
+            //always do this last, may override defaults EVENT_MESSAGE
+            ServiceUtil.getHtmlMessages(request, result);
+            
             request.setAttribute("WORK_EFFORT_ID", result.get("workEffortId"));
 
             // return the result
@@ -273,11 +273,9 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            // check for error message(s)
-            String errorMessage = ServiceUtil.makeHtmlErrorMessage(result);
-            if (errorMessage != null)
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
-
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort successfully updated.");
+            //always do this last, may override defaults EVENT_MESSAGE
+            ServiceUtil.getHtmlMessages(request, result);
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else {
@@ -311,35 +309,26 @@ public class WorkEffortEvents {
             return "error";
         }
 
-        String workEffortId = request.getParameter("workEffortId");
-        String partyId = request.getParameter("partyId");
-        String roleTypeId = request.getParameter("roleTypeId");
-        String fromDateStr = request.getParameter("fromDate");
         Timestamp fromDate = null;
-        GenericValue workEffortPartyAssignment = null;
 
         //get, and validate, the primary keys
-        if (UtilValidate.isNotEmpty(fromDateStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("fromDate"))) {
             try {
-                fromDate = Timestamp.valueOf(fromDateStr);
+                fromDate = Timestamp.valueOf(request.getParameter("fromDate"));
             } catch (Exception e) {
                 errMsg += "<li>From Date is not a valid Date-Time.";
             }
         }
 
-        if (!UtilValidate.isNotEmpty(workEffortId))
+        if (!UtilValidate.isNotEmpty(request.getParameter("workEffortId")))
             errMsg += "<li>Work Effort ID missing.";
-        if (!UtilValidate.isNotEmpty(partyId))
+        if (!UtilValidate.isNotEmpty(request.getParameter("partyId")))
             errMsg += "<li>Party ID missing.";
-        if (!UtilValidate.isNotEmpty(roleTypeId))
+        if (!UtilValidate.isNotEmpty(request.getParameter("roleTypeId")))
             errMsg += "<li>Role Type ID missing.";
             
-        if ("CREATE".equals(updateMode)) {
-            //if no fromDate specified, use nowStamp
-            if (fromDate == null)
-                fromDate = nowStamp;
-        } else {
-            if (!UtilValidate.isNotEmpty(fromDateStr))
+        if (!"CREATE".equals(updateMode)) {
+            if (!UtilValidate.isNotEmpty(request.getParameter("fromDate")))
                 errMsg += "<li>From Date missing.";
         }
         
@@ -349,67 +338,35 @@ public class WorkEffortEvents {
             return "error";
         }
 
-        //do a findByPrimary key to see if the entity exists, and other things later
-        try {
-            workEffortPartyAssignment = delegator.findByPrimaryKey("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", partyId, "roleTypeId", roleTypeId, "fromDate", fromDate));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
-
-        if ("CREATE".equals(updateMode)) {
-            if (workEffortPartyAssignment != null) {
-                request.setAttribute("ERROR_MESSAGE", "You cannot create this Work Effort Party Assignment, already exists.");
-                return "error";
-            }
-        } else {
-            if (workEffortPartyAssignment == null) {
-                request.setAttribute("ERROR_MESSAGE", "You cannot update or delete this Work Effort Party Assignment, does not exist.");
-                return "error";
-            }
-            
-            //check permissions before moving on:
-            // 1) if create, no permission necessary
-            // 2) if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions
-            boolean associatedWith = (userLogin.getString("partyId") != null && userLogin.getString("partyId").equals(workEffortPartyAssignment.getString("partyId"))) ? true : false;
-            if (!associatedWith && !security.hasEntityPermission("WORKEFFORTMGR", "_" + updateMode, request.getSession())) {
-                request.setAttribute("ERROR_MESSAGE", "You cannot update or delete this Work Effort Party Assignment, you must either be associated with it or have administration permission.");
-                return "error";
-            }
-        }
-
         //if this is a delete, do that before getting all of the non-pk parameters and validating them
         if (updateMode.equals("DELETE")) {
-            //NOTE: this is pretty weak for handling removal in clean way; what we really need
-            // is the upcoming generic transaction token stuff in the Entity Engine
-
-            //Remove associated/dependent entries from other tables here
-
-            //Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
+            // invoke the service
+            Map result = null;
+            Map context = new HashMap();
+            context.put("workEffortId", request.getParameter("workEffortId"));
+            context.put("partyId", request.getParameter("partyId"));
+            context.put("roleTypeId", request.getParameter("roleTypeId"));
+            context.put("fromDate", fromDate);
+            context.put("userLogin", userLogin);
             try {
-                workEffortPartyAssignment.remove();
-            } catch (GenericEntityException e) {
-                errMsg += e.getMessage();
-            }
-            if (errMsg.length() > 0) {
-                errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                request.setAttribute("ERROR_MESSAGE", errMsg);
+                result = dispatcher.runSync("deleteWorkEffortPartyAssignment",context);
+            } catch (GenericServiceException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not delete WorkEffortPartyAssignment (problem invoking the service: " + e.getMessage() + ")");
+                Debug.logError(e);
                 return "error";
-            } else {
-                return "success";
             }
+
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort Party Assignment successfully deleted.");
+            //always do this last, may override defaults EVENT_MESSAGE
+            ServiceUtil.getHtmlMessages(request, result);
+            // return the result
+            return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         }
 
-        String thruDateStr = request.getParameter("thruDate");
         Timestamp thruDate = null;
-        String facilityId = request.getParameter("facilityId");
-        String statusId = request.getParameter("statusId");
-        String comments = request.getParameter("comments");
-        String mustRsvp = request.getParameter("mustRsvp");
-        String expectationEnumId = request.getParameter("expectationEnumId");
-
-        if (UtilValidate.isNotEmpty(thruDateStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("thruDate"))) {
             try {
-                thruDate = Timestamp.valueOf(thruDateStr);
+                thruDate = Timestamp.valueOf(request.getParameter("thruDate"));
             } catch (Exception e) {
                 errMsg += "<li>Thru Date is not a valid Date-Time.";
             }
@@ -421,93 +378,56 @@ public class WorkEffortEvents {
             return "error";
         }
 
-        //done validating, now go about setting values and storing them...
-        GenericValue newWorkEffortPartyAssignment = null;
-        if (workEffortPartyAssignment != null)
-            newWorkEffortPartyAssignment = (GenericValue) workEffortPartyAssignment.clone();
-        else
-            newWorkEffortPartyAssignment = delegator.makeValue("WorkEffortPartyAssignment", null);
-
-        //if necessary create new status entry, and set lastStatusUpdate date
-        if (workEffortPartyAssignment == null || (statusId != null && !statusId.equals(workEffortPartyAssignment.getString("statusId")))) {
-            //set the current status & timestamp
-            newWorkEffortPartyAssignment.set("statusId", statusId);
-            newWorkEffortPartyAssignment.set("statusDateTime", nowStamp);
-            
-            //if the WorkEffort is an ACTIVITY, check for accept or complete new status...
-            GenericValue workEffort = null;
-            try {
-                workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e);
-            }
-            if (workEffort != null && "ACTIVITY".equals(workEffort.getString("workEffortTypeId"))) {
-                //TODO: restrict status transitions
-                
-                Map context = UtilMisc.toMap("workEffortId", workEffortId, "partyId", partyId, "roleTypeId", roleTypeId, "fromDate", fromDate);
-                if ("CAL_ACCEPTED".equals(statusId)) {
-                    //accept the activity assignment
-                    try {
-                        Map results = dispatcher.runSync("acceptAssignment", context);
-                    } catch (GenericServiceException e) {
-                        Debug.logWarning(e);
-                    }
-                } else if ("CAL_COMPLETED".equals(statusId)) {
-                    //complete the activity assignment
-                    try {
-                        Map results = dispatcher.runSync("completeAssignment", context);
-                    } catch (GenericServiceException e) {
-                        Debug.logWarning(e);
-                    }
-                } else if ("CAL_DECLINED".equals(statusId)) {
-                    //decline the activity assignment
-                    try {
-                        Map results = dispatcher.runSync("declineAssignment", context);
-                    } catch (GenericServiceException e) {
-                        Debug.logWarning(e);
-                    }
-                } else {
-                    //do nothing...
-                }
-            }
-        }
-
-        newWorkEffortPartyAssignment.set("workEffortId", workEffortId);
-        newWorkEffortPartyAssignment.set("partyId", partyId);
-        newWorkEffortPartyAssignment.set("roleTypeId", roleTypeId);
-        newWorkEffortPartyAssignment.set("fromDate", fromDate);
-        newWorkEffortPartyAssignment.set("thruDate", thruDate, false);
-        newWorkEffortPartyAssignment.set("facilityId", facilityId, false);
-        newWorkEffortPartyAssignment.set("comments", comments, false);
-        newWorkEffortPartyAssignment.set("mustRsvp", mustRsvp, false);
-        newWorkEffortPartyAssignment.set("expectationEnumId", expectationEnumId, false);
+        Map context = new HashMap();
+        context.put("workEffortId", request.getParameter("workEffortId"));
+        context.put("partyId", request.getParameter("partyId"));
+        context.put("roleTypeId", request.getParameter("roleTypeId"));
+        context.put("thruDate", thruDate);
+        context.put("facilityId", request.getParameter("facilityId"));
+        context.put("comments", request.getParameter("statusId"));
+        context.put("mustRsvp", request.getParameter("mustRsvp"));
+        context.put("expectationEnumId", request.getParameter("expectationEnumId"));
         
         if (updateMode.equals("CREATE")) {
-            GenericValue createWorkEffortPartyAssignment = null;
+            // invoke the service
+            Map result = null;
             try {
-                createWorkEffortPartyAssignment = delegator.create(newWorkEffortPartyAssignment);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                createWorkEffortPartyAssignment = null;
-            }
-            if (createWorkEffortPartyAssignment == null) {
-                request.setAttribute("ERROR_MESSAGE", "Could not create new WorkEffortPartyAssignment (write error)");
+                result = dispatcher.runSync("createWorkEffortPartyAssignment",context);
+            } catch (GenericServiceException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not delete WorkEffortPartyAssignment (problem invoking the service: " + e.getMessage() + ")");
+                Debug.logError(e);
                 return "error";
             }
-            request.setAttribute("fromDate", fromDate);
+
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort Party Assignment successfully created.");
+            //always do this last, may override defaults EVENT_MESSAGE
+            ServiceUtil.getHtmlMessages(request, result);
+
+            request.setAttribute("fromDate", result.get("fromDate"));
+
+            // return the result
+            return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else if (updateMode.equals("UPDATE")) {
+            // invoke the service
+            Map result = null;
+            context.put("fromDate", fromDate);
             try {
-                newWorkEffortPartyAssignment.store();
-            } catch (GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not update WorkEffortPartyAssignment (write error)");
-                Debug.logWarning("[WorkEffortEvents.updateWorkEffortPartyAssignment] Could not update WorkEffortPartyAssignment (write error); message: " + e.getMessage());
+                result = dispatcher.runSync("updateWorkEffortPartyAssignment",context);
+            } catch (GenericServiceException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not delete WorkEffortPartyAssignment (problem invoking the service: " + e.getMessage() + ")");
+                Debug.logError(e);
                 return "error";
             }
+
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort Party Assignment successfully updated.");
+            //always do this last, may override defaults EVENT_MESSAGE
+            ServiceUtil.getHtmlMessages(request, result);
+
+            // return the result
+            return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else {
             request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
         }
-        
-        return "success";
     }
 }

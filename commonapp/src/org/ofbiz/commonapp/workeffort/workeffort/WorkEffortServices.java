@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/12/29 12:26:08  jonesde
+ * Finished moving WorkEffort functionality to services, party assignment still needs to be done
+ *
  * Revision 1.2  2001/12/23 06:29:42  jonesde
  * Replaced preStoreOther stuff with storeAll
  *
@@ -11,8 +14,6 @@
  */
 package org.ofbiz.commonapp.workeffort.workeffort;
 
-import javax.servlet.http.*;
-import javax.servlet.*;
 import java.util.*;
 import java.sql.Timestamp;
 
@@ -117,7 +118,6 @@ public class WorkEffortServices {
                     "CAL_ASN_ACCEPTED")));
         }
 
-        GenericValue createWorkEffort = null;
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
@@ -164,77 +164,79 @@ public class WorkEffortServices {
             Debug.logWarning(e);
         }
 
+        if (workEffort == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not find Work Effort with ID" + workEffortId + ", workEffort not updated.");
+            return result;
+        }
+        
         if (!hasWorkEffortSecurity(workEffortId, userLogin, "_UPDATE", delegator, security)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "You cannot update this Work Effort, you must either be associated with it or have administration permission.");
             return result;
         }
 
-        if (workEffort != null) {
-            GenericValue newWorkEffort = null;
-            newWorkEffort = (GenericValue) workEffort.clone();
-            Collection toBeStored = new LinkedList();
-            toBeStored.add(newWorkEffort);
-            Timestamp nowStamp = UtilDateTime.nowTimestamp();
+        GenericValue newWorkEffort = null;
+        newWorkEffort = (GenericValue) workEffort.clone();
+        Collection toBeStored = new LinkedList();
+        toBeStored.add(newWorkEffort);
+        Timestamp nowStamp = UtilDateTime.nowTimestamp();
 
-            //if necessary create new status entry, and set lastStatusUpdate date
-            String currentStatusId = (String) context.get("currentStatusId");
-            if (currentStatusId != null && !currentStatusId.equals(workEffort.getString("currentStatusId"))) {
-                toBeStored.add(delegator.makeValue("WorkEffortStatus",
-                        UtilMisc.toMap("workEffortId", workEffortId, "statusId", currentStatusId, "statusDatetime", nowStamp, "setByPartyId", userLogin.get("partyId"))));
-                newWorkEffort.set("currentStatusId", currentStatusId);
-                newWorkEffort.set("lastStatusUpdate", nowStamp);
-            }
+        //if necessary create new status entry, and set lastStatusUpdate date
+        String currentStatusId = (String) context.get("currentStatusId");
+        if (currentStatusId != null && !currentStatusId.equals(workEffort.getString("currentStatusId"))) {
+            toBeStored.add(delegator.makeValue("WorkEffortStatus",
+                    UtilMisc.toMap("workEffortId", workEffortId, "statusId", currentStatusId, "statusDatetime", nowStamp, "setByPartyId", userLogin.get("partyId"))));
+            newWorkEffort.set("currentStatusId", currentStatusId);
+            newWorkEffort.set("lastStatusUpdate", nowStamp);
+        }
 
-            newWorkEffort.set("workEffortId", workEffortId);
-            newWorkEffort.set("workEffortTypeId", context.get("workEffortTypeId"), false);
-            newWorkEffort.set("universalId", context.get("universalId"), false);
-            newWorkEffort.set("scopeEnumId", context.get("scopeEnumId"), false);
-            newWorkEffort.set("priority", context.get("priority"), false);
-            newWorkEffort.set("workEffortName", context.get("workEffortName"), false);
-            newWorkEffort.set("description", context.get("description"), false);
-            newWorkEffort.set("locationDesc", context.get("locationDesc"), false);
-            newWorkEffort.set("estimatedStartDate", context.get("estimatedStartDate"), false);
-            newWorkEffort.set("estimatedCompletionDate", context.get("estimatedCompletionDate"), false);
-            newWorkEffort.set("actualStartDate", context.get("actualStartDate"), false);
-            newWorkEffort.set("actualCompletionDate", context.get("actualCompletionDate"), false);
-            newWorkEffort.set("estimatedMilliSeconds", context.get("estimatedMilliSeconds"), false);
-            newWorkEffort.set("actualMilliSeconds", context.get("actualMilliSeconds"), false);
-            newWorkEffort.set("totalMilliSecondsAllowed", context.get("totalMilliSecondsAllowed"), false);
-            newWorkEffort.set("totalMoneyAllowed", context.get("totalMoneyAllowed"), false);
-            newWorkEffort.set("moneyUomId", context.get("moneyUomId"), false);
-            newWorkEffort.set("specialTerms", context.get("specialTerms"), false);
-            newWorkEffort.set("timeTransparency", context.get("timeTransparency"), false);
-            newWorkEffort.set("infoUrl", context.get("infoUrl"), false);
+        newWorkEffort.set("workEffortId", workEffortId);
+        newWorkEffort.set("workEffortTypeId", context.get("workEffortTypeId"), false);
+        newWorkEffort.set("universalId", context.get("universalId"), false);
+        newWorkEffort.set("scopeEnumId", context.get("scopeEnumId"), false);
+        newWorkEffort.set("priority", context.get("priority"), false);
+        newWorkEffort.set("workEffortName", context.get("workEffortName"), false);
+        newWorkEffort.set("description", context.get("description"), false);
+        newWorkEffort.set("locationDesc", context.get("locationDesc"), false);
+        newWorkEffort.set("estimatedStartDate", context.get("estimatedStartDate"), false);
+        newWorkEffort.set("estimatedCompletionDate", context.get("estimatedCompletionDate"), false);
+        newWorkEffort.set("actualStartDate", context.get("actualStartDate"), false);
+        newWorkEffort.set("actualCompletionDate", context.get("actualCompletionDate"), false);
+        newWorkEffort.set("estimatedMilliSeconds", context.get("estimatedMilliSeconds"), false);
+        newWorkEffort.set("actualMilliSeconds", context.get("actualMilliSeconds"), false);
+        newWorkEffort.set("totalMilliSecondsAllowed", context.get("totalMilliSecondsAllowed"), false);
+        newWorkEffort.set("totalMoneyAllowed", context.get("totalMoneyAllowed"), false);
+        newWorkEffort.set("moneyUomId", context.get("moneyUomId"), false);
+        newWorkEffort.set("specialTerms", context.get("specialTerms"), false);
+        newWorkEffort.set("timeTransparency", context.get("timeTransparency"), false);
+        newWorkEffort.set("infoUrl", context.get("infoUrl"), false);
 
-            //if nothing has changed, return
-            if (workEffort != null && newWorkEffort.equals(workEffort)) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-                result.put(ModelService.ERROR_MESSAGE, "No changes made, not saving.");
-                return result;
-            }
+        //if nothing has changed, return
+        if (workEffort != null && newWorkEffort.equals(workEffort)) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not saving.");
+            return result;
+        }
 
-            //only set lastModifiedDate after comparing new & old to see if anything has changed
-            newWorkEffort.set("lastModifiedDate", nowStamp);
-            if (userLogin.get("partyId") != null)
-                newWorkEffort.set("lastModifiedByPartyId", userLogin.get("partyId"));
+        //only set lastModifiedDate after comparing new & old to see if anything has changed
+        newWorkEffort.set("lastModifiedDate", nowStamp);
+        if (userLogin.get("partyId") != null)
+            newWorkEffort.set("lastModifiedByPartyId", userLogin.get("partyId"));
 
-            Long currentRev = newWorkEffort.getLong("revisionNumber");
-            if (currentRev != null)
-                newWorkEffort.set("revisionNumber", new Long(currentRev.longValue() + 1));
-            else
-                newWorkEffort.set("revisionNumber", new Long(1));
+        Long currentRev = newWorkEffort.getLong("revisionNumber");
+        if (currentRev != null)
+            newWorkEffort.set("revisionNumber", new Long(currentRev.longValue() + 1));
+        else
+            newWorkEffort.set("revisionNumber", new Long(1));
 
-            try {
-                delegator.storeAll(toBeStored);
-            } catch (GenericEntityException e) {
-                Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Could not update WorkEffort (write error); message: " + e.getMessage());
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "Could not update WorkEffort (write error)");
-                return result;
-            }
-        } else {
-            errorMessageList.add("Could not find Work Effort with ID" + workEffortId + ", workEffort not updated.");
+        try {
+            delegator.storeAll(toBeStored);
+        } catch (GenericEntityException e) {
+            Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Could not update WorkEffort (write error); message: " + e.getMessage());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not update WorkEffort (write error)");
+            return result;
         }
         
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -255,60 +257,52 @@ public class WorkEffortServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         GenericValue workEffort = null;
         
-        //get, and validate, the primary keys
-        String workEffortId = (String) context.get("workEffortId");
-        if (!UtilValidate.isNotEmpty(workEffortId))
-            errorMessageList.add("Work Effort ID missing.");
-        if (errorMessageList.size() > 0) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
-            return result;
-        }
-
         //do a findByPrimary key to see if the entity exists, and other things later
         try {
-            workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+            workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", context.get("workEffortId")));
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
 
-        if (!hasWorkEffortSecurity(workEffortId, userLogin, "_DELETE", delegator, security)) {
+        if (workEffort == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not find Work Effort with ID" + context.get("workEffortId") + ", workEffort not deleted.");
+            return result;
+        }
+        
+        if (!hasWorkEffortSecurity((String) context.get("workEffortId"), userLogin, "_DELETE", delegator, security)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "You cannot delete this Work Effort, you must either be associated with it or have administration permission.");
             return result;
         }
 
-        if (workEffort != null) {
+        try {
+            TransactionUtil.begin();
+
+            //Remove associated/dependent entries from other tables here
+            workEffort.removeRelated("WorkEffortAttribute");
+            workEffort.removeRelated("WorkEffortCategoryMember");
+            workEffort.removeRelated("WorkEffortPartyAssignment");
+            workEffort.removeRelated("FromWorkEffortAssoc");
+            workEffort.removeRelated("ToWorkEffortAssoc");
+            workEffort.removeRelated("WorkEffortStatus");
+            workEffort.removeRelated("ContextRuntimeData");
+            workEffort.removeRelated("ResultRuntimeData");
+            workEffort.removeRelated("NoteData");
+            workEffort.removeRelated("RecurrenceInfo");
+
+            //Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
+            workEffort.remove();
+
+            TransactionUtil.commit();
+        } catch (GenericEntityException e) {
+            errorMessageList.add("Could not delete WorkEffort: " + e.getMessage());
+
             try {
-                TransactionUtil.begin();
-
-                //Remove associated/dependent entries from other tables here
-                workEffort.removeRelated("WorkEffortAttribute");
-                workEffort.removeRelated("WorkEffortCategoryMember");
-                workEffort.removeRelated("WorkEffortPartyAssignment");
-                workEffort.removeRelated("FromWorkEffortAssoc");
-                workEffort.removeRelated("ToWorkEffortAssoc");
-                workEffort.removeRelated("WorkEffortStatus");
-                workEffort.removeRelated("ContextRuntimeData");
-                workEffort.removeRelated("ResultRuntimeData");
-                workEffort.removeRelated("NoteData");
-                workEffort.removeRelated("RecurrenceInfo");
-
-                //Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
-                workEffort.remove();
-
-                TransactionUtil.commit();
-            } catch (GenericEntityException e) {
-                errorMessageList.add("Could not delete WorkEffort: " + e.getMessage());
-
-                try {
-                    TransactionUtil.rollback();
-                } catch(GenericEntityException e2) {
-                    errorMessageList.add("Could not rollback delete of WorkEffort: " + e2.getMessage());
-                }
+                TransactionUtil.rollback();
+            } catch(GenericEntityException e2) {
+                errorMessageList.add("Could not rollback delete of WorkEffort: " + e2.getMessage());
             }
-        } else {
-            errorMessageList.add("Could not find Work Effort with ID" + workEffortId + ", workEffort not deleted.");
         }
         
         if (errorMessageList.size() > 0) {
