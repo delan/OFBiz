@@ -114,7 +114,7 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Campaign Summary</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><textarea cols="60" rows="7" name="campaignSummary" maxlength="2000"><ofbiz:inputvalue entityAttr='marketingCampaign' field='campaignSummary' tryEntityAttr="tryEntity"/></textarea></td>
+        <td width="74%"><textarea class='textAreaBox' cols="60" rows="7" name="campaignSummary" maxlength="2000"><ofbiz:inputvalue entityAttr='marketingCampaign' field='campaignSummary' tryEntityAttr="tryEntity"/></textarea></td>
       </tr>
 
   <tr>

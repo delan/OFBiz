@@ -79,7 +79,7 @@
       <td>&nbsp;</td>
       <td>
         <h3>Could not find prodCatalog with ID "<%=prodCatalogId%>".</h3><br>
-        <input type=text size='20' maxlength='20' name="prodCatalogId" value="<%=UtilFormatOut.checkNull(prodCatalogId)%>">
+        <input type=text class='inputBox' size='20' maxlength='20' name="prodCatalogId" value="<%=UtilFormatOut.checkNull(prodCatalogId)%>">
       </td>
     </tr>
   <%} else {%>
@@ -89,7 +89,7 @@
       <td align=right><div class="tabletext">ProdCatalog ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type=text size='20' maxlength='20' name="prodCatalogId" value="<%=UtilFormatOut.checkNull(prodCatalogId)%>">
+        <input type=text size='20' class='inputBox' maxlength='20' name="prodCatalogId" value="<%=UtilFormatOut.checkNull(prodCatalogId)%>">
       </td>
     </tr>
   <%}%>
