@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.9 2004/04/24 22:48:04 jonesde Exp $
+ * $Id: PriceServices.java,v 1.10 2004/06/04 12:33:19 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class PriceServices {
@@ -91,8 +91,7 @@ public class PriceServices {
 
         // if currency uom is null get from properties file, if still null assume USD (USD: American Dollar) for now
         String currencyUomId = (String) context.get("currencyUomId");
-
-        if (currencyUomId == null || currencyUomId.length() == 0) {
+        if (UtilValidate.isEmpty(currencyUomId)) {
             currencyUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
         }
 
@@ -235,101 +234,113 @@ public class PriceServices {
         
         // now if this is a virtual product check each price type, if doesn't exist get from variant with lowest DEFAULT_PRICE
         if ("Y".equals(product.getString("isVirtual"))) {
-        	// only do this if there is no default price, consider the others optional for performance reasons
-        	if (defaultPriceValue == null) {
-        		// Debug.logInfo("Product isVirtual and there is no default price for ID " + productId + ", trying variant prices", module);
-        		
-        		//use the cache to find the variant with the lowest default price
-        		try {
-	        		List variantAssocList = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate")));
-	        		Iterator variantAssocIter = variantAssocList.iterator();
-	        		double minDefaultPrice = Double.MAX_VALUE;
-	        		List variantProductPrices = null;
-	        		String variantProductId = null;
-	        		while (variantAssocIter.hasNext()) {
-	        			GenericValue variantAssoc = (GenericValue) variantAssocIter.next();
-	        			String curVariantProductId = variantAssoc.getString("productIdTo");
-	        			List curVariantPriceList = EntityUtil.filterByDate(delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", curVariantProductId), UtilMisc.toList("-fromDate")), nowTimestamp);
-	        			List tempDefaultPriceList = EntityUtil.filterByAnd(curVariantPriceList, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
-	        			GenericValue curDefaultPriceValue = EntityUtil.getFirst(tempDefaultPriceList);
-	        			if (curDefaultPriceValue != null) {
-	        				Double curDefaultPrice = curDefaultPriceValue.getDouble("price");
-	        				if (curDefaultPrice.doubleValue() < minDefaultPrice) {
-	        					// check to see if the product is discontinued for sale before considering it the lowest price
-	        					GenericValue curVariantProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", curVariantProductId));
-	        					if (curVariantProduct != null) {
-	        						Timestamp salesDiscontinuationDate = curVariantProduct.getTimestamp("salesDiscontinuationDate");
-	        						if (salesDiscontinuationDate == null || salesDiscontinuationDate.after(nowTimestamp)) {
-			        					minDefaultPrice = curDefaultPrice.doubleValue();
-			        					variantProductPrices = curVariantPriceList;
-			        					variantProductId = curVariantProductId;
-			        					// Debug.logInfo("Found new lowest price " + minDefaultPrice + " for variant with ID " + variantProductId, module);
-	        						}
-	        					}
-	        				}
-	        			}
-	        		}
-	        		
-	        		if (variantProductPrices != null) {
-	        			// we have some other options, give 'em a go...
-	                    if (listPriceValue == null) {
-	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
-	                        listPriceValue = EntityUtil.getFirst(virtualTempPrices);
-	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-	                            if (Debug.infoOn()) Debug.logInfo("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + listPriceValue.getDouble("price"), module);
-	                        }
-	                    }
-	                    if (defaultPriceValue == null) {
-	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
-	                        defaultPriceValue = EntityUtil.getFirst(virtualTempPrices);
-	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-	                            if (Debug.infoOn()) Debug.logInfo("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"), module);
-	                        }
-	                    }
-	                    if (competitivePriceValue == null) {
-	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "COMPETITIVE_PRICE"));
-	                        competitivePriceValue = EntityUtil.getFirst(virtualTempPrices);
-	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-	                            if (Debug.infoOn()) Debug.logInfo("There is more than one COMPETITIVE_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + competitivePriceValue.getDouble("price"), module);
-	                        }
-	                    }
-	                    if (averageCostValue == null) {
-	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
-	                        averageCostValue = EntityUtil.getFirst(virtualTempPrices);
-	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-	                            if (Debug.infoOn()) Debug.logInfo("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + averageCostValue.getDouble("price"), module);
-	                        }
-	                    }
-	                    if (promoPriceValue == null) {
-	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "PROMO_PRICE"));
-	                        promoPriceValue = EntityUtil.getFirst(virtualTempPrices);
-	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-	                            if (Debug.infoOn()) Debug.logInfo("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + promoPriceValue.getDouble("price"), module);
-	                        }
-	                    }
-	                    if (minimumPriceValue == null) {
-	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
-	                        minimumPriceValue = EntityUtil.getFirst(virtualTempPrices);
-	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-	                            if (Debug.infoOn()) Debug.logInfo("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"), module);
-	                        }
-	                    }
-	                    if (maximumPriceValue == null) {
-	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
-	                        maximumPriceValue = EntityUtil.getFirst(virtualTempPrices);
-	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-	                            if (Debug.infoOn()) Debug.logInfo("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"), module);
-	                        }
-	                    }
-	        		}
-        		} catch (GenericEntityException e) {
-                    Debug.logError(e, "An error occurred while getting the product prices", module);
-        		}
-        	}
+            	// only do this if there is no default price, consider the others optional for performance reasons
+            	if (defaultPriceValue == null) {
+            		// Debug.logInfo("Product isVirtual and there is no default price for ID " + productId + ", trying variant prices", module);
+            		
+            		//use the cache to find the variant with the lowest default price
+            		try {
+        	        		List variantAssocList = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate")));
+        	        		Iterator variantAssocIter = variantAssocList.iterator();
+        	        		double minDefaultPrice = Double.MAX_VALUE;
+        	        		List variantProductPrices = null;
+        	        		String variantProductId = null;
+        	        		while (variantAssocIter.hasNext()) {
+        	        			GenericValue variantAssoc = (GenericValue) variantAssocIter.next();
+        	        			String curVariantProductId = variantAssoc.getString("productIdTo");
+        	        			List curVariantPriceList = EntityUtil.filterByDate(delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", curVariantProductId), UtilMisc.toList("-fromDate")), nowTimestamp);
+        	        			List tempDefaultPriceList = EntityUtil.filterByAnd(curVariantPriceList, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
+        	        			GenericValue curDefaultPriceValue = EntityUtil.getFirst(tempDefaultPriceList);
+        	        			if (curDefaultPriceValue != null) {
+        	        				Double curDefaultPrice = curDefaultPriceValue.getDouble("price");
+        	        				if (curDefaultPrice.doubleValue() < minDefaultPrice) {
+        	        					// check to see if the product is discontinued for sale before considering it the lowest price
+        	        					GenericValue curVariantProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", curVariantProductId));
+        	        					if (curVariantProduct != null) {
+        	        						Timestamp salesDiscontinuationDate = curVariantProduct.getTimestamp("salesDiscontinuationDate");
+        	        						if (salesDiscontinuationDate == null || salesDiscontinuationDate.after(nowTimestamp)) {
+        			        					minDefaultPrice = curDefaultPrice.doubleValue();
+        			        					variantProductPrices = curVariantPriceList;
+        			        					variantProductId = curVariantProductId;
+        			        					// Debug.logInfo("Found new lowest price " + minDefaultPrice + " for variant with ID " + variantProductId, module);
+        	        						}
+        	        					}
+        	        				}
+        	        			}
+        	        		}
+        	        		
+        	        		if (variantProductPrices != null) {
+        	        			// we have some other options, give 'em a go...
+    	                    if (listPriceValue == null) {
+    	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
+    	                        listPriceValue = EntityUtil.getFirst(virtualTempPrices);
+    	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+    	                            if (Debug.infoOn()) Debug.logInfo("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + listPriceValue.getDouble("price"), module);
+    	                        }
+    	                    }
+    	                    if (defaultPriceValue == null) {
+    	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
+    	                        defaultPriceValue = EntityUtil.getFirst(virtualTempPrices);
+    	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+    	                            if (Debug.infoOn()) Debug.logInfo("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"), module);
+    	                        }
+    	                    }
+    	                    if (competitivePriceValue == null) {
+    	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "COMPETITIVE_PRICE"));
+    	                        competitivePriceValue = EntityUtil.getFirst(virtualTempPrices);
+    	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+    	                            if (Debug.infoOn()) Debug.logInfo("There is more than one COMPETITIVE_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + competitivePriceValue.getDouble("price"), module);
+    	                        }
+    	                    }
+    	                    if (averageCostValue == null) {
+    	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
+    	                        averageCostValue = EntityUtil.getFirst(virtualTempPrices);
+    	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+    	                            if (Debug.infoOn()) Debug.logInfo("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + averageCostValue.getDouble("price"), module);
+    	                        }
+    	                    }
+    	                    if (promoPriceValue == null) {
+    	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "PROMO_PRICE"));
+    	                        promoPriceValue = EntityUtil.getFirst(virtualTempPrices);
+    	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+    	                            if (Debug.infoOn()) Debug.logInfo("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + promoPriceValue.getDouble("price"), module);
+    	                        }
+    	                    }
+    	                    if (minimumPriceValue == null) {
+    	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
+    	                        minimumPriceValue = EntityUtil.getFirst(virtualTempPrices);
+    	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+    	                            if (Debug.infoOn()) Debug.logInfo("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"), module);
+    	                        }
+    	                    }
+    	                    if (maximumPriceValue == null) {
+    	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
+    	                        maximumPriceValue = EntityUtil.getFirst(virtualTempPrices);
+    	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+    	                            if (Debug.infoOn()) Debug.logInfo("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"), module);
+    	                        }
+    	                    }
+        	        		}
+            		} catch (GenericEntityException e) {
+                        Debug.logError(e, "An error occurred while getting the product prices", module);
+            		}
+            	}
         }
 
-        double promoPrice = (promoPriceValue != null && promoPriceValue.get("price") != null) ? promoPriceValue.getDouble("price").doubleValue() : 0;
-        double defaultPrice = (defaultPriceValue != null && defaultPriceValue.get("price") != null) ? defaultPriceValue.getDouble("price").doubleValue() : 0;
+        boolean validPromoPriceFound = false;
+        double promoPrice = 0;
+        if (promoPriceValue != null && promoPriceValue.get("price") != null) {
+            promoPriceValue.getDouble("price").doubleValue();
+            validPromoPriceFound = true;
+        }
+
+        boolean validPriceFound = false;
+        double defaultPrice = 0;
+        if (defaultPriceValue != null && defaultPriceValue.get("price") != null) {
+            defaultPriceValue.getDouble("price").doubleValue();
+            validPriceFound = true;
+        }
+
         Double listPriceDbl = listPriceValue != null ? listPriceValue.getDouble("price") : null;
 
         if (listPriceDbl == null) {
@@ -337,15 +348,15 @@ public class PriceServices {
 
             // ========= ensure calculated price is not below minSalePrice or above maxSalePrice =========
             Double maxSellPrice = maximumPriceValue != null ? maximumPriceValue.getDouble("price") : null;
-
             if (maxSellPrice != null && defaultPrice > maxSellPrice.doubleValue()) {
                 defaultPrice = maxSellPrice.doubleValue();
             }
             // min price second to override max price, safety net
             Double minSellPrice = minimumPriceValue != null ? minimumPriceValue.getDouble("price") : null;
-
             if (minSellPrice != null && defaultPrice < minSellPrice.doubleValue()) {
                 defaultPrice = minSellPrice.doubleValue();
+                // since we have found a minimum price that has overriden a the defaultPrice, even if no valid one was found, we will consider it as if one had been...
+                validPriceFound = true;
             }
 
             result.put("price", new Double(defaultPrice));
@@ -378,15 +389,11 @@ public class PriceServices {
                     // by productCategoryId
                     // for we will always include any rules that go by category, shouldn't be too many to iterate through each time and will save on cache entries
                     // note that we always want to put the category, quantity, etc ones that find all rules with these conditions in separate cache lists so that they can be easily cleared
-                    Collection productCategoryIdConds = delegator.findByAndCache("ProductPriceCond",
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CAT_ID"));
-
+                    Collection productCategoryIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CAT_ID"));
                     if (productCategoryIdConds != null && productCategoryIdConds.size() > 0) {
                         Iterator productCategoryIdCondsIter = productCategoryIdConds.iterator();
-
                         while (productCategoryIdCondsIter.hasNext()) {
                             GenericValue productCategoryIdCond = (GenericValue) productCategoryIdCondsIter.next();
-
                             productPriceRuleIds.add(productCategoryIdCond.getString("productPriceRuleId"));
                         }
                     }
@@ -394,8 +401,7 @@ public class PriceServices {
                     // by quantity -- should we really do this one, ie is it necessary?
                     // we could say that all rules with quantity on them must have one of these other values
                     // but, no we'll do it the other way, any that have a quantity will always get compared
-                    Collection quantityConds = delegator.findByAndCache("ProductPriceCond",
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_QUANTITY"));
+                    Collection quantityConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_QUANTITY"));
                     if (quantityConds != null && quantityConds.size() > 0) {
                         Iterator quantityCondsIter = quantityConds.iterator();
                         while (quantityCondsIter.hasNext()) {
@@ -405,8 +411,7 @@ public class PriceServices {
                     }
 
                     // by roleTypeId
-                    Collection roleTypeIdConds = delegator.findByAndCache("ProductPriceCond",
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_ROLE_TYPE"));
+                    Collection roleTypeIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_ROLE_TYPE"));
                     if (roleTypeIdConds != null && roleTypeIdConds.size() > 0) {
                         Iterator roleTypeIdCondsIter = roleTypeIdConds.iterator();
                         while (roleTypeIdCondsIter.hasNext()) {
@@ -420,8 +425,7 @@ public class PriceServices {
                     // later: (by partyClassificationTypeId)
 
                     // by listPrice
-                    Collection listPriceConds = delegator.findByAndCache("ProductPriceCond",
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_LIST_PRICE"));
+                    Collection listPriceConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_LIST_PRICE"));
                     if (listPriceConds != null && listPriceConds.size() > 0) {
                         Iterator listPriceCondsIter = listPriceConds.iterator();
                         while (listPriceCondsIter.hasNext()) {
@@ -433,8 +437,7 @@ public class PriceServices {
                     // ------- These are all of them that DO depend on the current inputs -------
 
                     // by productId
-                    Collection productIdConds = delegator.findByAndCache("ProductPriceCond",
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", productId));
+                    Collection productIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", productId));
                     if (productIdConds != null && productIdConds.size() > 0) {
                         Iterator productIdCondsIter = productIdConds.iterator();
                         while (productIdCondsIter.hasNext()) {
@@ -445,8 +448,7 @@ public class PriceServices {
 
                     // by virtualProductId, if not null
                     if (virtualProductId != null) {
-                        Collection virtualProductIdConds = delegator.findByAndCache("ProductPriceCond",
-                                UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", virtualProductId));
+                        Collection virtualProductIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", virtualProductId));
                         if (virtualProductIdConds != null && virtualProductIdConds.size() > 0) {
                             Iterator virtualProductIdCondsIter = virtualProductIdConds.iterator();
                             while (virtualProductIdCondsIter.hasNext()) {
@@ -458,8 +460,7 @@ public class PriceServices {
 
                     // by prodCatalogId - which is optional in certain cases
                     if (UtilValidate.isNotEmpty(prodCatalogId)) {
-                        Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond",
-                                UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CLG_ID", "condValue", prodCatalogId));
+                        Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CLG_ID", "condValue", prodCatalogId));
                         if (prodCatalogIdConds != null && prodCatalogIdConds.size() > 0) {
                             Iterator prodCatalogIdCondsIter = prodCatalogIdConds.iterator();
                             while (prodCatalogIdCondsIter.hasNext()) {
@@ -470,8 +471,7 @@ public class PriceServices {
                     }
                     
                     // by webSiteId
-                    Collection webSiteIdConds = delegator.findByAndCache("ProductPriceCond",
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_WEBSITE_ID", "condValue", webSiteId));
+                    Collection webSiteIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_WEBSITE_ID", "condValue", webSiteId));
                     if (webSiteIdConds != null && webSiteIdConds.size() > 0) {
                         Iterator webSiteIdCondsIter = webSiteIdConds.iterator();
                         while (webSiteIdCondsIter.hasNext()) {
@@ -482,8 +482,7 @@ public class PriceServices {
                    
                     // by partyId
                     if (partyId != null) {
-                        Collection partyIdConds = delegator.findByAndCache("ProductPriceCond",
-                                UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
+                        Collection partyIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
                         if (partyIdConds != null && partyIdConds.size() > 0) {
                             Iterator partyIdCondsIter = partyIdConds.iterator();
                             while (partyIdCondsIter.hasNext()) {
@@ -494,8 +493,7 @@ public class PriceServices {
                     }
 
                     // by currencyUomId
-                    Collection currencyUomIdConds = delegator.findByAndCache("ProductPriceCond",
-                            UtilMisc.toMap("inputParamEnumId", "PRIP_CURRENCY_UOMID", "condValue", currencyUomId));
+                    Collection currencyUomIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_CURRENCY_UOMID", "condValue", currencyUomId));
                     if (currencyUomIdConds != null && currencyUomIdConds.size() > 0) {
                         Iterator currencyUomIdCondsIter = currencyUomIdConds.iterator();
                         while (currencyUomIdCondsIter.hasNext()) {
@@ -529,7 +527,6 @@ public class PriceServices {
                 int totalRules = 0;
 
                 Iterator productPriceRulesIter = productPriceRules.iterator();
-
                 while (productPriceRulesIter.hasNext()) {
                     GenericValue productPriceRule = (GenericValue) productPriceRulesIter.next();
                     String productPriceRuleId = productPriceRule.getString("productPriceRuleId");
@@ -694,7 +691,6 @@ public class PriceServices {
                     Debug.logVerbose("Unchecked Calculated price: " + price, module);
                     Debug.logVerbose("PriceInfo:", module);
                     Iterator orderItemPriceInfosIter = orderItemPriceInfos.iterator();
-
                     while (orderItemPriceInfosIter.hasNext()) {
                         GenericValue orderItemPriceInfo = (GenericValue) orderItemPriceInfosIter.next();
 
@@ -705,19 +701,23 @@ public class PriceServices {
                 // if no actions were run on the list price, then use the default price
                 if (totalActions == 0) {
                     price = defaultPrice;
+                    // here we will leave validPriceFound as it was originally set for the defaultPrice since that is what we are setting the price to...
+                } else {
+                    // at least one price rule action was found, so we will consider it valid
+                    validPriceFound = true;                    
                 }
 
                 // ========= ensure calculated price is not below minSalePrice or above maxSalePrice =========
                 Double maxSellPrice = maximumPriceValue != null ? maximumPriceValue.getDouble("price") : null;
-
                 if (maxSellPrice != null && price > maxSellPrice.doubleValue()) {
                     price = maxSellPrice.doubleValue();
                 }
                 // min price second to override max price, safety net
                 Double minSellPrice = minimumPriceValue != null ? minimumPriceValue.getDouble("price") : null;
-
                 if (minSellPrice != null && price < minSellPrice.doubleValue()) {
                     price = minSellPrice.doubleValue();
+                    // since we have found a minimum price that has overriden a the defaultPrice, even if no valid one was found, we will consider it as if one had been...
+                    validPriceFound = true;
                 }
 
                 if (Debug.verboseOn()) Debug.logVerbose("Final Calculated price: " + price + ", rules: " + totalRules + ", conds: " + totalConds + ", actions: " + totalActions, module);
@@ -735,6 +735,7 @@ public class PriceServices {
         result.put("competitivePrice", competitivePriceValue != null ? competitivePriceValue.getDouble("price") : null);
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));
+        result.put("validPriceFound", new Boolean(validPriceFound));
         result.put("currencyUsed", currencyUomId);
 
         // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);

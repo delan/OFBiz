@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.29 2004/06/01 11:27:08 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.30 2004/06/04 12:33:18 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -394,7 +394,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (_product != null) {
             try {
                 Map priceContext = new HashMap();
-
                 priceContext.put("currencyUomId", cart.getCurrency());
                 priceContext.put("product", this.getProduct());
                 priceContext.put("prodCatalogId", this.getProdCatalogId());
@@ -407,18 +406,24 @@ public class ShoppingCartItem implements java.io.Serializable {
 
                 priceContext.put("quantity", new Double(this.getQuantity()));
                 Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
-
                 if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
                     throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
+                }
+                
+                Boolean validPriceFound = (Boolean) priceResult.get("validPriceFound");
+                if (!validPriceFound.booleanValue()) {
+                    throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "], not adding to cart.");
                 }
 
                 if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
                 if (cart.getOrderType().equals("PURCHASE_ORDER")) {
-                    if (priceResult.get("averageCost") != null)
+                    if (priceResult.get("averageCost") != null) {
                         this.basePrice = ((Double) priceResult.get("averageCost")).doubleValue();
+                    }
                 } else {
-                    if (priceResult.get("price") != null)
+                    if (priceResult.get("price") != null) {
                         this.basePrice = ((Double) priceResult.get("price")).doubleValue();
+                    }
                 }
 
                 this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
