@@ -891,7 +891,10 @@ public class GenericDAO {
                             whereString.append(" IS NULL ");
                         }
                     } else {
-                        whereString.append(field.getColName());
+                        if (expr.isLUpper())
+                            whereString.append("UPPER(" + field.getColName() + ")");
+                        else
+                            whereString.append(field.getColName());
                         whereString.append(expr.getOperator());
                         whereString.append(" ? ");
                     }

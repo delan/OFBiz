@@ -36,8 +36,16 @@ import java.io.*;
 public class EntityExpr implements Serializable {
 
     private Object lhs;
+    private boolean lUpper;
     private EntityOperator operator;
     private Object rhs;
+    private boolean rUpper;
+
+    public EntityExpr(Object lhs, boolean lUpper, EntityOperator operator, Object rhs, boolean rUpper) {
+        this(lhs, operator, rhs);
+        setLUpper(lUpper);
+        setRUpper(rUpper);
+    }
 
     public EntityExpr(Object lhs, EntityOperator operator, Object rhs) {
         if (!(lhs instanceof String)) {
@@ -50,6 +58,22 @@ public class EntityExpr implements Serializable {
         this.lhs = lhs;
         this.operator = operator;
         this.rhs = rhs;
+    }
+
+    public void setLUpper(boolean upper) {
+        lUpper = upper;
+    }
+
+    public boolean isLUpper() {
+        return lUpper;
+    }
+
+    public boolean isRUpper() {
+        return rUpper;
+    }
+
+    public void setRUpper(boolean upper) {
+        rUpper = upper;
     }
 
     public Object getLhs() {
