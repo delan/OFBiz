@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/19 17:11:45  jonesde
+ * Added search in a category
+ *
  * Revision 1.1  2001/10/05 02:32:39  jonesde
  * Refactored CatalogHelper: split into CatalogWorker and in commonapp CategoryWorker and ProductWorker
  *
@@ -156,7 +159,13 @@ public class ProductWorker {
       Collection complementProducts = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_COMPLEMENT"));
       Collection obsolescenceProducts = product.getRelatedByAndCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
       Collection obsoleteByProducts = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
-
+      
+      //since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
+      upgradeProducts = EntityUtil.filterByDate(upgradeProducts);
+      complementProducts = EntityUtil.filterByDate(complementProducts);
+      obsolescenceProducts = EntityUtil.filterByDate(obsolescenceProducts);
+      obsoleteByProducts = EntityUtil.filterByDate(obsoleteByProducts);
+      
       if(upgradeProducts != null && upgradeProducts.size() > 0) pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);
       if(complementProducts != null && complementProducts.size() > 0) pageContext.setAttribute(assocPrefix + "complement", complementProducts);
       if(obsolescenceProducts != null && obsolescenceProducts.size() > 0) pageContext.setAttribute(assocPrefix + "obsolescence", obsolescenceProducts);
