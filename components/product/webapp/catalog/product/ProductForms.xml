@@ -60,7 +60,7 @@
 				</entity-options>
 			</drop-down>
 		</field>
-
+		
 		<field name="productName"><text size="30" maxlength="60"/></field>
 		<field name="internalName"><text size="30" maxlength="60"/></field>
 		<field name="brandName"><text size="30" maxlength="60"/></field>
