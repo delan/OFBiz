@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.42 $
+ * @version    $Revision: 1.43 $
  */
 -->
 
@@ -1545,7 +1545,7 @@
       <field name="contentDept" type="id"></field>
       <field name="aboutContentId" type="id"></field>
       <prim-key field="contentId"/>
-      <relation type="one" rel-entity-name="Content">
+      <relation type="one" fk-name="WBSTPP_CONTENT" rel-entity-name="Content">
           <key-map field-name="contentId" />
       </relation>
     </entity>
