@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.10 2004/01/27 01:00:59 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.11 2004/02/05 09:45:26 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.ofbiz.base.util.Debug;
@@ -40,7 +40,6 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -51,7 +50,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -79,23 +78,12 @@ public class KeywordIndex {
         if (delegator == null) return;
         String productId = product.getString("productId");
 
-        // String separators = ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-+_";
-        String separators = UtilProperties.getPropertyValue("prodsearch", "index.keyword.separators", ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-+_");
-        String stopWordBagOr = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.or");
-        String stopWordBagAnd = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.and");
-
-        String removeStemsStr = UtilProperties.getPropertyValue("prodsearch", "remove.stems");
-        boolean removeStems = "true".equals(removeStemsStr);
-        String stemBag = UtilProperties.getPropertyValue("prodsearch", "stem.bag");
-        List stemList = new ArrayList(10);
-        if (UtilValidate.isNotEmpty(stemBag)) {
-            String curToken;
-            StringTokenizer tokenizer = new StringTokenizer(stemBag, ": ");
-            while (tokenizer.hasMoreTokens()) {
-                curToken = tokenizer.nextToken();
-                stemList.add(curToken);
-            }
-        }
+        // get these in advance just once since they will be used many times for the multiple strings to index
+        String separators = KeywordSearch.getSeparators();
+        String stopWordBagOr = KeywordSearch.getStopWordBagOr();
+        String stopWordBagAnd = KeywordSearch.getStopWordBagAnd();
+        boolean removeStems = KeywordSearch.getRemoveStems();
+        Set stemSet = KeywordSearch.getStemSet();
         
         Map keywords = new TreeMap();
         List strings = new ArrayList(50);
@@ -197,52 +185,8 @@ public class KeywordIndex {
         Iterator strIter = strings.iterator();
         while (strIter.hasNext()) {
             String str = (String) strIter.next();
-
-            if (str.length() > 0) {
-                StringTokenizer tokener = new StringTokenizer(str, separators, false);
-
-                while (tokener.hasMoreTokens()) {
-                    // make sure it is lower case before doing anything else
-                    String token = tokener.nextToken().toLowerCase();
-                    
-                    // when cleaning up the tokens the ordering is inportant: check stop words, remove stems, then get rid of 1 character tokens (1 digit okay)
-                    
-                    // check stop words
-                    String colonToken = ":" + token + ":";
-                    if (stopWordBagOr.indexOf(colonToken) >= 0 && stopWordBagAnd.indexOf(colonToken) >= 0) {
-                        continue;
-                    }
-                    
-                    // remove stems
-                    if (removeStems) {
-                        Iterator stemIter = stemList.iterator();
-                        while (stemIter.hasNext()) {
-                            String stem = (String) stemIter.next();
-                            if (token.endsWith(stem)) {
-                                token = token.substring(0, token.length() - stem.length());
-                            }
-                        }
-                    }
-                    
-                    // get rid of all length 0 tokens now
-                    if (token.length() == 0) {
-                        continue;
-                    }
-                    
-                    // get rid of all length 1 character only tokens, pretty much useless
-                    if (token.length() == 1 && Character.isLetter(token.charAt(0))) {
-                        continue;
-                    }
-
-                    // group by word, add up weight
-                    Long curWeight = (Long) keywords.get(token);
-                    if (curWeight == null) {
-                        keywords.put(token, new Long(1));
-                    } else {
-                        keywords.put(token, new Long(curWeight.longValue() + 1));
-                    }
-                }
-            }
+            // call process keywords method here
+            KeywordSearch.processKeywordsForIndex(str, keywords, separators, stopWordBagAnd, stopWordBagOr, removeStems, stemSet);
         }
 
         List toBeStored = new LinkedList();
