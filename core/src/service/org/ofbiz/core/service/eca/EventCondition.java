@@ -45,20 +45,20 @@ public class EventCondition {
 
     protected String lhsValueName, rhsValueName;
     protected String lhsMapName, rhsMapName;
-    protected String rhsType;
     protected String operator;
     protected String compareType;
     protected String format;
+    protected boolean constant = false;
 
     protected EventCondition() {
     }
 
-    public EventCondition(Element condition, String rhsType) {
+    public EventCondition(Element condition, boolean constant) {
         this.lhsValueName = condition.getAttribute("field-name");
         this.lhsMapName = condition.getAttribute("map-name");
 
-        this.rhsType = rhsType;
-        if (rhsType.equals("constant")) {
+        this.constant = constant;
+        if (constant) {
             this.rhsValueName = condition.getAttribute("value");
             this.rhsMapName = null;
         } else {
@@ -80,6 +80,7 @@ public class EventCondition {
         if (serviceName == null || dctx == null || context == null || dctx.getClassLoader() == null)
             throw new GenericServiceException("Cannot have null Service, Context or DispatchContext!");
         Object lhsValue, rhsValue;
+        if (Debug.verboseOn()) Debug.logVerbose(this.toString());
 
         if (lhsMapName != null && lhsMapName.length() > 0) {
             try {
@@ -87,19 +88,23 @@ public class EventCondition {
                     Map envMap = (Map) context.get(lhsMapName);
                     lhsValue = envMap.get(lhsValueName);
                 } else {
-                    throw new GenericServiceException("Map (" + lhsMapName + ") not found in context.");
+                    Debug.logVerbose("Map (" + lhsMapName + ") not found in context.");
+                    return false;
                 }
             } catch (ClassCastException e) {
-                throw new GenericServiceException("Field (" + lhsMapName + ") is not a Map.", e);
+                Debug.logVerbose("Field (" + lhsMapName + ") is not a Map.");
+                return false;
             }
         } else {
-            if (context.containsKey(lhsValueName))
+            if (context.containsKey(lhsValueName)) {
                 lhsValue = context.get(lhsValueName);
-            else
-                throw new GenericServiceException("Field (" + lhsValueName + ") is not found in context.");
+            } else {
+                Debug.logVerbose("Field (" + lhsValueName + ") is not found in context.");
+                return false;
+            }
         }
 
-        if (rhsType.equals("constant")) {
+        if (constant) {
             rhsValue = rhsValueName;
         } else if (rhsMapName != null && rhsMapName.length() > 0) {
             try {
@@ -107,16 +112,20 @@ public class EventCondition {
                     Map envMap = (Map) context.get(rhsMapName);
                     rhsValue = envMap.get(rhsValueName);
                 } else {
-                    throw new GenericServiceException("Map (" + rhsMapName + ") not found in context.");
+                    Debug.logVerbose("Map (" + rhsMapName + ") not found in context.");
+                    return false;
                 }
             } catch (ClassCastException e) {
-                throw new GenericServiceException("Field (" + rhsMapName + ") is not a Map.", e);
+                Debug.logVerbose("Field (" + rhsMapName + ") is not a Map.");
+                return false;
             }
         } else {
             if (context.containsKey(rhsValueName))
                 rhsValue = context.get(rhsValueName);
-            else
-                throw new GenericServiceException("Field (" + rhsValueName + ") is not found in context.");
+            else {
+                Debug.logVerbose("Field (" + rhsValueName + ") is not found in context.");
+                return false;
+            }
         }
 
         if (Debug.verboseOn())
@@ -124,7 +133,7 @@ public class EventCondition {
 
         // evaluate the condition & invoke the action(s)
         List messages = new LinkedList();
-        Boolean cond = ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, null, messages, null, dctx.getClassLoader());
+        Boolean cond = ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, format, messages, null, dctx.getClassLoader());
 
         // if any messages were returned send them out
         if (messages.size() > 0) {
@@ -133,6 +142,19 @@ public class EventCondition {
                 Debug.logWarning((String) m.next());
         }
         return cond.booleanValue();
+    }
+
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        buf.append("[" + lhsMapName + "]");
+        buf.append("[" + lhsValueName + "]");
+        buf.append("[" + operator + "]");
+        buf.append("[" + rhsMapName + "]");
+        buf.append("[" + rhsValueName + "]");
+        buf.append("[" + constant + "]");
+        buf.append("[" + compareType + "]");
+        buf.append("[" + format + "]");
+        return buf.toString();
     }
 
 }

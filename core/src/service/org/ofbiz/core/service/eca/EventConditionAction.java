@@ -56,16 +56,21 @@ public class EventConditionAction {
         List condList = UtilXml.childElementList(eca, "condition");
         Iterator ci = condList.iterator();
         while (ci.hasNext())
-            conditions.add(new EventCondition((Element) ci.next(), "constant"));
+            conditions.add(new EventCondition((Element) ci.next(), true));
 
-        List condFList = UtilXml.childElementList(eca, "condition");
-        Iterator cfi = condList.iterator();
+        List condFList = UtilXml.childElementList(eca, "condition-field");
+        Iterator cfi = condFList.iterator();
         while (cfi.hasNext())
-            conditions.add(new EventCondition((Element) cfi.next(), "field"));
+            conditions.add(new EventCondition((Element) cfi.next(), false));
+
+        if (Debug.verboseOn()) Debug.logVerbose("Conditions: " + conditions);
+
         List actList = UtilXml.childElementList(eca, "action");
         Iterator ai = actList.iterator();
         while (ai.hasNext())
             actions.add(new EventAction((Element) ai.next()));
+
+        if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions);
     }
 
     public void eval(String serviceName, DispatchContext dctx, Map context) throws GenericServiceException {

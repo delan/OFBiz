@@ -30,7 +30,7 @@
 -->
 
 <!ELEMENT service-eca ( eca+ )>
-<!ELEMENT eca ( condition*, action+ )>
+<!ELEMENT eca ( (condition | condition-field)*, action+ )>
 <!ATTLIST eca
 	serviceName CDATA #REQUIRED
 	event ( auth | validate | invoke | commit | return ) #REQUIRED
@@ -63,8 +63,6 @@
 	mode ( sync | async ) #REQUIRED
     update-context ( true | false ) "true"
 >
-
-
 
 <!--
 <service-eca>
