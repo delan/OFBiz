@@ -38,6 +38,7 @@
 
     HtmlFormWrapper editProdCatalogWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "EditProdCatalog", request, response);
     editProdCatalogWrapper.putInContext("prodCatalog", prodCatalog);
+    editProdCatalogWrapper.putInContext("prodCatalogId", prodCatalogId);
 %>
 
 <%if(prodCatalogId != null && prodCatalogId.length() > 0){%>
