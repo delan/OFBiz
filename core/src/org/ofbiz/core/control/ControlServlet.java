@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/07/17 08:51:37  jonesde
+ * Updated for auth implementation & small fixes.
+ *
  * Revision 1.3  2001/07/17 03:01:51  azeneski
  * Fixed the double slash in CONTROL_PATH request attribute.
  *
@@ -24,6 +27,7 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import org.ofbiz.core.scheduler.JobManager;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
 
@@ -54,7 +58,7 @@ import org.ofbiz.core.util.Debug;
  * Created on June 28, 2001, 10:12 PM
  */
 public class ControlServlet extends HttpServlet {
-    
+            
     /** Creates new ControlServlet  */
     public ControlServlet() {
         super();
@@ -63,6 +67,7 @@ public class ControlServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         getRequestHandler();
+        getJobManager();
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -77,6 +82,8 @@ public class ControlServlet extends HttpServlet {
         /** Setup the CONTROL_PATH for JSP dispatching. */
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
         Debug.log("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
+        /** Setup the SERVLET_CONTEXT for events. */
+        request.setAttribute(SiteDefs.SERVLET_CONTEXT,getServletContext());
         
         try {
             nextPage = getRequestHandler().doRequest(request,response, null);
@@ -103,6 +110,15 @@ public class ControlServlet extends HttpServlet {
             getServletContext().setAttribute(SiteDefs.REQUEST_HANDLER,rh);
         }
         return rh;
+    }
+    
+    private JobManager getJobManager() {
+        JobManager jm = (JobManager) getServletContext().getAttribute(SiteDefs.JOB_MANAGER);
+        if ( jm == null ) {
+            jm = new JobManager(getServletContext());
+            getServletContext().setAttribute(SiteDefs.JOB_MANAGER,jm);
+        }
+        return jm;
     }
 }
 

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/07/19 14:19:31  azeneski
+ * Added scheduler config variable to SiteDefs.
+ *
  * Revision 1.4  2001/07/17 22:17:21  jonesde
  * Updates for improved login: no extra redirect, and can login staying on same page
  *
@@ -61,6 +64,8 @@ public final class SiteDefs {
     
     /** Required context init parameter to locate scheduler configuration */
     public static final String SCHEDULER_CONFIG = "schedulerConfigurationFile";
+    /** Required to parse the date strings in the scheduler config file. */
+    public static final String SCHEDULER_DATE_FORMAT = "yyyy-MM-dd hh:mm";
     
     /** Used in session object to determine if a previous request is waiting */
     public static final String PREVIOUS_REQUEST = "_PREVIOUS_REQUEST_";
@@ -69,6 +74,10 @@ public final class SiteDefs {
     
     /** Used in request object to pass around the web path */
     public static final String CONTROL_PATH = "_CONTROL_PATH_";
+    
+    /** Used in request object to store the ServletConfig object */
+    public static final String SERVLET_CONTEXT = "_SERVLET_CONTEXT_";    
+    
     /** Used in request object to pass around the final view of the current request */
     public static final String CURRENT_VIEW = "_CURRENT_VIEW_";
     
@@ -77,4 +86,7 @@ public final class SiteDefs {
     
     /** Used in servlet context to store the request handler */
     public static final String REQUEST_HANDLER = "_REQUEST_HANDLER_";   
+    
+    /** Used in servlet context to store the job manager */
+    public static final String JOB_MANAGER = "_JOB_MANAGER_";
 }
