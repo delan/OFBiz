@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.48 2004/08/16 16:56:54 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.49 2004/08/16 19:14:17 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -41,10 +41,10 @@ import java.util.Set;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.GenericDelegator;
@@ -69,7 +69,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.GenericResultWaiter;
 import org.ofbiz.workflow.WfUtil;
 
 /**
@@ -78,7 +77,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.48 $
+ * @version    $Revision: 1.49 $
  * @since      2.0
  */
 
