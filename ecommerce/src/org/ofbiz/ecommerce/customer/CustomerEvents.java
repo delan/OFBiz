@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.38  2002/01/02 04:46:19  jonesde
+ * Simplified message stuff
+ *
  * Revision 1.37  2001/12/23 06:35:51  jonesde
  * Replaced preStoreOther stuff with storeAll
  *
@@ -22,8 +25,9 @@ import java.util.*;
 import java.sql.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.commonapp.party.contact.ContactHelper;
-import org.ofbiz.commonapp.security.login.LoginEvents;
+import org.ofbiz.commonapp.security.login.*;
 
 /**
  * <p><b>Title:</b> CustomerEvents.java
@@ -48,7 +52,7 @@ import org.ofbiz.commonapp.security.login.LoginEvents;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Andy Zeneski (jaz@zsolv.com)
- * @author David E. Jones (jonesde@ofbiz.org) 
+ * @author David E. Jones (jonesde@ofbiz.org)
  * @version 1.0
  * Created on October 19, 2001, 8:34 AM
  */
@@ -61,55 +65,58 @@ public class CustomerEvents {
      */
     public static String createCustomer(HttpServletRequest request, HttpServletResponse response) {
         Collection toBeStored = new LinkedList();
-        
-        String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
+
+        String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = request.getSession().getServletContext();
         URL ecommercePropertiesUrl = null;
-        try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
-        catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
-        
+        try {
+            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+        } catch (java.net.MalformedURLException e) {
+            Debug.logWarning(e);
+        }
+
         String errMsg = "";
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-        
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
         String confirmPassword = request.getParameter("CONFIRM_PASSWORD");
         String passwordHint = request.getParameter("PASSWORD_HINT");
-        
-        
+
+
         //get all parameters:
         String firstName = request.getParameter("USER_FIRST_NAME");
         String middleName = request.getParameter("USER_MIDDLE_NAME");
         String lastName = request.getParameter("USER_LAST_NAME");
         String personalTitle = request.getParameter("USER_TITLE");
         String suffix = request.getParameter("USER_SUFFIX");
-        
+
         String homeCountryCode = request.getParameter("CUSTOMER_HOME_COUNTRY");
         String homeAreaCode = request.getParameter("CUSTOMER_HOME_AREA");
         String homeContactNumber = request.getParameter("CUSTOMER_HOME_CONTACT");
         String homeExt = request.getParameter("CUSTOMER_HOME_EXT");
         String homeAllowSolicitation = request.getParameter("CUSTOMER_HOME_ALLOW_SOL");
-        
+
         String workCountryCode = request.getParameter("CUSTOMER_WORK_COUNTRY");
         String workAreaCode = request.getParameter("CUSTOMER_WORK_AREA");
         String workContactNumber = request.getParameter("CUSTOMER_WORK_CONTACT");
         String workExt = request.getParameter("CUSTOMER_WORK_EXT");
         String workAllowSolicitation = request.getParameter("CUSTOMER_WORK_ALLOW_SOL");
-        
+
         String faxCountryCode = request.getParameter("CUSTOMER_FAX_COUNTRY");
         String faxAreaCode = request.getParameter("CUSTOMER_FAX_AREA");
         String faxContactNumber = request.getParameter("CUSTOMER_FAX_CONTACT");
         String faxAllowSolicitation = request.getParameter("CUSTOMER_FAX_ALLOW_SOL");
-        
+
         String mobileCountryCode = request.getParameter("CUSTOMER_MOBILE_COUNTRY");
         String mobileAreaCode = request.getParameter("CUSTOMER_MOBILE_AREA");
         String mobileContactNumber = request.getParameter("CUSTOMER_MOBILE_CONTACT");
         String mobileAllowSolicitation = request.getParameter("CUSTOMER_MOBILE_ALLOW_SOL");
-        
+
         String email = request.getParameter("CUSTOMER_EMAIL");
         String emailAllowSolicitation = request.getParameter("CUSTOMER_EMAIL_ALLOW_SOL");
-        
+
         String address1 = request.getParameter("CUSTOMER_ADDRESS1");
         String address2 = request.getParameter("CUSTOMER_ADDRESS2");
         String city = request.getParameter("CUSTOMER_CITY");
@@ -118,59 +125,84 @@ public class CustomerEvents {
         String country = request.getParameter("CUSTOMER_COUNTRY");
         String directions = "";
         String addressAllowSolicitation = request.getParameter("CUSTOMER_ADDRESS_ALLOW_SOL");
-        
-        if(!UtilValidate.isNotEmpty(firstName)) errMsg += "<li>First name missing.";
-        if(!UtilValidate.isNotEmpty(lastName)) errMsg += "<li>Last name missing.";
-        if(!UtilValidate.isNotEmpty(address1)) errMsg += "<li>Address Line 1 missing.";
-        if(!UtilValidate.isNotEmpty(city)) errMsg += "<li>City missing.";
-        if(UtilValidate.isNotEmpty(country) && (country.equals("USA") || country.equals("CAN"))) {
-            if(!UtilValidate.isNotEmpty(state)) errMsg += "<li>State missing.";
+
+        if (!UtilValidate.isNotEmpty(firstName))
+            errMsg += "<li>First name missing.";
+        if (!UtilValidate.isNotEmpty(lastName))
+            errMsg += "<li>Last name missing.";
+        if (!UtilValidate.isNotEmpty(address1))
+            errMsg += "<li>Address Line 1 missing.";
+        if (!UtilValidate.isNotEmpty(city))
+            errMsg += "<li>City missing.";
+        if (UtilValidate.isNotEmpty(country) && (country.equals("USA") || country.equals("CAN"))) {
+            if (!UtilValidate.isNotEmpty(state))
+                errMsg += "<li>State missing.";
         }
-        if(!UtilValidate.isNotEmpty(postalCode)) errMsg += "<li>Zip/Postal Code missing.";
-        if(!UtilValidate.isNotEmpty(country)) errMsg += "<li>Country missing.";
-        if(!UtilValidate.isNotEmpty(email)) errMsg += "<li>Email missing.";
-        if(!UtilValidate.isEmail(email)) errMsg += "<li>" + UtilValidate.isEmailMsg;
-        
-        if(!UtilValidate.isNotEmpty(username)) errMsg += "<li>Username missing.";
-        
-        if(username != null && username.length() > 0) {
+        if (!UtilValidate.isNotEmpty(postalCode))
+            errMsg += "<li>Zip/Postal Code missing.";
+        if (!UtilValidate.isNotEmpty(country))
+            errMsg += "<li>Country missing.";
+        if (!UtilValidate.isNotEmpty(email))
+            errMsg += "<li>Email missing.";
+        if (!UtilValidate.isEmail(email))
+            errMsg += "<li>" + UtilValidate.isEmailMsg;
+
+        if (!UtilValidate.isNotEmpty(username))
+            errMsg += "<li>Username missing.";
+
+        if (username != null && username.length() > 0) {
             GenericValue userLogin;
-            try { userLogin = delegator.findByPrimaryKey(delegator.makePK("UserLogin", UtilMisc.toMap("userLoginId", username))); }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); userLogin = null; }
-            if(userLogin != null) {
+            try {
+                userLogin = delegator.findByPrimaryKey(delegator.makePK("UserLogin", UtilMisc.toMap("userLoginId", username)));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage());
+                userLogin = null;
+            }
+            if (userLogin != null) {
                 //UserLogin record found, user does exist: go back to new user page...
                 errMsg += "<li>Username in use, please choose another.";
             }
         }
-        
+
         GenericValue tempUserLogin = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "partyId", username));
         toBeStored.add(tempUserLogin);
-        if(UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) {
-            errMsg += LoginEvents.setPassword(tempUserLogin, password, confirmPassword, passwordHint);
+
+        if (UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) {
+            List errorMessageList = new LinkedList();
+            LoginServices.checkNewPassword(tempUserLogin, null, password, confirmPassword, passwordHint, errorMessageList);
+            if (errorMessageList.size() > 0) {
+                errMsg += ServiceUtil.makeMessageList(errorMessageList, "<li>", "</li>");
+            }
         }
-        
-        
-        if(errMsg.length() > 0) {
+
+
+        if (errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
-        
+
         //UserLogin with username does not exist: create new user...
-        if(!UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true"))
+        if (!UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true"))
             password = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "default.customer.password", "ungssblepswd");
-        
+
         Timestamp now = UtilDateTime.nowTimestamp();
-        
+
         // create Party, PartyClass, Person, ContactMechs for Address, phones
         toBeStored.add(delegator.makeValue("Party", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON")));
         toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", username, "roleTypeId", "CUSTOMER")));
-        toBeStored.add(delegator.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName, "personalTitle", personalTitle, "suffix", suffix)));
-        
+        toBeStored.add( delegator.makeValue("Person",
+                UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName, "personalTitle", personalTitle, "suffix",
+                suffix)));
+
         Long newCmId = null;
         //make address
         newCmId = delegator.getNextSeqId("ContactMech");
-        if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
+        if (newCmId == null) {
+            errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service.";
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+            return "error";
+        }
         toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "POSTAL_ADDRESS")));
         GenericValue newAddr = delegator.makeValue("PostalAddress", null);
         newAddr.set("contactMechId", newCmId.toString());
@@ -184,61 +216,112 @@ public class CustomerEvents {
         newAddr.set("countryGeoId", country);
         //newAddr.set("postalCodeGeoId", postalCodeGeoId);
         toBeStored.add(newAddr);
-        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
-        toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "fromDate", now)));
-        
+        toBeStored.add( delegator.makeValue("PartyContactMech",
+                UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation",
+                addressAllowSolicitation)));
+        toBeStored.add( delegator.makeValue("PartyContactMechPurpose",
+                UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "fromDate", now)));
+
         //make home phone number
-        if(UtilValidate.isNotEmpty(homeContactNumber)) {
-            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
+        if (UtilValidate.isNotEmpty(homeContactNumber)) {
+            newCmId = delegator.getNextSeqId("ContactMech");
+            if (newCmId == null) {
+                errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service.";
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+                return "error";
+            }
             toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
-            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
-            toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_HOME", "fromDate", now)));
+            toBeStored.add( delegator.makeValue("TelecomNumber",
+                    UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber",
+                    homeContactNumber)));
+            toBeStored.add( delegator.makeValue("PartyContactMech",
+                    UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation",
+                    homeAllowSolicitation, "extension", homeExt)));
+            toBeStored.add( delegator.makeValue("PartyContactMechPurpose",
+                    UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_HOME", "fromDate", now)));
         }
-        
+
         //make work phone number
-        if(UtilValidate.isNotEmpty(workContactNumber)) {
-            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
+        if (UtilValidate.isNotEmpty(workContactNumber)) {
+            newCmId = delegator.getNextSeqId("ContactMech");
+            if (newCmId == null) {
+                errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service.";
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+                return "error";
+            }
             toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
-            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
-            toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_WORK", "fromDate", now)));
+            toBeStored.add( delegator.makeValue("TelecomNumber",
+                    UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber",
+                    workContactNumber)));
+            toBeStored.add( delegator.makeValue("PartyContactMech",
+                    UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation",
+                    workAllowSolicitation, "extension", workExt)));
+            toBeStored.add( delegator.makeValue("PartyContactMechPurpose",
+                    UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_WORK", "fromDate", now)));
         }
-        
+
         //make fax number
-        if(UtilValidate.isNotEmpty(faxContactNumber)) {
-            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
+        if (UtilValidate.isNotEmpty(faxContactNumber)) {
+            newCmId = delegator.getNextSeqId("ContactMech");
+            if (newCmId == null) {
+                errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service.";
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+                return "error";
+            }
             toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
-            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
-            toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "FAX_NUMBER", "fromDate", now)));
+            toBeStored.add( delegator.makeValue("TelecomNumber",
+                    UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
+            toBeStored.add( delegator.makeValue("PartyContactMech",
+                    UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation",
+                    faxAllowSolicitation)));
+            toBeStored.add( delegator.makeValue("PartyContactMechPurpose",
+                    UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "FAX_NUMBER", "fromDate", now)));
         }
-        
+
         //make mobile phone number
-        if(UtilValidate.isNotEmpty(mobileContactNumber)) {
-            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
+        if (UtilValidate.isNotEmpty(mobileContactNumber)) {
+            newCmId = delegator.getNextSeqId("ContactMech");
+            if (newCmId == null) {
+                errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service.";
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+                return "error";
+            }
             toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
-            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
-            toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_MOBILE", "fromDate", now)));
+            toBeStored.add( delegator.makeValue("TelecomNumber",
+                    UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber",
+                    mobileContactNumber)));
+            toBeStored.add( delegator.makeValue("PartyContactMech",
+                    UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation",
+                    mobileAllowSolicitation)));
+            toBeStored.add( delegator.makeValue("PartyContactMechPurpose",
+                    UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_MOBILE", "fromDate", now)));
         }
-        
+
         //make email
-        newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
-        toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)));
-        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
-        toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PRIMARY_EMAIL", "fromDate", now)));
-        
+        newCmId = delegator.getNextSeqId("ContactMech");
+        if (newCmId == null) {
+            errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service.";
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+            return "error";
+        }
+        toBeStored.add(
+                delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)));
+        toBeStored.add( delegator.makeValue("PartyContactMech",
+                UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation",
+                emailAllowSolicitation)));
+        toBeStored.add( delegator.makeValue("PartyContactMechPurpose",
+                UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PRIMARY_EMAIL", "fromDate", now)));
+
         try {
             delegator.storeAll(toBeStored);
-        }
-        catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not create new account (create failure). Please contact customer service.");
             return "error";
         }
-        
-        if(UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) 
+
+        if (UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true"))
             request.getSession().setAttribute(SiteDefs.USER_LOGIN, tempUserLogin);
         return "success";
     }
 }
+
