@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,20 +29,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.xml.parsers.ParserConfigurationException;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 
-import org.apache.commons.collections.map.LinkedMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -61,8 +60,8 @@ public class ComponentConfig {
     public static final String OFBIZ_COMPONENT_XML_FILENAME = "ofbiz-component.xml";
 
     // this is not a UtilCache because reloading may cause problems
-    protected static Map componentConfigs = new LinkedMap();
-    protected static Map serverWebApps = new HashMap();
+    protected static Map componentConfigs = FastMap.newInstance();
+    protected static Map serverWebApps = FastMap.newInstance();
 
     public static ComponentConfig getComponentConfig(String globalName) throws ComponentException {
         // TODO: we need to look up the rootLocation from the container config, or this will blow up
@@ -101,12 +100,12 @@ public class ComponentConfig {
             return values;
         } else {
             Debug.logWarning("No components were found, something is probably missing or incorrect in the component-load setup.", module);
-            return new LinkedList();
+            return FastList.newInstance();
         }
     }
 
     public static List getAllClasspathInfos() {
-        List classpaths = new LinkedList();
+        List classpaths = FastList.newInstance();
         Iterator i = getAllComponents().iterator();
         while (i.hasNext()) {
             ComponentConfig cc = (ComponentConfig) i.next();
@@ -116,7 +115,7 @@ public class ComponentConfig {
     }
 
     public static List getAllEntityResourceInfos(String type) {
-        List entityInfos = new LinkedList();
+        List entityInfos = FastList.newInstance();
         Iterator i = getAllComponents().iterator();
         while (i.hasNext()) {
             ComponentConfig cc = (ComponentConfig) i.next();
@@ -137,7 +136,7 @@ public class ComponentConfig {
     }
 
     public static List getAllServiceResourceInfos(String type) {
-        List serviceInfos = new LinkedList();
+        List serviceInfos = FastList.newInstance();
         Iterator i = getAllComponents().iterator();
         while (i.hasNext()) {
             ComponentConfig cc = (ComponentConfig) i.next();
@@ -158,7 +157,7 @@ public class ComponentConfig {
     }
 
     public static List getAllWebappResourceInfos() {
-        List webappInfos = new LinkedList();
+        List webappInfos = FastList.newInstance();
         Iterator i = getAllComponents().iterator();
         while (i.hasNext()) {
             ComponentConfig cc = (ComponentConfig) i.next();
@@ -214,7 +213,7 @@ public class ComponentConfig {
             synchronized(ComponentConfig.class) {
                 if (webInfos == null) {
                     Iterator i = getAllComponents().iterator();
-                    TreeMap tm = new TreeMap();
+                    Map tm = FastMap.newInstance();
                     while (i.hasNext()) {
                         ComponentConfig cc = (ComponentConfig) i.next();
                         Iterator wi = cc.getWebappInfos().iterator();
@@ -225,7 +224,8 @@ public class ComponentConfig {
                             }
                         }
                     }
-                    List webInfoList = new LinkedList(tm.values());
+                    List webInfoList = FastList.newInstance();
+                    webInfoList.addAll(tm.values());
                     serverWebApps.put(serverName, webInfoList);
                     return webInfoList;
                 }
@@ -259,11 +259,11 @@ public class ComponentConfig {
     protected String rootLocation = null;
     protected String componentName = null;
 
-    protected Map resourceLoaderInfos = new HashMap();
-    protected List classpathInfos = new LinkedList();
-    protected List entityResourceInfos = new LinkedList();
-    protected List serviceResourceInfos = new LinkedList();
-    protected List webappInfos = new LinkedList();
+    protected Map resourceLoaderInfos = FastMap.newInstance();
+    protected List classpathInfos = FastList.newInstance();
+    protected List entityResourceInfos = FastList.newInstance();
+    protected List serviceResourceInfos = FastList.newInstance();
+    protected List webappInfos = FastList.newInstance();
 
     protected ComponentConfig() {}
 
@@ -543,8 +543,8 @@ public class ComponentConfig {
         public boolean appBarDisplay;
 
         public WebappInfo(ComponentConfig componentConfig, Element element) {
-        	this.virtualHosts = new LinkedList();
-            this.initParameters = new HashMap();
+        	this.virtualHosts = FastList.newInstance();
+            this.initParameters = FastMap.newInstance();
             this.componentConfig = componentConfig;
             this.name = element.getAttribute("name");
             this.title = element.getAttribute("title");

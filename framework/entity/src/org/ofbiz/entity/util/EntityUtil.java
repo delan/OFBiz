@@ -1,19 +1,19 @@
 /*
  * $Id$
  *
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ * Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
+ * The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -25,16 +25,16 @@
 package org.ofbiz.entity.util;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -161,7 +161,7 @@ public class EntityUtil {
         if (fromDateName == null) fromDateName = "fromDate";
         if (thruDateName == null) thruDateName = "thruDate";
 
-        List result = new LinkedList();
+        List result = FastList.newInstance();
         Iterator iter = datedValues.iterator();
 
         if (allAreSame) {
@@ -235,16 +235,14 @@ public class EntityUtil {
         if (values == null) return null;
 
         List result = null;
-
         if (fields == null || fields.size() == 0) {
-            result = new ArrayList(values);
+            result = FastList.newInstance();
+            result.addAll(values);
         } else {
-            result = new ArrayList(values.size());
+            result = FastList.newInstance();
             Iterator iter = values.iterator();
-
             while (iter.hasNext()) {
                 GenericValue value = (GenericValue) iter.next();
-
                 if (value.matchesFields(fields)) {
                     result.add(value);
                 }// else did not match
@@ -267,9 +265,8 @@ public class EntityUtil {
             return values;
         }
 
-        List result = new ArrayList();
+        List result = FastList.newInstance();
         Iterator iter = values.iterator();
-
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
             Iterator exprIter = exprs.iterator();
@@ -300,14 +297,14 @@ public class EntityUtil {
             return values;
         }
 
-        List result = new ArrayList();
+        List result = FastList.newInstance();
         Iterator iter = values.iterator();
 
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
-            Iterator exprIter = exprs.iterator();
             boolean include = false;
 
+            Iterator exprIter = exprs.iterator();
             while (exprIter.hasNext()) {
                 EntityCondition condition = (EntityCondition) exprIter.next();
                 include = condition.entityMatches(value);
@@ -330,12 +327,15 @@ public class EntityUtil {
      */
     public static List orderBy(Collection values, List orderBy) {
         if (values == null) return null;
-        if (values.size() == 0) return new ArrayList();
+        if (values.size() == 0) return FastList.newInstance();
         if (orderBy == null || orderBy.size() == 0) {
-            return new ArrayList(values);
+            List newList = FastList.newInstance();
+            newList.addAll(values);
+            return newList;
         }
 
-        List result = new ArrayList(values);
+        List result = FastList.newInstance();
+        result.addAll(values);
         if (Debug.verboseOn()) Debug.logVerbose("Sorting " + values.size() + " values, orderBy=" + orderBy.toString(), module);
         Collections.sort(result, new OrderByList(orderBy));
         return result;
@@ -344,9 +344,8 @@ public class EntityUtil {
     public static List getRelated(String relationName, List values) throws GenericEntityException {
         if (values == null) return null;
 
-        List result = new ArrayList();
+        List result = FastList.newInstance();
         Iterator iter = values.iterator();
-
         while (iter.hasNext()) {
             result.addAll(((GenericValue) iter.next()).getRelated(relationName));
         }
@@ -356,9 +355,8 @@ public class EntityUtil {
     public static List getRelatedCache(String relationName, List values) throws GenericEntityException {
         if (values == null) return null;
 
-        List result = new ArrayList();
+        List result = FastList.newInstance();
         Iterator iter = values.iterator();
-
         while (iter.hasNext()) {
             result.addAll(((GenericValue) iter.next()).getRelatedCache(relationName));
         }
@@ -368,9 +366,8 @@ public class EntityUtil {
     public static List getRelatedByAnd(String relationName, Map fields, List values) throws GenericEntityException {
         if (values == null) return null;
 
-        List result = new ArrayList();
+        List result = FastList.newInstance();
         Iterator iter = values.iterator();
-
         while (iter.hasNext()) {
             result.addAll(((GenericValue) iter.next()).getRelatedByAnd(relationName, fields));
         }
@@ -380,9 +377,8 @@ public class EntityUtil {
     public static List filterByCondition(List values, EntityCondition condition) {
         if (values == null) return null;
 
-        List result = new ArrayList(values.size());
+        List result = FastList.newInstance();
         Iterator iter = values.iterator();
-
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
             if (condition.entityMatches(value)) {
@@ -395,9 +391,8 @@ public class EntityUtil {
     public static List filterOutByCondition(List values, EntityCondition condition) {
         if (values == null) return null;
 
-        List result = new ArrayList(values.size());
+        List result = FastList.newInstance();
         Iterator iter = values.iterator();
-
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
             if (!condition.entityMatches(value)) {
@@ -430,16 +425,22 @@ public class EntityUtil {
             for (int i = 0; i < entities.size(); i++) {
                 GenericValue entity = (GenericValue)entities.get(i);
                 if (now.equals(entity.get("fromDate"))) {
-                    search = new HashMap(entity.getPrimaryKey());
+                    search = FastMap.newInstance();
+                    search.putAll(entity.getPrimaryKey());
                     entity.remove("thruDate");
                 } else {
                     entity.set("thruDate",now);
                 }
                 entity.store();
             }
-            if (search == null) search = new HashMap(EntityUtil.getFirst(entities));
+            if (search == null) {
+                search = FastMap.newInstance();
+                search.putAll(EntityUtil.getFirst(entities));
+            }
         } else {
+            /* why is this being done? leaving out for now...
             search = new HashMap(search);
+            */
         }
         if (now.equals(search.get("fromDate"))) {
             return EntityUtil.getOnly(delegator.findByAnd(entityName, search));
@@ -467,10 +468,10 @@ public class EntityUtil {
         if (genericValueList == null || fieldName == null) {
             return null;
         }
-        List fieldList = new ArrayList(genericValueList.size());
+        List fieldList = FastList.newInstance();
         Set distinctSet = null;
         if (distinct) {
-            distinctSet = new HashSet();
+            distinctSet = FastSet.newInstance();
         }
         
         Iterator genericValueIter = genericValueList.iterator();
@@ -494,10 +495,10 @@ public class EntityUtil {
         if (genericValueEli == null || fieldName == null) {
             return null;
         }
-        List fieldList = new LinkedList();
+        List fieldList = FastList.newInstance();
         Set distinctSet = null;
         if (distinct) {
-            distinctSet = new HashSet();
+            distinctSet = FastSet.newInstance();
         }
         
         GenericValue value = null;

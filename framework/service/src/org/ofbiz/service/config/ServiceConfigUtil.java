@@ -24,9 +24,10 @@
  */
 package org.ofbiz.service.config;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javolution.util.FastList;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceLoader;
@@ -84,7 +85,7 @@ public class ServiceConfigUtil {
         Element threadPool = getElement("thread-pool");
         List readPoolElements = UtilXml.childElementList(threadPool, "run-from-pool");
         if (readPoolElements != null) {
-            readPools = new ArrayList();        
+            readPools = FastList.newInstance();        
             Iterator i = readPoolElements.iterator();
         
             while (i.hasNext()) {                
