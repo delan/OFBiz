@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/08/25 01:42:01  azeneski
+ * Seperated event processing, now is found totally in EventHandler.java
+ * Updated all classes which deal with events to use to new handler.
+ *
  * Revision 1.6  2001/07/19 14:15:58  azeneski
  * Moved org.ofbiz.core.control.RequestXMLReader to org.ofbiz.core.util.ConfigXMLReader
  * ConfigXMLReader is now used for all config files, not just the request mappings.
@@ -99,9 +103,10 @@ public class RequestHandler implements Serializable {
         if ( chain != null ) {
             requestUri = getRequestUri(chain);
             nextView = getNextPageUri(chain);
+            Debug.logInfo("Chain in place: requestUri=" + requestUri + " nextView=" + nextView);
         }
         
-        Debug.log("***Request: " + requestUri);
+        Debug.logInfo("***Request: " + requestUri);
         
         String eventReturnString = null;
         /** Perform security check. */
@@ -114,7 +119,7 @@ public class RequestHandler implements Serializable {
             String checkLoginReturnString = null;
             try {
                 EventHandler loginEvent = new EventHandler(checkLoginType,checkLoginPath,checkLoginMethod);
-                loginEvent.invoke(request,response);
+                checkLoginReturnString = loginEvent.invoke(request,response);
             }
             catch ( EventHandlerException e ) {
                 throw new RequestHandlerException(e.getMessage());
@@ -126,6 +131,11 @@ public class RequestHandler implements Serializable {
                 eventPath = checkLoginPath;
                 eventMethod = checkLoginMethod;
                 requestUri = SiteDefs.CHECK_LOGIN_REQUEST_URI;
+                Debug.logInfo("Logged in test FAILED.");
+            }
+            else
+            {
+              Debug.logInfo("Logged in test PASSED.");
             }
         }
         
