@@ -942,13 +942,19 @@ public class OrderServices {
         }             
         return result;
     }
-        
+    
+    /** Service to email a customer with initial order confirmation */
+    public static Map prepareOrderConfirmation(DispatchContext ctx, Map context) {
+        return prepareOrderEmail(ctx.getDelegator(), (String) context.get("orderId"), "WES_ODR_CONFIRM");
+    }
+    
     /** Service to email a customer with order status changes */
     public static Map prepareOrderNotification(DispatchContext ctx, Map context) {  
-        Map result = new HashMap();   
-        GenericDelegator delegator = ctx.getDelegator();                      
-        String orderId = (String) context.get("orderId");
-        String emailType = "WES_ODR_CHANGE";
+        return prepareOrderEmail(ctx.getDelegator(), (String) context.get("orderId"), "WES_ODR_CHANGE");         
+    }    
+    
+    private static Map prepareOrderEmail(GenericDelegator delegator, String orderId, String emailType) {
+        Map result = new HashMap();                                         
         String ofbizHome = System.getProperty("ofbiz.home");
         
         // get the order header and website
@@ -1004,8 +1010,8 @@ public class OrderServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);            
                    
         return result;     
-    }
-    
+    }    
+            
     /** Service to email order notifications for pending actions */
     public static Map sendNotification(DispatchContext ctx, Map context) {
         Map result = new HashMap();
