@@ -16,5 +16,9 @@
     <classpathentry kind="lib" path="components/entity/lib/ots-jts_1.0.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/commons-dbcp.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/commons-pool.jar"/>
+    <classpathentry kind="lib" path="base/lib/javax.servlet.jar"/>
+    <classpathentry kind="lib" path="base/lib/log4j.jar"/>
+    <classpathentry kind="lib" path="base/lib/org.mortbay.jetty.jar"/>
+    <classpathentry kind="lib" path="base/lib/xerces.jar"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>
