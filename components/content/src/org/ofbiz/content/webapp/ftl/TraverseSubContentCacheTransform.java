@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentCacheTransform.java,v 1.17 2004/04/30 23:08:28 ajzeneski Exp $
+ * $Id: TraverseSubContentCacheTransform.java,v 1.18 2004/06/02 17:50:10 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -26,7 +26,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilValidate;
@@ -44,7 +43,7 @@ import freemarker.template.TransformControl;
  * TraverseSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @since 3.0
  */
 public class TraverseSubContentCacheTransform implements TemplateTransformModel {

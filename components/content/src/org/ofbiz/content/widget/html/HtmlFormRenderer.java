@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.10 2004/04/26 17:45:54 byersa Exp $
+ * $Id: HtmlFormRenderer.java,v 1.11 2004/06/02 17:50:11 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,17 +25,18 @@ package org.ofbiz.content.widget.html;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
+import org.ofbiz.content.widget.WidgetWorker;
 import org.ofbiz.content.widget.form.FormStringRenderer;
 import org.ofbiz.content.widget.form.ModelForm;
 import org.ofbiz.content.widget.form.ModelFormField;
@@ -44,11 +45,12 @@ import org.ofbiz.content.widget.form.ModelFormField.DateFindField;
 import org.ofbiz.content.widget.form.ModelFormField.DateTimeField;
 import org.ofbiz.content.widget.form.ModelFormField.DisplayField;
 import org.ofbiz.content.widget.form.ModelFormField.DropDownField;
+import org.ofbiz.content.widget.form.ModelFormField.FileField;
 import org.ofbiz.content.widget.form.ModelFormField.HiddenField;
 import org.ofbiz.content.widget.form.ModelFormField.HyperlinkField;
 import org.ofbiz.content.widget.form.ModelFormField.IgnoredField;
+import org.ofbiz.content.widget.form.ModelFormField.ImageField;
 import org.ofbiz.content.widget.form.ModelFormField.LookupField;
-import org.ofbiz.content.widget.form.ModelFormField.FileField;
 import org.ofbiz.content.widget.form.ModelFormField.PasswordField;
 import org.ofbiz.content.widget.form.ModelFormField.RadioField;
 import org.ofbiz.content.widget.form.ModelFormField.RangeFindField;
@@ -57,16 +59,13 @@ import org.ofbiz.content.widget.form.ModelFormField.SubmitField;
 import org.ofbiz.content.widget.form.ModelFormField.TextField;
 import org.ofbiz.content.widget.form.ModelFormField.TextFindField;
 import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
-import org.ofbiz.content.widget.form.ModelFormField.ImageField;
-
-import org.ofbiz.content.widget.WidgetWorker;
 
 /**
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {

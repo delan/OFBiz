@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.10 2004/05/11 12:56:45 jonesde Exp $
+ * $Id: ModelMenuItem.java,v 1.11 2004/06/02 17:50:13 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -55,6 +55,7 @@ public class ModelMenuItem {
     protected FlexibleStringExpander title;
     protected FlexibleStringExpander tooltip;
     protected String titleStyle;
+    protected String disabledTitleStyle;
     protected String widgetStyle;
     protected String tooltipStyle;
     protected String selectedStyle;
@@ -73,6 +74,7 @@ public class ModelMenuItem {
     protected Boolean hideIfSelected;
     protected Boolean hasPermission;
     protected MenuImage menuImage;
+    protected String disableIfEmpty;
 
     public static String DEFAULT_TARGET_TYPE = "intra-app";
     // ===== CONSTRUCTORS =====
@@ -89,10 +91,13 @@ public class ModelMenuItem {
         this.setTitle(fieldElement.getAttribute("title"));
         this.setTooltip(fieldElement.getAttribute("tooltip"));
         this.titleStyle = fieldElement.getAttribute("title-style");
+        this.disabledTitleStyle = fieldElement.getAttribute("disabled-title-style");
         this.widgetStyle = fieldElement.getAttribute("widget-style");
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
         this.selectedStyle = fieldElement.getAttribute("selected-style");
         this.defaultMenuTargetName = fieldElement.getAttribute("default-target-name");
+        this.setHideIfSelected(fieldElement.getAttribute("hide-if-selected"));
+        this.disableIfEmpty = fieldElement.getAttribute("disable-if-empty");
 
         String positionStr = fieldElement.getAttribute("position");
         try {
@@ -112,14 +117,6 @@ public class ModelMenuItem {
         this.setAssociatedContentId( fieldElement.getAttribute("associated-content-id"));
         this.cellWidth = fieldElement.getAttribute("cell-width");
         this.privilegeEnumId = fieldElement.getAttribute("privilege-enum-id");
-        String val = fieldElement.getAttribute("hide-if-selected");
-        if (UtilValidate.isNotEmpty(val))
-            if (val.equalsIgnoreCase("true"))
-                hideIfSelected = new Boolean(true);
-            else
-                hideIfSelected = new Boolean(false);
-        else
-            hideIfSelected = null;
 
         dataMap.put("name", this.name);
         //dataMap.put("associatedContentId", this.associatedContentId);
@@ -142,6 +139,19 @@ public class ModelMenuItem {
         }
 
     }
+
+    public void setHideIfSelected(String val) {
+        if (UtilValidate.isNotEmpty(val))
+            if (val.equalsIgnoreCase("true"))
+                hideIfSelected = new Boolean(true);
+            else
+                hideIfSelected = new Boolean(false);
+        else
+            hideIfSelected = null;
+
+        return;
+    }
+
 
     /**
      * add/override modelMenuItem using the targetList and targetMap
@@ -249,6 +259,17 @@ public class ModelMenuItem {
             return this.titleStyle;
         } else {
             return this.modelMenu.getDefaultTitleStyle();
+        }
+    }
+
+    /**
+     * @return
+     */
+    public String getDisabledTitleStyle() {
+        if (UtilValidate.isNotEmpty(this.disabledTitleStyle)) {
+            return this.disabledTitleStyle;
+        } else {
+            return this.modelMenu.getDefaultDisabledTitleStyle();
         }
     }
 
@@ -526,6 +547,13 @@ public class ModelMenuItem {
         } else {
             return this.modelMenu.getDefaultHideIfSelected();
         }
+    }
+
+    /**
+     * @return
+     */
+    public String getDisableIfEmpty() {
+            return this.disableIfEmpty;
     }
 
     /**
@@ -885,6 +913,7 @@ public class ModelMenuItem {
         public class MenuImage {
 
         protected FlexibleStringExpander requestName;
+        protected FlexibleStringExpander disabledRequestName;
         protected String targetType;
         protected Map paramMap = new HashMap();
         protected List paramList = new ArrayList();
@@ -894,6 +923,7 @@ public class ModelMenuItem {
         public MenuImage(Element fieldElement) {
 
             setRequestName(fieldElement.getAttribute("request-name"));
+            setDisabledRequestName(fieldElement.getAttribute("disabled-request-name"));
                 Debug.logInfo("in new MenuImage, requestName:" + requestName.getOriginal(), module);
             this.targetType = fieldElement.getAttribute("target-type");
 
@@ -915,8 +945,20 @@ public class ModelMenuItem {
             this.requestName = new FlexibleStringExpander(string);
         }
 
+        /**
+         * @param string
+         */
+        public void setDisabledRequestName(String string) {
+            this.disabledRequestName = new FlexibleStringExpander(string);
+        }
+
         public String getRequestName(Map context) {
             String s = requestName.expandString(context);
+            return s;
+        }
+
+        public String getDisabledRequestName(Map context) {
+            String s = disabledRequestName.expandString(context);
             return s;
         }
 

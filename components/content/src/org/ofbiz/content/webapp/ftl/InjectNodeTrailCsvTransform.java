@@ -1,5 +1,5 @@
 /*
- * $Id: InjectNodeTrailCsvTransform.java,v 1.9 2004/05/11 14:45:50 byersa Exp $
+ * $Id: InjectNodeTrailCsvTransform.java,v 1.10 2004/06/02 17:50:09 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -25,10 +25,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
@@ -39,7 +39,7 @@ import freemarker.template.TransformControl;
  * InjectNodeTrailCsvTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since 3.0
  */
 public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
@@ -108,10 +108,17 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
                     String contentAssocTypeId = (String)templateCtx.get("contentAssocTypeId");
                     if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv(0), contentAssocTypeId:"+contentAssocTypeId,module);
                     try {
-                        if (UtilValidate.isNotEmpty(subContentId))
+                        if (UtilValidate.isNotEmpty(subContentId)) {
                             csvTrail = ContentWorker.getContentAncestryNodeTrailCsv(delegator, subContentId, contentAssocTypeId, "to");                     
-                        else if (UtilValidate.isNotEmpty(contentId))
+                            if (UtilValidate.isNotEmpty(csvTrail))
+                                csvTrail += ",";
+                            csvTrail += subContentId;
+                        } else if (UtilValidate.isNotEmpty(contentId)) {
                             csvTrail = ContentWorker.getContentAncestryNodeTrailCsv(delegator, contentId, contentAssocTypeId, "to");                     
+                            if (UtilValidate.isNotEmpty(csvTrail))
+                                csvTrail += ",";
+                            csvTrail += contentId;
+                        }
                     } catch (GenericEntityException e) {
                         throw new RuntimeException("Error getting current content. " + e.toString());
                     }

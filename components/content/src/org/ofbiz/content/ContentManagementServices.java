@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.ByteWrapper;
+import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -32,7 +34,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.0
  *
  * 
@@ -305,6 +307,7 @@ public class ContentManagementServices {
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
             if (Debug.infoOn()) Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
+            if (Debug.infoOn()) Debug.logInfo("in persistContentAndAssoc, deactivateExistin:" +  deactivateExisting, null);
             context.put("deactivateExisting", deactivateExisting);
             Map thisResult = null;
             try {
@@ -329,4 +332,104 @@ public class ContentManagementServices {
        context.remove("dataResource");
        return result;
     }
+
+    /**
+    Service for update publish sites with a ContentRole that will tie them to the passed 
+    in party. 
+   */
+  public static Map updateSiteRoles(DispatchContext dctx, Map context) {
+
+      LocalDispatcher dispatcher = dctx.getDispatcher();
+      GenericDelegator delegator = dctx.getDelegator();
+      GenericValue userLogin = (GenericValue)context.get("userLogin");
+      String userLoginPartyId = userLogin.getString("partyId");
+      Map results = new HashMap();
+      Map serviceContext = new HashMap();
+      // siteContentId will equal "ADMIN_MASTER", "AGINC_MASTER", etc.
+      // Remember that this service is called in the "multi" mode,
+      // with a new siteContentId each time.
+      // siteContentId could also have been name deptContentId, since this same
+      // service is used for updating department roles, too.
+      String siteContentId = (String)context.get("contentId");
+      String partyId = (String)context.get("partyId");
+      serviceContext.put("partyId", partyId);
+      serviceContext.put("userLogin", userLogin);
+      serviceContext.put("contentId", siteContentId);
+      //Debug.logInfo("updateSiteRoles, serviceContext(0):" + serviceContext, module);
+      //Debug.logInfo("updateSiteRoles, context(0):" + context, module);
+
+      List siteRoles = null;
+      try {
+      	  siteRoles = delegator.findByAndCache("RoleType", UtilMisc.toMap("parentTypeId", "BLOG"));
+      } catch(GenericEntityException e) {
+          return ServiceUtil.returnError( e.getMessage());
+      }
+      Iterator siteRoleIter = siteRoles.iterator();
+      while (siteRoleIter.hasNext()) {
+      	  GenericValue roleType = (GenericValue)siteRoleIter.next();
+          String siteRole = (String)roleType.get("roleTypeId"); // BLOG_EDITOR, BLOG_ADMIN, etc.
+          String cappedSiteRole = ModelUtil.dbNameToVarName(siteRole);
+          //if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, cappediteRole(1):" + cappedSiteRole, module);
+
+          String siteRoleVal = (String)context.get(cappedSiteRole);
+          Object fromDate = context.get(cappedSiteRole + "FromDate");
+          serviceContext.put("roleTypeId", siteRole);
+          if (siteRoleVal != null && siteRoleVal.equalsIgnoreCase("Y")) {
+                  // for now, will assume that any error is due to duplicates - ignore
+                  //return ServiceUtil.returnError(e.getMessage());
+              if (fromDate == null ) {
+                  try {
+                      serviceContext.put("fromDate", UtilDateTime.nowTimestamp());
+                      if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, serviceContext(1):" + serviceContext, module);
+                      Map permResults = dispatcher.runSync("createContentRole", serviceContext);
+                      addRoleToUser(delegator, dispatcher, serviceContext);
+                  } catch (GenericServiceException e) {
+                      Debug.logError(e, e.getMessage(), module);
+                  } catch (Exception e2) {
+                      Debug.logError(e2, e2.getMessage(), module);
+                  }
+              }
+          } else {
+              if (fromDate != null ) {
+                      // for now, will assume that any error is due to non-existence - ignore
+                      //return ServiceUtil.returnError(e.getMessage());
+                  try {
+Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
+                      //Timestamp thruDate = UtilDateTime.nowTimestamp();
+                      //serviceContext.put("thruDate", thruDate);
+                      //serviceContext.put("fromDate", fromDate);
+                      Map newContext = new HashMap();
+                      newContext.put("contentId", serviceContext.get("contentId"));
+                      newContext.put("partyId", serviceContext.get("partyId"));
+                      newContext.put("roleTypeId", serviceContext.get("roleTypeId"));
+                      newContext.put("userLogin", userLogin);
+                      Map permResults = dispatcher.runSync("deactivateAllContentRoles", newContext);
+                  } catch (GenericServiceException e) {
+                      Debug.logError(e, e.getMessage(), module);
+                  } catch (Exception e2) {
+                      Debug.logError(e2, e2.getMessage(), module);
+                  }
+              }
+          }
+      }
+      return results;
+  }
+
+  public static void addRoleToUser(GenericDelegator delegator, LocalDispatcher dispatcher, Map serviceContext) throws GenericServiceException {
+    String partyId = (String)serviceContext.get("partyId");
+    Map findMap = UtilMisc.toMap("partyId", partyId);
+    try {
+        List userLoginList = delegator.findByAnd("UserLogin", findMap);
+        Iterator iter = userLoginList.iterator();
+        while (iter.hasNext()) {
+            GenericValue partyUserLogin = (GenericValue)iter.next();
+            String partyUserLoginId = partyUserLogin.getString("userLoginId");
+            serviceContext.put("contentId", partyUserLoginId); // author contentId
+            dispatcher.runSync("createContentRole", serviceContext);
+        }
+    } catch(GenericEntityException e) {
+        Debug.logError(e, "No action, except returning, taken.", module);
+    }
+}
+
 }

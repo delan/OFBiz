@@ -25,6 +25,7 @@
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
     <handler name="jasperreportspdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
+    <handler name="service-multi" type="request" class="org.ofbiz.content.webapp.event.ServiceMultiEventHandler"/> 
     
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
@@ -540,12 +541,14 @@
     <request-map uri="LookupContent">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupContent"/>
-        <response name="error" type="view" value="LookupContent"/>
     </request-map>
     <request-map uri="LookupPerson">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupPerson"/>
-        <response name="error" type="view" value="LookupPerson"/>
+    </request-map>
+    <request-map uri="LookupPartyAndUserLoginAndPerson">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupPartyAndUserLoginAndPerson"/>
     </request-map>
 
     <request-map uri="ClipBoardDataResource">
@@ -1169,6 +1172,33 @@
         <response name="success" type="view" value="EditLayout"/>
         <response name="error" type="view" value="EditLayout"/>
     </request-map>
+    <request-map uri="UserPermissions">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="UserPermissions"/>
+    </request-map>
+    <request-map uri="CMSSiteFind">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="CMSSiteFind"/>
+    </request-map>
+    <request-map uri="CMSSiteEdit">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="CMSSiteEdit"/>
+    </request-map>
+    <request-map uri="CMSContentFind">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="CMSContentFind"/>
+    </request-map>
+    <request-map uri="CMSContentEdit">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="CMSContentEdit"/>
+    </request-map>
+   <request-map uri="updateSiteRoles">
+        <security https="false" auth="true"/>
+        <event type="service-multi" invoke="updateSiteRoles"/>
+        <response name="success" type="view" value="UserPermissions"/>
+        <response name="error" type="view" value="UserPermissions"/>
+    </request-map>
+
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.ftl" type="jpublish"/>
@@ -1236,15 +1266,21 @@
     <view-map name="LookupSubContent" page="/layout/LookupSubContent.ftl" type="jpublish"/>
 
     <view-map name="ContentMenu" page="/content/ContentMenu.ftl" type="jpublish"/>
-    <view-map name="ContentSetupMenu" page="/contentsetup/ContentSetupMenu.ftl" type="jpublish"/>
+    <view-map name="ContentSetupMenu" page="/cms/ContentSetupMenu.ftl" type="jpublish"/>
     <view-map name="DataMenu" page="/data/DataMenu.ftl" type="jpublish"/>
     <view-map name="DataSetupMenu" page="/datasetup/DataSetupMenu.ftl" type="jpublish"/>
     <view-map name="LayoutMenu" page="/layout/LayoutMenu.ftl" type="jpublish"/>
     <view-map name="subcontent" page="/subcontent.ftl" type="jpublish"/>
+    <view-map name="UserPermissions" page="/cms/UserPermissions.ftl" type="jpublish"/>
 
     <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurveyQuestions" page="/survey/EditSurveyQuestions.ftl" type="jpublish"/>
+    <view-map name="LookupPartyAndUserLoginAndPerson" page="/content/LookupPartyAndUserLoginAndPerson.ftl" type="jpublish"/>
     <view-map name="SurveyResponse" page="/survey/SurveyResponse.ftl" type="jpublish"/>
+    <view-map name="CMSSiteFind" page="/cms/CMSSiteFind.ftl" type="jpublish"/>
+    <view-map name="CMSSiteEdit" page="/cms/CMSSiteEdit.ftl" type="jpublish"/>
+    <view-map name="CMSContentFind" page="/cms/CMSContentFind.ftl" type="jpublish"/>
+    <view-map name="CMSContentEdit" page="/cms/CMSContentEdit.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>

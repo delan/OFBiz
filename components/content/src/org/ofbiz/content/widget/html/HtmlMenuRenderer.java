@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.13 2004/05/11 17:20:34 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.14 2004/06/02 17:50:11 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -193,6 +193,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         buffer.append("<td " + widthStr + ">");
         MenuTarget target = selectMenuTarget(menuItem, context);
         //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
+            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target,"");
         if (target != null) {
             String titleStyle = menuItem.getTitleStyle();
             String requestName = target.getRequestName();
@@ -201,11 +202,30 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             MenuImage menuImage = target.getMenuImage();
             //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, requestName(0):" + requestName,"");
             //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, menuImage(0):" + menuImage,"");
+            if (isDisableIfEmpty(menuItem, context) ) 
+                    target = null;
+            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(1):" + target,"");
             if (menuImage == null) {
                //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, description(0):" + description,"");
-                List paramList = target.getParamList();
-                WidgetWorker.makeHyperlinkString(buffer, titleStyle, targetType, requestName, description, this.request, this.response, context, paramList);
+                if (target != null) {
+                    List paramList = target.getParamList();
+                    WidgetWorker.makeHyperlinkString(buffer, titleStyle, targetType, requestName, description, this.request, this.response, context, paramList);
+                } else {
+                    buffer.append("<div ");
+                    String disabledStyle = menuItem.getDisabledTitleStyle();
+                    if (UtilValidate.isNotEmpty(disabledStyle)) {
+                        buffer.append(" class=\"");
+                        buffer.append(disabledStyle);
+                        buffer.append("\"");
+                        buffer.append(">");
+                        buffer.append(description);
+                    } else {
+                        buffer.append(">");
+                        buffer.append("</div>");
+                    }
+                }
             } else { // is an image link
+                // Note that target could be null is disabling is required
                 String imgLink = buildImgLink(menuItem, menuImage, context, target);
                 buffer.append(imgLink);
             }
@@ -215,6 +235,24 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             this.appendWhitespace(buffer);
         }
         return;
+    }
+
+    public boolean isDisableIfEmpty(ModelMenuItem menuItem, Map context) {
+
+        boolean disabled = false;
+        String disableIfEmpty = menuItem.getDisableIfEmpty();
+        if (UtilValidate.isNotEmpty(disableIfEmpty)) {
+            List keys = StringUtil.split(disableIfEmpty, "|");
+            Iterator iter = keys.iterator();
+            while (iter.hasNext()) {
+                Object obj = context.get(disableIfEmpty);
+                if (obj == null) {
+                    disabled = true;
+                    break;
+                }
+            }
+        }
+        return disabled;
     }
 
     public MenuTarget selectMenuTarget(ModelMenuItem menuItem, Map context) {
@@ -355,6 +393,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             return false;
     }
 
+
     public boolean permissionCheck(ModelMenuItem menuItem, Map context) {
         // Permission is cached in each menuItem object, but it can change when the user
         // logs in, so when a change in userLogin is dedected, recalc permissions
@@ -475,44 +514,43 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     public String buildImgLink(ModelMenuItem menuItem, MenuImage menuImage, Map context, MenuTarget target ) {
 
-        String imgStr = "<img src=\"";
-/*
-        String contentId = menuItem.getAssociatedContentId(context);
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-        GenericValue webSitePublishPoint = null;
-                //Debug.logInfo("in HtmlMenuRendererImage, contentId:" + contentId,"");
-        try {
-            webSitePublishPoint = ContentManagementWorker.getWebSitePublishPoint(delegator, contentId);
-        } catch(GenericEntityException e) {
-                //Debug.logInfo("in HtmlMenuRendererImage, GEException:" + e.getMessage(),"");
-            throw new RuntimeException(e.getMessage());
-        }
-        String medallionLogoStr = webSitePublishPoint.getString("medallionLogo");
-*/
+        String imgLinkStr = "";
         String requestName = menuImage.getRequestName(context);
-        String targetRequestName = target.getRequestName();
-        if (Debug.infoOn()) Debug.logInfo("in buildImgLink, requestName:" + requestName, module);
-        String targetType = menuImage.getTargetType();
-        List paramList = menuImage.getParamList();
-        StringBuffer buf = new StringBuffer();
-        WidgetWorker.buildHyperlinkUrl(buf, requestName, targetType, this.request, this.response, context, paramList);
-        imgStr += buf.toString();
-                //Debug.logInfo("in HtmlMenuRendererImage, imgStr:" + imgStr,"");
-        String cellWidth = menuItem.getCellWidth();
-        imgStr += "\"";
-        String widthStr = "";
-        if (UtilValidate.isNotEmpty(cellWidth)) 
-            widthStr = " width=\"" + cellWidth + "\" ";
-        
-        imgStr += widthStr;
-        imgStr += " border=\"0\" />";
-        if (Debug.infoOn()) Debug.logInfo("in buildImgLink, imgStr:" + imgStr, module);
-        buf = new StringBuffer();
-        String titleStyle = "";
-        List targetParamList = target.getParamList();
-        WidgetWorker.makeHyperlinkString(buf, titleStyle, targetType, targetRequestName, imgStr, this.request, this.response, context, targetParamList);
-        String imgLinkStr = buf.toString();
-        if (Debug.infoOn()) Debug.logInfo("in buildImgLink, imgLinkStr:" + imgLinkStr, module);
+        if (target == null)
+            requestName = menuImage.getDisabledRequestName(context);
+
+        // Only build link if target is not null or a disabled image is given
+        if (target != null || UtilValidate.isNotEmpty(requestName) ) {
+            String imgStr = "<img src=\"";
+            String targetRequestName = target.getRequestName();
+            if (Debug.infoOn()) Debug.logInfo("in buildImgLink, requestName:" + requestName, module);
+            String targetType = menuImage.getTargetType();
+            List paramList = menuImage.getParamList();
+            StringBuffer buf = new StringBuffer();
+            WidgetWorker.buildHyperlinkUrl(buf, requestName, targetType, this.request, this.response, context, paramList);
+            imgStr += buf.toString();
+                    //Debug.logInfo("in HtmlMenuRendererImage, imgStr:" + imgStr,"");
+            String cellWidth = menuItem.getCellWidth();
+            imgStr += "\"";
+            String widthStr = "";
+            if (UtilValidate.isNotEmpty(cellWidth)) 
+                widthStr = " width=\"" + cellWidth + "\" ";
+            
+            imgStr += widthStr;
+            imgStr += " border=\"0\" />";
+            if (Debug.infoOn()) Debug.logInfo("in buildImgLink, imgStr:" + imgStr, module);
+            buf = new StringBuffer();
+            String titleStyle = "";
+            if (target != null) {
+                List targetParamList = target.getParamList();
+                WidgetWorker.makeHyperlinkString(buf, titleStyle, targetType, targetRequestName, imgStr, this.request, this.response, context, targetParamList);
+            } else {
+                    buf.append(imgStr);
+    
+            }
+            imgLinkStr = buf.toString();
+            if (Debug.infoOn()) Debug.logInfo("in buildImgLink, imgLinkStr:" + imgLinkStr, module);
+        }
         return imgLinkStr;
     }
 

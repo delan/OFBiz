@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenu.java,v 1.6 2004/04/13 04:56:16 byersa Exp $
+ * $Id: ModelMenu.java,v 1.7 2004/06/02 17:50:12 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class ModelMenu {
@@ -79,6 +79,7 @@ public class ModelMenu {
     protected String menuWidth;
     protected String defaultCellWidth;
     protected Boolean defaultHideIfSelected;
+    protected String defaultDisabledTitleStyle;
 
     /** This List will contain one copy of each item for each item name in the order
      * they were encountered in the service, entity, or menu definition; item definitions
@@ -161,6 +162,7 @@ public class ModelMenu {
                 this.orientation = parent.orientation;
                 this.menuWidth = parent.menuWidth;
                 this.defaultCellWidth = parent.defaultCellWidth;
+                this.defaultDisabledTitleStyle = parent.defaultDisabledTitleStyle;
             }
         }
 
@@ -209,6 +211,8 @@ public class ModelMenu {
             else 
                 defaultHideIfSelected = new Boolean(false);
         }
+        if (this.defaultDisabledTitleStyle == null || menuElement.hasAttribute("default-disabled-title-style"))
+            this.defaultDisabledTitleStyle = menuElement.getAttribute("default-disabled-title-style");
 
 
         // read in add item defs, add/override one by one using the menuItemList and menuItemMap
@@ -336,6 +340,13 @@ public class ModelMenu {
      */
     public String getDefaultTitleStyle() {
         return this.defaultTitleStyle;
+    }
+
+    /**
+     * @return
+     */
+    public String getDefaultDisabledTitleStyle() {
+        return this.defaultDisabledTitleStyle;
     }
 
     /**

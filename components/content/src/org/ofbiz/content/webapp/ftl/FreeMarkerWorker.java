@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.24 2004/05/27 04:21:25 jonesde Exp $
+ * $Id: FreeMarkerWorker.java,v 1.25 2004/06/02 17:50:09 byersa Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -70,7 +70,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -673,7 +673,7 @@ public class FreeMarkerWorker {
         return outList;
     }
 
-    public static List csvToTrail(String csv, GenericDelegator delegator) {
+    public static List csvToContentList(String csv, GenericDelegator delegator) {
 
         List trail = new ArrayList();
         if (csv == null)
@@ -692,6 +692,22 @@ public class FreeMarkerWorker {
                 Debug.logError(e.getMessage(), module);
                 return new ArrayList();
             }
+            trail.add(content);
+        }
+        return trail;
+    }
+
+    public static List csvToTrail(String csv, GenericDelegator delegator) {
+
+        ArrayList trail = new ArrayList();
+        if (csv == null)
+            return trail;
+
+        List contentList = csvToContentList(csv, delegator);
+        GenericValue content = null;
+        Iterator it = contentList.iterator();
+        while (it.hasNext()) {
+            content = (GenericValue)it.next();
             Map node = makeNode(content);
             trail.add(node);
         }
@@ -723,9 +739,9 @@ public class FreeMarkerWorker {
         }
 
         //if (Debug.infoOn()) Debug.logInfo("in getCurrentContent, currentContent(3):" + currentContent , module);
-        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, contentId:" + contentId, "");
-        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, subContentId:" + subContentId, "");
-        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, viewContentId:" + viewContentId, "");
+        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, contentId:" + contentId, "");
+        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, subContentId:" + subContentId, "");
+        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, viewContentId:" + viewContentId, "");
         if (UtilValidate.isNotEmpty(subContentId)) {
             ctx.put("subContentId", subContentId);
             ctx.put("contentId", null);
@@ -761,7 +777,7 @@ public class FreeMarkerWorker {
     public static String getMimeTypeId(GenericDelegator delegator, GenericValue view, Map ctx) {
         // This order is taken so that the mimeType can be overridden in the transform arguments.
         String mimeTypeId = (String)ctx.get("mimeTypeId");
-        if (UtilValidate.isEmpty(mimeTypeId)) {
+        if (UtilValidate.isEmpty(mimeTypeId) && view != null) {
             mimeTypeId = (String) view.get("mimeTypeId");
             String parentContentId = (String)ctx.get("contentId");
             if (UtilValidate.isEmpty(mimeTypeId) && UtilValidate.isNotEmpty(parentContentId)) { // will need these below

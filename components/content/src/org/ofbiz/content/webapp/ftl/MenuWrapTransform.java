@@ -1,5 +1,5 @@
 /*
- * $Id: MenuWrapTransform.java,v 1.6 2004/04/30 23:08:26 ajzeneski Exp $
+ * $Id: MenuWrapTransform.java,v 1.7 2004/06/02 17:50:10 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.widget.html.HtmlMenuWrapper;
@@ -53,7 +52,7 @@ import freemarker.template.TransformControl;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.0
  */
 public class MenuWrapTransform implements TemplateTransformModel {

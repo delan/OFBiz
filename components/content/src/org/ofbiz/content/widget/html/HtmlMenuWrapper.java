@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuWrapper.java,v 1.5 2004/04/13 04:56:15 byersa Exp $
+ * $Id: HtmlMenuWrapper.java,v 1.6 2004/06/02 17:50:11 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,8 +26,6 @@ package org.ofbiz.content.widget.html;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.IllegalAccessException;
-import java.lang.InstantiationException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -35,23 +33,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
+import org.ofbiz.entity.GenericValue;
 import org.xml.sax.SAXException;
-import org.ofbiz.entity.*;
 
 
 /**
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class HtmlMenuWrapper {

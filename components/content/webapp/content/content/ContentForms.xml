@@ -399,4 +399,32 @@
         <field name="firstName" title="&amp;nbsp;" widget-style="buttontext"> <display/> </field>
         <field name="lastName" title="&amp;nbsp;" widget-style="buttontext"> <display/> </field>
     </form>
+    <form name="lookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupPerson" title="" type="single">
+        <auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="find" />
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" target="" paginate-target="LookupPartyAndUserLoginAndPerson" title="" type="list">
+        <auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="display"/>
+        <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
+                
+            <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}', '${userLoginId}', '${parameters.webSitePublishPoint}')"/>
+        </field>
+    </form>
+    <form 
+        name="mruLookupPartyAndUserLoginAndPerson" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="mruList" 
+        target="" title="" type="list">
+        <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
+                
+            <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}', '${userLoginId}')"/>
+        </field>
+        <field name="firstName" title="&amp;nbsp;" widget-style="buttontext"> <display/> </field>
+        <field name="lastName" title="&amp;nbsp;" widget-style="buttontext"> <display/> </field>
+    </form>
 </forms>

@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.lang.StringBuffer;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,7 +36,7 @@ import org.ofbiz.security.Security;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      3.0
  *
  * 
@@ -339,6 +341,7 @@ public class ContentManagementWorker {
 
     /**
      Returns a list of WebSitePublishPoint entities that are children of parentPubPt
+     The name should be "getAllTopLevelPublishPoints" or "getAllChildPublishPoints"
 
      @param parentPubPt The parent publish point.
      */
@@ -712,4 +715,33 @@ public class ContentManagementWorker {
         return allDepartmentPoints;
     }
 
+    public static String getUserName(HttpServletRequest request, String userLoginId) throws GenericEntityException {
+
+        String userName = null;
+        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        GenericValue userLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+        GenericValue person = userLogin.getRelatedOneCache("Person");
+        userName = person.getString("firstName") + " " + person.getString("lastName");
+        return userName;
+    }
+
+    public static String stripViewParamsFromQueryString(String queryString) {
+        String retStr = null;
+        if (UtilValidate.isNotEmpty(queryString)) {
+            StringTokenizer queryTokens = new StringTokenizer(queryString, "&");
+            StringBuffer cleanQuery = new StringBuffer();
+            while (queryTokens.hasMoreTokens()) {
+                String token =  queryTokens.nextToken();
+                if ((token.indexOf("VIEW_INDEX") == -1) && (token.indexOf("VIEW_SIZE")==-1)
+                    && (token.indexOf("viewIndex") == -1) && (token.indexOf("viewSize")==-1)) {
+                    cleanQuery.append(token);
+                    if(queryTokens.hasMoreTokens()){
+                        cleanQuery.append("&");
+                    }
+                }
+            }
+            retStr = cleanQuery.toString();
+        }
+        return retStr;
+    }
 }
