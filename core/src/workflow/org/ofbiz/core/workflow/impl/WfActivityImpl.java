@@ -85,6 +85,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (performer != null)
             createAssignments(performer);
 
+        // set the service loader the same as the parent
+        this.setServiceLoader(container().getRuntimeObject().getString("serviceLoaderName"));
+
+        // set the activity context
+        this.setProcessContext(container().contextKey());
+
         boolean limitAfterStart =
                 valueObject.getBoolean("limitAfterStart").booleanValue();
         if (limitAfterStart && valueObject.get("limitService") != null &&
@@ -202,26 +208,25 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws AlreadyRunning
      */
     public void activate() throws WfException, CannotStart, AlreadyRunning {
+        // make sure we aren't already running
         if (this.state().equals("open.running"))
             throw new AlreadyRunning();
 
-        // test the activity mode
+        // check the start mode
         String mode = getDefinitionObject().getString("startModeEnumId");
         if (mode == null)
-            throw new CannotStart("Start mode cannot be null");
+            throw new WfException("Start mode cannot be null");
+
         if (mode.equals("WAM_AUTOMATIC")) {
-            // set the status of the assignments
             Iterator i = getIteratorAssignment();
             while (i.hasNext())
-                ((WfAssignment) i.next()).changeStatus("CAL_ACCEPTED");
+                ((WfAssignment) i.next()).changeStatus("CAL_ACCEPTED");  // accept all assignments (AUTO)
             startActivity();
-        }
-
-        // check the assignment status
-        else if (howManyAssignment() > 0 && checkAssignStatus(1)) {
+        } else if (howManyAssignment() > 0 && checkAssignStatus(1)) {
             startActivity();
+        } else {
+            throw new CannotStart();
         }
-
     }
 
     /**

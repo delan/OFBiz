@@ -237,10 +237,16 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     /**
      * Abort the execution of this process or activity.
      * @throws WfException General workflow exception.
-     * @throws CannotStop The execution cannot be sopped.
+     * @throws CannotStop The execution cannot be stopped.
      * @throws NotRunning The process or activity is not yet running.
      */
     public void abort() throws WfException, CannotStop, NotRunning {
+        String stateStr = "closed.aborted";
+        if (!state().equals("open.running"))
+            throw new NotRunning();
+        if (!validStates().contains(stateStr))
+            throw new CannotStop();
+        changeState(stateStr);
     }
 
     /**
@@ -358,6 +364,12 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws NotRunning
      */
     public void terminate() throws WfException, CannotStop, NotRunning {
+        String stateStr = "closed.terminated";
+        if (!state().equals("open.running"))
+            throw new NotRunning();
+        if (!validStates().contains(stateStr))
+            throw new CannotStop();
+        changeState(stateStr);
     }
 
     /**

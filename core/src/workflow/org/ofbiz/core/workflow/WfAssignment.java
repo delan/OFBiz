@@ -27,7 +27,6 @@ package org.ofbiz.core.workflow;
 
 /**
  * WfAssignment - Workflow Assignment Interface
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    October 29, 2001

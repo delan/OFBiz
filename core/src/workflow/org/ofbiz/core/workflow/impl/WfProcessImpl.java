@@ -79,7 +79,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @throws CannotChangeRequester Requestor cannot be changed.
      */
     public void setRequester(WfRequester newValue) throws WfException, CannotChangeRequester {
-
+        if (requester != null)
+            throw new CannotChangeRequester();
         requester = newValue;
     }
 
@@ -102,7 +103,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @throws AlreadyRunning Process is already running.
      */
     public void start() throws WfException, CannotStart, AlreadyRunning {
-        if (workflowStateType().equals("open.running"))
+        if (state().equals("open.running"))
             throw new AlreadyRunning("Process is already running");
 
         if (getDefinitionObject().get("defaultStartActivityId") == null)
@@ -110,7 +111,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 
         changeState("open.running");
 
-        // start the first activity (using the defaultStartActivityId of this definition)
+        // start the first activity (using the defaultStartActivityId)
         GenericValue start = null;
         try {
             start = getDefinitionObject().getRelatedOne("DefaultStartWorkflowActivity");
@@ -322,14 +323,12 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Activates an activity object
     private void startActivity(GenericValue value) throws WfException {
         WfActivity activity = WfFactory.getWfActivity(value, workEffortId);
-        activity.setServiceLoader(getServiceLoader());
-        activity.setProcessContext(contextKey());
         try {
             activity.activate();
         } catch (AlreadyRunning e) {
-            throw new WfException(e.getMessage(), e);
+            throw new WfException("Activity already running", e);
         } catch (CannotStart e) {
-            throw new WfException(e.getMessage(), e);
+            Debug.logInfo("[WfProcess.startActivity] : Cannot start activity. Waiting for manual start");
         }
     }
 
