@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
@@ -93,7 +93,7 @@ function setStore(disable) {
               <select class="selectBox" name="productStoreId"<#if sessionAttributes.orderMode?exists> disabled</#if>>
                 <#assign currentStore = shoppingCart.getProductStoreId()?default("NA")>
                 <#list productStores as productStore>
-                  <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> checked</#if>>${productStore.storeName}</option>
+                  <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> selected</#if>>${productStore.storeName}</option>
                 </#list>
               </select>
               <#if !sessionAttributes.orderMode?exists>*<font color='red'>required</font><#else>(cannot be changed without clearing order.)</#if>
