@@ -1,0 +1,127 @@
+/*
+ * $Id$
+ *
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.core.service.jms;
+
+import java.util.*;
+import javax.jms.*;
+
+import org.ofbiz.core.serialize.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
+
+/**
+ * AbstractJmsListener
+ *
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @created    Jul 16, 2002
+ * @version    1.0
+ */
+public abstract class AbstractJmsListener implements GenericMessageListener, ExceptionListener {
+
+    public static final String module = AbstractJmsListener.class.getName();
+
+    protected LocalDispatcher dispatcher;
+    protected boolean isConnected = false;
+
+    public AbstractJmsListener(ServiceDispatcher dispatcher) {
+        DispatchContext dctx = new DispatchContext("JMSDispatcher", null, this.getClass().getClassLoader(), null);
+        this.dispatcher = new LocalDispatcher(dctx, dispatcher);
+    }
+
+    protected Map runService(MapMessage message) {
+        Map context = null;
+        String serviceName = null;
+        String xmlContext = null;
+        try {
+            serviceName = message.getString("serviceName");
+            xmlContext = message.getString("serviceContext");
+            if (serviceName == null || xmlContext == null) {
+                Debug.logError("Message received is not an OFB service message. Ignored!", module);
+                return null;
+            }
+
+            Object o = XmlSerializer.deserialize(xmlContext, dispatcher.getDelegator());
+            if (Debug.verboseOn()) Debug.logVerbose("De-Serialized Context --> " + o, module);
+            if (ObjectType.instanceOf(o, "java.util.Map"))
+                context = (Map) o;
+        } catch (JMSException je) {
+            Debug.logError(je, "Problems reading message.", module);
+        } catch (Exception e) {
+            Debug.logError(e, "Problems deserializing the service context.", module);
+        }
+
+        if (Debug.verboseOn()) Debug.logVerbose("Running service: " + serviceName, module);
+        Map result = null;
+        if (context != null) {
+            try {
+                result = dispatcher.runSync(serviceName, context);
+            } catch (GenericServiceException gse) {
+                Debug.logError(gse, "Problems with service invocation.", module);
+            }
+        }
+        return result;
+    }
+
+    public void onMessage(Message message) {
+        MapMessage mapMessage = null;
+        if (Debug.infoOn()) Debug.logInfo("JMS Message Received --> " + message, module);
+        if (message instanceof MapMessage) {
+            mapMessage = (MapMessage) message;
+        } else {
+            Debug.logError("Received message is not a MapMessage!");
+            return;
+        }
+        runService(mapMessage);
+    }
+
+    public void onException(JMSException je) {
+        this.setConnected(false);
+        Debug.logError(je, "JMS connection exception", module);
+        while (!isConnected()) {
+            try {
+                this.refresh();
+            } catch (GenericServiceException e) {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ie) { }
+                continue;
+            }
+        }
+    }
+
+    public void refresh() throws GenericServiceException {
+        this.close();
+        this.load();
+    }
+
+    public boolean isConnected() {
+        return this.isConnected;
+    }
+
+    protected void setConnected(boolean connected) {
+        this.isConnected = connected;
+    }
+
+}

@@ -55,7 +55,7 @@ public class ServiceDispatcher {
     protected Security security;
     protected Map localContext;
     protected JobManager jm;
-    protected JMSListenerFactory jlf;
+    protected JmsListenerFactory jlf;
 
     public ServiceDispatcher(GenericDelegator delegator) {
         Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
@@ -70,7 +70,7 @@ public class ServiceDispatcher {
                 Debug.logError(e, "[ServiceDispatcher.init] : No instance of security imeplemtation found.", module);
             }
             this.jm = new JobManager(this, this.delegator);
-            this.jlf = new JMSListenerFactory(this);
+            this.jlf = new JmsListenerFactory(this);
         }
     }
 
@@ -409,10 +409,10 @@ public class ServiceDispatcher {
     }
 
     /**
-     * Gets the JMSListenerFactory which holds the message listeners.
-     * @return JMSListenerFactory
+     * Gets the JmsListenerFactory which holds the message listeners.
+     * @return JmsListenerFactory
      */
-    public JMSListenerFactory getJMSListenerFactory() {
+    public JmsListenerFactory getJMSListenerFactory() {
         return this.jlf;
     }
 

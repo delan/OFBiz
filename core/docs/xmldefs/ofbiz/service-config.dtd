@@ -73,16 +73,19 @@
     location CDATA #REQUIRED
 >
 
-<!ELEMENT jms-service EMPTY>
+<!ELEMENT jms-service (server+)>
 <!ATTLIST jms-service
     name CDATA #REQUIRED
-    broker CDATA #REQUIRED
+    send-mode (none|all|first-available|random|round-robin|least-load) "none"
+>
+<!ELEMENT server EMPTY>
+<!ATTLIST server
+    jndi-server-name CDATA #REQUIRED
+    jndi-name CDATA #REQUIRED
+    topic-queue CDATA #REQUIRED
+    type (topic|queue) #REQUIRED
     username CDATA #IMPLIED
     password CDATA #IMPLIED
-    type (topic|queue) #REQUIRED
-    topic-queue CDATA #REQUIRED
-    jndi-name CDATA #REQUIRED
-    publisher-enabled (true|false) "false"
-    listener-enabled (true|false) "false"
+    listen (true|false) "false"
     listener-class CDATA #IMPLIED
 >

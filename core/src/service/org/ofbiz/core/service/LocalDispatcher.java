@@ -227,10 +227,10 @@ public class LocalDispatcher {
     }
 
     /**
-     * Gets the JMSListenerFactory which holds the message listeners.
-     * @return JMSListenerFactory
+     * Gets the JmsListenerFactory which holds the message listeners.
+     * @return JmsListenerFactory
      */
-    public JMSListenerFactory getJMSListeneFactory() {
+    public JmsListenerFactory getJMSListeneFactory() {
         return dispatcher.getJMSListenerFactory();
     }
 
