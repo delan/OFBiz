@@ -351,6 +351,9 @@
   <RoleType description="" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_DELEGATE"/>
   <RoleType description="" hasTable="N" parentTypeId="" roleTypeId="WORKFLOW_ROLE"/>
   <RoleType description="" hasTable="N" parentTypeId="WORKFLOW_ROLE" roleTypeId="WF_OWNER"/>
+  <ServerHitType description="Request" hitTypeId="REQUEST"/>
+  <ServerHitType description="Event" hitTypeId="EVENT"/>
+  <ServerHitType description="View" hitTypeId="VIEW"/>
   <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
   <ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
   <ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
