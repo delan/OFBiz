@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.2
  -->
 <simple-methods>
@@ -261,7 +261,7 @@
                         <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="itemFilterMap"/>
                         <filter-list-by-and to-list-name="perItemResList" map-name="itemFilterMap" list-name="orderReadyToPickInfo.orderItemInventoryResList"/>
                         <iterate entry-name="orderItemInventoryRes" list-name="perItemResList">
-                            <field-to-env field-name="inventoryItemId" map-name="orderItemInventoryRes" env-name="inventoryItemId"/>
+                            <field-to-env field-name="inventoryItemId" map-name="orderItemInventoryRes"/>
                             <!-- update reserved quantity per inventoryItem, keep track of orderItems this came from -->
                             <field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
                             <if-empty field-name="inventoryItem">
@@ -499,7 +499,7 @@
                 
                 <!-- get facilityLocationTo: a little more tricky, find the first FLT_PICKLOC  -->
                 <env-to-field env-name="productId" map-name="findProductFacilityLocationViewMap"/>
-                <field-to-field field-name="facilitytId" map-name="parameters" to-map-name="findProductFacilityLocationViewMap"/>
+                <field-to-field field-name="facilityId" map-name="parameters" to-map-name="findProductFacilityLocationViewMap"/>
                 <string-to-field string="FLT_PICKLOC" field-name="locationTypeEnumId" map-name="findProductFacilityLocationViewMap"/>
                 <find-by-and entity-name="ProductFacilityLocationView" map-name="findProductFacilityLocationViewMap" list-name="productFacilityLocationViewList"/>
 
@@ -520,7 +520,10 @@
                     </iterate>
 
                     <!-- if moveInfo.totalQuantity is greater than the total quantity in the given location, show an error and do something (hopefully) intelligent -->
-                    <get-related value-name="productFacilityLocation" relation-name="InventoryItem" list-name="inventoryItemList"/>
+                    <env-to-field env-name="productId" map-name="findInventoryItemMap"/>
+                    <env-to-field env-name="locationSeqId" map-name="findInventoryItemMap"/>
+                    <field-to-field field-name="facilityId" map-name="parameters" to-map-name="findInventoryItemMap"/>
+                    <find-by-and entity-name="InventoryItem" map-name="findInventoryItemMap" list-name="inventoryItemList"/>
                     <calculate field-name="totalQuantityOnHand" type="Double"><number value="0"/></calculate>
                     <iterate entry-name="inventoryItem" list-name="inventoryItemList">
                         <calculate field-name="totalQuantityOnHand" type="Double">
@@ -575,7 +578,7 @@
                             </if-compare-field>
 
                             <!-- add it to the stockMoveHandled Map to keep track of minimumStock based transfers already done so they are not duplicated below -->
-                            <string-to-field string="Y" field="stockMoveHandled.${targetProductFacilityLocation.locationSeqId}"/>
+                            <string-to-field string="Y" field-name="stockMoveHandled.${targetProductFacilityLocation.locationSeqId}"/>
                         </if-compare-field>
                     </else>
                     </if-compare-field>
@@ -638,7 +641,7 @@
                             
                             <!-- create a moveInfo for each from location with a corresponding quantity -->
                             <field-to-field field-name="productId" map-name="productFacilityLocationQuantityTest" to-map-name="findProductFacilityLocationViewMap"/>
-                            <field-to-field field-name="facilitytId" map-name="productFacilityLocationQuantityTest" to-map-name="findProductFacilityLocationViewMap"/>
+                            <field-to-field field-name="facilityId" map-name="productFacilityLocationQuantityTest" to-map-name="findProductFacilityLocationViewMap"/>
                             <string-to-field string="FLT_BULK" field-name="locationTypeEnumId" map-name="findProductFacilityLocationViewMap"/>
                             <find-by-and entity-name="ProductFacilityLocationView" map-name="findProductFacilityLocationViewMap" list-name="productFacilityLocationViewList"/>
 
@@ -761,11 +764,11 @@
                         <!-- now that targetInventoryItem is populated with quantities, etc, call createInventoryItem service -->
                         <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
                         <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
-                            <result-to-result result-name="inventoryItemId" service-result-name="targetInventoryItemId"/>
+                            <!-- for now do nothing with the new inventoryItemId <result-to-result result-name="inventoryItemId" service-result-name="targetInventoryItemId"/> -->
                         </call-service>
 
                         <!-- also need to store the origin inventoryItem, so do that now and do it through a service since there is one -->
-                        <set-service-fields map-name="inventoryItemId" service-name="updateInventoryItem" to-map-name="updateInventoryItemMap"/>
+                        <set-service-fields map-name="inventoryItem" service-name="updateInventoryItem" to-map-name="updateInventoryItemMap"/>
                         <call-service service-name="updateInventoryItem" in-map-name="updateInventoryItemMap"/>
                     </if-compare>
                 </if-compare>
@@ -785,7 +788,8 @@
         <field-to-field field-name="locationSeqId" map-name="parameters" to-map-name="findOiirailMap"/>
         <string-to-list string="reservedDatetime" list-name="orderItemInventoryResAndItemLocationOrderByList"/>
         <find-by-and entity-name="OrderItemInventoryResAndItemLocation" map-name="findOiirailMap" order-by-list-name="orderItemInventoryResAndItemLocationOrderByList" list-name="orderItemInventoryResAndItemLocationList"/>
-        
+
+        <clear-field field-name="oiirailByInvItemMap"/>
         <iterate entry-name="orderItemInventoryResAndItemLocation" list-name="orderItemInventoryResAndItemLocationList">
             <field-to-list field-name="orderItemInventoryResAndItemLocation" list-name="oiirailByInvItemMap.${orderItemInventoryResAndItemLocation.inventoryItemId}"/>
         </iterate>
@@ -796,9 +800,8 @@
         
             <!-- if this is a serialized InventoryItem, then just update the location -->
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="SERIALIZED_INV_ITEM">
-                <field-to-field field-name="locationSeqId" map-name="productFacilityLocationView" to-map-name="inventoryItem"/>
+                <field-to-field field-name="targetLocationSeqId" map-name="parameters" to-field-name="locationSeqId" to-map-name="inventoryItem"/>
                 <store-value value-name="inventoryItem"/>
-                <field-to-result field-name="inventoryItemId" map-name="inventoryItem" result-name="targetInventoryItemId"/>
             </if-compare>
 
             <!-- 
@@ -808,18 +811,28 @@
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM">
                 <!-- create a new InventoryItem for the targetInventoryItem -->
                 <make-value entity-name="InventoryItem" map-name="inventoryItem" value-name="targetInventoryItem"/>
-                <field-to-field field-name="locationSeqId" map-name="productFacilityLocationView" to-map-name="targetInventoryItem"/>
+                <field-to-field field-name="targetLocationSeqId" map-name="parameters" to-field-name="locationSeqId" to-map-name="targetInventoryItem"/>
                 <calculate field-name="targetInventoryItem.availableToPromise" type="Double"><number value="0"/></calculate>
                 <calculate field-name="targetInventoryItem.quantityOnHand" type="Double"><number value="0"/></calculate>
 
-                <!-- 
+                <!-- now that targetInventoryItem is populated with initial quantities, etc, call createInventoryItem service -->
+                <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
+                <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
+                    <result-to-field result-name="inventoryItemId" map-name="targetInventoryItem"/>
+                </call-service>
+                <!-- refresh the value object now that the create has been done -->
+                <refresh-value value-name="targetInventoryItem"/>
+                
+                <!--
                     go through OrderItemInventoryRes and move each one over, starting with the older making 
                     sure to stay within quantityOnHand
                 -->
                 <iterate entry-name="orderItemInventoryResAndItemLocation" list-name="orderItemInventoryResAndItemLocationList">
                     <!-- see if there is enough physically moved over to move this reservation -->
                     <if-compare-field field-name="quantityLeftToProcess" operator="greater" to-field-name="orderItemInventoryResAndItemLocation.quantity" type="Double">
-                        <get-related-one value-name="orderItemInventoryResAndItemLocationList" relation-name="OrderItemInventoryRes" to-value-name="orderItemInventoryRes"/>
+                        <get-related-one value-name="orderItemInventoryResAndItemLocation" relation-name="OrderItemInventoryRes" to-value-name="orderItemInventoryRes"/>
+                        <log level="info" message="orderItemInventoryResAndItemLocation is ${orderItemInventoryResAndItemLocation}"/>
+                        <log level="info" message="orderItemInventoryRes is ${orderItemInventoryRes}"/>
 
                         <!-- if there aren't enough to move, put this on a list for insufficient quantities and handle later -->
                         <if-compare-field field-name="orderItemInventoryRes.quantity" operator="greater" to-field-name="inventoryItem.quantityOnHand">
@@ -867,14 +880,12 @@
                     </if-compare-field>
                 </iterate>
 
-                <!-- now that targetInventoryItem is populated with quantities, etc, call createInventoryItem service -->
-                <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
-                <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
-                    <result-to-result result-name="inventoryItemId" service-result-name="targetInventoryItemId"/>
-                </call-service>
-
+                <!-- since we have changed the quantities on the new target inventory item (hopefully), store, it now... -->
+                <set-service-fields map-name="targetInventoryItem" service-name="updateInventoryItem" to-map-name="updateTargetInventoryItemMap"/>
+                <call-service service-name="updateInventoryItem" in-map-name="updateTargetInventoryItemMap"/>
+                
                 <!-- also need to store the origin inventoryItem, so do that now and do it through a service since there is one -->
-                <set-service-fields map-name="inventoryItemId" service-name="updateInventoryItem" to-map-name="updateInventoryItemMap"/>
+                <set-service-fields map-name="inventoryItem" service-name="updateInventoryItem" to-map-name="updateInventoryItemMap"/>
                 <call-service service-name="updateInventoryItem" in-map-name="updateInventoryItemMap"/>
 
                 <!-- TODO: something with the insufficientQuantityOiirList, add to warningMessageList -->
