@@ -109,7 +109,7 @@
     
     <request-map uri="calcShipping">
       <security https="true" auth="true"/>
-      <event type="java" path="org.ofbiz.ecommerce.checkout.ShippingEvents" invoke="calcShipping"/>
+      <event type="java" path="org.ofbiz.ecommerce.checkout.ShippingEvents" invoke="getShipEstimate"/>
       <response name="success" type="view" value="checkout"/>
       <response name="error" type="view" value="checkoutoptions"/>
     </request-map>
