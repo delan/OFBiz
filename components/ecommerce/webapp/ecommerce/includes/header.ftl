@@ -1,27 +1,27 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -41,7 +41,7 @@
     </#if>
     <#-- Append CSS for tracking codes -->
     <#if sessionAttributes.overrideCss?exists>
-	<link rel="stylesheet" href="${sessionAttributes.overrideCss}" type="text/css">
+        <link rel="stylesheet" href="${sessionAttributes.overrideCss}" type="text/css">
     </#if>
     <#-- Meta tags if defined by the page action -->
     <#if metaDescription?exists>
@@ -49,7 +49,7 @@
     </#if>
     <#if metaKeywords?exists>
     <meta name="keywords" content="${metaKeywords}">
-    </#if>    
+    </#if>
 </head>
 <body>
 
@@ -62,9 +62,9 @@
             <TD align="center" width="100%"><div class="head2">There is no ProductStore for this WebSite; Check Settings.</div></td>
           </#if>
           <#if sessionAttributes.overrideLogo?exists>
-            <TD align=left width="1%"><IMG src="${sessionAttributes.overrideLogo}"></TD> 
+            <TD align=left width="1%"><IMG src="${sessionAttributes.overrideLogo}"></TD>
           <#elseif catalogHeaderLogo?exists>
-            <TD align=left width="1%"><IMG src="${catalogHeaderLogo}"></TD> 
+            <TD align=left width="1%"><IMG src="${catalogHeaderLogo}"></TD>
           <#elseif (productStore.headerLogo)?has_content>
             <td align=left width="1%"><IMG src="<@ofbizContentUrl>${productStore.headerLogo}</@ofbizContentUrl>"></TD>
           </#if>
@@ -74,16 +74,6 @@
           </td>
           <td align=right width="1%" nowrap <#if (productStore.headerRightBackground)?has_content>background="<@ofbizContentUrl>${productStore.headerRightBackground}</@ofbizContentUrl>"</#if> >
             ${pages.get("/cart/microcart.ftl")}
-            <form method="POST" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
-            <select name="locale" class="selectBox">
-                <option value="${requestAttributes.locale.toString()}">${requestAttributes.locale.getDisplayName()}</option>
-                <option value="${requestAttributes.locale.toString()}">----</option>
-                <#list requestAttributes.availableLocales as availableLocale>
-                    <option value="${availableLocale.toString()}">${availableLocale.getDisplayName()}</option>
-                </#list>
-            </select>
-            <input type="submit" value="Set" class="smallSubmit"/>
-            </form>
           </td>
         </tr>
       </table>
