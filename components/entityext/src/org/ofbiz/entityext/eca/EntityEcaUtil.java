@@ -1,5 +1,5 @@
 /*
- * $Id: EntityEcaUtil.java,v 1.1 2003/08/17 06:44:25 jonesde Exp $
+ * $Id: EntityEcaUtil.java,v 1.2 2003/08/17 08:18:38 jonesde Exp $
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
@@ -44,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class EntityEcaUtil {
@@ -89,6 +90,14 @@ public class EntityEcaUtil {
             Element eecaResourceElement = (Element) eecaResourceIter.next();
             ResourceHandler handler = new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, eecaResourceElement);
             addEcaDefinitions(handler, ecaCache);
+        }
+
+        // get all of the component resource eca stuff, ie specified in each ofbiz-component.xml file
+        List componentResourceInfos = ComponentConfig.getAllEntityResourceInfos("eca");
+        Iterator componentResourceInfoIter = componentResourceInfos.iterator();
+        while (componentResourceInfoIter.hasNext()) {
+            ComponentConfig.EntityResourceInfo componentResourceInfo = (ComponentConfig.EntityResourceInfo) componentResourceInfoIter.next();
+            addEcaDefinitions(componentResourceInfo.createResourceHandler(), ecaCache);
         }
     }
 
