@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/09/28 21:57:53  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.9  2001/09/25 23:05:22  jonesde
  * Added cross sell, up sell, and obsolete product association support.
  *
@@ -39,13 +42,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.text.*;
 
 import org.ofbiz.ecommerce.shoppingcart.ShoppingCart;
 import org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem;
@@ -260,7 +258,8 @@ public class ShoppingCartEvents {
         try {
           String indexStr = o.substring(underscorePos+1);
           int index = Integer.parseInt(indexStr);
-          int quantity = Integer.parseInt((String) paramMap.get(o));
+          String quantString = (String) paramMap.get(o);
+          int quantity = NumberFormat.getNumberInstance().parse(quantString).intValue();
           Debug.log("Got index: " + index + "  AND  quantity: " + quantity);
           
           if ( o.toUpperCase().startsWith("UPDATE") ) {
@@ -281,6 +280,12 @@ public class ShoppingCartEvents {
         }
         catch ( NumberFormatException nfe ) {
           Debug.log(nfe,"Caught number format exception.");
+        }
+        catch ( ParseException pe ) {
+          Debug.log(pe,"Caught parse exception.");
+        }
+        catch ( Exception e ) {
+          Debug.log(e,"Caught exception.");
         }
       }//else not a parameter we need
     }
