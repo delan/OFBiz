@@ -49,6 +49,7 @@
 
     <!-- Service-Group definition files -->
     <service-groups loader="mainfile" location="groups_test.xml"/> 
+    <service-groups loader="mainfile" location="groups_accounting.xml"/>   
     <service-groups loader="mainfile" location="groups_common.xml"/>   
     <service-groups loader="mainfile" location="groups_shipment.xml"/>
     
