@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlScreenRenderer.java,v 1.6 2004/08/14 07:35:13 jonesde Exp $
+ * $Id: HtmlScreenRenderer.java,v 1.7 2004/08/16 19:37:58 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.entity.GenericValue;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.1
  */
 public class HtmlScreenRenderer implements ScreenStringRenderer {
@@ -282,7 +282,9 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             GenericDelegator delegator = (GenericDelegator) context.get("delegator");
                 Debug.logInfo("expandedContentId:" + expandedContentId, module);
             try {
-                renderedContent = ContentWorker.renderContentAsTextCache(delegator, expandedContentId, map, null, locale, mimeTypeId);
+            	if (UtilValidate.isNotEmpty(expandedContentId)) {
+                    renderedContent = ContentWorker.renderContentAsTextCache(delegator, expandedContentId, map, null, locale, mimeTypeId);
+            	}
                 if (UtilValidate.isEmpty(renderedContent)) {
                     String editRequest = (String)context.get("directEditRequest");
                     if (UtilValidate.isNotEmpty(editRequest)) {
@@ -305,7 +307,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
     public void renderContentEnd(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
 
-                Debug.logInfo("renderContentEnd, context:" + context, module);
+                //Debug.logInfo("renderContentEnd, context:" + context, module);
         String editRequest = (String)context.get("directEditRequest");
         String editRequestWithParams = editRequest + "?contentId=${currentValue.contentId}&drDataResourceId=${currentValue.drDataResourceId}&directEditRequest=${directEditRequest}&indirectEditRequest=${indirectEditRequest}&caContentIdTo=${currentValue.caContentIdTo}&caFromDate=${currentValue.caFromDate}&caContentAssocTypeId=${currentValue.caContentAssocTypeId}";
         FlexibleStringExpander editRequestExdr = new FlexibleStringExpander(editRequestWithParams);
