@@ -1,5 +1,6 @@
 
 <%@ include file="/includes/envsetup.jsp" %>
+<%@ taglib uri='ofbizTags' prefix='ofbiz' %>
 <%@ taglib uri='regions' prefix='region' %>
 
 <html>

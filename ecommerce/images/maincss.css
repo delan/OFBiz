@@ -1,6 +1,6 @@
 
 BODY {
-background-color: white;
+background-color: #FFFFFF;
 margin-top: 10px;
 margin-right: 10px;
 margin-bottom: 10px;
@@ -383,6 +383,7 @@ color: red;
 }
 
 HR.sepbar {
+font-size: xx-small;
 width: 100%;
 height: 1px;
 background-color: #999999;
