@@ -269,19 +269,22 @@ public class ProductPromoWorker {
                 // if null, then it's not in the cart
                 compare = 1;
             } else {
-                if (candidateProductId.equals(cartItem.getProductId())) {
+                // Debug.logInfo("Testing to see if productId \"" + candidateProductId + "\" is in the cart", module);
+                List productCartItems = cart.findAllCartItems(candidateProductId);
+
+                // don't count promotion items in this count...
+                Iterator pciIter = productCartItems.iterator();
+                while (pciIter.hasNext()) {
+                    ShoppingCartItem productCartItem = (ShoppingCartItem) pciIter.next();
+                    if (productCartItem.getIsPromo()) pciIter.remove();
+                }
+
+                if (productCartItems.size() > 0) {
+                    //Debug.logError("Item with productId \"" + candidateProductId + "\" IS in the cart", module);
                     compare = 0;
                 } else {
-                    // Debug.logInfo("Testing to see if productId \"" + candidateProductId + "\" is in the cart", module);
-                    List productCartItems = cart.findAllCartItems(candidateProductId);
-
-                    if (productCartItems.size() > 0) {
-                        // Debug.logInfo("Item with productId \"" + candidateProductId + "\" IS in the cart", module);
-                        compare = 0;
-                    } else {
-                        // Debug.logInfo("Item with productId \"" + candidateProductId + "\" IS NOT in the cart", module);
-                        compare = 1;
-                    }
+                    //Debug.logError("Item with productId \"" + candidateProductId + "\" IS NOT in the cart", module);
+                    compare = 1;
                 }
             }
         } else if ("PPIP_CATEGORY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
