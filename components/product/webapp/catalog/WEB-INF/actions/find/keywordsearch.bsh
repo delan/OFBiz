@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
  */
 
@@ -36,10 +36,9 @@ delegator = request.getAttribute("delegator");
 requestParams = UtilHttp.getParameterMap(request);
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
 ProductSearchSession.processSearchParameters(requestParams, session);
-//boolean hadVerbose = Debug.verboseOn();
 //Debug.set(Debug.VERBOSE, true);
 Map result = ProductSearchSession.getProductSearchResult(session, delegator, prodCatalogId);
-//Debug.set(Debug.VERBOSE, hadVerbose);
+//Debug.set(Debug.VERBOSE, false);
 
 applicationTypes = delegator.findAll("ProductFeatureApplType", UtilMisc.toList("discription"));
 productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));

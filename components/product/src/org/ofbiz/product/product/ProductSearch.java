@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.25 2004/02/05 09:45:26 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.26 2004/02/07 09:39:14 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -263,6 +263,8 @@ public class ProductSearch {
                     //don't add an alias for this, will be part of a complex alias: dynamicViewEntity.addAlias(entityAlias, prefix + "RelevancyWeight", "relevancyWeight", null, null, null, null);
                     relevancyComplexAlias.addComplexAliasMember(new ComplexAliasField(entityAlias, "relevancyWeight"));
                 }
+
+                productIdGroupBy = true;
 
                 if (!doingBothAndOr) {
                     dynamicViewEntity.addAlias(null, "totalRelevancy", null, null, null, null, null, relevancyComplexAlias);
