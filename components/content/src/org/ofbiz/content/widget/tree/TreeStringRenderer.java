@@ -39,7 +39,7 @@ import org.ofbiz.content.widget.screen.ScreenStringRenderer;
  */
 public interface TreeStringRenderer {
 
-    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast, List subNodeValues) throws IOException;
+    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException;
     public void renderNodeEnd(Writer writer, Map context, ModelTree.ModelNode node) throws IOException;
     public void renderLabel(Writer writer, Map context, ModelTree.ModelNode.Label label) throws IOException;
     public void renderLink(Writer writer, Map context, ModelTree.ModelNode.Link link) throws IOException;

@@ -89,6 +89,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute type="xs:string" name="entry-name" />
     </xs:attributeGroup>
     <xs:element name="sub-node">
         <xs:complexType>
@@ -245,6 +246,7 @@
     </xs:element>
     <xs:attributeGroup name="attlist.entity-and">
         <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" />
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -318,6 +320,7 @@
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="delegator-name"/>
+        <xs:attribute type="xs:string" name="list-name" />
         <xs:attribute name="result-set-type" default="scroll">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
