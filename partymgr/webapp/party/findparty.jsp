@@ -191,32 +191,34 @@
           <td colspan='6'><hr class='sepbar'></td>
         </tr>
         <ofbiz:if name="parties">
+            <% String rowClass = "viewManyTR2"; %>
             <ofbiz:iterator name="partyMap" property="parties" expandMap="true" type="java.util.Map" offset="<%=lowIndex%>" limit="<%=viewSize%>">
               <%
-                GenericValue party = (GenericValue) pageContext.getAttribute("party");
-                if (party != null && pageContext.getAttribute("person") == null && pageContext.getAttribute("partyGroup") == null) {
-                    //this is a bit complicated, many inherited types, so use special method
-                    GenericValue curPartyType = party.getRelatedOneCache("PartyType");
-                    GenericValue partyPersonType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PERSON"));
-                    if (EntityTypeUtil.isType(curPartyType, partyPersonType)) {
-                        GenericValue person = party.getRelatedOne("Person");
-                        if (person != null) {
-                            partyMap.put("person", person);
-                            pageContext.setAttribute("person", person);
-                        }
-                    } else {
-                        GenericValue partyGroupType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PARTY_GROUP"));
-                        if (EntityTypeUtil.isType(curPartyType, partyGroupType)) {
-                            GenericValue partyGroup = party.getRelatedOne("PartyGroup");
-                            if (partyGroup != null) {
-                                partyMap.put("partyGroup", partyGroup);
-                                pageContext.setAttribute("partyGroup", partyGroup);
-                            }
-                        }
-                    }
-                }
+                  rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";
+                  GenericValue party = (GenericValue) pageContext.getAttribute("party");
+                  if (party != null && pageContext.getAttribute("person") == null && pageContext.getAttribute("partyGroup") == null) {
+                      //this is a bit complicated, many inherited types, so use special method
+                      GenericValue curPartyType = party.getRelatedOneCache("PartyType");
+                      GenericValue partyPersonType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PERSON"));
+                      if (EntityTypeUtil.isType(curPartyType, partyPersonType)) {
+                          GenericValue person = party.getRelatedOne("Person");
+                          if (person != null) {
+                              partyMap.put("person", person);
+                              pageContext.setAttribute("person", person);
+                          }
+                      } else {
+                          GenericValue partyGroupType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PARTY_GROUP"));
+                          if (EntityTypeUtil.isType(curPartyType, partyGroupType)) {
+                              GenericValue partyGroup = party.getRelatedOne("PartyGroup");
+                              if (partyGroup != null) {
+                                  partyMap.put("partyGroup", partyGroup);
+                                  pageContext.setAttribute("partyGroup", partyGroup);
+                              }
+                          }
+                      }
+                  }
               %>
-              <tr>
+              <tr class="<%=rowClass%>">
                 <td><a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="party" field="partyId"/></a></td>
                 <td>
                     <%
