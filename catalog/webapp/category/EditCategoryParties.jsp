@@ -94,7 +94,7 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="partyId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="roleTypeId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="productCategoryRole" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="productCategoryRole" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -112,14 +112,14 @@
 
   <div class='head2'>Associate Party to Category (enter Party ID, select Type, then enter optional From Date):</div>
   <br>
-  <input type="text" size="20" maxlength="20" name="partyId" value="">
-  <select name='roleTypeId' size=1>
+  <input type="text" class='inputBox' size="20" maxlength="20" name="partyId" value="">
+  <select name='roleTypeId' size=1 class='selectBox'>
     <%-- <option value=''>&nbsp;</option> --%>
     <ofbiz:iterator name="roleType" property="roleTypes">
       <option value='<%=roleType.getString("roleTypeId")%>'<%if ("_NA_".equals(roleType.getString("roleTypeId"))) {%> selected<%}%>><%=roleType.getString("description")%><%-- [<%=roleType.getString("roleTypeId")%>]--%></option>
     </ofbiz:iterator>
   </select>
-  <input type=text size='20' name='fromDate'>
+  <input type='text' size='20' name='fromDate' class='inputBox'>
   <input type="submit" value="Add">
 </form>
 <%}%>

@@ -166,10 +166,10 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
             <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/> class='inputBox'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -211,8 +211,8 @@
   </script>
   <div class='head2'>Add ProductCategoryMember:</div>
   <div class='tabletext'>
-    Product ID: <input type=text size='20' name='productId'>
-    From Date: <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
+    Product ID: <input type=text size='20' name='productId' class='inputBox'>
+    From Date: <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate' class='inputBox'>
     <input type="submit" value="Add">
   </div>
 </form>
@@ -226,16 +226,16 @@
   <div class='head2'>Copy ProductCategoryMembers to Another Category:</div>
   <div class='tabletext'>
     Product Category:
-      <select name="productCategoryIdTo">
+      <select name="productCategoryIdTo" class='selectBox'>
       <ofbiz:iterator name="productCategoryTo" property="productCategories">
         <option value='<ofbiz:entityfield attribute="productCategoryTo" field="productCategoryId"/>'><ofbiz:entityfield attribute="productCategoryTo" field="description"/> [<ofbiz:entityfield attribute="productCategoryTo" field="productCategoryId"/>]</option>
       </ofbiz:iterator>
       </select>
     <br>
-    Optional Filter With Date: <input type=text size='20' name='validDate'>
+    Optional Filter With Date: <input type=text size='20' name='validDate' class='inputBox'>
     <br>
     Include Sub-Categories?
-    <select name='recurse'>
+    <select name='recurse' class='selectBox'>
         <option>N</option>
         <option>Y</option>
     </select>
@@ -251,7 +251,7 @@
 
   <div class='head2'>Expire All Product Members:</div>
   <div class='tabletext'>
-    Optional Expiration Date: <input type=text size='20' name='thruDate'>
+    Optional Expiration Date: <input type=text size='20' name='thruDate' class='inputBox'>
     <input type="submit" value="Expire All">
   </div>
 </form>
@@ -263,7 +263,7 @@
 
   <div class='head2'>Remove Expired Product Members:</div>
   <div class='tabletext'>
-    Optional Expired Before Date: <input type=text size='20' name='validDate'>
+    Optional Expired Before Date: <input type=text size='20' name='validDate' class='inputBox'>
     <input type="submit" value="Remove Expired">
   </div>
 </form>

@@ -94,9 +94,9 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
-            <select name='prodCatalogCategoryTypeId' size=1 style='font-size: x-small;'>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="sequenceNum" fullattrs="true"/> class='inputBox'>
+            <select name='prodCatalogCategoryTypeId' size=1 class='selectBox'>
                 <%if (prodCatalogCategory.get("prodCatalogCategoryTypeId") != null) {%>
                   <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'><%if (curProdCatalogCategoryType != null) {%><%=UtilFormatOut.checkNull(curProdCatalogCategoryType.getString("description"))%><%} else {%> [<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>]<%}%></option>
                   <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'>----</option>
@@ -124,18 +124,18 @@
 
   <div class='head2'>Add Catalog Product Category (select Category and Type, then enter optional From Date):</div>
   <br>
-  <select name="prodCatalogId">
+  <select name="prodCatalogId" class='selectBox'>
   <ofbiz:iterator name="prodCatalog" property="prodCatalogs">
     <option value='<ofbiz:entityfield attribute="prodCatalog" field="prodCatalogId"/>'><ofbiz:entityfield attribute="prodCatalog" field="catalogName"/> [<ofbiz:entityfield attribute="prodCatalog" field="prodCatalogId"/>]</option>
   </ofbiz:iterator>
   </select>
-    <select name='prodCatalogCategoryTypeId' size=1>
+    <select name='prodCatalogCategoryTypeId' size=1 class='selectBox'>
         <%-- <option value=''>&nbsp;</option> --%>
         <ofbiz:iterator name="prodCatalogCategoryType" property="prodCatalogCategoryTypes">
           <option value='<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>'><%=prodCatalogCategoryType.getString("description")%><%-- [<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>]--%></option>
         </ofbiz:iterator>
     </select>
-  <input type=text size='20' name='fromDate'>
+  <input type=text size='20' name='fromDate' class='inputBox'>
   <input type="submit" value="Add">
 </form>
 <%}%>

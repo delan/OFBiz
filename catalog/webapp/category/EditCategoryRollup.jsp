@@ -102,9 +102,9 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="parentProductCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> class='inputBox' style='<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
             <a href='#' onclick='setLineThruDateParent("<%=lineParent%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
       </td>
@@ -126,7 +126,7 @@
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="showProductCategoryId" value="<%=productCategoryId%>">
   <div class='tabletext'>Add <b>Parent</b> Category (select Category and enter From Date):</div>
-    <select name="parentProductCategoryId">
+    <select name="parentProductCategoryId" class='selectBox'>
     <%Iterator pit = UtilMisc.toIterator(productCategoryCol);%>
     <%while(pit != null && pit.hasNext()) {%>
       <%GenericValue curCategory = (GenericValue)pit.next();%>
@@ -139,7 +139,7 @@
       function setPctcParentFromDate() { document.addParentForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
   </script>
   <a href='#' onclick='setPctcParentFromDate()' class='buttontext'>[Now]</a>
-  <input type=text size='22' name='fromDate'>
+  <input type=text size='22' name='fromDate' class='inputBox'>
   <input type="submit" value="Add">
 </form>
 <br>
@@ -168,9 +168,9 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="parentProductCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> class='inputBox' style='<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
             <a href='#' onclick='setLineThruDateChild("<%=lineChild%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
       </td>
@@ -192,7 +192,7 @@
   <input type="hidden" name="showProductCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="parentProductCategoryId" value="<%=productCategoryId%>">
   <div class='tabletext'>Add <b>Child</b> Category (select Category and enter From Date):</div>
-    <select name="productCategoryId">
+    <select name="productCategoryId" class='selectBox'>
     <%Iterator cit = UtilMisc.toIterator(productCategoryCol);%>
     <%while (cit != null && cit.hasNext()) {%>
       <%GenericValue curCategory = (GenericValue)cit.next();%>
@@ -205,7 +205,7 @@
       function setPctcChildFromDate() { document.addChildForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
   </script>
   <a href='#' onclick='setPctcChildFromDate()' class='buttontext'>[Now]</a>
-  <input type=text size='22' name='fromDate'>
+  <input type=text size='22' name='fromDate' class='inputBox'>
   <input type="submit" value="Add">
 </form>
 <%}%>
