@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.33 $
+ *@version    $Revision: 1.34 $
  *@since      2.1
  */
 
@@ -428,4 +428,7 @@ if (product != null) {
             context.put("commonFeatureResultIds", commonFeatureResultIds);
         }
     }
+    
+    // not the best to save info in an action, but this is probably the best place to count a view
+    dispatcher.runAsync("countProductView", UtilMisc.toMap("productId", productId, "weight", new Long(1)), false);
 }

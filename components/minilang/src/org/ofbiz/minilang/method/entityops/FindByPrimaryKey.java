@@ -1,5 +1,5 @@
 /*
- * $Id: FindByPrimaryKey.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: FindByPrimaryKey.java,v 1.2 2004/05/10 17:41:40 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,8 @@
  */
 package org.ofbiz.minilang.method.entityops;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -40,7 +42,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find an entity value by its primary key
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class FindByPrimaryKey extends MethodOperation {
@@ -52,12 +54,14 @@ public class FindByPrimaryKey extends MethodOperation {
     ContextAccessor mapAcsr;
     String delegatorName;
     String useCacheStr;
+    ContextAccessor fieldsToSelectListAcsr;
 
     public FindByPrimaryKey(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
         entityName = element.getAttribute("entity-name");
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldsToSelectListAcsr = new ContextAccessor(element.getAttribute("fields-to-select-list"));
         delegatorName = element.getAttribute("delegator-name");
         useCacheStr = element.getAttribute("use-cache");
     }
@@ -79,11 +83,21 @@ public class FindByPrimaryKey extends MethodOperation {
             GenericEntity inEntity = (GenericEntity) inMap;
             entityName = inEntity.getEntityName();
         }
+        
+        List fieldsToSelectList = null;
+        if (!fieldsToSelectListAcsr.isEmpty()) {
+            fieldsToSelectList = (List) fieldsToSelectListAcsr.get(methodContext);
+        }
+        
         try {
-            if (useCache) {
-                valueAcsr.put(methodContext, delegator.findByPrimaryKeyCache(entityName, inMap));
+            if (fieldsToSelectList != null) {
+                valueAcsr.put(methodContext, delegator.findByPrimaryKeyPartial(delegator.makePK("Product", inMap), new HashSet(fieldsToSelectList)));
             } else {
-                valueAcsr.put(methodContext, delegator.findByPrimaryKey(entityName, inMap));
+                if (useCache) {
+                    valueAcsr.put(methodContext, delegator.findByPrimaryKeyCache(entityName, inMap));
+                } else {
+                    valueAcsr.put(methodContext, delegator.findByPrimaryKey(entityName, inMap));
+                }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.36 2004/04/11 08:28:20 jonesde Exp $
+ * $Id: OrderServices.java,v 1.37 2004/05/10 17:41:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -74,7 +74,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.36 $
+ * @version    $Revision: 1.37 $
  * @since      2.0
  */
 
@@ -140,6 +140,7 @@ public class OrderServices {
 
         // need to run through the items combining any cases where multiple lines refer to the
         // same product so the inventory check will work correctly
+        // also count quantities ordered while going through the loop
         while (itemIter.hasNext()) {
             GenericValue orderItem = (GenericValue) itemIter.next();
             String currentProductId = (String) orderItem.get("productId");
@@ -151,6 +152,15 @@ public class OrderServices {
                 } else {
                     Double currentQuantity = (Double) normalizedItemQuantities.get(currentProductId);
                     normalizedItemQuantities.put(currentProductId, new Double(currentQuantity.doubleValue() + orderItem.getDouble("quantity").doubleValue()));
+                }
+                
+                try {
+                    // count product ordered quantities
+                    // run this synchronously so it will run in the same transaction
+                    dispatcher.runSync("countProductQuantityOrdered", UtilMisc.toMap("productId", currentProductId, "quantity", orderItem.getDouble("quantity"), "userLogin", userLogin));
+                } catch (GenericServiceException e1) {
+                    Debug.logError(e1, "Error calling countProductQuantityOrdered service", module);
+                    return ServiceUtil.returnError("Error calling countProductQuantityOrdered service: " + e1.toString());
                 }
             }
         }
