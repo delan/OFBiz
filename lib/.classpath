@@ -11,6 +11,8 @@
     <classpathentry exported="true" kind="lib" path="common/commons-collections.jar"/>
     <classpathentry exported="true" kind="lib" path="common/commons-dbcp.jar"/>
     <classpathentry exported="true" kind="lib" path="common/commons-digester.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/commons-httpclient.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/commons-logging.jar"/>
     <classpathentry exported="true" kind="lib" path="common/commons-pool.jar"/>
     <classpathentry exported="true" kind="lib" path="common/hsqldb.jar"/>
     <classpathentry exported="true" kind="lib" path="common/jms_1.0.2a.jar"/>
