@@ -471,9 +471,9 @@
         <response name="success" type="view" value="ProductionRunDeclaration"/>
         <response name="error" type="view" value="ProductionRunDeclaration"/>
     </request-map>
-    <request-map uri="createProductionRunsFromRequirements">
+    <request-map uri="approveRequirements">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="createProductionRunFromRequirement"/>
+        <event type="service-multi" invoke="approveRequirement"/>
         <response name="success" type="view" value="FindProposedOrder"/>
         <response name="error" type="view" value="FindProposedOrder"/>
     </request-map>
@@ -487,7 +487,27 @@
         <response name="success" type="view" value="WorkWithShipmentPlans"/>
         <response name="error" type="view" value="WorkWithShipmentPlans"/>
     </request-map>
-    
+
+    <!-- Reports -->    
+    <request-map uri="CuttingListReport.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="CuttingListReport"/>
+    </request-map>
+    <request-map uri="ShipmentPlanStockReport.pdf">
+        <security https="true" auth="true"/>
+        <event type="bsf" path="/jobshopmgt/" invoke="ShipmentPlanStockReportPrepare.bsh"/>
+        <response name="success" type="view" value="ShipmentPlanStockReport"/>
+    </request-map>
+    <request-map uri="ShipmentLabel.pdf">
+        <security https="true" auth="true"/>
+        <event type="bsf" path="/jobshopmgt/" invoke="ShipmentLabelPrepare.bsh"/>
+        <response name="success" type="view" value="ShipmentLabel"/>
+    </request-map>
+    <request-map uri="ShipmentWorkEffortTasks.pdf">
+        <security https="true" auth="true"/>
+        <event type="bsf" path="/jobshopmgt/" invoke="ShipmentWorkEffortTasksPrepare.bsh"/>
+        <response name="success" type="view" value="ShipmentWorkEffortTasks"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
 
@@ -526,6 +546,10 @@
     <view-map name="EditProductionRun" type="jpublish" page="/jobshopmgt/EditProductionRun.ftl"/>
     <view-map name="ProductionRunDeclaration" type="jpublish" page="/jobshopmgt/ProductionRunDeclaration.ftl"/>
     <view-map name="WorkWithShipmentPlans" type="jpublish" page="/jobshopmgt/WorkWithShipmentPlans.ftl"/>
-
+    
+    <view-map name="CuttingListReport" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#CuttingListReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="ShipmentPlanStockReport" type="jasperpdf" page="/jobshopmgt/ShipmentPlanStockReport.xml" content-type="application/pdf" encoding="none"/>
+    <view-map name="ShipmentLabel" type="jasperpdf" page="/jobshopmgt/ShipmentLabel.xml" content-type="application/pdf" encoding="none"/>
+    <view-map name="ShipmentWorkEffortTasks" type="jasperpdf" page="/jobshopmgt/ShipmentWorkEffortTasks.xml" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>
