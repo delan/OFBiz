@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMapOperation.java,v 1.2 2004/04/04 07:04:25 jonesde Exp $
+ * $Id: SimpleMapOperation.java,v 1.3 2004/05/14 23:37:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * A single operation, does the specified operation on the given field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public abstract class SimpleMapOperation {
@@ -64,20 +64,19 @@ public abstract class SimpleMapOperation {
 
     public void addMessage(List messages, ClassLoader loader, Locale locale) {
         if (!isProperty && message != null) {
-            messages.add(message);
+            messages.add(new MessageString(message, fieldName, true));
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message, module);
         } else if (isProperty && propertyResource != null && message != null) {
             // this one doesn't do the proper i18n: String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
             String propMsg = UtilProperties.getMessage(propertyResource, message, locale);
-
             if (propMsg == null || propMsg.length() == 0) {
-                messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
+                messages.add(new MessageString("Simple Map Processing error occurred, but no message was found, sorry.", fieldName, propertyResource, message, locale, true));
             } else {
-                messages.add(propMsg);
+                messages.add(new MessageString(propMsg, fieldName, propertyResource, message, locale, true));
             }
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg, module);
         } else {
-            messages.add("Simple Map Processing error occurred, but no message was found, sorry.");
+            messages.add(new MessageString("Simple Map Processing error occurred, but no message was found, sorry.", fieldName, true));
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found", module);
         }
     }

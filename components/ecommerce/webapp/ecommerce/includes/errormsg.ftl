@@ -1,8 +1,4 @@
 
-<#-- get the default messages -->
-<#assign errorMsgReq = requestAttributes.errorMsgReq?if_exists>
-<#assign errorMsgSes = requestAttributes.errorMsgSes?if_exists>
-<#assign eventMsgReq = requestAttributes.eventMsgReq?if_exists>
 
 <#-- special error message override -->
 <#if requestAttributes.serviceValidationException?exists>
@@ -42,12 +38,26 @@
 </#if>
 
 <#-- display the error messages -->
-<#if errorMsgReq?has_content>
-<div class='errorMessage'>${errorMsgReq}</div><br>
+<#if requestAttributes.errorMsgReq?has_content>
+<div class="errorMessage">${requestAttributes.errorMsgReq}</div><br>
 </#if>
-<#if errorMsgSes?has_content>
-<div class='errorMessage'>${errorMsgSes}</div><br>
+<#if requestAttributes.errorMsgListReq?has_content>
+<ul>
+  <#list requestAttributes.errorMsgListReq as errorMsg>
+    <li class="errorMessage">${errorMsg}</li>
+  </#list>
+</ul>
 </#if>
-<#if eventMsgReq?has_content>
-<div class='eventMessage'>${eventMsgReq}</div><br>
+<#if sessionAttributes.errorMsgSes?has_content>
+<div class="errorMessage">${sessionAttributes.errorMsgSes}</div><br>
+</#if>
+<#if requestAttributes.eventMsgReq?has_content>
+<div class="eventMessage">${requestAttributes.eventMsgReq}</div><br>
+</#if>
+<#if requestAttributes.eventMsgListReq?has_content>
+<ul>
+  <#list requestAttributes.eventMsgListReq as eventMsg>
+    <li class="eventMessage">${eventMsg}</li>
+  </#list>
+</ul>
 </#if>

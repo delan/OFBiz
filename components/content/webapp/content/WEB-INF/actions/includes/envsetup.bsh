@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,7 +20,8 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@version    $Revision: 1.6 $
  *@since      2.2
  */
 
@@ -74,16 +75,26 @@ request.setAttribute("externalKeyParam", externalKeyParam);
 request.setAttribute("activeApp", "contentmgr");
 
 eventMsgReq = request.getAttribute("_EVENT_MESSAGE_");
+eventMsgListReq = request.getAttribute("_EVENT_MESSAGE_LIST_");
 errorMsgReq = request.getAttribute("_ERROR_MESSAGE_");
+errorMsgListReq = request.getAttribute("_ERROR_MESSAGE_LIST_");
 errorMsgSes = session.getAttribute("_ERROR_MESSAGE_");
 
 if (eventMsgReq != null) {
     request.setAttribute("eventMsgReq", UtilFormatOut.replaceString(eventMsgReq, "\n", "<br>"));
     request.removeAttribute("_EVENT_MESSAGE_");
 }
+if (eventMsgListReq != null) {
+    request.setAttribute("eventMsgListReq", eventMsgListReq);
+    request.removeAttribute("_EVENT_MESSAGE_LIST_");
+}
 if (errorMsgReq != null) {
     request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
     request.removeAttribute("_ERROR_MESSAGE_");
+}
+if (errorMsgListReq != null) {
+    request.setAttribute("errorMsgListReq", errorMsgListReq);
+    request.removeAttribute("_ERROR_MESSAGE_LIST_");
 }
 if (errorMsgSes != null) {
     request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));

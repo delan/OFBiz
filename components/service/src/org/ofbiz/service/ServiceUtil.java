@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.10 2003/12/06 23:10:14 ajzeneski Exp $
+ * $Id: ServiceUtil.java,v 1.11 2004/05/14 23:37:45 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -72,7 +72,6 @@ public class ServiceUtil {
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code, also forwards any error messages from the nestedResult */
     public static Map returnError(String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
         Map result = new HashMap();
-
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
         if (errorMessage != null) {
             result.put(ModelService.ERROR_MESSAGE, errorMessage);
@@ -125,7 +124,6 @@ public class ServiceUtil {
      */
     public static Map returnMessage(String code, String message) {
         Map result = new HashMap();
-
         if (code != null) result.put(ModelService.RESPONSE_MESSAGE, code);
         if (message != null) result.put(ModelService.SUCCESS_MESSAGE, message);
         return result;
@@ -136,7 +134,6 @@ public class ServiceUtil {
      */
     public static String getPartyIdCheckSecurity(GenericValue userLogin, Security security, Map context, Map result, String secEntity, String secOperation) {
         String partyId = (String) context.get("partyId");
-
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
@@ -244,7 +241,6 @@ public class ServiceUtil {
 
         if (outMsg.length() > 0) {
             StringBuffer strBuf = new StringBuffer();
-
             if (successPrefix != null) strBuf.append(successPrefix);
             strBuf.append(outMsg.toString());
             if (successSuffix != null) strBuf.append(successSuffix);
@@ -256,13 +252,10 @@ public class ServiceUtil {
 
     public static String makeMessageList(List msgList, String msgPrefix, String msgSuffix) {
         StringBuffer outMsg = new StringBuffer();
-
         if (msgList != null && msgList.size() > 0) {
             Iterator iter = msgList.iterator();
-
             while (iter.hasNext()) {
-                String curMsg = (String) iter.next();
-
+                String curMsg = iter.next().toString();
                 if (msgPrefix != null) outMsg.append(msgPrefix);
                 outMsg.append(curMsg);
                 if (msgSuffix != null) outMsg.append(msgSuffix);

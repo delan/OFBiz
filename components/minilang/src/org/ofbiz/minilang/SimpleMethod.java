@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMethod.java,v 1.6 2004/04/30 00:24:06 jonesde Exp $
+ * $Id: SimpleMethod.java,v 1.7 2004/05/14 23:37:40 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class SimpleMethod {
@@ -266,7 +266,9 @@ public class SimpleMethod {
     protected String eventResponseName;
     protected String eventResponseCodeName;
     protected String eventErrorMessageName;
+    protected String eventErrorMessageListName;
     protected String eventEventMessageName;
+    protected String eventEventMessageListName;
 
     // service fields
     protected String serviceResponseMessageName;
@@ -320,9 +322,17 @@ public class SimpleMethod {
         if (eventErrorMessageName == null || eventErrorMessageName.length() == 0) {
             eventErrorMessageName = "_error_message_";
         }
+        eventErrorMessageListName = simpleMethodElement.getAttribute("event-error-message-list-name");
+        if (eventErrorMessageListName == null || eventErrorMessageListName.length() == 0) {
+            eventErrorMessageListName = "_error_message_list_";
+        }
         eventEventMessageName = simpleMethodElement.getAttribute("event-event-message-name");
         if (eventEventMessageName == null || eventEventMessageName.length() == 0) {
             eventEventMessageName = "_event_message_";
+        }
+        eventEventMessageListName = simpleMethodElement.getAttribute("event-event-message-list-name");
+        if (eventEventMessageListName == null || eventEventMessageListName.length() == 0) {
+            eventEventMessageListName = "_event_message_list_";
         }
 
         serviceResponseMessageName = simpleMethodElement.getAttribute("service-response-message-name");
@@ -415,9 +425,15 @@ public class SimpleMethod {
     public String getEventErrorMessageName() {
         return this.eventErrorMessageName;
     }
+    public String getEventErrorMessageListName() {
+        return this.eventErrorMessageListName;
+    }
 
     public String getEventEventMessageName() {
         return this.eventEventMessageName;
+    }
+    public String getEventEventMessageListName() {
+        return this.eventEventMessageListName;
     }
 
     // service fields
@@ -545,10 +561,19 @@ public class SimpleMethod {
                 methodContext.getRequest().setAttribute("_ERROR_MESSAGE_", errorMsg);
                 forceError = true;
             }
+            List tempErrorMsgList = (List) methodContext.getEnv(eventErrorMessageListName);
+            if (tempErrorMsgList != null && tempErrorMsgList.size() > 0) {
+                methodContext.getRequest().setAttribute("_ERROR_MESSAGE_LIST_", tempErrorMsgList);
+                forceError = true;
+            }
 
             String eventMsg = (String) methodContext.getEnv(eventEventMessageName);
             if (eventMsg != null && eventMsg.length() > 0) {
                 methodContext.getRequest().setAttribute("_EVENT_MESSAGE_", eventMsg);
+            }
+            List eventMsgList = (List) methodContext.getEnv(eventEventMessageListName);
+            if (eventMsgList != null && eventMsgList.size() > 0) {
+                methodContext.getRequest().setAttribute("_EVENT_MESSAGE_LIST_", eventMsgList);
             }
 
             response = (String) methodContext.getEnv(eventResponseCodeName);
