@@ -358,8 +358,14 @@
                                 <field-to-field field-name="orderId" map-name="parameters" to-map-name="newOiirEntity"/>
                                 <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                                 <field-to-field field-name="inventoryItemId" map-name="lastNonSerInventoryItem" to-field-name="inventoryItemId" to-map-name="newOiirEntity"/>
+                                <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="newOiirEntity"/>
                                 <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
+                                <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="newOiirEntity"/>
+                                <env-to-field env-name="nowTimestamp" field-name="createdDatetime" map-name="newOiirEntity"/>
                                 <string-to-field string="OIIR_RESERVED" field-name="statusId" map-name="newOiirEntity"/>
+                                <if-empty field-name="reservedDatetime" map-name="newOiirEntity">
+                                    <env-to-field env-name="nowTimestamp" field-name="reservedDatetime" map-name="newOiirEntity"/>
+                                </if-empty>
                                 <create-value value-name="newOiirEntity"/>
                             </else>
                         </if-not-empty>
@@ -385,8 +391,14 @@
                             <field-to-field field-name="orderId" map-name="parameters" to-map-name="newOiirEntity"/>
                             <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                             <field-to-field field-name="inventoryItemId" map-name="newNonSerInventoryItem" to-field-name="inventoryItemId" to-map-name="newOiirEntity"/>
+                            <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="newOiirEntity"/>
                             <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
+                            <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="newOiirEntity"/>
+                            <env-to-field env-name="nowTimestamp" field-name="createdDatetime" map-name="newOiirEntity"/>
                             <string-to-field string="OIIR_RESERVED" field-name="statusId" map-name="newOiirEntity"/>
+                            <if-empty field-name="reservedDatetime" map-name="newOiirEntity">
+                                <env-to-field env-name="nowTimestamp" field-name="reservedDatetime" map-name="newOiirEntity"/>
+                            </if-empty>
                             <create-value value-name="newOiirEntity"/>
                         </else>
                     </if-not-empty>
@@ -478,22 +490,28 @@
     	<!-- find all items which have a negative ATP; find their current reservations -->
     	<log level="error" message="checking for negative items"/>
     	<iterate list-name="inventoryItems" entry-name="item">
+    		<log level="error" message="found item : ${item}"/>
     		<if-compare field-name="availableToPromise" map-name="item" operator="less" value="0">
     			<string-to-field field-name="statusId" map-name="resLookupMap" string="OIIR_RESERVED"/>
-    			<get-related value-name="item" relation-name="OrderItemInventoryRes" map-name="resLookupMap" list-name="reservations"/>
+    			<get-related value-name="item" relation-name="OrderItemInventoryRes" map-name="resLookupMap" list-name="relatedRes"/>
+    			<log level="error" message="got related : ${relatedRes}"/>
+    			<list-to-list list-name="relatedRes" to-list-name="reservations"/>
+    			<log level="error" message="appended to list : ${reservations}"/>
     		</if-compare>
     	</iterate>
     	
     	<!-- sort the list by date -->
-    	<log level="error" message="sorting reservations"/>
+    	<log level="error" message="sorting reservations : ${reservations}"/>
     	<order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
+    	
+    	<!-- a counter to so we just loop for then needed amount -->
+    	<field-to-env env-name="balanceAvailable" field-name="availableToPromise" map-name="inventoryItem"/>
     	
     	<!-- cancel the reservations -->    	
     	<iterate list-name="reservations" entry-name="oiir">
-    		<log level="error" message="working with reservation ${oiir}"/>
+    		<log level="error" message="working with reservation : ${oiir}"/>
     		<!-- only continue if we have enough quantity to work with -->
-    		<!-- for now; this will find the first available reservation which we can fill -->
-    		<if-compare-field field-name="quantity" map-name="oiir" operator="less" to-field-name="availableToPromise" to-map-name="inventoryItem">
+    		<if-compare field-name="balanceAvailable" operator="greater" value="0">    		
     			<log level="error" message="doing the cancel"/>
     			<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelMap"/>
     			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelMap"/>
@@ -501,18 +519,15 @@
     			<call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelMap"/>
     			<!-- log the reservation to be re-reserved again -->
     			<field-to-list field-name="oiir" list-name="toReserve"/>
-    			<!-- deduct the ATP from the inventory item -->
-    			<calculate field-name="availableToPromise" map-name="inventoryItem">
-    				<calcop operator="subtract" field-name="availableToPromise" map-name="inventoryItem">
+    			<!-- deduct the reservation from the balanceAvailable -->
+    			<calculate field-name="balanceAvailable">
+    				<calcop operator="subtract" field-name="balanceAvailable">
     					<calcop operator="get" field-name="quantity" map-name="oiir"/>
     				</calcop>
     			</calculate>    			
-    		</if-compare-field>
+    		</if-compare>
     	</iterate>
-    	
-    	<!-- store the changes to the inventory item (ATP) -->
-    	<store-value value-name="inventoryItem"/>
-    	
+    	    	    	
     	<!-- re-reserve the cancelled items -->
     	<iterate list-name="toReserve" entry-name="oiir">
     		<!-- require inventory is N because it had to be N to begin with to have a negative ATP -->
