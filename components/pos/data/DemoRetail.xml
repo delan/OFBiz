@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-    <UserLogin userLoginId="1" partyId="admin" currentPassword="1" passwordHint=""/>
+    <UserLogin userLoginId="1" partyId="admin" currentPassword="1" passwordHint="The Number One, Yeah, Literally"/>
     <UserLoginSecurityGroup groupId="POSCLERK" userLoginId="1" fromDate="2001-01-01 12:00:00.0"/>
     <Facility facilityId="MyRetailStore" facilityTypeId="RETAIL_STORE" facilityName="My Retail Store" description="Example Retail (POS) Store"/>
     <ContactMech contactMechId="9300" contactMechTypeId="POSTAL_ADDRESS"/>
@@ -22,9 +22,10 @@
     <FacilityContactMechPurpose facilityId="MyRetailStore" contactMechId="9301" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2004-07-26 16:49:04.176"/>
     <FacilityContactMechPurpose facilityId="MyRetailStore" contactMechId="9301" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2004-07-26 16:49:09.267"/>
 
-    <ProductStore productStoreId="9100" storeName="OFBiz Retail Store" companyName="Open For Business" title="Open For Retail"
+    <ProductStore productStoreId="9100" storeName="OFBiz Physical Retail Store" companyName="Open For Business" title="Open For Retail"
         subtitle="Part of the Open For Business Family of Open Source Software" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y"
-        inventoryFacilityId="MyRetailStore" oneInventoryFacility="Y" checkInventory="N" reserveInventory="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        inventoryFacilityId="MyRetailStore" oneInventoryFacility="Y" checkInventory="N" reserveInventory="Y"
+        reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N" isImmediatelyFulfilled="Y"
         defaultLocaleString="en_US" defaultCurrencyUomId="USD" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="N" manualAuthIsCapture="Y"
         headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
         itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="RS"
