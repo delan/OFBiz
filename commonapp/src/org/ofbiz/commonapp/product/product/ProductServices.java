@@ -91,7 +91,7 @@ public class ProductServices {
             Collection features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
             Iterator i = features.iterator();
             while (i.hasNext())
-                featureSet.add(((GenericValue)i.next()).getString("productFeatureTypeId"));
+                featureSet.add(((GenericValue) i.next()).getString("productFeatureTypeId"));
             Debug.logInfo("" + featureSet);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -116,7 +116,7 @@ public class ProductServices {
         // * String productId      -- Parent (virtual) product ID
         // * List featureOrder     -- Order of features
         Map result = new HashMap();
-        List featureOrder = new LinkedList((Collection)context.get("featureOrder"));
+        List featureOrder = new LinkedList((Collection) context.get("featureOrder"));
         if (featureOrder == null || featureOrder.size() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Empty list of features passed");
@@ -132,7 +132,7 @@ public class ProductServices {
         List items = new ArrayList();
         Iterator i = variants.iterator();
         while (i.hasNext())
-            items.add(((GenericValue)i.next()).get("productIdTo"));
+            items.add(((GenericValue) i.next()).get("productIdTo"));
 
         Map tree = null;
         try {
@@ -147,6 +147,22 @@ public class ProductServices {
             result.put(ModelService.ERROR_MESSAGE, "Feature grouping came back empty");
         } else {
             result.put("variantTree", tree);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        }
+
+        Map sample = null;
+        try {
+            sample = makeVariantSample(dctx.getDelegator(), items, (String) featureOrder.get(0));
+        } catch (Exception e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+            return result;
+        }
+        if (sample == null || sample.size() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Feature sample came back empty");
+        } else {
+            result.put("variantSample", sample);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
 
@@ -174,7 +190,7 @@ public class ProductServices {
             features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
             result.put("productFeatures", features);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        } catch (GenericEntityException e ) {
+        } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading product feature entity: " + e.getMessage());
         }
@@ -288,7 +304,7 @@ public class ProductServices {
             Collection features = null;
             try {
                 Map fields = UtilMisc.toMap("productId", thisItem, "productFeatureTypeId", orderKey,
-                        "productFeatureApplTypeId", "STANDARD_FEATURE");
+                                            "productFeatureApplTypeId", "STANDARD_FEATURE");
                 List sort = UtilMisc.toList("sequenceNum");
 
                 // get the features and filter out expired dates
@@ -334,4 +350,38 @@ public class ProductServices {
         }
         return group;
     }
+
+    // builds a variant sample (a single sku for a featureType)
+    private static Map makeVariantSample(GenericDelegator delegator, List items, String feature) {
+        Map sample = new OrderedMap();
+        Iterator itemIt = items.iterator();
+        while (itemIt.hasNext()) {
+            String productId = (String) itemIt.next();
+            Collection features = null;
+            try {
+                Map fields = UtilMisc.toMap("productId", productId, "productFeatureTypeId", feature,
+                                            "productFeatureApplTypeId", "STANDARD_FEATURE");
+                List sort = UtilMisc.toList("sequenceNum");
+
+                // get the features and filter out expired dates
+                features = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
+                features = EntityUtil.filterByDate(features);
+            } catch (GenericEntityException e) {
+                throw new IllegalStateException("Problem reading relation: " + e.getMessage());
+            }
+            Iterator featureIt = features.iterator();
+            while (featureIt.hasNext()) {
+                GenericValue featureAppl = (GenericValue) featureIt.next();
+                try {
+                    GenericValue product = delegator.findByPrimaryKeyCache("Product",
+                            UtilMisc.toMap("productId", productId));
+                    sample.put(featureAppl.getString("description"), product);
+                } catch (GenericEntityException e) {
+                    throw new RuntimeException("Cannot get product entity: " + e.getMessage());
+                }
+            }
+        }
+        return sample;
+    }
+
 }
