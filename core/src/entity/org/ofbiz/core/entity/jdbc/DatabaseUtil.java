@@ -43,16 +43,17 @@ public class DatabaseUtil {
     public static final String module = DatabaseUtil.class.getName();
 
     protected String helperName;
-    protected ModelFieldTypeReader modelFieldTypeReader = null;
+    protected ModelFieldTypeReader modelFieldTypeReader;
+    protected EntityConfigUtil.DatasourceInfo datasourceInfo;
 
     public DatabaseUtil(String helperName) {
         this.helperName = helperName;
         modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
+        datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
     }
 
     public Connection getConnection() throws SQLException, GenericEntityException {
         Connection connection = ConnectionFactory.getConnection(helperName);
-
         return connection;
     }
 
@@ -61,8 +62,6 @@ public class DatabaseUtil {
     /* ====================================================================== */
 
     public void checkDb(Map modelEntities, Collection messages, boolean addMissing) {
-
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
         UtilTimer timer = new UtilTimer();
 
@@ -692,8 +691,15 @@ public class DatabaseUtil {
 
         try {
             String[] types = {"TABLE", "VIEW", "ALIAS", "SYNONYM"};
-            String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
-            tableSet = dbData.getTables(null, userName, null, types);
+            String lookupSchemaName = null;
+            if (dbData.supportsSchemasInTableDefinitions()) {
+                if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+                    lookupSchemaName = this.datasourceInfo.schemaName;
+                } else {
+                    lookupSchemaName = dbData.getUserName();
+                }
+            }
+            tableSet = dbData.getTables(null, lookupSchemaName, null, types);
             if (tableSet == null) {
                 Debug.logWarning("getTables returned null set", module);
             }
@@ -839,9 +845,16 @@ public class DatabaseUtil {
         Map colInfo = new HashMap();
 
         try {
-            String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
-            ResultSet rsCols = dbData.getColumns(null, userName, null, null);
-
+            String lookupSchemaName = null;
+            if (dbData.supportsSchemasInTableDefinitions()) {
+                if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+                    lookupSchemaName = this.datasourceInfo.schemaName;
+                } else {
+                    lookupSchemaName = dbData.getUserName();
+                }
+            }
+            
+            ResultSet rsCols = dbData.getColumns(null, lookupSchemaName, null, null);
             while (rsCols.next()) {
                 try {
                     ColumnCheckInfo ccInfo = new ColumnCheckInfo();
@@ -913,7 +926,6 @@ public class DatabaseUtil {
 
     public Map getReferenceInfo(Set tableNames, Collection messages) {
         Connection connection = null;
-
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
@@ -933,7 +945,6 @@ public class DatabaseUtil {
         }
 
         DatabaseMetaData dbData = null;
-
         try {
             dbData = connection.getMetaData();
         } catch (SQLException sqle) {
@@ -976,9 +987,16 @@ public class DatabaseUtil {
 
         try {
             // ResultSet rsCols = dbData.getCrossReference(null, null, null, null, null, null);
-            String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
-            ResultSet rsCols = dbData.getImportedKeys(null, userName, null);
-
+            String lookupSchemaName = null;
+            if (dbData.supportsSchemasInTableDefinitions()) {
+                if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+                    lookupSchemaName = this.datasourceInfo.schemaName;
+                } else {
+                    lookupSchemaName = dbData.getUserName();
+                }
+            }
+            
+            ResultSet rsCols = dbData.getImportedKeys(null, lookupSchemaName, null);
             int totalFkRefs = 0;
 
             // Iterator tableNamesIter = tableNames.iterator();
@@ -1117,16 +1135,22 @@ public class DatabaseUtil {
             while (tableNamesIter.hasNext()) {
                 String curTableName = (String) tableNamesIter.next();
 
-                // false for unique, we don't really use unique indexes
-                // true for approximate, don't really care if stats are up-to-date
-                String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
+                String lookupSchemaName = null;
+                if (dbData.supportsSchemasInTableDefinitions()) {
+                    if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+                        lookupSchemaName = this.datasourceInfo.schemaName;
+                    } else {
+                        lookupSchemaName = dbData.getUserName();
+                    }
+                }
 
                 ResultSet rsCols = null;
-
                 try {
-                    rsCols = dbData.getIndexInfo(null, userName, curTableName, false, true);
+                    // false for unique, we don't really use unique indexes
+                    // true for approximate, don't really care if stats are up-to-date
+                    rsCols = dbData.getIndexInfo(null, lookupSchemaName, curTableName, false, true);
                 } catch (Exception e) {
-                    Debug.logWarning(e, "Error getting index info for table: " + curTableName + " using userName " + userName);
+                    Debug.logWarning(e, "Error getting index info for table: " + curTableName + " using lookupSchemaName " + lookupSchemaName);
                 }
 
                 while (rsCols != null && rsCols.next()) {
@@ -1225,7 +1249,10 @@ public class DatabaseUtil {
         }
 
         StringBuffer sqlBuf = new StringBuffer("CREATE TABLE ");
-
+        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+            sqlBuf.append(this.datasourceInfo.schemaName);
+            sqlBuf.append('.');
+        }
         sqlBuf.append(entity.getTableName());
         sqlBuf.append(" (");
         for (int i = 0; i < entity.getFieldsSize(); i++) {
@@ -1330,7 +1357,18 @@ public class DatabaseUtil {
             return "Field type [" + type + "] not found for field [" + field.getName() + "] of entity [" + entity.getEntityName() + "], not adding column.";
         }
 
-        String sql = "ALTER TABLE " + entity.getTableName() + " ADD " + field.getColName() + " " + type.getSqlType();
+        StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
+        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+            sqlBuf.append(this.datasourceInfo.schemaName);
+            sqlBuf.append('.');
+        }
+        sqlBuf.append(entity.getTableName());
+        sqlBuf.append(" ADD ");
+        sqlBuf.append(field.getColName());
+        sqlBuf.append(" ");
+        sqlBuf.append(type.getSqlType());
+
+        String sql = sqlBuf.toString();
         if (Debug.infoOn()) Debug.logInfo("[addColumn] sql=" + sql);
         try {
             stmt = connection.createStatement();
@@ -1440,6 +1478,10 @@ public class DatabaseUtil {
         // now add constraint clause
         StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
 
+        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+            sqlBuf.append(this.datasourceInfo.schemaName);
+            sqlBuf.append('.');
+        }
         sqlBuf.append(entity.getTableName());
         sqlBuf.append(" ADD ");
         sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle, useFkInitiallyDeferred));
@@ -1498,6 +1540,10 @@ public class DatabaseUtil {
             sqlBuf.append(" FOREIGN KEY (");
             sqlBuf.append(mainCols.toString());
             sqlBuf.append(") REFERENCES ");
+            if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+                sqlBuf.append(this.datasourceInfo.schemaName);
+                sqlBuf.append('.');
+            }
             sqlBuf.append(relModelEntity.getTableName());
             sqlBuf.append(" (");
             sqlBuf.append(relCols.toString());
@@ -1513,6 +1559,10 @@ public class DatabaseUtil {
             sqlBuf.append(" (");
             sqlBuf.append(mainCols.toString());
             sqlBuf.append(") REFERENCES ");
+            if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+                sqlBuf.append(this.datasourceInfo.schemaName);
+                sqlBuf.append('.');
+            }
             sqlBuf.append(relModelEntity.getTableName());
             sqlBuf.append(" (");
             sqlBuf.append(relCols.toString());
@@ -1591,6 +1641,10 @@ public class DatabaseUtil {
         // now add constraint clause
         StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
 
+        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+            sqlBuf.append(this.datasourceInfo.schemaName);
+            sqlBuf.append('.');
+        }
         sqlBuf.append(entity.getTableName());
         sqlBuf.append(" DROP CONSTRAINT ");
         sqlBuf.append(relConstraintName);
@@ -1705,6 +1759,10 @@ public class DatabaseUtil {
 
         indexSqlBuf.append(relConstraintName);
         indexSqlBuf.append(" ON ");
+        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+            indexSqlBuf.append(this.datasourceInfo.schemaName);
+            indexSqlBuf.append('.');
+        }
         indexSqlBuf.append(entity.getTableName());
 
         indexSqlBuf.append(" (");
@@ -1763,6 +1821,10 @@ public class DatabaseUtil {
         StringBuffer indexSqlBuf = new StringBuffer("DROP INDEX ");
         String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
 
+        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+            indexSqlBuf.append(this.datasourceInfo.schemaName);
+            indexSqlBuf.append('.');
+        }
         indexSqlBuf.append(entity.getTableName());
         indexSqlBuf.append(".");
         indexSqlBuf.append(relConstraintName);
