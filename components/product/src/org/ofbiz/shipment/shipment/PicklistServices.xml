@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  -->
 <simple-methods>
@@ -224,6 +224,8 @@
             <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
+
+    	<now-timestamp-to-env env-name="nowTimestamp"/>
         
         <set-service-fields map-name="parameters" service-name="findOrdersToPickMove" to-map-name="findOrdersToPickMoveMap"/>
         <call-service service-name="findOrdersToPickMove" in-map-name="findOrdersToPickMoveMap">
@@ -293,6 +295,12 @@
                                     <calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
                                 </calcop>
                             </calculate>
+                            
+                            <!-- if setPickStartedDate == "Y" then set the OrderItemInventoryRes.pickStartDate to now -->
+                            <if-compare field-name="parameters.setPickStartedDate" operator="equals" value="Y">
+                            	<env-to-env env-name="nowTimestamp" to-env-name="orderItemInventoryRes.pickStartDate"/>
+                            	<store-value value-name="orderItemInventoryRes"/>
+                            </if-compare>
                         </iterate>
                         
                         <if-not-empty field-name="perItemResListValid">

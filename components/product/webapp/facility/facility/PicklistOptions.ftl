@@ -21,7 +21,7 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author         Andy Zeneski (jaz@ofbiz.org)
- *@version        $Revision: 1.3 $
+ *@version        $Revision: 1.4 $
  *@since            2.2
 -->
 
@@ -71,7 +71,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                                                         <input type="hidden" name="shipmentMethodTypeId" value="${shipmentMethodType.shipmentMethodTypeId}"/>
                                                         Pick First:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
-                                                        <input type="submit" value="Pick" class="smallSubmit"/>
+                                                        <br><input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>Flag Picking Started?
+                                                        <br><input type="submit" value="Pick" class="smallSubmit"/>
                                                     </form>
                                                 <#else>
                                                     &nbsp;
@@ -98,7 +99,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                             <form method="POST" action="<@ofbizUrl>/Picklist</@ofbizUrl>">
                                                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                                                 Pick First:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
-                                                <input type="submit" value="Pick" class="smallSubmit"/>
+                                                <br><input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>Flag Picking Started?
+                                                <br><input type="submit" value="Pick" class="smallSubmit"/>
                                         </form>
                                         </div>
                                     </td>

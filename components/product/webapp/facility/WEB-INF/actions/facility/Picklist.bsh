@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
  */
 
@@ -41,10 +41,12 @@ shipmentMethodTypeId = request.getParameter("shipmentMethodTypeId");
 context.put("shipmentMethodTypeId", shipmentMethodTypeId);
 maxNumberOfOrders = Long.valueOf(request.getParameter("maxNumberOfOrders"));
 context.put("maxNumberOfOrders", maxNumberOfOrders);
+setPickStartedDate = request.getParameter("setPickStartedDate");
+context.put("setPickStartedDate", setPickStartedDate);
 
 
 // if orderHeaderList is null or empty the service will get all approved orders
-inMap = UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId, "shipmentMethodTypeId", shipmentMethodTypeId, "maxNumberOfOrders", maxNumberOfOrders);
+inMap = UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId, "shipmentMethodTypeId", shipmentMethodTypeId, "maxNumberOfOrders", maxNumberOfOrders, "setPickStartedDate", setPickStartedDate);
 outMap = dispatcher.runSync("getPicklistData", inMap);
 
 context.put("inventoryItemInfoList", outMap.get("inventoryItemInfoList"));
