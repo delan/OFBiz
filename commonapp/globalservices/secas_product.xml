@@ -2,8 +2,18 @@
 <!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
 
 <service-eca>    
-    <eca service="createInventoryTransfer" event="invoke">    	
+    <eca service="createInventoryTransfer" event="invoke">  
+    	<condition field-name="statusId" operator="not-equals" value="IXF_CANCELLED"/>  	
         <action service="prepareInventoryTransfer" mode="sync"/>
+    </eca>
+    <eca service="createInventoryTransfer" event="commit">
+    	<condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
+    	<action service="completeInventoryTransfer" mode="sync"/>
+    </eca>
+    
+    <eca service="updateInventoryTransfer" event="invoke">
+    	<condition field-name="statusId" operator="equals" value="IXF_CANCELLED"/>
+    	<action service="cancelInventoryTransfer" mode="sync"/>
     </eca>
     <eca service="updateInventoryTransfer" event="commit">
     	<condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
