@@ -1093,12 +1093,14 @@
             title="Simple Sales Tax Lookup Entity">
       <field name="stateProvinceGeoId" type="id-ne"></field>
       <field name="taxCategory" type="id-ne"></field>
+      <field name="minPurchase" type="currency-amount"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="taxShipping" type="indicator"></field>
       <field name="salesTaxPercentage" type="floating-point"></field>
       <prim-key field="stateProvinceGeoId"/>
       <prim-key field="taxCategory"/>
+      <prim-key field="minPurchase"/>
       <prim-key field="fromDate"/>
       <relation type="many" rel-entity-name="Product">
         <key-map field-name="taxCategory"/>

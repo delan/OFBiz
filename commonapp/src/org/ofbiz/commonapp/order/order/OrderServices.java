@@ -1209,7 +1209,7 @@ public class OrderServices {
             lookupMap = UtilMisc.toMap("stateProvinceGeoId", stateCode, "taxCategory", item.get("taxCategory"));
         else
             lookupMap = UtilMisc.toMap("stateProvinceGeoId", stateCode, "taxCategory", "_NA_");
-        List orderList = UtilMisc.toList("-fromDate");
+        List orderList = UtilMisc.toList("minPurchase", "fromDate");
 
         try {
             List lookupList = delegator.findByAndCache("SimpleSalesTaxLookup", lookupMap, orderList);
@@ -1221,10 +1221,27 @@ public class OrderServices {
             List filteredList = EntityUtil.filterByDate(lookupList);
 
             if (filteredList.size() == 0) {
-                Debug.logWarning("SimpleTaxCalc: No State/TaxCategory pair found (with or without taxCat).");
+                Debug.logWarning("SimpleTaxCalc: No State/TaxCategory pair found (with or without taxCat).", module);
                 return new Double(0.00);
             }
-            GenericValue taxLookup = (GenericValue) filteredList.get(0);
+            
+            // find the right entry based on purchase amount
+            GenericValue taxLookup = null;
+            Iterator flIt = filteredList.iterator();
+            while (flIt.hasNext()) {
+                GenericValue tl = (GenericValue) flIt.next();
+                Debug.logInfo("Testing " + itemAmount + " with : " + tl, module);
+                if (itemAmount >= tl.getDouble("minPurchase").doubleValue()) 
+                    taxLookup = tl;
+            }
+            
+            Debug.logInfo("TaxLookup: " + taxLookup, module);
+            
+            if (taxLookup == null) {
+                Debug.logWarning("SimpleTaxCalc: No tax entry found for state/category with matching min-purchase.", module);
+                return new Double(0.00);
+            }
+            
             double taxRate = taxLookup.get("salesTaxPercentage") != null ? taxLookup.getDouble("salesTaxPercentage").doubleValue() : 0;
             double taxable = 0.00;
 
