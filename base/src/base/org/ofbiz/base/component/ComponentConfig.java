@@ -32,6 +32,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import javolution.util.FastList;
@@ -210,10 +212,11 @@ public class ComponentConfig {
     public static List getAppBarWebInfos(String serverName) {
         List webInfos = (List) serverWebApps.get(serverName);
         if (webInfos == null) {
-            synchronized(ComponentConfig.class) {
+            synchronized (ComponentConfig.class) {
                 if (webInfos == null) {
                     Iterator i = getAllComponents().iterator();
-                    Map tm = FastMap.newInstance();
+                    // use a TreeMap to sort the components alpha by title
+                    Map tm = new TreeMap();
                     while (i.hasNext()) {
                         ComponentConfig cc = (ComponentConfig) i.next();
                         Iterator wi = cc.getWebappInfos().iterator();
