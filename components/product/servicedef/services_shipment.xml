@@ -379,4 +379,12 @@
         <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="true"/>
         <attribute name="insufficientQohList" type="List" mode="OUT" optional="true"/>
     </service>
+    <service name="clearPickStarted" engine="simple"
+            location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="clearPickStarted">
+        <description>Clear PickStarted Dates according to specified parameters</description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
+        <attribute name="pickStartDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
 </services>

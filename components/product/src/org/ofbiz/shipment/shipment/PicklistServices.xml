@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
  -->
 <simple-methods>
@@ -434,4 +434,13 @@
         <field-to-result field-name="wrongQuantityReservedList"/>
         <field-to-result field-name="insufficientQohList"/>
     </simple-method>    
+
+    <simple-method method-name="clearPickStarted" short-description="Clear PickStarted Dates according to specified parameters">
+        <make-value entity-name="OrderItemInventoryRes" map-name="parameters" value-name="orderItemInventoryResLkupValue"/>
+        <find-by-and entity-name="OrderItemInventoryRes" map-name="orderItemInventoryResLkupValue" list-name="orderItemInventoryResList"/>
+        <iterate entry-name="orderItemInventoryRes" list-name="orderItemInventoryResList">
+            <clear-field field-name="pickStartDate" map-name="orderItemInventoryRes"/>
+            <store-value value-name="orderItemInventoryRes"/>
+        </iterate>
+    </simple-method>
 </simple-methods>

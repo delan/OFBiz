@@ -455,6 +455,14 @@
     <request-map uri="Picklist"><security https="true" auth="true"/>
         <response name="success" type="view" value="Picklist"/>
     </request-map>
+    <request-map uri="PickStarted"><security https="true" auth="true"/>
+        <response name="success" type="view" value="PickStarted"/>
+    </request-map>
+    <request-map uri="clearPickStarted"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="clearPickStarted"/>
+        <response name="success" type="view" value="PickStarted"/>
+        <response name="error" type="view" value="PickStarted"/>
+    </request-map>
 
     <!-- ================ Shipment Requests ================= -->
     <request-map uri="FindShipment"><security https="true" auth="true"/>
@@ -664,6 +672,7 @@
 
     <view-map name="PicklistOptions" type="jpublish" page="/facility/PicklistOptions.ftl"/>
     <view-map name="Picklist" type="jpublish" page="/facility/Picklist.ftl"/>
+    <view-map name="PickStarted" type="jpublish" page="/facility/PickStarted.ftl"/>
 
     <view-map name="FindFacilityGroup" type="jpublish" page="/group/FindFacilityGroup.ftl"/>
     <view-map name="EditFacilityGroup" type="jpublish" page="/group/EditFacilityGroup.ftl"/>

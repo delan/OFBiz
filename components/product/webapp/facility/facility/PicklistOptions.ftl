@@ -21,7 +21,7 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author         Andy Zeneski (jaz@ofbiz.org)
- *@version        $Revision: 1.4 $
+ *@version        $Revision: 1.5 $
  *@since            2.2
 -->
 
@@ -34,8 +34,10 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td width="100%">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
                 <tr>
-                    <td><div class="boxhead">Find Orders</div></td>
-                    <td align="right">&nbsp;</td>
+                    <td><div class="boxhead">Find Orders to Pick</div></td>
+                    <td align="right">
+                        <a href="<@ofbizUrl>/PickStarted?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="submenutext">View Picks Started</a>
+                    </td>
                 </tr>
             </table>
             <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
@@ -50,8 +52,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                 <td><div class="tableheadtext">&nbsp;</div></td>
                             </tr>
                             <#if pickMoveByShipmentMethodInfoList?has_content>
-                            	<#assign orderReadyToPickInfoListSizeTotal = 0>
-                            	<#assign orderNeedsStockMoveInfoListSizeTotal = 0>
+                                <#assign orderReadyToPickInfoListSizeTotal = 0>
+                                <#assign orderNeedsStockMoveInfoListSizeTotal = 0>
                                 <#list pickMoveByShipmentMethodInfoList as pickMoveByShipmentMethodInfo>
                                     <#assign shipmentMethodType = pickMoveByShipmentMethodInfo.shipmentMethodType>
                                     <#assign orderReadyToPickInfoList = pickMoveByShipmentMethodInfo.orderReadyToPickInfoList?if_exists>

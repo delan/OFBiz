@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  */
 -->
 
@@ -937,6 +937,18 @@
         <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
+    <view-entity entity-name="OrderItemInventoryResAndItem"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Item Inventory Reservation and Inventory Item View Entity">
+      <member-entity entity-alias="OIIR" entity-name="OrderItemInventoryRes"/>
+      <member-entity entity-alias="II" entity-name="InventoryItem"/>
+      <alias-all entity-alias="OIIR"/>
+      <alias-all entity-alias="II"/>
+      <view-link entity-alias="OIIR" rel-entity-alias="II">
+      	<key-map field-name="inventoryItemId"/>
+      </view-link>
+    </view-entity>          
     <entity entity-name="OrderItemPriceInfo"
             package-name="org.ofbiz.order.order"
             never-cache="true"
