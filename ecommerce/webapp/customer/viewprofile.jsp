@@ -39,7 +39,6 @@
   GenericValue party = userLogin.getRelatedOne("Party");
   if(party != null)
   {
-    GenericValue person = party.getRelatedOne("Person");
     Iterator partyContactMechIterator = UtilMisc.toIterator(party.getRelated("PartyContactMech"));
     Iterator creditCardInfoIterator = UtilMisc.toIterator(party.getRelated("CreditCardInfo"));
 %>

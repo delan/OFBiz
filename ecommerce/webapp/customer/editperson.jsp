@@ -40,8 +40,6 @@
 
   String donePage = request.getParameter("DONE_PAGE");
   if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
-
-  GenericValue person = userLogin.getRelatedOne("Person");
 %>
     <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <%if(person == null){%>
