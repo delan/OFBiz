@@ -1,5 +1,5 @@
 /*
- * $Id: ContextFilter.java,v 1.3 2003/12/06 17:39:38 ajzeneski Exp $
+ * $Id: ContextFilter.java,v 1.4 2004/04/01 18:16:54 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,9 +46,8 @@ import org.ofbiz.base.util.CachedClassLoader;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.container.ComponentContainer;
-import org.ofbiz.base.component.AlreadyLoadedException;
-import org.ofbiz.base.component.ComponentException;
+import org.ofbiz.base.container.ContainerLoader;
+import org.ofbiz.base.start.StartupException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.security.Security;
 import org.ofbiz.security.SecurityConfigurationException;
@@ -60,16 +59,17 @@ import org.ofbiz.service.WebAppDispatcher;
  * ContextFilter - Restricts access to raw files and configures servlet objects.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class ContextFilter implements Filter {
 
     public static final String module = ContextFilter.class.getName();
+    public static final String CONTAINER_CONFIG = "limited-containers.xml";
     public static final String FORWARDED_FROM_SERVLET = "_FORWARDED_FROM_SERVLET_";
 
     protected ClassLoader localCachedClassLoader = null;
-    protected FilterConfig config = null;    
+    protected FilterConfig config = null;
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -81,8 +81,8 @@ public class ContextFilter implements Filter {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
 
-        // load the components
-        getComponents();
+        // load the containers
+        getContainers();
         // check the serverId
         getServerId();
         // initialize the delegator
@@ -339,15 +339,12 @@ public class ContextFilter implements Filter {
         return serverId;
     }
 
-    protected boolean getComponents() throws ServletException {
+    protected boolean getContainers() throws ServletException {
         try {
-            ComponentContainer.loadComponents(false);
-        } catch (AlreadyLoadedException e) {
-            Debug.logVerbose("Components already loaded; not loading from ContextFilter", module);
-            return false;
-        } catch (ComponentException e) {
+            ContainerLoader.loadContainers(CONTAINER_CONFIG);
+        } catch (StartupException e) {
             Debug.logError(e, module);
-            throw new ServletException("Unable to load components; cannot start ContextFilter");
+            throw new ServletException("Unable to load containers; cannot start ContextFilter");
         }
         return true;
     }

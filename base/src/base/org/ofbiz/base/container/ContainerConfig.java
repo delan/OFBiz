@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerConfig.java,v 1.5 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: ContainerConfig.java,v 1.6 2004/04/01 18:16:53 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * ContainerConfig - Container configuration for ofbiz.xml
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ContainerConfig {
@@ -93,7 +93,7 @@ public class ContainerConfig {
     
     protected ContainerConfig(String configFileLocation) throws ContainerException {        
         // load the config file
-        URL xmlUrl = UtilURL.fromFilename(configFileLocation);
+        URL xmlUrl = UtilURL.fromResource(configFileLocation);
         if (xmlUrl == null) {
             throw new ContainerException("Could not find " + configFileLocation + " master OFBiz container configuration");
         }

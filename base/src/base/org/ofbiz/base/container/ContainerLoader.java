@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.8 2004/03/30 22:35:09 ajzeneski Exp $
+ * $Id: ContainerLoader.java,v 1.9 2004/04/01 18:16:54 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,22 +38,24 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.8 $
+  *@version    $Revision: 1.9 $
  * @since      3.0
  */
 public class ContainerLoader implements StartupLoader {
     
     public static final String module = ContainerLoader.class.getName();
     public static final String CONTAINER_CONFIG = "ofbiz-containers.xml";
-    
-    protected List loadedContainers = new LinkedList();    
+    private static boolean loaded = false;
+
+    protected List loadedContainers = new LinkedList();
 
     /**
      * @see org.ofbiz.base.start.StartupLoader#load(Start.Config, String[])
      */
     public void load(Start.Config config, String args[]) throws StartupException {
         Debug.logInfo("[Startup] Loading ContainerLoader...", module);
-              
+        loaded = true;
+        
         // get the master container configuration file
         String configFileLocation = config.containerConfig;
         
@@ -70,7 +72,7 @@ public class ContainerLoader implements StartupLoader {
                 ContainerConfig.Container containerCfg = (ContainerConfig.Container) i.next();                
                 loadedContainers.add(loadContainer(containerCfg.className, configFileLocation));
             }
-        }                                    
+        }
     }
 
     /**
@@ -128,5 +130,16 @@ public class ContainerLoader implements StartupLoader {
         }  
         
         return componentObj;
-    }   
+    }
+
+    public static synchronized boolean loadContainers(String config) throws StartupException {
+        if (!loaded) {
+            ContainerLoader loader = new ContainerLoader();
+            Start.Config cfg = new Start.Config();
+            cfg.containerConfig = config == null ? "limited-containers.xml" : config;
+            loader.load(cfg, null);
+            return true;
+        }
+        return false;
+    }
 }
