@@ -20,10 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <div class='tabContainer'>
         <a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingCalendar}</a>

@@ -31,6 +31,9 @@
             target="EditRoutingTaskAssoc" title="" list-name="allRoutingTasks"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
             >
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
@@ -54,6 +57,9 @@
      <form name="UpdateRoutingTaskAssoc" type="single" 
             target="UpdateRoutingTaskAssoc" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"></field>
@@ -73,6 +79,9 @@
     <form name="AddRoutingProductLink" type="single" 
             target="AddRoutingProductLink" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="createWorkEffortGoodStandard" map-name="routingProductLink"/>
         <field name="statusId">
             <hidden/>
@@ -115,6 +124,9 @@
      <form name="UpdateRoutingProductLink" type="single" 
             target="UpdateRoutingProductLink" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-service service-name="updateWorkEffortGoodStandard" map-name="routingProductLink"/>
         <field name="byProduct"><hidden/></field>
         <field name="statusId"><hidden/></field>
@@ -138,6 +150,9 @@
    <form name="ListRoutingProductLink" type="list" 
             target="EditRoutingProductLink" title="" list-name="allRoutingProductLinks"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <field name="workEffortId"><hidden/></field>
         <field name="byProduct"><hidden/></field>
         <field name="statusId"><hidden/></field>
