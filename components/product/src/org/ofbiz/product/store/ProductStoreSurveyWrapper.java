@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreSurveyWrapper.java,v 1.3 2003/12/06 00:04:50 ajzeneski Exp $
+ * $Id: ProductStoreSurveyWrapper.java,v 1.4 2004/05/21 04:55:25 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,14 +25,17 @@ package org.ofbiz.product.store;
 
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.content.survey.SurveyWrapper;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilValidate;
 
 import java.util.Map;
+import java.io.Writer;
 
 /**
  * Product Store Survey Wrapper
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ProductStoreSurveyWrapper extends SurveyWrapper {
@@ -40,6 +43,9 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
     public static final String module = ProductStoreSurveyWrapper.class.getName();
 
     protected GenericValue productStoreSurveyAppl = null;
+    protected String surveyTemplate = null;
+    protected String resultTemplate = null;
+    protected boolean callResult = false;
 
     protected ProductStoreSurveyWrapper() {}
 
@@ -51,10 +57,33 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
             this.partyId = partyId;
             this.delegator = productStoreSurveyAppl.getDelegator();
             this.surveyId = productStoreSurveyAppl.getString("surveyId");
-            this.templatePath = productStoreSurveyAppl.getString("templatePath");
+            this.surveyTemplate = productStoreSurveyAppl.getString("surveyTemplate");
+            this.resultTemplate = productStoreSurveyAppl.getString("resultTemplate");
         } else {
             throw new IllegalArgumentException("Required parameter productStoreSurveyAppl missing");
         }
         this.checkParameters();
+    }
+
+    public void callResult(boolean b) {
+        this.callResult = b;
+    }
+
+    public Writer render() throws SurveyWrapperException {
+        if (canRespond() && !callResult) {
+            return renderSurvey();
+        } else if (!UtilValidate.isEmpty(resultTemplate)) {
+            return renderResult();
+        } else {
+            throw new SurveyWrapperException("Error template not implemented yet; cannot update survey; no result template defined!");
+        }
+    }
+
+    public Writer renderSurvey() throws SurveyWrapperException {
+        return this.render(surveyTemplate);
+    }
+
+    public Writer renderResult() throws SurveyWrapperException {
+        return this.render(resultTemplate);
     }
 }

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -112,9 +112,15 @@
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">Template Path</span></td>
+        <td><span class="tableheadtext">Survey Template Path</span></td>
         <td>
-          <input type="text" class="inputBox" size="30" name="templatePath">
+          <input type="text" class="inputBox" size="30" name="surveyTemplate">
+        </td>
+      </tr>
+      <tr>
+        <td><span class="tableheadtext">Result Template Path</span></td>
+        <td>
+          <input type="text" class="inputBox" size="30" name="resultTemplate">
         </td>
       </tr>
       <tr>
