@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <CustRequestType custRequestTypeId="RF_BUGFIX" description="Request For Bug Fix" hasTable="N" parentTypeId=""/>
+    <CustRequestType custRequestTypeId="RF_CATALOG" description="Request For Catalog" hasTable="N" parentTypeId=""/>
     <CustRequestType custRequestTypeId="RF_FEATURE" description="Request For Feature" hasTable="N" parentTypeId=""/>
     <CustRequestType custRequestTypeId="RF_INFO" description="Request For Information" hasTable="N" parentTypeId=""/>
     <CustRequestType custRequestTypeId="RF_PROPOSAL" description="Request For Proposal" hasTable="N" parentTypeId=""/>
