@@ -264,7 +264,7 @@
               <#elseif "TELECOM_NUMBER" = contactMech.contactMechTypeId>
                   <#assign telecomNumber = contactMechMap.telecomNumber>
                   <div class="tabletext">
-                    ${telecomNumber.countryCode}
+                    ${telecomNumber.countryCode?if_exists}
                     <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber}
                     <#if partyContactMech.extension?has_content>ext&nbsp;${partyContactMech.extension}</#if>
                     <#if (telecomNumber?has_content && !telecomNumber.countryCode?has_content) || telecomNumber.countryCode = "011">
@@ -629,7 +629,7 @@
 </TABLE>
 
 <#else>
-    No party found with the partyId of: ${partyId}
+    No party found with the partyId of: ${partyId?if_exists}
 </#if>
 <#else>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
