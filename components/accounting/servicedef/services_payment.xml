@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
-
 <!--
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -21,10 +19,10 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: services.xml 3805 2004-10-28 20:50:45Z jaz $
 -->
 
-<services>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
     <description>Accounting Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
