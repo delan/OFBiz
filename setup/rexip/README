@@ -1,0 +1,7 @@
+To setup RexIP:
+
+1) Copy server.xml and defaultServer.sh to $REXIP_HOME/config/default
+2) Be sure to configure your datasource to match that in server.xml
+3) Edit defaultServer.sh and update REXIP_HOME
+4) Run defaultServer.sh from $REXIP_HOME/config/default
+

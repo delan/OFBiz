@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<domain name="rexip_default" auto-deploy-enabled="true" auto-deploy-interval="5">
+    <server rexip-node-port="7777" address="" listen-port="8080" name="defaultServer" secured-port="8443" connection-filter="" id="1">
+        <server-log></server-log>
+        <access-log></access-log>
+    </server>
+    <webapp name="defaultWebapp" uri="/" path="./applications/defaultWebapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+
+    <webapp name="webtools" uri="/webtools" path="../../../../ofbiz/webtools/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+    <webapp name="commonapp" uri="/commonapp" path="../../../../ofbiz/commonapp/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+    <webapp name="workeffort" uri="/workeffort" path="../../../../ofbiz/workeffort/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+    <webapp name="partymgr" uri="/partymgr" path="../../../../ofbiz/partymgr/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+    <webapp name="ordermgr" uri="/ordermgr" path="../../../../ofbiz/ordermgr/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+    <webapp name="catalog" uri="/catalog" path="../../../../ofbiz/catalog/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+    <webapp name="ecommerce" uri="/ecommerce" path="../../../../ofbiz/ecommerce/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+    <webapp name="images" uri="/images" path="../../../../ofbiz/ecommerce/images/">
+        <server name="defaultServer"></server>
+    </webapp>
+
+    <security default-basic-realm=""/>
+    <transaction/>
+    <xadatasource name="HsqlDataSource"
+                  jndi-name="HsqlDataSource"
+                  url="jdbc:hsqldb:db/test"
+                  driver="org.hsqldb.jdbcDriver"
+                  username="sa"
+                  password=""
+                  gc-min-idle-time="1200" 
+                  max-idle-timeout-percent="1.0" 
+                  enable-blocking="true" gc-interval="120" 
+                  idle-timeout="1800" 
+                  enable-gc="false" max-pool="5" 
+                  blocking-timeout="-1" 
+                  min-pool="0" 
+                  enable-idle-timeout="false" 
+                  enable-invalidate-on-error="false"/>    
+
+    <xadatasource name="PostgresDataSource"
+                  jndi-name="PostgresDataSource"
+                  driver="org.postgresql.Driver"
+                  url="jdbc:postgresql://127.0.0.1/ofbiz"
+                  username="ofbiz"
+                  password="ofbiz"
+                  gc-min-idle-time="1200"
+                  max-idle-timeout-percent="1.0"
+                  enable-blocking="true" gc-interval="120"
+                  idle-timeout="1800"
+                  enable-gc="false" max-pool="5"
+                  blocking-timeout="-1"
+                  min-pool="0"
+                  enable-idle-timeout="false"
+                  enable-invalidate-on-error="false"/>
+
+    <!--
+    <xadatasource name="SapDbDataSource"
+                  jndi-name="SapDBDataSource"
+                  driver="com.sap.dbtech.jdbc.DriverSapDB"
+                  url="jdbc:sapdb://localhost/OFBIZ"
+                  username="ofbiz"
+                  password="ofbiz"
+                  gc-min-idle-time="1200"
+                  max-idle-timeout-percent="1.0"
+                  enable-blocking="true" gc-interval="120"
+                  idle-timeout="1800"
+                  enable-gc="false" max-pool="5"
+                  blocking-timeout="-1"
+                  min-pool="0"
+                  enable-idle-timeout="false"
+                  enable-invalidate-on-error="false"/>
+    -->
+</domain>
