@@ -64,8 +64,8 @@
 <%if(trackingCodeId != null && trackingCodeId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditTrackingCode?trackingCodeId=<%=trackingCodeId%></ofbiz:url>" class="tabButtonSelected">TrackingCode</a>
-  <a href="#<%--<ofbiz:url>/FindTrackingCodeOrders?trackingCodeId=<%=trackingCodeId%></ofbiz:url>--%>" class="tabButton">Orders</a>
-  <a href="#<%--<ofbiz:url>/FindTrackingCodeVisits?trackingCodeId=<%=trackingCodeId%></ofbiz:url>--%>" class="tabButton">Visits</a>
+  <a href="<ofbiz:url>/FindTrackingCodeOrders?trackingCodeId=<%=trackingCodeId%></ofbiz:url>" class="tabButton">Orders</a>
+  <a href="<ofbiz:url>/FindTrackingCodeVisits?trackingCodeId=<%=trackingCodeId%></ofbiz:url>" class="tabButton">Visits</a>
   </div>
 <%}%>
 
