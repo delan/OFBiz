@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -29,12 +29,16 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <div class='tabContainer'>
-        <a href="<@ofbizUrl>/FindRouting</@ofbizUrl>" class="${selectedClassMap.findRouting?default(unselectedClassName)}">${uiLabelMap.ManufacturingFindRouting}</a>
+    <a href="<@ofbizUrl>/FindRouting</@ofbizUrl>" class="${selectedClassMap.findRouting?default(unselectedClassName)}">${uiLabelMap.ManufacturingFindRouting}</a>
+    <#if routingId?has_content>
         <a href="<@ofbizUrl>/FindRouting?workEffortId=${routingId}&hideFields=Y&lookupFlag=Y</@ofbizUrl>" class="${selectedClassMap.routing?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRouting}</a>
-        <a href="<@ofbizUrl>/EditRoutingProductLink?workEffortId=${routingId}</@ofbizUrl>" class="${selectedClassMap.routingProductLink?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRoutingProductLink}</a>
-        <a href="<@ofbizUrl>//EditRoutingTaskAssoc?workEffortIdFrom=${routingId}</@ofbizUrl>" class="${selectedClassMap.routingTaskAssoc?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRoutingTaskAssoc}</a>
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="<@ofbizUrl>/FindRoutingTask</@ofbizUrl>" class="${selectedClassMap.routingTask?default(unselectedClassName)}">${uiLabelMap.ManufacturingRoutingTask}</a>
-        <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="${selectedClassMap.machine?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachine}</a>
-        <a href="<@ofbizUrl>/EditMachineGroup</@ofbizUrl>" class="${selectedClassMap.machineGroup?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachineGroup}</a>
+    </#if>
+        <a href="<@ofbizUrl>/EditRoutingProductLink?<#if routingId?has_content>workEffortId=${routingId}&</#if><#if byProduct?has_content>byProduct=${byProduct}</#if></@ofbizUrl>" class="${selectedClassMap.routingProductLink?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRoutingProductLink}</a>
+    <#if routingId?has_content>
+        <a href="<@ofbizUrl>/EditRoutingTaskAssoc?workEffortIdFrom=${routingId}</@ofbizUrl>" class="${selectedClassMap.routingTaskAssoc?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRoutingTaskAssoc}</a>
+    </#if>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="<@ofbizUrl>/FindRoutingTask</@ofbizUrl>" class="${selectedClassMap.routingTask?default(unselectedClassName)}">${uiLabelMap.ManufacturingRoutingTask}</a>
+    <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="${selectedClassMap.machine?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachine}</a>
+    <a href="<@ofbizUrl>/EditMachineGroup</@ofbizUrl>" class="${selectedClassMap.machineGroup?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachineGroup}</a>
 </div>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,7 +30,13 @@ ${pages.get("/routing/RoutingDetailTabBar.ftl")}
 
 	<div class="head1">${uiLabelMap.ManufacturingEditRoutingProductLink}&nbsp; 
 	</div>
-	${addRoutingProductLinkWrapper.renderFormString()} 
+        <#if byProduct?has_content>
+            <div class='tabletext'>
+                <a href="<@ofbizUrl>/EditProductBom?productId=${byProduct}&amp;productAssocTypeId=MANUF_COMPONENT</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductBom}]</a>
+            </div>
+        </#if>
+        
+        ${addRoutingProductLinkWrapper.renderFormString()}
 		<hr class="sepbar">
 	<#if routingProductLink?has_content>
 			${updateRoutingProductLinkWrapper.renderFormString()}

@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -70,36 +70,53 @@
 		</sort-order>
     </form>
 
-     <form name="AddRoutingProductLink" type="single" 
+    <form name="AddRoutingProductLink" type="single" 
             target="AddRoutingProductLink" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createWorkEffortGoodStandard" map-name="routingProductLink"/>
-       <field name="byProduct"><hidden/></field>
-        <field name="routingTemplate"><hidden/></field>
-        <field name="statusId"><hidden/></field>
-         <field name="workEffortId"><hidden/></field>
-        <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}"><display description="${workEffortName}[${workEffortId}]"/></field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}">
+        <field name="statusId">
+            <hidden/>
+        </field>
+        <field name="workEffortId" use-when="${byProduct} == null">
+            <hidden/>
+        </field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}" use-when="${byProduct} == null">
+            <display description="${workEffortName}[${workEffortId}]"/>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="${byProduct} == null">
             <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="byProduct" use-when="${byProduct} != null">
+            <hidden/>
+        </field>
+        <field name="productId" use-when="${byProduct} != null">
+            <hidden value="${byProduct}"/>
+        </field>
+        <field name="productName" title="${uiLabelMap.ProductProductName}" use-when="${byProduct} != null">
+            <display description="${productName}[${byProduct}]"/>
+        </field>
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingId}" use-when="${byProduct} != null">
+            <lookup target-form-name="LookupRouting"/>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" ><submit button-type="button"/></field>
-		<sort-order>
-			<sort-field name="workEffortName"/>
-			<sort-field name="productId"/>
-			<sort-field name="fromDate"/>
-			<sort-field name="thruDate"/>
-			<sort-field name="estimatedQuantity"/>
-		</sort-order>
+        <sort-order>
+            <sort-field name="workEffortName"/>
+            <sort-field name="productName"/>
+            <sort-field name="workEffortId"/>
+            <sort-field name="productId"/>
+            <sort-field name="fromDate"/>
+            <sort-field name="thruDate"/>
+            <sort-field name="estimatedQuantity"/>
+        </sort-order>
     </form>
      <form name="UpdateRoutingProductLink" type="single" 
             target="UpdateRoutingProductLink" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateWorkEffortGoodStandard" map-name="routingProductLink"/>
         <field name="byProduct"><hidden/></field>
-        <field name="routingTemplate"><hidden/></field>
         <field name="statusId"><hidden/></field>
          <field name="workEffortId"><hidden/></field>
         <field name="productId" ><hidden/></field>
@@ -123,7 +140,6 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <field name="workEffortId"><hidden/></field>
         <field name="byProduct"><hidden/></field>
-        <field name="routingTemplate"><hidden/></field>
         <field name="statusId"><hidden/></field>
         <field name="workEffortName"  title="${uiLabelMap.ManufacturingRoutingName}"><display description="${workEffortName} [${workEffortId}]"/></field>
         <field name="productId"><hidden/></field>
@@ -133,7 +149,7 @@
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSelected}" widget-style="smallSubmit" ><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;byProduct=${byProduct}&amp;routingTemplate=${routingTemplate}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+            <hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
 
