@@ -7,11 +7,11 @@
 
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    	<event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
     </preprocessor>
     <postprocessor>
     	<!-- Events to run on every request after all other processing (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    	<event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> 
     </postprocessor>
 
     <!-- Security Mappings -->
@@ -26,7 +26,7 @@
     <request-map uri="login">
       <security https="true" auth="false"/>
       <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="login"/>
-      <response name="success" type="request" value="updatedistributor"/>
+      <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="login"/>
     </request-map>
 
@@ -45,44 +45,92 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
+    
     <request-map uri="chain">
         <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
         <response name="success" type="request" value="/view"/>
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main"><security https="false" auth="false"/><response name="success" type="view" value="main"/></request-map>
-    <request-map uri="sitemap"><security https="false" auth="false"/><response name="success" type="view" value="sitemap"/></request-map>
-    <request-map uri="install"><security https="false" auth="false"/><response name="success" type="view" value="install"/></request-map>
-    <request-map uri="entitymaint"><security https="true" auth="true"/><response name="success" type="view" value="entitymaint"/></request-map>
+    <request-map uri="main">
+    	<security https="false" auth="false"/>
+    	<response name="success" type="view" value="main"/>
+    </request-map>
+    
+    <request-map uri="sitemap">
+    	<security https="false" auth="false"/>
+    	<response name="success" type="view" value="sitemap"/>
+    </request-map>
+    
+    <request-map uri="install">
+    	<security https="false" auth="false"/>
+    	<response name="success" type="view" value="install"/>
+    </request-map>
+    
+    <request-map uri="entitymaint">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="entitymaint"/>
+    </request-map>
 
-    <request-map uri="FindGeneric"><security https="true" auth="true"/><response name="success" type="view" value="FindGeneric"/></request-map>
-    <request-map uri="ViewGeneric"><security https="true" auth="true"/><response name="success" type="view" value="ViewGeneric"/></request-map>
-    <request-map uri="UpdateGeneric"><security https="true" auth="true"/>
+    <request-map uri="FindGeneric">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindGeneric"/>
+    </request-map>
+    
+    <request-map uri="ViewGeneric">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="ViewGeneric"/>
+    </request-map>
+    
+    <request-map uri="UpdateGeneric">
+    	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.entity.GenericWebEvent" invoke="updateGeneric"/>
-        <response name="success" type="view" value="ViewGeneric"/><response name="error" type="view" value="ViewGeneric"/>
+        <response name="success" type="view" value="ViewGeneric"/>
+        <response name="error" type="view" value="ViewGeneric"/>
     </request-map>
 
-    <request-map uri="FindUtilCache"><security https="true" auth="true"/><response name="success" type="view" value="FindUtilCache"/></request-map>
-    <request-map uri="FindUtilCacheClear"><security https="true" auth="true"/>
+    <request-map uri="FindUtilCache">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindUtilCache"/>
+    </request-map>
+    
+    <request-map uri="FindUtilCacheClear">
+    	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
-        <response name="success" type="view" value="FindUtilCache"/><response name="error" type="view" value="FindUtilCache"/>
+        <response name="success" type="view" value="FindUtilCache"/>
+        <response name="error" type="view" value="FindUtilCache"/>
     </request-map>
 
-    <request-map uri="EditUtilCache"/><security https="true" auth="true"/><response name="success" type="view" value="EditUtilCache"/></request-map>
-    <request-map uri="EditUtilCacheUpdate"><security https="true" auth="true"/>
+    <request-map uri="EditUtilCache">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditUtilCache"/>
+    </request-map>
+    
+    <request-map uri="EditUtilCacheUpdate">
+    	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="updateEvent"/>
-        <response name="success" type="view" value="EditUtilCache"/><response name="error" type="view" value="EditUtilCache"/>
+        <response name="success" type="view" value="EditUtilCache"/>
+        <response name="error" type="view" value="EditUtilCache"/>
     </request-map>
-    <request-map uri="EditUtilCacheClear"><security https="true" auth="true"/>
+    
+    <request-map uri="EditUtilCacheClear">
+    	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
-        <response name="success" type="view" value="EditUtilCache"/><response name="error" type="view" value="EditUtilCache"/>
+        <response name="success" type="view" value="EditUtilCache"/>
+        <response name="error" type="view" value="EditUtilCache"/>
     </request-map>
 
-    <request-map uri="FindUtilCacheElements"><security https="true" auth="true"/><response name="success" type="view" value="FindUtilCacheElements"/><response name="error" type="view" value="FindUtilCacheElements"/></request-map>
-    <request-map uri="FindUtilCacheElementsRemoveElement"><security https="true" auth="true"/>
+    <request-map uri="FindUtilCacheElements">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindUtilCacheElements"/>
+    	<response name="error" type="view" value="FindUtilCacheElements"/>
+    </request-map>
+    
+    <request-map uri="FindUtilCacheElementsRemoveElement">
+    	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="removeElementEvent"/>
-        <response name="success" type="view" value="FindUtilCacheElements"/><response name="error" type="view" value="FindUtilCacheElements"/>
+        <response name="success" type="view" value="FindUtilCacheElements"/>
+        <response name="error" type="view" value="FindUtilCacheElements"/>
     </request-map>
     <!-- end of request mappings -->
 
@@ -109,4 +157,6 @@
     <view-map name="FindUtilCache" page="/cache/FindUtilCache.jsp"/>
     <view-map name="FindUtilCacheElements" page="/cache/FindUtilCacheElements.jsp"/>
     <!-- end of view mappings -->
+    
 </site-conf>
+
