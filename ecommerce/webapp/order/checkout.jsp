@@ -53,13 +53,13 @@
 <%pageContext.setAttribute("cart", cart);%>
 <ofbiz:if name="cart" size="0">
 <%
-    List orderItems = cart.makeOrderItems(delegator);
-    List orderAdjustments = cart.makeAllAdjustments(delegator);
+    List orderItems = cart.makeOrderItems();
+    List orderAdjustments = cart.makeAllAdjustments();
     List orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
     double orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments);
 
-    GenericValue shippingAddress = cart.getShippingAddress(delegator);
-    List paymentMethods = cart.getPaymentMethods(delegator);
+    GenericValue shippingAddress = cart.getShippingAddress();
+    List paymentMethods = cart.getPaymentMethods();
     GenericValue paymentMethod = null;
     if (paymentMethods != null && paymentMethods.size() > 0) {
         paymentMethod = (GenericValue) paymentMethods.get(0);
