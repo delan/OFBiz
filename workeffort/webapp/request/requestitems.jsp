@@ -83,7 +83,7 @@
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <ofbiz:unless name="custRequestItems">
                   <TR>
-                    <TD><div class="tabletext">No items created.</div></TD>
+                    <TD><div class="tabletext">&nbsp;<b>No items created.</b></div></TD>
                   </TR>
                 </ofbiz:unless>
                 <ofbiz:if name="custRequestItems">

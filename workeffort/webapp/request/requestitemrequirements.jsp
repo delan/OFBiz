@@ -77,7 +77,7 @@
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <ofbiz:unless name="requirements">
                   <TR>
-                    <TD><div class="tabletext">No requirements created.</div></TD>
+                    <TD><div class="tabletext">&nbsp;<b>No requirements created.</b></div></TD>
                   </TR>
                 </ofbiz:unless>  
                 <ofbiz:if name="requirements">

@@ -52,6 +52,7 @@
         <attribute name="workEffortName" type="String" mode="IN" optional="false"/>
         <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
         <attribute name="quickAssignPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="requirementId" type="String" mode="IN" optional="true"/>
         <attribute name="workEffortId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateWorkEffort" engine="simple"

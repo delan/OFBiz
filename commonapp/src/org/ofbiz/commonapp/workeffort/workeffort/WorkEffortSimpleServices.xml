@@ -52,6 +52,14 @@
         <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newWorkEffortStatus"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="setByUserLogin" to-map-name="newWorkEffortStatus"/>
         <create-value value-name="newWorkEffortStatus"/>
+        
+        <!-- Attach the workeffort to a requirement if passed -->
+        <if-not-empty field-name="requirementId" map-name="parameters">
+        	<make-value value-name="workFullfillment" entity-name="WorkRequirementFulfillment"/>
+        	<field-to-field field-name="workEffortId" map-name="newEntity" to-map-name="workFullfillment"/>
+        	<field-to-field field-name="requirementId" map-name="parameters" to-map-name="workFullfillment"/>
+        	<create-value value-name="workFullfillment"/>
+        </if-not-empty>
     </simple-method>
     <simple-method method-name="updateWorkEffort" short-description="Update Work Effort">
         <!-- check permissions before moving on: if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions -->

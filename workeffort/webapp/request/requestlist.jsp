@@ -51,43 +51,48 @@
       </table>
     </TD>
   </TR>
-  <ofbiz:if name="custRequestAndRoles" size="0">
-      <TR>
-        <TD width='100%'>
-              <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
-                <TR>
-                  <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Request</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Response Required By</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
-                  <%-- <TD><DIV class='tabletext'><b>Party&nbsp;ID</b></DIV></TD> --%>
-                  <TD><DIV class='tabletext'><b>Role&nbsp;ID</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Request&nbsp;Name</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
-                </TR>
-                <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
-                <ofbiz:iterator name="custRequestAndRole" property="custRequestAndRoles">
-                  <% GenericValue roleType = delegator.findByPrimaryKeyCache("RoleType", UtilMisc.toMap("roleTypeId", custRequestAndRole.getString("roleTypeId"))); %>
-                  <TR>
-                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("priority"))%></DIV></TD>
-                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestDate"))%></DIV></TD>
-                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("responseRequiredDate"))%></DIV></TD>
-                    <%GenericValue statusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", custRequestAndRole.getString("statusId")));%>                   
-                    <% if (statusItem != null) { %>
-                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(statusItem.getString("description"))%></DIV></TD>
-                    <% } else { %>
-                    <TD><DIV class='tabletext'>&nbsp;</DIV></TD>
-                    <% } %>
-                    <%-- <TD><DIV class='tabletext'><ofbiz:entityfield attribute="custRequestAndRole" field="partyId"/></DIV></TD> --%>
-                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(roleType.getString("description"))%></DIV></TD>
-                    <TD><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%></ofbiz:url>'>
-                        <ofbiz:entityfield attribute="custRequestAndRole" field="custRequestName"/></a></DIV></TD>
-                    <TD align=right><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%></ofbiz:url>'>
-                        Edit&nbsp;[<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%>]</a></DIV></TD>
-                  </TR>
-                </ofbiz:iterator>
-              </TABLE>
-        </TD>
-      </TR>
-  </ofbiz:if>
+  <TR>
+    <TD width='100%'>
+      <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
+        <ofbiz:if name="custRequestAndRoles" size="0"> 
+        <TR>
+          <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
+          <TD><DIV class='tabletext'><b>Request</b></DIV></TD>
+          <TD><DIV class='tabletext'><b>Response Required By</b></DIV></TD>
+          <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
+          <%-- <TD><DIV class='tabletext'><b>Party&nbsp;ID</b></DIV></TD> --%>
+          <TD><DIV class='tabletext'><b>Role&nbsp;ID</b></DIV></TD>
+          <TD><DIV class='tabletext'><b>Request&nbsp;Name</b></DIV></TD>
+          <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+        </TR>
+        <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
+        <ofbiz:iterator name="custRequestAndRole" property="custRequestAndRoles">
+          <% GenericValue roleType = delegator.findByPrimaryKeyCache("RoleType", UtilMisc.toMap("roleTypeId", custRequestAndRole.getString("roleTypeId"))); %>
+          <TR>
+            <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("priority"))%></DIV></TD>
+            <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestDate"))%></DIV></TD>
+            <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("responseRequiredDate"))%></DIV></TD>
+            <%GenericValue statusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", custRequestAndRole.getString("statusId")));%>                   
+            <% if (statusItem != null) { %>
+            <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(statusItem.getString("description"))%></DIV></TD>
+            <% } else { %>
+            <TD><DIV class='tabletext'>&nbsp;</DIV></TD>
+            <% } %>
+            <%-- <TD><DIV class='tabletext'><ofbiz:entityfield attribute="custRequestAndRole" field="partyId"/></DIV></TD> --%>
+            <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(roleType.getString("description"))%></DIV></TD>
+            <TD><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%></ofbiz:url>'>
+            <ofbiz:entityfield attribute="custRequestAndRole" field="custRequestName"/></a></DIV></TD>
+            <TD align=right><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%></ofbiz:url>'>
+              Edit&nbsp;[<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%>]</a></DIV></TD>
+          </TR>
+        </ofbiz:iterator>
+        </ofbiz:if>
+        <ofbiz:unless name="custRequestAndRoles" size="0">
+        <TR>
+          <TD><div class="tabletext">&nbsp;<b>No requests found.</b></div></TD>
+        </TR>
+        </ofbiz:unless>
+      </TABLE>
+    </TD>
+  </TR>
 </TABLE>
