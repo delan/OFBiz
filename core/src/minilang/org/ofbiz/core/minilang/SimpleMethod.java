@@ -192,6 +192,10 @@ public class SimpleMethod {
     boolean loginRequired = true;
     boolean useTransaction = true;
 
+    String delegatorName;
+    String securityName;
+    String dispatcherName;
+    
     public SimpleMethod(Element simpleMethodElement) {
         methodName = simpleMethodElement.getAttribute("method-name");
         shortDescription = simpleMethodElement.getAttribute("short-description");
@@ -209,7 +213,7 @@ public class SimpleMethod {
 
         eventRequestName = simpleMethodElement.getAttribute("event-request-object-name");
         if (eventRequestName == null || eventRequestName.length() == 0)
-            eventRequestName = "_request_";
+            eventRequestName = "request";
         eventResponseCodeName = simpleMethodElement.getAttribute("event-response-code-name");
         if (eventResponseCodeName == null || eventResponseCodeName.length() == 0)
             eventResponseCodeName = "_response_code_";
@@ -239,6 +243,16 @@ public class SimpleMethod {
         loginRequired = !"false".equals(simpleMethodElement.getAttribute("login-required"));
         useTransaction = !"false".equals(simpleMethodElement.getAttribute("use-transaction"));
 
+        delegatorName = simpleMethodElement.getAttribute("delegator-name");
+        if (delegatorName == null || delegatorName.length() == 0)
+            delegatorName = "delegator";
+        securityName = simpleMethodElement.getAttribute("security-name");
+        if (securityName == null || securityName.length() == 0)
+            securityName = "security";
+        dispatcherName = simpleMethodElement.getAttribute("dispatcher-name");
+        if (dispatcherName == null || dispatcherName.length() == 0)
+            dispatcherName = "dispatcher";
+
         readOperations(simpleMethodElement, this.methodOperations, this);
     }
 
@@ -267,6 +281,10 @@ public class SimpleMethod {
 
     /** Execute the Simple Method operations */
     public String exec(MethodContext methodContext) {
+        methodContext.putEnv(delegatorName, methodContext.getDelegator());
+        methodContext.putEnv(securityName, methodContext.getSecurity());
+        methodContext.putEnv(dispatcherName, methodContext.getDispatcher());
+
         methodContext.putEnv(parameterMapName, methodContext.getParameters());
 
         if (methodContext.getMethodType() == MethodContext.EVENT) {

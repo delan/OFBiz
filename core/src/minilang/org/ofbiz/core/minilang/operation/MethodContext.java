@@ -33,6 +33,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -53,6 +54,7 @@ public class MethodContext {
     ClassLoader loader;
     LocalDispatcher dispatcher;
     GenericDelegator delegator;
+    Security security;
     
     HttpServletRequest request = null;
     
@@ -66,6 +68,7 @@ public class MethodContext {
         this.request = request;
         this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         this.delegator = (GenericDelegator) request.getAttribute("delegator");
+        this.security = (Security) request.getAttribute("security");
 
         if (this.loader == null)
             this.loader = Thread.currentThread().getContextClassLoader();
@@ -77,6 +80,7 @@ public class MethodContext {
         this.loader = loader;
         this.dispatcher = ctx.getDispatcher();
         this.delegator = ctx.getDelegator();
+        this.security = ctx.getSecurity();
         this.results = new HashMap();
 
         if (this.loader == null)
@@ -96,6 +100,7 @@ public class MethodContext {
     public ClassLoader getLoader() { return this.loader; }
     public LocalDispatcher getDispatcher() { return this.dispatcher; }
     public GenericDelegator getDelegator() { return this.delegator; }
+    public Security getSecurity() { return this.security; }
     public HttpServletRequest getRequest() { return this.request; }
 
     public Object getResult(String key) { return this.results.get(key); }
