@@ -1,31 +1,25 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.2  2002/03/21 19:14:49  dustinc
- * added auto-login capability
  *
- * Revision 1.1.1.1  2002/03/14 23:36:26  dustinc
- * no message
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * Revision 1.7  2002/02/28 01:52:17  azeneski
- * added attribute to the request when login has passed; this is necessary because a chain may take place with the login event and it may no longer be in the URI
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * Revision 1.6  2002/02/02 12:01:47  jonesde
- * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
  *
- * Revision 1.5  2002/01/31 21:22:34  jonesde
- * Fixed NPE when password is null in the database
- *
- * Revision 1.4  2002/01/27 08:33:13  jonesde
- * Changed update password to use new service, also added createUserLogin service
- *
- * Revision 1.3  2002/01/25 06:59:06  jonesde
- * A small addition for ecommerce to maintain the current catalog setting
- *
- *
- * Revision 1.1  2001/10/19 16:44:42  azeneski
- * Moved Party/ContactMech/Login events to more appropiate packages.
- *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.commonapp.security.login;
@@ -40,45 +34,28 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.commonapp.party.contact.ContactHelper;
 
 /**
- * <p><b>Title:</b> LoginEvents.java
- * <p><b>Description:</b> Events for UserLogin and Security handling.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
+ * LoginEvents - Events for UserLogin and Security handling.
  *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author Dustin Caldwell
- * @version 1.0
- * Created on October 19, 2001, 8:34 AM
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     Dustin Caldwell
+ * @version    1.0
+ * @created    Oct 19, 2001
  */
 public class LoginEvents {
     
     /**
-     *save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages
-     *@param request The HTTP request object for the current JSP or Servlet request.
-     *@param response The HTTP response object for the current JSP or Servlet request.
-     *@throws RemoteException
-     *@throws IOException
-     *@throws ServletException
-     *@return
+     * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
+     *
+     * @param request The HTTP request object for the current JSP or Servlet request.
+     * @param response The HTTP response object for the current JSP or Servlet request.
+     * @throws RemoteException
+     * @throws IOException
+     * @throws ServletException
+     * @return
      */
-    public static String saveEntryParams(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+    public static String saveEntryParams(HttpServletRequest request, HttpServletResponse response)
+            throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
         // save entry login parameters if we don't have a valid login object
@@ -101,15 +78,19 @@ public class LoginEvents {
     }
     
     
-    /** An HTTP WebEvent handler that checks to see is a userLogin is logged in. If not, the user is forwarded to the /login.jsp page.
-     *@param request The HTTP request object for the current JSP or Servlet request.
-     *@param response The HTTP response object for the current JSP or Servlet request.
-     *@throws RemoteException
-     *@throws IOException
-     *@throws ServletException
-     *@return
+    /**
+     * An HTTP WebEvent handler that checks to see is a userLogin is logged in.
+     * If not, the user is forwarded to the /login.jsp page.
+     *
+     * @param request The HTTP request object for the current JSP or Servlet request.
+     * @param response The HTTP response object for the current JSP or Servlet request.
+     * @throws RemoteException
+     * @throws IOException
+     * @throws ServletException
+     * @return
      */
-    public static String checkLogin(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+    public static String checkLogin(HttpServletRequest request, HttpServletResponse response)
+            throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         String username = null;
@@ -151,15 +132,19 @@ public class LoginEvents {
         return "success";
     }
     
-    /** An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
-     *@param request The HTTP request object for the current JSP or Servlet request.
-     *@param response The HTTP response object for the current JSP or Servlet request.
-     *@return Return a boolean which specifies whether or not the calling Servlet or JSP should generate its own content. This allows an event to override the default content.
-     *@exception javax.servlet.ServletException Standard J2EE Servlet Exception
-     *@exception java.rmi.RemoteException Standard RMI Remote Exception
-     *@exception java.io.IOException Standard IO Exception
+    /**
+     * An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
+     *
+     * @param request The HTTP request object for the current JSP or Servlet request.
+     * @param response The HTTP response object for the current JSP or Servlet request.
+     * @return Return a boolean which specifies whether or not the calling Servlet or
+     *         JSP should generate its own content. This allows an event to override the default content.
+     * @exception javax.servlet.ServletException Standard J2EE Servlet Exception
+     * @exception java.rmi.RemoteException Standard RMI Remote Exception
+     * @exception java.io.IOException Standard IO Exception
      */
-    public static String login(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+    public static String login(HttpServletRequest request, HttpServletResponse response)
+            throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
         String errMsg = "";
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
@@ -209,11 +194,14 @@ public class LoginEvents {
         return "success";
     }
     
-    /** An HTTP WebEvent handler that logs out a userLogin by clearing the session.
-     *@param request The HTTP request object for the current JSP or Servlet request.
-     *@param response The HTTP response object for the current JSP or Servlet request.
-     *@return Return a boolean which specifies whether or not the calling Servlet or JSP should generate its own content. This allows an event to override the default content.
-     *@exception java.io.IOException Standard IO Exception
+    /**
+     * An HTTP WebEvent handler that logs out a userLogin by clearing the session.
+     *
+     * @param request The HTTP request object for the current JSP or Servlet request.
+     * @param response The HTTP response object for the current JSP or Servlet request.
+     * @return Return a boolean which specifies whether or not the calling Servlet or
+     *        JSP should generate its own content. This allows an event to override the default content.
+     * @exception java.io.IOException Standard IO Exception
      */
     public static String logout(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException {
         //invalidate the security group list cache
@@ -234,10 +222,12 @@ public class LoginEvents {
         return "success";
     }
     
-    /** The user forgot his/her password.  This will either call showPasswordHint or emailPassword.
-     *@param request The HTTPRequest object for the current request
-     *@param response The HTTPResponse object for the current request
-     *@return String specifying the exit status of this event
+    /**
+     * The user forgot his/her password.  This will either call showPasswordHint or emailPassword.
+     *
+     * @param request The HTTPRequest object for the current request
+     * @param response The HTTPResponse object for the current request
+     * @return String specifying the exit status of this event
      */
     public static String forgotPassword(HttpServletRequest request, HttpServletResponse response) {
         if (UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT"))) {
@@ -286,10 +276,12 @@ public class LoginEvents {
         return "success";
     }
     
-    /** Email the password for the userLoginId specified in the request object.
-     *@param request The HTTPRequest object for the current request
-     *@param response The HTTPResponse object for the current request
-     *@return String specifying the exit status of this event
+    /**
+     *  Email the password for the userLoginId specified in the request object.
+     *
+     * @param request The HTTPRequest object for the current request
+     * @param response The HTTPResponse object for the current request
+     * @return String specifying the exit status of this event
      */
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
