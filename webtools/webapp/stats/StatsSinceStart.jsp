@@ -28,7 +28,7 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.stats.*" %>
 <%@ page import="java.util.*" %>
 
 <%pageContext.setAttribute("PageName", "Server Stats Since Start");%>
