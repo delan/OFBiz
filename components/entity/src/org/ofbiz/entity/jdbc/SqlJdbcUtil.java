@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.15 2004/01/27 23:48:14 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.16 2004/02/05 09:49:33 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Reader;
-import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -67,7 +66,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -480,7 +479,6 @@ public class SqlJdbcUtil {
     public static void setValues(SQLProcessor sqlP, List list, GenericEntity entity, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
         for (int i = 0; i < list.size(); i++) {
             ModelField curField = (ModelField) list.get(i);
-
             setValue(sqlP, curField, entity, modelFieldTypeReader);
         }
     }
@@ -736,7 +734,8 @@ public class SqlJdbcUtil {
 
             switch (typeValue) {
             case 1:
-                sqlP.setValue((String) fieldValue);
+                String strValue = (String) fieldValue;
+                sqlP.setValue(strValue);
                 break;
 
             case 2:
