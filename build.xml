@@ -193,6 +193,7 @@
         <mkdir dir="${site.dir}/dtds"/>
         <copy todir="${site.dir}/dtds" flatten="true" overwrite="true">
             <fileset dir="${basedir}" includes="**/*.dtd"/>
+            <fileset dir="${basedir}" includes="**/*.xsd"/>
         </copy>
     </target>
 
