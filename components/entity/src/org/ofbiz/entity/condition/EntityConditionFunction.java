@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionFunction.java,v 1.7 2004/07/07 05:48:23 doogie Exp $
+ * $Id: EntityConditionFunction.java,v 1.8 2004/07/14 04:18:51 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -74,6 +74,10 @@ public abstract class EntityConditionFunction extends EntityCondition {
 
     public int getId() {
         return idInt;
+    }
+
+    public void visit(EntityConditionVisitor visitor) {
+        visitor.acceptEntityConditionFunction(this, condition);
     }
 
     public boolean equals(Object obj) {

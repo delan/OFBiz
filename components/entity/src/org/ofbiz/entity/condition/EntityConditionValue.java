@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionValue.java,v 1.3 2004/07/07 17:37:40 ajzeneski Exp $
+ * $Id: EntityConditionValue.java,v 1.4 2004/07/14 04:18:52 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  */
 public abstract class EntityConditionValue extends EntityConditionBase {
 
@@ -63,6 +63,12 @@ public abstract class EntityConditionValue extends EntityConditionBase {
     public abstract Object getValue(Map map);
 
     public abstract EntityConditionValue freeze();
+
+    public abstract void visit(EntityConditionVisitor visitor);
+
+    public void accept(EntityConditionVisitor visitor) {
+        throw new IllegalArgumentException("accept not implemented");
+    }
 
     public String toString() {
         StringBuffer sql = new StringBuffer();

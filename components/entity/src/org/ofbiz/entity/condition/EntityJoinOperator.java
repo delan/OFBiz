@@ -1,5 +1,5 @@
 /*
- * $Id: EntityJoinOperator.java,v 1.5 2004/07/07 17:37:40 ajzeneski Exp $
+ * $Id: EntityJoinOperator.java,v 1.6 2004/07/14 04:18:52 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelEntity;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  */
 public class EntityJoinOperator extends EntityOperator {
 
@@ -93,6 +93,19 @@ public class EntityJoinOperator extends EntityOperator {
             newList.add(condition.freeze());
         }
         return new EntityConditionList(newList, this);
+    }
+
+    public void visit(EntityConditionVisitor visitor, List conditionList) {
+        if (conditionList != null && conditionList.size() > 0) {
+            for (int i = 0; i < conditionList.size(); i++) {
+                visitor.visit(conditionList.get(i));
+            }
+        }
+    }
+
+    public void visit(EntityConditionVisitor visitor, Object lhs, Object rhs) {
+        ((EntityCondition) lhs).visit(visitor);
+        visitor.visit(rhs);
     }
 
     public boolean entityMatches(GenericEntity entity, Object lhs, Object rhs) {

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionList.java,v 1.8 2004/07/14 04:15:49 doogie Exp $
+ * $Id: EntityConditionList.java,v 1.9 2004/07/14 04:18:51 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * Encapsulates a list of EntityConditions to be used as a single EntityCondition combined as specified
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class EntityConditionList extends EntityConditionListBase {
@@ -58,6 +58,10 @@ public class EntityConditionList extends EntityConditionListBase {
         return super.getConditionIterator();
     }
     
+    public void accept(EntityConditionVisitor visitor) {
+        visitor.acceptEntityConditionList(this);
+    }
+
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityConditionList)) return false;
         EntityConditionList other = (EntityConditionList) obj;

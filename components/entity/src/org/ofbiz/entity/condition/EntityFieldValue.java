@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldValue.java,v 1.3 2004/07/14 04:04:52 doogie Exp $
+ * $Id: EntityFieldValue.java,v 1.4 2004/07/14 04:18:52 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  */
 public class EntityFieldValue extends EntityConditionValue {
 
@@ -80,6 +80,14 @@ public class EntityFieldValue extends EntityConditionValue {
 
     public Object getValue(Map map) {
         return map.get(fieldName);
+    }
+
+    public void visit(EntityConditionVisitor visitor) {
+        visitor.acceptEntityFieldValue(this);
+    }
+
+    public void accept(EntityConditionVisitor visitor) {
+        visitor.acceptEntityFieldValue(this);
     }
 
     public EntityConditionValue freeze() {

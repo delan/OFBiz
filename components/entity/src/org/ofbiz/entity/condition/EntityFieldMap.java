@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.11 2004/07/14 04:15:49 doogie Exp $
+ * $Id: EntityFieldMap.java,v 1.12 2004/07/14 04:18:52 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class EntityFieldMap extends EntityConditionListBase {
@@ -89,6 +89,10 @@ public class EntityFieldMap extends EntityConditionListBase {
         return Collections.unmodifiableSet(this.fieldMap.entrySet()).iterator();
     }
     
+    public void accept(EntityConditionVisitor visitor) {
+        visitor.acceptEntityFieldMap(this);
+    }
+
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityFieldMap)) return false;
         EntityFieldMap other = (EntityFieldMap) obj;
