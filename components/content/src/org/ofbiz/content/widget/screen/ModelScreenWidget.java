@@ -24,7 +24,6 @@
 package org.ofbiz.content.widget.screen;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -135,25 +134,23 @@ public abstract class ModelScreenWidget {
         protected Map sectionMap;
         protected ScreenStringRenderer screenStringRenderer;
         protected Map context;
+        protected Writer writer;
         
-        public SectionsRenderer(Map sectionMap, Map context, ScreenStringRenderer screenStringRenderer) {
+        public SectionsRenderer(Map sectionMap, Map context, Writer writer, ScreenStringRenderer screenStringRenderer) {
             this.sectionMap = sectionMap;
             this.context = context;
+            this.writer = writer;
             this.screenStringRenderer = screenStringRenderer;
         }
 
+        /** This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker */
         public String render(String sectionName) {
-            Writer tempWriter = new StringWriter();
-            this.render(sectionName, tempWriter);
-            return tempWriter.toString();
-        }
-        
-        public void render(String sectionName, Writer writer) {
             ModelScreenWidget section = (ModelScreenWidget) this.sectionMap.get(sectionName);
             // if no section by that name, write nothing
             if (section != null) {
-                section.renderWidgetString(writer, this.context, this.screenStringRenderer);
+                section.renderWidgetString(this.writer, this.context, this.screenStringRenderer);
             }
+            return "";
         }
     }
 
@@ -385,7 +382,7 @@ public abstract class ModelScreenWidget {
             // create a standAloneStack, basically a "save point" for this SectionsRenderer, and make a new "screens" object just for it so it is isolated and doesn't follow the stack down
             MapStack standAloneStack = contextMs.standAloneChildStack();
             standAloneStack.put("screens", new ScreenRenderer(writer, context, screenStringRenderer));
-            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, standAloneStack, screenStringRenderer);
+            SectionsRenderer sections = new SectionsRenderer(this.sectionMap, standAloneStack, writer, screenStringRenderer);
             
             // put the sectionMap in the context, make sure it is in the sub-scope, ie after calling push on the MapStack
             contextMs.push();
@@ -461,7 +458,7 @@ public abstract class ModelScreenWidget {
             if (sections == null) {
                 Debug.logWarning("In decorator-section-include could not find sections object in the context, not rendering section with name [" + this.name + "]", module);
             } else {
-                sections.render(this.name, writer);
+                sections.render(this.name);
             }
         }
     }
