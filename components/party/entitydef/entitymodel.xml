@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  */
 -->
 
@@ -871,9 +871,6 @@
       <field name="needTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="needTypeId"/>
-      <relation type="many" rel-entity-name="PartyNeed">
-        <key-map field-name="needTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="PartyNeed"
             package-name="org.ofbiz.party.need"
