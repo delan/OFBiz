@@ -83,18 +83,28 @@ public class EntityDataLoader {
     }
 
     public static List getUrlList(String helperName) {
+        DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        return getUrlList(helperName, datasourceInfo.readDatas);
+    }
+
+    public static List getUrlList(String helperName, List readerNames) {
         String paths = getPathsString(helperName);
         List urlList = new LinkedList();
         
         // first get files from resources
-
-        DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
-        if (datasourceInfo != null) {
-            Iterator readDataIter = datasourceInfo.readDatas.iterator();
+        if (readerNames != null) {
+            Iterator readDataIter = readerNames.iterator();
             while (readDataIter.hasNext()) {
-                Element readDataElement = (Element) readDataIter.next();
-                String readerName = readDataElement.getAttribute("reader-name");
-                
+                Object readerInfo = readDataIter.next();
+                String readerName = null;
+                if (readerInfo instanceof String) {
+                    readerName = (String) readerInfo;
+                } else if (readerInfo instanceof Element) {
+                    readerName = ((Element) readerInfo).getAttribute("reader-name");
+                } else {
+                    throw new IllegalArgumentException("Reader name list does not contain String(s) or Element(s)");
+                }
+
                 // get all of the main resource model stuff, ie specified in the entityengine.xml file
                 EntityDataReaderInfo entityDataReaderInfo = EntityConfigUtil.getEntityDataReaderInfo(readerName);
                 
@@ -172,6 +182,7 @@ public class EntityDataLoader {
                 }
             }
         }
+
         return urlList;
     }
 
