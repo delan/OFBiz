@@ -282,7 +282,8 @@ public class EntityListIterator implements ListIterator {
             // init numRetreived to one since we have already grabbed the initial one
             int numRetreived = 1;
 
-            while ((nextValue = this.next()) != null && number > numRetreived) {
+            //number > numRetreived comparison goes first to avoid the unwanted call to next
+            while (number > numRetreived && (nextValue = this.next()) != null) {
                 list.add(nextValue);
                 numRetreived++;
             }
