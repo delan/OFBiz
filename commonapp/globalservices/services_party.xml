@@ -73,6 +73,18 @@
         <attribute name="federalTaxId" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="createAffiliate" engine="java" 
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createAffiliate" auth="false">
+        <description>Create an Affiliate</description>
+        <attribute name="partyId" type="String" mode="INOUT"/>
+        <attribute name="affiliateName" type="String" mode="IN"/>
+        <attribute name="affiliateDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="yearEstablished" type="String" mode="IN" optional="true"/>
+        <attribute name="siteType" type="String" mode="IN" optional="true"/>
+        <attribute name="sitePageViews" type="String" mode="IN" optional="true"/>
+        <attribute name="siteVisitors" type="String" mode="IN" optional="true"/>
+    </service>
+    
     <!-- Party Role services -->
     <service name="createPartyRole" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyRoleServices" invoke="createPartyRole" auth="true">
