@@ -345,14 +345,14 @@
     </service>
 
     <service name="authOrderPayments" engine="java"
-            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="authOrderPayments" auth="false">
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="authOrderPayments" auth="true">
         <description>Process (authorizes/re-authorizes) payments for an order</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>
     </service>
 
     <service name="releaseOrderPayments" engine="java"
-            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="releaseOrderPayments" auth="false">
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="releaseOrderPayments" auth="true">
         <description>Process (authorizes/re-authorizes) payments for an order</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>
@@ -406,6 +406,7 @@
         <attribute name="authMessage" type="String" mode="OUT" optional="true"/>
         <attribute name="avsCode" type="String" mode="OUT" optional="true"/>
         <attribute name="scoreCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="captureCode" type="String" mode="OUT" optional="true"/>
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
     </service>
 
@@ -486,6 +487,7 @@
         <attribute name="authRefNum" type="String" mode="OUT" optional="false"/>
         <attribute name="authFlag" type="String" mode="OUT" optional="false"/>
         <attribute name="authMessage" type="String" mode="OUT" optional="false"/>
+        <attribute name="captureCode" type="String" mode="OUT" optional="true"/>
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
     </service>
 
@@ -508,6 +510,7 @@
         <attribute name="authRefNum" type="String" mode="OUT" optional="false"/>
         <attribute name="authFlag" type="String" mode="OUT" optional="true"/>
         <attribute name="authMessage" type="String" mode="OUT" optional="true"/>
+        <attribute name="captureCode" type="String" mode="OUT" optional="true"/>
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
     </service>
 
@@ -550,7 +553,7 @@
 
     <!-- Test GiftCard Services -->
     <service name="alwaysApproveGCProcessor" engine="java"
-             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveProcessor">
+             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveWithCapture">
         <description>Gift Card Processing</description>
         <implements service="giftCardProcessInterface"/>
     </service>
