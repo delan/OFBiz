@@ -24,8 +24,12 @@
  */
 package org.ofbiz.jotm.container;
 
+import java.util.Properties;
+
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerException;
+import org.ofbiz.base.container.ContainerConfig;
+import org.ofbiz.base.util.UtilProperties;
 
 import org.objectweb.carol.util.configuration.RMIConfigurationException;
 import org.objectweb.transaction.jta.TMService;
@@ -61,9 +65,23 @@ public class JotmContainer implements Container {
     }
 
     private void startJotm() throws ContainerException {
+        // get the container config
+        ContainerConfig.Container cc = ContainerConfig.getContainer("jotm-container", configFile);
+        if (cc == null) {
+            throw new ContainerException("No jotm-container configuration found in container config!");
+        }
+
+        // locate the JNDI (carol) configuration file
+        String carolPropName = ContainerConfig.getPropertyValue(cc, "jndi-config", "rmi.properties");
+
+        // load the properties file
+        Properties carolProps = UtilProperties.getProperties(carolPropName);
         // initialize Carol
         try {
+            // default initialization
             org.objectweb.carol.util.configuration.CarolConfiguration.init();
+            // load the defined properties file
+            org.objectweb.carol.util.configuration.CarolConfiguration.loadCarolConfiguration(carolProps);
         } catch (RMIConfigurationException e) {
             throw new ContainerException("Carol threw configuration exception", e);
         }
