@@ -383,9 +383,10 @@ A.listtext:hover {color:red;}
     <%Iterator memberEntityNamesIter = UtilMisc.toIterator(modelViewEntity.getMemberModelMemberEntities().entrySet());%>
     <%while (memberEntityNamesIter != null && memberEntityNamesIter.hasNext()) {%>
       <%Map.Entry aliasEntry = (Map.Entry) memberEntityNamesIter.next();%>
+      <%ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) aliasEntry.getValue();%>
       <TR>
-        <TD><%=(String) aliasEntry.getKey()%></TD>
-        <TD><%=(String) aliasEntry.getValue()%></TD>
+        <TD><%=modelMemberEntity.getEntityAlias()%></TD>
+        <TD><%=modelMemberEntity.getEntityName()%></TD>
         <TD><A href='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&alias=<%=(String) aliasEntry.getKey()%>&event=removeMemberEntity</ofbiz:url>'>Remove</A></TD>
       </TR>
     <%}%>

@@ -1,5 +1,5 @@
 /*
- * $Id: TyrexConnectionFactory.java,v 1.2 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: TyrexConnectionFactory.java,v 1.3 2003/09/11 13:23:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,10 +40,15 @@ package org.ofbiz.entity.transaction;
  * Tyrex ConnectionFactory - central source for JDBC connections from Tyrex
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
- *
+ */
 public class TyrexConnectionFactory {
+    public static final String module = TyrexConnectionFactory.class.getName();
+}
+/*
+public class TyrexConnectionFactory {
+    public static final String module = TyrexConnectionFactory.class.getName();
 
     // protected static UtilCache dsCache = new UtilCache("entity.TyrexDataSources", 0, 0);
     protected static Map dsCache = new HashMap();

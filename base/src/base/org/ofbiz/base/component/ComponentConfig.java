@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.12 2003/09/02 01:32:46 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.13 2003/09/11 13:23:26 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -96,8 +96,13 @@ public class ComponentConfig {
     }
         
     public static Collection getAllComponents() {
-        return componentConfigs.values();
-        
+        Collection values = componentConfigs.values();
+        if (values != null) {
+            return values;
+        } else {
+            Debug.logWarning("No components were found, something is probably missing or incorrect in the component-load setup.", module);
+            return new LinkedList();
+        }
     }
     
     public static List getAllClasspathInfos() {
