@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.2
  -->
 
@@ -81,9 +81,17 @@
         
         <!-- because we specified the partyId and the roleTypeId, should only be one item in list returned -->
         <first-from-list list-name="orderInfoList" entry-name="orderInfo"/>
-        <field-to-result field-name="orderInfo.totalGrandAmount" result-name="totalGrandAmount"/>
-        <field-to-result field-name="orderInfo.totalSubRemainingAmount" result-name="totalSubRemainingAmount"/>
-        <field-to-result field-name="orderInfo.totalOrders" result-name="totalOrders"/>
+        <if-empty field-name="orderInfo">
+            <calculate field-name="plainDoubleZero" type="Double"><number value="0.0"/></calculate>
+            <field-to-result field-name="plainDoubleZero" result-name="totalGrandAmount"/>
+            <field-to-result field-name="plainDoubleZero" result-name="totalSubRemainingAmount"/>
+            <field-to-result field-name="plainDoubleZero" result-name="totalOrders"/>
+        <else>
+            <field-to-result field-name="orderInfo.totalGrandAmount" result-name="totalGrandAmount"/>
+            <field-to-result field-name="orderInfo.totalSubRemainingAmount" result-name="totalSubRemainingAmount"/>
+            <field-to-result field-name="orderInfo.totalOrders" result-name="totalOrders"/>
+        </else>
+        </if-empty>
     </simple-method>
 </simple-methods>
 

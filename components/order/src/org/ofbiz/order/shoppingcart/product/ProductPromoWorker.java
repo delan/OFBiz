@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.48 2004/08/16 11:36:06 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.49 2004/08/16 18:54:36 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.48 $
+ * @version    $Revision: 1.49 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -658,6 +658,7 @@ public class ProductPromoWorker {
         String operatorEnumId = productPromoCond.getString("operatorEnumId");
 
         String partyId = cart.getPartyId();
+        GenericValue userLogin = cart.getUserLogin();
 
         if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond, module);
         int compare = 0;
@@ -873,11 +874,11 @@ public class ProductPromoWorker {
             // description="Order sub-total X in last Y Months"
             if (partyId != null) {
                 // call the getOrderedSummaryInformation service to get the sub-total
-                double monthsToInclude = 12;
+                int monthsToInclude = 12;
                 if (otherValue != null) {
-                    monthsToInclude = Double.parseDouble(condValue);
+                    monthsToInclude = Integer.parseInt(condValue);
                 }
-                Map serviceIn = UtilMisc.toMap("partyId", partyId, "roleTypeId", "PLACING_CUSTOMER", "orderTypeId", "SALES_ORDER", "statusId", "ORDER_COMPLETED", "monthsToInclude", new Double(monthsToInclude));
+                Map serviceIn = UtilMisc.toMap("partyId", partyId, "roleTypeId", "PLACING_CUSTOMER", "orderTypeId", "SALES_ORDER", "statusId", "ORDER_COMPLETED", "monthsToInclude", new Integer(monthsToInclude), "userLogin", userLogin);
                 try {
                     Map result = dispatcher.runSync("getOrderedSummaryInformation", serviceIn);
                     if (ServiceUtil.isError(result)) {
