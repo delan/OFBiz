@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenu.java,v 1.7 2004/06/02 17:50:12 byersa Exp $
+ * $Id: ModelMenu.java,v 1.8 2004/07/01 08:37:50 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,9 +33,9 @@ import java.util.TreeSet;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
@@ -48,7 +48,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
  */
 public class ModelMenu {

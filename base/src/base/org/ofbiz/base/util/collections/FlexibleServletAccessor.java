@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleServletAccessor.java,v 1.2 2003/11/25 07:48:14 jonesde Exp $
+ * $Id: FlexibleServletAccessor.java,v 1.1 2004/07/01 08:37:48 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.base.util;
+package org.ofbiz.base.util.collections;
 
 import java.util.List;
 import java.util.Map;
@@ -29,13 +29,15 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.util.string.FlexibleStringExpander;
+
 /**
  * Used to flexibly access Map values, supporting the "." (dot) syntax for
  * accessing sub-map values and the "[]" (square bracket) syntax for accessing
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.1 $
  * @since      2.1
  */
 public class FlexibleServletAccessor {

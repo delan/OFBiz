@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceBundleMapWrapper.java,v 1.4 2004/06/17 17:20:10 jonesde Exp $
+ * $Id: ResourceBundleMapWrapper.java,v 1.1 2004/07/01 08:37:48 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.base.util;
+package org.ofbiz.base.util.collections;
 
 import java.util.Collection;
 import java.util.Enumeration;
@@ -36,7 +36,7 @@ import java.util.Set;
  * Generic ResourceBundle Map Wrapper, given ResourceBundle allows it to be used as a Map
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.1 $
  * @since      3.1
  */
 public class ResourceBundleMapWrapper implements Map {

@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleProperties.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: FlexibleProperties.java,v 1.1 2004/07/01 08:37:48 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.base.util;
+package org.ofbiz.base.util.collections;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +31,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
+
+import org.ofbiz.base.util.Debug;
 
 /**
  * Simple Class for flexibly working with properties files

@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleStringExpander.java,v 1.2 2003/09/21 05:58:51 jonesde Exp $
+ * $Id: FlexibleStringExpander.java,v 1.1 2004/07/01 08:37:48 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.base.util;
+package org.ofbiz.base.util.string;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,13 +29,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+
 /**
  * Expands string values with in a Map context supporting the ${} syntax for
  * variable placeholders and the "." (dot) and "[]" (square-brace) syntax
  * elements for accessing Map entries and List elements in the context.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.1 $
  * @since      2.2
  */
 public class FlexibleStringExpander {

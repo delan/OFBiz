@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.12 2004/05/10 17:29:57 ajzeneski Exp $
+ * $Id: ProductEvents.java,v 1.13 2004/07/01 08:37:53 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,12 +26,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -49,7 +49,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Product Information Related Events
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since 2.0
  */
 public class ProductEvents {

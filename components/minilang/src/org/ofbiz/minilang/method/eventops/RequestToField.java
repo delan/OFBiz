@@ -1,5 +1,5 @@
 /*
- * $Id: RequestToField.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: RequestToField.java,v 1.2 2004/07/01 08:37:53 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,18 +23,22 @@
  */
 package org.ofbiz.minilang.method.eventops;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.w3c.dom.*;
-import org.ofbiz.base.util.*;
-import org.ofbiz.minilang.*;
-import org.ofbiz.minilang.method.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.collections.FlexibleServletAccessor;
+import org.ofbiz.minilang.SimpleMethod;
+import org.ofbiz.minilang.method.ContextAccessor;
+import org.ofbiz.minilang.method.MethodContext;
+import org.ofbiz.minilang.method.MethodOperation;
+import org.w3c.dom.Element;
 
 /**
  * Copies a Servlet request attribute to a map field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class RequestToField extends MethodOperation {
