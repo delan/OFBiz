@@ -721,6 +721,9 @@
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
     </entity>
     <view-entity entity-name="PartyContactWithPurpose"
             package-name="org.ofbiz.commonapp.party.party"
@@ -728,6 +731,7 @@
       <member-entity entity-alias="CM" entity-name="ContactMech"/>
       <member-entity entity-alias="PC" entity-name="PartyContactMech"/>
       <member-entity entity-alias="PR" entity-name="PartyContactMechPurpose"/>
+      <member-entity entity-alias="PT" entity-name="ContactMechPurposeType"/>
       <alias entity-alias="CM" name="contactMechId" prim-key="true"/>
       <alias entity-alias="PC" name="partyId" prim-key="true"/>
       <alias entity-alias="PR" name="contactMechPurposeTypeId" prim-key="true"/>
@@ -739,11 +743,15 @@
       <alias entity-alias="PC" name="comments"/>
       <alias entity-alias="PC" name="extension"/>
       <alias entity-alias="PC" name="allowSolicitation"/>
+      <alias entity-alias="PT" name="purposeDescription" field="description"/>
       <view-link entity-alias="PC" rel-entity-alias="CM">
         <key-map field-name="contactMechId"/>
       </view-link>
       <view-link entity-alias="CM" rel-entity-alias="PR">
         <key-map field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="PT" rel-entity-alias="PR">
+        <key-map field-name="contactMechPurposeTypeId"/>
       </view-link>
       <relation type="many" rel-entity-name="PartyContactMech">
         <key-map field-name="partyId"/>
