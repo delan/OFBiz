@@ -28,7 +28,13 @@ import java.util.List;
 import java.util.Locale;
 import java.io.Serializable;
 
+import javax.wsdl.WSDLException;
+import javax.wsdl.Part;
+import javax.wsdl.Definition;
+import javax.xml.namespace.QName;
+
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.ObjectType;
 
 /**
  * Generic Service Model Parameter
@@ -113,6 +119,12 @@ public class ModelParam implements Serializable {
         }
     }
 
+    public boolean equals(ModelParam model) {
+        if (model.name.equals(this.name))
+            return true;
+        return false;
+    }
+    
     public String toString() {
         StringBuffer buf = new StringBuffer();
         buf.append(name + "::");
@@ -131,11 +143,42 @@ public class ModelParam implements Serializable {
         buf.append(internal);
         return buf.toString();
     }
-    
-    public boolean equals(ModelParam model) {
-        if (model.name.equals(this.name))
-            return true;
-        return false;
+
+    public Part getWSDLPart(Definition def) throws WSDLException {
+        Part part = def.createPart();
+        part.setName(this.name);
+        part.setTypeName(new QName(ModelService.XSD, this.java2wsdlType()));
+        return part;
+    }
+
+    protected String java2wsdlType() throws WSDLException {
+        if (ObjectType.instanceOf(java.lang.Character.class, this.type)) {
+            return "string";
+        } else if (ObjectType.instanceOf(java.lang.String.class, this.type)) {
+            return "string";
+        } else if (ObjectType.instanceOf(java.lang.Byte.class, this.type)) {
+            return "byte";
+        } else if (ObjectType.instanceOf(java.lang.Boolean.class, this.type)) {
+            return "boolean";
+        } else if (ObjectType.instanceOf(java.lang.Integer.class, this.type)) {
+            return "int";
+        } else if (ObjectType.instanceOf(java.lang.Double.class, this.type)) {
+            return "double";
+        } else if (ObjectType.instanceOf(java.lang.Float.class, this.type)) {
+            return "float";
+        } else if (ObjectType.instanceOf(java.lang.Short.class, this.type)) {
+            return "short";
+        } else if (ObjectType.instanceOf(java.math.BigDecimal.class, this.type)) {
+            return "decimal";
+        } else if (ObjectType.instanceOf(java.math.BigInteger.class, this.type)) {
+            return "integer";
+        } else if (ObjectType.instanceOf(java.util.Calendar.class, this.type)) {
+            return "dateTime";
+        } else if (ObjectType.instanceOf(java.util.Date.class, this.type)) {
+            return "dateTime";
+        }
+        // TODO add array support (maybe even convert List objects); add GenericValue/Map support
+        throw new WSDLException(WSDLException.OTHER_ERROR, "Service cannot be described with WSDL (" + this.name + " / " + this.type + ")");
     }
 
     static class ModelParamValidator {

@@ -28,10 +28,24 @@ import java.util.*;
 import java.lang.reflect.Method;
 import java.io.Serializable;
 
+import javax.wsdl.*;
+import javax.wsdl.extensions.soap.SOAPBinding;
+import javax.wsdl.extensions.soap.SOAPBody;
+import javax.wsdl.extensions.soap.SOAPOperation;
+import javax.wsdl.extensions.soap.SOAPAddress;
+import javax.wsdl.factory.WSDLFactory;
+import javax.xml.namespace.QName;
+
+import com.ibm.wsdl.extensions.soap.SOAPBindingImpl;
+import com.ibm.wsdl.extensions.soap.SOAPBodyImpl;
+import com.ibm.wsdl.extensions.soap.SOAPOperationImpl;
+import com.ibm.wsdl.extensions.soap.SOAPAddressImpl;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
@@ -40,6 +54,7 @@ import org.ofbiz.service.group.GroupServiceModel;
 import org.ofbiz.service.group.ServiceGroupReader;
 
 import org.apache.commons.collections.set.ListOrderedSet;
+import org.w3c.dom.Document;
 
 /**
  * Generic Service Model Class
@@ -53,6 +68,8 @@ public class ModelService implements Serializable {
 
     public static final String module = ModelService.class.getName();
 
+    public static final String XSD = "http://www.w3.org/2001/XMLSchema";
+    public static final String TNS = "http://www.ofbiz.org/service/";
     public static final String OUT_PARAM = "OUT";
     public static final String IN_PARAM = "IN";
 
@@ -880,5 +897,120 @@ public class ModelService implements Serializable {
             // set the flag so we don't do this again
             this.inheritedParameters = true;
         }
-    }            
+    }
+
+    public Document toWSDL(String locationURI) throws WSDLException {
+        WSDLFactory factory = WSDLFactory.newInstance();
+        Definition def = factory.newDefinition();
+        def.setTargetNamespace(TNS);
+        def.addNamespace("xsd", XSD);
+        def.addNamespace("tns", TNS);
+        def.addNamespace("soap", "http://schemas.xmlsoap.org/wsdl/soap/");
+        this.getWSDL(def, locationURI);
+        return factory.newWSDLWriter().getDocument(def);
+}
+
+    public void getWSDL(Definition def, String locationURI) throws WSDLException {
+        // set the IN parameters
+        Input input = def.createInput();
+        List inParam = this.getParameterNames(IN_PARAM, true, false);
+        if (inParam != null) {
+            Message inMessage = def.createMessage();
+            inMessage.setQName(new QName(TNS, this.name + "Request"));
+            inMessage.setUndefined(false);
+            Iterator i = inParam.iterator();
+            while (i.hasNext()) {
+                String paramName = (String) i.next();
+                ModelParam param = this.getParam(paramName);
+                if (!param.internal) {
+                    inMessage.addPart(param.getWSDLPart(def));
+                }
+            }
+            def.addMessage(inMessage);
+            input.setMessage(inMessage);
+        }
+
+        // set the OUT parameters
+        Output output = def.createOutput();
+        List outParam = this.getParameterNames(OUT_PARAM, true, false);
+        if (outParam != null) {
+            Message outMessage = def.createMessage();
+            outMessage.setQName(new QName(TNS, this.name + "Response"));
+            outMessage.setUndefined(false);
+            Iterator i = outParam.iterator();
+            while (i.hasNext()) {
+                String paramName = (String) i.next();
+                ModelParam param = this.getParam(paramName);
+                if (!param.internal) {
+                    outMessage.addPart(param.getWSDLPart(def));
+                }
+            }
+            def.addMessage(outMessage);
+            output.setMessage(outMessage);
+        }
+
+        // set port type
+        Operation operation = def.createOperation();
+        operation.setName(this.name);
+        operation.setUndefined(false);
+        operation.setOutput(output);
+        operation.setInput(input);
+
+        PortType portType = def.createPortType();
+        portType.setQName(new QName(TNS, this.name + "PortType"));
+        portType.addOperation(operation);
+        portType.setUndefined(false);
+        def.addPortType(portType);
+
+        // SOAP binding
+        SOAPBinding soapBinding = new SOAPBindingImpl();
+        soapBinding.setStyle("document");
+        soapBinding.setTransportURI("http://schemas.xmlsoap.org/soap/http");
+
+        Binding binding = def.createBinding();
+        binding.setQName(new QName(TNS, this.name + "SoapBinding"));
+        binding.setPortType(portType);
+        binding.setUndefined(false);
+        binding.addExtensibilityElement(soapBinding);
+
+        BindingOperation bindingOperation = def.createBindingOperation();
+        bindingOperation.setName(operation.getName());
+        bindingOperation.setOperation(operation);
+
+        SOAPBody soapBody = new SOAPBodyImpl();
+        soapBody.setUse("literal");
+        soapBody.setNamespaceURI(TNS);
+        soapBody.setEncodingStyles(UtilMisc.toList("http://schemas.xmlsoap.org/soap/encoding/"));
+
+        BindingOutput bindingOutput = def.createBindingOutput();
+        bindingOutput.addExtensibilityElement(soapBody);
+        bindingOperation.setBindingOutput(bindingOutput);
+
+        BindingInput bindingInput = def.createBindingInput();
+        bindingInput.addExtensibilityElement(soapBody);
+        bindingOperation.setBindingInput(bindingInput);
+
+        SOAPOperation soapOperation = new SOAPOperationImpl();
+        soapOperation.setSoapActionURI(""); // ?
+        bindingOperation.addExtensibilityElement(soapOperation);
+
+        binding.addBindingOperation(bindingOperation);
+        def.addBinding(binding);
+
+        // Service port
+        Port port = def.createPort();
+        port.setBinding(binding);
+        port.setName(this.name + "Port");
+
+        if (locationURI != null) {
+            SOAPAddress soapAddress = new SOAPAddressImpl();
+            soapAddress.setLocationURI(locationURI);
+            port.addExtensibilityElement(soapAddress);
+        }
+
+        Service service = def.createService();
+        service.setQName(new QName(TNS, this.name));
+        service.addPort(port);
+        def.addService(service);
+    }
 }

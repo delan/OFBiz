@@ -25,6 +25,8 @@
 package org.ofbiz.webapp.event;
 
 import java.io.IOException;
+import java.io.Writer;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,12 +36,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 import javax.xml.soap.SOAPException;
+import javax.wsdl.WSDLException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.webapp.control.RequestHandler;
 
 import org.apache.axis.AxisFault;
 import org.apache.axis.Constants;
@@ -50,6 +56,7 @@ import org.apache.axis.message.RPCParam;
 import org.apache.axis.message.SOAPEnvelope;
 import org.apache.axis.server.AxisServer;
 import org.apache.log4j.Category;
+import org.w3c.dom.Document;
 
 /**
  * SOAPEventHandler - SOAP Event Handler implementation
@@ -83,6 +90,72 @@ public class SOAPEventHandler implements EventHandler {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         AxisServer axisServer;
 
+        // first check for WSDL request
+        String wsdlReq = request.getParameter("wsdl");
+        if (wsdlReq == null) {
+            wsdlReq = request.getParameter("WSDL");
+        }
+        if (wsdlReq != null) {
+            String serviceName = RequestHandler.getNextPageUri(request.getPathInfo());
+            DispatchContext dctx = dispatcher.getDispatchContext();
+            String locationUri = this.getLocationURI(request);
+
+            if (serviceName != null) {
+                Document wsdl = null;
+                try {
+                    wsdl = dctx.getWSDL(serviceName, locationUri);
+                } catch (GenericServiceException e) {
+                    serviceName = null;
+                } catch (WSDLException e) {
+                    sendError(response, "Unable to obtain WSDL");
+                    throw new EventHandlerException("Unable to obtain WSDL", e);
+                }
+
+                if (wsdl != null) {
+                    try {
+                        OutputStream os = response.getOutputStream();
+                        response.setContentType("text/xml");
+                        UtilXml.writeXmlDocument(os, wsdl);
+                        response.flushBuffer();
+                    } catch (IOException e) {
+                        throw new EventHandlerException(e);
+                    }
+                    return null;
+                } else {
+                    sendError(response, "Unable to obtain WSDL");
+                    throw new EventHandlerException("Unable to obtain WSDL");
+                }
+            }
+
+            if (serviceName == null) {
+                try {
+                    Writer writer = response.getWriter();
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("<html><head><title>OFBiz SOAP/1.1 Services</title></head>");
+                    sb.append("<body>No such service.").append("<p>Services:<ul>");
+
+                    Iterator i = dctx.getAllServiceNames().iterator();
+                    while (i.hasNext()) {
+                        String scvName = (String) i.next();
+                        ModelService model = dctx.getModelService(scvName);
+                        if (model.export) {
+                            sb.append("<li><a href=\"").append(locationUri).append("/").append(model.name).append("?wsdl\">");
+                            sb.append(model.name).append("</a></li>");
+                        }
+                    }
+                    sb.append("</ul></p></body></html>");
+
+                    writer.write(sb.toString());
+                    writer.flush();
+                    return null;
+                } catch (Exception e) {
+                    sendError(response, "Unable to obtain WSDL");
+                    throw new EventHandlerException("Unable to obtain WSDL");
+                }
+            }
+        }
+
+        // not a wsdl request; invoke the service
         try {
             axisServer = AxisServer.getServer(UtilMisc.toMap("name", "OFBiz/Axis Server", "provider", null));                    
         } catch (AxisFault e) {
@@ -98,6 +171,7 @@ public class SOAPEventHandler implements EventHandler {
             msg = new Message(request.getInputStream(), false,
                         request.getHeader("Content-Type"), request.getHeader("Content-Location"));
         } catch (IOException ioe) {
+            sendError(response, "Problem processing the service");
             throw new EventHandlerException("Cannot read the input stream", ioe);
         }
 
@@ -116,6 +190,7 @@ public class SOAPEventHandler implements EventHandler {
         try {
             reqEnv = (SOAPEnvelope) msg.getSOAPPart().getEnvelope();                    
         } catch (SOAPException e) {
+            sendError(response, "Problem processing the service");
             throw new EventHandlerException("Cannot get the envelope", e);
         }
         
@@ -177,8 +252,8 @@ public class SOAPEventHandler implements EventHandler {
 
                             resBody.addParam(par);
                         }
-                        resEnv.addBodyElement(resBody);                        
-                        resEnv.setEncodingStyle(Constants.URI_DEFAULT_SOAP_ENC);
+                        resEnv.addBodyElement(resBody);
+                        resEnv.setEncodingStyle(Constants.URI_LITERAL_ENC);
                     } else {
                         sendError(response, "Requested service not available");
                         throw new EventHandlerException("Service is not exported");
@@ -221,7 +296,7 @@ public class SOAPEventHandler implements EventHandler {
 
         Debug.logVerbose("[EventHandler] : Message sent to requester", module);
 
-        return "success";
+        return null;
     }
 
     private void sendError(HttpServletResponse res, Object obj) throws EventHandlerException {
@@ -235,5 +310,26 @@ public class SOAPEventHandler implements EventHandler {
         } catch (Exception e) {
             throw new EventHandlerException(e.getMessage(), e);
         }
+    }
+
+    private String getLocationURI(HttpServletRequest request) {
+        StringBuffer uri = new StringBuffer();
+        uri.append(request.getScheme());
+        uri.append("://");
+        uri.append(request.getServerName());
+        if (request.getServerPort() != 80 && request.getServerPort() != 443) {
+            uri.append(":");
+            uri.append(request.getServerPort());
+        }
+        uri.append(request.getContextPath());
+        uri.append(request.getServletPath());
+
+        String reqInfo = RequestHandler.getRequestUri(request.getPathInfo());
+        if (!reqInfo.startsWith("/")) {
+            reqInfo = "/" + reqInfo;
+        }
+
+        uri.append(reqInfo);
+        return uri.toString();
     }
 }
