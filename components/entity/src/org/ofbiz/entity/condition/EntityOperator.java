@@ -1,5 +1,5 @@
 /*
- * $Id: EntityOperator.java,v 1.8 2004/07/07 06:01:43 doogie Exp $
+ * $Id: EntityOperator.java,v 1.9 2004/07/10 13:54:11 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,7 +24,6 @@
 
 package org.ofbiz.entity.condition;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,7 +42,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.0
  */
 public abstract class EntityOperator extends EntityConditionBase {
@@ -69,7 +68,7 @@ public abstract class EntityOperator extends EntityConditionBase {
     }
 
     public static EntityOperator lookup(String name) {
-        return (EntityOperator)registry.get(name);
+        return (EntityOperator) registry.get(name);
     }
 
     public static EntityComparisonOperator lookupComparison(String name) {
@@ -107,22 +106,32 @@ public abstract class EntityOperator extends EntityConditionBase {
             }
         }
     };
+    static { register( "not-equal", NOT_EQUAL ); }
+    static { register( "not-equals", NOT_EQUAL ); }
     static { register( "notEqual", NOT_EQUAL ); }
     public static final EntityComparisonOperator LESS_THAN = new EntityComparisonOperator(ID_LESS_THAN, "<") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareLessThan(lhs, rhs); }
     };
+    static { register( "less", LESS_THAN ); }
+    static { register( "less-than", LESS_THAN ); }
     static { register( "lessThan", LESS_THAN ); }
     public static final EntityComparisonOperator GREATER_THAN = new EntityComparisonOperator(ID_GREATER_THAN, ">") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareGreaterThan(lhs, rhs); }
     };
+    static { register( "greater", GREATER_THAN ); }
+    static { register( "greater-than", GREATER_THAN ); }
     static { register( "greaterThan", GREATER_THAN ); }
     public static final EntityComparisonOperator LESS_THAN_EQUAL_TO = new EntityComparisonOperator(ID_LESS_THAN_EQUAL_TO, "<=") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareLessThanEqualTo(lhs, rhs); }
     };
+    static { register( "less-equals", LESS_THAN_EQUAL_TO ); }
+    static { register( "less-than-equal-to", LESS_THAN_EQUAL_TO ); }
     static { register( "lessThanEqualTo", LESS_THAN_EQUAL_TO ); }
     public static final EntityComparisonOperator GREATER_THAN_EQUAL_TO = new EntityComparisonOperator(ID_GREATER_THAN_EQUAL_TO, ">=") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareGreaterThanEqualTo(lhs, rhs); }
     };
+    static { register( "greater-equals", GREATER_THAN_EQUAL_TO ); }
+    static { register( "greater-than-equal-to", GREATER_THAN_EQUAL_TO ); }
     static { register( "greaterThanEqualTo", GREATER_THAN_EQUAL_TO ); }
     public static final EntityComparisonOperator IN = new EntityComparisonOperator(ID_IN, "IN") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareIn(lhs, rhs); }
