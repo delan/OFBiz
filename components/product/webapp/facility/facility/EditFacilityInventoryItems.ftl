@@ -1,28 +1,28 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
@@ -31,13 +31,13 @@
 <#if hasPermission>
 
 ${pages.get("/facility/FacilityTabBar.ftl")}
-    
+
     <div class="head1">${uiLabelMap.ProductInventoryItemsFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
-    
+
     <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">
     [${uiLabelMap.ProductCreateNewInventoryItemFacility}]</a>
-    
+
     <#if facilityInventoryItems?exists && (facilityInventoryItems.size() > 0)>
         <table border="0" width="100%" cellpadding="2">
             <tr>
@@ -67,12 +67,12 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td><div class="tabletext"><b>${uiLabelMap.CommonExpire}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductProductId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductLocation}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.ProductProductId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductLotId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductBinNum}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductAtpQohSerial}#</b></div></td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td>&nbsp;</td>
+            <#-- <td>&nbsp;</td> -->
         </tr>
         <#list facilityInventoryItems[lowIndex..highIndex-1] as inventoryItem>
         <#assign curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType")>
@@ -90,9 +90,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 ${(inventoryItem.productId)?if_exists}</a></td>
             <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content>(${facilityLocationTypeEnum.description})</#if>[${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.lotId)?if_exists}</div></td>
-            <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>   
+            <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>
             <#if (inventoryItem.inventoryItemTypeId)?exists && (inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM"))>
-                <td>       
+                <td>
                     <div class="tabletext">${(inventoryItem.availableToPromise)?if_exists}
                     / ${(inventoryItem.quantityOnHand)?if_exists}</div>
                 </td>
@@ -110,10 +110,10 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <a href="<@ofbizUrl>/TransferInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}&facilityId=${facilityId}</@ofbizUrl>" class="buttontext">
             [Transfer]</a>
             </td>
-            <td>
+            <#-- <td>
             <a href="<@ofbizUrl>/DeleteFacilityInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">
             [Delete]</a>
-            </td>
+            </td> -->
         </tr>
         </#list>
         </table>
