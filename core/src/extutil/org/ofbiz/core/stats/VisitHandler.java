@@ -44,8 +44,8 @@ public class VisitHandler {
     // this is not an event because it is required to run; as an event it could be disabled.
     public static void setInitialVisit(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        String webappName = UtilMisc.getApplicationName(request);
-        StringBuffer fullRequestUrl = UtilMisc.getFullRequestUrl(request);
+        String webappName = UtilHttp.getApplicationName(request);
+        StringBuffer fullRequestUrl = UtilHttp.getFullRequestUrl(request);
         String initialLocale = request.getLocale() != null ? request.getLocale().toString() : "";
         String initialRequest = fullRequestUrl.toString();
         String initialReferrer = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";

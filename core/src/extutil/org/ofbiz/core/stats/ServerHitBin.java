@@ -630,7 +630,7 @@ public class ServerHitBin {
             serverHit.set("contentId", this.id);
             serverHit.set("runningTimeMillis", new Long(runningTime));
 
-            String fullRequestUrl = UtilMisc.getFullRequestUrl(request).toString();
+            String fullRequestUrl = UtilHttp.getFullRequestUrl(request).toString();
 
             serverHit.set("requestUrl", fullRequestUrl.length() > 250 ? fullRequestUrl.substring(0, 250) : fullRequestUrl);
             String referrerUrl = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";
