@@ -1,8 +1,6 @@
-
 package org.ofbiz.core.entity;
 
 import java.util.*;
-
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
@@ -35,19 +33,18 @@ import org.ofbiz.core.entity.model.*;
  *@version    1.0
  */
 public class GenericHelperDAO implements GenericHelper {
-
     GenericDAO genericDAO;
     String helperName;
-
+    
     public GenericHelperDAO(String helperName) {
         this.helperName = helperName;
         genericDAO = GenericDAO.getGenericDAO(helperName);
     }
-
+    
     public String getHelperName() {
         return helperName;
     }
-
+    
     /** Creates a Entity in the form of a GenericValue and write it to the database
      *@return GenericValue instance containing the new instance
      */
@@ -58,7 +55,7 @@ public class GenericHelperDAO implements GenericHelper {
         genericDAO.insert(value);
         return value;
     }
-
+    
     /** Creates a Entity in the form of a GenericValue and write it to the database
      *@return GenericValue instance containing the new instance
      */
@@ -70,7 +67,7 @@ public class GenericHelperDAO implements GenericHelper {
         genericDAO.insert(genericValue);
         return genericValue;
     }
-
+    
     /** Find a Generic Entity by its Primary Key
      *@param primaryKey The primary key to find by.
      *@return The GenericValue corresponding to the primaryKey
@@ -83,7 +80,7 @@ public class GenericHelperDAO implements GenericHelper {
         genericDAO.select(genericValue);
         return genericValue;
     }
-
+    
     /** Find a Generic Entity by its Primary Key and only returns the values requested by the passed keys (names)
      *@param primaryKey The primary key to find by.
      *@param keys The keys, or names, of the values to retrieve; only these values will be retrieved
@@ -97,7 +94,7 @@ public class GenericHelperDAO implements GenericHelper {
         genericDAO.partialSelect(genericValue, keys);
         return genericValue;
     }
-
+    
     /** Find a number of Generic Value objects by their Primary Keys, all at once
      * This is done here for the DAO GenericHelper; for a client-server helper it
      * would be done on the server side to reduce network round trips.
@@ -107,7 +104,7 @@ public class GenericHelperDAO implements GenericHelper {
     public Collection findAllByPrimaryKeys(Collection primaryKeys) throws GenericEntityException {
         if (primaryKeys == null) return null;
         Collection results = new LinkedList();
-
+        
         Iterator pkiter = primaryKeys.iterator();
         while (pkiter.hasNext()) {
             GenericPK primaryKey = (GenericPK) pkiter.next();
@@ -116,7 +113,7 @@ public class GenericHelperDAO implements GenericHelper {
         }
         return results;
     }
-
+    
     /** Remove a Generic Entity corresponding to the primaryKey
      *@param  primaryKey  The primary key of the entity to remove.
      */
@@ -125,7 +122,7 @@ public class GenericHelperDAO implements GenericHelper {
         Debug.logInfo("Removing GenericPK: " + primaryKey.toString());
         genericDAO.delete(primaryKey);
     }
-
+    
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
      *@param entityName The Name of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
@@ -135,20 +132,29 @@ public class GenericHelperDAO implements GenericHelper {
     public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByAnd(modelEntity, fields, orderBy);
     }
-
     public Collection findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
         return genericDAO.selectByAnd(modelEntity, expressions, orderBy);
     }
-
     public Collection findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByLike(modelEntity, fields, orderBy);
     }
-
     public Collection findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByClause(modelEntity, entityClauses, fields, orderBy);
     }
-
-
+    
+    /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param fields The fields of the named entity to query by with their corresponging values
+     *@param order The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@return Collection of GenericValue instances that match the query
+     */
+    public Collection findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+        return genericDAO.selectByOr(modelEntity, fields, orderBy);
+    }
+    public Collection findByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
+        return genericDAO.selectByOr(modelEntity, expressions, orderBy);
+    }
+    
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      *@param entityName The Name of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
@@ -160,7 +166,7 @@ public class GenericHelperDAO implements GenericHelper {
         }
         genericDAO.deleteByAnd(modelEntity, fields);
     }
-
+    
     /** Store the Entity from the GenericValue to the persistent store
      *@param value GenericValue instance containing the entity
      */
@@ -170,7 +176,7 @@ public class GenericHelperDAO implements GenericHelper {
         }
         genericDAO.update(value);
     }
-
+    
     /** Store the Entities from the Collection GenericValue instances to the persistent store.
      *  This is different than the normal store method in that the store method only does
      *  an update, while the storeAll method checks to see if each entity exists, then
@@ -183,7 +189,7 @@ public class GenericHelperDAO implements GenericHelper {
     public void storeAll(Collection values) throws GenericEntityException {
         genericDAO.storeAll(values);
     }
-
+    
     /** Remove the Entities from the Collection from the persistent store.
      *  <br>The Collection contains GenericEntity objects, can be either GenericPK or GenericValue.
      *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
@@ -197,7 +203,7 @@ public class GenericHelperDAO implements GenericHelper {
     public void removeAll(Collection dummyPKs) throws GenericEntityException {
         genericDAO.deleteAll(dummyPKs);
     }
-
+    
     /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
      *@param modelEntities Map of entityName names and ModelEntity values
      *@param messages Collection to put any result messages in

@@ -1,10 +1,8 @@
-
 package org.ofbiz.core.entity;
 
 import java.lang.reflect.*;
 import java.sql.*;
 import java.util.*;
-
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
@@ -37,7 +35,6 @@ import org.ofbiz.core.entity.model.*;
  *@version    1.0
  */
 public class GenericDAO {
-
     static Map genericDAOs = new Hashtable();
     String helperName;
     ModelFieldTypeReader modelFieldTypeReader = null;
@@ -643,6 +640,111 @@ public class GenericDAO {
                 } return collection;
     }
 
+    public Collection selectByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+        if (modelEntity == null)
+            return null;
+        ModelViewEntity modelViewEntity = null;
+        if (modelEntity instanceof ModelViewEntity) {
+            modelViewEntity = (ModelViewEntity) modelEntity;
+        }
+
+        Collection collection = new LinkedList();
+
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = getConnection();
+        } catch (SQLException sqle) {
+            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
+        }
+
+        //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
+        Vector whereFields = new Vector();
+        Vector selectFields = new Vector();
+        if (fields != null && fields.size() > 0) {
+            Set keys = fields.keySet();
+            for (int fi = 0; fi < modelEntity.fields.size(); fi++) {
+                ModelField curField = (ModelField) modelEntity.fields.elementAt(fi);
+                if (keys.contains(curField.name))
+                    whereFields.add(curField);
+                else
+                    selectFields.add(curField);
+            }
+        } else {
+            selectFields = modelEntity.fields;
+        }
+
+        GenericValue dummyValue;
+        if (fields != null && fields.size() > 0)
+            dummyValue = new GenericValue(modelEntity, fields);
+        else
+            dummyValue = new GenericValue(modelEntity);
+
+        String sql = "SELECT ";
+        if (selectFields.size() > 0)
+            sql = sql + modelEntity.colNameString(selectFields, ", ", "");
+        else
+            sql = sql + "*";
+
+        sql += makeFromClause(modelEntity);
+        sql += makeWhereClauseOr(modelEntity, whereFields, dummyValue);
+        sql += makeOrderByClause(modelEntity, orderBy);
+
+        //Debug.logInfo("[GenericDAO.selectByOr] sql=" + sql);
+        try {
+            ps = connection.prepareStatement(sql);
+
+            if (fields != null && fields.size() > 0) {
+                for (int i = 0; i < whereFields.size(); i++) {
+                    ModelField curField = (ModelField) whereFields.elementAt(i);
+                    //for where clause variables only setValue if not null...
+                    if (dummyValue.get(curField.name) != null) {
+                        setValue(ps, i + 1, curField, dummyValue);
+                    }
+                }
+            }
+            //Debug.logInfo("[GenericDAO.selectByOr] ps=" + ps.toString());
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                GenericValue value = new GenericValue(dummyValue);
+
+                for (int j = 0; j < selectFields.size(); j++) {
+                    ModelField curField = (ModelField) selectFields.elementAt(j);
+                    getValue(rs, j + 1, curField, value);
+                }
+
+                value.modified = false;
+                collection.add(value);
+            }
+        }
+        catch (SQLException sqle) {
+            //Debug.logWarning("[GenericDAO.selectByOr]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+            //sqle.printStackTrace();
+            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+        }
+        finally { try {
+                  if (rs != null)
+                          rs.close();
+              } catch (SQLException sqle) {
+                      Debug.logWarning(sqle.getMessage());
+                  }
+              try {
+                  if (ps != null)
+                          ps.close();
+              } catch (SQLException sqle) {
+                      Debug.logWarning(sqle.getMessage());
+                  }
+              try {
+                  if (connection != null)
+                          connection.close();
+              } catch (SQLException sqle) {
+                      Debug.logWarning(sqle.getMessage());
+                  }
+                } return collection;
+    }
+
     public Collection selectByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
             return null;
@@ -741,6 +843,128 @@ public class GenericDAO {
             }
         } catch (SQLException sqle) {
             //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+            //sqle.printStackTrace();
+            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+        }
+        finally { try {
+                  if (rs != null)
+                          rs.close();
+              } catch (SQLException sqle) {
+                      Debug.logWarning(sqle.getMessage());
+                  }
+              try {
+                  if (ps != null)
+                          ps.close();
+              } catch (SQLException sqle) {
+                      Debug.logWarning(sqle.getMessage());
+                  }
+              try {
+                  if (connection != null)
+                          connection.close();
+              } catch (SQLException sqle) {
+                      Debug.logWarning(sqle.getMessage());
+                  }
+                } return collection;
+    }
+
+    public Collection selectByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
+        if (modelEntity == null)
+            return null;
+        ModelViewEntity modelViewEntity = null;
+        if (modelEntity instanceof ModelViewEntity) {
+            modelViewEntity = (ModelViewEntity) modelEntity;
+        }
+
+        if (expressions == null)
+            return null;
+        Collection collection = new LinkedList();
+
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = getConnection();
+        } catch (SQLException sqle) {
+            throw new GenericDataSourceException("Unable to establish a connection with the database.", sqle);
+        }
+
+        //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
+        Vector selectFields = modelEntity.fields;
+
+        //Vector modelEntityFields = modelEntity.fields;
+        if (expressions != null && expressions.size() > 0) {
+            for (int fi = 0; fi < expressions.size(); fi++) {
+            }
+        }
+
+        StringBuffer sqlBuffer = new StringBuffer("SELECT ");
+        if (selectFields.size() > 0)
+            sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
+        else
+            sqlBuffer.append("*");
+        sqlBuffer.append(" ");
+        sqlBuffer.append(makeFromClause(modelEntity));
+
+        StringBuffer whereString = new StringBuffer("");
+        Vector whereFields = new Vector();
+        if (expressions != null && expressions.size() > 0) {
+            for (int i = 0; i < expressions.size(); i++) {
+                EntityExpr expr = (EntityExpr) expressions.get(i);
+                ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+                if (field != null) {
+                    whereFields.add(field);
+                    whereString.append(field.colName + expr.getOperator().getCode());
+                    if (i < expressions.size() - 1)
+                        whereString.append(" ? OR ");
+                    else
+                        whereString.append(" ? ");
+                } else {
+                    throw new IllegalArgumentException("ModelField with field name " + (String) expr.getLhs() + " not found");
+                }
+            }
+        }
+
+        String viewClause = makeViewWhereClause(modelEntity);
+        if (viewClause.length() > 0) {
+            whereString.append(" AND ");
+            whereString.append(viewClause);
+        }
+
+        if (whereString.length() > 0) {
+            sqlBuffer.append(" WHERE ");
+            sqlBuffer.append(whereString);
+        }
+
+        sqlBuffer.append(makeOrderByClause(modelEntity, orderBy));
+        String sql = sqlBuffer.toString();
+        //Debug.logInfo("[GenericDAO.selectByOr] sql=" + sql);
+
+        try {
+            ps = connection.prepareStatement(sql);
+            GenericValue dummyValue = new GenericValue(modelEntity);
+            if (expressions != null && expressions.size() > 0) {
+                for (int i = 0; i < expressions.size(); i++) {
+                    EntityExpr expr = (EntityExpr) expressions.get(i);
+                    ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
+                    dummyValue.set(field.name, expr.getRhs());
+                    setValue(ps, i + 1, field, dummyValue);
+                }
+            }
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                GenericValue value = new GenericValue(modelEntity);
+
+                for (int j = 0; j < selectFields.size(); j++) {
+                    ModelField curField = (ModelField) selectFields.elementAt(j);
+                    getValue(rs, j + 1, curField, value);
+                }
+
+                value.modified = false;
+                collection.add(value);
+            }
+        } catch (SQLException sqle) {
+            //Debug.logWarning("[GenericDAO.selectByOr]: SQL Exception while executing the following:\n" + sql + "\nError was:");
             //sqle.printStackTrace();
             throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         }
@@ -1277,6 +1501,49 @@ public class GenericDAO {
             return "";
     }
 
+    protected String makeWhereStringOr(Vector modelFields, GenericEntity entity) {
+        StringBuffer returnString = new StringBuffer("");
+        if (modelFields.size() < 1) {
+            return "";
+        }
+
+        int i = 0;
+        for (; i < modelFields.size() - 1; i++) {
+            ModelField modelField = (ModelField) modelFields.elementAt(i);
+            returnString.append(modelField.colName);
+            if (entity.get(modelField.name) != null)
+                returnString.append("=? OR ");
+            else
+                returnString.append(" IS NULL OR ");
+        }
+        ModelField modelField2 = (ModelField) modelFields.elementAt(i);
+        returnString.append(modelField2.colName);
+        if (entity.get(modelField2.name) != null)
+            returnString.append("=?");
+        else
+            returnString.append(" IS NULL");
+        return returnString.toString();
+    }
+
+    protected String makeWhereClauseOr(ModelEntity modelEntity, Vector modelFields, GenericEntity entity) {
+        StringBuffer whereString = new StringBuffer("");
+        if (modelFields != null && modelFields.size() > 0) {
+            whereString.append(makeWhereStringOr(modelFields, entity));
+        }
+
+        String viewClause = makeViewWhereClause(modelEntity);
+        if (viewClause.length() > 0) {
+            if (whereString.length() > 0)
+                whereString.append(" AND ");
+            whereString.append(viewClause);
+        }
+
+        if (whereString.length() > 0)
+            return " WHERE " + whereString.toString();
+        else
+            return "";
+    }
+
     protected String makeViewWhereClause(ModelEntity modelEntity) {
         StringBuffer whereString = new StringBuffer("");
         if (modelEntity instanceof ModelViewEntity) {
@@ -1510,17 +1777,19 @@ public class GenericDAO {
             Debug.logWarning(sqle.getMessage());
             return false;
         }
-        finally { try {
-                  if (stmt != null)
-                          stmt.close();
-              } catch (SQLException sqle) {
-                  }
-              try {
-                  if (connection != null)
-                          connection.close();
-              } catch (SQLException sqle) {
-                  }
-                } return true;
+        finally { 
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException sqle) {
+            }
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {
+            }
+        }
+        return true;
     }
     /*
       public boolean addColumn(String entityName, String fieldName)
@@ -1563,17 +1832,19 @@ public class GenericDAO {
             Debug.logWarning(sqle.getMessage());
             return false;
         }
-        finally { try {
-                  if (stmt != null)
-                          stmt.close();
-              } catch (SQLException sqle) {
-                  }
-              try {
-                  if (connection != null)
-                          connection.close();
-              } catch (SQLException sqle) {
-                  }
-                } return true;
+        finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException sqle) {
+            }
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {
+            }
+        } 
+        return true;
     }
 
     /* ====================================================================== */
@@ -2085,7 +2356,6 @@ public class GenericDAO {
     }
 
     class ColumnCheckInfo {
-
         public String tableName;
         public String columnName;
         public String typeName;

@@ -1,4 +1,3 @@
-
 package org.ofbiz.core.entity;
 
 import java.util.*;
@@ -8,7 +7,6 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -47,13 +45,12 @@ import org.w3c.dom.NodeList;
  *@version    1.0
  */
 public class GenericDelegator {
-
-    /** the delegatorCache will now be a HashMap, allowing reload of definitions,
+    /** the delegatorCache will now be a HashMap, allowing reload of definitions, 
      * but the delegator will always be the same object for the given name */
     static Map delegatorCache = new HashMap();
     String delegatorName;
 
-    /** set this to true for better performance; set to false to be able to reload definitions at runtime throught he cache manager */
+    /** set this to true for better performance; set to false to be able to reload definitions at runtime throught the cache manager */
     public static final boolean keepLocalReaders = true;
     ModelReader modelReader = null;
     ModelGroupReader modelGroupReader = null;
@@ -546,6 +543,15 @@ public class GenericDelegator {
         return this.findByAnd(entityName, fields, null);
     }
 
+    /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
+     * @param entityName The Name of the Entity as defined in the entity XML file
+     * @param fields The fields of the named entity to query by with their corresponging values
+     * @return Collection of GenericValue instances that match the query
+     */
+    public Collection findByOr(String entityName, Map fields) throws GenericEntityException {
+        return this.findByOr(entityName, fields, null);
+    }
+    
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
      * @param entityName The Name of the Entity as defined in the entity XML file
      * @param fields The fields of the named entity to query by with their corresponging values
@@ -566,6 +572,26 @@ public class GenericDelegator {
         return collection;
     }
 
+    /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
+     * @param entityName The Name of the Entity as defined in the entity XML file
+     * @param fields The fields of the named entity to query by with their corresponging values
+     * @param order The fields of the named entity to order the query by;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     * @return Collection of GenericValue instances that match the query
+     */
+    public Collection findByOr(String entityName, Map fields, List orderBy) throws GenericEntityException {
+        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericHelper helper = getEntityHelper(modelEntity);
+
+        if (fields != null && !modelEntity.areFields(fields.keySet()))
+            throw new IllegalArgumentException("[GenericDelegator.findByOr] At least of the passed fields is not valid: " + fields.keySet().toString());
+
+        Collection collection = null;
+        collection = helper.findByOr(modelEntity, fields, orderBy);
+        absorbCollection(collection);
+        return collection;
+    }
+    
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND), looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
      *@param entityName The Name of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
@@ -600,6 +626,15 @@ public class GenericDelegator {
         return findByAnd(entityName, expressions, null);
     }
 
+    /** Finds Generic Entity records by all of the specified expressions (ie: combined using OR)
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param expressions The expressions to use for the lookup, each consisting of at least a field name, an EntityOperator, and a value to compare to
+     *@return Collection of GenericValue instances that match the query
+     */
+    public Collection findByOr(String entityName, List expressions) throws GenericEntityException {
+        return findByOr(entityName, expressions, null);
+    }
+    
     /** Finds Generic Entity records by all of the specified expressions (ie: combined using AND)
      *@param entityName The Name of the Entity as defined in the entity XML file
      *@param expressions The expressions to use for the lookup, each consisting of at least a field name, an EntityOperator, and a value to compare to
@@ -616,6 +651,22 @@ public class GenericDelegator {
         return collection;
     }
 
+    /** Finds Generic Entity records by all of the specified expressions (ie: combined using OR)
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param expressions The expressions to use for the lookup, each consisting of at least a field name, an EntityOperator, and a value to compare to
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@return Collection of GenericValue instances that match the query
+     */
+    public Collection findByOr(String entityName, List expressions, List orderBy) throws GenericEntityException {
+        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericHelper helper = getEntityHelper(modelEntity);
+
+        Collection collection = null;
+        collection = helper.findByOr(modelEntity, expressions, orderBy);
+        absorbCollection(collection);
+        return collection;
+    }
+    
     public Collection findByLike(String entityName, Map fields) throws GenericEntityException {
         return findByLike(entityName, fields, null);
     }
@@ -748,7 +799,7 @@ public class GenericDelegator {
             ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
             fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
         }
-
+        
         GenericPK dummyPK = new GenericPK(relatedEntity, fields);
         dummyPK.setDelegator(this);
         return dummyPK;
@@ -1132,8 +1183,7 @@ public class GenericDelegator {
                     if (value != null)
                         values.add(value);
                 }
-            } while ((curChild = curChild.getNextSibling()) != null)
-                    ;
+            } while ((curChild = curChild.getNextSibling()) != null);
         } else
             Debug.logWarning("[GenericDelegator.makeValues] No child nodes found in document.");
 
