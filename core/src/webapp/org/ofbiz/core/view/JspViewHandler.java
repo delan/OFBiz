@@ -39,7 +39,7 @@ import org.ofbiz.core.util.*;
  *@created    Feb 26, 2002
  *@version    1.0
  */
-public class JspViewHandler {
+public class JspViewHandler implements ViewHandler {
 
     protected ServletContext context;
 

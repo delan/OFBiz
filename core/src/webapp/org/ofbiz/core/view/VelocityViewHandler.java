@@ -48,7 +48,7 @@ import org.ofbiz.core.util.*;
  *@created    Feb 16, 2002
  *@version    1.0
  */
-public class VelocityViewHandler {
+public class VelocityViewHandler implements ViewHandler {
 
     public static final String module = VelocityViewHandler.class.getName();
 

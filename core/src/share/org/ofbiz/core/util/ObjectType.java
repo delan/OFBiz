@@ -42,7 +42,6 @@ public class ObjectType {
      * @param className The name of the class to load
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
-        Debug.logVerbose("Loading Class: " + className, module);
         ClassLoader loader = null;
         Class c = null;
         try {
@@ -51,6 +50,7 @@ public class ObjectType {
         } catch (Exception e) {
             c = Class.forName(className);
         }
+        Debug.logVerbose("Loaded Class: " + c.getName(), module);
         return c;
     }
 
@@ -61,6 +61,7 @@ public class ObjectType {
             InstantiationException, IllegalAccessException {
         Class c = loadClass(className);
         Object o = c.newInstance();
+        Debug.logVerbose("Instantiated object: " + o.toString(), module);
         return o;
     }
 

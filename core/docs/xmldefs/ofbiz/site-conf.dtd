@@ -67,6 +67,6 @@
 <!ATTLIST view-map
 	name CDATA #REQUIRED
 	page CDATA #REQUIRED
-	type CDATA "jsp"
+	type CDATA "default"
 >
 

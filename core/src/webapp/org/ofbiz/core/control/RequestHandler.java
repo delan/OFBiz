@@ -31,11 +31,12 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.naming.*;
 
-import org.ofbiz.core.service.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.event.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.view.*;
 
 
 /**
@@ -53,27 +54,26 @@ public class RequestHandler implements Serializable {
 
     private ServletContext context;
     private RequestManager rm;
-    private VelocityViewHandler ve;
 
     public void init(ServletContext context) {
         this.context = context;
         Debug.logInfo("[RerquestHandler Loading...]", module);
         rm = new RequestManager(context);
-        ve = null;
     }
 
-    public String doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
-                            GenericValue userLogin, GenericDelegator delegator) throws RequestHandlerException {
+    public void doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
+                          GenericValue userLogin, GenericDelegator delegator) throws RequestHandlerException {
+
         String requestUri = null;
         String eventType = null;
         String eventPath = null;
         String eventMethod = null;
         String nextView = null;
+        String viewType = null;
         String nextPage = null;
         boolean chainRequest = false;
         boolean noDispatch = false;
         boolean redirect = false;
-        boolean velocity = false;
 
         String cname = request.getContextPath().substring(1);
 
@@ -97,7 +97,7 @@ public class RequestHandler implements Serializable {
                     String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
                     String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
                     try {
-                        EventHandler preEvent = EventFactory.getEventHandler(rm, eType);
+                        EventHandler preEvent = EventFactory.getEventHandler(this, eType);
                         preEvent.initialize(ePath, eMeth);
                         String returnString = preEvent.invoke(request, response);
                         if (!returnString.equalsIgnoreCase("success"))
@@ -121,7 +121,7 @@ public class RequestHandler implements Serializable {
             String checkLoginMethod = rm.getEventMethod(SiteDefs.CHECK_LOGIN_REQUEST_URI);
             String checkLoginReturnString = null;
             try {
-                EventHandler loginEvent = EventFactory.getEventHandler(rm, checkLoginType);
+                EventHandler loginEvent = EventFactory.getEventHandler(this, checkLoginType);
                 loginEvent.initialize(checkLoginPath, checkLoginMethod);
                 checkLoginReturnString = loginEvent.invoke(request, response);
             } catch (EventHandlerException e) {
@@ -148,7 +148,7 @@ public class RequestHandler implements Serializable {
             if (eventType != null && eventPath != null && eventMethod != null) {
                 try {
                     long eventStartTime = System.currentTimeMillis();
-                    EventHandler eh = EventFactory.getEventHandler(rm, eventType);
+                    EventHandler eh = EventFactory.getEventHandler(this, eventType);
                     eh.initialize(eventPath, eventMethod);
                     eventReturnString = eh.invoke(request, response);
                     ServerHitBin.countEvent(cname + "." + eventMethod, request.getSession().getId(), eventStartTime,
@@ -198,10 +198,7 @@ public class RequestHandler implements Serializable {
             // before mapping the view, set a session attribute so we know where we are
             request.setAttribute(SiteDefs.CURRENT_VIEW, tempView);
 
-            // check the type of view (for velocity)
-            if (rm.getViewType(tempView) != null && rm.getViewType(tempView).equals("velocity"))
-                velocity = true;
-
+            viewType = rm.getViewType(tempView);
             tempView = rm.getViewPage(tempView);
             nextPage = tempView != null ? tempView : "/" + nextView;
             Debug.logVerbose("[Mapped To]: " + nextPage, module);
@@ -221,7 +218,7 @@ public class RequestHandler implements Serializable {
         // invoke chained requests
         if (chainRequest) {
             Debug.logInfo("[Running Chained Request]: " + nextView, module);
-            nextPage = doRequest(request, response, nextView, userLogin, delegator);
+            doRequest(request, response, nextView, userLogin, delegator);
         }
 
         // if previous request exists, and a login just succeeded, do that now...
@@ -231,13 +228,13 @@ public class RequestHandler implements Serializable {
                 request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
                 //here we need to display nothing, and do the previous request
                 Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
-                nextPage = doRequest(request, response, previousRequest, userLogin, delegator);
+                doRequest(request, response, previousRequest, userLogin, delegator);
             }
         }
 
         // if noDispatch return null to the control servlet
         if (noDispatch)
-            return null;
+            return;
 
         // if redirect - redirect to the url and return null to the control servlet
         if (redirect) {
@@ -249,21 +246,15 @@ public class RequestHandler implements Serializable {
             } catch (IllegalStateException ise) {
                 throw new RequestHandlerException(ise.getMessage(), ise);
             }
-            return null;
+            return;
         }
 
-        // if velocity - call the velocity view handler and return null to the control servlet
-        if (velocity) {
-            Debug.logInfo("[Calling Velocity Template]: " + nextPage, module);
-            if (ve == null) {
-                ve = new VelocityViewHandler();
-                ve.init(context);
-            }
-            ve.eval(nextPage, request, response);
-            return null;
+        try {
+            ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
+            vh.render(nextPage, request, response);
+        } catch (ViewHandlerException e) {
+            throw new RequestHandlerException(e.getMessage(), e);
         }
-
-        return nextPage;
     }
 
     public String getDefaultErrorPage(HttpServletRequest request) {
@@ -274,6 +265,11 @@ public class RequestHandler implements Serializable {
     /* Returns the RequestManager Object. */
     public RequestManager getRequestManager() {
         return rm;
+    }
+
+    /** Returns the ServletContext Object. */
+    public ServletContext getServletContext() {
+        return context;
     }
 
     /* Gets the mapped request URI from path_info */

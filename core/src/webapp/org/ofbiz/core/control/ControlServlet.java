@@ -97,8 +97,6 @@ public class ControlServlet extends HttpServlet {
         HttpSession session = request.getSession();
         if (request.getCharacterEncoding() == null)
             request.setCharacterEncoding("UTF-8");
-        
-        String nextPage = null;
 
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
@@ -162,24 +160,25 @@ public class ControlServlet extends HttpServlet {
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s)", module);
 
+        String errorPage = null;
         try {
             //the ServerHitBin call for the event is done inside the doRequest method
-            nextPage = getRequestHandler().doRequest(request, response, null, userLogin, delegator);
+            getRequestHandler().doRequest(request, response, null, userLogin, delegator);
         } catch (Exception e) {
             Debug.logError(e);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
-            nextPage = getRequestHandler().getDefaultErrorPage(request);
+            errorPage = getRequestHandler().getDefaultErrorPage(request);
         }
 
         // Forward to the JSP
-        Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage, module);
-        if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
+        // Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage, module);
+        // if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
         long viewStartTime = System.currentTimeMillis();
-        if (nextPage != null) {
+        if (errorPage != null) {
             //some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
             request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
-            RequestDispatcher rd = request.getRequestDispatcher(nextPage);
+            RequestDispatcher rd = request.getRequestDispatcher(errorPage);
             if (rd != null) rd.forward(request, response);
         }
 
