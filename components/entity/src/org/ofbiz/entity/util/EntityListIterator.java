@@ -460,7 +460,7 @@ public class EntityListIterator implements ListIterator {
         try {
             if (!closed) {
                 this.close();
-                Debug.logError("\n====================================================================\n EntityListIterator Not Closed for Entity [" + modelEntity==null?"":modelEntity.getEntityName() + "], caught in Finalize\n ====================================================================\n", module);
+                Debug.logError("\n====================================================================\n EntityListIterator Not Closed for Entity [" + (modelEntity==null ? "" : modelEntity.getEntityName()) + "], caught in Finalize\n ====================================================================\n", module);
             }
         } catch (Exception e) {
             Debug.logError(e, "Error closing the SQLProcessor in finalize EntityListIterator", module);
