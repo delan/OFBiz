@@ -156,7 +156,7 @@ public class EntityFinderUtil {
                 value = envNameAcsr.get(context);
             }
             // no value so far, and a string value is specified, use that
-            if (value == null && valueExdr != null) {
+            if (value == null && valueExdr != null && !valueExdr.isEmpty()) {
                 value = valueExdr.expandString(context);
             }
             // now to a type conversion for the target fieldName
@@ -164,6 +164,8 @@ public class EntityFinderUtil {
             
             if (this.ignoreIfNull && value == null) {
                 return null;
+            } else {
+                if (Debug.verboseOn()) Debug.logVerbose("Got value for fieldName [" + fieldName + "]: " + value, module);
             }
             
             String operatorName = operatorExdr.expandString(context);
