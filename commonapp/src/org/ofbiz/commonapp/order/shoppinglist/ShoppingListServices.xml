@@ -131,7 +131,7 @@
         <string-to-field field-name="parentMethodName" string="updateShoppingListItem"/>
         <string-to-field field-name="permissionAction" string="UPDATE"/>
         <call-simple-method method-name="checkShoppingListItemSecurity"/>
-        <check-errors/>    	     
+        <check-errors/>
 
         <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
         <field-to-field field-name="shoppingListItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -144,13 +144,54 @@
         <string-to-field field-name="parentMethodName" string="removeShoppingListItem"/>
         <string-to-field field-name="permissionAction" string="DELETE"/>
         <call-simple-method method-name="checkShoppingListItemSecurity"/>
-        <check-errors/>    
+        <check-errors/>
 
         <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
         <field-to-field field-name="shoppingListItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingListItem"/>
         <remove-value value-name="shoppingListItem"/>
     </simple-method>    
+
+    <simple-method method-name="calculateShoppingListItemsTotalPrice" short-description="Update a ShoppingList">
+        <string-to-field field-name="parentMethodName" string="calculateShoppingListItemsTotalPrice"/>
+        <string-to-field field-name="permissionAction" string="VIEW"/>
+        <call-simple-method method-name="checkShoppingListItemSecurity"/>
+        <check-errors/>
+
+		<field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
+		<field-to-field field-name="webSiteId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
+		<field-to-field field-name="partyId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
+		<field-to-field field-name="facilityGroupId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
+		<field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
+		<field-to-field field-name="autoUserLogin" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
+
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupMap"/>
+        <find-by-and entity-name="ShoppingListItem" list-name="shoppingListItems" map-name="lookupMap" use-cache="true"/>
+
+		<calculate field-name="totalPrice" type="Double"><number value="0.0"/></calculate>
+        <iterate entry-name="shoppingListItem" list-name="shoppingListItems">
+        	<field-to-field field-name="productId" map-name="shoppingListItem" to-map-name="lookupProductMap"/>
+        	<find-by-primary-key entity-name="Product" value-name="product" map-name="lookupProductMap" use-cache="true"/>
+        	
+        	<map-to-map map-name="calcPriceInBaseMap" to-map-name="calcPriceInMap"/>
+        	<env-to-field env-name="product" field-name="product" map-name="calcPriceInMap"/>
+        	<field-to-field field-name="quantity" map-name="shoppingListItem" to-map-name="calcPriceInMap"/>
+        	<call-service service-name="calculateProductPrice" in-map-name="calcPriceInMap">
+        		<result-to-field result-name="price" field-name="price" map-name="calcPriceOutMap"/>
+        	</call-service>
+        	<calculate field-name="totalPrice">
+        		<calcop field-name="totalPrice" operator="add">
+        			<calcop operator="multiply">
+        				<calcop operator="get" field-name="price" map-name="calcPriceOutMap"/>
+        				<calcop operator="get" field-name="quantity" map-name="shoppingListItem"/>
+        			</calcop>
+        		</calcop>
+        	</calculate>
+        	
+        	<clear-field field-name="calcPriceInMap"/>
+        </iterate>
+		<field-to-result field-name="totalPrice" result-name="totalPrice"/>
+    </simple-method>
     
     <simple-method method-name="checkShoppingListSecurity" short-description="Checks security on a ShoppingList">
     	<if>
@@ -165,7 +206,6 @@
     	    </then>
     	</if>    	    	
     </simple-method>    
-    
     <simple-method method-name="checkShoppingListItemSecurity" short-description="Checks security on a ShoppingListItem">
     	<field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupSLMap"/>
     	<find-by-primary-key entity-name="ShoppingList" map-name="lookupSLMap" value-name="shoppingList"/>

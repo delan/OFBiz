@@ -376,6 +376,19 @@
         <description>Remove a shopping list entity</description>       
         <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
     </service>    
+    <service name="calculateShoppingListItemsTotalPrice" engine="simple" auth="true"
+            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="calculateShoppingListItemsTotalPrice">
+        <description>Remove a shopping list entity</description>       
+        <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityGroupId" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="autoUserLogin" type="GenericValue" mode="IN" optional="true"/>
+        <attribute name="totalPrice" type="Double" mode="OUT" optional="false"/>
+    </service>    
           
     <service name="shoppingListItemInterface" engine="interface" location="" invoke="">
         <description>Interface of shopping list items</description>
