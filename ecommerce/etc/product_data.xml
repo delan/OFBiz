@@ -5,9 +5,9 @@
   <WebSite webSiteId="WebStore" siteName="eCommerce Web Site"/>
 
   <ProdCatalog prodCatalogId="DemoCatalog" catalogName="Demo Catalog" title="Open For Commerce" 
-    subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" useQuickAdd="Y"/>
+    subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" oneInventoryFacility="Y" useQuickAdd="Y"/>
   <ProdCatalog prodCatalogId="TestCatalog" catalogName="Test Catalog" title="Open For Commerce" 
-    subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" useQuickAdd="N"/>
+    subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" oneInventoryFacility="Y" useQuickAdd="N"/>
   <WebSiteCatalog webSiteId="WebStore" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
   <WebSiteCatalog webSiteId="WebStore" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
 
