@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org) 
+ *@author David E. Jones (jonesde@ofbiz.org)
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -58,7 +58,7 @@
   <!-- org.ofbiz.commonapp.product.category -->
   <!-- ========================================================= -->
 
-    <entity entity-name="ProductCategory" 
+    <entity entity-name="ProductCategory"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Entity">
       <field name="productCategoryId" type="id-ne"></field>
@@ -66,7 +66,7 @@
       <field name="primaryParentCategoryId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="categoryImageUrl" type="long-varchar"></field>
-      <field name="longDescription" type="very-long"></field>	
+      <field name="longDescription" type="very-long"></field>
       <prim-key field="productCategoryId" />
       <relation type="many" rel-entity-name="ProductCategoryAttribute">
         <key-map field-name="productCategoryId" />
@@ -105,13 +105,13 @@
         <key-map field-name="productCategoryId" />
       </relation>
     </entity>
-    <entity entity-name="ProductCategoryAttribute" 
+    <entity entity-name="ProductCategoryAttribute"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Attribute Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>	
-      <prim-key field="productCategoryId" />	
+      <field name="attrValue" type="value"></field>
+      <prim-key field="productCategoryId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
@@ -120,7 +120,7 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="ProductCategoryMember" 
+    <entity entity-name="ProductCategoryMember"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Member Entity">
       <field name="productCategoryId" type="id-ne"></field>
@@ -129,9 +129,9 @@
       <field name="thruDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
       <field name="sequenceNum" type="numeric"></field>
-      <field name="quantity" type="floating-point"></field>	
-      <prim-key field="productCategoryId" />	
-      <prim-key field="productId" />	
+      <field name="quantity" type="floating-point"></field>
+      <prim-key field="productCategoryId" />
+      <prim-key field="productId" />
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
@@ -140,13 +140,13 @@
         <key-map field-name="productCategoryId" />
       </relation>
     </entity>
-    <entity entity-name="ProductCategoryRollup" 
+    <entity entity-name="ProductCategoryRollup"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Rollup Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="parentProductCategoryId" type="id-ne"></field>
-      <field name="sequenceNum" type="numeric"></field>	
-      <prim-key field="productCategoryId" />	
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productCategoryId" />
       <prim-key field="parentProductCategoryId" />
       <relation type="one" title="Current" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
@@ -164,13 +164,13 @@
         <key-map field-name="parentProductCategoryId" />
       </relation>
     </entity>
-    <entity entity-name="ProductCategoryType" 
+    <entity entity-name="ProductCategoryType"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Type Entity">
       <field name="productCategoryTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="productCategoryTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductCategoryType">
         <key-map field-name="parentTypeId" rel-field-name="productCategoryTypeId" />
@@ -185,12 +185,12 @@
         <key-map field-name="productCategoryTypeId" />
       </relation>
     </entity>
-    <entity entity-name="ProductCategoryTypeAttr" 
+    <entity entity-name="ProductCategoryTypeAttr"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Type Attribute Entity">
       <field name="productCategoryTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>	
-      <prim-key field="productCategoryTypeId" />	
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="productCategoryTypeId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ProductCategoryType">
         <key-map field-name="productCategoryTypeId" />
@@ -207,7 +207,7 @@
   <!-- org.ofbiz.commonapp.product.cost -->
   <!-- ========================================================= -->
 
-    <entity entity-name="CostComponent" 
+    <entity entity-name="CostComponent"
             package-name="org.ofbiz.commonapp.product.cost"
             title="Cost Component Entity">
       <field name="costComponentId" type="id-ne"></field>
@@ -218,7 +218,7 @@
       <field name="geoId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="cost" type="currency-amount"></field>	
+      <field name="cost" type="currency-amount"></field>
       <prim-key field="costComponentId" />
       <relation type="one" rel-entity-name="CostComponentType">
         <key-map field-name="costComponentTypeId" />
@@ -242,13 +242,13 @@
         <key-map field-name="geoId" />
       </relation>
     </entity>
-    <entity entity-name="CostComponentAttribute" 
+    <entity entity-name="CostComponentAttribute"
             package-name="org.ofbiz.commonapp.product.cost"
             title="Cost Component Attribute Entity">
       <field name="costComponentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>	
-      <prim-key field="costComponentId" />	
+      <field name="attrValue" type="value"></field>
+      <prim-key field="costComponentId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="CostComponent">
         <key-map field-name="costComponentId" />
@@ -257,13 +257,13 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="CostComponentType" 
+    <entity entity-name="CostComponentType"
             package-name="org.ofbiz.commonapp.product.cost"
             title="Cost Component Type Entity">
       <field name="costComponentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="costComponentTypeId" />
       <relation type="one" title="Parent" rel-entity-name="CostComponentType">
         <key-map field-name="parentTypeId" rel-field-name="costComponentTypeId" />
@@ -278,12 +278,12 @@
         <key-map field-name="costComponentTypeId" />
       </relation>
     </entity>
-    <entity entity-name="CostComponentTypeAttr" 
+    <entity entity-name="CostComponentTypeAttr"
             package-name="org.ofbiz.commonapp.product.cost"
             title="Cost Component Type Attribute Entity">
       <field name="costComponentTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>	
-      <prim-key field="costComponentTypeId" />	
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="costComponentTypeId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="CostComponentType">
         <key-map field-name="costComponentTypeId" />
@@ -300,12 +300,12 @@
   <!-- org.ofbiz.commonapp.product.feature -->
   <!-- ========================================================= -->
 
-    <entity entity-name="FeatureDataObject" 
+    <entity entity-name="FeatureDataObject"
             package-name="org.ofbiz.commonapp.product.feature"
             title="Feature Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
-      <field name="productFeatureId" type="id-ne"></field>	
-      <prim-key field="dataObjectId" />	
+      <field name="productFeatureId" type="id-ne"></field>
+      <prim-key field="dataObjectId" />
       <prim-key field="productFeatureId" />
       <relation type="one" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId" />
@@ -314,7 +314,7 @@
         <key-map field-name="dataObjectId" />
       </relation>
     </entity>
-    <entity entity-name="ProductFeature" 
+    <entity entity-name="ProductFeature"
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Entity">
       <field name="productFeatureId" type="id-ne"></field>
@@ -322,7 +322,7 @@
       <field name="productFeatureCategoryId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="uomId" type="id"></field>
-      <field name="numberSpecified" type="numeric"></field>	
+      <field name="numberSpecified" type="numeric"></field>
       <prim-key field="productFeatureId" />
       <relation type="one" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId" />
@@ -349,16 +349,16 @@
         <key-map field-name="productFeatureId" />
       </relation>
     </entity>
-    <entity entity-name="ProductFeatureAppl" 
+    <entity entity-name="ProductFeatureAppl"
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Applicability Entity">
       <field name="productId" type="id-ne"></field>
       <field name="productFeatureId" type="id-ne"></field>
       <field name="productFeatureApplTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>	
-      <prim-key field="productId" />	
-      <prim-key field="productFeatureId" />	
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="productId" />
+      <prim-key field="productFeatureId" />
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductFeatureApplType">
         <key-map field-name="productFeatureApplTypeId" />
@@ -370,13 +370,13 @@
         <key-map field-name="productFeatureId" />
       </relation>
     </entity>
-    <entity entity-name="ProductFeatureApplType" 
+    <entity entity-name="ProductFeatureApplType"
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Applicability Type Entity">
       <field name="productFeatureApplTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="productFeatureApplTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductFeatureApplType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureApplTypeId" />
@@ -388,12 +388,12 @@
         <key-map field-name="productFeatureApplTypeId" />
       </relation>
     </entity>
-    <entity entity-name="ProductFeatureCategory" 
+    <entity entity-name="ProductFeatureCategory"
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Category Entity">
       <field name="productFeatureCategoryId" type="id-ne"></field>
       <field name="parentCategoryId" type="id"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="productFeatureCategoryId" />
       <relation type="one" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="parentCategoryId" rel-field-name="productFeatureCategoryId" />
@@ -402,14 +402,14 @@
         <key-map field-name="productFeatureCategoryId" />
       </relation>
     </entity>
-    <entity entity-name="ProductFeatureIactn" 
+    <entity entity-name="ProductFeatureIactn"
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Interaction Entity">
       <field name="productFeatureId" type="id-ne"></field>
       <field name="productFeatureIdTo" type="id-ne"></field>
       <field name="productFeatureIactnTypeId" type="id"></field>
-      <field name="productId" type="id"></field>	
-      <prim-key field="productFeatureId" />	
+      <field name="productId" type="id"></field>
+      <prim-key field="productFeatureId" />
       <prim-key field="productFeatureIdTo" />
       <relation type="one" rel-entity-name="ProductFeatureIactnType">
         <key-map field-name="productFeatureIactnTypeId" />
@@ -421,13 +421,13 @@
         <key-map field-name="productFeatureIdTo" rel-field-name="productFeatureId" />
       </relation>
     </entity>
-    <entity entity-name="ProductFeatureIactnType" 
+    <entity entity-name="ProductFeatureIactnType"
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Interaction Type Entity">
       <field name="productFeatureIactnTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="productFeatureIactnTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductFeatureIactnType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureIactnTypeId" />
@@ -439,13 +439,13 @@
         <key-map field-name="productFeatureIactnTypeId" />
       </relation>
     </entity>
-    <entity entity-name="ProductFeatureType" 
+    <entity entity-name="ProductFeatureType"
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Type Entity">
       <field name="productFeatureTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="productFeatureTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductFeatureType">
         <key-map field-name="parentTypeId" rel-field-name="productFeatureTypeId" />
@@ -462,7 +462,7 @@
   <!-- org.ofbiz.commonapp.product.inventory -->
   <!-- ========================================================= -->
 
-    <entity entity-name="InventoryItem" 
+    <entity entity-name="InventoryItem"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Entity">
       <field name="inventoryItemId" type="id-ne"></field>
@@ -475,7 +475,7 @@
       <field name="lotId" type="id"></field>
       <field name="uomId" type="id"></field>
       <field name="quantityOnHand" type="floating-point"></field>
-      <field name="serialNumber" type="value"></field>	
+      <field name="serialNumber" type="value"></field>
       <prim-key field="inventoryItemId" />
       <relation type="one" rel-entity-name="InventoryItemType">
         <key-map field-name="inventoryItemTypeId" />
@@ -514,13 +514,13 @@
         <key-map field-name="inventoryItemId" />
       </relation>
     </entity>
-    <entity entity-name="InventoryItemAttribute" 
+    <entity entity-name="InventoryItemAttribute"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Attribute Entity">
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>	
-      <prim-key field="inventoryItemId" />	
+      <field name="attrValue" type="value"></field>
+      <prim-key field="inventoryItemId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId" />
@@ -529,13 +529,13 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="InventoryItemType" 
+    <entity entity-name="InventoryItemType"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Type Entity">
       <field name="inventoryItemTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="inventoryItemTypeId" />
       <relation type="one" title="Parent" rel-entity-name="InventoryItemType">
         <key-map field-name="parentTypeId" rel-field-name="inventoryItemTypeId" />
@@ -550,12 +550,12 @@
         <key-map field-name="inventoryItemTypeId" />
       </relation>
     </entity>
-    <entity entity-name="InventoryItemTypeAttr" 
+    <entity entity-name="InventoryItemTypeAttr"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Type Attribute Entity">
       <field name="inventoryItemTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>	
-      <prim-key field="inventoryItemTypeId" />	
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="inventoryItemTypeId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="InventoryItemType">
         <key-map field-name="inventoryItemTypeId" />
@@ -567,15 +567,15 @@
         <key-map field-name="inventoryItemTypeId" />
       </relation>
     </entity>
-    <entity entity-name="InventoryItemVariance" 
+    <entity entity-name="InventoryItemVariance"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Variance Entity">
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="physicalInventoryId" type="id-ne"></field>
       <field name="varianceReasonId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
-      <field name="comments" type="comment"></field>	
-      <prim-key field="inventoryItemId" />	
+      <field name="comments" type="comment"></field>
+      <prim-key field="inventoryItemId" />
       <prim-key field="physicalInventoryId" />
       <relation type="one" rel-entity-name="VarianceReason">
         <key-map field-name="varianceReasonId" />
@@ -591,12 +591,12 @@
         <key-map field-name="physicalInventoryId" />
       </relation>
     </entity>
-    <entity entity-name="ItemVarianceAcctgTrans" 
+    <entity entity-name="ItemVarianceAcctgTrans"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Item Variance Accounting Transaction Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
-      <field name="physicalInventoryId" type="id"></field>	
+      <field name="physicalInventoryId" type="id"></field>
       <prim-key field="acctgTransId" />
       <relation type="one" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId" />
@@ -612,35 +612,35 @@
         <key-map field-name="physicalInventoryId" />
       </relation>
     </entity>
-    <entity entity-name="Lot" 
+    <entity entity-name="Lot"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Lot Entity">
       <field name="lotId" type="id-ne"></field>
       <field name="creationDate" type="date-time"></field>
       <field name="quantity" type="floating-point"></field>
-      <field name="expirationDate" type="date-time"></field>	
+      <field name="expirationDate" type="date-time"></field>
       <prim-key field="lotId" />
       <relation type="many" rel-entity-name="InventoryItem">
         <key-map field-name="lotId" />
       </relation>
     </entity>
-    <entity entity-name="PhysicalInventory" 
+    <entity entity-name="PhysicalInventory"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Physical Inventory Entity">
       <field name="physicalInventoryId" type="id-ne"></field>
       <field name="physicalInventoryDate" type="date-time"></field>
       <field name="partyId" type="id"></field>
-      <field name="comments" type="comment"></field>	
+      <field name="comments" type="comment"></field>
       <prim-key field="physicalInventoryId" />
       <relation type="many" rel-entity-name="InventoryItemVariance">
         <key-map field-name="physicalInventoryId" />
       </relation>
     </entity>
-    <entity entity-name="VarianceReason" 
+    <entity entity-name="VarianceReason"
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Variance Reason Entity">
       <field name="varianceReasonId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="varianceReasonId" />
       <relation type="many" rel-entity-name="InventoryItemVariance">
         <key-map field-name="varianceReasonId" />
@@ -651,7 +651,7 @@
   <!-- org.ofbiz.commonapp.product.price -->
   <!-- ========================================================= -->
 
-    <entity entity-name="PriceComponent" 
+    <entity entity-name="PriceComponent"
             package-name="org.ofbiz.commonapp.product.price"
             title="Price Component Entity">
       <field name="priceComponentId" type="id-ne"></field>
@@ -674,7 +674,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="price" type="currency-amount"></field>
       <field name="pricePercent" type="floating-point"></field>
-      <field name="comments" type="comment"></field>	
+      <field name="comments" type="comment"></field>
       <prim-key field="priceComponentId" />
       <relation type="one" rel-entity-name="PriceComponentType">
         <key-map field-name="priceComponentTypeId" />
@@ -726,13 +726,13 @@
         <key-map field-name="orderValueBreakId" rel-field-name="quantityBreakId" />
       </relation>
     </entity>
-    <entity entity-name="PriceComponentAttribute" 
+    <entity entity-name="PriceComponentAttribute"
             package-name="org.ofbiz.commonapp.product.price"
             title="Price Component Attribute Entity">
       <field name="priceComponentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>	
-      <prim-key field="priceComponentId" />	
+      <field name="attrValue" type="value"></field>
+      <prim-key field="priceComponentId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="PriceComponent">
         <key-map field-name="priceComponentId" />
@@ -741,13 +741,13 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="PriceComponentType" 
+    <entity entity-name="PriceComponentType"
             package-name="org.ofbiz.commonapp.product.price"
             title="Price Component Type Entity">
       <field name="priceComponentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="priceComponentTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PriceComponentType">
         <key-map field-name="parentTypeId" rel-field-name="priceComponentTypeId" />
@@ -762,12 +762,12 @@
         <key-map field-name="priceComponentTypeId" />
       </relation>
     </entity>
-    <entity entity-name="PriceComponentTypeAttr" 
+    <entity entity-name="PriceComponentTypeAttr"
             package-name="org.ofbiz.commonapp.product.price"
             title="Price Component Type Attribute Entity">
       <field name="priceComponentTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>	
-      <prim-key field="priceComponentTypeId" />	
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="priceComponentTypeId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="PriceComponentType">
         <key-map field-name="priceComponentTypeId" />
@@ -779,13 +779,13 @@
         <key-map field-name="priceComponentTypeId" />
       </relation>
     </entity>
-    <entity entity-name="QuantityBreak" 
+    <entity entity-name="QuantityBreak"
             package-name="org.ofbiz.commonapp.product.price"
             title="Quantity Break Entity">
       <field name="quantityBreakId" type="id-ne"></field>
       <field name="quantityBreakTypeId" type="id"></field>
       <field name="fromQuantity" type="floating-point"></field>
-      <field name="thruQuantity" type="floating-point"></field>	
+      <field name="thruQuantity" type="floating-point"></field>
       <prim-key field="quantityBreakId" />
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="quantityBreakId" />
@@ -794,21 +794,21 @@
         <key-map field-name="quantityBreakTypeId" />
       </relation>
     </entity>
-    <entity entity-name="QuantityBreakType" 
+    <entity entity-name="QuantityBreakType"
             package-name="org.ofbiz.commonapp.product.price"
             title="Quantity Break Type Entity">
       <field name="quantityBreakTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="quantityBreakTypeId" />
       <relation type="many" rel-entity-name="QuantityBreak">
         <key-map field-name="quantityBreakTypeId" />
       </relation>
     </entity>
-    <entity entity-name="SaleType" 
+    <entity entity-name="SaleType"
             package-name="org.ofbiz.commonapp.product.price"
             title="Sale Type Entity">
       <field name="saleTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="saleTypeId" />
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="saleTypeId" />
@@ -819,13 +819,13 @@
   <!-- org.ofbiz.commonapp.product.product -->
   <!-- ========================================================= -->
 
-    <entity entity-name="GoodIdentification" 
+    <entity entity-name="GoodIdentification"
             package-name="org.ofbiz.commonapp.product.product"
             title="Good Identification Entity">
       <field name="goodIdentificationTypeId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
-      <field name="idValue" type="id-long"></field>	
-      <prim-key field="goodIdentificationTypeId" />	
+      <field name="idValue" type="id-long"></field>
+      <prim-key field="goodIdentificationTypeId" />
       <prim-key field="productId" />
       <relation type="one" rel-entity-name="GoodIdentificationType">
         <key-map field-name="goodIdentificationTypeId" />
@@ -834,13 +834,13 @@
         <key-map field-name="productId" />
       </relation>
     </entity>
-    <entity entity-name="GoodIdentificationType" 
+    <entity entity-name="GoodIdentificationType"
             package-name="org.ofbiz.commonapp.product.product"
             title="Good Identification Type Entity">
       <field name="goodIdentificationTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="goodIdentificationTypeId" />
       <relation type="one" title="Parent" rel-entity-name="GoodIdentificationType">
         <key-map field-name="parentTypeId" rel-field-name="goodIdentificationTypeId" />
@@ -852,7 +852,7 @@
         <key-map field-name="goodIdentificationTypeId" />
       </relation>
     </entity>
-    <entity entity-name="Product" 
+    <entity entity-name="Product"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Entity">
       <field name="productId" type="id-ne"></field>
@@ -868,6 +868,8 @@
       <field name="longDescription" type="very-long"></field>
       <field name="smallImageUrl" type="url"></field>
       <field name="largeImageUrl" type="url"></field>
+      <field name="listPrice" type="currency-amount"></field>
+      <field name="listPriceUomId" type="id"></field>
       <field name="defaultPrice" type="currency-amount"></field>
       <field name="defaultPriceUomId" type="id"></field>
       <field name="quantityUomId" type="id"></field>
@@ -880,7 +882,7 @@
       <field name="taxVatCode" type="short-varchar"></field>
       <field name="taxDutyCode" type="short-varchar"></field>
       <field name="chargeShipping" type="indicator"></field>
-      <field name="autoCreateKeywords" type="indicator"></field>	
+      <field name="autoCreateKeywords" type="indicator"></field>
       <prim-key field="productId" />
       <relation type="many" rel-entity-name="ProductAttribute">
         <key-map field-name="productId" />
@@ -943,7 +945,7 @@
         <key-map field-name="productId" />
       </relation>
     </entity>
-    <entity entity-name="ProductAssoc" 
+    <entity entity-name="ProductAssoc"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Association Entity">
       <field name="productId" type="id-ne"></field>
@@ -953,10 +955,10 @@
       <field name="thruDate" type="date-time"></field>
       <field name="reason" type="long-varchar"></field>
       <field name="quantity" type="floating-point"></field>
-      <field name="instruction" type="long-varchar"></field>	
-      <prim-key field="productId" />	
-      <prim-key field="productIdTo" />	
-      <prim-key field="productAssocTypeId" />	
+      <field name="instruction" type="long-varchar"></field>
+      <prim-key field="productId" />
+      <prim-key field="productIdTo" />
+      <prim-key field="productAssocTypeId" />
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductAssocType">
         <key-map field-name="productAssocTypeId" />
@@ -968,13 +970,13 @@
         <key-map field-name="productIdTo" rel-field-name="productId" />
       </relation>
     </entity>
-    <entity entity-name="ProductAssocType" 
+    <entity entity-name="ProductAssocType"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Association Type Entity">
       <field name="productAssocTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="productAssocTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductAssocType">
         <key-map field-name="parentTypeId" rel-field-name="productAssocTypeId" />
@@ -986,13 +988,14 @@
         <key-map field-name="productAssocTypeId" />
       </relation>
     </entity>
-    <entity entity-name="ProductAttribute" 
+    <entity entity-name="ProductAttribute"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Attribute Entity">
       <field name="productId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>	
-      <prim-key field="productId" />	
+      <field name="attrValue" type="value"></field>
+      <field name="attrType" type="value"></field>
+      <prim-key field="productId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
@@ -1001,12 +1004,12 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="ProductDataObject" 
+    <entity entity-name="ProductDataObject"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
-      <field name="productId" type="id-ne"></field>	
-      <prim-key field="dataObjectId" />	
+      <field name="productId" type="id-ne"></field>
+      <prim-key field="dataObjectId" />
       <prim-key field="productId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
@@ -1015,24 +1018,24 @@
         <key-map field-name="dataObjectId" />
       </relation>
     </entity>
-    <entity entity-name="ProductKeyword" 
+    <entity entity-name="ProductKeyword"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Keyword Entity">
       <field name="productId" type="id-ne"></field>
-      <field name="keyword" type="short-varchar"></field>	
-      <prim-key field="productId" />	
+      <field name="keyword" type="short-varchar"></field>
+      <prim-key field="productId" />
       <prim-key field="keyword" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
     </entity>
-    <entity entity-name="ProductType" 
+    <entity entity-name="ProductType"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Type Entity">
       <field name="productTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="productTypeId" />
       <relation type="one" title="Parent" rel-entity-name="ProductType">
         <key-map field-name="parentTypeId" rel-field-name="productTypeId" />
@@ -1047,12 +1050,12 @@
         <key-map field-name="productTypeId" />
       </relation>
     </entity>
-    <entity entity-name="ProductTypeAttr" 
+    <entity entity-name="ProductTypeAttr"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Type Attribute Entity">
       <field name="productTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>	
-      <prim-key field="productTypeId" />	
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="productTypeId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ProductType">
         <key-map field-name="productTypeId" />
@@ -1069,12 +1072,12 @@
   <!-- org.ofbiz.commonapp.product.storage -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Container" 
+    <entity entity-name="Container"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Container Entity">
       <field name="containerId" type="id-ne"></field>
       <field name="containerTypeId" type="id"></field>
-      <field name="facilityId" type="id"></field>	
+      <field name="facilityId" type="id"></field>
       <prim-key field="containerId" />
       <relation type="one" rel-entity-name="ContainerType">
         <key-map field-name="containerTypeId" />
@@ -1086,24 +1089,24 @@
         <key-map field-name="facilityId" />
       </relation>
     </entity>
-    <entity entity-name="ContainerType" 
+    <entity entity-name="ContainerType"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Container Type Entity">
       <field name="containerTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="containerTypeId" />
       <relation type="many" rel-entity-name="Container">
         <key-map field-name="containerTypeId" />
       </relation>
     </entity>
-    <entity entity-name="Facility" 
+    <entity entity-name="Facility"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Entity">
       <field name="facilityId" type="id-ne"></field>
       <field name="facilityTypeId" type="id"></field>
       <field name="facilityName" type="name"></field>
       <field name="squareFootage" type="numeric"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="facilityId" />
       <relation type="one" rel-entity-name="FacilityType">
         <key-map field-name="facilityTypeId" />
@@ -1133,13 +1136,13 @@
         <key-map field-name="facilityId" />
       </relation>
     </entity>
-    <entity entity-name="FacilityAttribute" 
+    <entity entity-name="FacilityAttribute"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Attribute Entity">
       <field name="facilityId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>	
-      <prim-key field="facilityId" />	
+      <field name="attrValue" type="value"></field>
+      <prim-key field="facilityId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Facility">
         <key-map field-name="facilityId" />
@@ -1148,13 +1151,13 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="FacilityContactMech" 
+    <entity entity-name="FacilityContactMech"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Contact Mechanism Entity">
       <description>Data Type Of: Contact Mechanism</description>
       <field name="facilityId" type="id-ne"></field>
-      <field name="contactMechId" type="id-ne"></field>	
-      <prim-key field="facilityId" />	
+      <field name="contactMechId" type="id-ne"></field>
+      <prim-key field="facilityId" />
       <prim-key field="contactMechId" />
       <relation type="one" rel-entity-name="Facility">
         <key-map field-name="facilityId" />
@@ -1163,23 +1166,23 @@
         <key-map field-name="contactMechId" />
       </relation>
     </entity>
-    <entity entity-name="FacilityRoleType" 
+    <entity entity-name="FacilityRoleType"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Role Type Entity">
       <field name="facilityRoleTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="facilityRoleTypeId" />
       <relation type="many" rel-entity-name="PartyFacility">
         <key-map field-name="facilityRoleTypeId" />
       </relation>
     </entity>
-    <entity entity-name="FacilityType" 
+    <entity entity-name="FacilityType"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Type Entity">
       <field name="facilityTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="facilityTypeId" />
       <relation type="one" title="Parent" rel-entity-name="FacilityType">
         <key-map field-name="parentTypeId" rel-field-name="facilityTypeId" />
@@ -1194,12 +1197,12 @@
         <key-map field-name="facilityTypeId" />
       </relation>
     </entity>
-    <entity entity-name="FacilityTypeAttr" 
+    <entity entity-name="FacilityTypeAttr"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Type Attribute Entity">
       <field name="facilityTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>	
-      <prim-key field="facilityTypeId" />	
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="facilityTypeId" />
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FacilityType">
         <key-map field-name="facilityTypeId" />
@@ -1211,13 +1214,13 @@
         <key-map field-name="facilityTypeId" />
       </relation>
     </entity>
-    <entity entity-name="PartyFacility" 
+    <entity entity-name="PartyFacility"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Party Facility Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="facilityId" type="id-ne"></field>
-      <field name="facilityRoleTypeId" type="id"></field>	
-      <prim-key field="partyId" />	
+      <field name="facilityRoleTypeId" type="id"></field>
+      <prim-key field="partyId" />
       <prim-key field="facilityId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -1234,15 +1237,15 @@
   <!-- org.ofbiz.commonapp.product.supplier -->
   <!-- ========================================================= -->
 
-    <entity entity-name="MarketInterest" 
+    <entity entity-name="MarketInterest"
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Market Interest Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="partyTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>	
-      <prim-key field="productCategoryId" />	
-      <prim-key field="partyTypeId" />	
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="productCategoryId" />
+      <prim-key field="partyTypeId" />
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
@@ -1251,7 +1254,7 @@
         <key-map field-name="partyTypeId" />
       </relation>
     </entity>
-    <entity entity-name="ReorderGuideline" 
+    <entity entity-name="ReorderGuideline"
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Reorder Guideline Entity">
       <field name="reorderGuidelineId" type="id-ne"></field>
@@ -1263,7 +1266,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="reorderQuantity" type="floating-point"></field>
-      <field name="reorderLevel" type="floating-point"></field>	
+      <field name="reorderLevel" type="floating-point"></field>
       <prim-key field="reorderGuidelineId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
@@ -1278,17 +1281,17 @@
         <key-map field-name="geoId" />
       </relation>
     </entity>
-    <entity entity-name="SupplierPrefOrder" 
+    <entity entity-name="SupplierPrefOrder"
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Preference Type Entity">
       <field name="supplierPrefOrderId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="supplierPrefOrderId" />
       <relation type="many" rel-entity-name="SupplierProduct">
         <key-map field-name="supplierPrefOrderId" />
       </relation>
     </entity>
-    <entity entity-name="SupplierProduct" 
+    <entity entity-name="SupplierProduct"
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Supplier Product Entity">
       <field name="productId" type="id-ne"></field>
@@ -1298,8 +1301,8 @@
       <field name="supplierPrefOrderId" type="id"></field>
       <field name="supplierRatingTypeId" type="id"></field>
       <field name="standardLeadTime" type="date-time"></field>
-      <field name="comments" type="comment"></field>	
-      <prim-key field="productId" />	
+      <field name="comments" type="comment"></field>
+      <prim-key field="productId" />
       <prim-key field="partyId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
@@ -1314,15 +1317,15 @@
         <key-map field-name="supplierRatingTypeId" />
       </relation>
     </entity>
-    <entity entity-name="SupplierRatingType" 
+    <entity entity-name="SupplierRatingType"
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Supplier Rating Type Entity">
       <field name="supplierRatingTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
+      <field name="description" type="description"></field>
       <prim-key field="supplierRatingTypeId" />
       <relation type="many" rel-entity-name="SupplierProduct">
         <key-map field-name="supplierRatingTypeId" />
       </relation>
-    </entity>  
+    </entity>
 </entitymodel>
 
