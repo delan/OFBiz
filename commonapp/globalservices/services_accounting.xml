@@ -6,6 +6,62 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
+    <!-- Invoice services -->
+    <service name="createInvoice" engine="simple" 
+            location="org/ofbiz/commonapp/accounting/invoice/InvoiceServices.xml" invoke="createInvoice">
+        <description>Create Inovice Record</description>
+        <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>        
+        <attribute name="invoiceMessage" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>                
+    </service>
+    <service name="createInvoiceItem" engine="simple" 
+            location="org/ofbiz/commonapp/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceItem">
+        <description>Create Invoice Item Record</description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceItemTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="true"/>
+        <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="taxableFlag" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>        
+    </service>
+    <service name="createInvoiceRole" engine="simple" 
+            location="org/ofbiz/commonapp/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceRole">
+        <description>Create Invoice Role Record</description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>   
+        <attribute name="datetimePerformed" type="Timestamp" mode="IN" optional="true"/> 
+        <attribute name="percentage" type="Double" mode="IN" optional="true"/>
+    </service>
+    <service name="createInvoiceStatus" engine="simple" 
+            location="org/ofbiz/commonapp/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceStatus">
+        <description>Create Invoice (Item) Term Record</description>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="createInvoiceTerm" engine="simple" 
+            location="org/ofbiz/commonapp/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceTerm">
+        <description>Create Invoice (Item) Term Record</description>
+        <attribute name="termTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="termValue" type="Long" mode="IN" optional="false"/>
+        <attribute name="uomId" type="String" mode="IN" optional="true"/> 
+        <attribute name="invoiceTermId" type="String" mode="OUT" optional="false"/>       
+    </service>    
+    
     <!-- Payment Method services -->
     <service name="deletePaymentMethod" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="deletePaymentMethod" auth="true">
