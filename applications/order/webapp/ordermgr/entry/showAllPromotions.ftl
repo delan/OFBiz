@@ -25,7 +25,7 @@
 -->
 
 <#if (shoppingCartSize > 0)>
-  ${screens.render("component://order/widget/ordermgr/OrderEntryCartScreens.xml#promoUseDetailsInline")}
+  ${screens.render(promoUseDetailsInlineScreen)}
   <br/>
 </#if>
 

@@ -76,7 +76,7 @@
         <#assign product = productCategoryMember.getRelatedOneCache("Product")>
         <tr>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
-            ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#quickaddsummary")}
+            ${screens.render(quickaddsummaryScreen)}
         </tr>        
       </#list> 
     </table>

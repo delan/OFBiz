@@ -160,7 +160,7 @@
                 <td>
                   ${setRequestAttribute("optProductId", productId)}
                   ${setRequestAttribute("listIndex", productId_index)}
-                  ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")}
+                  ${screens.render(productsummaryScreen)}
                 </td>
               </tr>
           </#list>

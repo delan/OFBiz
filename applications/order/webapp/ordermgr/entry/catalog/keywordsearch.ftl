@@ -74,7 +74,7 @@
       <tr><td colspan="2"><hr class="sepbar"></td></tr>
       <tr>
         <td>
-          ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")}
+          ${screens.render(productsummaryScreen)}
         </td>
       </tr>
     </#list>
