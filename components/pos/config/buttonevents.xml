@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<button-events>
+    <!-- numeric button events -->
+    <event button-name="numOne" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerOne" disable-lock="true"/>
+    <event button-name="numTwo" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerTwo" disable-lock="true"/>
+    <event button-name="numThree" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerThree" disable-lock="true"/>
+    <event button-name="numFour" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerFour" disable-lock="true"/>
+    <event button-name="numFive" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerFive" disable-lock="true"/>
+    <event button-name="numSix" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerSix" disable-lock="true"/>
+    <event button-name="numSeven" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerSeven" disable-lock="true"/>
+    <event button-name="numEight" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerEight" disable-lock="true"/>
+    <event button-name="numNine" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerNine" disable-lock="true"/>
+    <event button-name="numZero" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerZero" disable-lock="true"/>
+    <event button-name="numDZero" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerDZero" disable-lock="true"/>
+
+    <!-- extended numeric events -->
+    <event button-name="numClear" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerClear" disable-lock="true"/>
+    <event button-name="numQty" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerQty" disable-lock="true"/>
+    <event button-name="numEnter" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerEnter" disable-lock="true"/>
+
+    <!-- sales menu events -->
+    <event button-name="menuTotal" class-name="org.ofbiz.pos.event.MenuEvents" method-name="calcTotal" disable-lock="false"/>
+    <event button-name="menuVoidItem" class-name="org.ofbiz.pos.event.MenuEvents" method-name="voidItem" disable-lock="false"/>
+    <event button-name="menuVoidAll" class-name="org.ofbiz.pos.event.MenuEvents" method-name="voidAll" disable-lock="false"/>
+    <event button-name="menuChgQty" class-name="org.ofbiz.pos.event.MenuEvents" method-name="changeQty" disable-lock="false"/>
+
+    <!-- payment events -->
+    <event button-name="menuCash" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="payCash" disable-lock="false"/>
+
+    <!-- pos main menu events -->
+    <event button-name="menuPlu" class-name="org.ofbiz.pos.event.MenuEvents" method-name="addItem" disable-lock="false"/>
+    <event button-name="menuLock" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="lock" disable-lock="false"/>
+    <event button-name="menuMgr" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showMgrScreen" disable-lock="false"/>
+    <event button-name="menuPromo" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPromoScreen" disable-lock="false"/>
+
+    <!-- pos promo menu events -->
+    <event button-name="promoMain" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPosScreen" disable-lock="false"/>
+
+    <!-- pos mgr menu events -->
+    <event button-name="mgrLogOut" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="logoff" disable-lock="false"/>
+    <event button-name="mgrMain" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPosScreen" disable-lock="false"/>
+</button-events>

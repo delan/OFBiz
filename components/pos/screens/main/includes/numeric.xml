@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XPage>
+    <Components>
+        <!-- left side numeric pad -->
+        <Panel x="0" y="0" w="306" h="282" style="numButton">
+            <Button name="numSeven" x="0" y="0" w="75" h="68" style="numButton" content="7" alignment="Center"/>
+            <Button name="numEight" x="76" y="0" w="75" h="68" style="numButton" content="8" alignment="Center"/>
+            <Button name="numNine" x="152" y="0" w="75" h="68" style="numButton" content="9" alignment="Center"/>
+            <Button name="numQty" x="228" y="0" w="75" h="68" style="numButton" content="QTY" alignment="Center"/>
+            <Button name="numFour" x="0" y="69" w="75" h="68" style="numButton" content="4" alignment="Center"/>
+            <Button name="numFive" x="76" y="69" w="75" h="68" style="numButton" content="5" alignment="Center"/>
+            <Button name="numSix" x="152" y="69" w="75" h="68" style="numButton" content="6" alignment="Center"/>
+            <Button name="numEnter" x="228" y="69" w="75" h="206" style="numButton" content="ENTER" alignment="Center"/>
+            <Button name="numOne" x="0" y="138" w="75" h="68" style="numButton" content="1" alignment="Center"/>
+            <Button name="numTwo" x="76" y="138" w="75" h="68" style="numButton" content="2" alignment="Center"/>
+            <Button name="numThree" x="152" y="138" w="75" h="68" style="numButton" content="3" alignment="Center"/>
+            <Button name="numClear" x="0" y="207" w="75" h="68" style="numButton" content="CLEAR" alignment="Center"/>
+            <Button name="numZero" x="76" y="207" w="75" h="68" style="numButton" content="0" alignment="Center"/>
+            <Button name="numDZero" x="152" y="207" w="75" h="68" style="numButton" content="00" alignment="Center"/>
+        </Panel>
+
+        <!-- right side options -->
+        <Panel x="308" y="0" w="306" h="282" style="posButton">
+            <Button x="0" y="0" w="75" h="68" style="posButton" content="% OFF" alignment="Center"/>
+            <Button name="menuTotal" x="76" y="0" w="75" h="68" style="posButton" content="TOTAL" alignment="Center"/>
+            <Button name="menuCash" x="152" y="0" w="75" h="68" style="posButton" content="CASH" alignment="Center"/>
+            <Button x="228" y="0" w="75" h="68" style="posButton" content="VISA" alignment="Center"/>
+            <Button name="menuChgQty" x="0" y="69" w="75" h="68" style="posButton" content="MOD" alignment="Center"/>
+            <Button x="76" y="69" w="75" h="68" style="posButton" alignment="Center"/>
+            <Button x="152" y="69" w="75" h="68" style="posButton" content="CHECK" alignment="Center"/>
+            <Button x="228" y="69" w="75" h="68" style="posButton" content="MC" alignment="Center"/>
+            <Button name="menuVoidItem" x="0" y="138" w="75" h="68" style="posButton" content="VOID ITEM" alignment="Center"/>
+            <Button x="76" y="138" w="75" h="68" style="posButton" content="TRANS SAVE" alignment="Center"/>
+            <Button x="152" y="138" w="75" h="68" style="posButton" content="GIFT CERT" alignment="Center"/>
+            <Button x="228" y="138" w="75" h="68" style="posButton" content="AMEX" alignment="Center"/>
+            <Button name="menuVoidAll" x="0" y="207" w="75" h="68" style="posButton" content="VOID SALE" alignment="Center"/>
+            <Button x="76" y="207" w="75" h="68" style="posButton" content="TRANS RET" alignment="Center"/>
+            <Button x="152" y="207" w="75" h="68" style="posButton" content="OTHER" alignment="Center"/>
+            <Button x="228" y="207" w="75" h="68" style="posButton" content="DISCV" alignment="Center"/>
+        </Panel>
+    </Components>
+    <Events>
+        <Event method="buttonPressed" target="numOne" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numTwo" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numThree" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numFour" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numFive" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numSix" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numSeven" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numEight" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numNine" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numZero" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numDZero" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numClear" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numQty" type="ActionHandler"/>
+        <Event method="buttonPressed" target="numEnter" type="ActionHandler"/>
+
+        <Event method="buttonPressed" target="menuTotal" type="ActionHandler"/>
+        <Event method="buttonPressed" target="menuChgQty" type="ActionHandler"/>
+        <Event method="buttonPressed" target="menuVoidItem" type="ActionHandler"/>
+        <Event method="buttonPressed" target="menuVoidAll" type="ActionHandler"/>
+
+        <Event method="buttonPressed" target="menuCash" type="ActionHandler"/>
+    </Events>
+</XPage>
