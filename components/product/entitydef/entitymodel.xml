@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.65 $
+ * @version    $Revision: 1.66 $
  */
 -->
 
@@ -1800,6 +1800,37 @@
         <key-map field-name="productContentTypeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductContentAndInfo"
+                package-name="org.ofbiz.commonapp.content"
+                title="ProductContent, Content and DataResource View Entity">
+      <member-entity entity-alias="PC" entity-name="ProductContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <alias-all entity-alias="PC" />
+      <alias-all entity-alias="CO" />
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <view-link entity-alias="PC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="DR">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ElectronicText">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OtherDataResource">
+        <key-map field-name="dataResourceId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
+        <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+    </view-entity>
     <entity entity-name="ProductContentType"
             package-name="org.ofbiz.product.product"
             title="Product Content Type Entity">

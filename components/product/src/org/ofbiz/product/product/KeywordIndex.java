@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.1 2003/08/17 18:04:22 ajzeneski Exp $
+ * $Id: KeywordIndex.java,v 1.2 2003/12/21 10:33:44 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.product.product;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,17 +34,19 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 
 /**
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -66,10 +69,11 @@ public class KeywordIndex {
         List strings = new ArrayList(50);
 
         int pidWeight = 1;
-
         try {
             pidWeight = Integer.parseInt(UtilProperties.getPropertyValue("prodsearch", "index.weight.Product.productId", "1"));
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Debug.logWarning("Could not parse weight number: " + e.toString(), module);
+        }
         keywords.put(product.getString("productId").toLowerCase(), new Long(pidWeight));
 
         addWeightedKeywordSourceString(product, "productName", strings);
@@ -104,8 +108,42 @@ public class KeywordIndex {
             }
         }
         
-        Iterator strIter = strings.iterator();
+        String productContentTypes = UtilProperties.getPropertyValue("prodsearch", "index.include.ProductContentTypes");
+        List productContentTypeList = Arrays.asList(productContentTypes.split(","));
+        Iterator productContentTypeIter = productContentTypeList.iterator();
+        while (productContentTypeIter.hasNext()) {
+            String productContentTypeId = (String) productContentTypeIter.next();
 
+            int weight = 1;
+            try {
+                weight = Integer.parseInt(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductContent." + productContentTypeId, "1"));
+            } catch (Exception e) {
+                Debug.logWarning("Could not parse weight number: " + e.toString(), module);
+            }
+            
+            List productContentAndInfos = delegator.findByAnd("ProductContentAndInfo", UtilMisc.toMap("productId", productId, "productContentTypeId", productContentTypeId), null);
+            Iterator productContentAndInfoIter = productContentAndInfos.iterator();
+            while (productContentAndInfoIter.hasNext()) {
+                GenericValue productContentAndInfo = (GenericValue) productContentAndInfoIter.next();
+
+                
+                
+                List alternateViews = productContentAndInfo.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"));
+                alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
+                Iterator alternateViewIter = alternateViews.iterator();
+                while (alternateViewIter.hasNext()) {
+                    GenericValue thisView = (GenericValue) alternateViewIter.next();
+                }
+            }
+            
+            
+            /*
+            for (int i = 0; i < weight; i++) {
+                strings.add(value.getString(fieldName));
+            }*/
+        }
+        
+        Iterator strIter = strings.iterator();
         while (strIter.hasNext()) {
             String str = (String) strIter.next();
 
@@ -132,7 +170,6 @@ public class KeywordIndex {
 
         List toBeStored = new LinkedList();
         Iterator kiter = keywords.entrySet().iterator();
-
         while (kiter.hasNext()) {
             Map.Entry entry = (Map.Entry) kiter.next();
             GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", ((String) entry.getKey()).toLowerCase(), "relevancyWeight", entry.getValue()));
@@ -150,7 +187,9 @@ public class KeywordIndex {
 
             try {
                 weight = Integer.parseInt(UtilProperties.getPropertyValue("prodsearch", "index.weight." + value.getEntityName() + "." + fieldName, "1"));
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Debug.logWarning("Could not parse weight number: " + e.toString(), module);
+            }
 
             for (int i = 0; i < weight; i++) {
                 strings.add(value.getString(fieldName));
