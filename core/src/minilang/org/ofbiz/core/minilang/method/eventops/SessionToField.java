@@ -66,7 +66,6 @@ public class SessionToField extends MethodOperation {
             fieldVal = methodContext.getRequest().getSession().getAttribute(sessionName);
             if (fieldVal == null) {
                 Debug.logWarning("Session attribute value not found with name " + sessionName);
-                return true;
             }
         }
         

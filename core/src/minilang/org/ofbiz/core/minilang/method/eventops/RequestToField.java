@@ -66,7 +66,6 @@ public class RequestToField extends MethodOperation {
             fieldVal = methodContext.getRequest().getAttribute(requestName);
             if (fieldVal == null) {
                 Debug.logWarning("Request attribute value not found with name " + requestName);
-                return true;
             }
         }
         
