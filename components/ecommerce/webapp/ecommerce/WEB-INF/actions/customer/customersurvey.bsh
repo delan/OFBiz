@@ -34,6 +34,9 @@ userLogin = session.getAttribute("userLogin");
 partyId = userLogin.getString("partyId");
 
 productStoreSurveyId = request.getParameter("productStoreSurveyId");
+if (productStoreSurveyId == null) {
+    productStoreSurveyId = request.getAttribute("productStoreSurveyId");
+}
 paramMap = UtilHttp.getParameterMap(request);
 
 surveyAppl = delegator.findByPrimaryKey("ProductStoreSurveyAppl", UtilMisc.toMap("productStoreSurveyId", productStoreSurveyId));

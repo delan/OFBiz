@@ -26,7 +26,7 @@
 
 <#-- Render the survey -->
 <#if requestAttributes.surveyWrapper?exists && requestAttributes.surveyAction?exists>
-  <form method="post" action="<@ofbizUrl>${requestAttributes.surveyAction}</@ofbizUrl>" style="margin: 0;">
+  <form method="post" enctype="multipart/mixed" action="<@ofbizUrl>${requestAttributes.surveyAction}</@ofbizUrl>" style="margin: 0;">
     ${requestAttributes.surveyWrapper.renderSurvey().toString()}
   </form>
 <#else>
