@@ -121,23 +121,6 @@ function gwAll(e) {
         <tr>
           <td>           
             <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
-<#--
-              <table border="0" cellspacing="0" cellpadding="2">
-                <tr>
-                  <td valign="middle">
-                    <span class="tabletext">${uiLabelMap.OrderOrderFor} : </span>
-                    <#if person?has_content>
-                      <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam?if_exists}" target="partymgr" class="buttontext">${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]</a>
-                    <#elseif partyGroup?has_content>
-                      <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam?if_exists}" target="partymgr" class="buttontext">${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]</a>
-                    <#else>
-                      <span class="tabletext">[${uiLabelMap.PartyPartyNotDefined}]</span>
-                    </#if>
-                    - <span class="tabletext"><a href="<@ofbizUrl>/orderentry?updateParty=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonChange}]</a><#if partyId?default("_NA_") == "_NA_"> - <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">[${uiLabelMap.PartyFindParty}]</a></#if></span>
-                  </td>
-                </tr>              
-              </table>
--->	      
               <table border="0">
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.ProductProductId} :<div></td>
