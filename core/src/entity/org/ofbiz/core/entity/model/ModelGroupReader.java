@@ -116,7 +116,7 @@ public class ModelGroupReader {
     public Map getGroupCache() {
         if (groupCache == null) //don't want to block here
         {
-            synchronized (ModelReader.class) {
+            synchronized (ModelGroupReader.class) {
                 //must check if null again as one of the blocked threads can still enter
                 if (groupCache == null) //now it's safe
                 {
