@@ -1005,6 +1005,10 @@
         <response name="success" type="view" value="mostrecent"/>
         <response name="error" type="view" value="mostrecent"/>
     </request-map>
+    <request-map uri="searchContent">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="searchContent"/>
+    </request-map>
 
     <!-- End of Request Mappings -->
 
@@ -1081,6 +1085,7 @@
     <view-map name="showcontenttree" page="/content/showcontenttree.ftl" type="jpublish"/>
     <view-map name="viewcontent" page="/content/viewcontent.ftl" type="jpublish"/>
     <view-map name="mostrecent" page="/forum/mostrecent.ftl" type="jpublish"/>
+    <view-map name="searchContent" page="/content/searchContent.ftl" type="jpublish"/>
 
     <!-- End of View Mappings -->
 </site-conf>

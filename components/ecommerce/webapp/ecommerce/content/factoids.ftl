@@ -20,21 +20,21 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.1 $
  *@since      3.1
 -->
-<#assign forumRootId = "WebStoreFORUM" />
+<#assign factoidRootId = "WebStoreFACTOID" />
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#-- variable setup and worker calls -->
 <#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
-<#assign forumTrailCsv=requestParameters.forumTrailCsv?if_exists/>
-<#assign forumTrail=[]/>
+<#assign factoidTrailCsv=requestParameters.factoidTrailCsv?if_exists/>
+<#assign factoidTrail=[]/>
 <#assign firstContentId=""/>
-<#if forumTrailCsv?has_content>
-  <#assign forumTrail=Static["org.ofbiz.base.util.StringUtil"].split(forumTrailCsv, ",") />
-  <#if 0 < forumTrail?size>
-    <#assign firstContentId=forumTrail[0]?string/>
+<#if factoidTrailCsv?has_content>
+  <#assign factoidTrail=Static["org.ofbiz.base.util.StringUtil"].split(factoidTrailCsv, ",") />
+  <#if 0 < factoidTrail?size>
+    <#assign firstContentId=factoidTrail[0]?string/>
   </#if>
 </#if>
 
@@ -44,7 +44,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-            <div class="boxhead">${uiLabelMap.ProductBrowseForums}</div>
+            <div class="boxhead">${uiLabelMap.Factoids}</div>
           </td>
         </tr>
       </table>
@@ -58,21 +58,22 @@
             <div style='margin-left: 10px;'>
 
                 <#assign count_1=0 />
-                <@loopSubContentCache subContentId=forumRootId
+                <@limitedSubContent subContentId=factoidRootId
                     viewIndex=0
                     viewSize=9999
                     orderBy="contentName"
                     contentAssocTypeId="SUBSITE"
+                    limitSize="2"
                 >
                        <tr>
                          <td >
                            <div class="browsecategorytext" style="margin-left: 10px">
-                             -&nbsp;<a href="<@ofbizUrl>/showforum?forumId=${subContentId}</@ofbizUrl>" class="browsecategorybutton">${content.contentName}</a>
+                             - <@renderSubContentCache subContentId=subContentId/>
                            </div>
                          </td >
                        </tr>
                     <#assign count_1=count_1 + 1 />
-                </@loopSubContentCache >
+                </@limitedSubContent >
             </div>
           </td>
         </tr>

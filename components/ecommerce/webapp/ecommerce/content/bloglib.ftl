@@ -1,5 +1,5 @@
 
-<#macro renderAncestryPath trail siteId startIndex=0 endIndexOffset=0 buttonTitle="Back to" >
+<#macro renderAncestryPath trail siteId startIndex=0 endIndexOffset=0 buttonTitle="Back to" searchOn="" >
     <#local indent = "">
     <#local csv = "">
     <#local counter = 0>
@@ -21,8 +21,13 @@
               <a class="tabButton" href="<@ofbizUrl>/showcontenttree?contentId=${siteId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >Back to</a> &nbsp;${content.contentName?if_exists}
             </#if>
             <#local indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
-            [${content.contentId?if_exists}]</td>
+            [${content.contentId?if_exists}]
+            <#if searchOn?has_content && searchOn?lower_case == "true">
+                &nbsp;
+              <a class="tabButton" href="<@ofbizUrl>/searchContent?siteId=${siteId?if_exists}&nodeTrailCsv=${csv}</@ofbizUrl>" >Search</a> 
+            </#if>
         </#if>
+         </td>
        </tr>
       </#if>
       <#local counter = counter + 1>

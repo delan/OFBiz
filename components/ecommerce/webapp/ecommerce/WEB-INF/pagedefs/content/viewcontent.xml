@@ -3,7 +3,7 @@
     <template>main_lr</template> 
     <property name="title">View Blog</property>
     <property name="headerItem">Blog</property>    
-    <property name="entityName">Content</property>    
+    <property name="entityName">ContentAssocDataResourceViewFrom</property>    
     <property name="permissionType">none</property>    
     <content-action name="/forum/nodetrailprep.bsh"/>
 <!--
@@ -15,5 +15,6 @@
     <content-action name="/forum/permprep.bsh"/>
     <content-action name="/forum/viewprep.bsh"/>
 -->
+    <content-action name="/includes/mruadd.bsh"/>
 
 </page>

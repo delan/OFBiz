@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.1
 -->
 <#assign forumRootId = "WebStoreCONTENT" />
@@ -70,11 +70,6 @@
                              -&nbsp;<a href="<@ofbizUrl>/showcontenttree?contentId=${subContentId}&nodeTrailCsv=${subContentId}</@ofbizUrl>" class="browsecategorybutton">${content.contentName}</a>
                            </div>
                          </td >
-<@checkPermission mode="equals" entityOperation="_UPDATE" subContentId=content.contentId targetOperation="CONTENT_PUBLISH" contentPurposeList="ARTICLE">
-    <td width="40px" valign="bottom">
-<a class="tabButton" style="height:14pt;" href="<@ofbizUrl>/mostrecent?forumId=${subContentId}</@ofbizUrl>" >Mod</a>
-    </td>
-</@checkPermission>
                        </tr>
                     <#assign count_1=count_1 + 1 />
                 </@loopSubContentCache >
