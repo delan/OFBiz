@@ -1,5 +1,5 @@
 /*
- * $Id: WfActivityImpl.java,v 1.3 2003/08/28 19:06:14 ajzeneski Exp $
+ * $Id: WfActivityImpl.java,v 1.4 2003/09/02 02:17:15 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,6 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.workflow.AlreadyRunning;
 import org.ofbiz.workflow.CannotComplete;
 import org.ofbiz.workflow.CannotResume;
@@ -73,7 +72,7 @@ import org.ofbiz.workflow.WfResource;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de)
  * @author     Oswin Ondarza and Manuel Soto 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {

@@ -1,5 +1,5 @@
 /*
- * $Id: WfExecutionObjectImpl.java,v 1.5 2003/08/28 19:06:14 ajzeneski Exp $
+ * $Id: WfExecutionObjectImpl.java,v 1.6 2003/09/02 02:17:15 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,6 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.workflow.AlreadySuspended;
 import org.ofbiz.workflow.CannotResume;
 import org.ofbiz.workflow.CannotStop;
@@ -72,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {

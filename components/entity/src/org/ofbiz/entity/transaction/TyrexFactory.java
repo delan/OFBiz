@@ -1,5 +1,5 @@
 /*
- * $Id: TyrexFactory.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: TyrexFactory.java,v 1.2 2003/09/02 02:17:15 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,15 +23,15 @@
  */
 package org.ofbiz.entity.transaction;
 
-import java.net.*;
-import java.sql.*;
-import javax.sql.*;
-import javax.transaction.*;
-import org.w3c.dom.Element;
+//import java.net.*;
+//import java.sql.*;
+//import javax.sql.*;
+//import javax.transaction.*;
+//import org.w3c.dom.Element;
 
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.config.*;
-import org.ofbiz.base.util.*;
+//import org.ofbiz.entity.*;
+//import org.ofbiz.entity.config.*;
+//import org.ofbiz.base.util.*;
 
 //import tyrex.tm.*;
 //import tyrex.resource.*;
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.*;
  * TyrexTransactionFactory - central source for Tyrex JTA objects
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  *
 public class TyrexFactory implements TransactionFactoryInterface {

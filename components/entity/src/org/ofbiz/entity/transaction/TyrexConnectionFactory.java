@@ -1,5 +1,5 @@
 /*
- * $Id: TyrexConnectionFactory.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: TyrexConnectionFactory.java,v 1.2 2003/09/02 02:17:15 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,12 +23,12 @@
  */
 package org.ofbiz.entity.transaction;
 
-import java.util.*;
-import java.sql.*;
-import org.w3c.dom.Element;
+//import java.util.*;
+//import java.sql.*;
+//import org.w3c.dom.Element;
 
-import org.ofbiz.entity.*;
-import org.ofbiz.base.util.*;
+//import org.ofbiz.entity.*;
+//import org.ofbiz.base.util.*;
 
 // For Tyrex 0.9.8.5
 // import tyrex.resource.jdbc.xa.*;
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.*;
  * Tyrex ConnectionFactory - central source for JDBC connections from Tyrex
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  *
 public class TyrexConnectionFactory {

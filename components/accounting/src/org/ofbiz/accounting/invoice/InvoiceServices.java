@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.3 2003/08/26 16:08:03 ajzeneski Exp $
+ * $Id: InvoiceServices.java,v 1.4 2003/09/02 02:17:15 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,6 @@ package org.ofbiz.accounting.invoice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class InvoiceServices {

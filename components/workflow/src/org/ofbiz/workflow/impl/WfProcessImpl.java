@@ -1,5 +1,5 @@
 /*
- * $Id: WfProcessImpl.java,v 1.3 2003/08/28 19:06:14 ajzeneski Exp $
+ * $Id: WfProcessImpl.java,v 1.4 2003/09/02 02:17:15 ajzeneski Exp $
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,6 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericResultWaiter;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.job.Job;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
@@ -69,7 +68,7 @@ import org.ofbiz.workflow.client.StartActivityJob;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {

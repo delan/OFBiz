@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.2 2003/08/26 22:12:24 ajzeneski Exp $
+ * $Id: UtilHttp.java,v 1.3 2003/09/02 02:17:15 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,9 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -50,7 +48,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class UtilHttp {
