@@ -1,0 +1,1339 @@
+<xsd:schema targetNamespace="http://www.bpmi.org/2002/6/BPML"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:bpml="http://www.bpmi.org/2002/6/BPML"
+            elementFormDefault="qualified"
+            blockDefault="#all">
+
+
+<!-- Definition of BPML package document -->
+
+  <xsd:element name="package">
+    <xsd:annotation>
+      <xsd:documentation>
+        A BPML package document consists of one or more
+        top-level definitions within the given target
+        name and can import multiple definitions from
+        other namespaces.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="bpml:documented">
+          <xsd:sequence>
+            <xsd:element name="feature"
+                         minOccurs="0" maxOccurs="unbounded">
+              <xsd:complexType>
+                <xsd:attribute name="name" type="xsd:anyURI"
+                               use="required"/>
+                <xsd:attribute name="version" type="xsd:NMTOKEN"
+                               use="optional"/>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="import"
+                         minOccurs="0" maxOccurs="unbounded">
+              <xsd:complexType>
+                <xsd:attribute name="namespace" type="xsd:anyURI"
+                               use="optional"/>
+                <xsd:attribute name="location" type="xsd:anyURI"
+                               use="optional"/>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+              <xsd:element ref="bpml:connect"/>
+              <xsd:element ref="bpml:model"/>
+              <xsd:element ref="bpml:process"/>
+              <xsd:element ref="bpml:property"/>
+              <xsd:any namespace="##other" processContents="strict"/>
+            </xsd:choice>
+          </xsd:sequence>
+          <xsd:attribute name="targetNamespace" type="xsd:anyURI"
+                         use="required"/>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:key name="processNameConstraint">
+      <xsd:selector xpath="./bpml:process"/>
+      <xsd:field xpath="@name"/>
+    </xsd:key>
+    <xsd:unique name="importNamespaceConstraint">
+      <xsd:selector xpath="./bpml:import"/>
+      <xsd:field xpath="@namespace"/>
+    </xsd:unique>
+    <xsd:unique name="importLocationConstraint">
+      <xsd:selector xpath="./bpml:import"/>
+      <xsd:field xpath="@location"/>
+    </xsd:unique>
+  </xsd:element>
+
+
+  <!-- Definition of BPML process -->
+
+  <xsd:element name="process">
+    <xsd:complexType>
+      <xsd:annotation>
+        <xsd:documentation>
+          Defines a process. A process is an activity set that
+          is not contained within any other activity.
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:complexContent>
+        <xsd:extension base="bpml:nameRequired">
+          <xsd:sequence>
+            <xsd:element name="implements" type="bpml:implements"
+                         minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="parameter" type="bpml:parameter"
+                         minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:group ref="bpml:activitySet"/>
+          </xsd:sequence>
+          <xsd:attribute name="instantiation" type="bpml:instantiationType"
+                         use="optional" default="message"/>
+          <xsd:attribute name="scope" type="bpml:scopeType"
+                         use="optional" default="private"/>
+          <xsd:attribute name="maxConcurrent" type="bpml:instanceCount"
+                         use="optional" default="unbounded"/>
+          <xsd:attribute name="maxLifetime" type="bpml:instanceCount"
+                         use="optional" default="unbounded"/>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:key name="processParameterConstraint">
+      <xsd:selector xpath="./bpml:parameter|./bpml:context/bpml:property"/>
+      <xsd:field xpath="@name"/>
+    </xsd:key>
+  </xsd:element>
+
+  <xsd:complexType name="implements">
+    <xsd:annotation>
+      <xsd:documentation>
+        Declares a service type definition that is implemented
+        by this process. The normative attributes refer to a WSCI
+        interface definition.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:documented">
+        <xsd:sequence/>
+        <xsd:attribute name="interface" type="xsd:QName"
+                       use="optional"/>
+        <xsd:attribute name="process" type="xsd:NCName"
+                       use="optional"/>
+        <xsd:anyAttribute namespace="##other"
+                          processContents="strict"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="parameter">
+    <xsd:annotation>
+      <xsd:documentation>
+        Declares a process input/output parameter. The parameter
+        name and type are required. The type can reference an XSD
+        element or simple/complex type definition. The parameter
+        may be optional or required, and a default value may be
+        specified for optional parameters. The parameter may serve
+        as input, output or both.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:documented">
+        <xsd:sequence>
+          <xsd:element name="value" type="bpml:xmlValue"
+                       minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:QName"
+                       use="required"/>
+        <xsd:attribute name="type" type="xsd:QName"
+                       use="optional"/>
+        <xsd:attribute name="element" type="xsd:QName"
+                       use="optional"/>
+        <xsd:attribute name="use" type="bpml:parameterUseType"
+                       use="optional" default="required"/>
+        <xsd:attribute name="input" type="xsd:boolean"
+                       use="optional" default="true"/>
+        <xsd:attribute name="output" type="xsd:boolean"
+                       use="optional" default="false"/>
+        <xsd:anyAttribute namespace="##other"
+                          processContents="strict"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="nameRequired">
+    <xsd:complexContent>
+      <xsd:restriction base="bpml:activity">
+        <xsd:sequence>
+          <xsd:element ref="bpml:documentation" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:NCName"
+                       use="required"/>
+      </xsd:restriction>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+
+  <!-- Definition of BPML global model -->
+
+  <xsd:element name="model">
+    <xsd:annotation>
+      <xsd:documentation>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="bpml:nameRequired">
+          <xsd:sequence>
+            <xsd:element name="uses" type="bpml:uses"
+                         minOccurs="1" maxOccurs="unbounded"/>
+            <xsd:element ref="bpml:connect"
+                         minOccurs="1" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:complexType name="uses">
+    <xsd:annotation>
+      <xsd:documentation>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="model" type="xsd:QName"
+                   use="optional"/>
+    <xsd:attribute name="interface" type="xsd:QName"
+                   use="optional"/>
+    <xsd:attribute name="package" type="xsd:anyURI"
+                   use="optional"/>
+    <xsd:attribute name="process" type="xsd:NCName"
+                   use="optional"/>
+  </xsd:complexType>
+
+
+  <!-- Other package level definitions -->
+
+  <xsd:element name="connect">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Connects two operations in two different port types.
+        A synchronous connector is always of direct type, an
+        asynchronous connector can be either direct or publish.</p>
+        <p>If the connector references a WSDL operation, the
+        port type name is given by the <code>portType</code>
+        attribute and the operation name is given by the
+        <code>name</code> attribute and both attributes
+        must be used.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="bpml:documented">
+          <xsd:sequence>
+            <xsd:element name="operation"
+                         minOccurs="2" maxOccurs="2">
+              <xsd:complexType>
+                <xsd:attribute name="portType" type="xsd:QName"
+                               use="optional"/>
+                <xsd:attribute name="name" type="xsd:NCName"
+                               use="optional"/>
+                <xsd:anyAttribute namespace="##other"
+                                  processContents="strict"/>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:any namespace="##other" processContents="strict"
+                     minOccurs="0" maxOccurs="1"/>
+          </xsd:sequence>
+          <xsd:attribute name="type" type="bpml:connectorType"
+                         use="optional" default="direct"/>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:unique name="connectorPortTypeConstraint">
+      <xsd:selector xpath="./bpml:operation"/>
+      <xsd:field xpath="@portType"/>
+    </xsd:unique>
+  </xsd:element>
+
+
+  <xsd:element name="property">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Declares a property and its value in the current context.</p>
+        <p>The <code>xpath</code> attribute specifies an XPath
+        expression that extracts the value from other instance
+        properties.</p>
+        <p>The <code>value</code> element allows any static
+        value to be specified in the form of mixed content in
+        any schema. A null value is specified using the
+        <code>xsi:null</code> attribute.</p>
+        <p>Other extension element can be used instead of the
+        <code>xpath</code> attribute or <code>value</code>
+        element, e.g. an XQueryX query.</p>
+        <p>If neither attribute or elements are used, the value is
+        obtained form a property with the same name in the parent
+        context is such a property (and context) do exist.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="bpml:documented">
+          <xsd:choice minOccurs="0" maxOccurs="1">
+            <xsd:element name="value" type="bpml:xmlValue"/>
+            <xsd:any namespace="##other" processContents="strict"/>
+          </xsd:choice>
+          <xsd:attribute name="name" type="xsd:NCName"
+                         use="required"/>
+          <xsd:attribute name="type" type="xsd:QName"
+                         use="optional"/>
+          <xsd:attribute name="element" type="xsd:QName"
+                         use="optional"/>
+          <xsd:attribute name="xpath" type="bpml:expression"
+                         use="optional"/>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+
+
+  <!-- Generic type definitions used by activity types -->
+
+  <xsd:complexType name="activity">
+    <xsd:annotation>
+      <xsd:documentation>
+        The base type type for all activity elements, those defined
+        in BPML and those defined in other namespaces. It defines
+        the optional <code>name</code> attribute and allows the
+        <code>documentation</code> element.
+     </xsd:documentation>
+     </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:documented">
+        <xsd:attribute name="name" type="xsd:NCName"
+                       use="optional"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:element name="otherActivity" abstract="true" type="bpml:activity">
+    <xsd:annotation>
+      <xsd:documentation>
+        To define a new activity type (in a different namespace),
+        define an element that extends the <code>activity</code>
+        type and is in the substitution group of this element.
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:group name="activitySet">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>A collection of one or more activities that are
+        performed in the same context.</p>
+        <p>The context definition is required in order to
+        override any declaractions given in a parent context.
+        An empty <code>context</code> element and a missing
+        <code>context</code> element are equivalent.</p>
+        <p>Any activity element defined in BPML and any
+        activity element that can substitute <code>activity</code>
+        are allowed. At least one activity must be present
+        in the activity set.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="context" type="bpml:context"
+                   minOccurs="0" maxOccurs="1">
+        <xsd:key name="contextPropertyConstraint">
+          <xsd:selector xpath="./bpml:property"/>
+          <xsd:field xpath="@name"/>
+        </xsd:key>
+        <xsd:key name="contextNestedProcessConstraint">
+          <xsd:selector xpath="./bpml:process|./bpml:transaction"/>
+          <xsd:field xpath="@name"/>
+        </xsd:key>
+      </xsd:element>
+      <xsd:choice minOccurs="1" maxOccurs="unbounded">
+        <xsd:element name="action" type="bpml:action"/>
+        <xsd:element name="all" type="bpml:all"/>
+        <xsd:element name="assign" type="bpml:assign"/>
+        <xsd:element name="call" type="bpml:call"/>
+        <xsd:element name="choice" type="bpml:choice"/>
+        <xsd:element name="compensate"
+                     type="bpml:compensate"/>
+        <xsd:element name="delay" type="bpml:delay"/>
+        <xsd:element name="empty" type="bpml:empty"/>
+        <xsd:element name="fault" type="bpml:fault"/>
+        <xsd:element name="foreach" type="bpml:foreach"/>
+        <xsd:element name="join" type="bpml:join"/>
+        <xsd:element name="sequence" type="bpml:sequence"/>
+        <xsd:element name="spawn" type="bpml:spawn"/>
+        <xsd:element name="switch" type="bpml:switch"/>
+        <xsd:element name="until" type="bpml:until"/>
+        <xsd:element name="while" type="bpml:while"/>
+        <xsd:element ref="bpml:otherActivity"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:group>
+
+  <xsd:complexType name="condition">
+    <xsd:annotation>
+      <xsd:documentation>
+         A condition expression. The expression is given as
+         character data. If no extension attributes are used,
+         the condition must be formulated as an XPath expression.
+         Otherwise, the interpretation of the expression depend
+         on the extension attributes used.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="bpml:expression">
+        <xsd:anyAttribute namespace="##other"
+                          processContents="strict"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  
+  <xsd:complexType name="eventHandler">
+    <xsd:annotation>
+      <xsd:documentation>
+         The base type for all event handlers. An event handler
+         defined the event to which it responds and the activity
+         set that will be executed in response to that event.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:documented"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="onMessage">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>An event handler that is triggered by an action.
+        The event handler is triggered only if the action
+        can be performed atomicly (including any failure
+        condition).</p>
+        <p>If the action references a WSDL operation,
+        the action can only reference a one-way or a
+        request-response operation. Notification and
+        solicit-response operations are not valid events.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:eventHandler">
+        <xsd:sequence>
+          <xsd:element name="action" type="bpml:action"/>
+          <xsd:group ref="bpml:activitySet"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="onTimeout">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>An event handler that is triggered by a timeout.</p>
+        <p>The time-out is specified by a property that is either
+        a date/time instant or a time duration, as specified
+        by the <code>type</code> attribute.</p>
+        <p>For time duration, a reference point that is different
+        than the instantiation of the event handler can be specified
+        using the <code>reference</code> attribute. This could be
+        a date/time instant property or a reference to the start or
+        end time of an activity, transaction or process.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:eventHandler">
+        <xsd:group ref="bpml:activitySet"/>
+        <xsd:attribute name="property" type="xsd:QName"
+                       use="required"/>
+        <xsd:attribute name="type" type="bpml:timeConstraintType"
+                       use="optional" default="duration"/>
+        <xsd:attribute name="reference" type="bpml:timeReference"
+                       use="optional"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="onFault">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>An event handler that is triggered by a fault.</p>
+        <p>The fault code is specified by its fully qualified name.
+        If the fault code is unspecified, this event handler will
+        respond to any fault for which no specified event handler
+        exists.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:eventHandler">
+        <xsd:group ref="bpml:activitySet"/>
+        <xsd:attribute name="code" type="xsd:QName"
+                       use="optional"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:group name="anyEventHandler">
+    <xsd:choice>
+      <xsd:element name="onMessage" type="bpml:onMessage"/>
+      <xsd:element name="onTimeout" type="bpml:onTimeout"/>
+      <xsd:element name="onFault" type="bpml:onFault"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:complexType name="output">
+    <xsd:annotation>
+      <xsd:documentation>
+        Constructs an output from a fixed value, an XPath
+        expression or another type of expression. The xpath
+        attribute, value element and extension element are
+        mutually exclusive.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0" maxOccurs="1">
+      <xsd:element name="value" type="bpml:xmlValue"/>
+      <xsd:any namespace="##other" processContents="strict"/>
+    </xsd:choice>
+    <xsd:attribute name="xpath" type="bpml:expression"
+                   use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="partOutput">
+    <xsd:annotation>
+      <xsd:documentation>
+        Constructs an output to be used by a message part.
+        Specifies the message part by its unqualified name.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:output">
+        <xsd:attribute name="part" type="xsd:NCName"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="parameterOutput">
+    <xsd:annotation>
+      <xsd:documentation>
+        Constructs an output to be used by an input parameter.
+        Specifies the parameter by its unqualified name.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:output">
+        <xsd:attribute name="parameter" type="xsd:QName"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+
+  <!-- Definition of context and its related elements -->
+
+  <xsd:complexType name="context">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Defines the local declarations in the context of
+        an activity set.</p>
+        <p>The <code>process</code> element defines a nested
+        process that will be instantiated in that context and
+        overrides any other definition with the same name that
+        would be visible in this context.</p>
+        <p>The <code>property</code> element declares the
+        value of a property as being local in this context and
+        either copies the value from the parent context, or
+        assigns a new value to the property.</p>
+        <p>The <code>connect</code> element connects two port
+        type definitions that are local to this context, such
+        as messages sent and received along these port types
+        are not visible outside this context.</p>
+        <p>The <code>exception</code> elements defines event
+        handlers for unexpected conditions that could occur
+        while in this context and will cause the event handlers
+        to be executed instead of any ongoing activity in this
+        context.</p>
+        <p>The <code>transaction</code> element defines the
+        transaction associated with this context. This can be
+        an atomic or open transaction. The transaction name
+        must be different than an activity, process or property
+        name. Open and atomic transactions can be nested inside
+        an outer open transaction.</p>
+        <p>Other context specific definitions are allowed using
+        extension elements. The semantic of such contexts is
+        not defined by BPML.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="bpml:connect"/>
+        <xsd:element ref="bpml:process"/>
+        <xsd:element ref="bpml:property"/>
+        <xsd:any namespace="##other" processContents="strict"
+                 minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+      <xsd:element name="exception" type="bpml:exception"
+                   minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="transaction" type="bpml:transaction"
+                   minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="completion" type="bpml:completion"
+                   minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="exception">
+    <xsd:annotation>
+      <xsd:documentation>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:group ref="bpml:anyEventHandler"
+               minOccurs="1" maxOccurs="unbounded"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="transaction">
+    <xsd:annotation>
+      <xsd:documentation>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="compensation" type="bpml:compensation"
+                   minOccurs="0" maxOccurs="1">
+        <xsd:key name="compensationParameterConstraint">
+          <xsd:selector xpath="./bpml:parameter|./bpml:context/bpml:property"/>
+          <xsd:field xpath="@name"/>
+        </xsd:key>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:NCName"
+                   use="required"/>
+    <xsd:attribute name="type" type="bpml:transactionType"
+                   use="optional" default="atomic"/>
+    <xsd:attribute name="participation" type="bpml:transactionParticipationType"
+                   use="optional" default="never"/>
+    <xsd:attribute name="retries" type="xsd:nonNegativeInteger"
+                   use="optional" default="0"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="compensation">
+    <xsd:annotation>
+      <xsd:documentation>
+        Activity set that is executed when compensating
+        for the transaction. Parameters can be passsed to
+        the activity set from the compensate activity.
+        Only input parameters are allowed.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:documented">
+        <xsd:sequence>
+          <xsd:element name="parameter"
+                       minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>  
+              <xsd:complexContent>
+                <xsd:restriction base="bpml:parameter">
+                  <xsd:sequence>
+                    <xsd:element ref="bpml:documentation"
+                                 minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="value" type="bpml:xmlValue"
+                                 minOccurs="0" maxOccurs="1"/>
+                  </xsd:sequence>
+                  <xsd:attribute name="input" type="xsd:boolean"
+                                 fixed="true"/>
+                  <xsd:attribute name="output" type="xsd:boolean"
+                                 fixed="false"/>
+                </xsd:restriction>
+              </xsd:complexContent>
+            </xsd:complexType>  
+          </xsd:element>
+          <xsd:group ref="bpml:activitySet"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="completion">
+    <xsd:annotation>
+      <xsd:documentation>
+        Activty set to perform upon completion of all the
+        activities in the context, or upon completion of all
+        activities in an event handler, or upon termination
+        of the context, but prior to the context being discarded.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:documented">
+        <xsd:sequence>
+          <xsd:group ref="bpml:activitySet"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+
+  <!-- Type definitions for activities -->
+
+  <xsd:complexType name="action">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Performs an atomic action.</p>
+        <p>If the action references a WSDL operation, the
+        port type name is given by the <code>portType</code>
+        attribute and the operation name is given by the
+        <code>operation</code> attribute and both attributes
+        must be used.</p>
+        <p>The action can be correlated to zero or more
+        correlations using the <code>correlate</code> element.</p>
+        <p>The service instance against which the action is
+        performed can be identified using the <code>locate</code>
+        element. When referring to a WSDL operation, this element
+        is used for both notification and solicit-response operations.</p>
+        <p>A complex action may involve the execution of a nested
+        process, by instantiating that process and waiting for it
+        to complete within the confines of the action. This can be
+        done using the <code>call</code>. When referring to a WSDL
+        operation this element is used only for request-response
+        operations.</p>
+        <p>Other type of actions are supported by using extension
+        attributes, in replacement to the <code>portType</code> and
+        <code>operation</code> attributes.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:sequence>
+          <xsd:element name="correlate" type="bpml:correlate"
+                       minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="locate" type="bpml:locate"
+                       minOccurs="0" maxOccurs="1"/>
+          <xsd:element name="call" type="bpml:call"
+                       minOccurs="0" maxOccurs="1"/>
+          <xsd:element name="output" type="bpml:partOutput"
+                       minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="portType" type="xsd:QName"
+                       use="optional"/>
+        <xsd:attribute name="operation" type="xsd:NCName"
+                       use="optional"/>
+        <xsd:anyAttribute namespace="##other"
+                          processContents="strict"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="locate">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Locates a service instance. Uses properties and a
+        locator mechanism to locate the service instance.</p>
+        <p>If the property contains the end-point of the service
+        instance, the <code>property</code> attribute names that
+        property and no extension element should be used.</p>
+        <p>Otherwise, the <code>locator</code> attribute references
+        a locator definition which defines the mechanism for
+        locating the service instance.</p>
+        <p>Zero properties are required when referencing a static
+        locator definition. One or more properties are required
+        for a dynamic locator.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="property" type="bpml:listQName"
+                   use="optional"/>
+    <xsd:attribute name="locator" type="xsd:QName"
+                   use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="correlate">
+    <xsd:annotation>
+      <xsd:documentation>
+        Correlates an action by referencing the correlation
+        definition and indicating whether the correlation instance
+        is instantiated by this action, or was instantiated before.
+        The default is false.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="correlation" type="xsd:QName"
+                   use="required"/>
+    <xsd:attribute name="instantiation" type="xsd:boolean"
+                   use="optional" default="false"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="all">
+    <xsd:annotation>
+      <xsd:documentation>
+        Executes all the activities in the activity set in
+        no particular order (possibly but not necessarily
+        in parallel).
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:group ref="bpml:activitySet"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="assign">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Assigns a new value to the specified property.</p>
+        <p>The <code>xpath</code> attribute specifies an XPath
+        expression that extracts the value from the instance
+        properties.</p>
+        <p>The <code>value</code> element allows any static
+        value to be specified in the form of mixed content in
+        any schema. A null value is specified using the
+        <code>xsi:null</code> attribute.</p>
+        <p>Other extension element can be used instead of the
+        <code>xpath</code> attribute or <code>value</code>
+        element, e.g. an XQueryX query.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:choice minOccurs="0" maxOccurs="1">
+          <xsd:element name="value" type="bpml:xmlValue"/>
+          <xsd:any namespace="##other" processContents="strict"/>
+        </xsd:choice>
+        <xsd:attribute name="property" type="xsd:QName"
+                       use="required"/>
+        <xsd:attribute name="xpath" type="bpml:expression"
+                       use="optional"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="call">
+    <xsd:annotation>
+      <xsd:documentation>
+        Invokes a process and waits for it complete. The process
+        must be defined in the same package (and namespace) and
+        its definition must be accessible in the current context.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:sequence>
+          <xsd:element name="output" type="bpml:parameterOutput"
+                       minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="process" type="xsd:NCName"
+                       use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="choice">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Selects one activity set and executes it.</p>
+        <p>The activity set is selected by an event handler.
+        Two or more event handlers must be specified and the
+        events must not overlap.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:group ref="bpml:anyEventHandler"
+                   minOccurs="2" maxOccurs="unbounded"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="compensate">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Compensate for all transaction instances that have
+        completed in the current context.</p>
+        <p>The transaction instances are identified by the
+        transaction name. A completed transaction instance can
+        be compensated exactly once. This activity waits for
+        all compensations to conclude.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:sequence>
+          <xsd:element name="output" type="bpml:parameterOutput"
+                       minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="transaction" type="bpml:compensateName"
+                      use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="delay">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Represents the passage of time.</p>
+        <p>The delay-out is specified by a property that is either
+        a date/time instant or a time duration, as specified
+        by the <code>type</code> attribute.</p>
+        <p>For time duration, a reference point that is different
+        than the beginning of this activity can be specified
+        using the <code>reference</code> attribute. This could be
+        a date/time instant property or a reference to the start or
+        end time of an activity, transaction or process.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:attribute name="property" type="xsd:QName"
+                       use="required"/>
+        <xsd:attribute name="type" type="bpml:timeConstraintType"
+                       use="optional" default="duration"/>
+        <xsd:attribute name="reference" type="bpml:timeReference"
+                       use="optional"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="empty">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>An activity that does nothing. Can be used where
+        an activity set is required, but no activity is performed
+        (e.g. onMessage).</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="fault">
+    <xsd:annotation>
+      <xsd:documentation>
+        Causes a fault to occcur in the current context.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:attribute name="code" type="xsd:QName"
+                       use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="foreach">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Repeats the activity set once for each item.</p>
+        <p>The <code>select</code> attribute is an XPath expression
+        that is evaluated against the process instance properties
+        and results in zero or more items. This activity is repeated
+        once for each item in the list.</p>
+        <p>The current item is assigned to the property
+        <code>bpml:current</code> that is local to the context of
+        the activity set.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:group ref="bpml:activitySet"/>
+        <xsd:attribute name="select" type="bpml:expression"
+                       use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="join">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Waits for all instances of the specified process that
+        were spawned in the current context to complete.</p>
+        <p>This activity does not wait for instances that were
+        invoked by calling them. It will wait for instances that
+        were spawned in the current context after the beginning
+        of the activity.</p>
+        <p>If the <code>count</code> attribute is used, it provides
+        the name of a property whose value is the number of
+        process instance to wait for. This activity will wait until
+        that number of instances has completed, whether before or
+        during execution of the activity.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:attribute name="process" type="xsd:NCName"
+                       use="required"/>
+        <xsd:attribute name="count" type="xsd:QName"
+                       use="optional"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="sequence">
+    <xsd:annotation>
+      <xsd:documentation>
+        Executes all the activities in serial order.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:group ref="bpml:activitySet"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="spawn">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Instantiates a process without waiting for it to complete.</p>
+        <p>The process must be defined in the same package (and namespace)
+        and its definition must be accessible in the current context.</p>
+        <p>The instance list in the current context is modified, such
+        that <code>join</code> can be used to wait for all process
+        instances to complete.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:sequence>
+          <xsd:element name="output" type="bpml:parameterOutput"
+                       minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="process" type="xsd:NCName"
+                       use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="switch">
+    <xsd:annotation>
+      <xsd:documentation>
+        <p>Selects one activity set and executes it.</p>
+        <p>For each case, its condition is evaluated and if
+        true, that activity set is executed. In such a case,
+        no other condition will be evaluated.</p>
+        <p>Conditions are evaluated in the order in which the
+        <code>case</code> elements are specified.</p>
+        <p>If all conditions have evaluated to false, the
+        activity set specified by the <code>default</code>
+        element is executed. If that element is missing, the
+        activity completes immediately.</p>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:sequence>
+          <xsd:element name="case"
+                       minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:complexContent>
+                <xsd:extension base="bpml:documented">
+                  <xsd:sequence>
+                    <xsd:element name="condition"
+                                 type="bpml:condition"/>
+                    <xsd:group ref="bpml:activitySet"/>
+                  </xsd:sequence>
+                </xsd:extension>
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="default"
+                       minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+              <xsd:complexContent>
+                <xsd:extension base="bpml:documented">
+                  <xsd:group ref="bpml:activitySet"/>
+                </xsd:extension>
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="until">
+    <xsd:annotation>
+      <xsd:documentation>
+        Repeats the activity set until the condition is
+        met (evaluates to true). The activity set will be
+        repreated one or more times.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:sequence>
+          <xsd:element name="condition"
+                       type="bpml:condition"/>
+          <xsd:group ref="bpml:activitySet"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="while">
+    <xsd:annotation>
+      <xsd:documentation>
+        Repeats the activity set while the condition is
+        met (evaluates to true). The activity set will be
+        repreated zero or more times.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="bpml:activity">
+        <xsd:sequence>
+          <xsd:element name="condition"
+                       type="bpml:condition"/>
+          <xsd:group ref="bpml:activitySet"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+
+  <!-- Generic type definitions -->
+
+  <xsd:simpleType name="listQName">
+    <xsd:annotation>
+      <xsd:documentation>
+        Simple type representing a list of QNames.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:list itemType="xsd:QName"/>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="transactionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Allowed transaction types: atomic or open.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="atomic"/>
+      <xsd:enumeration value="open"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="transactionParticipationType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Allowed transaction participation types: supports,
+        always or never.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="supports"/>
+      <xsd:enumeration value="always"/>
+      <xsd:enumeration value="never"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="instantiationType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Allowed instantiation types: message or other.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="message"/>
+      <xsd:enumeration value="other"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="scopeType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Allowed scope types: public or private.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="public"/>
+      <xsd:enumeration value="private"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="parameterUseType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Parameter use types: required or optional.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="required"/>
+      <xsd:enumeration value="optional"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="timeConstraintType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Time constraint types: duration or date/time instance.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="duration"/>
+      <xsd:enumeration value="dateTime"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="connectorType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Connector types: direct or publish.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="direct"/>
+      <xsd:enumeration value="publish"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="expression">
+    <xsd:annotation>
+      <xsd:documentation>
+        Simple type representing an expression,
+        possibly but not necessarily XPath.
+        Cannot hold an empty string.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="timeReference">
+    <xsd:annotation>
+      <xsd:documentation>
+        Time reference: a property name or reference to
+        the start (<code>/@start</code>) or end
+        (<code>/@end</code>) time of an activity, transaction
+        or process in the current context.
+      </xsd:documentation>
+    </xsd:annotation>    
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="(start|end) [\i-[:]][\c-[:]]*:[\i-[:]][\c-[:]]*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="documented">
+    <xsd:annotation>
+      <xsd:documentation>
+        This complex type forms the basis for all elements that
+        allow human-readable documentation to be added.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="bpml:documentation" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="documentation">
+    <xsd:annotation>
+      <xsd:documentation>
+        This element allows documentation to appear as
+        mixed content using any schema without validation.
+        We recommend the use of XHTML or a similar schema.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:sequence>
+        <xsd:any namespace="##other" processContents="lax"
+                 minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="xmlValue" mixed="true">
+    <xsd:annotation>
+      <xsd:documentation>
+        This type is a container for any valid
+        XML value, represented as mixed content.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any namespace="##other" processContents="lax"
+               minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="instanceCount">
+    <xsd:annotation>
+      <xsd:documentation>
+        Instance count is a numeric value higher
+        than one or the value 'unbounded'.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:positiveInteger"/>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="unbounded"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="compensateName">
+    <xsd:annotation>
+      <xsd:documentation>
+        The name of a transaction being compensated
+        or the special value '#all'.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:QName"/>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="#all"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+
+
+  <!-- Instance property definitions -->
+
+  <xsd:element name="instance">
+    <xsd:annotation>
+      <xsd:documentation>
+        Instance of activity, transaction or process.
+        Contains the instance identifier.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleType>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+    </xsd:restriction>
+    </xsd:simpleType>
+  </xsd:element>
+
+  <xsd:simpleType name="instancePropertyType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Instance property type: activity, transaction
+        or process.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="activity"/>
+      <xsd:enumeration value="transaction"/>
+      <xsd:enumeration value="process"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="instanceStateType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Allowed instance state types for all instance
+        properties.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="active"/>
+      <xsd:enumeration value="completing"/>
+      <xsd:enumeration value="complete"/>
+      <xsd:enumeration value="aborting"/>
+      <xsd:enumeration value="aborted"/>
+      <xsd:enumeration value="compensating"/>
+      <xsd:enumeration value="compensated"/>
+      <xsd:enumeration value="suspended"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>
+
