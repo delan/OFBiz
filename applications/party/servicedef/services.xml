@@ -418,6 +418,15 @@
         <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
     </service>
 
+    <service name="getPartiesByRelationship" engine="simple"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="getPartiesByRelationship">
+        <description>Gets all parties related to partyIdFrom through the PartyRelationship entity</description>
+        <auto-attributes mode="IN" include="all" optional="true" entity-name="PartyRelationship"/>
+        <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
+        <override name="partyIdFrom" optional="false"/>
+    </service>
+
+    <!-- PostalAddressBoundary -->
     <service name="createPostalAddressBoundary" engine="simple"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="createPostalAddressBoundary">
         <description>Create a Postal Address Boundary</description>
@@ -437,6 +446,7 @@
         <attribute name="geos" type="java.util.List" mode="OUT" optional="true"/>
     </service>
 
+    <!-- PartyClassification -->
     <service name="createPartyClassification" engine="simple"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyClassification">
         <description>delete party classifications</description>
@@ -452,6 +462,7 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
+    <!-- Vendor -->
     <service name="createVendor" engine="simple"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="createVendor" auth="false">
         <description>Create Vendor Information</description>
