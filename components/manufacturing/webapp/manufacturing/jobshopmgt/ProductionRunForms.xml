@@ -394,5 +394,42 @@
             <submit button-type="button"/>
         </field>
     </form>
+    <!-- ******************* -->
+    <!-- Shipment Plan Forms -->
+    <!-- ******************* -->
+    <!-- List for Shipment Plan -->
+    <form name="listShipmentPlan" type="list" 
+            target="" title="" list-name="shipmentPlan"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="orderId" title="${uiLabelMap.ProductOrderId}"><display/></field>
+        <field name="orderItemSeqId" title="${uiLabelMap.ProductOrderItem}"><display/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
+        <!-- quantity planned in this shipment -->
+        <field name="quantity" title="${uiLabelMap.ProductQuantity}"><display/></field>
+        <!-- quantity issued in this shipment -->
+        <field name="issuedQuantity"><display/></field>
+        <!-- total ordered quantity -->
+        <field name="totOrderedQuantity"><display/></field>
+        <!-- total not available quantity -->
+        <field name="notAvailableQuantity" title="${uiLabelMap.ProductNotAvailable}"><display/></field>
+        <!-- total planned quantity not issued -->
+        <field name="totPlannedQuantity"><display/></field>
+        <!-- total issued quantity -->
+        <field name="totIssuedQuantity"><display/></field>
+        <field name="productionRuns" title="Production Run"><display/></field>
+    </form>
 
+    <form name="listShipmentPlans" type="list" 
+            target="" title="" list-name="shipmentPlans"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}"><display/></field>
+        <field name="statusId" title="${uiLabelMap.ProductShipmentStatusId}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+        <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}"><display/></field>
+        <field name="viewShipmentPlanLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="WorkWithShipmentPlans?shipmentId=${shipmentId}" description="[${uiLabelMap.ManufacturingViewShipmentPlan}]" also-hidden="false"/>
+        </field>
+    </form>
+    
 </forms>

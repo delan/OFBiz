@@ -29,6 +29,7 @@
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <div class='tabContainer'>
+    <a href="<@ofbizUrl>/WorkWithShipmentPlans</@ofbizUrl>" class="${selectedClassMap.WorkWithShipmentPlans?default(unselectedClassName)}">${uiLabelMap.ManufacturingWorkWithShipmentPlans}</a>
     <a href="<@ofbizUrl>/FindProductionRun</@ofbizUrl>" class="${selectedClassMap.find?default(unselectedClassName)}">${uiLabelMap.ManufacturingFindProductionRun}</a>
     <a href="<@ofbizUrl>/CreateProductionRun</@ofbizUrl>" class="${selectedClassMap.create?default(unselectedClassName)}">${uiLabelMap.ManufacturingCreateProductionRun}</a>
     <#if productionRun?has_content>

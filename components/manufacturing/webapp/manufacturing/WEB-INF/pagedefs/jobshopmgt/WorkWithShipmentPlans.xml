@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Work With Shipment Plans</property>
+    <property name="titleProperty">ManufacturingWorkWithShipmentPlans</property>
+    <property name="headerItem">jobshop</property>
+    <property name="tabButtonItem">WorkWithShipmentPlans</property>
+    <content-action name="/jobshopmgt/WorkWithShipmentPlans.bsh"/> 
+</page>
