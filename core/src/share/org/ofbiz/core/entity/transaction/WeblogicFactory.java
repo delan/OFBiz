@@ -1,7 +1,7 @@
 package org.ofbiz.core.entity.transaction;
 
 import javax.transaction.*;
-import weblogic.transaction.TxHelper;
+//import weblogic.transaction.TxHelper;
 
 /**
  * <p><b>Title:</b> WeblogicFactory.java
@@ -31,10 +31,12 @@ import weblogic.transaction.TxHelper;
  */
 public class WeblogicFactory implements TransactionFactoryInterface {
     public javax.transaction.TransactionManager getTransactionManager() {
-        return (javax.transaction.TransactionManager) TxHelper.getTransactionManager();
+        //return (javax.transaction.TransactionManager) TxHelper.getTransactionManager();
+        throw new IllegalStateException("ERROR: Weblogic tx factory methods not compiled in: change comments in org.ofbiz.core.entity.transaction.WeblogicFactory.java and compile with weblogic.jar on the classpath.");
     }
     
     public UserTransaction getUserTransaction() {
-        return TxHelper.getUserTransaction();
+        //return TxHelper.getUserTransaction();
+        throw new IllegalStateException("ERROR: Weblogic tx factory methods not compiled in: change comments in org.ofbiz.core.entity.transaction.WeblogicFactory.java and compile with weblogic.jar on the classpath.");
     }
 }
