@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.16 2003/12/06 23:28:44 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.17 2004/04/01 14:49:36 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.base.util.UtilValidate;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.16 $
+  *@version    $Revision: 1.17 $
  * @since      3.0
  */
 public class ComponentContainer implements Container {
@@ -55,16 +55,12 @@ public class ComponentContainer implements Container {
     public static final String module = ComponentContainer.class.getName();   
     
     protected static List loadedComponents = null;
-    protected Classpath classPath = null;   
+    protected Classpath classPath = new Classpath(System.getProperty("java.class.path"));
 
     /**
      * @see org.ofbiz.base.container.Container#start(java.lang.String)
      */
-    public boolean start(String configFileLocation) throws ContainerException {
-        if (classPath == null) {
-            classPath = new Classpath(System.getProperty("java.class.path"));    
-        } 
-
+    public boolean start(String configFileLocation) throws ContainerException {        
         // get the config for this container
         ContainerConfig.Container cc = ContainerConfig.getContainer("component-container", configFileLocation);
         
