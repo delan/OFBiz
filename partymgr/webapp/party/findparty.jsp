@@ -1,13 +1,11 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%@ page import="java.util.*,
-                 org.ofbiz.core.service.ModelService" %>
+<%@ page import="java.util.*, org.ofbiz.core.service.ModelService" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<%try {%>
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
 <%
     String searchString = "";
@@ -309,4 +307,3 @@
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
 <%}%>
-<%} catch (Exception e) { Debug.logError(e); throw e; }%>
