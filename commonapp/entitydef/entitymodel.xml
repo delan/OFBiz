@@ -5322,7 +5322,7 @@
       </relation>
       <relation>
         <type>one</type>
-        <rel-table-name>TELECOMMUNICATIONS_NUMBER</rel-table-name>
+        <rel-table-name>TELECOM_NUMBER</rel-table-name>
         <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
       </relation>
       <relation>
@@ -5632,11 +5632,11 @@
     <entity>
       <title>Telecommunications Number Entity</title>
       <package-name>org.ofbiz.commonapp.party.contact</package-name>
-      <table-name>TELECOMMUNICATIONS_NUMBER</table-name>
+      <table-name>TELECOM_NUMBER</table-name>
       <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
-      <field><col-name>AREA_CODE</col-name><type>short-varchar</type></field>
+      <field><col-name>COUNTRY_CODE</col-name><type>very-short</type></field>	
+      <field><col-name>AREA_CODE</col-name><type>very-short</type></field>
       <field><col-name>CONTACT_NUMBER</col-name><type>short-varchar</type></field>
-      <field><col-name>COUNTRY_CODE</col-name><type>short-varchar</type></field>	
       <prim-key-col>CONTACT_MECH_ID</prim-key-col>
       <relation>
         <type>one</type>
