@@ -46,15 +46,24 @@ public class CheckPermission extends MethodOperation {
     String propertyResource = null;
     boolean isProperty = false;
 
-    String permission;
-    String action;
+    PermissionInfo permissionInfo;
     ContextAccessor errorListAcsr;
+    List altPermissions = null;
 
     public CheckPermission(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.permission = element.getAttribute("permission");
-        this.action = element.getAttribute("action");
+        permissionInfo = new PermissionInfo(element);
         this.errorListAcsr = new ContextAccessor(element.getAttribute("error-list-name"), "error_list");
+
+        List altPermElements = UtilXml.childElementList(element, "alt-permission");
+        Iterator apeIter = altPermElements.iterator();
+        if (apeIter.hasNext()) {
+            altPermissions = new LinkedList();
+        }
+        while (apeIter.hasNext()) {
+            Element altPermElement = (Element) apeIter.next();
+            altPermissions.add(new PermissionInfo(altPermElement));
+        }
 
         Element failMessage = UtilXml.firstChildElement(element, "fail-message");
         Element failProperty = UtilXml.firstChildElement(element, "fail-property");
@@ -80,23 +89,24 @@ public class CheckPermission extends MethodOperation {
         // if no user is logged in, treat as if the user does not have permission: do not run subops
         GenericValue userLogin = methodContext.getUserLogin();
         if (userLogin != null) {
-            String permission = methodContext.expandString(this.permission);
-            String action = methodContext.expandString(this.action);
-            
             Security security = methodContext.getSecurity();
-            if (action != null && action.length() > 0) {
-                // run hasEntityPermission
-                if (security.hasEntityPermission(permission, action, userLogin)) {
-                    hasPermission = true;
-                }
-            } else {
-                // run hasPermission
-                if (security.hasPermission(permission, userLogin)) {
-                    hasPermission = true;
+            if (this.permissionInfo.hasPermission(methodContext, userLogin, security)) {
+                hasPermission = true;
+            }
+            
+            // if failed, check alternate permissions
+            if (!hasPermission && altPermissions != null) {
+                Iterator altPermIter = altPermissions.iterator();
+                while (altPermIter.hasNext()) {
+                    PermissionInfo altPermInfo = (PermissionInfo) altPermIter.next();
+                    if (altPermInfo.hasPermission(methodContext, userLogin, security)) {
+                        hasPermission = true;
+                        break;
+                    }
                 }
             }
         }
-
+        
         if (!hasPermission) {
             this.addMessage(messages, methodContext);
         }
@@ -124,6 +134,29 @@ public class CheckPermission extends MethodOperation {
         } else {
             messages.add("Simple Method Permission error occurred, but no message was found, sorry.");
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
+        }
+    }
+    
+    public static class PermissionInfo {
+        String permission;
+        String action;
+        
+        public PermissionInfo(Element altPermissionElement) {
+            this.permission = altPermissionElement.getAttribute("permission");
+            this.action = altPermissionElement.getAttribute("action");
+        }
+        
+        public boolean hasPermission(MethodContext methodContext, GenericValue userLogin, Security security) {
+            String permission = methodContext.expandString(this.permission);
+            String action = methodContext.expandString(this.action);
+            
+            if (action != null && action.length() > 0) {
+                // run hasEntityPermission
+                return security.hasEntityPermission(permission, action, userLogin);
+            } else {
+                // run hasPermission
+                return security.hasPermission(permission, userLogin);
+            }
         }
     }
 }

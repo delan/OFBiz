@@ -2384,6 +2384,13 @@ file-property will be added to the specified error list.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
+    <td>alt-permission</td><td>0 to many</td>
+    <td>Allows you to specify alternate permissions, any of which will satisfy this check permission. 
+    If the current userLogin does not have any of these permissions the error will be added to the list.
+    Has two attributes: <code>permission</code> and <code>action</code> that behave just as the 
+    corresponding attributes described above for the check-permission element.</td>
+</tr>
+<tr>
     <td>fail-message</td><td>one</td>
     <td>An inline failure message.</td>
 </tr>

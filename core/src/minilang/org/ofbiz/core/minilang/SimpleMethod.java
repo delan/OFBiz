@@ -712,6 +712,8 @@ public class SimpleMethod {
                 } else if ("remove-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.RemoveList(curOperElem, simpleMethod));
 
+                } else if ("if".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.conditional.MasterIf(curOperElem, simpleMethod));
                 } else if ("if-validate-method".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfValidateMethod(curOperElem, simpleMethod));
                 } else if ("if-compare".equals(nodeName)) {
