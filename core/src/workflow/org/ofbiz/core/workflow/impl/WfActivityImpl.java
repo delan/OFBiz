@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -665,8 +665,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     // Invoke the procedure (service) -- This will include sub-workflows
-    private GenericResultWaiter runService(String serviceName, String params,
-                                           String extend) throws WfException {
+    private GenericResultWaiter runService(String serviceName, String params, String extend) throws WfException {
         DispatchContext dctx = getDispatcher().getLocalContext(getServiceLoader());
         ModelService service = null;
         Debug.logVerbose("[WfActivity.runService] : Getting the service model.", module);
@@ -680,8 +679,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         return runService(service, params, extend);
     }
 
-    private GenericResultWaiter runService(ModelService service, String params,
-                                           String extend) throws WfException {
+    private GenericResultWaiter runService(ModelService service, String params, String extend) throws WfException {
         Map ctx = this.actualContext(params, extend);
         GenericResultWaiter waiter = new GenericResultWaiter();
         Debug.logVerbose("[WfActivity.runService] : Invoking the service.", module);
@@ -707,6 +705,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         GenericValue userLogin = null;
         if (context.containsKey("runAsUser")) {
             userLogin = getUserLogin((String) context.get("runAsUser"));
+            actualContext.put("userLogin", userLogin);
         } else if (context.containsKey("workflowOwnerId")) {
             userLogin = getUserLogin((String) context.get("workflowOwnerId"));
         }
