@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.10 2003/11/03 14:44:13 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.11 2003/11/07 22:30:20 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -250,7 +250,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
         ModelField modelField = getModelEntity().getField(name);
         if (modelField == null) {
-            throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName);
+            throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", must be one of: " + getModelEntity().fieldNameString());
         }
         if (value != null || setIfNull) {
             if (value instanceof Boolean) {
