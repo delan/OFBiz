@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.3 2003/09/21 05:58:51 jonesde Exp $
+ * $Id: ModelFormField.java,v 1.4 2003/10/29 05:11:43 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -84,6 +84,7 @@ public class ModelFormField {
     protected FlexibleStringExpander useWhen;
 
     protected FieldInfo fieldInfo = null;
+    protected String idName;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -109,6 +110,9 @@ public class ModelFormField {
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
         this.redWhen = fieldElement.getAttribute("red-when");
         this.setUseWhen(fieldElement.getAttribute("use-when"));
+        this.idName = fieldElement.getAttribute("id-name");
+
+
 
         String positionStr = fieldElement.getAttribute("position");
         try {
@@ -164,6 +168,8 @@ public class ModelFormField {
                 this.fieldInfo = new RangeFindField(subElement, this);
             } else if ("lookup".equals(subElementName)) {
                 this.fieldInfo = new LookupField(subElement, this);
+            } else if ("file".equals(subElementName)) {
+                this.fieldInfo = new FileField(subElement, this);
             } else {
                 throw new IllegalArgumentException("The field sub-element with name " + subElementName + " is not supported");
             }
@@ -209,6 +215,8 @@ public class ModelFormField {
         if (overrideFormField.fieldInfo != null) {
             this.setFieldInfo(overrideFormField.fieldInfo);
         }
+        if (UtilValidate.isNotEmpty(overrideFormField.idName))
+            this.idName = overrideFormField.idName;
     }
 
     public boolean induceFieldInfo(String defaultFieldType) {
@@ -873,6 +881,21 @@ public class ModelFormField {
         }
     }
 
+    /**
+     * @return
+     */
+    public String getIdName() {
+        return idName;
+    }
+
+    /**
+     * @param string
+     */
+    public void setIdName(String string) {
+        idName = string;
+    }
+
+
     public boolean isUseWhenEmpty() {
         if (this.useWhen == null) {
             return true;
@@ -1061,6 +1084,7 @@ public class ModelFormField {
         public static final int DATEQBE = 14;
         public static final int RANGEQBE = 15;
         public static final int LOOKUP = 16;
+        public static final int FILE = 17;
 
         // the numbering here represents the priority of the source; 
         //when setting a new fieldInfo on a modelFormField it will only set
@@ -1089,6 +1113,7 @@ public class ModelFormField {
             fieldTypeByName.put("date-qbe", new Integer(14));
             fieldTypeByName.put("range-qbe", new Integer(15));
             fieldTypeByName.put("lookup", new Integer(16));
+            fieldTypeByName.put("file", new Integer(17));
         }
 
         protected int fieldType;
@@ -2288,6 +2313,21 @@ public class ModelFormField {
         
         public void setFormName(String str) {
             this.formName = str;
+        }
+    }
+
+    public static class FileField extends TextField {
+
+        public FileField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+        }
+
+        public FileField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, modelFormField);
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderFileField(buffer, context, this);
         }
     }
 }
