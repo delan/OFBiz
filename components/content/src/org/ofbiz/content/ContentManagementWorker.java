@@ -728,11 +728,10 @@ public class ContentManagementWorker {
     
     public static int updateStatsTopDown(GenericDelegator delegator, String contentId, List typeList) throws GenericEntityException {
         int subLeafCount = 0;
-        GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+        GenericValue thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
         if (thisContent == null)
             throw new RuntimeException("No entity found for id=" + contentId);
         
-        String thisContentId = thisContent.getString("contentId");
        List condList = new ArrayList();
        Iterator iterType = typeList.iterator();
        while (iterType.hasNext()) {
@@ -741,7 +740,7 @@ public class ContentManagementWorker {
        }
        
        EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
-       EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentIdTo", EntityOperator.EQUALS, thisContentId), conditionType), EntityOperator.AND);
+       EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentIdTo", EntityOperator.EQUALS, contentId), conditionType), EntityOperator.AND);
             List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, null);
             List listFiltered = EntityUtil.filterByDate(listAll);
             Iterator iter = listFiltered.iterator();
@@ -754,28 +753,18 @@ public class ContentManagementWorker {
             // If no children, count this as a leaf
             if (subLeafCount == 0)
                 subLeafCount = 1;
-            thisContent.put("childBranchCount", new Integer(listFiltered.size()));
-            thisContent.put("childLeafCount", new Integer(subLeafCount));
+            thisContent.put("childBranchCount", new Long(listFiltered.size()));
+            thisContent.put("childLeafCount", new Long(subLeafCount));
             thisContent.store();
         
         return subLeafCount;
     }
     
-    public static void updateStatsBottomUp(GenericDelegator delegator, String contentId, List typeList, int changeAmount) throws GenericEntityException {
+    public static void updateStatsBottomUp(GenericDelegator delegator, String contentId, List typeList, int branchChangeAmount, int leafChangeAmount) throws GenericEntityException {
         GenericValue thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
         if (thisContent == null)
             throw new RuntimeException("No entity found for id=" + contentId);
         
-        String thisContentId = thisContent.getString("contentId");
-        Object countObj = thisContent.get("childLeafCount");
-        int subLeafCount = 0;
-        if (countObj != null && countObj instanceof Long){
-        	subLeafCount = ((Long)countObj).intValue();
-        }
-        subLeafCount += changeAmount;
-        thisContent.put("childLeafCount", new Integer(subLeafCount));
-        thisContent.store();
-
        List condList = new ArrayList();
        Iterator iterType = typeList.iterator();
        while (iterType.hasNext()) {
@@ -784,17 +773,34 @@ public class ContentManagementWorker {
        }
        
        EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
-       EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentId", EntityOperator.EQUALS, thisContentId), conditionType), EntityOperator.AND);
+       EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentId", EntityOperator.EQUALS, contentId), conditionType), EntityOperator.AND);
             List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, null);
             List listFiltered = EntityUtil.filterByDate(listAll);
             Iterator iter = listFiltered.iterator();
             while (iter.hasNext()) {
                 GenericValue contentAssoc = (GenericValue)iter.next();
                 String contentIdTo = contentAssoc.getString("contentIdTo");
-                updateStatsBottomUp(delegator, contentIdTo, typeList, changeAmount);
+                GenericValue contentTo = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentIdTo));
+        		int intLeafCount = 0;
+        		Long leafCount = (Long)contentTo.get("childLeafCount");
+        	    if (leafCount != null) {
+            	    intLeafCount = leafCount.intValue();
+                }
+                contentTo.set("childLeafCount", new Long(intLeafCount + leafChangeAmount)); 
+                
+                if (branchChangeAmount != 0) {
+                	int intBranchCount = 0;
+        			Long branchCount = (Long)contentTo.get("childBranchCount");
+        	    	if (branchCount != null) {
+            	    	intBranchCount = branchCount.intValue() * -1;
+        	    	}
+                	contentTo.set("childBranchCount", new Long(intBranchCount + branchChangeAmount)); 
+                }
+                updateStatsBottomUp(delegator, contentIdTo, typeList, 0, leafChangeAmount);
             }
             
         
         return ;
     }
+    
 }
