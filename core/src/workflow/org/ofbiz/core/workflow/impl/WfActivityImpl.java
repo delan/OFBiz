@@ -608,6 +608,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 Object key = i.next();
                 if ( context.containsKey(key) )
                     actualContext.put(key,context.get(key));
+                else if ( ((String)key).equals("workEffortId") )
+                    actualContext.put(key,runtimeKey());              
                 else if ( !actualContext.containsKey(key) )
                     throw new WfException("Context does not contain the key: '" + (String)key + "'");
             }

@@ -55,6 +55,7 @@ public class WorkflowServices {
             if ( actResults != null && actResults.size() > 0 )
                 activity.setResult(actResults);
             activity.complete();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
         catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -68,10 +69,11 @@ public class WorkflowServices {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         String workEffortId = (String) context.get("workEffortId");
-        String newState = (String) context.get("newStatus");
+        String newState = (String) context.get("newState");
         try {
             WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
             activity.changeState(newState);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
         catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -88,6 +90,7 @@ public class WorkflowServices {
         try {
             WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
             result.put("activityState",activity.state());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
         catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -104,6 +107,7 @@ public class WorkflowServices {
         try {
             WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
             activity.activate();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
         catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -127,6 +131,7 @@ public class WorkflowServices {
             WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
             WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,roleType);
             activity.assign(resource,removeOldAssign ? false : true);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
         catch ( WfException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -149,6 +154,7 @@ public class WorkflowServices {
         try {
             WfAssignment assign = WfFactory.getWfAssignment(delegator,workEffortId,partyId,roleType,fromDate);
             assign.accept();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
         catch ( WfException we ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -174,6 +180,7 @@ public class WorkflowServices {
             if ( actResults != null && actResults.size() > 0 )
                 assign.setResult(actResults);
             assign.complete();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
         catch ( WfException we ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -195,6 +202,7 @@ public class WorkflowServices {
             WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
             if ( activity.state().startsWith("open") ) 
                 dispatcher.runSync(limitService,limitContext);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
         catch ( WfException we ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
