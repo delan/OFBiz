@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.25 2004/06/10 06:06:57 byersa Exp $
+ * $Id: ContentServices.java,v 1.26 2004/06/10 23:09:03 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @since 2.2
  * 
  *  
@@ -726,6 +726,9 @@ public class ContentServices {
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
         String statusId = (String)context.get("statusId");
         String privilegeEnumId = (String)context.get("privilegeEnumId");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        if (Debug.infoOn()) Debug.logInfo("in publishContent, statusId:" + statusId , module);
+        if (Debug.infoOn()) Debug.logInfo("in publishContent, userLogin:" + userLogin , module);
         Map mapIn = new HashMap();
         mapIn.put("contentId", contentId);
         mapIn.put("contentIdTo", contentIdTo);
@@ -760,6 +763,10 @@ public class ContentServices {
                     mapIn.put("contentAssocTypeId", contentAssocTypeId);
                     mapIn.put("mapKey", context.get("mapKey"));
                     mapIn.put("fromDate", UtilDateTime.nowTimestamp());
+                    mapIn.put("createdDate", UtilDateTime.nowTimestamp());
+                    mapIn.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+                    mapIn.put("createdByUserLogin", userLogin.get("userLoginId"));
+                    mapIn.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
                     GenericValue contentAssoc = delegator.create("ContentAssoc", mapIn);
                 }
             } else {
