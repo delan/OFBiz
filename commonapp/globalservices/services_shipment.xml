@@ -13,7 +13,7 @@
     	<attribute name="productId" type="String" mode="IN" optional="false"/>
     	<attribute name="shipmentPackageId" type="String" mode="IN" optional="true"/>
     	<attribute name="orderId" type="String" mode="IN" optional="true"/>
-    	<attribute name="orderItemSeqId" type="Double" mode="IN" optional="true"/>
+    	<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     	<attribute name="rejectionId" type="String" mode="IN" optional="true"/>
     	<attribute name="datetimeReceived" type="Timestamp" mode="IN" optional="true"/>
     	<attribute name="itemDescription" type="String" mode="IN" optional="true"/>
