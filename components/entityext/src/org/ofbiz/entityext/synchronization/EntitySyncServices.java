@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.7 2003/12/11 05:09:48 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.8 2003/12/12 03:42:55 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
  */
 package org.ofbiz.entityext.synchronization;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,12 +32,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
@@ -44,18 +49,21 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelViewEntity;
+import org.ofbiz.entity.serialize.SerializeException;
+import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.xml.sax.SAXException;
 
 /**
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -160,9 +168,9 @@ public class EntitySyncServices {
                     currentRunEndTime = nowTimestamp;
                 }
                 
-                // TODO: make sure tx times are indexed somehow
+                // make sure tx times are indexed somehow
                 // TODO: keep track of how long these sync runs take and store that info on the history table
-                // TODO: save info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
+                // save info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
                 
                 // simulate two ordered lists and merge them on-the-fly for faster combined sorting
                 ArrayList valuesToStore = new ArrayList(); // make it an ArrayList to easily merge in sorted lists
@@ -188,8 +196,18 @@ public class EntitySyncServices {
                     eli.close();
                 }
                 
-                // TODO: get all removed items from the given time range, add to list for those
+                // get all removed items from the given time range, add to list for those
                 List keysToRemove = new LinkedList();
+                // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
+                EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
+                        new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
+                        new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
+                EntityListIterator removeEli = delegator.findListIteratorByCondition("EntitySyncRemove", findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_FIELD));
+                GenericValue nextValue = null;
+                while ((nextValue = (GenericValue) removeEli.next()) != null) {
+                    keysToRemove.add(nextValue);
+                }
+                removeEli.close();
                 
                 // grab some totals before calling...
                 long totalRowsToStoreCur = valuesToStore.size();
@@ -363,7 +381,7 @@ public class EntitySyncServices {
      */
     public static Map storeEntitySyncData(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
         
         String entitySyncId = (String) context.get("entitySyncId");
         // incoming lists will already be sorted by lastUpdatedStamp
@@ -405,8 +423,37 @@ public class EntitySyncServices {
             // iterate through to remove list and remove each
             Iterator keyToRemoveIter = keysToRemove.iterator();
             while (keyToRemoveIter.hasNext()) {
-                GenericValue keyToRemove = (GenericValue) keyToRemoveIter.next();
-                // TODO: pull the PK from the EntitySyncRemove in the primaryKeyRemoved field, de-XML-serialize it and check to see if it exists, if so remove and count, if not just count already removed
+                GenericValue entitySyncRemove = (GenericValue) keyToRemoveIter.next();
+                // pull the PK from the EntitySyncRemove in the primaryKeyRemoved field, de-XML-serialize it and check to see if it exists, if so remove and count, if not just count already removed
+                String primaryKeyRemoved = entitySyncRemove.getString("primaryKeyRemoved");
+                GenericEntity pkToRemove = null;
+                try {
+                    pkToRemove = (GenericEntity) XmlSerializer.deserialize(primaryKeyRemoved, delegator);
+                } catch (IOException e) {
+                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
+                    Debug.logError(e, errorMsg, module);
+                    return ServiceUtil.returnError(errorMsg);
+                } catch (SAXException e) {
+                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
+                    Debug.logError(e, errorMsg, module);
+                    return ServiceUtil.returnError(errorMsg);
+                } catch (ParserConfigurationException e) {
+                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
+                    Debug.logError(e, errorMsg, module);
+                    return ServiceUtil.returnError(errorMsg);
+                } catch (SerializeException e) {
+                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
+                    Debug.logError(e, errorMsg, module);
+                    return ServiceUtil.returnError(errorMsg);
+                }
+                
+                // always do a removeByAnd, if it was a removeByAnd great, if it was a removeByPrimaryKey, this will also work and save us a query
+                int numRemByAnd = delegator.removeByAnd(pkToRemove.getEntityName(), pkToRemove);
+                if (numRemByAnd == 0) {
+                    numAlreadyRemoved++;
+                } else {
+                    numRemoved++;
+                }
             }
             
             Map result = ServiceUtil.returnSuccess();
