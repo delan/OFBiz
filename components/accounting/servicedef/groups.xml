@@ -23,22 +23,22 @@
 
 <service-group xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-group.xsd">
-	
-	<group name="createCreditCardAndAddress" send-mode="all">
-		<service name="createPostalAddress" mode="sync" result-to-context="true"/>
-		<service name="createCreditCard" mode="sync"/>
-	</group>			
-	<group name="updateCreditCardAndAddress" send-mode="all">
-		<service name="updatePostalAddress" mode="sync" result-to-context="true"/>
-		<service name="updateCreditCard" mode="sync"/>
-	</group>		
-	
-	<group name="createEftAccountAndAddress" send-mode="all">
-		<service name="createPostalAddress" mode="sync" result-to-context="true"/>
-		<service name="createEftAccount" mode="sync"/>
-	</group>		
-	<group name="updateEftAccountAndAddress" send-mode="all">
-		<service name="updatePostalAddress" mode="sync" result-to-context="true"/>
-		<service name="updateEftAccount" mode="sync"/>
-	</group>					
+    
+    <group name="createCreditCardAndAddress" send-mode="all">
+        <service name="createPostalAddress" mode="sync" result-to-context="true"/>
+        <service name="createCreditCard" mode="sync"/>
+    </group>
+    <group name="updateCreditCardAndAddress" send-mode="all">
+        <service name="updatePostalAddress" mode="sync" result-to-context="true"/>
+        <service name="updateCreditCard" mode="sync"/>
+    </group>
+    
+    <group name="createEftAccountAndAddress" send-mode="all">
+        <service name="createPostalAddress" mode="sync" result-to-context="true"/>
+        <service name="createEftAccount" mode="sync"/>
+    </group>
+    <group name="updateEftAccountAndAddress" send-mode="all">
+        <service name="updatePostalAddress" mode="sync" result-to-context="true"/>
+        <service name="updateEftAccount" mode="sync"/>
+    </group>
 </service-group>
