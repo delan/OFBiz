@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.40 2004/06/24 02:16:28 jonesde Exp $
+ *  $Id: build.xml,v 1.41 2004/06/25 22:04:06 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -81,9 +81,9 @@
 
     <target name="clean-xtra" depends="">
         <delete verbose="on">
-            <fileset dir="."
-                     includes="**/.nbattrs,**/*~,**/*.#*,**/.DS_Store,**/*.rej,**/*.orig"/>
+            <fileset dir="." includes="**/.nbattrs,**/*~,**/*.#*,**/.DS_Store,**/*.rej,**/*.orig"/>                                 
         </delete>
+        <delete dir="components/catalina/work"/>
     </target>
 
     <target name="tests">
