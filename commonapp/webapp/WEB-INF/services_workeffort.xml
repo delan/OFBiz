@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services 
+  PUBLIC "-//OFBiz//DTD Services Config//EN" 
+  "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+  <description>Common Application Shared WorkEffort Services</description>
+  <vendor>OFBiz</vendor>
+  <version>1.0</version>
+	
+  
+  <!-- WorkEffort services -->
+  <service name="createWorkEffort" engine="java"
+    location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="createWorkEffort">
+	  <description>Create a WorkEffort Entity</description>
+	  <attribute name="workEffortId" type="String" mode="OUT" optional="false"/>
+	  <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+	  <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
+	  <attribute name="universalId" type="String" mode="IN" optional="true"/>
+	  <attribute name="scopeEnumId" type="String" mode="IN" optional="true"/>
+	  <attribute name="priority" type="Long" mode="IN" optional="true"/>
+	  <attribute name="workEffortName" type="String" mode="IN" optional="false"/>
+	  <attribute name="description" type="String" mode="IN" optional="true"/>
+	  <attribute name="locationDesc" type="String" mode="IN" optional="true"/>
+	  <attribute name="estimatedStartDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+	  <attribute name="estimatedCompletionDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+	  <attribute name="actualStartDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+	  <attribute name="actualCompletionDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+	  <attribute name="estimatedMilliSeconds" type="Double" mode="IN" optional="true"/>
+	  <attribute name="actualMilliSeconds" type="Double" mode="IN" optional="true"/>
+	  <attribute name="totalMilliSecondsAllowed" type="Double" mode="IN" optional="true"/>
+	  <attribute name="totalMoneyAllowed" type="Double" mode="IN" optional="true"/>
+	  <attribute name="moneyUomId" type="String" mode="IN" optional="true"/>
+	  <attribute name="specialTerms" type="String" mode="IN" optional="true"/>
+	  <attribute name="timeTransparency" type="Long" mode="IN" optional="true"/>
+	  <attribute name="infoUrl" type="String" mode="IN" optional="true"/>
+  </service>
+  <service name="updateWorkEffort" engine="java"
+    location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="updateWorkEffort">
+	  <description>Update a WorkEffort Entity</description>
+	  <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+	  <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+	  <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
+	  <attribute name="universalId" type="String" mode="IN" optional="true"/>
+	  <attribute name="scopeEnumId" type="String" mode="IN" optional="true"/>
+	  <attribute name="priority" type="Long" mode="IN" optional="true"/>
+	  <attribute name="workEffortName" type="String" mode="IN" optional="false"/>
+	  <attribute name="description" type="String" mode="IN" optional="true"/>
+	  <attribute name="locationDesc" type="String" mode="IN" optional="true"/>
+	  <attribute name="estimatedStartDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+	  <attribute name="estimatedCompletionDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+	  <attribute name="actualStartDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+	  <attribute name="actualCompletionDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+	  <attribute name="estimatedMilliSeconds" type="Double" mode="IN" optional="true"/>
+	  <attribute name="actualMilliSeconds" type="Double" mode="IN" optional="true"/>
+	  <attribute name="totalMilliSecondsAllowed" type="Double" mode="IN" optional="true"/>
+	  <attribute name="totalMoneyAllowed" type="Double" mode="IN" optional="true"/>
+	  <attribute name="moneyUomId" type="String" mode="IN" optional="true"/>
+	  <attribute name="specialTerms" type="String" mode="IN" optional="true"/>
+	  <attribute name="timeTransparency" type="Long" mode="IN" optional="true"/>
+	  <attribute name="infoUrl" type="String" mode="IN" optional="true"/>
+  </service>
+  <service name="deleteWorkEffort" engine="java"
+    location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="deleteWorkEffort">
+	  <description>Delete a WorkEffort Entity</description>
+	  <attribute name="workEffortId" type="String" mode="IN"/>
+  </service>
+
+</services>
