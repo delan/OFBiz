@@ -34,7 +34,7 @@ import javax.net.ssl.*;
  * KeyStoreUtil - Utilities for setting up SSL connections with specific client certificates
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class SSLUtil {
@@ -91,6 +91,16 @@ public class SSLUtil {
 
     public static SSLSocketFactory getSSLSocketFactory(String alias) throws IOException, GeneralSecurityException {
         KeyManager[] km = getKeyManagers(alias);
+        TrustManager[] tm = getTrustManagers();
+
+        // may want to have this in the properties file
+        SSLContext context = SSLContext.getInstance("SSL");
+        context.init(km, tm, null);
+        return context.getSocketFactory();
+    }
+
+    public static SSLSocketFactory getSSLSocketFactory() throws IOException, GeneralSecurityException {
+        KeyManager[] km = getKeyManagers();
         TrustManager[] tm = getTrustManagers();
 
         // may want to have this in the properties file

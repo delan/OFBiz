@@ -59,7 +59,7 @@ import javax.crypto.spec.DHParameterSpec;
  * KeyStoreUtil - Utilities for getting KeyManagers and TrustManagers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class KeyStoreUtil {
@@ -67,15 +67,15 @@ public class KeyStoreUtil {
     public static final String module = KeyStoreUtil.class.getName();
 
     public static String getKeyStoreFileName() {
-        return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.keyStore", null);
+        return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.client.keyStore", null);
     }
 
     public static String getKeyStorePassword() {
-        return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.keyStore.password", null);
+        return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.client.keyStore.password", null);
     }
 
     public static String getKeyStoreType() {
-        return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.keyStore.type", "jks");
+        return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.client.keyStore.type", "jks");
     }
 
     public static String getTrustStoreFileName() {
