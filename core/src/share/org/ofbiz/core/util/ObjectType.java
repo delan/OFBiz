@@ -676,7 +676,6 @@ public class ObjectType {
         int result = 0;
 
         Object convertedValue1 = null;
-
         try {
             convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format, locale);
         } catch (GeneralException e) {
@@ -685,7 +684,6 @@ public class ObjectType {
         }
 
         Object convertedValue2 = null;
-
         if (value2 != null) {
             try {
                 convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format, locale);
@@ -695,13 +693,32 @@ public class ObjectType {
             }
         }
 
-        if (convertedValue1 == null && !"is-not-empty".equals(operator) && !"is-empty".equals(operator)) {
-            if (verboseOn) Debug.logVerbose("Value1 was null, cannot complete comparison");
-            return null;
-        }
-        if (convertedValue2 == null && !"is-not-empty".equals(operator) && !"is-empty".equals(operator)) {
-            if (verboseOn) Debug.logVerbose("Value2 was null, cannot complete comparison");
-            return null;
+        // handle null values...
+        if (convertedValue1 == null || convertedValue2 == null) {
+            if ("equals".equals(operator)) {
+                if (convertedValue1 == null && convertedValue2 == null) {
+                    return Boolean.TRUE;
+                } else {
+                    return Boolean.FALSE;
+                }
+            } else if ("not-equals".equals(operator)) {
+                if (convertedValue1 == null && convertedValue2 == null) {
+                    return Boolean.FALSE;
+                } else {
+                    return Boolean.TRUE;
+                }
+            } else if ("is-not-empty".equals(operator) || "is-empty".equals(operator)) {
+                // do nothing, handled later...
+            } else {
+                if (convertedValue1 == null) {
+                    messages.add("Value1 is null, cannot complete compare for the operator " + operator);
+                    return null;
+                }
+                if (convertedValue2 == null) {
+                    messages.add("Value2 is null, cannot complete compare for the operator " + operator);
+                    return null;
+                }
+            }
         }
 
         if ("contains".equals(operator)) {
@@ -715,29 +732,27 @@ public class ObjectType {
 
             if (str1.indexOf(str2) < 0) {
                 return Boolean.FALSE;
+            } else {
+                return Boolean.TRUE;
             }
-        }
-
-        if ("is-empty".equals(operator)) {
-            if (value1 == null)
+        } else if ("is-empty".equals(operator)) {
+            if (convertedValue1 == null)
                 return Boolean.TRUE;
-            if (value1 instanceof String && ((String) value1).length() == 0)
+            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0)
                 return Boolean.TRUE;
-            if (value1 instanceof List && ((List) value1).size() == 0)
+            if (convertedValue1 instanceof List && ((List) convertedValue1).size() == 0)
                 return Boolean.TRUE;
-            if (value1 instanceof Map && ((Map) value1).size() == 0)
+            if (convertedValue1 instanceof Map && ((Map) convertedValue1).size() == 0)
                 return Boolean.TRUE;
             return Boolean.FALSE;    
-        }
-        
-        if ("is-not-empty".equals(operator)) {
-            if (value1 == null)
+        } else if ("is-not-empty".equals(operator)) {
+            if (convertedValue1 == null) 
                 return Boolean.FALSE;
-            if (value1 instanceof String && ((String) value1).length() == 0)
+            if (convertedValue1 instanceof String && ((String) convertedValue1).length() == 0)
                 return Boolean.FALSE;
-            if (value1 instanceof List && ((List) value1).size() == 0)
+            if (convertedValue1 instanceof List && ((List) convertedValue1).size() == 0)
                 return Boolean.FALSE;
-            if (value1 instanceof Map && ((Map) value1).size() == 0)
+            if (convertedValue1 instanceof Map && ((Map) convertedValue1).size() == 0)
                 return Boolean.FALSE;
             return Boolean.TRUE;    
         }
@@ -747,7 +762,22 @@ public class ObjectType {
             String str2 = (String) convertedValue2;
 
             if (str1.length() == 0 || str2.length() == 0) {
-                return null;
+                if ("equals".equals(operator)) {
+                    if (str1.length() == 0 && str2.length() == 0) {
+                        return Boolean.TRUE;
+                    } else {
+                        return Boolean.FALSE;
+                    }
+                } else if ("not-equals".equals(operator)) {
+                    if (str1.length() == 0 && str2.length() == 0) {
+                        return Boolean.FALSE;
+                    } else {
+                        return Boolean.TRUE;
+                    }
+                } else {
+                    messages.add("ERROR: Could not do a compare between strings with one empty string for the operator " + operator);
+                    return null;
+                }
             }
             result = str1.compareTo(str2);
         } else if ("Double".equals(type) || "Float".equals(type) || "Long".equals(type) || "Integer".equals(type)) {
