@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
  */
 
@@ -76,7 +76,6 @@ request.setAttribute("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "check
 externalLoginKey = LoginEvents.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 request.setAttribute("externalKeyParam", externalKeyParam);
-request.setAttribute("activeApp", "accountingmgr");
 
 eventMsgReq = request.getAttribute("_EVENT_MESSAGE_");
 errorMsgReq = request.getAttribute("_ERROR_MESSAGE_");
