@@ -296,6 +296,7 @@
   <PaymentMethodType description="Personal Check" paymentMethodTypeId="PERSONAL_CHECK"/>
   <PaymentMethodType description="Certified Check" paymentMethodTypeId="CERTIFIED_CHECK"/>
   <PaymentMethodType description="Money Order" paymentMethodTypeId="MONEY_ORDER"/>
+  <PaymentMethodType description="Offline Payment" paymentMethodTypeId="OFFLINE"/>
   <PaymentType description="" hasTable="N" parentTypeId="" paymentTypeId="DISBURSEMENT"/>
   <PaymentType description="" hasTable="Y" parentTypeId="DISBURSEMENT" paymentTypeId="PAY_CHECK"/>
   <PaymentType description="" hasTable="Y" parentTypeId="" paymentTypeId="RECEIPT"/>
