@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  To refer to this DTD in your XML file, use the following declaration:
+  To refer to this DTD in your XML file, use the following declarations:
+
+  To use only the simple-methods element as the root node, use the following:
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
   To use only the simple-map-processors element as the root node, use the following:
@@ -47,8 +49,15 @@
 
     The field-to-request and field-to-session elements will be IGNORED when 
     called in a service context. So, they are ONLY used when called in an event context.
+    
+    The field-to-result elements will be ignored in an event context, ie only used in a service.
+    
+    The parameter-map-name env entry will contain the HttpRequest parameters for
+    running in an event context and and the input context when running in a service.
+    
+    
 -->
-<!ELEMENT simple-method ( ( call-map-processor | check-errors | call-service | field-to-request | field-to-session )* )>
+<!ELEMENT simple-method ( ( call-map-processor | check-errors | call-service | field-to-request | field-to-session | field-to-result )* )>
 <!ATTLIST simple-method
     method-name CDATA #REQUIRED
     short-description CDATA #REQUIRED
@@ -57,10 +66,15 @@
     default-error-code CDATA "error"
     default-success-code CDATA "success"
     parameter-map-name CDATA "parameters"
-    request-name CDATA "_request_"
-    response-code-name CDATA "_response_code_"
-    error-message-name CDATA "_error_message_"
-    event-message-name CDATA "_event_message_"
+    event-request-object-name CDATA "_request_"
+    event-response-code-name CDATA "_response_code_"
+    event-error-message-name CDATA "_error_message_"
+    event-event-message-name CDATA "_event_message_"
+    service-response-message-name CDATA "responseMessage"
+    service-error-message-name CDATA "errorMessage"
+    service-error-message-list-name CDATA "errorMessageList"
+    service-success-message-name CDATA "successMessage"
+    service-success-message-list-name CDATA "successMessageList"
 >
 
 <!-- 
@@ -69,8 +83,8 @@
 -->
 <!ELEMENT call-map-processor ( simple-map-processor? )>
 <!ATTLIST call-map-processor
-    xml-resource CDATA #REQUIRED
-    processor-name CDATA #REQUIRED
+    xml-resource CDATA #IMPLIED
+    processor-name CDATA #IMPLIED
     in-map-name CDATA #REQUIRED
     out-map-name CDATA #REQUIRED
     error-list-name CDATA "_error_list_"
@@ -87,7 +101,7 @@
     called in a service context. So, they are ONLY used when called in an event context.
 -->
 <!ELEMENT call-service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message?, 
-                         results-to-map*, result-to-field*, result-to-request*, result-to-session* )>
+                         results-to-map*, result-to-field*, result-to-request*, result-to-session*, result-to-result* )>
 <!ATTLIST call-service
     service-name CDATA #REQUIRED
     in-map-name CDATA #REQUIRED
@@ -151,6 +165,11 @@
         result-name CDATA #REQUIRED
         session-name CDATA #IMPLIED
     >
+    <!ELEMENT result-to-result EMPTY>
+    <!ATTLIST result-to-result
+        result-name CDATA #REQUIRED
+        service-result-name CDATA #IMPLIED
+    >
 
 <!ELEMENT field-to-request EMPTY>
 <!ATTLIST field-to-request
@@ -164,6 +183,13 @@
     field-name CDATA #REQUIRED
     session-name CDATA #IMPLIED
 >
+<!ELEMENT field-to-result EMPTY>
+<!ATTLIST field-to-result
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
+    result-name CDATA #IMPLIED
+>
+
 
 <!-- 
     ======================================================
