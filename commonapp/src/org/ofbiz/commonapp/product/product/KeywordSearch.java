@@ -1,55 +1,24 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.11  2002/01/30 06:11:25  jonesde
- * Formatting changes only, in preparation for other changes
  *
- * Revision 1.10  2001/12/21 04:23:10  jonesde
- * A few more changes to get XA with tyrex working
+ *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * Revision 1.9  2001/10/19 17:11:45  jonesde
- * Added search in a category
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
  *
- * Revision 1.8  2001/10/19 00:29:43  jonesde
- * Added keyword search to catalog manager; changed product keywords to not have group any more, will use categories to limit searches
- *
- * Revision 1.7  2001/10/14 09:32:24  jonesde
- * Finished pass of renaming entities and fields to eliminate reserved word collisions
- *
- * Revision 1.6  2001/09/28 21:51:21  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.5  2001/09/26 05:08:43  jonesde
- * Fixed keyword stuff to work minimally with group name
- *
- * Revision 1.4  2001/09/19 08:35:19  jonesde
- * Initial checkin of refactored entity engine.
- *
- * Revision 1.3  2001/09/11 09:41:29  jonesde
- * Cleaned up induceKeywords function, removed unneeded helper parameter.
- *
- * Revision 1.2  2001/09/11 00:00:08  jonesde
- * Removed unnecessary throws statement.
- *
- * Revision 1.1  2001/09/10 23:38:10  jonesde
- * Moved to commonapp
- *
- *
- * Revision 1.5  2001/09/05 00:30:15  jonesde
- * Initial keyword search implementation in place.
- *
- * Revision 1.4  2001/09/04 19:48:32  jonesde
- * Added support for a '?' single char wildcard to accompany the '*' wildcard.
- *
- * Revision 1.3  2001/09/04 19:40:52  jonesde
- * Cleaned up a bit.
- *
- * Revision 1.2  2001/09/04 19:27:51  jonesde
- * Fixed small problem with '_' wild cards.
- *
- * Revision 1.1  2001/09/04 19:23:51  jonesde
- * Initial checkin of keyword search class.
- *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.ofbiz.commonapp.product.product;
 
@@ -60,27 +29,8 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> KeywordSearch.java
- * <p><b>Description:</b> Does a product search by keyword using the PRODUCT_KEYWORD table.
- *  Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
- * <p>Copyright (c) 2001 The Open For Business Project (www.ofbiz.org) and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *  Does a product search by keyword using the PRODUCT_KEYWORD table.
+ *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@version 1.0
@@ -139,20 +89,20 @@ public class KeywordSearch {
         }
         catch (GenericEntityException e) {
             Debug.logError(e);
+        } finally { 
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+            } catch (SQLException sqle) { }
+            try {
+                if (statement != null)
+                    statement.close();
+            } catch (SQLException sqle) { }
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) { }
         }
-        finally { try {
-                  if (resultSet != null)
-                          resultSet.close();
-              } catch (SQLException sqle) { }
-              try {
-                  if (statement != null)
-                          statement.close();
-              } catch (SQLException sqle) { }
-              try {
-                  if (connection != null)
-                          connection.close();
-              } catch (SQLException sqle) { }
-                }
         return null;
     }
 
@@ -282,4 +232,3 @@ public class KeywordSearch {
         }
     }
 }
-

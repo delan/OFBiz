@@ -1,25 +1,24 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.6  2002/02/02 12:01:47  jonesde
- * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
  *
- * Revision 1.5  2002/02/01 12:18:47  jonesde
- * Small speedup to not relead session item list caches on the first page for all loads
+ *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * Revision 1.4  2002/01/30 06:11:25  jonesde
- * Formatting changes only, in preparation for other changes
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
  *
- * Revision 1.3  2001/10/26 05:04:47  jonesde
- * Added filter by date so that only ProductAssoc entities within date range will be shown
- *
- * Revision 1.2  2001/10/19 17:11:45  jonesde
- * Added search in a category
- *
- * Revision 1.1  2001/10/05 02:32:39  jonesde
- * Refactored CatalogHelper: split into CatalogWorker and in commonapp CategoryWorker and ProductWorker
- *
- *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.commonapp.product.product;
@@ -33,26 +32,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 
 /**
- * <p><b>Title:</b> ProductWorker.java
- * <p><b>Description:</b> Helper class to reduce code in JSPs.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Product Worker class to reduce code in JSPs.
  *
  * @author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
@@ -124,8 +104,9 @@ public class ProductWorker {
             viewSize = 10;
         }
 
+        if (categoryId == null) categoryId = "";
         String keywordString = pageContext.getRequest().getParameter("SEARCH_STRING");
-        String curFindString = "KeywordSearch:" + keywordString;
+        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId;
 
         ArrayList productIds = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
