@@ -45,7 +45,7 @@ public class GenericHelperDAO implements GenericHelper {
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
-  public GenericValue create(GenericValue value) {
+  public GenericValue create(GenericValue value) throws GenericEntityException {
     if(value == null) { return null; }
     if(!genericDAO.insert(value)) return null;
     return value;
@@ -54,7 +54,7 @@ public class GenericHelperDAO implements GenericHelper {
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
-  public GenericValue create(GenericPK primaryKey) {
+  public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
     if(primaryKey == null) { return null; }
     GenericValue genericValue = new GenericValue(primaryKey);
     if(!genericDAO.insert(genericValue)) return null;
@@ -65,7 +65,7 @@ public class GenericHelperDAO implements GenericHelper {
    *@param primaryKey The primary key to find by.
    *@return The GenericValue corresponding to the primaryKey
    */
-  public GenericValue findByPrimaryKey(GenericPK primaryKey) {
+  public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
     if(primaryKey == null) { return null; }
     GenericValue genericValue = new GenericValue(primaryKey);
     if(!genericDAO.select(genericValue)) return null;
@@ -75,7 +75,7 @@ public class GenericHelperDAO implements GenericHelper {
   /** Remove a Generic Entity corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
-  public void removeByPrimaryKey(GenericPK primaryKey) {
+  public void removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
     if(primaryKey == null) return;
     Debug.logInfo("Removing GenericPK: " + primaryKey.toString());
     try { genericDAO.delete(primaryKey); }
@@ -88,7 +88,7 @@ public class GenericHelperDAO implements GenericHelper {
    *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
    *@return Collection of GenericValue instances that match the query
    */
-  public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) {
+  public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
     return genericDAO.selectByAnd(modelEntity, fields, orderBy);
   }
   
@@ -97,7 +97,7 @@ public class GenericHelperDAO implements GenericHelper {
    *@param fields The fields of the named entity to query by with their corresponging values
    *@return Collection of GenericValue instances that match the query
    */
-  public void removeByAnd(ModelEntity modelEntity, Map fields) {
+  public void removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
     if(modelEntity == null || fields == null) { return; }
     Iterator iterator = UtilMisc.toIterator(findByAnd(modelEntity, fields, null));
     
@@ -112,8 +112,17 @@ public class GenericHelperDAO implements GenericHelper {
   /** Store the Entity from the GenericValue to the persistent store
    *@param value GenericValue instance containing the entity
    */
-  public void store(GenericValue value) {
+  public void store(GenericValue value) throws GenericEntityException {
     if(value == null) { return; }
     if(!genericDAO.update(value)) Debug.logError("[GenericHelperDAO.store] Could not store GenericValue: " + value.toString());
+  }
+
+  /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
+   *@param modelEntities Map of entityName names and ModelEntity values
+   *@param messages Collection to put any result messages in
+   *@param addMissing Flag indicating whether or not to add missing entities and fields on the server
+   */
+  public void checkDataSource(Map modelEntities, Collection messages, boolean addMissing) throws GenericEntityException {
+    genericDAO.checkDb(modelEntities, messages, addMissing);
   }
 }

@@ -61,13 +61,6 @@ public class GenericDAO
   { 
     this.helperName = helperName;
     modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
-/*    
-    if(UtilProperties.propertyValueEqualsIgnoreCase("servers", helperName + ".database.check.on.start", "true"))
-    {
-      boolean addMissing = UtilProperties.propertyValueEqualsIgnoreCase("servers", helperName + ".database.add.missing.on.start", "true");
-      Debug.logInfo("[GenericDAO.constructor] Doing database check as requested in servers.properties with addMissing=" + addMissing);
-      checkDb(null, addMissing);
-    }*/
   }
     
   public Connection getConnection() throws SQLException { return ConnectionFactory.getConnection(helperName); }
@@ -754,7 +747,7 @@ public class GenericDAO
 /* ====================================================================== */
 /* ====================================================================== */
 
-  public void checkDb(Collection messages, boolean addMissing, Map modelEntities)
+  public void checkDb(Map modelEntities, Collection messages, boolean addMissing)
   {
     UtilTimer timer = new UtilTimer();
     timer.timerString("[GenericDAO.checkDb] Start - Before Get Table List");

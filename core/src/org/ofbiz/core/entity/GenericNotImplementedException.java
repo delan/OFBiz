@@ -1,9 +1,6 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2001/09/19 08:32:01  jonesde
- * Initial checkin of refactored entity engine.
- *
  *
  */
 
@@ -12,7 +9,7 @@ package org.ofbiz.core.entity;
 import java.io.*;
 
 /**
- * <p><b>Title:</b> GenericEntityException.java
+ * <p><b>Title:</b> NotImplementedException.java
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -36,42 +33,16 @@ import java.io.*;
  *@created Sep 17, 2001
  *@version 1.0
  */
-public class GenericEntityException extends Exception {
-  Throwable nested = null;
-  
-  public GenericEntityException() {
+public class GenericNotImplementedException extends GenericEntityException {
+  public GenericNotImplementedException() {
     super();
   }
 
-  public GenericEntityException(String str) {
+  public GenericNotImplementedException(String str) {
     super(str);
   }
 
-  public GenericEntityException(String str, Throwable nested) {
-    super(str);
-    this.nested = nested;
-  }
-  
-  /** Returns the detail message, including the message from the nested exception if there is one. */
-  public String getMessage() {
-    return this.getMessage() + " (" + nested.getMessage() + ")";
-  }
-  
-  /** Prints the composite message to System.err. */
-  public void printStackTrace() {
-    this.printStackTrace();
-    nested.printStackTrace();
-  }
-
-  /** Prints the composite message and the embedded stack trace to the specified stream ps. */
-  public void printStackTrace(PrintStream ps) {
-    this.printStackTrace(ps);
-    nested.printStackTrace(ps);
-  }
-
-  /** Prints the composite message and the embedded stack trace to the specified print writer pw. */
-  public void printStackTrace(PrintWriter pw) {
-    this.printStackTrace(pw);
-    nested.printStackTrace(pw);
+  public GenericNotImplementedException(String str, Throwable nested) {
+    super(str, nested);
   }
 }

@@ -40,22 +40,22 @@ public interface GenericHelper
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
-  public GenericValue create(GenericValue value);
+  public GenericValue create(GenericValue value) throws GenericEntityException;
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
-  public GenericValue create(GenericPK primaryKey);
+  public GenericValue create(GenericPK primaryKey) throws GenericEntityException;
 
   /** Find a Generic Entity by its Primary Key
    *@param primaryKey The primary key to find by.
    *@return The GenericValue corresponding to the primaryKey
    */
-  public GenericValue findByPrimaryKey(GenericPK primaryKey);
+  public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException;
 
   /** Remove a Generic Entity corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
-  public void removeByPrimaryKey(GenericPK primaryKey);
+  public void removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException;
 
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
@@ -64,17 +64,24 @@ public interface GenericHelper
    *       optionall add a " ASC" for ascending or " DESC" for descending
    *@return Collection of GenericValue instances that match the query
    */
-  public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy);
+  public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
   
   /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
    *@return Collection of GenericValue instances that match the query
    */
-  public void removeByAnd(ModelEntity modelEntity, Map fields);
+  public void removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException;
   
   /** Store the Entity from the GenericValue to the persistent store
    *@param value GenericValue instance containing the entity
    */
-  public void store(GenericValue value);
+  public void store(GenericValue value) throws GenericEntityException;
+
+  /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
+   *@param modelEntities Map of entityName names and ModelEntity values
+   *@param messages Collection to put any result messages in
+   *@param addMissing Flag indicating whether or not to add missing entities and fields on the server
+   */
+  public void checkDataSource(Map modelEntities, Collection messages, boolean addMissing) throws GenericEntityException;
 }

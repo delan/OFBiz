@@ -68,6 +68,34 @@ public class GenericDelegator {
     primaryKeyCache = new UtilCache("FindByPrimaryKey-" + delegatorName);
     allCache = new UtilCache("FindAll-" + delegatorName);
     andCache = new UtilCache("FindByAnd-" + delegatorName);
+    
+    //initialize helpers by group
+    Iterator groups = UtilMisc.toIterator(modelGroupReader.getGroupNames());
+    while(groups != null && groups.hasNext()) {
+      String groupName = (String)groups.next();
+      String helperName = UtilProperties.getPropertyValue("servers", delegatorName + ".group." + groupName);
+      Debug.logInfo("[GenericDelegator.GenericDelegator] Delegator \"" + delegatorName + "\" initializing helper \"" + helperName + "\" for entity group \"" + groupName + "\".");
+      TreeSet helpersDone = new TreeSet();
+      if(helperName != null && helperName.length() > 0) {
+        //make sure each helper is only loaded once
+        if(helpersDone.contains(helperName)) {
+          Debug.logInfo("[GenericDelegator.GenericDelegator] Helper \"" + helperName + "\" alread initialized, not re-initializing.");
+          continue;
+        }
+        helpersDone.add(helperName);
+        //pre-load field type defs
+        ModelFieldTypeReader.getModelFieldTypeReader(helperName);
+        //get the helper and if configured, do the datasource check
+        GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+        if(UtilProperties.propertyValueEqualsIgnoreCase("servers", helperName + ".datasource.check.on.start", "true"))
+        {
+          boolean addMissing = UtilProperties.propertyValueEqualsIgnoreCase("servers", helperName + ".datasource.add.missing.on.start", "true");
+          Debug.logInfo("[GenericDelegator.GenericDelegator] Doing database check as requested in servers.properties with addMissing=" + addMissing);
+          try { helper.checkDataSource(this.getModelEntityMapByGroup(groupName), null, addMissing); }
+          catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); }
+        }
+      }
+    }
   }
   
   /** Gets the name of the server configuration that corresponds to this delegator
@@ -90,22 +118,79 @@ public class GenericDelegator {
    *@return ModelEntity that corresponds to this delegator and the specified entityName
    */
   public ModelEntity getModelEntity(String entityName) { return modelReader.getModelEntity(entityName); }
+
+  /** Gets a collection of entity models that are in a group corresponding to the specified group name
+   *@param groupName The name of the group
+   *@return Collection of ModelEntity instances
+   */
+  public Collection getModelEntitiesByGroup(String groupName) {
+    Iterator enames = UtilMisc.toIterator(modelGroupReader.getEntityNamesByGroup(groupName));
+    Collection entities = new LinkedList();
+    if(enames == null || !enames.hasNext()) return entities;
+    while(enames.hasNext()) {
+      String ename = (String)enames.next();
+      ModelEntity entity = this.getModelEntity(ename);
+      if(entity != null) entities.add(entity);
+    }
+    return entities;
+  }
   
+  /** Gets a Map of entity name & entity model pairs that are in the named group
+   *@param groupName The name of the group
+   *@return Map of entityName String keys and ModelEntity instance values
+   */
+  public Map getModelEntityMapByGroup(String groupName) {
+    Iterator enames = UtilMisc.toIterator(modelGroupReader.getEntityNamesByGroup(groupName));
+    Map entities = new HashMap();
+    if(enames == null || !enames.hasNext()) return entities;
+    while(enames.hasNext()) {
+      String ename = (String)enames.next();
+      ModelEntity entity = this.getModelEntity(ename);
+      if(entity != null) entities.put(entity.entityName, entity);
+    }
+    return entities;
+  }
+  
+  /** Gets the helper name that corresponds to this delegator and the specified entityName
+   *@param entityName The name of the entity to get the helper for
+   *@return String with the helper name that corresponds to this delegator and the specified entityName
+   */
   public String getEntityHelperName(String entityName) {
     String groupName = getModelGroupReader().getEntityGroupName(entityName);
     return UtilProperties.getPropertyValue("servers", delegatorName + ".group." + groupName);
   }
   
+  /** Gets the helper name that corresponds to this delegator and the specified entity
+   *@param entity The entity to get the helper for
+   *@return String with the helper name that corresponds to this delegator and the specified entity
+   */
   public String getEntityHelperName(ModelEntity entity) {
     return getEntityHelperName(entity.entityName);
   }
   
-  public GenericHelper getEntityHelper(ModelEntity entity) throws GenericEntityException {
-    String helperName = getEntityHelperName(entity);
+  /** Gets the an instance of helper that corresponds to this delegator and the specified entityName
+   *@param entityName The name of the entity to get the helper for
+   *@return GenericHelper that corresponds to this delegator and the specified entityName
+   */
+  public GenericHelper getEntityHelper(String entityName) throws GenericEntityException {
+    String helperName = getEntityHelperName(entityName);
     if(helperName != null && helperName.length() > 0) return GenericHelperFactory.getHelper(helperName);
-    else throw new GenericEntityException("Helper name not found for entity " + entity.entityName);
+    else throw new GenericEntityException("Helper name not found for entity " + entityName);
   }
 
+  /** Gets the an instance of helper that corresponds to this delegator and the specified entity
+   *@param entity The entity to get the helper for
+   *@return GenericHelper that corresponds to this delegator and the specified entity
+   */
+  public GenericHelper getEntityHelper(ModelEntity entity) throws GenericEntityException {
+    return getEntityHelper(entity.entityName);
+  }
+
+  /** Gets a field type instance by name from the helper that corresponds to the specified entity
+   *@param entity The entity
+   *@param type The name of the type
+   *@return ModelFieldType instance for the named type from the helper that corresponds to the specified entity
+   */
   public ModelFieldType getEntityFieldType(ModelEntity entity, String type) throws GenericEntityException {
     String helperName = getEntityHelperName(entity);
     ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
@@ -113,6 +198,10 @@ public class GenericDelegator {
     return modelFieldTypeReader.getModelFieldType(type);
   }
   
+  /** Gets field type names from the helper that corresponds to the specified entity
+   *@param entity The entity
+   *@return Collection of field type names from the helper that corresponds to the specified entity
+   */
   public Collection getEntityFieldTypeNames(ModelEntity entity) throws GenericEntityException {
     String helperName = getEntityHelperName(entity);
     ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);

@@ -149,6 +149,23 @@ public class ModelGroupReader {
     return new ArrayList(groupNames);
   }
   
+  /** Creates a Collection with names of all of the entities for a given group
+   * @return A Collection of entityName Strings
+   */
+  public Collection getEntityNamesByGroup(String groupName) {
+    Map gc = getGroupCache();
+    Collection enames = new LinkedList();
+    if(groupName == null || groupName.length() <= 0) return enames;
+    if(gc == null || gc.size() < 0) return enames;
+    Set gcEntries = gc.entrySet();
+    Iterator gcIter = gcEntries.iterator();
+    while(gcIter.hasNext()) {
+      Map.Entry entry = (Map.Entry)gcIter.next();
+      if(groupName.equals(entry.getValue())) enames.add(entry.getKey());
+    }
+    return enames;
+  }
+  
   String checkNull(String string) {
     if(string != null) return string;
     else return "";
