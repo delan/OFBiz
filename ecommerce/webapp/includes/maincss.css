@@ -5,6 +5,7 @@
   .head1 {font-family: Helvetica,sans-serif; margin: 0; font-size: 15pt; font-weight: bold; COLOR: #3A4C37;}
   .head2 {font-family: Helvetica,sans-serif; margin: 0; font-size: 12pt; font-weight: bold; COLOR: #000000;}
   .head3 {font-family: Helvetica,sans-serif; margin: 0; font-size: 10pt; font-weight: bold; COLOR: #000000;}
+  .info {font-family: Helvetica,sans-serif; margin: 0; font-size: x-small; font-style: normal; COLOR: #000000;}
   .tabletext {FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
   
   .boxhead {font-family: Helvetica,sans-serif; margin: 0; font-size: 12pt; font-weight: bold; COLOR: #FFFFFF; }
@@ -26,6 +27,7 @@
   a.offlnk:hover {COLOR: red;}
   .areaheader {FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT: bold; color: white; width: 100%; background-color: black; padding: 2;}
 
+  .edittable {  border-color: #000000 #000000 #003333; border-style: solid; border-top-width: thin; border-right-width: thin; border-bottom-width: thin; border-left-width: thin}
   .viewOneTR1 {background-color: #99CCFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
   .viewOneTR2 {background-color: #CCFFFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
   .viewManyHeaderTR {background-color: #99CCFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
@@ -41,7 +43,4 @@
  .headerCenter { PADDING-RIGHT:10px; PADDING-LEFT:10px; font-size: 10pt; font-weight: bold; COLOR: #000000; }
  .headerCompanyName { margin: 0; font-size: 24pt; font-weight: bold; color: white; white-space: nowrap; }
  .headerCompanySubtitle { margin: 0; font-size: 8pt; color: white; white-space: nowrap; }
-
- HR.sepbar { height: 1px; background-color: #999999; border-width: 0; }
-
 </style>
