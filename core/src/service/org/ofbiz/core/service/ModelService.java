@@ -401,8 +401,11 @@ public class ModelService {
                             key + " failed: " + e.toString(), module);
                         // let this go. service invokation will catch it
                     }
-                    if (value != null)
-                        target.put(key, value);
+                    // always put values in, even if they are null because 
+                    //there is a difference in most services between null 
+                    //(meaning null the stored value) and not specified 
+                    //(meaning leave whatever is already there)
+                    target.put(key, value);
                 }
             }
         }
