@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE site-conf PUBLIC "-//OFBiz//DTD Request Config//EN" "http://www.ofbiz.org/dtds/site-conf.dtd">
 
 <site-conf>
     <description>Order Manager Module Site Configuration File</description>

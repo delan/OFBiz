@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE site-conf PUBLIC "-//OFBiz//DTD Request Config//EN" "http://www.ofbiz.org/dtds/site-conf.dtd">
 
 <site-conf>
     <description>CommonApp Site Configuration File</description>
@@ -45,9 +46,15 @@
 
     <!-- Request Mappings -->
 	<request-map uri="SOAPService">
-	  <event type="soap"/>
-	  <response name="error" type="none"/>
-	  <response name="success" type="none"/>
+	    <event type="soap"/>
+	    <response name="error" type="none"/>
+	    <response name="success" type="none"/>
+	</request-map>
+	
+	<request-map uri="TestService">
+	    <event type="service" invoke="testScv" />
+	    <response name="error" type="view" value="error"/>
+	    <response name="success" type="view" value="error"/>
 	</request-map>
 	
     <request-map uri="view">
@@ -63,39 +70,48 @@
     </request-map>
 
     <request-map uri="main">
-    	<security https="false" auth="false"/><response name="success" type="view" value="main"/>
+    	<security https="false" auth="false"/>
+    	<response name="success" type="view" value="main"/>
     </request-map>
     
     <request-map uri="sitemap">
-    	<security https="false" auth="false"/><response name="success" type="view" value="sitemap"/>
+    	<security https="false" auth="false"/>
+    	<response name="success" type="view" value="sitemap"/>
     </request-map>
     
     <request-map uri="install">
-    	<security https="false" auth="false"/><response name="success" type="view" value="install"/>
+    	<security https="false" auth="false"/>
+    	<response name="success" type="view" value="install"/>
     </request-map>
     
     <request-map uri="entitymaint">
-    	<security https="true" auth="true"/><response name="success" type="view" value="entitymaint"/>
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="entitymaint"/>
     </request-map>
 
     <request-map uri="entityref">
-    	<security https="true" auth="true"/><response name="success" type="view" value="entityref"/>
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="entityref"/>
     </request-map>
 
     <request-map uri="xmldsdump">
-    	<security https="true" auth="true"/><response name="success" type="view" value="xmldsdump"/>
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="xmldsdump"/>
     </request-map>
 
     <request-map uri="xmldsimport">
-    	<security https="true" auth="true"/><response name="success" type="view" value="xmldsimport"/>
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="xmldsimport"/>
     </request-map>
 
     <request-map uri="FindGeneric">
-    	<security https="true" auth="true"/><response name="success" type="view" value="FindGeneric"/>
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindGeneric"/>
     </request-map>
     
     <request-map uri="ViewGeneric">
-    	<security https="true" auth="true"/><response name="success" type="view" value="ViewGeneric"/>
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="ViewGeneric"/>
     </request-map>
     
     <request-map uri="UpdateGeneric">
@@ -150,15 +166,18 @@
     </request-map>
 
     <request-map uri="viewdatafile">
-    	<security https="true" auth="true"/><response name="success" type="view" value="viewdatafile"/>
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="viewdatafile"/>
     </request-map>
 
     <request-map uri="logikus">
-    	<security https="true" auth="true"/><response name="success" type="view" value="logikus"/>
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="logikus"/>
     </request-map>
 
     <request-map uri="readxpdl">
-    	<security https="true" auth="true"/><response name="success" type="view" value="readxpdl"/>
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="readxpdl"/>
     </request-map>
 
     <!-- end of request mappings -->
