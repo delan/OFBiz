@@ -20,37 +20,23 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
-import java.util.*;
-import org.ofbiz.entity.*;
-import org.ofbiz.content.webapp.control.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.security.*;
+import org.ofbiz.service.*;
+import org.ofbiz.entity.model.*;
+import org.ofbiz.content.widget.html.*;
+import org.ofbiz.content.widget.form.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 
+
 userLogin = session.getAttribute("userLogin");
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
-
-// Set the menuHistory object with the info relating to this page
-// This counts on the convention of the page name being the same as the request id base name
-HashMap menuHistory	= session.getAttribute("menuHistory");
-if(menuHistory == null){
-	menuHistory	= new HashMap();
-	session.setAttribute("menuHistory", menuHistory);
-}
-String pageName		= page.getPageName();
-
-
-servletPath = request.getServletPath();
-queryString = request.getQueryString();
-if (queryString != null) queryString = "?" + queryString;
-else queryString = "";
-String thisPath		= request.getRequestURI();
-String menuPath		= page.getProperty("headerItem");
-menuHistory.put(menuPath, thisPath + queryString);
 
 
 person = session.getAttribute("_PERSON_");

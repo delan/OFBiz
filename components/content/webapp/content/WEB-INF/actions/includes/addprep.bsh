@@ -1,5 +1,5 @@
 /*
- * $Id: addprep.bsh,v 1.3 2003/09/14 05:30:33 jonesde Exp $
+ * $Id: addprep.bsh,v 1.4 2003/11/04 23:58:06 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,26 +33,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.ofbiz.content.widget.html.*;
-import org.ofbiz.content.widget.form.*;
-
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
+import org.ofbiz.content.widget.html.*;
+import org.ofbiz.content.widget.form.*;
+
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
 
  */
 
-    
 security			= request.getAttribute("security");
 // Get permission from pagedef config file
 String permission		= page.getProperty("permission");
@@ -61,18 +60,81 @@ String singleFormName		= page.getProperty("singleFormName");
 String entityName		= page.getProperty("entityName");
 String priKeyName		= page.getProperty("priKeyName");
 String defaultMapName		= page.getProperty("defaultMapName");
-if( defaultMapName == null) defaultMapName	= "valueObject";
-if(security.hasEntityPermission(permission, "_VIEW", session)) {
-    	context.put("hasPermission", Boolean.TRUE);
-} else {
-    	context.put("hasPermission", Boolean.FALSE);
+if( defaultMapName == null) defaultMapName	= "currentValue";
+String entityOperation		= page.getProperty("entityOperation");
+if( entityOperation == null) entityOperation	= "_ADMIN";
+
+dispatcher      = (LocalDispatcher)request.getAttribute("dispatcher");
+delegator = (GenericDelegator) request.getAttribute("delegator");
+
+mapIn = new HashMap();
+userLogin = session.getAttribute("userLogin");
+mapIn.put("userLogin", userLogin);
+mapIn.put("entityOperation", entityOperation);
+
+// Since we don't know the purpose for the Content to be entered, at least
+// check that the user has permission to enter some Content
+lst = delegator.findAllCache("ContentPurposeType");
+iter = lst.iterator();
+contentPurposeList = new ArrayList();
+while (iter.hasNext()) {
+    purpose = (GenericValue)iter.next();
+    contentPurposeTypeId = (String)purpose.get( "contentPurposeTypeId");
+    contentPurposeList.add(contentPurposeTypeId);
 }
+mapIn.put("contentPurposeList", contentPurposeList);
+//contentPropertiesUrl = application.getResource("content.properties");
+
+ownerContentId = UtilProperties.getPropertyValue("content.properties", "owner.content.id");
+org.ofbiz.base.util.Debug.logInfo("ownerContentId:" + ownerContentId, null);
+genericValue = delegator.makeValue(entityName, null);
+genericValue.put("ownerContentId", ownerContentId);
+mapIn.put("currentContent", genericValue);
+
+List targetOperationList = UtilMisc.toList("CREATE_CONTENT");
+mapIn.put("targetOperationList", targetOperationList );
+
+org.ofbiz.base.util.Debug.logInfo("before runSync, mapIn:" + mapIn, null);
+result = dispatcher.runSync("checkContentPermission", mapIn);
+org.ofbiz.base.util.Debug.logInfo("result:" + result, null);
+permissionStatus = result.get("permissionStatus");
+org.ofbiz.base.util.Debug.logInfo("permissionStatus:" + permissionStatus, null);
+if (permissionStatus != null && permissionStatus.equals("granted")) {
+        context.put("hasPermission", Boolean.TRUE);
+} else {
+        context.put("hasPermission", Boolean.FALSE);
+}
+    
 
 
 HtmlFormWrapper addWrapper = new HtmlFormWrapper(formDefFile, 
 				singleFormName, request, response);
 
-context.put("editWrapper", addWrapper);
+addWrapper.putInContext(defaultMapName, genericValue);
+// The idea here is that by setting the map name here, dependency on the 
+        // widget-form config file could be eliminated.
+ModelForm modelForm	= addWrapper.getModelForm();
+modelForm.setDefaultMapName(defaultMapName);
 
-return "success";
+roles = result.get("roleTypeList");
+allowedPurposes = new ArrayList();
+pIter = contentPurposeList.iterator();
+while ( pIter.hasNext() ) {
+    purpose = (String)pIter.next();
+    purposeList = new ArrayList();
+    purposeList.add(purpose);
+    mapIn.put("contentPurposeList", purposeList);
+    resultPurpose = dispatcher.runSync("checkContentPermission", mapIn);
+    org.ofbiz.base.util.Debug.logInfo("resultPurpose:" + resultPurpose, null);
+    permissionStatus = resultPurpose.get("permissionStatus");
+    org.ofbiz.base.util.Debug.logInfo("permissionStatus:" + permissionStatus, null);
+    if (permissionStatus != null && permissionStatus.equals("granted")) {
+        purposeValue = delegator.findByPrimaryKey("ContentPurposeType", 
+                                   UtilMisc.toMap("contentPurposeTypeId", purpose));
+        allowedPurposes.add(purposeValue);
+    }
+}
+
+addWrapper.putInContext("allowedPurposes", allowedPurposes);
+context.put("editWrapper", addWrapper);
 
