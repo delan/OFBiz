@@ -4,6 +4,9 @@
 
 package org.ofbiz.core.workflow;
 
+import java.util.*;
+import org.ofbiz.core.workflow.impl.*;
+
 /**
  * <p><b>Title:</b> WfFactory.java
  * <p><b>Description:</b> Workflow Factory Class
@@ -39,8 +42,8 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfActivify Interface
    */
-  public static WfActivity newWfActivity() throws WfException {
-      return null;
+  public static WfActivity newWfActivity(String name, String description) throws WfException {
+      return new WfActivityImpl(name,description);      
   }
   
   
@@ -48,8 +51,8 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfAssignment Interface
    */
-  public static WfAssignment newWfAssignment() throws WfException {
-      return null;
+  public static WfAssignment newWfAssignment(WfActivity activity, WfResource resource) throws WfException {
+      return new WfAssignmentImpl(activity,resource);
   }
   
   
@@ -57,8 +60,8 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfProcess Interface.
    */
-  public static WfProcess newWfProcess() throws WfException {
-      return null;
+  public static WfProcess newWfProcess(String name, String description) throws WfException {
+      return new WfProcessImpl(name,description);      
   }
   
   
@@ -82,7 +85,7 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfResource Interface.
    */
-  public static WfResource newWfResource() throws WfException {
-      return null;
+  public static WfResource newWfResource(String name, String key, List items) throws WfException {
+      return new WfResourceImpl(name,key,items);
   }
 }

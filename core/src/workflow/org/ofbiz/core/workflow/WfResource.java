@@ -36,51 +36,51 @@ import java.util.List;
  */
 
 public interface WfResource  {
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public int howManyWorkItem() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Iterator getIteratorWorkItem() throws WfException;
-  
-  /**
-   * @param maxNumber
-   * @throws WfException
-   * @return List of WfAssignment objects.
-   */
-  public List getSequenceWorkItem(int maxNumber) throws WfException;
-  
-  /**
-   * @param member
-   * @throws WfException
-   * @return
-   */
-  public boolean isMemberOfWorkItems(WfAssignment member) throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String resourceKey() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String resourceName() throws WfException;
-  
-  /**
-   * @param fromAssigment
-   * @param releaseInfo
-   * @throws WfException
-   * @throws NotAssigned
-   */
-  public void release(WfAssignment fromAssigment, String releaseInfo) throws WfException, NotAssigned;
-  
+    
+    /**
+     * @throws WfException
+     * @return
+     */
+    public int howManyWorkItem() throws WfException;
+    
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Iterator getIteratorWorkItem() throws WfException;
+    
+    /**
+     * @param maxNumber
+     * @throws WfException
+     * @return List of WfAssignment objects.
+     */
+    public List getSequenceWorkItem(int maxNumber) throws WfException;
+    
+    /**
+     * @param member
+     * @throws WfException
+     * @return
+     */
+    public boolean isMemberOfWorkItems(WfAssignment member) throws WfException;
+    
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String resourceKey() throws WfException;
+    
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String resourceName() throws WfException;
+    
+    /**
+     * @param fromAssigment
+     * @param releaseInfo
+     * @throws WfException
+     * @throws NotAssigned
+     */
+    public void release(WfAssignment fromAssignment, String releaseInfo) throws WfException, NotAssigned;
+    
 } // interface WfResourceOperations

@@ -35,7 +35,7 @@ import org.ofbiz.core.workflow.*;
  *@version    1.0
  */
 
-public class WfResource  {
+public class WfResourceImpl implements WfResource {
     
     protected String resourceName;
     protected String resourceKey;
@@ -46,7 +46,7 @@ public class WfResource  {
      * @param resourceKey Uniquely identifies the resource
      * @param workItems Assignments associated with this resource
      */
-    public WfResource(String resourceName, String resourceKey, List workItems) {
+    public WfResourceImpl(String resourceName, String resourceKey, List workItems) {
         this.resourceName = resourceName;
         this.resourceKey = resourceKey;
         this.workItems = workItems;
@@ -85,9 +85,7 @@ public class WfResource  {
      * @return true if assignment is part of the work list
      */
     public boolean isMemberOfWorkItems(WfAssignment member) throws WfException {
-        if ( workItems.contains(member) )
-            return true;
-        return false;
+        return workItems.contains(member);            
     }
     
     /** Gets the resource key.
@@ -112,10 +110,10 @@ public class WfResource  {
      * @throws WfException
      * @throws NotAssigned
      */
-    public void release(WfAssignment fromAssigment, String releaseInfo) throws WfException, NotAssigned {
-        if ( !workList.contains(fromAssignment) )
+    public void release(WfAssignment fromAssignment, String releaseInfo) throws WfException, NotAssigned {
+        if ( !workItems.contains(fromAssignment) )
             throw new NotAssigned();
-        workList.remove(fromAssignment);
+        workItems.remove(fromAssignment);
         // log the transaction
     }
 }
