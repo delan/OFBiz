@@ -57,17 +57,23 @@ public class IfCompareField extends MethodOperation {
         super(element, simpleMethod);
         this.mapName = element.getAttribute("map-name");
         this.fieldName = element.getAttribute("field-name");
+        
         this.toMapName = element.getAttribute("to-map-name");
         this.toFieldName = element.getAttribute("to-field-name");
+        // set fieldName to their defualt value of envName if empty
+        if (this.toFieldName == null || this.toFieldName.length() == 0) {
+            this.toFieldName = this.fieldName;
+        }
+        // do NOT default the to-map-name to the map-name because that
+        //would make it impossible to compare from a map field to an 
+        //environment field
 
         this.operator = element.getAttribute("operator");
         this.type = element.getAttribute("type");
         this.format = element.getAttribute("format");
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
-
         Element elseElement = UtilXml.firstChildElement(element, "else");
-
         if (elseElement != null) {
             elseSubOps = new LinkedList();
             SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);

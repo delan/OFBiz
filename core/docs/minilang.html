@@ -2065,8 +2065,9 @@ operations, including the conditional/if operations.</p>
 <tr>
     <td>to-map-name</td><td>N</td>
     <td>The name of the method environment field that contains the map that the 
-    field to be compared will come from. If left empty will default to the map-name, 
-    or the method environment if map-name is also unspecified.</td>
+    field to be compared will come from. If left empty will default to the method 
+    environment. It does not default to the map-name because that would make it
+    impossible to compare a map field to an environment field.</td>
 </tr>
 <tr>
     <td>to-field-name</td><td>N</td>
