@@ -162,6 +162,10 @@
          <td >
             <a class="buttontext" href="javascript:call_fieldlookup4('${rootForumId}', '${context.content.contentId}')">Add Child Forum</a>
          </td >
+         <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
+         <td >
+            <a class="buttontext" href="<@ofbizUrl>/removeSite?rootForumId=${rootForumId}&contentId=${context.content.contentId}&contentIdTo=${forumId}&contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
+         </td >
        </tr>
        <#assign rowCount = rowCount + 1 />
        <@showSites forumId=context.subContentId indentIndex=(indentIndex + 1)/>
