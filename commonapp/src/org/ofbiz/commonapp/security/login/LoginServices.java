@@ -38,7 +38,7 @@ import org.ofbiz.core.security.*;
  *@version    1.0
  */
 public class LoginServices {
-    
+
     /** Login service to authenticate username and password
      * @return Map of results including (userLogin) GenericValue object
      */
@@ -46,11 +46,11 @@ public class LoginServices {
         Map result = new HashMap();
         List errors = new ArrayList();
         GenericDelegator delegator = ctx.getDelegator();
-        
+
         String username = (String) context.get("login.username");
         String password = (String) context.get("login.password");
         GenericValue value = null;
-        
+
         try {
             value = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
         } catch ( GenericEntityException e ) {
@@ -75,7 +75,7 @@ public class LoginServices {
         }
         return result;
     }
-    
+
     /** Creates a UserLogin
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -88,12 +88,14 @@ public class LoginServices {
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
         List errorMessageList = new LinkedList();
 
+        boolean adminUser = false;
+
         String userLoginId = (String) context.get("userLoginId");
         String partyId = (String) context.get("partyId");
         String currentPassword = (String) context.get("currentPassword");
         String currentPasswordVerify = (String) context.get("currentPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
-        
+
         //security: don't create a user login if the specified partyId (if not empty) already exists
         // unless the logged in user has permission to do so (same partyId or PARTYMGR_CREATE)
         if (partyId != null || partyId.length() > 0) {
@@ -103,13 +105,15 @@ public class LoginServices {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString());
             }
-            
+
             if (party != null) {
                 if (loggedInUserLogin != null) {
                     //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
                     if (!partyId.equals(loggedInUserLogin.getString("partyId"))) {
                         if (!security.hasEntityPermission("PARTYMGR", "_CREATE", loggedInUserLogin)) {
                             errorMessageList.add("Party with specified party ID exists and you do not have permission to create a user login with this party ID");
+                        } else {
+                            adminUser = true;
                         }
                     }
                 } else {
@@ -117,15 +121,15 @@ public class LoginServices {
                 }
             }
         }
-        
-        checkNewPassword(null, null, currentPassword, currentPasswordVerify, passwordHint, errorMessageList);
+
+        checkNewPassword(null, null, currentPassword, currentPasswordVerify, passwordHint, errorMessageList, adminUser);
 
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         userLoginToCreate.set("passwordHint", passwordHint);
         userLoginToCreate.set("partyId", partyId);
         userLoginToCreate.set("currentPassword", currentPassword);
-        
-        try { 
+
+        try {
             if (delegator.findByPrimaryKey(userLoginToCreate.getPrimaryKey()) != null) {
                 errorMessageList.add("Could not create login user: user with ID \"" + userLoginId + "\" already exists");
             }
@@ -133,7 +137,7 @@ public class LoginServices {
             Debug.logWarning(e);
             errorMessageList.add("Could not create login user (read failure): " + e.getMessage());
         }
-        
+
         if (errorMessageList.size() > 0) {
             return ServiceUtil.returnError(errorMessageList);
         }
@@ -144,7 +148,7 @@ public class LoginServices {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could create login user (write failure): " + e.getMessage());
         }
-        
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
@@ -166,7 +170,7 @@ public class LoginServices {
         if (userLoginId == null || userLoginId.length() == 0) {
             userLoginId = loggedInUserLogin.getString("userLoginId");
         }
-        
+
         //<b>security check</b>: userLogin userLoginId must equal userLoginId, or must have PARTYMGR_UPDATE permission
         if (!userLoginId.equals(loggedInUserLogin.getString("userLoginId"))) {
             if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin)) {
@@ -175,14 +179,14 @@ public class LoginServices {
                 adminUser = true;
             }
         }
-        
+
         GenericValue userLoginToUpdate = null;
         try {
             userLoginToUpdate = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError("Could not change password (read failure): " + e.getMessage());
         }
-        
+
         if (userLoginToUpdate == null) {
             return ServiceUtil.returnError("Could not change password, UserLogin with ID \"" + userLoginId + "\" does not exist");
         }
@@ -191,7 +195,7 @@ public class LoginServices {
         String newPassword = (String) context.get("newPassword");
         String newPasswordVerify = (String) context.get("newPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
-        
+
         List errorMessageList = new LinkedList();
         checkNewPassword(userLoginToUpdate, currentPassword, newPassword, newPasswordVerify, passwordHint, errorMessageList, adminUser);
         if (errorMessageList.size() > 0) {
@@ -200,21 +204,19 @@ public class LoginServices {
 
         userLoginToUpdate.set("currentPassword", newPassword);
         userLoginToUpdate.set("passwordHint", passwordHint);
-        
+
         try {
             userLoginToUpdate.store();
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError("Could not change password (write failure): " + e.getMessage());
         }
-        
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
-    
+
     public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List errorMessageList, boolean adminUser) {
-        if (userLogin == null)
-            errorMessageList.add("Invalid UserLogin Object.");
-        else if ((currentPassword == null && !adminUser) || (currentPassword != null && !currentPassword.equals(userLogin.getString("currentPassword"))))
+        if ((currentPassword == null && !adminUser) || (userLogin != null && currentPassword != null && !currentPassword.equals(userLogin.getString("currentPassword"))))
             errorMessageList.add("Old Password was not correct, please re-enter.");
 
         if (!UtilValidate.isNotEmpty(newPassword) || !UtilValidate.isNotEmpty(newPasswordVerify)) {
@@ -224,7 +226,7 @@ public class LoginServices {
         }
 
         int minPasswordLength = 0;
-        try { 
+        try {
             minPasswordLength = Integer.parseInt(UtilProperties.getPropertyValue("security", "password.length.min", "0"));
         } catch (NumberFormatException nfe) {
             minPasswordLength = 0;
@@ -242,4 +244,4 @@ public class LoginServices {
             }
         }
     }
-}    
+}
