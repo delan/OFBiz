@@ -423,7 +423,7 @@ public class UtilCache implements Serializable {
         while (it.hasNext()) {
             Object key = it.next();
             CacheLine line = getInternalNoCheck(key);
-            noteRemoval(key, line.getValue());
+            noteRemoval(key, line == null ? null : line.getValue());
         }
         cacheLineTable.clear();
         clearCounters();
