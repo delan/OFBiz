@@ -45,6 +45,7 @@ public class Calculate extends MethodOperation {
     public static final int TYPE_FLOAT = 2;
     public static final int TYPE_LONG = 3;
     public static final int TYPE_INTEGER = 4;
+    public static final int TYPE_STRING = 5;
 
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
@@ -90,6 +91,8 @@ public class Calculate extends MethodOperation {
             type = Calculate.TYPE_LONG;
         } else if ("Integer".equals(typeString)) {
             type = Calculate.TYPE_INTEGER;
+        } else if ("String".equals(typeString)) {
+            type = Calculate.TYPE_STRING;
         } else {
             type = Calculate.TYPE_DOUBLE;
         }
@@ -116,6 +119,9 @@ public class Calculate extends MethodOperation {
         case TYPE_INTEGER:
             resultObj = new Integer((int) Math.round(resultValue));
             break;
+        case TYPE_STRING:
+            resultObj = new Double(resultValue).toString();
+            break;            
         }
 
         if (!mapAcsr.isEmpty()) {
@@ -243,6 +249,8 @@ public class Calculate extends MethodOperation {
                         resultValue = (double) ((Float) fieldObj).floatValue();
                     } else if (fieldObj instanceof Integer) {
                         resultValue = (double) ((Integer) fieldObj).intValue();
+                    } else if (fieldObj instanceof String) {             
+                        resultValue = Double.valueOf((String) fieldObj).doubleValue();                        
                     }
                     if (operator == OPERATOR_NEGATIVE) resultValue = -resultValue;
                     isFirst = false;
