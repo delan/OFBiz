@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,21 +21,18 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.util;
-
 
 import java.io.*;
 import java.util.*;
 import java.net.*;
 
-
 /**
  * Send HTTP GET/POST requests.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @version    1.0
- * @created    June 29, 2001
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class HttpClient {
 
@@ -216,9 +213,23 @@ public class HttpClient {
         return buf.toString();
     }
 
-    private InputStream sendHttpRequestStream(String method) throws HttpClientException {
+    private InputStream sendHttpRequestStream(String method) throws HttpClientException {                
+        // setup some SSL variables       
+        String protocol = UtilProperties.getPropertyValue("jsse.properties", "java.protocol.handler.pkgs", "NONE");
+        String proxyHost = UtilProperties.getPropertyValue("jsse.properties", "https.proxyHost", "NONE");
+        String proxyPort = UtilProperties.getPropertyValue("jsse.properties", "https.proxyPort", "NONE");        
+        String cypher = UtilProperties.getPropertyValue("jsse.properties", "https.cipherSuites", "NONE");
+        if (protocol != null && !protocol.equals("NONE"))
+            System.setProperty("java.protocol.handler.pkgs", protocol);
+        if (proxyHost != null && !proxyHost.equals("NONE"))
+            System.setProperty("https.proxyHost", proxyHost);
+        if (proxyPort != null && !proxyPort.equals("NONE"))
+            System.setProperty("https.proxyPort", proxyPort);
+        if (cypher != null && !cypher.equals("NONE"))
+            System.setProperty("https.cipherSuites", cypher);   
+            
         String arguments = null;
-        InputStream in = null;
+        InputStream in = null;                     
 
         if (url == null)
             throw new HttpClientException("Cannot process a null URL.");
