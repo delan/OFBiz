@@ -117,7 +117,6 @@ public class WebEventSecurity
                                                            "fromDate", UtilDateTime.nowTimestamp(), 
                                                            "password", password, 
                                                            "partyId", userLogin.get("partyId"), 
-                                                           "userId", userLogin.get("currentUserId"), 
                                                            "referrerUrl", "NotYetImplemented"));
         }
         else
