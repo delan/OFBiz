@@ -4,13 +4,9 @@
  - This file configures the Entity Engine JDBC (or other DataSource) and JTA
 access. For a detailed description see the core/docs/entityconfig.html file.
 -->
-<entity-config>
-    <resource-loader name="mainfile" class="org.ofbiz.base.config.FileLoader"
-            prepend-env="ofbiz.home" prefix="/commonapp/entitydef/"/>
+<entity-config>    
     <resource-loader name="fieldfile" class="org.ofbiz.base.config.FileLoader"
             prepend-env="ofbiz.home" prefix="/components/entity/fieldtype/"/>
-    <resource-loader name="maincp" class="org.ofbiz.base.config.ClasspathLoader"/>
-    <resource-loader name="mainurl" class="org.ofbiz.base.config.UrlLoader"/>
             
     <!-- the transaction factory class to use, one is needed for each way of getting JTA interfaces -->
     <!-- Use this one for JOTM -->
@@ -43,25 +39,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localpostgres"/>
     </delegator>
 
-    <entity-model-reader name="main">
-        <resource loader="mainfile" location="entitymodel.xml"/>
-        <resource loader="mainfile" location="entitymodel_content.xml"/>
-        <resource loader="mainfile" location="entitymodel_accounting.xml"/>
-        <resource loader="mainfile" location="entitymodel_humanres.xml"/>
-        <resource loader="mainfile" location="entitymodel_shipment.xml"/>
-        <resource loader="mainfile" location="entitymodel_workeffort.xml"/>
-        <resource loader="mainfile" location="entitymodel_workflow.xml"/>
-        <resource loader="mainfile" location="entitymodel_order.xml"/>
-        <resource loader="mainfile" location="entitymodel_party.xml"/>
-        <resource loader="mainfile" location="entitymodel_product.xml"/>
-        <resource loader="mainfile" location="entitymodel_marketing.xml"/>
-    </entity-model-reader>
-
-    <entity-group-reader name="main" loader="mainfile" location="entitygroup.xml"/>
-
-    <entity-eca-reader name="main">
-        <resource loader="mainfile" location="eecas_product.xml"/>
-    </entity-eca-reader>
+    <entity-model-reader name="main"/>
+    <entity-group-reader name="main"/>
+    <entity-eca-reader name="main"/>
 
     <field-type name="hsql" loader="fieldfile" location="fieldtypehsql.xml"/>
     <field-type name="cloudscape" loader="fieldfile" location="fieldtypecloudscape.xml"/>
