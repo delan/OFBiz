@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEventHandler.java,v 1.7 2004/02/19 18:52:35 ajzeneski Exp $
+ * $Id: ServiceEventHandler.java,v 1.8 2004/07/10 04:56:09 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceAuthException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ServiceEventHandler implements EventHandler {
@@ -156,7 +156,14 @@ public class ServiceEventHandler implements EventHandler {
         }
 
         // get only the parameters for this service - converted to proper type
-        serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM);
+        // TODO: pass in a list for error messages, like could not convert type or not a proper X, return immediately with messages if there are any
+        List errorMessages = new LinkedList();
+        serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM, true, errorMessages);
+        if (errorMessages.size() > 0) {
+            // uh-oh, had some problems...
+            request.setAttribute("_ERROR_MESSAGE_LIST_", errorMessages);
+            return "error";
+        }
 
         // include the UserLogin value object
         if (userLogin != null) {
@@ -170,7 +177,6 @@ public class ServiceEventHandler implements EventHandler {
 
         // invoke the service
         Map result = null;
-
         try {
             if (ASYNC.equalsIgnoreCase(mode)) {
                 dispatcher.runAsync(serviceName, serviceContext);
@@ -197,10 +203,11 @@ public class ServiceEventHandler implements EventHandler {
             responseString = ModelService.RESPOND_SUCCESS;
         } else {
 
-            if (!result.containsKey(ModelService.RESPONSE_MESSAGE))
+            if (!result.containsKey(ModelService.RESPONSE_MESSAGE)) {
                 responseString = ModelService.RESPOND_SUCCESS;
-            else
+            } else {
                 responseString = (String) result.get(ModelService.RESPONSE_MESSAGE);
+            }
 
             // Get the messages:
             String errorPrefixStr = UtilProperties.getMessage("DefaultMessages", "service.error.prefix", locale);
@@ -213,20 +220,22 @@ public class ServiceEventHandler implements EventHandler {
 
             String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
 
-            if (UtilValidate.isNotEmpty(errorMessage))
+            if (UtilValidate.isNotEmpty(errorMessage)) {
                 request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+            }
 
             String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
 
-            if (UtilValidate.isNotEmpty(successMessage))
+            if (UtilValidate.isNotEmpty(successMessage)) {
                 request.setAttribute("_EVENT_MESSAGE_", successMessage);
+            }
 
-            if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr))
+            if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr)) {
                 request.setAttribute("_EVENT_MESSAGE_", defaultMessageStr);
+            }
 
             // set the results in the request
             Iterator ri = result.keySet().iterator();
-
             while (ri.hasNext()) {
                 String resultKey = (String) ri.next();
                 Object resultValue = result.get((Object) resultKey);
