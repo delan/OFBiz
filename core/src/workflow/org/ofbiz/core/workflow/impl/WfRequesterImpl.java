@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow;
 
 import java.util.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -37,16 +38,44 @@ import org.ofbiz.core.workflow.*;
 
 public class WfRequesterImpl implements WfRequester {
     
-    protected String name;
     protected List performers;
-    
-    // TODO : I believe this is the starting point for a workflow. We need to add in an API to start a process.
+    protected List contexts;
+    protected List waiters;
     
     /** Create a new WfRequester
-     * @param name of this requester
      */
-    public WfRequesterImpl(String name) {
-        this.name = name;
+    public WfRequesterImpl() {
+        this.performers = new ArrayList();
+        this.contexts = new ArrayList();
+        this.waiters = new ArrayList();
+    }
+    
+    /** Sets up a new process
+     * @param context of the process   
+     */
+    public void processInfo(Map context) {
+        processInfo(context,null);        
+    }
+    
+    /** Sets up a new process
+     * @param context of the process
+     * @param requester GenericRequester for the service
+     */
+    public void processInfo(Map context, GenericRequester requester) {
+        this.contexts.add(context);
+        this.waiters.add(requester);
+    }
+    
+    /** Registers a process with this requester; starts the process.
+     *@param WfProcess to register
+     *@throws WfException
+     */
+    public void registerProcess(WfProcess process) throws WfException {
+        performers.add(process);
+        if ( performers.size() != context.size() || waiters.size() != performers.size() )
+            throw new WfException("Cannot match context/waiter to process.");
+        process.setProcessContext(contextList.get(contextList.size() -1));
+        process.start();
     }
     
     /** Gets the number of processes.
@@ -90,8 +119,25 @@ public class WfRequesterImpl implements WfRequester {
      * @throws WfException
      * @throws InvalidPerformer
      */
-    public void receiveEvent(WfEventAudit event) throws WfException, InvalidPerformer {
-        // Implement this
+    public synchronized void receiveEvent(WfEventAudit event) throws WfException, InvalidPerformer {     
+        // Should the source of the audit come from the process? if so use this.
+        WfProcess process = null;
+        try {
+            process = (WfProcess) event.source();
+        } 
+        catch ( SourceNotAvailable sna ) {
+            throw new InvalidPerformer("Could not get the performer.",sna);
+        }
+        catch ( ClassCastException cce ) {
+            throw new InvalidPerformer("Not a valid process object.",cce);
+        }
+        if ( process == null )
+            throw new InvalidPerformer("No performer specified.");
+        if ( !performers.contains(process) )
+            throw new InvalidPerformer("Performer not assigned to this requester.");
+        
+        
+        // Implement me
     }
     
 }
