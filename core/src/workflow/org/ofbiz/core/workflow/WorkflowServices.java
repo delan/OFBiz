@@ -170,6 +170,36 @@ public class WorkflowServices {
         return result;
     }
 
+    /** Appends data to the activity context */
+    public static Map appendActivityContext(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        String workEffortId = (String) context.get("workEffortId");
+        Map appendContext = (Map) context.get("currentContext");
+
+        if (appendContext == null || appendContext.size() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "The passed context is empty");
+        }
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (!hasPermission(security, workEffortId, userLogin)) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
+            return result;
+        }
+        try {
+            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
+            activity.setResult(appendContext);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (WfException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+        }
+        return result;
+    }
+
     /** Manually activate an activity */
     public static Map activateActivity(DispatchContext ctx, Map context) {
         Map result = new HashMap();
