@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.7 2003/11/17 06:21:27 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.8 2003/11/19 00:27:55 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
@@ -46,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -78,7 +79,11 @@ public class ShoppingCartItem implements java.io.Serializable {
     private List orderItemPriceInfos = null;
     private List itemAdjustments = new LinkedList();
     private boolean isPromo = false;
-    private int promoQuantityUsed = 0;
+    private double promoQuantityUsed = 0;
+    private Map quantityUsedPerPromoCondCandidate = new HashMap();
+    private Map quantityUsedPerPromoCondActual = new HashMap();
+    private Map quantityUsedPerPromoActionActual = new HashMap();
+
 
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
@@ -250,7 +255,10 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.basePrice = item.getBasePrice();
         this.listPrice = item.getListPrice();
         this.isPromo = item.getIsPromo();
-        this.promoQuantityUsed = item.getPromoQuantityUsed();
+        this.promoQuantityUsed = item.promoQuantityUsed;
+        this.quantityUsedPerPromoActionActual = new HashMap(item.quantityUsedPerPromoActionActual);
+        this.quantityUsedPerPromoCondActual = new HashMap(item.quantityUsedPerPromoCondActual);
+        this.quantityUsedPerPromoCondCandidate = new HashMap(item.quantityUsedPerPromoCondCandidate);
         this.orderItemSeqId = item.getOrderItemSeqId();
         this.orderShipmentPreference = new GenericValue(item.getOrderShipmentPreference());
         this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
@@ -384,6 +392,76 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns the quantity. */
     public double getQuantity() {
         return quantity;
+    }
+
+    public double getPromoQuantityAvailable() {
+        return this.quantity - this.promoQuantityUsed;
+    }
+
+    public synchronized double addPromoQuantityCondUse(double quantityDesired, GenericValue productPromoCond) {
+        if (quantityDesired == 0) return 0;
+        double promoQuantityAvailable = this.getPromoQuantityAvailable();
+        double promoQuantityToUse = quantityDesired;
+        if (promoQuantityAvailable > 0) {
+            if (promoQuantityToUse > promoQuantityAvailable) {
+                promoQuantityToUse = promoQuantityAvailable;
+            }
+
+            // keep track of candidate promo uses on cartItem
+            quantityUsedPerPromoCondCandidate.put(productPromoCond.getPrimaryKey(), new Double(promoQuantityToUse));
+
+            this.promoQuantityUsed += promoQuantityToUse;
+        }
+
+        return promoQuantityToUse;
+    }
+
+    public synchronized void resetPromoRuleUse(String productPromoId, String productPromoRuleId) {
+        Iterator entryIter = this.quantityUsedPerPromoCondCandidate.entrySet().iterator();
+        while (entryIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) entryIter.next();
+            GenericPK productPromoCondPK = (GenericPK) entry.getKey();
+            Double quantityUsed = (Double) entry.getValue();
+            if (productPromoId.equals(productPromoCondPK.getString("productPromoId")) && productPromoRuleId.equals(productPromoCondPK.getString("productPromoRuleId"))) {
+                entryIter.remove();
+                this.promoQuantityUsed -= quantityUsed.doubleValue();
+            }
+        }
+    }
+
+    public synchronized void confirmPromoRuleUse(String productPromoId, String productPromoRuleId) {
+        Iterator entryIter = this.quantityUsedPerPromoCondCandidate.entrySet().iterator();
+        while (entryIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) entryIter.next();
+            GenericPK productPromoCondPK = (GenericPK) entry.getKey();
+            Double quantityUsed = (Double) entry.getValue();
+            if (productPromoId.equals(productPromoCondPK.getString("productPromoId")) && productPromoRuleId.equals(productPromoCondPK.getString("productPromoRuleId"))) {
+                entryIter.remove();
+                this.quantityUsedPerPromoCondActual.put(productPromoCondPK, quantityUsed);
+            }
+        }
+    }
+
+    public synchronized double addPromoQuantityActionUse(double quantityDesired, GenericValue productPromoAction) {
+        if (quantityDesired <= 0) return 0;
+
+        double promoQuantityAvailable = this.getPromoQuantityAvailable();
+        double promoQuantityToUse = quantityDesired;
+        if (promoQuantityAvailable > 0) {
+            if (promoQuantityToUse > promoQuantityAvailable) {
+                promoQuantityToUse = promoQuantityAvailable;
+            }
+
+            // if we are adding any actions, we can automatically confirm the corresponding conditions, if any
+            this.confirmPromoRuleUse(productPromoAction.getString("productPromoId"), productPromoAction.getString("productPromoRuleId"));
+
+            // keep track of actual promo uses on cartItem
+            quantityUsedPerPromoActionActual.put(productPromoAction.getPrimaryKey(), new Double(promoQuantityToUse));
+
+            this.promoQuantityUsed += promoQuantityToUse;
+        }
+
+        return promoQuantityToUse;
     }
 
     /** Sets the item comment. */
@@ -750,14 +828,6 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public boolean getIsPromo() {
         return this.isPromo;
-    }
-
-    public void setPromoQuantityUsed(int promoQuantityUsed) {
-        this.promoQuantityUsed = promoQuantityUsed;
-    }
-
-    public int getPromoQuantityUsed() {
-        return this.promoQuantityUsed;
     }
 
     public GenericValue getOrderShipmentPreference() {

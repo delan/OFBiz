@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.20 2003/11/17 03:17:12 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.21 2003/11/19 00:27:55 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1016,6 +1016,22 @@ public class ShoppingCart implements java.io.Serializable {
 
     public Set getProductPromoCodesEntered() {
         return this.productPromoCodes;
+    }
+
+    public synchronized void resetPromoRuleUse(String productPromoId, String productPromoRuleId) {
+        Iterator lineIter = this.iterator();
+        while (lineIter.hasNext()) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) lineIter.next();
+            cartItem.resetPromoRuleUse(productPromoId, productPromoRuleId);
+        }
+    }
+
+    public synchronized void confirmPromoRuleUse(String productPromoId, String productPromoRuleId) {
+        Iterator lineIter = this.iterator();
+        while (lineIter.hasNext()) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) lineIter.next();
+            cartItem.confirmPromoRuleUse(productPromoId, productPromoRuleId);
+        }
     }
 
     // =======================================================================
