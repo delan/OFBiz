@@ -56,7 +56,7 @@ public class ProductEvents {
 
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
-            Debug.logWarning("[ProductEvents.updateProductKeyword] Update Mode was not specified, but is required");
+            Debug.logWarning("[ProductEvents.updateProductKeyword] Update Mode was not specified, but is required", module);
             return "error";
         }
 
@@ -87,7 +87,7 @@ public class ProductEvents {
             try {
                 newValue = delegator.findByPrimaryKey(productKeyword.getPrimaryKey());
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 newValue = null;
             }
 
@@ -99,7 +99,7 @@ public class ProductEvents {
             try {
                 productKeyword = productKeyword.create();
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 productKeyword = null;
             }
             if (productKeyword == null) {
@@ -112,7 +112,7 @@ public class ProductEvents {
             try {
                 productKeyword = delegator.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 productKeyword = null;
             }
             if (productKeyword == null) {
@@ -123,7 +123,7 @@ public class ProductEvents {
                 productKeyword.remove();
             } catch (GenericEntityException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-keyword (write error)");
-                Debug.logWarning("[ProductEvents.updateProductKeyword] Could not remove product-keyword (write error); message: " + e.getMessage());
+                Debug.logWarning("[ProductEvents.updateProductKeyword] Could not remove product-keyword (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else {
@@ -148,7 +148,7 @@ public class ProductEvents {
 
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
-            Debug.logWarning("[ProductEvents.updateProductKeywords] Update Mode was not specified, but is required");
+            Debug.logWarning("[ProductEvents.updateProductKeywords] Update Mode was not specified, but is required", module);
             return "error";
         }
 
@@ -170,7 +170,7 @@ public class ProductEvents {
         try {
             product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             product = null;
         }
         if (product == null) {
@@ -190,7 +190,7 @@ public class ProductEvents {
                 product.removeRelated("ProductKeyword");
             } catch (GenericEntityException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product-keywords (write error)");
-                Debug.logWarning("[ProductEvents.updateProductKeywords] Could not remove product-keywords (write error); message: " + e.getMessage());
+                Debug.logWarning("[ProductEvents.updateProductKeywords] Could not remove product-keywords (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else {
@@ -224,7 +224,7 @@ public class ProductEvents {
 		try {
 			entityListIterator = delegator.findListIteratorByCondition("Product", null, null, null);
 		} catch (GenericEntityException gee) {
-			Debug.logWarning(gee.getMessage());
+			Debug.logWarning(gee.getMessage(), module);
 			entityListIterator = null;
 		}
 
@@ -238,11 +238,11 @@ public class ProductEvents {
                     KeywordSearch.induceKeywords(product);
                 } catch (GenericEntityException e) {
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create keywords (write error).");
-                    Debug.logWarning("[ProductEvents.updateAllKeywords] Could not create product-keyword (write error); message: " + e.getMessage());
+                    Debug.logWarning("[ProductEvents.updateAllKeywords] Could not create product-keyword (write error); message: " + e.getMessage(), module);
                     try {
                     	entityListIterator.close();
                     } catch (GenericEntityException gee) {
-                        Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.");
+                        Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.", module);
                     }
                     errProds++;
                 }
@@ -254,7 +254,7 @@ public class ProductEvents {
 			try {
 				entityListIterator.close();
 			} catch (GenericEntityException gee) {
-                Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.");
+                Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.", module);
 			}
         }
         
@@ -281,7 +281,7 @@ public class ProductEvents {
 
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
-            Debug.logWarning("[ProductEvents.updateProductAssoc] Update Mode was not specified, but is required");
+            Debug.logWarning("[ProductEvents.updateProductAssoc] Update Mode was not specified, but is required", module);
             return "error";
         }
 
@@ -304,7 +304,7 @@ public class ProductEvents {
                 errMsg += "<li>Product To with id " + productIdTo + " not found.";
         } catch (GenericEntityException e) {
             // if there is an exception for either, the other probably wont work
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
 
         if (UtilValidate.isNotEmpty(fromDateStr)) {
@@ -349,7 +349,7 @@ public class ProductEvents {
             try {
                 productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey());
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 productAssoc = null;
             }
             if (productAssoc == null) {
@@ -360,7 +360,7 @@ public class ProductEvents {
                 productAssoc.remove();
             } catch (GenericEntityException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove product association (write error)");
-                Debug.logWarning("[ProductEvents.updateProductAssoc] Could not remove product association (write error); message: " + e.getMessage());
+                Debug.logWarning("[ProductEvents.updateProductAssoc] Could not remove product association (write error); message: " + e.getMessage(), module);
                 return "error";
             }
             return "success";
@@ -421,7 +421,7 @@ public class ProductEvents {
             try {
                 productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey());
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 productAssoc = null;
             }
             if (productAssoc != null) {
@@ -432,7 +432,7 @@ public class ProductEvents {
                 productAssoc = tempProductAssoc.create();
             } catch (GenericEntityException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product association (write error)");
-                Debug.logWarning("[ProductEvents.updateProductAssoc] Could not create product association (write error); message: " + e.getMessage());
+                Debug.logWarning("[ProductEvents.updateProductAssoc] Could not create product association (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else if (updateMode.equals("UPDATE")) {
@@ -440,7 +440,7 @@ public class ProductEvents {
                 tempProductAssoc.store();
             } catch (GenericEntityException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update product association (write error)");
-                Debug.logWarning("[ProductEvents.updateProductAssoc] Could not update product association (write error); message: " + e.getMessage());
+                Debug.logWarning("[ProductEvents.updateProductAssoc] Could not update product association (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else {
@@ -460,7 +460,7 @@ public class ProductEvents {
 
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
-            Debug.logWarning("[CategoryEvents.updateCategory] Update Mode was not specified, but is required");
+            Debug.logWarning("[CategoryEvents.updateCategory] Update Mode was not specified, but is required", module);
             return "error";
         }
 
@@ -506,7 +506,7 @@ public class ProductEvents {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update attribute (write error)");
-                Debug.logWarning("[ProductEvents.updateAttribute] Could not update attribute (write error); message: " + e.getMessage());
+                Debug.logWarning("[ProductEvents.updateAttribute] Could not update attribute (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else if (updateMode.equals("DELETE")) {
@@ -514,7 +514,7 @@ public class ProductEvents {
                 delegator.removeByAnd("ProductAttribute", UtilMisc.toMap("productId", productId, "attrName", attrName));
             } catch (GenericEntityException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not delete attribute (write error)");
-                Debug.logWarning("[ProductEvents.updateAttribute] Could not delete attribute (write error); message: " + e.getMessage());
+                Debug.logWarning("[ProductEvents.updateAttribute] Could not delete attribute (write error); message: " + e.getMessage(), module);
                 return "error";
             }
         } else {

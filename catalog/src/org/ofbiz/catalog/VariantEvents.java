@@ -126,12 +126,12 @@ public class VariantEvents {
                 TransactionUtil.commit(beganTransacton);
             } catch (GenericEntityException e) {
                 TransactionUtil.rollback(beganTransacton);
-                Debug.logError(e, "Entity error creating quick add variant data");
+                Debug.logError(e, "Entity error creating quick add variant data", module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Entity error quick add variant data: " + e.toString());
                 return "error";
             }
         } catch (GenericTransactionException e) {
-            Debug.logError(e, "Transaction error creating quick add variant data");
+            Debug.logError(e, "Transaction error creating quick add variant data", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Transaction error creating quick add variant data: " + e.toString());
             return "error";
         }
