@@ -26,6 +26,7 @@ package org.ofbiz.service;
 
 import java.util.*;
 import java.lang.reflect.Method;
+import java.io.Serializable;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -47,7 +48,7 @@ import org.apache.commons.collections.set.ListOrderedSet;
  * @version    $Rev$
  * @since      2.0
  */
-public class ModelService {
+public class ModelService implements Serializable {
 
     public static final String module = ModelService.class.getName();
 

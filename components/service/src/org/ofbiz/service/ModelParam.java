@@ -26,6 +26,7 @@ package org.ofbiz.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.io.Serializable;
 
 import org.ofbiz.base.util.UtilProperties;
 
@@ -37,7 +38,7 @@ import org.ofbiz.base.util.UtilProperties;
  * @version    $Rev$
  * @since      2.0
  */
-public class ModelParam {
+public class ModelParam implements Serializable {
 
     /** Parameter name */
     public String name;
