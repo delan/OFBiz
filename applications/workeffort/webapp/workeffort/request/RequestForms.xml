@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -22,6 +22,7 @@
  *
  *@author     Nicolas.Malin@librenberry.net
  *@author     Jacopo Cappellato (tiz@sastau.it)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Rev$
  *@since      3.0
 -->
@@ -60,6 +61,50 @@
         </field>
     </form>
 
+    <form name="EditCustRequest" type="single"
+            target="updaterequest" title="Customer Request" default-map-name="custRequest"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="custRequest==null" target="createrequest"/>
+        <auto-fields-entity entity-name="CustRequest" default-field-type="edit"   />
+        <field name="custRequestId"><hidden/></field>
+        <field name="custRequestTypeId" title="Request Type">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="CustRequestType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="custRequestCategoryId" title="Request Category">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="CustRequestCategory" description="${description}"/>
+            </drop-down>
+        </field>
+        <field use-when="custRequest==null" name="statusId" title="Status" widget-style="selectBox">
+            <drop-down allow-empty="false" current="first-in-list">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" value="CUSTREQ_STTS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="priority" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <option key="9"/>
+                <option key="8"/>
+                <option key="7"/>
+                <option key="6"/>
+                <option key="5"/>
+                <option key="4"/>
+                <option key="3"/>
+                <option key="2"/>
+                <option key="1"/>
+            </drop-down>
+        </field>
+        <field name="custRequestDate" title="Request Date" > <date-time type="timestamp" /></field>
+        <field name="responseRequiredDate" title="Response Required Date"><date-time type="timestamp" /></field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
     <form name="ListRequestQuoteItems" type="list" use-row-submit="true" 
             title="" list-name="quotes" paginate-target="RequestItemQuotes"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
@@ -75,6 +120,62 @@
         <field name="uomId"><hidden/></field>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestItemSeqId"><hidden/></field>
+    </form>
+
+    <form name="EditCustRequest" type="single"
+            target="updaterequest" title="Request" default-map-name="custRequest"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="custRequest==null" target="createrequest"/>
+        <auto-fields-service service-name="updateCustRequest" default-field-type="edit"/>
+        <field name="custRequestId"><hidden/></field>
+        <field name="custRequestName" title="Request Name"/>
+        <field name="custRequestTypeId" title="Request Type">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="CustRequestType" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="custRequestCategoryId" title="Request Category">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="CustRequestCategory" description="${description}"/>
+            </drop-down>
+        </field>
+
+        <field use-when="custRequest==null" name="statusId" title="Status" widget-style="selectBox">
+            <drop-down allow-empty="false" current="first-in-list">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" value="CUSTREQ_STTS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field use-when="custRequest!=null" name="statusId" title="Status" widget-style="selectBox">
+            <drop-down allow-empty="false" current="first-in-list" current-description="${currentStatus.description}">
+                <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
+                    <entity-constraint name="statusId" value="${custRequest.statusId}"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+        <field name="priority" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <option key="9"/>
+                <option key="8"/>
+                <option key="7"/>
+                <option key="6"/>
+                <option key="5"/>
+                <option key="4"/>
+                <option key="3"/>
+                <option key="2"/>
+                <option key="1"/>
+            </drop-down>
+        </field>
+        <field name="custRequestDate" title="Request Date"><date-time type="timestamp"/></field>
+        <field name="responseRequiredDate" title="Response Required Date"><date-time type="timestamp"/></field>
+        
+        <field name="requestPartyId" use-when="custRequest==null" title="Requesting Party"><lookup target-form-name="LookupPartyName"/></field>
+
+        <field name="submitButton" title="Submit" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditCustRequestItem" type="single"
             target="updaterequestitem" title="" default-map-name="custRequestItem"
@@ -113,9 +214,7 @@
                 <option key="1"/>
             </drop-down>
         </field>
-        <field name="productId">
-            <lookup target-form-name="LookupProduct"/>
-        </field>
+        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -219,9 +318,7 @@
             target="createrequestrole" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <field name="custRequestId"><hidden/></field>
-        <field name="partyId">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
+        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="roleTypeId">
             <drop-down allow-empty="false">
                 <option key="REQ_TAKER" description="${uiLabelMap.WorkEffortRequestTaker}"/>

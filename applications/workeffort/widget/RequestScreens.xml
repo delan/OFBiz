@@ -91,9 +91,11 @@
                 <set field="title" value="Request"/>
                 <set field="tabButtonItem" value="request"/>
                 <set field="headerItem" value="request"/>
+
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-one entity-name="CustRequest" value-name="custRequest"/>
-                <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/request/request.bsh"/>
+                <set field="statusId" from-field="custRequest.statusId"/>
+                <entity-one entity-name="StatusItem" value-name="currentStatus"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
@@ -101,9 +103,12 @@
                         <container>
                             <link target="request" text="[${uiLabelMap.WorkEffortNewRequest}]" style="buttontext"/>
                         </container>
+                        <include-form name="EditCustRequest" location="component://workeffort/webapp/workeffort/request/RequestForms.xml"/>
+                        <!--
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/request/request.ftl"/></html>
                         </platform-specific>
+                        -->
                     </decorator-section>
                 </decorator-screen>
             </widgets>
