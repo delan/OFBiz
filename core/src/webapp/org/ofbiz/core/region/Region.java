@@ -42,6 +42,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class Region extends Content {
+    
+    public static final String module = Region.class.getName();
 
     private Map sections = new HashMap();
     protected String id;

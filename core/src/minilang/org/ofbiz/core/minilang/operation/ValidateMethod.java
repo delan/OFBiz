@@ -39,6 +39,8 @@ import org.ofbiz.core.util.*;
  */
 public class ValidateMethod extends SimpleMapOperation {
     
+    public static final String module = ValidateMethod.class.getName();
+    
     String methodName;
     String className;
 

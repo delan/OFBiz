@@ -42,6 +42,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class I18nMessageTag extends BodyTagSupport {
+    
+    public static final String module = I18nMessageTag.class.getName();
 
     private String key = null;
 

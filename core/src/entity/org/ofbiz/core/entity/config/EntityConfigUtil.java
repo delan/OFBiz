@@ -41,6 +41,7 @@ import org.ofbiz.core.entity.*;
  */
 public class EntityConfigUtil {
     
+    public static final String module = EntityConfigUtil.class.getName();
     public static final String ENTITY_ENGINE_XML_FILENAME = "entityengine.xml";
 
     // ========== engine info fields ==========

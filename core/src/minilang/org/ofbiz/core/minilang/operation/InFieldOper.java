@@ -37,6 +37,8 @@ import org.ofbiz.core.util.*;
  */
 public class InFieldOper extends MakeInStringOperation {
     
+    public static final String module = InFieldOper.class.getName();
+    
     String fieldName;
 
     public InFieldOper(Element element) {

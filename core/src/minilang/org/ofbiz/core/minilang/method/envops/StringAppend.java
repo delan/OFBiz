@@ -41,6 +41,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class StringAppend extends MethodOperation {
     
+    public static final String module = StringAppend.class.getName();
+    
     String string;
     String prefix;
     String suffix;

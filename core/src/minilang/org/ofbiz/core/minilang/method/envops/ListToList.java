@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class ListToList extends MethodOperation {
     
+    public static final String module = ListToList.class.getName();
+    
     ContextAccessor listAcsr;
     ContextAccessor toListAcsr;
 

@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.operation.*;
  */
 public class CompareCondition implements Conditional {
     
+    public static final String module = CompareCondition.class.getName();
+    
     SimpleMethod simpleMethod;
     
     ContextAccessor mapAcsr;

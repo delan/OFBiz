@@ -39,6 +39,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class GenericWebEvent {
+    
+    public static final String module = GenericWebEvent.class.getName();
 
     /** An HTTP WebEvent handler that updates a Generic entity
      *

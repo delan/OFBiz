@@ -39,6 +39,8 @@ import org.ofbiz.core.entity.*;
  */
 public class StoreValue extends MethodOperation {
     
+    public static final String module = StoreValue.class.getName();
+    
     ContextAccessor valueAcsr;
     String doCacheClearStr;
 

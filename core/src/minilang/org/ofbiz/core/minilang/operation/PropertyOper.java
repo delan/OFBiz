@@ -37,6 +37,8 @@ import org.ofbiz.core.util.*;
  */
 public class PropertyOper extends MakeInStringOperation {
     
+    public static final String module = PropertyOper.class.getName();
+    
     String resource;
     String property;
 

@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  * @since      2.0
  */
 public class Iterate extends MethodOperation {
+    
+    public static final String module = Iterate.class.getName();
 
     List subOps = new LinkedList();
 

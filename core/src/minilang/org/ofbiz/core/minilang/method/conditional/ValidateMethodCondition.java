@@ -38,6 +38,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class ValidateMethodCondition implements Conditional {
     
+    public static final String module = ValidateMethodCondition.class.getName();
+    
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
     String methodName;

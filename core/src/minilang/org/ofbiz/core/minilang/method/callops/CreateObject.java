@@ -40,6 +40,8 @@ import org.ofbiz.core.minilang.method.*;
  * @since      2.0
  */
 public class CreateObject extends MethodOperation {
+    
+    public static final String module = CreateObject.class.getName();
 
     String className;
     ContextAccessor fieldAcsr;

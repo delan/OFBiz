@@ -48,6 +48,8 @@ import org.ofbiz.core.util.Debug;
  * @author <a href="mailto:plightbo@.com">Pat Lightbody</a>
  */
 public class MemoryHelper implements GenericHelper {
+    
+    public static final String module = MemoryHelper.class.getName();
     private static Map cache = new HashMap();
 
     public static void clearCache() {

@@ -39,6 +39,8 @@ import org.ofbiz.core.entity.*;
  */
 public class RemoveValue extends MethodOperation {
     
+    public static final String module = RemoveValue.class.getName();
+    
     ContextAccessor valueAcsr;
     String doCacheClearStr;
 

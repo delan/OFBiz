@@ -40,6 +40,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class ToString extends MethodOperation {
     
+    public static final String module = ToString.class.getName();
+    
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
     String format;

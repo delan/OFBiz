@@ -42,6 +42,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class InputValueTag extends TagSupport {
+    
+    public static final String module = InputValueTag.class.getName();
 
     private String field = null;
     private String param = null;

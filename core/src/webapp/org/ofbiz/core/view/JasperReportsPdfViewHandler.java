@@ -42,6 +42,8 @@ import dori.jasper.engine.*;
  * @since      2.0
  */
 public class JasperReportsPdfViewHandler implements ViewHandler {
+    
+    public static final String module = JasperReportsPdfViewHandler.class.getName();
 
     protected ServletContext context;
     public static UtilCache jasperReportsCompiledCache = new UtilCache("webapp.JasperReportsCompiled");

@@ -40,6 +40,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class ClearField extends MethodOperation {
     
+    public static final String module = ClearField.class.getName();
+    
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
 

@@ -33,6 +33,8 @@ package org.ofbiz.core.util;
  * @since      2.0
  */
 public class UtilTimer {
+    
+    public static final String module = UtilTimer.class.getName();
 
     long realStartTime;
     long startTime;

@@ -38,6 +38,8 @@ import org.ofbiz.core.minilang.method.*;
  * @since      2.0
  */
 public class FirstFromList extends MethodOperation {
+    
+    public static final String module = FirstFromList.class.getName();
 
     ContextAccessor entryAcsr;
     ContextAccessor listAcsr;

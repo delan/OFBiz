@@ -66,6 +66,8 @@ import java.util.Collection;
  * <br> ================================================================
  */
 public class UtilValidate {
+    
+    public static final String module = UtilValidate.class.getName();
 
     /** boolean specifying by default whether or not it is okay for a String to be empty */
     public static final boolean defaultEmptyOK = true;

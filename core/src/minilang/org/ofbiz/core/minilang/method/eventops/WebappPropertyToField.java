@@ -41,6 +41,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class WebappPropertyToField extends MethodOperation {
     
+    public static final String module = WebappPropertyToField.class.getName();
+    
     String resource;
     String property;
     String defaultVal;

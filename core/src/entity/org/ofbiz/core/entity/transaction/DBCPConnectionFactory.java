@@ -48,6 +48,7 @@ import org.apache.commons.pool.ObjectPool;
  */
 public class DBCPConnectionFactory {
 
+    public static final String module = DBCPConnectionFactory.class.getName();
     protected static Map dsCache = new HashMap();
 
     public static Connection getConnection(String helperName, Element dbcpJdbcElement) throws SQLException, GenericEntityException {

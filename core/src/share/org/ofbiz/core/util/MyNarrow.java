@@ -29,6 +29,8 @@ import javax.naming.*;
 
 
 public final class MyNarrow {
+    
+    public static final String module = MyNarrow.class.getName();
 
     /**
      * instance

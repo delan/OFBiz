@@ -39,6 +39,8 @@ import org.ofbiz.core.util.*;
  */
 public class Regexp extends SimpleMapOperation {
     
+    public static final String module = Regexp.class.getName();
+    
     static PatternMatcher matcher = new Perl5Matcher();
     static PatternCompiler compiler = new Perl5Compiler();
     Pattern pattern = null;

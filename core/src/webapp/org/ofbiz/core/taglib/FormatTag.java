@@ -38,6 +38,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class FormatTag extends BodyTagSupport {
+    
+    public static final String module = FormatTag.class.getName();
 
     private String type = "N";
     private String defaultStr = "";

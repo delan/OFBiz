@@ -40,6 +40,8 @@ import org.ofbiz.core.minilang.method.*;
  * @since      2.0
  */
 public class IfRegexp extends MethodOperation {
+    
+    public static final String module = IfRegexp.class.getName();
 
     static PatternMatcher matcher = new Perl5Matcher();
     static PatternCompiler compiler = new Perl5Compiler();

@@ -43,6 +43,8 @@ import org.w3c.dom.Element;
  * @since      2.0
  */
 public class IterateMap extends MethodOperation {
+    
+    public static final String module = IterateMap.class.getName();
 
     List subOps = new LinkedList();
 

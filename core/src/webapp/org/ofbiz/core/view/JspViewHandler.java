@@ -39,6 +39,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class JspViewHandler implements ViewHandler {
+    
+    public static final String module = JspViewHandler.class.getName();
 
     protected ServletContext context;
 

@@ -40,6 +40,8 @@ import org.ofbiz.core.minilang.operation.*;
  * @since      2.0
  */
 public class IfCompare extends MethodOperation {
+    
+    public static final String module = IfCompare.class.getName();
 
     List subOps = new LinkedList();
     List elseSubOps = null;

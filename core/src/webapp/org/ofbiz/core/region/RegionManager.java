@@ -48,6 +48,8 @@ import org.w3c.dom.Element;
  *@version    1.0
  */
 public class RegionManager {
+    
+    public static final String module = RegionManager.class.getName();
 
     protected static UtilCache regionCache = new UtilCache("webapp.Regions.Config", 0, 0);
     

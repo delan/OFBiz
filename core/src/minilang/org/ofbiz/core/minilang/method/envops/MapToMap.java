@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class MapToMap extends MethodOperation {
     
+    public static final String module = MapToMap.class.getName();
+    
     ContextAccessor mapAcsr;
     ContextAccessor toMapAcsr;
 

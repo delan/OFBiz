@@ -45,6 +45,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class I18nBundleTag extends TagSupport {
+    
+    public static final String module = I18nBundleTag.class.getName();
 
     private String baseName = null;
 

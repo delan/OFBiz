@@ -39,6 +39,8 @@ import org.ofbiz.core.entity.*;
  */
 public class RemoveRelated extends MethodOperation {
     
+    public static final String module = RemoveRelated.class.getName();
+    
     ContextAccessor valueAcsr;
     String relationName;
     String doCacheClearStr;

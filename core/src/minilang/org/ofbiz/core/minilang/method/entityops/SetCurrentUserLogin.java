@@ -39,6 +39,8 @@ import org.ofbiz.core.entity.*;
  */
 public class SetCurrentUserLogin extends MethodOperation {
     
+    public static final String module = SetCurrentUserLogin.class.getName();
+    
     ContextAccessor valueAcsr;
 
     public SetCurrentUserLogin(Element element, SimpleMethod simpleMethod) {

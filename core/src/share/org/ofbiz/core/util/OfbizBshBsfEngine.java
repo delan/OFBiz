@@ -63,6 +63,9 @@ import com.ibm.bsf.util.BSFEngineImpl;
  * @author David E. Jones
  */
 public class OfbizBshBsfEngine extends BSFEngineImpl {
+    
+    public static final String module = OfbizBshBsfEngine.class.getName();
+    
     protected static Map masterClassManagers = new HashMap();
     protected Interpreter interpreter;
     protected boolean installedApplyMethod;

@@ -38,6 +38,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class PrintTag extends TagSupport {
+    
+    public static final String module = PrintTag.class.getName();
 
     private String attribute = null;
     private String defaultStr = "";

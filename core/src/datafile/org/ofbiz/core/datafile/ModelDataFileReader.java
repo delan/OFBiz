@@ -44,6 +44,8 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelDataFileReader {
+    
+    public static final String module = ModelDataFileReader.class.getName();
 
     public static UtilCache readers = new UtilCache("ModelDataFile", 0, 0);
 

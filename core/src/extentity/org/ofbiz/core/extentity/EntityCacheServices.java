@@ -38,6 +38,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class EntityCacheServices implements DistributedCacheClear {
+    
+    public static final String module = EntityCacheServices.class.getName();
 
     protected GenericDelegator delegator = null;
     protected LocalDispatcher dispatcher = null;

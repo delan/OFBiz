@@ -40,6 +40,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class PropertyToField extends MethodOperation {
     
+    public static final String module = PropertyToField.class.getName();
+    
     String resource;
     String property;
     ContextAccessor mapAcsr;

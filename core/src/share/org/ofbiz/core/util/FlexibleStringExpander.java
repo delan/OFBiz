@@ -36,6 +36,8 @@ import java.util.*;
  */
 public class FlexibleStringExpander {
     
+    public static final String module = FlexibleStringExpander.class.getName();
+    
     protected String original;
     protected List stringElements = new LinkedList();
     

@@ -39,6 +39,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class HttpViewHandler implements ViewHandler {
+    
+    public static final String module = HttpViewHandler.class.getName();
 
     protected ServletContext context;
 

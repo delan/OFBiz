@@ -37,6 +37,8 @@ import org.ofbiz.core.config.*;
  * @since      2.0
  */
 public class JNDIContextFactory {
+    
+    public static final String module = JNDIContextFactory.class.getName();
     static UtilCache contexts = new UtilCache("entity.JNDIContexts", 0, 0);
 
     /** 

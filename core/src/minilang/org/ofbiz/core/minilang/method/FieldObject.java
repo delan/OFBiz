@@ -38,6 +38,8 @@ import org.ofbiz.core.minilang.*;
  */
 public class FieldObject extends MethodObject {
     
+    public static final String module = FieldObject.class.getName();
+    
     ContextAccessor fieldAcsr;
     ContextAccessor mapAcsr;
     String type;

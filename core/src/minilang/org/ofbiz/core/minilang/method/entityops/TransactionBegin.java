@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class TransactionBegin extends MethodOperation {
     
+    public static final String module = TransactionBegin.class.getName();
+    
     ContextAccessor beganTransactionAcsr;
 
     public TransactionBegin(Element element, SimpleMethod simpleMethod) {

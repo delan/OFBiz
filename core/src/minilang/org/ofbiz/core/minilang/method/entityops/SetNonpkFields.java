@@ -41,6 +41,8 @@ import org.ofbiz.core.entity.*;
  */
 public class SetNonpkFields extends MethodOperation {
     
+    public static final String module = SetNonpkFields.class.getName();
+    
     ContextAccessor valueAcsr;
     ContextAccessor mapAcsr;
     String setIfNullStr;

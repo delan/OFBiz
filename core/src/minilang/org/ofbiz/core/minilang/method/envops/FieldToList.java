@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FieldToList extends MethodOperation {
     
+    public static final String module = FieldToList.class.getName();
+    
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
     ContextAccessor listAcsr;

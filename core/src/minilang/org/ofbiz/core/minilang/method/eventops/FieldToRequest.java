@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FieldToRequest extends MethodOperation {
     
+    public static final String module = FieldToRequest.class.getName();
+    
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
     FlexibleServletAccessor requestAcsr;

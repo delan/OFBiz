@@ -37,6 +37,8 @@ import org.ofbiz.core.util.*;
  */
 public class MakeInString {
     
+    public static final String module = MakeInString.class.getName();
+    
     String fieldName;
     List operations = new LinkedList();
 

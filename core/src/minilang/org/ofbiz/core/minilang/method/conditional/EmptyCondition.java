@@ -38,6 +38,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class EmptyCondition implements Conditional {
     
+    public static final String module = EmptyCondition.class.getName();
+    
     SimpleMethod simpleMethod;
     
     ContextAccessor mapAcsr;

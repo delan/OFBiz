@@ -40,6 +40,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class ClearCacheLine extends MethodOperation {
     
+    public static final String module = ClearCacheLine.class.getName();
+    
     String entityName;
     ContextAccessor mapAcsr;
 

@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class RegexpCondition implements Conditional {
     
+    public static final String module = RegexpCondition.class.getName();
+    
     SimpleMethod simpleMethod;
     
     static PatternMatcher matcher = new Perl5Matcher();

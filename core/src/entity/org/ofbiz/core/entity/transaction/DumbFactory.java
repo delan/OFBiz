@@ -40,6 +40,9 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class DumbFactory implements TransactionFactoryInterface {
+    
+    public static final String module = DumbFactory.class.getName();
+    
     public TransactionManager getTransactionManager() {
         return new TransactionManager() {
             public void begin() throws NotSupportedException, SystemException {

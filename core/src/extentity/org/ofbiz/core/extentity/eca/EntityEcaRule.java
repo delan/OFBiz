@@ -41,12 +41,14 @@ import org.ofbiz.core.util.*;
  */
 public class EntityEcaRule {
 
-    String entityName;
-    String operationName;
-    String eventName;
-    boolean runOnError;
-    List conditions = new LinkedList();
-    List actions = new LinkedList();
+    public static final String module = EntityEcaRule.class.getName();
+    
+    protected String entityName = null;
+    protected String operationName = null;
+    protected String eventName = null;
+    protected boolean runOnError = false;
+    protected List conditions = new LinkedList();
+    protected List actions = new LinkedList();
 
     protected EntityEcaRule() {}
 

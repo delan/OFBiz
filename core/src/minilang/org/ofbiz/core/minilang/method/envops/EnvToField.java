@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class EnvToField extends MethodOperation {
     
+    public static final String module = EnvToField.class.getName();
+    
     ContextAccessor envAcsr;
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;

@@ -37,6 +37,8 @@ import org.ofbiz.core.util.*;
  */
 public class SimpleMapProcess {
     
+    public static final String module = SimpleMapProcess.class.getName();
+    
     List simpleMapOperations = new LinkedList();
     String field = "";
 

@@ -38,6 +38,8 @@ import org.ofbiz.core.minilang.method.*;
  * @since      2.0
  */
 public class IfEmpty extends MethodOperation {
+    
+    public static final String module = IfEmpty.class.getName();
 
     List subOps = new LinkedList();
     List elseSubOps = null;

@@ -40,6 +40,8 @@ import org.ofbiz.core.entity.*;
  */
 public class FindByPrimaryKey extends MethodOperation {
     
+    public static final String module = FindByPrimaryKey.class.getName();
+    
     ContextAccessor valueAcsr;
     String entityName;
     ContextAccessor mapAcsr;

@@ -39,6 +39,8 @@ import org.ofbiz.core.entity.*;
  */
 public class CloneValue extends MethodOperation {
     
+    public static final String module = CloneValue.class.getName();        
+    
     ContextAccessor valueAcsr;
     ContextAccessor newValueAcsr;
 

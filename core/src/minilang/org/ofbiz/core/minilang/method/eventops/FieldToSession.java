@@ -38,6 +38,9 @@ import org.ofbiz.core.minilang.method.*;
  * @since      2.0
  */
 public class FieldToSession extends MethodOperation {
+    
+    public static final String module = FieldToSession.class.getName();
+    
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
     FlexibleServletAccessor sessionAcsr;

@@ -40,6 +40,8 @@ import org.ofbiz.core.util.*;
  * @since      2.1
  */
 public class EntityEcaCondition {
+    
+    public static final String module = EntityEcaCondition.class.getName();
 
     protected String lhsValueName, rhsValueName;
     protected String operator;

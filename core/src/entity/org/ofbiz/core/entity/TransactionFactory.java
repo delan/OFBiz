@@ -39,6 +39,7 @@ import org.ofbiz.core.entity.transaction.TransactionFactoryInterface;
  */
 public class TransactionFactory {
 
+    public static final String module = TransactionFactory.class.getName();
     public static TransactionFactoryInterface transactionFactory = null;
 
     public static TransactionFactoryInterface getTransactionFactory() {

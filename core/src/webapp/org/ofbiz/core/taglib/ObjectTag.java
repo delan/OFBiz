@@ -40,6 +40,8 @@ import org.ofbiz.core.util.*;
  * @created    August 4, 2001
  */
 public class ObjectTag extends TagSupport {
+    
+    public static final String module = ObjectTag.class.getName();
 
     protected Object element = null;
     protected String name = null;

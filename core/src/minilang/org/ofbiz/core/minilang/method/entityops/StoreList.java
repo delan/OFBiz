@@ -41,6 +41,8 @@ import org.ofbiz.core.entity.*;
  */
 public class StoreList extends MethodOperation {
     
+    public static final String module = StoreList.class.getName();
+    
     ContextAccessor listAcsr;
     String doCacheClearStr;
 

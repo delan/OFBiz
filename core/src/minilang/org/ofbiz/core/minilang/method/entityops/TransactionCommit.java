@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class TransactionCommit extends MethodOperation {
     
+    public static final String module = TransactionCommit.class.getName();
+    
     ContextAccessor beganTransactionAcsr;
 
     public TransactionCommit(Element element, SimpleMethod simpleMethod) {

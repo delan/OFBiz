@@ -42,6 +42,8 @@ import org.ofbiz.core.util.*;
  */
 public class SimpleMethodBsfEngine extends BSFEngineImpl {
     
+    public static final String module = SimpleMethodBsfEngine.class.getName();
+    
     protected Map context = new HashMap();
     
     public void initialize(BSFManager mgr, String lang, Vector declaredBeans) throws BSFException {

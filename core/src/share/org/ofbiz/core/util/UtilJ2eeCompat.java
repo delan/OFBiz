@@ -33,6 +33,8 @@ import javax.servlet.*;
  * @since      2.0
  */
 public class UtilJ2eeCompat {
+    
+    public static final String module = UtilJ2eeCompat.class.getName();
 
     public static final String TOMCAT = "Apache Tomcat";
     public static final String ORION = "Orion";

@@ -45,10 +45,12 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@created    Wed Aug 08 2001
- *@version    1.0
+ *@version    $Revision$
+ *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, Serializable, Comparable, Cloneable {
+    
+    public static final String module = GenericEntity.class.getName();
 
     /** Name of the GenericDelegator, used to reget the GenericDelegator when deserialized */
     public String delegatorName = null;

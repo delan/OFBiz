@@ -58,6 +58,8 @@ import com.ibm.bsf.util.BSFFunctions;
  */
 public class OfbizJsBsfEngine extends BSFEngineImpl {
     
+    public static final String module = OfbizJsBsfEngine.class.getName();
+    
     /**
      * The global script object, where all embedded functions are defined,
      * as well as the standard ECMA "core" objects.

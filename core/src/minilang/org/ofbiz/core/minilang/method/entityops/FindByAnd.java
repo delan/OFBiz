@@ -26,6 +26,7 @@ package org.ofbiz.core.minilang.method.entityops;
 import java.util.*;
 
 import org.w3c.dom.*;
+import org.netbeans.lib.cvsclient.commandLine.command.log;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
@@ -39,6 +40,8 @@ import org.ofbiz.core.entity.*;
  * @since      2.0
  */
 public class FindByAnd extends MethodOperation {
+    
+    public static final String module = FindByAnd.class.getName();         
     
     ContextAccessor listAcsr;
     String entityName;

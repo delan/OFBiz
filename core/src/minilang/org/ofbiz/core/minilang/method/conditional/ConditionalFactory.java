@@ -35,6 +35,9 @@ import org.ofbiz.core.minilang.*;
  * @since      2.1
  */
 public class ConditionalFactory {
+    
+    public static final String module = ConditionalFactory.class.getName();
+    
     public static Conditional makeConditional(Element element, SimpleMethod simpleMethod) {
         String tagName = element.getTagName();
         
@@ -59,7 +62,7 @@ public class ConditionalFactory {
         } else if ("if-has-permission".equals(tagName)) {
             return new HasPermissionCondition(element, simpleMethod);
         } else {
-            Debug.logWarning("Found an unknown if condition: ", tagName, module);
+            Debug.logWarning("Found an unknown if condition: " + tagName, module);
             return null;
         }
     }

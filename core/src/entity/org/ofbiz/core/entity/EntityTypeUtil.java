@@ -37,6 +37,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class EntityTypeUtil {
+    
+    public static final String module = EntityTypeUtil.class.getName();
 
     public static boolean isType(Collection thisCollection, String typeRelation, GenericValue targetType) {
         Iterator iter = thisCollection.iterator();

@@ -41,6 +41,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class EntityFieldTag extends TagSupport {
+    
+    public static final String module = EntityFieldTag.class.getName();
 
     protected String field = null;
     protected String type = null;

@@ -39,6 +39,9 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class RenderTag extends RegionTag {
+    
+    public static final String module = RenderTag.class.getName();
+    
     private String sectionName = null;
     private String role = null;
     private String permission = null;

@@ -41,6 +41,8 @@ import org.ofbiz.core.entity.*;
  */
 public class RemoveByAnd extends MethodOperation {
     
+    public static final String module = RemoveByAnd.class.getName();
+    
     String entityName;
     ContextAccessor mapAcsr;
     String doCacheClearStr;

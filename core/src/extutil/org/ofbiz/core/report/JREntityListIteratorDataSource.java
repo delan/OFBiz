@@ -46,6 +46,8 @@ import org.ofbiz.core.util.Debug;
  * @version $Revision$
  */
 public class JREntityListIteratorDataSource implements JRDataSource {
+    
+    public static final String module = JREntityListIteratorDataSource.class.getName();
 
     private EntityListIterator entityListIterator = null;
     private GenericEntity currentEntity = null;

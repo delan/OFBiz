@@ -40,6 +40,8 @@ import org.ofbiz.core.entity.*;
  */
 public class GetRelatedOne extends MethodOperation {
     
+    public static final String module = GetRelatedOne.class.getName();
+    
     ContextAccessor valueAcsr;
     ContextAccessor toValueAcsr;
     String relationName;

@@ -37,6 +37,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FlexibleMessage {
     
+    public static final String module = FlexibleMessage.class.getName();
+    
     String message = null;
     String propertyResource = null;
     boolean isProperty = false;

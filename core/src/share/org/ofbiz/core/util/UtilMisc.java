@@ -34,6 +34,8 @@ import java.util.*;
  * @since      2.0
  */
 public class UtilMisc {
+    
+    public static final String module = UtilMisc.class.getName();
 
     /** 
      * Get an iterator from a collection, returning null if collection is null

@@ -43,6 +43,9 @@ import org.ofbiz.core.util.UtilValidate;
  * @since      2.0
  */
 public class MakeNextSeqId extends MethodOperation {
+    
+    public static final String module = MakeNextSeqId.class.getName();
+    
     String seqFieldName;
     ContextAccessor valueAcsr;
     String numericPaddingStr;

@@ -40,6 +40,7 @@ import org.ofbiz.core.entity.config.*;
  */
 public class ModelGroupReader {
 
+    public static final String module = ModelGroupReader.class.getName();
     public static UtilCache readers = new UtilCache("entity.ModelGroupReader", 0, 0);
 
     private Map groupCache = null;

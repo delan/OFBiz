@@ -41,6 +41,8 @@ import org.ofbiz.core.entity.*;
  */
 public class RemoveList extends MethodOperation {
     
+    public static final String module = RemoveList.class.getName();
+
     ContextAccessor listAcsr;
     String doCacheClearStr;
 

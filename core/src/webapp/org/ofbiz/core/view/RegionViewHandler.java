@@ -42,6 +42,8 @@ import org.ofbiz.core.region.*;
  * @since      2.0
  */
 public class RegionViewHandler implements ViewHandler {
+    
+    public static final String module = RegionViewHandler.class.getName();
 
     protected ServletContext context;
     protected RegionManager regionManager = null;

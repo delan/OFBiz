@@ -44,6 +44,8 @@ import org.ofbiz.core.util.*;
  * @created    August 31, 2001
  */
 public class IfTag extends BodyTagSupport {
+    
+    public static final String module = IfTag.class.getName();
 
     private String name = null;
     private String value = null;

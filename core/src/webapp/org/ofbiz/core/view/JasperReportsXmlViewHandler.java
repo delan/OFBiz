@@ -42,6 +42,8 @@ import dori.jasper.engine.*;
  * @since      2.0
  */
 public class JasperReportsXmlViewHandler implements ViewHandler {
+    
+    public static final String module = JasperReportsXmlViewHandler.class.getName();
 
     protected ServletContext context;
 

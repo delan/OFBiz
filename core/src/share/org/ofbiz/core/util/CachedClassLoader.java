@@ -38,6 +38,9 @@ import java.util.Map;
  * @since      2.1
  */
 public class CachedClassLoader extends URLClassLoader {
+    
+    public static final String module = CachedClassLoader.class.getName();
+    
     private String contextName;
 
     public static Map globalClassNameClassMap = new HashMap();

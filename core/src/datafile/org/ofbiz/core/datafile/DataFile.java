@@ -38,6 +38,8 @@ import org.ofbiz.core.util.*;
  */
 
 public class DataFile {
+    
+    public static final String module = DataFile.class.getName();
 
     /** List of record in the file, contains Record objects */
     protected List records = new ArrayList();

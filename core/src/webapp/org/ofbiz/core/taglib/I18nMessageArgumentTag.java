@@ -42,6 +42,9 @@ import org.ofbiz.core.util.Debug;
  * @created April 16, 2002
  */
 public class I18nMessageArgumentTag extends TagSupport {
+    
+    public static final String module = I18nMessageArgumentTag.class.getName();
+    
     public void setValue(Object argumentValue) throws JspException {
         try {
             I18nMessageTag messageTag = (I18nMessageTag) this.getParent();

@@ -39,6 +39,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class TransactionRollback extends MethodOperation {
     
+    public static final String module = TransactionRollback.class.getName();
+    
     ContextAccessor beganTransactionAcsr;
 
     public TransactionRollback(Element element, SimpleMethod simpleMethod) {

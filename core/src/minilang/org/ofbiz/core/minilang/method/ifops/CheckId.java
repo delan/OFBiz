@@ -40,6 +40,8 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class CheckId extends MethodOperation {
     
+    public static final String module = CheckId.class.getName();
+    
     String message = null;
     String propertyResource = null;
     boolean isProperty = false;

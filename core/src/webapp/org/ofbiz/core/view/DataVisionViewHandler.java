@@ -41,6 +41,8 @@ import jimm.datavision.*;
  * @since      2.0
  */
 public class DataVisionViewHandler implements ViewHandler {
+    
+    public static final String module = DataVisionViewHandler.class.getName();
 
     protected ServletContext context;
 
