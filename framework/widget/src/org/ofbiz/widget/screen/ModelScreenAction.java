@@ -151,7 +151,7 @@ public abstract class ModelScreenAction {
             if (this.fromScope != null && this.fromScope.equals("user")) {
                 if (this.fromField != null) {
                     HttpSession session = (HttpSession)context.get("session");
-                	newValue = getInMemoryPersistedFromField(session, context);
+                    newValue = getInMemoryPersistedFromField(session, context);
                     if (Debug.verboseOn()) Debug.logVerbose("In user getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
                 } else if (this.valueExdr != null) {
                     newValue = this.valueExdr.expandString(context);
@@ -160,12 +160,11 @@ public abstract class ModelScreenAction {
             } else if (this.fromScope != null && this.fromScope.equals("application")) {
                 if (this.fromField != null) {
                     ServletContext servletContext = (ServletContext)context.get("application");
-                	newValue = getInMemoryPersistedFromField(servletContext, context);
+                     newValue = getInMemoryPersistedFromField(servletContext, context);
                     if (Debug.verboseOn()) Debug.logVerbose("In application getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
                 } else if (this.valueExdr != null) {
                     newValue = this.valueExdr.expandString(context);
                 }
-                
             } else {
                 if (this.fromField != null) {
                     newValue = this.fromField.get(context);
@@ -177,11 +176,11 @@ public abstract class ModelScreenAction {
 
             // If newValue is still empty, use the default value
             if (UtilValidate.isEmpty(newValue)) {
-            	if (this.defaultExdr != null) {
-            		if (ObjectType.isEmpty(newValue)) {
-            			newValue = this.defaultExdr.expandString(context);
-            		}
-            	}
+                if (this.defaultExdr != null) {
+                    if (ObjectType.isEmpty(newValue)) {
+                        newValue = this.defaultExdr.expandString(context);
+                    }
+                }
             }
             
             if (UtilValidate.isNotEmpty(this.type)) {
@@ -192,8 +191,8 @@ public abstract class ModelScreenAction {
                     Debug.logError(e, errMsg, module);
                     throw new IllegalArgumentException(errMsg);
                 }
-         
             }
+            
             if (this.toScope != null && this.toScope.equals("user")) {
                     String originalName = this.field.getOriginalName();
                     List currentWidgetTrail = (List)context.get("_WIDGETTRAIL_");
@@ -206,29 +205,34 @@ public abstract class ModelScreenAction {
                     HttpSession session = (HttpSession)context.get("session");
                     session.setAttribute(newKey, newValue);
                     if (Debug.verboseOn()) Debug.logVerbose("In user setting value for field from [" + this.field.getOriginalName() + "]: " + newValue, module);
-                
             } else if (this.toScope != null && this.toScope.equals("application")) {
                     String originalName = this.field.getOriginalName();
                     List currentWidgetTrail = (List)context.get("_WIDGETTRAIL_");
                     String newKey = "";
-                    if (currentWidgetTrail != null)
+                    if (currentWidgetTrail != null) {
                         newKey = StringUtil.join(currentWidgetTrail, "|");
-                    if (UtilValidate.isNotEmpty(newKey))
+                    }
+                    if (UtilValidate.isNotEmpty(newKey)) {
                         newKey += "|";
+                    }
                     newKey += originalName;
                     ServletContext servletContext = (ServletContext)context.get("application");
                     servletContext.setAttribute(newKey, newValue);
                     if (Debug.verboseOn()) Debug.logVerbose("In application setting value for field from [" + this.field.getOriginalName() + "]: " + newValue, module);
-                
             } else {
-            	if (Debug.verboseOn()) Debug.logVerbose("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
-                this.field.put(context, newValue);
+                // only do this if it is not global, if global ONLY put it in the global context
+                if (!global) {
+                    if (Debug.verboseOn()) Debug.logVerbose("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
+                    this.field.put(context, newValue);
+                }
             }
             
             if (global) {
                 Map globalCtx = (Map) context.get("globalContext");
                 if (globalCtx != null) {
                     this.field.put(globalCtx, newValue);
+                } else {
+                    this.field.put(context, newValue);
                 }
             }
             
@@ -238,32 +242,34 @@ public abstract class ModelScreenAction {
                 this.field.put(page, newValue);
             }
         }
-    	
-    	public Object getInMemoryPersistedFromField( Object storeAgent, Map context) {
-    	            
-                    Object newValue = null;
-                    String originalName = this.fromField.getOriginalName();
-                    List currentWidgetTrail = (List)context.get("_WIDGETTRAIL_");
-                    List trailList = new ArrayList();
-                    if (currentWidgetTrail != null)
-                        trailList.addAll(currentWidgetTrail);
-                    
-                    for (int i=trailList.size(); i >= 0; i--) {
-                    	List subTrail = trailList.subList(0,i);
-                    	String newKey = null;
-                    	if (subTrail.size() > 0)
-                    	    newKey = StringUtil.join(subTrail, "|") + "|" + originalName;
-                    	else
-                    	    newKey = originalName;
-                        
-                    	if (storeAgent instanceof ServletContext)
-                    		newValue = ((ServletContext)storeAgent).getAttribute(newKey);
-                    	else if (storeAgent instanceof HttpSession)
-                    		newValue = ((HttpSession)storeAgent).getAttribute(newKey);
-                    	if (newValue != null)
-                            break;
-                    }
-                    return newValue;
+        
+        public Object getInMemoryPersistedFromField( Object storeAgent, Map context) {
+            Object newValue = null;
+            String originalName = this.fromField.getOriginalName();
+            List currentWidgetTrail = (List)context.get("_WIDGETTRAIL_");
+            List trailList = new ArrayList();
+            if (currentWidgetTrail != null) {
+                trailList.addAll(currentWidgetTrail);
+            }
+            
+            for (int i=trailList.size(); i >= 0; i--) {
+                List subTrail = trailList.subList(0,i);
+                String newKey = null;
+                if (subTrail.size() > 0)
+                    newKey = StringUtil.join(subTrail, "|") + "|" + originalName;
+                else
+                    newKey = originalName;
+                
+                if (storeAgent instanceof ServletContext) {
+                    newValue = ((ServletContext)storeAgent).getAttribute(newKey);
+                } else if (storeAgent instanceof HttpSession) {
+                    newValue = ((HttpSession)storeAgent).getAttribute(newKey);
+                }
+                if (newValue != null) {
+                    break;
+                }
+            }
+            return newValue;
         }
     }
     
