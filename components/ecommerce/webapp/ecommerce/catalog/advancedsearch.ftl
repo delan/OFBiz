@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -98,7 +98,7 @@
             <#list searchConstraintStrings as searchConstraintString>
                 <div class="tabletext">&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
-            <div class="tabletext">${uiLabelMap.ProductSortedby}: ${searchSortOrderString}</div>
+            <div class="tabletext">${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
             <div class="tabletext">
               ${uiLabelMap.ProductNewSearch}<input type="RADIO" name="clearSearch" value="Y" checked>
               ${uiLabelMap.ProductRefineSearch}<input type="RADIO" name="clearSearch" value="N">
