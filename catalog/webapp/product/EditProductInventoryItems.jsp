@@ -26,6 +26,7 @@
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
@@ -39,7 +40,10 @@
             UtilMisc.toMap("productId", productId), 
             UtilMisc.toList("statusId", "quantityOnHand", "serialNumber"));
     if (productInventoryItems != null) pageContext.setAttribute("productInventoryItems", productInventoryItems);
+
 %>
+<%String externalLoginKey = LoginEvents.getExternalLoginKey(request);%>
+<%String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;%>
 
 <%if (productId != null && productId.length() > 0){%>
   <div class='tabContainer'>
@@ -66,7 +70,7 @@
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
-  <a href='/facility/control/EditInventoryItem?productId=<%=productId%>' class="buttontext">[Create New Inventory Item for this Product]</a>
+  <a href='/facility/control/EditInventoryItem?productId=<%=productId%><%=externalKeyParam%>' class="buttontext">[Create New Inventory Item for this Product]</a>
 <%}%>
 <br>
 
@@ -97,7 +101,7 @@
   <%if (curInventoryItemType != null) pageContext.setAttribute("curInventoryItemType", curInventoryItemType);%>
   <%boolean isQuantity = inventoryItem.get("quantityOnHand") != null && (inventoryItem.get("serialNumber") == null || inventoryItem.getString("serialNumber").length() == 0);%>
   <tr valign="middle">
-    <td><a href='/facility/control/EditInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/>' class="buttontext"><ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></a></td>
+    <td><a href='/facility/control/EditInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/><%=externalKeyParam%>' class="buttontext"><ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></a></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="curInventoryItemType" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<%if (curStatusItem != null) {%><%=curStatusItem.getString("description")%><%} else {%><ofbiz:entityfield attribute="inventoryItem" field="statusId" prefix="[" suffix="]"/><%}%></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="datetimeReceived"/></div></td>
@@ -106,7 +110,7 @@
         <td><div class='tabletext' style='color: red;'>Error: facility (<ofbiz:entityfield attribute="inventoryItem" field="facilityId"/>) 
             AND container (<ofbiz:entityfield attribute="inventoryItem" field="containerId"/>) specified</div></td>
     <%} else if(UtilValidate.isNotEmpty(inventoryItem.getString("facilityId"))) {%>
-        <td><span class='tabletext'>F:&nbsp;</span><a href='/facility/control/EditFacility?facilityId=<ofbiz:entityfield attribute="inventoryItem" field="facilityId"/>' class='buttontext'>
+        <td><span class='tabletext'>F:&nbsp;</span><a href='/facility/control/EditFacility?facilityId=<ofbiz:entityfield attribute="inventoryItem" field="facilityId"/><%=externalKeyParam%>' class='buttontext'>
             <ofbiz:entityfield attribute="inventoryItem" field="facilityId"/></a></td>
     <%} else if(UtilValidate.isNotEmpty(inventoryItem.getString("containerId"))) {%>
         <td><span class='tabletext'>C:&nbsp;</span><a href='<ofbiz:url>/EditContainer?containerId=<ofbiz:entityfield attribute="inventoryItem" field="containerId"/></ofbiz:url>' class='buttontext'>
@@ -145,7 +149,7 @@
         <td>&nbsp;</td>
     <%}%>
     <td>
-      <a href='/facility/control/EditInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/>' class="buttontext">
+      <a href='/facility/control/EditInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/><%=externalKeyParam%>' class="buttontext">
       [Edit]</a>
     </td>
     <td>
