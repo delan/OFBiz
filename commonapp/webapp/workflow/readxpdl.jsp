@@ -35,15 +35,25 @@
     
     String xpdlLoc = request.getParameter("XPDL_LOCATION");
     boolean xpdlIsUrl = request.getParameter("XPDL_IS_URL")!=null?true:false;
+    boolean xpdlImport = request.getParameter("XPDL_IMPORT")!=null?true:false;
     
     URL xpdlUrl = null;
     try { xpdlUrl = xpdlIsUrl?new URL(xpdlLoc):UtilURL.fromFilename(xpdlLoc); }
-    catch (java.net.MalformedURLException e) { messages.add(e.getMessage()); messages.add(e.toString()); }
+    catch (java.net.MalformedURLException e) { messages.add(e.getMessage()); messages.add(e.toString()); Debug.logWarning(e); }
     if (xpdlUrl == null) messages.add("Could not find file/URL: " + xpdlLoc);
     
     List values = null;
     try { if (xpdlUrl != null) values = XpdlReader.readXpdl(xpdlUrl, delegator); }
-    catch (Exception e) { messages.add(e.getMessage()); messages.add(e.toString()); }
+    catch (Exception e) { messages.add(e.getMessage()); messages.add(e.toString()); Debug.logWarning(e); }
+
+    if (values != null && xpdlImport) {
+        try {
+            delegator.storeAll(values);
+            messages.add("Wrote/Updated " + values.size() + " values objects to the data source.");
+        } catch (GenericEntityException e) {
+            messages.add(e.getMessage()); messages.add(e.toString()); Debug.logWarning(e);
+        }
+    }
 %>
 <h3>View Data File</h3>
 <div>This page is used to view data from data files parsed by the configurable data file parser.</div>
@@ -51,7 +61,7 @@
 <%if(security.hasPermission("WORKFLOW_MAINT", session)) {%>
   <FORM method=POST action='<ofbiz:url>/readxpdl</ofbiz:url>'>
     XPDL Filename or URL: <INPUT name='XPDL_LOCATION' type=text size='60' value='<%=UtilFormatOut.checkNull(xpdlLoc)%>'> Is URL?:<INPUT type=checkbox name='XPDL_IS_URL' <%=xpdlIsUrl?"checked":""%>><BR>
-    <INPUT type=submit value='View'>
+    Import/Update to DB?:<INPUT type=checkbox name='XPDL_IMPORT'> <INPUT type=submit value='View'>
   </FORM>
 
   <hr>
@@ -77,6 +87,7 @@
     <%} else {%>
         <div>No values read.</div>
     <%}%>
+    
     
 <%}else{%>
   <hr>
