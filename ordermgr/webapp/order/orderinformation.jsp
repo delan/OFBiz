@@ -389,7 +389,7 @@
                     <%if(userPerson!=null){%>
                       <%=PartyHelper.getPersonName(userPerson)%>
                     <%}%>
-                    &nbsp;(<a href="/partymgr/control/viewprofile?party_id=<%=partyId%>" class="buttontext"><%=partyId%></a>)
+                    &nbsp;(<a href="/partymgr/control/viewprofile?party_id=<%=partyId%>" target='partymgr' class="buttontext"><%=partyId%></a>)
                     </div>
                   </td>
                 </tr>

@@ -150,7 +150,7 @@
                             <td align="right" colspan="2">
                                 <div class="tabletext" style='font-size: xx-small;'>
                                     <b><i>Inventory</i>:</b>
-                                    <a target='_blank' href='/catalog/control/EditInventoryItem?inventoryItemId=<%=UtilFormatOut.checkNull(orderItemInventoryRes.getString("inventoryItemId"))%>' class='buttontext' style='font-size: xx-small;'><%=UtilFormatOut.checkNull(orderItemInventoryRes.getString("inventoryItemId"))%></a>
+                                    <a target='facility' href='/facility/control/EditInventoryItem?inventoryItemId=<%=UtilFormatOut.checkNull(orderItemInventoryRes.getString("inventoryItemId"))%>' class='buttontext' style='font-size: xx-small;'><%=UtilFormatOut.checkNull(orderItemInventoryRes.getString("inventoryItemId"))%></a>
                                 </div>
                             </td>
                             <td align="center"><div class="tabletext" style='font-size: xx-small;'><%=UtilFormatOut.formatQuantity(orderItemInventoryRes.getDouble("quantity"))%>&nbsp;</div></td>
