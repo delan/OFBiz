@@ -525,12 +525,6 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateProductPromoCodeEmail" default-entity-name="ProductPromoCodeEmail" engine="simple"
-                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCodeEmail" auth="true">
-        <description>Update a ProductPromoCodeEmail</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
     <service name="deleteProductPromoCodeEmail" default-entity-name="ProductPromoCodeEmail" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="deleteProductPromoCodeEmail" auth="true">
         <description>Delete a ProductPromoCodeEmail</description>
@@ -540,12 +534,6 @@
     <service name="createProductPromoCodeParty" default-entity-name="ProductPromoCodeParty" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCodeParty" auth="true">
         <description>Create a ProductPromoCodeParty</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="updateProductPromoCodeParty" default-entity-name="ProductPromoCodeParty" engine="simple"
-                location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCodeParty" auth="true">
-        <description>Update a ProductPromoCodeParty</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
@@ -1431,7 +1419,7 @@
         <attribute name="highIndex" type="Integer" mode="OUT" optional="false"/>
         <attribute name="listSize" type="Integer" mode="OUT" optional="false"/>
     </service>
-    
+
     <!-- Product Store Keyword Override services -->
     <service name="createProductStoreKeywordOvrd" default-entity-name="ProductStoreKeywordOvrd" engine="simple"
                 location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreKeywordOvrd" auth="true">
@@ -1453,7 +1441,7 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    
+
     <!-- Product content services -->
     <service name="createProductContent" default-entity-name="ProductContent" engine="simple"
                 location="org/ofbiz/product/content/ContentServices.xml" invoke="createProductContent" auth="true">

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
  */
 
@@ -62,8 +62,17 @@ HtmlFormWrapper productPromoCodeFormWrapper = new HtmlFormWrapper("/promo/PromoF
 productPromoCodeFormWrapper.putInContext("productPromoCodeId", productPromoCodeId);
 productPromoCodeFormWrapper.putInContext("productPromoCode", productPromoCode);
 
+productPromoCodeEmails = null;
+productPromoCodeParties = null;
+if (productPromoCode != null) {
+    productPromoCodeEmails = productPromoCode.getRelated("ProductPromoCodeEmail");
+    productPromoCodeParties = productPromoCode.getRelated("ProductPromoCodeParty");
+}
+
 context.put("productPromoId", productPromoId);
 context.put("productPromo", productPromo);
 context.put("productPromoCodeId", productPromoCodeId);
 context.put("productPromoCode", productPromoCode);
 context.put("productPromoCodeFormWrapper", productPromoCodeFormWrapper);
+context.put("productPromoCodeEmails", productPromoCodeEmails);
+context.put("productPromoCodeParties", productPromoCodeParties);
