@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org) 
+ *@author David E. Jones (jonesde@ofbiz.org)
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -1278,6 +1278,33 @@
         <key-map field-name="partyId"/>
       </relation>
     </entity>
+    <view-entity entity-name="PersonRoleView"
+            package-name="org.ofbiz.commonapp.party.party"
+            title="Person Role View Entity">
+      <member-entity entity-alias="PS" entity-name="Person"/>
+      <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <alias entity-alias="PS" name="partyId" prim-key="true"/>
+      <alias entity-alias="PS" name="lastName"/>
+      <alias entity-alias="PS" name="firstName"/>
+      <alias entity-alias="PS" name="middleName"/>
+      <alias entity-alias="PS" name="personalTitle"/>
+      <alias entity-alias="PS" name="suffix"/>
+      <alias entity-alias="PS" name="nickname"/>
+      <alias entity-alias="PS" name="gender"/>
+      <alias entity-alias="PS" name="height"/>
+      <alias entity-alias="PS" name="weight"/>
+      <alias entity-alias="PS" name="mothersMaidenName"/>
+      <alias entity-alias="PS" name="maritalStatus"/>
+      <alias entity-alias="PS" name="socialSecurityNumber"/>
+      <alias entity-alias="PS" name="passportNumber"/>
+      <alias entity-alias="PS" name="passportExpireDate"/>
+      <alias entity-alias="PS" name="totalYearsWorkExperience"/>
+      <alias entity-alias="PS" name="comments"/>
+      <alias entity-alias="PR" name="roleTypeId"/>
+      <view-link entity-alias="PS" rel-entity-alias="PR">
+        <key-map field-name="partyId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="PriorityType"
             package-name="org.ofbiz.commonapp.party.party"
             title="Priority Type Entity">
