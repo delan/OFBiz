@@ -127,7 +127,10 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="submitButton" title="Add"><submit button-type="button"/></field>
+		<field name="comments"><ignored/></field>
+		<field name="userLogin"><ignored/></field>
+		<field name="locale"><ignored/></field>
+		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
 	<form name="UpdateProductCategoryMemeber" type="list" 
 		target="updateProductToCategory" title="" list-name="productCategoryMemberDatas"

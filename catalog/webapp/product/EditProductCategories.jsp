@@ -33,16 +33,11 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
-
     String productId = request.getParameter("productId");
     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 
     Collection productCategoryMembers = product.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productCategoryId"));
     if (productCategoryMembers != null) pageContext.setAttribute("productCategoryMembers", productCategoryMembers);
-
-    Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
-    if (categoryCol != null) pageContext.setAttribute("categoryCol", categoryCol);
 
 	List productCategoryMemberDatas = new LinkedList();
 	Iterator productCategoryMemberIter = productCategoryMembers.iterator();
@@ -56,6 +51,7 @@
     updateProductCategoryMemberWrapper.putInContext("productCategoryMemberDatas", productCategoryMemberDatas);
 
     HtmlFormWrapper addProductCategoryMemberWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddProductCategoryMember", request, response);
+    addProductCategoryMemberWrapper.putInContext("product", product);
 %>
 
 <%if(productId != null && productId.length() > 0){%>
@@ -87,76 +83,10 @@
 <br>
 <br>
 
-<hr/>
-
-<%=updateProductCategoryMemberWrapper.renderFormString()%>
-
-<hr/>
-
 <%if(productId!=null && product!=null){%>
-<table border="1" width="100%" cellpadding='2' cellspacing='0'>
-  <tr>
-    <td><div class="tabletext"><b>Category [ID]</b></div></td>
-    <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-    <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence&nbsp;&amp;&nbsp;Quantity</b></div></td>
-    <td><div class="tabletext"><b>&nbsp;</b></div></td>
-  </tr>
-<%int line = 0;%>
-<ofbiz:iterator name="productCategoryMember" property="productCategoryMembers">
-  <%line++;%>
-  <%GenericValue category = productCategoryMember.getRelatedOne("ProductCategory");%>
-  <tr valign="middle">
-    <td><a href='<ofbiz:url>/EditCategory?productCategoryId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%if (category!=null) {%><%=category.getString("description")%><%}%> [<ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/>]</a></td>
-    <td>
-        <%boolean hasntStarted = false;%>
-        <%if (productCategoryMember.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productCategoryMember.getTimestamp("fromDate"))) { hasntStarted = true; }%>
-        <div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>>
-                <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/>
-        </div>
-    </td>
-    <td align="center">
-        <%boolean hasExpired = false;%>
-        <%if (productCategoryMember.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryMember.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <FORM method=POST action='<ofbiz:url>/updateProductToCategory</ofbiz:url>' name='lineForm<%=line%>'>
-            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
-            <input type=text class='inputBox' size='25' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/> style='<%if (hasExpired) {%> color: red;<%}%>'>
-            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/> class='inputBox'>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/> class='inputBox'>
-            <INPUT type=submit value='Update' style='font-size: x-small;'>
-        </FORM>
-    </td>
-    <td align="center">
-      <a href='<ofbiz:url>/removeProductFromCategory?productId=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>&productCategoryId=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
-      [Delete]</a>
-    </td>
-  </tr>
-</ofbiz:iterator>
-</table>
+<%=updateProductCategoryMemberWrapper.renderFormString()%>
 <br>
-	
-<hr/>
-
 <%=addProductCategoryMemberWrapper.renderFormString()%>
-
-<hr/>
-
-<form method="POST" action="<ofbiz:url>/addProductToCategory</ofbiz:url>" style='margin: 0;' name='addProductCategoryMemberForm'>
-  <input type="hidden" name="productId" value="<%=productId%>">
-
-  <div class='head2'>Add ProductCategoryMember (select Category, enter From Date):</div>
-  <br>
-  <select name="productCategoryId" class='selectBox'>
-  <ofbiz:iterator name="category" property="categoryCol">
-    <option value='<ofbiz:entityfield attribute="category" field="productCategoryId"/>'><ofbiz:entityfield attribute="category" field="description"/> [<ofbiz:entityfield attribute="category" field="productCategoryId"/>]</option>
-  </ofbiz:iterator>
-  </select>
-  <input type=text size='25' name='fromDate' class='inputBox'>
-  <a href="javascript:call_cal(document.addProductCategoryMemberForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-  <input type="submit" value="Add" style='font-size: x-small;'>
-</form>
 <%}%>
 <br>
 
