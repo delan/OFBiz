@@ -42,6 +42,8 @@
     <Enumeration description="LIFO Received" enumCode="LIFO_REC" enumId="INVRO_LIFO_REC" sequenceId="02" enumTypeId="INV_RES_ORDER"/>
     <Enumeration description="FIFO Expire" enumCode="FIFO_EXP" enumId="INVRO_FIFO_EXP" sequenceId="03" enumTypeId="INV_RES_ORDER"/>
     <Enumeration description="LIFO Expire" enumCode="LIFO_EXP" enumId="INVRO_LIFO_EXP" sequenceId="04" enumTypeId="INV_RES_ORDER"/>
+    <Enumeration description="Greater Unit Cost" enumCode="GUNIT_COST" enumId="INVRO_GUNIT_COST" sequenceId="05" enumTypeId="INV_RES_ORDER"/>
+    <Enumeration description="Less Unit Cost" enumCode="LUNIT_COST" enumId="INVRO_LUNIT_COST" sequenceId="06" enumTypeId="INV_RES_ORDER"/>
 
     <EnumerationType description="Product Store Payment Service Type" enumTypeId="PRDS_PAYSVC" hasTable="N" parentTypeId=""/>
     <Enumeration description="Payment Authorization Service" enumCode="PAY_AUTH" enumId="PRDS_PAY_AUTH" sequenceId="01" enumTypeId="PRDS_PAYSVC"/>
