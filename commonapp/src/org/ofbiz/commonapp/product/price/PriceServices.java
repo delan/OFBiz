@@ -81,8 +81,53 @@ public class PriceServices {
                 //calculate running sum based on listPrice and rules found
                 double price = listPrice;
 
-                // ========= find all rules that must be run for each input type: =========
+                // ========= find all rules that must be run for each input type; this is kind of like a pre-filter to slim down the rules to run =========
                 TreeSet productPriceRuleIds = new TreeSet();
+
+                // ------- These are all of them that DON'T depend on the current inputs -------
+
+                //by productCategoryId
+                // for we will always include any rules that go by category, shouldn't be too many to iterate through each time and will save on cache entries
+                // note that we always want to put the category, quantity, etc ones that find all rules with these conditions in separate cache lists so that they can be easily cleared
+                Collection productCategoryIdConds = delegator.findByAndCache("ProductPriceCond", 
+                        UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CAT_ID"));
+                if (productCategoryIdConds != null && productCategoryIdConds.size() > 0) {
+                    Iterator productCategoryIdCondsIter = productCategoryIdConds.iterator();
+                    while (productCategoryIdCondsIter.hasNext()) {
+                        GenericValue productCategoryIdCond = (GenericValue) productCategoryIdCondsIter.next();
+                        productPriceRuleIds.add(productCategoryIdCond.getString("productPriceRuleId"));
+                    }
+                }
+
+                //by quantity -- should we really do this one, ie is it necessary? 
+                // we could say that all rules with quantity on them must have one of these other values
+                // but, no we'll do it the other way, any that have a quantity will always get compared
+                Collection quantityConds = delegator.findByAndCache("ProductPriceCond", 
+                        UtilMisc.toMap("inputParamEnumId", "PRIP_QUANTITY"));
+                if (quantityConds != null && quantityConds.size() > 0) {
+                    Iterator quantityCondsIter = quantityConds.iterator();
+                    while (quantityCondsIter.hasNext()) {
+                        GenericValue quantityCond = (GenericValue) quantityCondsIter.next();
+                        productPriceRuleIds.add(quantityCond.getString("productPriceRuleId"));
+                    }
+                }
+                
+                //by roleTypeId
+                Collection roleTypeIdConds = delegator.findByAndCache("ProductPriceCond", 
+                        UtilMisc.toMap("inputParamEnumId", "PRIP_ROLE_TYPE"));
+                if (roleTypeIdConds != null && roleTypeIdConds.size() > 0) {
+                    Iterator roleTypeIdCondsIter = roleTypeIdConds.iterator();
+                    while (roleTypeIdCondsIter.hasNext()) {
+                        GenericValue roleTypeIdCond = (GenericValue) roleTypeIdCondsIter.next();
+                        productPriceRuleIds.add(roleTypeIdCond.getString("productPriceRuleId"));
+                    }
+                }
+                
+                //TODO, not supported yet: by groupPartyId
+                //TODO, not supported yet: by partyClassificationGroupId
+                //later: (by partyClassificationTypeId)
+
+                // ------- These are all of them that DO depend on the current inputs -------
 
                 //by productId
                 Collection productIdConds = delegator.findByAndCache("ProductPriceCond", 
@@ -95,14 +140,27 @@ public class PriceServices {
                     }
                 }
 
-                //TODO: by productCategoryId
-                //TODO: by prodCatalogId
-                //TODO: by quantity -- should we really do this one, ie is it necessary? we could say that all rules with quantity on them must have one of these other values
-                //TODO: by partyId
-                //TODO: by groupPartyId
-                //TODO: by partyClassificationGroupId
-                //later: (by partyClassificationTypeId)
-                //TODO: by roleTypeId
+                //by prodCatalogId
+                Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond", 
+                        UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CLG_ID", "condValue", prodCatalogId));
+                if (prodCatalogIdConds != null && prodCatalogIdConds.size() > 0) {
+                    Iterator prodCatalogIdCondsIter = prodCatalogIdConds.iterator();
+                    while (prodCatalogIdCondsIter.hasNext()) {
+                        GenericValue prodCatalogIdCond = (GenericValue) prodCatalogIdCondsIter.next();
+                        productPriceRuleIds.add(prodCatalogIdCond.getString("productPriceRuleId"));
+                    }
+                }
+
+                //by partyId
+                Collection partyIdConds = delegator.findByAndCache("ProductPriceCond", 
+                        UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
+                if (partyIdConds != null && partyIdConds.size() > 0) {
+                    Iterator partyIdCondsIter = partyIdConds.iterator();
+                    while (partyIdCondsIter.hasNext()) {
+                        GenericValue partyIdCond = (GenericValue) partyIdCondsIter.next();
+                        productPriceRuleIds.add(partyIdCond.getString("productPriceRuleId"));
+                    }
+                }
 
 
                 // ========= go through each price rule by id and eval all conditions =========
