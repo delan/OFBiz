@@ -172,6 +172,19 @@
         <attribute name="originContactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="destinationFacilityId" type="String" mode="IN" optional="true"/>                                
     </service>
+    <service name="createReturnHeader" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="createReturnHeader">
+        <description>Create a new ReturnHeader</description>
+        <implements service="returnInterface"/>
+        <attribute name="returnId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateReturnHeader" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="updateReturnHeader">
+        <description>Updaete a ReturnHeader</description>
+        <implements service="returnInterface"/>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+    </service>    
+    
     <service name="returnItemInterface" engine="interface" location="" invoke="">
         <description>Return Item Interface</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
@@ -182,6 +195,18 @@
         <attribute name="returnQuantity" type="Double" mode="IN" optional="false"/>
         <attribute name="returnPrice" type="Double" mode="IN" optional="false"/>                              
     </service>
+    <service name="createReturnHeader" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="createReturnItem">
+        <description>Create a new ReturnItem</description>
+        <implements service="returnItemInterface"/>
+        <attribute name="returnItemSeqId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateReturnHeader" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="updateReturnItem">
+        <description>Updaete a ReturnItem</description>
+        <implements service="returnItemInterface"/>
+        <attribute name="returnItemSeqId" type="String" mode="IN" optional="false"/>
+    </service>    
     
     <!-- Tax Services -->
     <service name="calcTax" engine="java"
