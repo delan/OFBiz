@@ -2,6 +2,6 @@
 <page>
     <template>main</template>    
     <property name="title">View Profile</property>
-     <property name="title.property">PageTitleViewProfile</property>
+    <property name="title.property">PageTitleViewProfile</property>
     <content-action name="/customer/viewprofile.bsh"/>
 </page>

@@ -82,6 +82,7 @@ if (userLogin != null) {
     eli = delegator.findListIteratorByCondition("CommunicationEvent", condition, null, null, orderBy, findOpts);
     messages = eli.getCompleteList();
     context.put("messages", messages);
+    context.put("profileMessages", true);
     eli.close();
 }
 
