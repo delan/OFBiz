@@ -118,8 +118,16 @@ public class TrackingCodeEvents {
                 response.addCookie(billableCookie);
             }
 
+			// if we have overridden logo and/or css set some session attributes
+			HttpSession session = request.getSession();
+			String overrideLogo = trackingCode.getString("overrideLogo");
+			if (overrideLogo != null)
+				session.setAttribute("overrideLogo", overrideLogo);
+			String overrideCss = trackingCode.getString("overrideCss");
+			if (overrideCss != null)
+				session.setAttribute("overrideCss", overrideCss);				
             
-            //if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
+            // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
             String redirectUrl = trackingCode.getString("redirectUrl");
             if (UtilValidate.isNotEmpty(redirectUrl)) {
                 try {
