@@ -68,8 +68,14 @@ public class FreeMarkerViewHandler implements ViewHandler {
         } catch (java.io.IOException e) {
             throw new ViewHandlerException("Could not create file for webapp root path", e);
         }
-        config.setObjectWrapper(BeansWrapper.getDefaultInstance());
         WrappingTemplateModel.setDefaultObjectWrapper(BeansWrapper.getDefaultInstance());
+        try {        
+            config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+            config.setCacheStorage(new OfbizCacheStorage("unknown"));
+            config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+        } catch (TemplateException e) {
+            throw new ViewHandlerException("Freemarker TemplateException", e.getCause());
+        }        
     }    
     
     public void render(String name, String page, String info, String contentType, String encoding, 

@@ -50,11 +50,12 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
         
     public static final String module = FreeMarkerViewRenderer.class.getName();        
 
-    public void init() throws Exception{
+    public void init() throws Exception {
         super.init();
         //TODO: find some way of getting the site identifier... hmmm...
         String id = "unknown";
         fmConfig.setCacheStorage(new OfbizCacheStorage(id));
+        fmConfig.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
     }
     
     protected Object createViewContext(JPublishContext context, String path) throws ViewRenderException {
