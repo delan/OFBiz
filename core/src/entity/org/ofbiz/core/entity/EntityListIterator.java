@@ -183,4 +183,13 @@ public class EntityListIterator implements ListIterator {
     public void set(Object obj) {
         throw new GeneralRuntimeException("CursorListIterator currently only supports read-only access");
     }
+    
+    protected void finalize() throws Throwable {
+        try {
+            sqlp.close();
+        } catch (Exception e) {
+            Debug.logError(e, "Error closing the result, connection, etc in finalize EntityListIterator");
+        }
+        super.finalize();
+    }
 }
