@@ -97,6 +97,9 @@ public class CashDrawer extends GenericDevice implements Runnable {
                 if ((now > 4499) && (now % 500 == 0)) {
                     java.awt.Toolkit.getDefaultToolkit().beep();
                 }
+                if ((now > 4499) && (now % 5000 == 0)) {
+                    PosScreen.currentScreen.showDialog("main/dialog/error/draweropen");   
+                }
             } else {
                 this.waiting = false;
             }

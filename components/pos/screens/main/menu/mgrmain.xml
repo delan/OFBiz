@@ -44,7 +44,7 @@
         <!-- col 6 -->
         <Button name="menuMain" x="0" y="310" w="100" h="60" style="posButton" content="MAIN" alignment="Center"/>
         <Button name="mgrLogOut" x="102" y="310" w="100" h="60" style="posButton" content="LOGOFF" alignment="Center"/>
-        <Button name="" x="204" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="mgrPopDrwr" x="204" y="310" w="100" h="60" style="posButton" content="OPEN DRAWER" alignment="Center"/>
         <Button name="" x="306" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="510" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>

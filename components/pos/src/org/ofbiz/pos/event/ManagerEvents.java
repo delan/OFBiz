@@ -25,6 +25,7 @@
 package org.ofbiz.pos.event;
 
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.pos.device.DeviceLoader;
 
 /**
  * 
@@ -35,6 +36,10 @@ import org.ofbiz.pos.screen.PosScreen;
 public class ManagerEvents {
 
     public static final String module = ManagerEvents.class.getName();
+
+    public static void openDrawer(PosScreen pos) {
+        DeviceLoader.drawer[0].openDrawer();    
+    }
 
     public static void logoff(PosScreen pos) {
         System.exit(0);
