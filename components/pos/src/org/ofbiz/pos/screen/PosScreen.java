@@ -39,6 +39,7 @@ import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.component.PosButton;
+import org.ofbiz.pos.component.Operator;
 import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
@@ -68,6 +69,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     protected Output output = null;
     protected Input input = null;
     protected Journal journal = null;
+    protected Operator operator = null;
     protected PosButton buttons = null;
 
     public void pageCreated() {
@@ -82,6 +84,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.output = new Output(this);
         this.input = new Input(this);
         this.journal = new Journal(this);
+        this.operator = new Operator(this);
         this.lastActivity = System.currentTimeMillis();
 
         // create the monitor thread
@@ -118,6 +121,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         if (session.getUserLogin() == null) {
             this.setLock(true);
         } else {
+            this.setLock(isLocked);
             if (!monitorRunning) {
                 monitorRunning = true;
                 activityMonitor.start();
@@ -125,16 +129,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         }
 
         currentScreen = this;
-        this.refresh();
-
-        Debug.log("App Frame :", module);
-        Debug.log("name    - " + appFrame.getName(), module);
-        Debug.log("title   - " + appFrame.getTitle(), module);
-        Debug.log("active  - " + appFrame.isActive(), module);
-        Debug.log("enabled - " + appFrame.isEnabled(), module);
-        Debug.log("visible - " + appFrame.isVisible(), module);
-        Debug.log("opaque  - " + appFrame.isOpaque(), module);
-
+        this.refresh();      
     }
 
     public void pageDeactivated() {
@@ -155,6 +150,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             this.setEnabled(true);
             this.setVisible(true);
             input.clearInput();
+            operator.refresh();
             if (input.isFunctionSet("PAID")) {
                 output.print(Output.CHANGE + UtilFormatOut.formatPrice((PosTransaction.getCurrentTx(this.getSession()).getTotalDue() * -1)));
             } else if (input.isFunctionSet("TOTAL")) {
@@ -181,6 +177,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.input.setLock(lock);
         this.output.setLock(lock);
         this.journal.setLock(lock);
+        this.operator.setLock(lock);
         this.isLocked = lock;
         this.input.setFunction("LOGIN");
     }

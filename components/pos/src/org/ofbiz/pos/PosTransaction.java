@@ -80,7 +80,7 @@ public class PosTransaction {
     protected String partyId = null;
     protected Locale locale = null;
     protected boolean isMgr = false;
-    protected int drawerNo = 0;
+    protected int drawerIdx = 0;
 
     private GenericValue shipAddress = null;
 
@@ -99,6 +99,10 @@ public class PosTransaction {
         this.ch = new CheckOutHelper(session.getDispatcher(), session.getDelegator(), cart);
         currentTx = this;
         trace("transaction created");
+    }
+
+    public int getDrawerNumber() {
+        return drawerIdx + 1;
     }
 
     public String getTransactionId() {
@@ -276,7 +280,7 @@ public class PosTransaction {
         double change = (grandTotal - paymentAmt);
 
         // open the drawer (only supports 1 drawer for now)
-        DeviceLoader.drawer[drawerNo].openDrawer();
+        DeviceLoader.drawer[drawerIdx].openDrawer();
 
         // print the receipt
         DeviceLoader.receipt.printReceipt(this);

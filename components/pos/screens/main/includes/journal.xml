@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<XPage class="org.ofbiz.pos.screen.Journal">
+<XPage>
     <Components>
-        <Panel name="infopan" x="0" y="0" w="412" h="55" border="1" style="panel">
-            <!--<Include file="main/posinfo"/>-->
+        <Panel name="oper_panel" x="0" y="0" w="412" h="55" border="0" style="panel">
+            <Edit name="oper_txid" x="2" y="2" w="80" h="50" style="opinfo" border="0" alignment="Left"/>
+            <Edit name="oper_drwr" x="84" y="2" w="80" h="50" style="opinfo" border="0" alignment="Left"/>
+            <Edit name="oper_empl" x="168" y="2" w="80" h="50" style="opinfo" border="0" alignment="Left"/>
+            <Edit name="oper_date" x="250" y="2" w="80" h="50" style="opinfo" border="0" alignment="Center"/>
+            <Edit name="oper_total" x="332" y="2" w="80" h="50" style="optotal" border="0" alignment="Right"/>
         </Panel>
-        <Panel name="tpan" x="0" y="55" w="412" h="637">
+        <Panel name="journal_panel" x="0" y="55" w="412" h="637">
             <Table name="jtable" x="2" y="2" w="410" h="625" style="journal"/>
         </Panel>
     </Components>    
