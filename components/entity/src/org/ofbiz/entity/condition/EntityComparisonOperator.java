@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.7 2004/07/14 04:18:51 doogie Exp $
+ * $Id: EntityComparisonOperator.java,v 1.8 2004/07/14 06:34:35 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {
@@ -98,7 +98,7 @@ public class EntityComparisonOperator extends EntityOperator {
                 sql.append(field.getColName());
             }
         } else {
-            sql.append(lhs.toString());
+            addValue(sql, null, lhs, entityConditionParams);
             field = null;
         }
         makeRHSWhereString(entity, entityConditionParams, sql, field, rhs);
