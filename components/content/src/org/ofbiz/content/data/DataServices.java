@@ -254,26 +254,23 @@ public class DataServices {
      * A top-level service for updating a DataResource and ElectronicText together.
      */
     public static Map updateDataResourceAndText(DispatchContext dctx, Map context) {
-        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map thisResult = updateDataResourceMethod(dctx, context);
-            if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
-                return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
-            }
-            context.put("dataResourceId", thisResult.get("dataResourceId"));
+  		Map thisResult = updateDataResourceMethod(dctx, context);
+  		if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
+      		return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
+  		}
+        String dataResourceTypeId = (String) context.get("dataResourceTypeId");
+        if (dataResourceTypeId != null && dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
+      		thisResult = updateElectronicText(dctx, context);
+      		if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
+          		return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
+      		}
+  		}
+    	return ServiceUtil.returnSuccess();
+	}
 
-            String dataResourceTypeId = (String) context.get("dataResourceTypeId");
-            if (dataResourceTypeId != null && dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
-                thisResult = updateElectronicText(dctx, context);
-                if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
-                    return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
-                }
-            }
-        
 
-        return result;
-    }
 
     /**
      * A service wrapper for the updateDataResourceMethod method. Forces permissions to be checked.
