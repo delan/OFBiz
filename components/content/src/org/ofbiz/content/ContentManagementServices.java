@@ -33,14 +33,8 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityConditionList;
-import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityListIterator;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.ServiceAuthException;
+import org.ofbiz.service.ServiceUtil;
 
 
 
@@ -774,10 +768,12 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
 	    	Integer leafCount = (Integer)thisContent.get("nodeLeafCount");
 	    	int subLeafCount = (leafCount == null) ? 1 : leafCount.intValue();
 	        String mode = (String)context.get("mode");
-	        if (mode != null && mode.equalsIgnoreCase("remove"))
+	        if (mode != null && mode.equalsIgnoreCase("remove")) {
 	        	subLeafCount *= -1;
-	        else
-	        	subLeafCount = subLeafCount;
+            } else {
+                // TODO: ??? what is this supposed to do:
+	        	//subLeafCount = subLeafCount;
+            }
 	        
 	       List condList = new ArrayList();
 	       Iterator iterType = typeList.iterator();
