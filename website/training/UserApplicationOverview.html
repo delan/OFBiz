@@ -160,165 +160,972 @@ etc.</li>
       <li>Linking to Content in a Webapp</li>
     </ol>
   </ol>
-  <li>Applications Reference</li>
-  <ol>
-    <li>TODO: Fill in all of the main areas and pages of each
+  <li>Applications Reference -- TODO: Fill in all of the main areas and
+pages of each
 application; this will be pretty similar to the same section in the
 Business Level Technical Overview document, correspond mainly to the
 tabs across the top.</li>
+  <ol>
     <li>Accounting Manager</li>
     <ol>
-      <li>Billing Accounts</li>
+      <li>Billing Accounts <br>
+      </li>
       <ol>
-        <li>List</li>
-        <li>New Account (create)</li>
+        <li>List [Edit]</li>
+        <ol>
+          <li>Account <br>
+          </li>
+          <ol>
+            <li>Account ID</li>
+            <li>Description</li>
+            <li>Billing Contact Mechanism</li>
+            <li>Account Limit<br>
+            </li>
+          </ol>
+          <li>Roles </li>
+          <ol>
+            <li>Edit Billing Account Roles</li>
+            <ol>
+              <li>Party ID</li>
+              <li>Role Type ID</li>
+              <li>From Date</li>
+              <li>To Date<br>
+              </li>
+            </ol>
+            <li>Create Billing Account Role [Save]<br>
+            </li>
+            <ol>
+              <li>Party ID</li>
+              <li>Roll Type ID</li>
+              <li>From Date<br>
+              </li>
+            </ol>
+          </ol>
+          <li>Terms</li>
+          <ol>
+            <li>Edit Billing Account Terms [Edit / Delete]</li>
+            <li>Create Billing Account Term [Save]<br>
+            </li>
+            <ol>
+              <li>Term Type</li>
+              <li>UOM</li>
+              <li>Term Value<br>
+              </li>
+            </ol>
+          </ol>
+          <li>Invoices <br>
+          </li>
+          <ol>
+            <li>Invoice #</li>
+            <li>Invoice Date</li>
+            <li>Due Date</li>
+            <li>Total<br>
+            </li>
+          </ol>
+          <li>Payments</li>
+          <ol>
+            <li>Payment #</li>
+            <li>Type</li>
+            <li>Invoice #</li>
+            <li>Invoice Item</li>
+            <li>Payment Date</li>
+            <li>Amount<br>
+            </li>
+          </ol>
+        </ol>
+        <li>Create Billing Account [Save]<br>
+        </li>
+        <ol>
+          <li>Description</li>
+          <li>Billing Contact Mech</li>
+          <li>Account Limit<br>
+          </li>
+        </ol>
       </ol>
-      <li>Invoices</li>
+      <li>Invoices <br>
+      </li>
       <ol>
-        <li>Find Invoices by ID or</li>
-        <li>Find Invoices by Status with Date Filter</li>
+        <li>Find Invoices by Id or Status with Date Filter</li>
+        <li>Invoices Found [Show/Hide Lookup Fields]<br>
+        </li>
+        <ol>
+          <li>Type</li>
+          <li>Invoice #</li>
+          <li>Invoice Total</li>
+          <li>Status</li>
+          <li>Invoice Date</li>
+        </ol>
+        <li>View Invoice #NNNNN Information</li>
+        <ol>
+          <li>Name<br>
+          </li>
+          <li>Status [Payments Link]</li>
+          <ol>
+            <li>Payment #</li>
+            <li>Type</li>
+            <li>Status</li>
+            <li>Invoice #</li>
+            <li>Invoice Item</li>
+            <li>Billing Acct</li>
+            <li>Payment Date</li>
+            <li>Ref #</li>
+            <li>Amount<br>
+            </li>
+          </ol>
+          <li>Date<br>
+          </li>
+          <li>Orders [Link to Order #NNNNN] <br>
+          </li>
+          <ol>
+            <li>Order #nnnn Information</li>
+            <ol>
+              <li>Status History</li>
+              <li>Date Ordered</li>
+            </ol>
+            <li>Payment Information [Receive Payment] [Invoices Link]<br>
+            </li>
+            <ol>
+              <li>Online Payment</li>
+              <ol>
+                <li>Credit Card Authorized</li>
+                <li>Credit Card Settled<br>
+                </li>
+              </ol>
+              <li>Offline Payment</li>
+            </ol>
+            <li>Contact Information</li>
+            <ol>
+              <li>Name [Link customer #]<br>
+              </li>
+              <li>Order Notification Email Address [send email]<br>
+              </li>
+              <li>Shipping To</li>
+              <li>Destination Address [lookup link]<br>
+              </li>
+            </ol>
+            <li>Shipment Information [View/ Edit Delivery Schedule Info]<br>
+            </li>
+            <ol>
+              <li>Method</li>
+              <li>Tracking Number<br>
+              </li>
+              <li>Splitting Preference</li>
+              <li>Gift?</li>
+              <li>Shipments # [Link]<br>
+              </li>
+            </ol>
+            <li>Order Items [Cancel All Items]</li>
+            <ol>
+              <li>Product [catalog] [ecommerce]</li>
+              <li>Status</li>
+              <ol>
+                <li>[Shipment Item #]<br>
+                </li>
+              </ol>
+              <li>Quantity</li>
+              <ol>
+                <li>[Inventory # link]<br>
+                </li>
+              </ol>
+              <li>Unit / List Adjustments</li>
+              <li>Subtotal</li>
+              <li>Adjustment: Sales Tax</li>
+              <li>Adjustment: Promotion:</li>
+              <li>Inventory remaining</li>
+              <li>Sales Tax</li>
+              <li>Shipping and Handling</li>
+              <li>Additional Feature [Add] (dropdown selection)<br>
+              </li>
+              <ol>
+                <li>Discount</li>
+                <li>Fee</li>
+                <li>Miscellaneous Charges</li>
+                <li>Promotion <br>
+                </li>
+                <li>Replacement</li>
+                <li>Sales Tax</li>
+                <li>Shipping and Handling</li>
+                <li>Surcharge</li>
+                <li>Warranty</li>
+              </ol>
+              <li>Items Subtotal</li>
+              <li>Total Other Order Adjustments</li>
+              <li>Total Shipping and Handling</li>
+              <li>Total Sales Tax</li>
+              <li>Total Due</li>
+              <li>[Create New]<br>
+              </li>
+            </ol>
+          </ol>
+        </ol>
       </ol>
-      <li>Payments</li>
+      <li>Payments <br>
+      </li>
       <ol>
         <li>Find Payment</li>
         <ol>
-          <li>Lookup by ID, Payment TYpe, or Status</li>
-          <li>Payments found</li>
+          <li>Lookup <br>
+          </li>
+          <ol>
+            <li>Payment Id</li>
+            <li>Payment Method Type</li>
+            <li>Status</li>
+            <li>From Party</li>
+            <li>To Party</li>
+            <li>Date Filter<br>
+            </li>
+          </ol>
+          <li>Payments found [Show Lookup Fields]<br>
+          </li>
+          <ol>
+            <li>Payment #</li>
+            <li>Type</li>
+            <li>Method</li>
+            <li>Status</li>
+            <li>From Party</li>
+            <li>To Party</li>
+            <li>Effective (date)</li>
+            <li>Amount<br>
+            </li>
+          </ol>
         </ol>
-        <li>Edit (or Create) Payment</li>
+        <li>Edit (or Create) Payment [Update / Create New]<br>
+        </li>
+        <ol>
+          <li>Payment ID<br>
+          </li>
+          <li>Payment Type</li>
+          <ol>
+            <li>Disbursement</li>
+            <li>Pay Check</li>
+            <li>Receipt<br>
+            </li>
+          </ol>
+          <li>Payment Method Id (i.e., Cash, Credit Card, EFT, PayPal,
+Personal Check, etc.)<br>
+          </li>
+          <li>Status</li>
+          <li>Payment Preference Id</li>
+          <li>Payment Method Id</li>
+          <li>To Party Id</li>
+          <li>From Party Id</li>
+          <li>Reference Number</li>
+          <li>Amount</li>
+          <li>Effective Date</li>
+          <li>Comments<br>
+          </li>
+        </ol>
       </ol>
-      <li>Chart of Accounts</li>
+      <li>Chart of Accounts (Global GL)<br>
+      </li>
       <ol>
-        <li>Find or List GL Account</li>
+        <li>Find or List Global GL Account</li>
         <ol>
           <li>Lookup by ID, Type, Class, Rource Type, XBRL Class, or
 Parent Account</li>
-          <li>GL Accounts List</li>
+          <li>GL Accounts List&nbsp; [Edit]<br>
+          </li>
+          <ol>
+            <li>ID</li>
+            <li>Name</li>
+            <li>Code</li>
+            <li>Parent ID</li>
+            <li>Class</li>
+            <li>Resource<br>
+            </li>
+          </ol>
         </ol>
         <li>Create New or Edit GL Account</li>
       </ol>
-      <li>Manual Electronic Transaction [???]</li>
-    </ol>
-    <li>Catalog Manager</li>
-    <ol>
-      <li>Left Pane (These options constantly visible while going
-through other tabs under Catalog.)</li>
       <ol>
-        <li>Search Products</li>
         <ol>
-          <li>Product&nbsp; by ID</li>
+          <li>GL Account<br>
+          </li>
+        </ol>
+      </ol>
+      <ol>
+        <ol>
           <ol>
-            <li>New Product (Create)</li>
-            <li>Product Page (Existing)</li>
+            <li>GL Account Id</li>
+            <li>GL Account Type (Accounts Payable, Credit Card,
+Purchase, Tax, etc.)</li>
+            <li>GL Account Class [Only with New]</li>
             <ol>
-              <li>Edit Catalog</li>
-              <li>Edit Category</li>
-              <li>Edit Product</li>
-              <li>Find Product</li>
-              <li>AutoCreate Keywords</li>
+              <li>through 7. (Asset, Expense, Liability, etc.)<br>
+              </li>
+            </ol>
+            <li>GL Resource Type (Delivered Goods,&nbsp; Finished
+Goods, Labor, Money, Raw Materials, etc.)<br>
+            </li>
+            <li>XBRL Class (IAS, US GAAP)</li>
+            <li>Parent GL Account</li>
+            <li>Account Code</li>
+            <li>Account Name</li>
+            <li>Description</li>
+            <li>Product Id</li>
+            <li>Posted Balance</li>
+          </ol>
+        </ol>
+      </ol>
+      <ol>
+        <ol>
+        </ol>
+      </ol>
+      <ol>
+        <ol>
+          <li>Organizations</li>
+          <li>Roles<br>
+          </li>
+        </ol>
+      </ol>
+      <li>Manual Electronic Transaction <br>
+      </li>
+      <ol>
+        <li>Payment Method Type [drop-down selections]<br>
+        </li>
+        <li>Product Store [drop-down selections]<br>
+        </li>
+        <li>Transaction Type [drop-down selections]<br>
+        </li>
+      </ol>
+    </ol>
+    <li>Catalog Manager - Left Pane (These options constantly visible
+while going
+through other tabs under Catalog.)</li>
+    <ol>
+      <li>Search Products [Find]<br>
+      </li>
+      <ol>
+        <li>Keywords<br>
+        </li>
+        <li>Category ID<br>
+        </li>
+        <ol>
+          <li>Any (button)</li>
+          <li>All (button)</li>
+        </ol>
+        <li><span style="font-weight: bold;">&gt;&gt; Successful search
+results &gt;&gt;</span><br>
+        </li>
+        <ol>
+          <li>(List of products in category) [Refine Search]<br>
+          </li>
+          <li>Remove Results From Category</li>
+          <li>Expire Results From Category [Expire]<br>
+          </li>
+          <li>Add Results to Category [Add to Category]</li>
+          <li>Add Features to Results [Add Feature]<br>
+          </li>
+        </ol>
+        <li>[Advanced Search] [Find]<br>
+        </li>
+        <ol>
+          <li>Select a Category (drop-down window)</li>
+          <ol>
+            <li>Include sub-categories?</li>
+            <ol>
+              <li>Yes / No (buttons)<br>
+              </li>
             </ol>
           </ol>
-          <li>Prices</li>
-          <li>Content</li>
-          <li>IDs</li>
-          <li>Categories</li>
           <li>Keywords</li>
-          <li>Associations</li>
-          <li>Attributes</li>
-          <li>Features</li>
-          <li>Facilities</li>
-          <li>Locations</li>
-          <li>Inventory</li>
+          <ol>
+            <li>Any / All (buttons)</li>
+          </ol>
+          <li>Feature IDs (3 choices)</li>
+          <li>Amount (Any or dollar ranges)</li>
+          <li>Color</li>
+          <li>Hazmat</li>
+          <li>Size</li>
+          <li>Style</li>
+          <li>Type</li>
+          <li>Sort Order</li>
+          <ol>
+            <li>Low to High or High to Low (buttons)<br>
+            </li>
+          </ol>
+        </ol>
+        <li><span style="font-weight: bold;">&gt;&gt; Having Found
+Product &gt;&gt;</span><br>
+        </li>
+        <ol>
+          <li>Product <br>
+          </li>
+          <ol>
+            <li>Product NNNNN [New Product] [Product Page (in current
+catalog) [Update Product]<br>
+            </li>
+            <ol>
+              <li>Product ID #XX-ZZZZ &lt;Cannot be changed&gt;<br>
+              </li>
+              <li>Is VARIANT Product?<br>
+              </li>
+              <li>Is VIRTUAL Product?<br>
+              </li>
+              <li>Product Type (drop-down selection)<br>
+              </li>
+              <li>Primary Category (drop-down selection)</li>
+              <li>Internal Name</li>
+              <li>Brand Name</li>
+              <li>Comments</li>
+              <li>Introduction Date</li>
+              <li>Sales discontinuation Thru Date</li>
+              <li>Support Thru Date</li>
+              <li>Disc. When Inv. Not Avail?</li>
+              <li>OEM Party ID</li>
+              <li>Require Inventory?</li>
+              <li>Inventory Message</li>
+              <li>Rating Type Enum</li>
+              <li>Rating</li>
+              <li>Require Amount (to be entered by Customer)?</li>
+              <li>Amount Uom Id</li>
+              <li>Product Height</li>
+              <li>Height Uom Id</li>
+              <li>Product Width</li>
+              <li>Width Uom Id</li>
+              <li>Product Depth</li>
+              <li>Depth Uom Id</li>
+              <li>Weight</li>
+              <li>Weight Uom Id</li>
+              <li>Quantity Included</li>
+              <li>Quantity Uom Id</li>
+              <li>Pieces Included</li>
+              <li>Returnable?</li>
+              <li>Include In Promotions?</li>
+              <li>Taxable?</li>
+              <li>Tax Category</li>
+              <li>Tax Vat Code</li>
+              <li>Tax Duty Code</li>
+              <li>Charge Shipping?</li>
+              <li>AutoCreate Keywords?</li>
+              <li>Content Info Text</li>
+              <li>Last Modified By</li>
+              <li>Created By</li>
+            </ol>
+            <li>Duplicate Product [Go!]<br>
+            </li>
+            <ol>
+              <li>Duplicate / Remove Selected With New ID</li>
+              <ol>
+                <li>(Enter new ID)<br>
+                </li>
+              </ol>
+              <li>Duplicate / Remove (following are checkboxes)</li>
+              <ol>
+                <li>Prices</li>
+                <li>ID</li>
+                <li>Category Members</li>
+                <li>Assocs</li>
+                <li>Attributes</li>
+                <li>Feature Appls</li>
+                <li>Inventory<br>
+                </li>
+              </ol>
+            </ol>
+          </ol>
+          <ol>
+            <ol>
+            </ol>
+          </ol>
+          <li>Prices [New Product / Product Page]<br>
+          </li>
+          <ol>
+            <li>Price Type</li>
+            <li>Currency</li>
+            <li>Product Store Group</li>
+            <li>From Date &amp; Time</li>
+            <li>Thru Date and Time</li>
+            <li>Last Modified By</li>
+            <li>[Delete]</li>
+            <li>Add Price<br>
+            </li>
+          </ol>
+          <li>Content [New Product / Product Page]</li>
+          <ol>
+            <li>List of Current Content</li>
+            <ol>
+              <li>Content</li>
+              <li>Type <br>
+              </li>
+              <li>From</li>
+              <li>Thru</li>
+              <li>Purchase From</li>
+              <li>Purchase Thru</li>
+              <li>Use Count</li>
+              <li>Use Days</li>
+            </ol>
+            <li>Create New Product Content [Prepare Create]</li>
+            <ol>
+              <li>Description</li>
+              <li>Description - Long</li>
+              <li>Digital Download</li>
+              <li>Directions</li>
+              <li>Fulfillment Email</li>
+              <li>Fulfillment External</li>
+              <li>Image</li>
+              <li>Ingredients</li>
+              <li>Product Name</li>
+              <li>etc.<br>
+              </li>
+            </ol>
+            <li>Add Content to Product [Add]</li>
+            <ol>
+              <li>Content ID</li>
+              <li>Product Content Type Id</li>
+              <li>From Date</li>
+              <li>Thru Date</li>
+              <li>Purchase From Date</li>
+              <li>Purchase Thru Date</li>
+              <li>Use Count Limit</li>
+              <li>Use Days Limit<br>
+              </li>
+            </ol>
+            <li>Override Simple Fields [Update]</li>
+            <ol>
+              <li>Product Name</li>
+              <li>Product Description</li>
+              <li>Long Description</li>
+              <li>Detail Template</li>
+              <li>Small Image [.jpg / .gif]<br>
+              </li>
+              <li>Medium Image [.jpg / .gif]</li>
+              <li>Large Image [.jpg / .gif]</li>
+              <li>Detail Image [.jpg / .gif]</li>
+            </ol>
+            <li>Upload Image [Browse] [Upload Image]<br>
+            </li>
+          </ol>
+          <li>IDs [New Product / Product Page]</li>
+          <ol>
+            <li>(listing)</li>
+            <ol>
+              <li>ID Type</li>
+              <li>ID Value</li>
+            </ol>
+            <li>Add ID [Add]</li>
+            <ol>
+              <li>ID Type</li>
+              <li>ID Value</li>
+            </ol>
+          </ol>
+          <li>Category Members [New Product / Product Page]</li>
+          <ol>
+            <li>(listing) [Update] [Delete]<br>
+            </li>
+            <ol>
+              <li>Category ID</li>
+              <ol>
+                <li>(link to each specific category)</li>
+              </ol>
+              <li>From Date &amp; Time</li>
+              <li>Thru Date &amp; Time</li>
+              <li>Sequence Num</li>
+              <li>Quantity</li>
+            </ol>
+            <li>(add) [Add]</li>
+            <ol>
+              <li>Category ID</li>
+              <li>From Date &amp; Time</li>
+              <li>Thru Date &amp; Time</li>
+              <li>Sequence Num</li>
+              <li>Quantity</li>
+            </ol>
+          </ol>
+          <li>Keywords [New Product / Product Page]</li>
+          <ol>
+            <li>Add product keyword [Edit Product]<br>
+            </li>
+            <ol>
+              <li>Keyword [Add]</li>
+              <li>Weight</li>
+            </ol>
+            <li>Keywords [Re-induce Keywords / Delete All Keywords]</li>
+            <ol>
+              <li>(Weight)<br>
+              </li>
+              <li>(list item)&nbsp;</li>
+              <li>[Delete]</li>
+            </ol>
+          </ol>
+          <li>Associations [New Product / Product Page]</li>
+          <ol>
+            <li>[Create]</li>
+            <ol>
+              <li>Product ID (current selection)<br>
+              </li>
+              <li>Product ID To</li>
+              <li>Association Type ID</li>
+              <li>From Date</li>
+              <li>Thru Date</li>
+              <li>Sequence Num</li>
+              <li>Reason</li>
+              <li>Instruction</li>
+              <li>Quantity</li>
+            </ol>
+            <li>Associations FROM this Product to ... [Delete / Edit]</li>
+            <ol>
+              <li>Product ID</li>
+              <li>Name</li>
+              <li>Froma Date &amp; Time</li>
+              <li>Thrue Date &amp; Time</li>
+              <li>Seq Num</li>
+              <li>Association Type</li>
+            </ol>
+            <li>Associations TO this Product from ... [Delete]</li>
+            <ol>
+              <li>Product ID</li>
+              <li>Name</li>
+              <li>From Date &amp; Time</li>
+              <li>Thru Date &amp; Time</li>
+              <li>Association Type<br>
+              </li>
+            </ol>
+          </ol>
+          <li>Attributes [New Product / Product Page]</li>
+          <ol>
+            <li>(table) [Update]</li>
+            <ol>
+              <li>Name</li>
+              <li>Value</li>
+              <li>Type</li>
+            </ol>
+            <li>Add Product Attribute [Add]<br>
+            </li>
+            <ol>
+              <li>Name</li>
+              <li>Value</li>
+              <li>Type<br>
+              </li>
+            </ol>
+          </ol>
+          <li>Features [New Product / Product Page] <br>
+          </li>
+          <ol>
+            <li>(table of features) [Delete]</li>
+            <ol>
+              <li>ID</li>
+              <li>Description</li>
+              <li>Type</li>
+              <li>Category</li>
+              <li>From Date</li>
+              <li>Thru Date</li>
+              <li>Amount</li>
+              <li>Sequence #</li>
+              <li>Application Type</li>
+            </ol>
+            <li>Add Product Feature from Category [Add]</li>
+            <li>Add Product Feature with Tyype and ID Code [Add]<br>
+            </li>
+            <li>Add Product Feature with ID [Add]<br>
+            </li>
+          </ol>
+          <li>Facilities [New Product / Product Page] <br>
+          </li>
+          <ol>
+            <li>(table of facilities) [Delete / Update]</li>
+            <ol>
+              <li>Facility</li>
+              <li>Minimum Stock</li>
+              <li>Reorder Quantity</li>
+              <li>Days to Ship</li>
+            </ol>
+            <li>Add Facility [Add]<br>
+            </li>
+            <ol>
+              <li>Facility</li>
+              <li>Minimum Stock</li>
+              <li>Reorder Quantity</li>
+              <li>Days to Ship</li>
+            </ol>
+          </ol>
+          <li>Locations [New Product / Product Page]</li>
+          <ol>
+            <li>*** Dave, unable create location without this error
+message: <br>
+              <br>
+            </li>
+            <li class="errorMessage">The following errors occurred:
+              <ul>
+                <li>ERROR:
+Could not complete the Create a ProductFacilityLocation process
+[problem creating the newEntity value: Exception while inserting the
+following entity:
+[GenericEntity:ProductFacilityLocation][createdTxStamp,2004-05-21
+11:36:42.684(java.sql.Timestamp)][locationSeqId,10000(java.lang.String)][facilityId,WebStoreWarehouse(java.lang.String)][productId,WG-9943(java.lang.String)][minimumStock,50.0(java.lang.Double)][lastUpdatedTxStamp,2004-05-21
+11:36:42.684(java.sql.Timestamp)][createdStamp,2004-05-21
+11:36:42.684(java.sql.Timestamp)][lastUpdatedStamp,2004-05-21
+11:36:42.684(java.sql.Timestamp)][moveQuantity,10.0(java.lang.Double)]
+(while inserting:
+[GenericEntity:ProductFacilityLocation][createdTxStamp,2004-05-21
+11:36:42.684(java.sql.Timestamp)][locationSeqId,10000(java.lang.String)][facilityId,WebStoreWarehouse(java.lang.String)][productId,WG-9943(java.lang.String)][minimumStock,50.0(java.lang.Double)][lastUpdatedTxStamp,2004-05-21
+11:36:42.684(java.sql.Timestamp)][createdStamp,2004-05-21
+11:36:42.684(java.sql.Timestamp)][lastUpdatedStamp,2004-05-21
+11:36:42.684(java.sql.Timestamp)][moveQuantity,10.0(java.lang.Double)]
+(SQL Exception while executing the following:INSERT INTO
+public.PRODUCT_FACILITY_LOCATION (PRODUCT_ID, FACILITY_ID,
+LOCATION_SEQ_ID, MINIMUM_STOCK, MOVE_QUANTITY, LAST_UPDATED_STAMP,
+LAST_UPDATED_TX_STAMP, CREATED_STAMP, CREATED_TX_STAMP) VALUES (?, ?,
+?, ?, ?, ?, ?, ?, ?) (ERROR: insert or update on table
+"product_facility_location" violates foreign key constraint
+"prod_fcl_fcl")))]</li>
+              </ul>
+            </li>
+          </ol>
+          <ol>
+            <li>(table of locations) [Edit / Delete]</li>
+            <ol>
+              <li>Facility</li>
+              <li>Location</li>
+              <li>Minimum Stock</li>
+              <li>Move Quantity<br>
+              </li>
+            </ol>
+            <li>Add Facility Location [Add]<br>
+            </li>
+            <ol>
+              <li>Facility</li>
+              <li>Location Sequence ID<br>
+              </li>
+              <li>Minimum Stock</li>
+              <li>Move Quantity<br>
+              </li>
+            </ol>
+          </ol>
+          <li>Inventory [New Product / Product Page]</li>
           <ol>
             <li>Inventory Summary</li>
-            <li>Inventory Items (Create new inventory or Show empty
-items.)</li>
+            <ol>
+              <li>Facility</li>
+              <li>ATP</li>
+              <li>QOH</li>
+              <li>Incoming Shipments<br>
+              </li>
+            </ol>
+            <li>Inventory Items [Create new inventory / Show empty
+items]</li>
+            <ol>
+              <li>Item ID</li>
+              <li>Item Type</li>
+              <li>Status</li>
+              <li>Received</li>
+              <li>Expire</li>
+              <li>Facility or Container ID</li>
+              <li>Location</li>
+              <li>Lot ID</li>
+              <li>Bin Num</li>
+              <li>ATP/QOH or Serial #<br>
+              </li>
+            </ol>
           </ol>
-          <li>Accounts</li>
+          <li>Accounts [New Product / Product Page] <br>
+          </li>
+          <ol>
+            <li>(table of GL Accounts) [Delete]</li>
+            <ol>
+              <li>Account Type</li>
+              <li>GL Account<br>
+              </li>
+            </ol>
+            <li>Add GL Account [Add]</li>
+            <ol>
+              <li>Account Type</li>
+              <li>GL Account<br>
+              </li>
+            </ol>
+          </ol>
+          <li>Variants [New Product / Product Page]</li>
         </ol>
-        <li>Browse Catalogs</li>
         <ol>
-          <li>Demo Catalog</li>
           <ol>
+            <li>(Table of Quick Add Variants) [create !]</li>
             <ol>
-              <li>Stores</li>
-              <li>Parties</li>
-              <li>Categories</li>
+              <li>Color</li>
+              <li>Size</li>
+              <li>New Product ID and Create !</li>
+              <li>Existing Variant IDs</li>
             </ol>
-            <li>Demo Browse Root</li>
-            <ol>
-              <li>Category</li>
-              <li>Rollup</li>
-              <li>Products</li>
-              <li>Catalogs</li>
-              <li>Features</li>
-              <li>Parties</li>
-            </ol>
-            <li>Featured Products</li>
-            <ol>
-              <li>Category</li>
-              <li>Rollup</li>
-              <li>Products</li>
-              <li>Catalogs</li>
-              <li>Features</li>
-              <li>Parties</li>
-            </ol>
-            <li>Main Quick Add</li>
-            <ol>
-              <li>Category</li>
-              <li>Rollup</li>
-              <li>Products</li>
-              <li>Catalogs</li>
-              <li>Features</li>
-              <li>Parties</li>
-            </ol>
-            <li>Widget Quick Add</li>
-            <ol>
-              <li>Category</li>
-              <li>Rollup</li>
-              <li>Products</li>
-              <li>Catalogs</li>
-              <li>Features</li>
-              <li>Parties</li>
-            </ol>
-            <li>Demo Default Search</li>
           </ol>
-          <li>Test Catalog</li>
+        </ol>
+      </ol>
+      <li><span style="font-weight: bold; font-style: italic;">Les,
+START HERE NEXT</span><br>
+      </li>
+      <li>Browse Catalogs</li>
+      <ol>
+        <li>Demo Catalog</li>
+        <ol>
           <ol>
-            <li>Catalog</li>
             <li>Stores</li>
             <li>Parties</li>
             <li>Categories</li>
           </ol>
         </ol>
-        <li>Browse Categories</li>
+        <li>Edit Catalog</li>
         <ol>
-          <li>Category Details</li>
-          <ol>
-            <li>New Category</li>
-            <li>Category Page</li>
-            <li>Create Product in Category</li>
-            <li>Search in Category</li>
-          </ol>
-          <li>Rollup</li>
-          <li>Products</li>
-          <ol>
-            <li>New Category</li>
-            <li>Category Page</li>
-            <li>Create Product in Category</li>
-            <li>Active and Inactive (toggle)</li>
-          </ol>
-          <li>Catalogs</li>
-          <li>Features</li>
-          <ol>
-            <li>New Category</li>
-            <li>Attach Features to Catefory from Products</li>
-            <li>Category Page (link to catalog)</li>
-          </ol>
+          <li>Catalog</li>
+          <li>Stores</li>
           <li>Parties</li>
+          <li>Categories</li>
         </ol>
-        <li>Category Products (brings up Product screen, same as above)</li>
       </ol>
+      <li>Browse Categories</li>
+      <ol>
+        <li>Category Details</li>
+        <ol>
+          <li>New Category</li>
+          <ol>
+            <li>Product Category Id</li>
+            <li>Product Category Type</li>
+            <li>Description</li>
+            <li>Long Description</li>
+            <li>Category Image URL</li>
+            <li>Link One Image URL</li>
+            <li>Link Two Image URL</li>
+            <li>Detail Template</li>
+            <li>Primary Parent Category<br>
+            </li>
+          </ol>
+          <li>Category Page [Update]<br>
+          </li>
+          <li>Create Product in Category [Back to Edit Category /
+Check Existing]<br>
+          </li>
+          <ol>
+            <li>Internal Name</li>
+            <li>Product Name</li>
+            <li>Short Description</li>
+            <li>Default Price</li>
+            <li>Average Cost<br>
+            </li>
+          </ol>
+          <li>Search in Category *** DAVID Note: ***<br>
+          </li>
+          <ol>
+            <li>Results in error message: Error: Expression
+uiLabelMap. ProductKeywordRelevency is undefined on
+line 122, column 52 in repository:pages:///find/advancedsearch.ftl.</li>
+          </ol>
+        </ol>
+        <li>Rollup [New Category / Category Page]</li>
+        <ol>
+          <li>Category Rollup: Parent Categories</li>
+          <ol>
+            <li>List<br>
+            </li>
+          </ol>
+          <ol>
+            <ol>
+              <li>Parent Category (Id)</li>
+              <li>From Date</li>
+              <li>Thru Date/Time &amp; Sequence</li>
+            </ol>
+            <li>2.&nbsp; Add a Parent Category [Add]</li>
+            <ol>
+              <li>Drop Down list</li>
+              <li>Enter From Date</li>
+            </ol>
+          </ol>
+          <li>Category Rollup: Child Categories<br>
+          </li>
+          <ol>
+&lt;&gt;<li>List<br>
+            </li>
+            <ol>
+              <li>Child Category ID</li>
+              <li>From Date</li>
+              <li>Thru Date/Time &amp; Sequence</li>
+            </ol>
+            <li>Add a Child Category [Add]</li>
+            <ol>
+              <li>Drop Down list</li>
+              <li>Enter From Date</li>
+            </ol>
+          </ol>
+        </ol>
+        <li>Products [with links to New Category and Category Page]<br>
+        </li>
+        <ol>
+          <li>(Opening Page)<br>
+          </li>
+          <ol>
+            <li>Product Category Member Maintenance</li>
+            <ol>
+              <li>Product Name Id</li>
+              <li>From Date &amp; Time</li>
+              <li>Through Date, Time/ Sequence and Quantity</li>
+            </ol>
+            <li>Add Product Category&nbsp; Member [Add]<br>
+            </li>
+            <ol>
+              <li>Product Id</li>
+              <li>From Date</li>
+            </ol>
+            <li>Copy Product Category Members to Another Category
+[Copy]<br>
+            </li>
+            <ol>
+              <li>Target Product Category (dropdown window)</li>
+              <li>Optional filter with Date</li>
+              <li>Include Sub-Categories? Y/N</li>
+            </ol>
+            <li>Expire All Product Members [Expire All]<br>
+            </li>
+            <ol>
+              <li>Optional Expiration Date</li>
+            </ol>
+            <li>Remove Expired Product Members [Remove]</li>
+            <ol>
+              <li>Optional Expired Before Date<br>
+              </li>
+            </ol>
+          </ol>
+          <li>Create Product in Category [Check Existing / Back to
+Edit Category]<br>
+          </li>
+          <ol>
+            <li>Internal Name</li>
+            <li>Product Name</li>
+            <li>Short Description</li>
+            <li>Default Price</li>
+            <li>Average Cost</li>
+            <li>Check Existing<br>
+            </li>
+          </ol>
+          <li>Active and Inactive (toggle to select what is shown in
+other actions) *** David, true??? ***<br>
+          </li>
+        </ol>
+        <li>Catalogs [New Category / Category Page]</li>
+        <ol>
+          <li>(List of existing) [Link to catalog / Delete]<br>
+          </li>
+          <ol>
+            <li>Catalog ; Name ; Id</li>
+            <li>Type</li>
+            <li>From Date &amp; Time</li>
+            <li>Thru Date &amp; Time [selection window]<br>
+            </li>
+            <ol>
+              <li>[Update]</li>
+            </ol>
+          </ol>
+          <li>Add Catalog Product Category [Add]</li>
+          <ol>
+            <li>Select Category</li>
+            <li>Select Type</li>
+            <li>Select Optional From Date<br>
+            </li>
+          </ol>
+        </ol>
+        <li>Features</li>
+        <ol>
+          <li>New Category</li>
+          <li>Attach Features to Catefory from Products</li>
+          <li>Category Page (link to catalog)</li>
+        </ol>
+        <li>Parties</li>
+      </ol>
+      <li>Category Products (brings up Product screen, same as above)</li>
       <li>Right Pane</li>
     </ol>
     <ol>
@@ -585,7 +1392,7 @@ items.)</li>
           <li>Mime Type [Update/ Delete/ Add]</li>
           <ol>
             <li><span class="buttontext">Arbitrary Binary Data</span></li>
-            <li><span class="buttontext">Postsctipt Application/Script</span></li>
+            <li><span class="buttontext">Postscript Application/Script</span></li>
             <li><span class="buttontext">ZIP Data</span></li>
             <li><span class="buttontext">Adobe Portable Document Format
 (PDF)</span></li>
@@ -1073,31 +1880,51 @@ buttons&nbsp; [Update/ Delete/ Create]<br>
               <li>Status History</li>
               <li>Date Ordered</li>
             </ol>
-            <li>Payment Information [Receive Payment]</li>
+            <li>Payment Information [Receive Payment] [Invoices Link]<br>
+            </li>
             <ol>
               <li>Online Payment</li>
+              <ol>
+                <li>Credit Card Authorized</li>
+                <li>Credit Card Settled<br>
+                </li>
+              </ol>
               <li>Offline Payment</li>
             </ol>
             <li>Contact Information</li>
             <ol>
-              <li>Name</li>
+              <li>Name [Link customer #]<br>
+              </li>
               <li>Order Notification Email Address [send email]<br>
               </li>
               <li>Shipping To</li>
-              <li>Destination Address</li>
+              <li>Destination Address [lookup link]<br>
+              </li>
             </ol>
             <li>Shipment Information [View/ Edit Delivery Schedule Info]<br>
             </li>
             <ol>
               <li>Method</li>
+              <li>Tracking Number<br>
+              </li>
               <li>Splitting Preference</li>
               <li>Gift?</li>
+              <li>Shipments # [Link]<br>
+              </li>
             </ol>
             <li>Order Items [Cancel All Items]</li>
             <ol>
               <li>Product [catalog] [ecommerce]</li>
               <li>Status</li>
+              <ol>
+                <li>[Shipment Item #]<br>
+                </li>
+              </ol>
               <li>Quantity</li>
+              <ol>
+                <li>[Inventory # link]<br>
+                </li>
+              </ol>
               <li>Unit / List Adjustments</li>
               <li>Subtotal</li>
               <li>Adjustment: Sales Tax</li>
@@ -1123,9 +1950,10 @@ buttons&nbsp; [Update/ Delete/ Create]<br>
               <li>Total Other Order Adjustments</li>
               <li>Total Shipping and Handling</li>
               <li>Total Sales Tax</li>
-              <li>Total Due<br>
-              </li>
+              <li>Total Due</li>
             </ol>
+            <li>[Create New]<br>
+            </li>
           </ol>
         </ol>
         <li>Lookup Party (takes to next tab - Party Manager)</li>
@@ -1532,7 +2360,8 @@ one)</a> </li>
  class="buttontext">XML Data Import Dir</a><!--
                   <li><a href="/webtools/control/view/tablesMySql;jsessionid=77ce804jms0ce" class='buttontext'>MySQL Table Creation SQL</A>
                   <li><a href="/webtools/control/view/dataMySql;jsessionid=77ce804jms0ce" class='buttontext'>MySQL Auto Data SQL</A>
-            --> </li>
+            -->
+          </li>
         </ul>
       </li>
       <li>
