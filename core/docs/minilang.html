@@ -1,0 +1,97 @@
+<html>
+<head>
+<title>Open For Business Mini-Language Guide</title>
+</head>
+
+<body>
+
+<h2 align="center">The Open For Business Project: Mini-Language Guide</h2>
+
+<br>Written By: David E. Jones
+<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>
+<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
+<br>
+Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
+Last Updated: January 14, 2002<br>
+$Id$ <br>
+<hr>
+<br>
+<h3>Table of Contents</h3>
+
+<ul>
+  <li><a href="#Introduction">Introduction</a>
+  <li><a href="#Simple_Map_Processor">The Simple Map Processor Mini-Language</a>
+  <li><a href="#Simple_Event">The Simple Event Mini-Language</a>
+</ul>
+
+<br>
+
+<hr>
+<h3><a name="Introduction">Introduction</a></h3>
+<hr>
+<p>The Mini-Language concept in Open For Business is similar to the Gang of Four Interpreter
+pattern, or the Mark Grand Little Language pattern. This is also the central theme
+of the Building Parsers with Java book by Steven John Metsker which the OFBiz Rule Engine
+is based on. The idea is to create simple languages that simplify complex or
+frequently performed tasks.</p>
+<p>In business software there are things that are done
+hundreds or thousands of times in a single application that a Mini-Language
+can simplify to the point of cutting implementation and maintenance times not
+by just 50%, but often as much as 70-90%. Yes, certain tasks will take only 10% of
+the effort and knowledge to perform. This makes it easier people not familiar
+with the software to manipulate existing or build new functionality.</p>
+<p>Mini-Languages tend to have instructions that are more like method calls in a 
+general purpose language. They are meant to solve a specific problem in a specific
+context, and are generally worthless or need to be modified for other contexts
+or problems.</p>
+<p>Often this idea is implemented using a free form (BNF) or english-like syntax.
+In Open For Business the Mini-Languages are expressed as XML files to simplify the
+learning and manipulation of the syntax, in addition to making the Mini-Languages
+easier to write and extend.</p>
+
+<hr>
+<h3><a name="Simple_Map_Processor">The Simple Map Processor Mini-Language</a></h3>
+<hr>
+<p>The Simple Map Processor Mini-Language performes two primary tasks: validation
+and conversion. It does this in a context of moving values from one Map to another. The
+input map will commonly contain Strings, but can contain other object types like Integer, Long,
+Float, Double, java.sql.Date, Time, and Timestamp.</p>
+
+<p><b><u>make-in-string</u></b></p>
+<p>In addition to dealing with the fields already in the incoming Map you can build 
+Strings and add them to the in-Map before the processing begins with the make-in-string tag. You can have zero or
+many make-in-string tags, and they must all come before the process tags. Inside each
+make-in-string is a list of snippets to concatenate together to make the final String. 
+Each snippet can be another field in the in-Map (in-field element), a value from a properties 
+file (property element), or a constant (constant element).</p>
+
+<p><b><u>process</u></b></p>
+<p>The process tag is used to contain the operations to be done on the specified 
+field in the in-Map. It has one required attribute, the field to operate on. The
+operations that it contains are: validate-method, compare, compare-field, regexp, 
+not-empty, equals,  copy,  and convert.</p>
+
+<p><b><u>process:validate-method</u></b></p>
+<p><b><u>process:compare</u></b></p>
+<p><b><u>process:compare-field</u></b></p>
+<p><b><u>process:regexp</u></b></p>
+<p><b><u>process:not-empty</u></b></p>
+<p><b><u>process:equals</u></b></p>
+<p><b><u>process:copy</u></b></p>
+<p><b><u>process:convert</u></b></p>
+
+
+<p><b><u>Example</u></b></p>
+
+
+<hr>
+<h3><a name="Simple_Event">The Simple Event Mini-Language</a></h3>
+<hr>
+<p></p>
+
+
+</body>
+
+</html>
