@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+    <classpathentry kind="output" path="bin"/>
     <classpathentry kind="src" path="src/share"/>
     <classpathentry kind="src" path="src/datafile"/>
     <classpathentry kind="src" path="src/entity"/>
@@ -11,7 +12,7 @@
     <classpathentry kind="src" path="src/rules"/>
     <classpathentry kind="src" path="src/widget"/>
     <classpathentry kind="src" path="src/webapp"/>
-    <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
+    <classpathentry kind="src" path="src/start"/>    
     <classpathentry kind="src" path="/lib"/>
-    <classpathentry kind="output" path="bin"/>
+    <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>    
 </classpath>
