@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,9 +19,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
- *@since      2.1
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@version    $Revision: 1.2 $
+ *@since      3.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#-- variable setup and worker calls -->
@@ -50,7 +50,7 @@
 </#macro>
 
 <div class="tabletext">
-  <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontext">Home</a>
+  <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonMain}</a>
   <#-- Show the category branch -->
   <#list topLevelList as category>
     <@categoryList parentCategory=category category=category/>
