@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.1 2003/08/17 05:12:38 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.2 2003/08/28 16:25:55 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,6 +42,8 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.calendar.RecurrenceInfo;
@@ -51,7 +53,7 @@ import org.ofbiz.service.calendar.RecurrenceInfoException;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class JobManager {
@@ -89,34 +91,60 @@ public class JobManager {
         List poll = new ArrayList();
         Collection jobEnt = null;
         List order = UtilMisc.toList("runTime");
-        List expressions = UtilMisc.toList(new EntityExpr("runTime", EntityOperator.LESS_THAN, UtilDateTime.nowTimestamp()),
-                new EntityExpr("startDateTime", EntityOperator.EQUALS, null));
-
-        try {
-            jobEnt = delegator.findByAnd("JobSandbox", expressions, order);
-        } catch (GenericEntityException ee) {
-            Debug.logError(ee, "Cannot load jobs from datasource.", module);
-        } catch (Exception e) {
-            Debug.logError(e, "Unknown error.", module);
-            e.printStackTrace();
-        }
-        if (jobEnt != null && jobEnt.size() > 0) {
-            Iterator i = jobEnt.iterator();
-
-            while (i.hasNext()) {
-                GenericValue v = (GenericValue) i.next();
-                String loader = v.getString("loaderName");
-                DispatchContext dctx = dispatcher.getLocalContext(loader);
-
-                if (dctx == null) {
-                    Debug.logWarning("Job (" + v.getString("jobName") + " scheduled to run at " +
-                        v.getTimestamp("runTime") + " has an invalid service loader.", module);
-                    continue;
-                }
-                Job job = new PersistedServiceJob(dctx, v, null); // todo fix the requester
-
-                poll.add(job);
+        List expressions = UtilMisc.toList(new EntityExpr("runTime", EntityOperator.LESS_THAN_EQUAL_TO, 
+            UtilDateTime.nowTimestamp()), new EntityExpr("startDateTime", EntityOperator.EQUALS, null));
+        
+        // we will loop until we have no more to do        
+        boolean pollDone = false;
+        
+        while (!pollDone) {
+            boolean beganTransaction;
+            try {
+                beganTransaction = TransactionUtil.begin();
+            } catch (GenericTransactionException e) {                
+                Debug.logError(e, "Unable to start transaction; not polling for jobs", module);
+                return null;
             }
+            if (!beganTransaction) {
+                Debug.logError("Unable to poll for jobs; transaction was not started by this process", module);
+                return null;
+            }
+        
+            try {
+                jobEnt = delegator.findByAnd("JobSandbox", expressions, order);
+            } catch (GenericEntityException ee) {
+                Debug.logError(ee, "Cannot load jobs from datasource.", module);
+            } catch (Exception e) {
+                Debug.logError(e, "Unknown error.", module);            
+            }
+            
+            if (jobEnt != null && jobEnt.size() > 0) {
+                Iterator i = jobEnt.iterator();
+
+                while (i.hasNext()) {
+                    GenericValue v = (GenericValue) i.next();
+                    String loader = v.getString("loaderName");
+                    DispatchContext dctx = dispatcher.getLocalContext(loader);
+
+                    if (dctx == null) {
+                        // ignore jobs which are designed to work on a specific loader
+                        continue;
+                    }
+                    Job job = new PersistedServiceJob(dctx, v, null); // todo fix the requester
+
+                    poll.add(job);
+                }
+            } else {
+                pollDone = true;
+            }
+            
+            // finished this run; commit the transaction
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, module);                
+            }
+            
         }
         return poll.iterator();
     }
