@@ -1,27 +1,27 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.3 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -32,7 +32,7 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="100%"><div class="boxhead">${uiLabelMap.PartyFindParties}</div></td>         
+          <td width="100%"><div class="boxhead">${uiLabelMap.PartyFindParties}</div></td>
         </tr>
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
@@ -154,7 +154,7 @@
             </#if>
             <#list parties[startIndex..endIndex] as partyMap>
               <#if partyMap_index % 2 = 0>
-              	<#assign rowClass = "viewManyTR1">
+                <#assign rowClass = "viewManyTR1">
               <#else>
                 <#assign rowClass = "viewManyTR2">
               </#if>
@@ -167,9 +167,9 @@
                     <td><div class="tabletext">${partyMap.person.lastName?if_exists}</div></td>
                     <td><div class="tabletext">${partyMap.person.firstName?if_exists}</div></td>
                 <#elseif partyMap.group?has_content>
-                	<td colspan='2'><div class="tabletext">${partyMap.group.groupName}</div></td>
+                        <td colspan='2'><div class="tabletext">${partyMap.group.groupName}</div></td>
                 <#else>
-                	<td><div class="tabletext">&nbsp;</div></td>
+                        <td><div class="tabletext">&nbsp;</div></td>
                      <td><div class="tabletext">&nbsp;</div></td>
                 </#if>
                 <td><div class="tabletext">${partyMap.party.partyTypeId?if_exists}</div></td>
@@ -178,7 +178,7 @@
                   <div class="tabletext"><nobr>
                     <a href='<@ofbizUrl>/viewprofile?party_id=${partyMap.party.partyId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDetails}]</a>&nbsp;
                     <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-                      <a href='/ordermgr/control/findorders?lookupFlag=Y&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderOrders}]</a>&nbsp;
+                      <a href='/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderOrders}]</a>&nbsp;
                     </#if>
                     <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
                       <a href='/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>&nbsp;
