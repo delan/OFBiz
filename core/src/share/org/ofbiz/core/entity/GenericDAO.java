@@ -85,11 +85,15 @@ public class GenericDAO {
     try {
       singleInsert(entity, modelEntity, modelEntity.fields, connection);
       storeAllOther(entity, connection);
-      if(manualTX) connection.commit();
-    }  catch (SQLException sqle) {
-      try { if(manualTX) connection.rollback(); }
-      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
-      throw new GenericDataSourceException("SQL Exception occured on insert or storeAllOther", sqle);
+      if(manualTX) {
+        try {
+          connection.commit();
+        }  catch (SQLException sqle) {
+          try { if(manualTX) connection.rollback(); }
+          catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
+          throw new GenericDataSourceException("SQL Exception occured on commit of insert/storeAllOther", sqle);
+        }
+      }
     } catch(GenericDataSourceException e) {
       try { if(manualTX) connection.rollback(); }
       catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
@@ -99,23 +103,30 @@ public class GenericDAO {
     }
   }
   
-  private void singleInsert(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws SQLException, GenericEntityException {
+  private void singleInsert(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws GenericEntityException {
     if(modelEntity instanceof ModelViewEntity) {
       throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation insert not supported yet for view entities");
     }
 
     PreparedStatement ps = null;
     String sql = "INSERT INTO " + modelEntity.tableName + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" + modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
-    ps = connection.prepareStatement(sql);
+    try {
+      ps = connection.prepareStatement(sql);
     
-    for(int i=0;i<fieldsToSave.size();i++) {
-      ModelField curField=(ModelField)fieldsToSave.elementAt(i);
-      setValue(ps, i+1, curField, entity);
+      for(int i=0;i<fieldsToSave.size();i++) {
+        ModelField curField=(ModelField)fieldsToSave.elementAt(i);
+        setValue(ps, i+1, curField, entity);
+      }
+    
+      ps.executeUpdate();
+      entity.modified = false;
+    } catch(SQLException sqle) {
+      //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      //Debug.logWarning(sqle.getMessage());
+      throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+    } finally {
+      try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
-    
-    ps.executeUpdate();
-    entity.modified = false;
-    try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
   }
   
   public void updateAll(GenericEntity entity) throws GenericEntityException {
@@ -158,12 +169,16 @@ public class GenericDAO {
     try {
       singleUpdate(entity, modelEntity, fieldsToSave, connection);
       storeAllOther(entity, connection);
-      if(manualTX) connection.commit();
-    } catch (SQLException sqle) {
-      try { if(manualTX) connection.rollback(); }
-      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
-      throw new GenericDataSourceException("SQL Exception occured in update or storeAllOther", sqle);
-    } catch(GenericDataSourceException e) {
+      if(manualTX) {
+        try {
+          connection.commit();
+        }  catch (SQLException sqle) {
+          try { if(manualTX) connection.rollback(); }
+          catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
+          throw new GenericDataSourceException("SQL Exception occured on commit of update/storeAllOther", sqle);
+        }
+      }
+   } catch(GenericDataSourceException e) {
       try { if(manualTX) connection.rollback(); }
       catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
       throw new GenericDataSourceException("Exception occured in update or storeAllOther", e);
@@ -172,7 +187,7 @@ public class GenericDAO {
     }
   }
   
-  private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws SQLException, GenericEntityException {
+  private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws GenericEntityException {
     if(modelEntity instanceof ModelViewEntity) {
       throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation update not supported yet for view entities");
     }
@@ -182,27 +197,34 @@ public class GenericDAO {
     
     String sql = "UPDATE " + modelEntity.tableName + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " + makeWhereStringAnd(modelEntity.pks, entity);
     PreparedStatement ps = null;
-    ps = connection.prepareStatement(sql);
+    try {
+      ps = connection.prepareStatement(sql);
     
-    int i;
-    for(i=0;i<fieldsToSave.size();i++) {
-      ModelField curField=(ModelField)fieldsToSave.elementAt(i);
-      setValue(ps, i+1, curField, entity);
-    }
-    for(int j=0;j<modelEntity.pks.size();j++) {
-      ModelField curField=(ModelField)modelEntity.pks.elementAt(j);
-      //for where clause variables only setValue if not null...
-      if(entity.get(curField.name) != null) {
-        setValue(ps, i+j+1, curField, entity);
+      int i;
+      for(i=0;i<fieldsToSave.size();i++) {
+        ModelField curField=(ModelField)fieldsToSave.elementAt(i);
+        setValue(ps, i+1, curField, entity);
       }
-    }
+      for(int j=0;j<modelEntity.pks.size();j++) {
+        ModelField curField=(ModelField)modelEntity.pks.elementAt(j);
+        //for where clause variables only setValue if not null...
+        if(entity.get(curField.name) != null) {
+          setValue(ps, i+j+1, curField, entity);
+        }
+      }
     
-    ps.executeUpdate();
-    entity.modified = false;
-    try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle); }
+      ps.executeUpdate();
+      entity.modified = false;
+    } catch(SQLException sqle) {
+      //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      //Debug.logWarning(sqle.getMessage());
+      throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+    } finally {
+      try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+    }
   }
   
-  private void storeAllOther(GenericEntity entity, Connection connection) throws SQLException, GenericEntityException {
+  private void storeAllOther(GenericEntity entity, Connection connection) throws GenericEntityException {
     //also store valueObject.otherToStore entities
     if(entity.otherToStore != null && entity.otherToStore.size() > 0) {
       Iterator entities = entity.otherToStore.iterator();
@@ -214,7 +236,7 @@ public class GenericDAO {
   }
   
   /** Store the passed entity - insert if does not exist, otherwise update; then call storeAllOther to do a deep store */
-  private void singleStore(GenericEntity entity, Connection connection) throws SQLException, GenericEntityException {
+  private void singleStore(GenericEntity entity, Connection connection) throws GenericEntityException {
     GenericPK tempPK = entity.getPrimaryKey();
     try {
       //must use same connection for select or it won't be in the same transaction...
@@ -255,12 +277,15 @@ public class GenericDAO {
         GenericEntity curEntity = (GenericEntity)entityIter.next();
         singleStore(curEntity, connection);
       }
-      if(manualTX) connection.commit();
-    }
-    catch(SQLException sqle) {
-      try { if(manualTX) connection.rollback(); }
-      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back store. Error was:"); Debug.logWarning(sqle2); }
-      throw new GenericDataSourceException("SQL Exception occured in storeAll", sqle);
+      if(manualTX) {
+        try {
+          connection.commit();
+        }  catch (SQLException sqle) {
+          try { if(manualTX) connection.rollback(); }
+          catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back storeAll. Error was:"); Debug.logWarning(sqle2); }
+          throw new GenericDataSourceException("SQL Exception occured on commit of storeAllr", sqle);
+        }
+      }
     } catch(GenericDataSourceException e) {
       try { if(manualTX) connection.rollback(); }
       catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back store. Error was:"); Debug.logWarning(sqle2); }
@@ -300,12 +325,6 @@ public class GenericDAO {
       modelViewEntity = (ModelViewEntity)modelEntity;
     }
 
-/*
-    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
-      return false;
-    }
- */
     if(modelEntity.pks.size() <= 0) throw new GenericEntityException("Entity has no primary keys, cannot select by primary key");
 
     PreparedStatement ps = null;
@@ -344,13 +363,11 @@ public class GenericDAO {
         //Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString());
         throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
       }
-    }
-    catch(SQLException sqle) {
+    } catch(SQLException sqle) {
       //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       //Debug.logWarning(sqle.getMessage());
       throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
-    }
-    finally {
+    } finally {
       try { if (rs != null) rs.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
