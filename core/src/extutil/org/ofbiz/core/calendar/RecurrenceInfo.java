@@ -83,7 +83,7 @@ public class RecurrenceInfo {
         } catch (GenericEntityException gee) {
             rRulesList = null;
         } catch (RecurrenceRuleException rre) {
-            throw new RecurrenceInfoException("Illegal rule format.");
+            throw new RecurrenceInfoException("Illegal rule format.", rre);
         }
 
         // Get the exception rules objects
@@ -97,7 +97,7 @@ public class RecurrenceInfo {
         } catch (GenericEntityException gee) {
             eRulesList = null;
         } catch (RecurrenceRuleException rre) {
-            throw new RecurrenceInfoException("Illegal rule format.");
+            throw new RecurrenceInfoException("Illegal rule format", rre);
         }
 
         // Get the recurrence date list
