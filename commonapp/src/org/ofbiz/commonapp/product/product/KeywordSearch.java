@@ -352,7 +352,7 @@ public class KeywordSearch {
         }
         sql.append("TOTAL_WEIGHT DESC");
 
-        if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] sql=" + sql.toString());
+        if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] sql=" + sql.toString());
         return sql.toString();
     }
 
