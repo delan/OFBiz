@@ -149,7 +149,14 @@
             location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="removeBillingAccountTerm">
         <description>Remove a Billing Account Term</description>
         <attribute name="billingAccountTermId" type="String" mode="IN" optional="false"/>
-    </service>                                     
+    </service> 
+    <service name="calcBillingAccountBalance" engine="java"
+            location="org.ofbiz.accounting.payment.BillingAccountWorker" invoke="calcBillingAccountBalance">
+        <description>Calculate the balance of a Billing Account</description>
+        <attribute name="billingAccountId" type="String" mode="IN" optional="false"/>
+        <attribute name="accountBalance" type="Double" mode="OUT" optional="false"/>
+        <attribute name="billingAccount" type="GenericValue" mode="OUT" optional="false"/>       
+    </service>                                  
     
     <!-- Payment Method services -->
     <service name="deletePaymentMethod" engine="java"

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  */
 -->
 
@@ -682,6 +682,22 @@
       <relation type="many" rel-entity-name="InvoiceTypeAttr">
         <key-map field-name="attrName"/>
       </relation>
+    </entity>
+    <entity entity-name="InvoiceBillingAccount"
+            package-name="org.ofbiz.accounting.invoice"
+            never-cache="true"
+            title="Invoice Billing Account Association">
+      <field name="invoiceId" type="id-ne"></field>
+      <field name="billingAccountId" type="id-ne"></field>
+      <field name="maxAmount" type="currency"></field>
+      <prim-key field="invoiceId"/>
+      <prim-key field="billingAccountId"/>
+      <relation type="one" fk-name="INVOICE_BACT_INV" rel-entity-name="Invoice">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="one" fk-name="INVOICE_BACT_BACT" rel-entity-name="BillingAccount">
+        <key-map field-name="BillingAccount"/>
+      </relation>      
     </entity>
     <entity entity-name="InvoiceContactMech"
             package-name="org.ofbiz.accounting.invoice"
