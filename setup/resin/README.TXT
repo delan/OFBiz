@@ -17,4 +17,13 @@ of resin/bin where is was.
 Also, the newer ofbiz.sh uses commonapp.jar rather than ofbcommonapp.jar since
 it was recently changed.
 ---------------------
+2002-02-09 David Jones
+
+Resin does not include the activation.jar file from Sun, which is needed for 
+Java Mail. This is only an issue with certain parts of OFBiz like the email
+order confirmation in eCommerce.
+
+To fix this, just add the activation.jar file to the resin/lib directory.
+---------------------
+
 
