@@ -177,8 +177,11 @@ public class ControlServlet extends HttpServlet {
                         Debug.logError(e,"[ControlServlet.init] ERROR: cannot get URL from String.");
                     }                    
                 }
-            }            
-            String rootPath = getServletContext().getRealPath("/");
+            }     
+            // get the root path (sub-path) from init parameter
+            String initPath = getServletContext().getInitParameter("scriptLocationPath");
+            if ( initPath == null ) initPath = "/";                            
+            String rootPath = getServletContext().getRealPath(initPath);
             dispatcher = new LocalDispatcher(getServletContext().getServletContextName(),rootPath,delegator,readers);                  
             getServletContext().setAttribute("dispatcher",dispatcher);
             if ( dispatcher == null )
