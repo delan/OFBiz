@@ -556,11 +556,13 @@
   <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ORDER_APPROVED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Shipped" sequenceId="05" statusCode="SHIPPED" statusId="ORDER_SHIPPED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ORDER_BACKORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ORDER_REJECTED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ITEM_ORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ITEM_APPROVED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Shipped" sequenceId="05" statusCode="SHIPPED" statusId="ITEM_SHIPPED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ITEM_BACKORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ITEM_REJECTED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Authorized" sequenceId="01" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusItem description="Settled" sequenceId="02" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
@@ -592,19 +594,21 @@
   <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_DELIVERED" transitionName="Deliver"/>
   <StatusValidChange condition="" statusId="INV_DELIVERED" statusIdTo="INV_AVAILABLE" transitionName="Return"/>
   <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_APPROVED" transitionName="Approve Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_REJECTED" transitionName="Reject Order"/>
   <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_SHIPPED" transitionName="Ship Order"/>
   <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
   <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
   <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
   <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
   <StatusValidChange condition="" statusId="ORDER_BACKORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Back Order"/>
-  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Order"/>
-  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_SHIPPED" transitionName="Ship Order"/>
-  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order"/>
-  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order"/>
-  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Order"/>
-  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Order"/>
-  <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Back Order"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Item"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_REJECTED" transitionName="Reject Item"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_SHIPPED" transitionName="Ship Item"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order Item"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order Item"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
+  <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item Back Order"/>
   <StatusValidChange condition="" statusId="PAYMENT_AUTHORIZED" statusIdTo="PAYMENT_SETTLED" transitionName="Payment Settled"/>
   <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_SENT" transitionName="Send"/>
   <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
