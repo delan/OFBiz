@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.13 2004/02/26 09:10:50 jonesde Exp $
+ * $Id: ProductWorker.java,v 1.14 2004/05/11 17:06:09 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -346,6 +346,90 @@ public class ProductWorker {
             }
         }
         return newOrderAdjustmentsList;
+    }
+
+    public static double getAverageProductRating(GenericDelegator delegator, String productId, String productStoreId) {
+        GenericValue product = null;
+        try {
+            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return ProductWorker.getAverageProductRating(product, productStoreId);
+    }
+
+    public static double getAverageProductRating(GenericValue product, String productStoreId) {
+        return getAverageProductRating(product, null, productStoreId);
+    }
+
+    public static double getAverageProductRating(GenericValue product, List reviews, String productStoreId) {
+        if (product == null) {
+            Debug.logWarning("Invalid product entity passed; unable to obtain valid product rating", module);
+            return 0.00;
+        }
+
+        double productRating = 0.00;
+        Double productEntityRating = product.getDouble("productRating");
+        String entityFieldType = product.getString("ratingTypeEnum");
+
+        // null check
+        if (productEntityRating == null) {
+            productEntityRating = new Double(0);
+        }
+        if (entityFieldType == null) {
+            entityFieldType = new String();
+        }
+
+        if ("PRDR_FLAT".equals(entityFieldType)) {
+            productRating = productEntityRating.doubleValue();
+        } else {
+            // get the product rating from the ProductReview entity; limit by product store if ID is passed
+            Map reviewByAnd = UtilMisc.toMap("statusId", "PRR_APPROVED");
+            if (productStoreId != null) {
+                reviewByAnd.put("productStoreId", productStoreId);
+            }
+
+            // lookup the reviews if we didn't pass them in
+            if (reviews == null) {
+                try {
+                    reviews = product.getRelatedCache("ProductReview", reviewByAnd, UtilMisc.toList("-postedDateTime"));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+            }
+
+            // tally the average
+            double ratingTally = 0;
+            double numRatings = 0;
+            if (reviews != null) {
+                Iterator i = reviews.iterator();
+                while (i.hasNext()) {
+                    GenericValue productReview = (GenericValue) i.next();
+                    Double rating = productReview.getDouble("productRating");
+                    if (rating != null) {
+                        ratingTally += rating.doubleValue();
+                        numRatings++;
+                    }
+                }
+            }
+            if (ratingTally > 0 && numRatings > 0) {
+                productRating = ratingTally /  numRatings;
+            }
+
+            if ("PRDR_MIN".equals(entityFieldType)) {
+                // check for min
+                if (productEntityRating.doubleValue() > productRating) {
+                    productRating = productEntityRating.doubleValue();
+                }
+            } else if ("PRDR_MAX".equals(entityFieldType)) {
+                // check for max
+                if (productRating > productEntityRating.doubleValue()) {
+                    productRating = productEntityRating.doubleValue();
+                }
+            }
+        }
+
+        return productRating;
     }
 }
 
