@@ -42,13 +42,13 @@
             pageContext.setAttribute("productPriceRule", productPriceRule);
     }
 
-    Collection inputParamEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PRICE_IN_PARAM"), UtilMisc.toList("sequenceId"));
+    List inputParamEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PRICE_IN_PARAM"), UtilMisc.toList("sequenceId"));
     if (inputParamEnums != null) pageContext.setAttribute("inputParamEnums", inputParamEnums);
 
-    Collection condOperEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PRICE_COND"), UtilMisc.toList("sequenceId"));
+    List condOperEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PRICE_COND"), UtilMisc.toList("sequenceId"));
     if (condOperEnums != null) pageContext.setAttribute("condOperEnums", condOperEnums);
 
-    Collection productPriceActionTypes = delegator.findAllCache("ProductPriceActionType", UtilMisc.toList("description"));
+    List productPriceActionTypes = delegator.findAllCache("ProductPriceActionType", UtilMisc.toList("description"));
     if (productPriceActionTypes != null) pageContext.setAttribute("productPriceActionTypes", productPriceActionTypes);
 %>
 <br>
