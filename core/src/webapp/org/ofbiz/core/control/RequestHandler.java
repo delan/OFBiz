@@ -291,10 +291,21 @@ public class RequestHandler implements Serializable {
         GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
         GenericDelegator delegator = (GenericDelegator) req.getAttribute("delegator");
         // workaraound if we are in the root webapp
-		String cname = UtilMisc.getApplicationName(req);
+        String cname = UtilMisc.getApplicationName(req);
         String oldView = view;
 
         if (view != null && view.length() > 0 && view.charAt(0) == '/') view = view.substring(1);
+
+        //if the view name starts with the control servlet name and a /, then it was an 
+        //  attempt to override the default view with a call back into the control servlet,
+        //  so just get the target view name and use that
+        String servletName = req.getServletPath().substring(1);
+        Debug.logInfo("servletName=" + servletName + ", view=" + view);
+        if (view.startsWith(servletName + "/")) {
+            view = view.substring(servletName.length() + 1);
+            Debug.logInfo("a manual control servlet request was received, removing control servlet path resulting in: view=" + view);
+        }
+        
         if (Debug.verboseOn()) Debug.logVerbose("[Getting View Map]: " + view, module);
 
         // before mapping the view, set a session attribute so we know where we are
@@ -304,10 +315,11 @@ public class RequestHandler implements Serializable {
         String tempView = rm.getViewPage(view);
         String nextPage = null;
         if (tempView == null) {
-            if (!allowExtView)
+            if (!allowExtView) {
                 throw new RequestHandlerException("No view to render.");
-            else
+            } else {
                 nextPage = "/" + oldView;
+            }
         } else {
             nextPage = tempView;
         }
