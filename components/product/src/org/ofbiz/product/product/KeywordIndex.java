@@ -172,14 +172,14 @@ public class KeywordIndex {
             Iterator productContentAndInfoIter = productContentAndInfos.iterator();
             while (productContentAndInfoIter.hasNext()) {
                 GenericValue productContentAndInfo = (GenericValue) productContentAndInfoIter.next();
-                addWeightedDataResourceString(productContentAndInfo, weight, strings, delegator);
+                addWeightedDataResourceString(productContentAndInfo, weight, strings, delegator, product);
                 
                 List alternateViews = productContentAndInfo.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"));
                 alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
                 Iterator alternateViewIter = alternateViews.iterator();
                 while (alternateViewIter.hasNext()) {
                     GenericValue thisView = (GenericValue) alternateViewIter.next();
-                    addWeightedDataResourceString(thisView, weight, strings, delegator);
+                    addWeightedDataResourceString(thisView, weight, strings, delegator, product);
                 }
             }
         }
@@ -204,9 +204,10 @@ public class KeywordIndex {
         }
     }
     
-    public static void addWeightedDataResourceString(GenericValue drView, int weight, List strings, GenericDelegator delegator) {
+    public static void addWeightedDataResourceString(GenericValue drView, int weight, List strings, GenericDelegator delegator, GenericValue product) {
+        Map drContext = UtilMisc.toMap("product", product);
         try {
-            String contentText = DataResourceWorker.renderDataResourceAsText(delegator, drView.getString("dataResourceId"), null, drView, null, null);
+            String contentText = DataResourceWorker.renderDataResourceAsText(delegator, drView.getString("dataResourceId"), drContext, drView, null, null);
             for (int i = 0; i < weight; i++) {
                 strings.add(contentText);
             }
