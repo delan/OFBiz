@@ -316,6 +316,27 @@
         <key-map field-name="orderId"/>
       </relation>
     </entity>
+    <view-entity entity-name="OrderHeaderAndItems"
+    		package-name="org.ofbiz.commonapp.order.order"
+    		never-cache="true"
+    		title="Order Header And Order Items View Entity">
+    	<member-entity entity-alias="OH" entity-name="OrderHeader"/>
+    	<member-entity entity-alias="OI" entity-name="OrderItem"/>
+    	<alias entity-alias="OH" name="orderId"/>
+    	<alias entity-alias="OH" name="orderDate"/>
+    	<alias entity-alias="OH" name="orderStatusId" field="statusId"/>
+    	<alias entity-alias="OH" name="grandTotal"/>
+    	<alias entity-alias="OI" name="orderItemSeqId"/>
+    	<alias entity-alias="OI" name="productId"/>
+    	<alias entity-alias="OI" name="quantity"/>
+    	<alias entity-alias="OI" name="unitPrice"/>
+    	<alias entity-alias="OI" name="unitListPrice"/>
+    	<alias entity-alias="OI" name="itemDescription"/>
+    	<alias entity-alias="OI" name="itemStatusId" field="statusId"/>
+    	<view-link entity-alias="OH" rel-entity-alias="OI">
+    		<key-map field-name="orderId"/>
+    	</view-link>    	
+    </view-entity>
     <view-entity entity-name="OrderHeaderAndPaymentPref"
             package-name="org.ofbiz.commonapp.order.order"
             never-cache="true"
