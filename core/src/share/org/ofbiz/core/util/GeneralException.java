@@ -1,7 +1,5 @@
 /*
- * GeneralException.java
- *
- * Created on November 5, 2001, 1:55 PM
+ * $Id$ 
  */
 
 /*
