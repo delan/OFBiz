@@ -69,8 +69,8 @@
 
 <!--
 <service-eca>
-    <eca serviceName="testBsh" event="commit">
-      <condition lhs-value="1" operator="equals" rhs="1"/>
+    <eca service="testBsh" event="commit">
+      <condition field-name="foo" operator="equals" rhs="1"/>
       <action service="testScv" mode="sync"/>
       <action service="testScv" mode="sync"/>
     </eca>
