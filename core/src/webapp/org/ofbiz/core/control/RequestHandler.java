@@ -252,10 +252,11 @@ public class RequestHandler implements Serializable {
         long viewStartTime = System.currentTimeMillis();
         
         try {
+            Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
             ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
             vh.render(nextPage, request, response);
         } catch (ViewHandlerException e) {
-            throw new RequestHandlerException(e.getMessage(), e);
+            throw new RequestHandlerException("Error in view handler", e);
         }
 
         String vname = (String) request.getAttribute(SiteDefs.CURRENT_VIEW);
