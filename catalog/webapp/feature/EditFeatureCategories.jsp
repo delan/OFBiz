@@ -60,9 +60,9 @@
           <%GenericValue curProdFeatCat = delegator.findByPrimaryKey("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureCategory.get("parentCategoryId")));%>
           <%if (curProdFeatCat != null) {%>
             <option value='<%=curProdFeatCat.getString("productFeatureCategoryId")%>'><%=curProdFeatCat.getString("description")%><%-- [<%=curProdFeatCat.getString("productFeatureCategoryId")%>]--%></option>
-            <option value='<%=curProdFeatCat.getString("productFeatureCategoryId")%>'>&nbsp;</option>
           <%}%>
         <%}%>
+        <option value=''>&nbsp;</option>
         <ofbiz:iterator name="dropDownProductFeatureCategory" property="productFeatureCategories">
           <option value='<%=dropDownProductFeatureCategory.getString("productFeatureCategoryId")%>'><%=dropDownProductFeatureCategory.getString("description")%><%-- [<%=dropDownProductFeatureCategory.getString("productFeatureCategoryId")%>]--%></option>
         </ofbiz:iterator>
