@@ -1518,6 +1518,26 @@
         <key-map field-name="noteId"/>
       </relation>
     </entity>
+    <entity entity-name="CustRequestItemWorkEffort"
+            package-name="org.ofbiz.order.request"
+            title="Cust Request Work Effort Entity">
+      <field name="custRequestId" type="id-ne"></field>
+      <field name="custRequestItemSeqId" type="id-ne"></field>
+      <field name="workEffortId" type="id-ne"></field>
+      <prim-key field="custRequestId"/>
+      <prim-key field="custRequestItemSeqId"/>
+      <prim-key field="workEffortId"/>
+      <relation type="one" fk-name="WORK_REQFL_CSTRQ" rel-entity-name="CustRequestItem">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQ_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+    </entity>
     <entity entity-name="CustRequestResolution"
             package-name="org.ofbiz.order.request"
             title="Customer Request Resolution Entity">
@@ -1832,9 +1852,6 @@
       <field name="workReqFulfTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="workReqFulfTypeId"/>
-      <relation type="many" rel-entity-name="WorkRequirementFulfillment">
-        <key-map field-name="workReqFulfTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="WorkRequirementFulfillment"
             package-name="org.ofbiz.order.request"
@@ -1849,6 +1866,9 @@
       </relation>
       <relation type="one" fk-name="WORK_REQFL_WEFF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WORK_REQFL_WRFT" rel-entity-name="WorkReqFulfType">
+        <key-map field-name="workReqFulfTypeId"/>
       </relation>
     </entity>
 
