@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -29,6 +29,6 @@
 <div class="head1">Most Recently Used ${page.getProperty("entityName")}</div>
 <br>
 <br>
-${lruWrapper.renderFormString()}
+${mruWrapper.renderFormString()}
 <br>
 

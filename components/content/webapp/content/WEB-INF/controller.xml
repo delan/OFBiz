@@ -658,6 +658,12 @@
         <response name="success" type="view" value="EditContentAssoc"/>
         <response name="error" type="view" value="EditContentAssoc"/>
     </request-map>
+    <request-map uri="removeContentAssoc">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentAssoc" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssoc"/>
+        <response name="error" type="view" value="EditContentAssoc"/>
+    </request-map>
 
 	<!-- DataResource requests -->
     <request-map uri="BrowseDataResource">

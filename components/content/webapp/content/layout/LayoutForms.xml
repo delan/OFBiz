@@ -199,7 +199,7 @@
             <text />
         </field>
         <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
-		<textarea rows="24" cols="55" />
+		<textarea rows="24" cols="80" />
         </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit">
             <submit button-type="button"/>
@@ -334,7 +334,7 @@
             <display description="text/plain"/>
         </field>
         <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
-		<textarea rows="24" cols="55" />
+		<textarea rows="24" cols="80" />
         </field>
         <field name="createdByUserLogin" position="1">
             <display/>
@@ -373,7 +373,7 @@
             <hidden value="text/html"/>
         </field>
         <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
-		<textarea rows="24" cols="55" />
+		<textarea rows="24" cols="80" />
         </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit">
             <submit button-type="button"/>
@@ -395,7 +395,7 @@
             <display description="text/plain"/>
         </field>
         <field name="textData" title="Text" > 
-		<textarea rows="24" cols="55" />
+		<textarea rows="24" cols="80" />
         </field>
         <field name="createdByUserLogin" position="1">
             <display/>
@@ -434,7 +434,7 @@
             <hidden value="text/html"/>
         </field>
         <field name="textData" title="Text" > 
-		<textarea rows="24" cols="55" />
+		<textarea rows="24" cols="80" />
         </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit">
             <submit button-type="button"/>
@@ -590,8 +590,21 @@
         extends="LayoutSubContentMaster"
         target="updateLayoutSubContent"
         title="" type="single">
+        <field name="contentIdToDisplay" >
+           <ignored/>
+        </field>
+        <field name="mapKeyDisplay" >
+           <ignored/>
+        </field>
+
         <field name="contentId" position="1" >
             <display/>
+        </field>
+        <field name="contentIdTo" >
+            <text default-value="${contentIdTo}"/>
+        </field>
+        <field name="mapKey" >
+            <text default-value="${mapKey}"/>
         </field>
         <field name="drDataResourceTypeId" >
             <drop-down no-current-selected-key="ELECTRONIC_TEXT">
@@ -617,7 +630,7 @@
             <text />
         </field>
         <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
-		<textarea rows="24" cols="55" />
+		<textarea rows="24" cols="80" />
         </field>
         <field name="createdByUserLogin" position="1">
             <display/>
@@ -643,8 +656,21 @@
         extends="LayoutSubContentMaster"
         target="createLayoutSubContent"
         title="" type="single">
+        <field name="contentIdToDisplay" >
+           <ignored/>
+        </field>
+        <field name="mapKeyDisplay" >
+           <ignored/>
+        </field>
+
         <field name="contentId" position="1" >
             <text/>
+        </field>
+        <field name="contentIdTo" >
+            <text default-value="TEMPLATE_MASTER"/>
+        </field>
+        <field name="mapKey" >
+            <text default-value="${mapKey}"/>
         </field>
         <field name="drDataResourceTypeId" >
             <drop-down no-current-selected-key="ELECTRONIC_TEXT">
@@ -670,7 +696,7 @@
             <text />
         </field>
         <field name="textData" title="Text"  id-name="textData"> 
-		<textarea rows="24" cols="55" />
+		<textarea rows="24" cols="80" />
         </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit">
             <submit button-type="button"/>

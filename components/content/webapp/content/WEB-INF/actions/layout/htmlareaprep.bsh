@@ -1,5 +1,5 @@
 /*
- * $Id: htmlareaprep.bsh,v 1.1 2003/12/17 18:03:16 byersa Exp $
+ * $Id: htmlareaprep.bsh,v 1.2 2004/03/16 17:35:24 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -53,7 +53,7 @@ import javax.servlet.http.*;
 paramMap = UtilHttp.getParameterMap(request);
 contentIdTo = (String)paramMap.get("contentIdTo");
 
-if (!contentIdTo.equals("TEMPLATE_MASTER")) {
+if (contentIdTo == null || !contentIdTo.equals("TEMPLATE_MASTER")) {
     context.put("dynamicPrimaryHTMLField", "textData");
 }
 

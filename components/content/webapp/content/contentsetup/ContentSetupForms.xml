@@ -239,9 +239,6 @@
         list-name="contentList" 
         target="updateContentPurposeOperation" title="" type="list">
         <auto-fields-service service-name="updateContentPurposeOperation"/>
-        <field name="contentPurposeOperationId" title="ContentPurposeOperationId" widget-style="buttontext">
-            <display/>
-        </field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
