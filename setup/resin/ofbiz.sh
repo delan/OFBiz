@@ -32,20 +32,18 @@ fi
 
 # ----- Set the CLASSPATH ----------------------------------------------------
 
-CP=`ls $OFBIZ_HOME/lib/share/*.jar | paste -s -d":" - `
-CP=$CP:`ls $OFBIZ_HOME/lib/common/*.jar | paste -s -d":" - `
+CP=`find $OFBIZ_HOME/core/lib -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/share -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/common -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/datavision -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/jasperreports -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/jotm -name *.jar | paste -s -d":" -`
+#CP=$CP:`find $OFBIZ_HOME/lib/tyrex -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/scripting -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/weka -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/worldpay -name *.jar | paste -s -d":" -`
 CP=$CP:$OFBIZ_HOME/lib/compile/xerces.jar:$OFBIZ_HOME/lib/compile/mail.jar
-CP=$CP:$OFBIZ_HOME/lib/datavision/DataVision.jar:$OFBIZ_HOME/lib/datavision/MinML.jar:$OFBIZ_HOME/lib/datavision/jcalendar.jar
-CP=$CP:$OFBIZ_HOME/lib/jasperreports/jasperreports.jar:$OFBIZ_HOME/lib/jasperreports/itext-0.81.jar
-CP=$CP:$OFBIZ_HOME/lib/weka/weka.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-share.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-entity.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-service.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-extutil.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-workflow.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-rules.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-datafile.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-minilang.jar
+CP=$CP:$OFBIZ_HOME/lib/compile/activation.jar:$OFBIZ_HOME/lib/compile/jdbc2_0-stdext.jar
 CP=$CP:$OFBIZ_HOME/commonapp/lib/commonapp.jar 
 CP=$CP:$OFBIZ_HOME/commonapp/etc
 
