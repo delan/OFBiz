@@ -2,6 +2,6 @@
 <page>
     <template>main_lr</template>
     <property name="title">Product Page</property>
-     <property name="title.property">PageTitleProductPage</property>
-    <content-action name="/catalog/product.bsh"/>
+    <property name="title.property">PageTitleProductPage</property>
+    <page-action name="/catalog/product.bsh"/>
 </page>

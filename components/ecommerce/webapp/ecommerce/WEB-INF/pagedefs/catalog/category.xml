@@ -3,5 +3,5 @@
     <template>main_lr</template>
     <property name="title">Category Page</property>
     <property name="title.property">PageTitleCategoryPage</property>
-    <content-action name="/catalog/category.bsh"/>
+    <page-action name="/catalog/category.bsh"/>
 </page>
