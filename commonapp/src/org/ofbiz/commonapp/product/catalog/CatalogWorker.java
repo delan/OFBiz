@@ -269,10 +269,14 @@ public class CatalogWorker {
         if (application == null) return null;
         return application.getInitParameter("webSiteId");
     }
-
+    
     public static GenericValue getWebSite(PageContext pageContext) {
-        String webSiteId = getWebSiteId(pageContext);
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        return getWebSite(pageContext.getRequest());
+    }
+
+    public static GenericValue getWebSite(ServletRequest request) {
+        String webSiteId = getWebSiteId(request);
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         try {
             return delegator.findByPrimaryKeyCache("WebSite", UtilMisc.toMap("webSiteId", webSiteId));
