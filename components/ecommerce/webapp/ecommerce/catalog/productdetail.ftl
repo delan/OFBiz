@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.28 $
+ *@version    $Revision: 1.29 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -36,12 +36,37 @@ ${requestAttributes.virtualJavaScript?if_exists}
 <script language="JavaScript">
 <!--
     var detailImageUrl = null;
+     function setAddProductId(name) {
+        document.addform.add_product_id.value = name;
+        if (document.addform.quantity == null) return;
+        if (name == 'NULL' || isVirtual(name) == true) {
+            document.addform.quantity.disabled = true;
+        } else {
+            document.addform.quantity.disabled = false;
+        }
+     }
+     function isVirtual(product) {
+        var isVirtual = false;
+        <#if requestAttributes.virtualJavaScript?exists>
+        for (i = 0; i < VIR.length; i++) {
+            if (VIR[i] == product) {
+                isVirtual = true;
+            }
+        }
+        </#if>
+        return isVirtual;
+     }
     function addItem() {
        if (document.addform.add_product_id.value == 'NULL') {
            alert("Please enter all the required information.");
            return;
        } else {
-           document.addform.submit();
+             if (isVirtual(document.addform.add_product_id.value)) {
+                document.location = '<@ofbizUrl>/product?category_id=${requestAttributes.categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
+                return;
+             } else {
+                 document.addform.submit();
+             }
        }
     }
 
@@ -103,7 +128,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
             eval("list" + OPT[(currentFeatureIndex+1)] + selectedValue + "()");
 
             // set the product ID to NULL to trigger the alerts
-            document.addform.add_product_id.value = 'NULL';
+            setAddProductId('NULL');
         } else {
             // this is the final selection -- locate the selected index of the last selection
             var indexSelected = document.forms["addform"].elements[name].selectedIndex;
@@ -112,7 +137,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
             var sku = document.forms["addform"].elements[name].options[indexSelected].value;
 
             // set the product ID
-            document.addform.add_product_id.value = sku;
+            setAddProductId(sku);
 
             // check for amount box
             toggleAmt(checkAmtReq(sku));
@@ -200,12 +225,21 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <a href="javascript:popUpSmall('<@ofbizUrl>/tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
       </div>
 
+      <p>&nbsp;</p>
+      <#if requestAttributes.disFeatureList?exists && 0 < requestAttributes.disFeatureList.size()>
+        <#list requestAttributes.disFeatureList as currentFeature>
+            <div class="tabletext">
+                ${currentFeature.productFeatureTypeId}:&nbsp;${currentFeature.description}
+            </div>
+        </#list>
+            <div class="tabletext">&nbsp;</div>
+      </#if>
+
       <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
           <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
-            <p>&nbsp;</p>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
                 <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">

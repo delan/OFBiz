@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -34,15 +34,115 @@
 <#-- virtual product javascript -->
 ${requestAttributes.virtualJavaScript?if_exists}
 <script language="JavaScript">
- <!--
-     function addItem() {
-         if (document.addform.add_product_id.value == 'NULL') {
-             alert("Please enter all the required information.");
-             return;
-         } else {
-             document.addform.submit();
-         }
+<!--
+    var detailImageUrl = null;
+     function setAddProductId(name) {
+        document.addform.add_product_id.value = name;
+        if (document.addform.quantity == null) return;
+        if (name == 'NULL' || isVirtual(name) == true) {
+            document.addform.quantity.disabled = true;
+        } else {
+            document.addform.quantity.disabled = false;
+        }
      }
+     function isVirtual(product) {
+        var isVirtual = false;
+        <#if requestAttributes.virtualJavaScript?exists>
+        for (i = 0; i < VIR.length; i++) {
+            if (VIR[i] == product) {
+                isVirtual = true;
+            }
+        }
+        </#if>
+        return isVirtual;
+     }
+    function addItem() {
+       if (document.addform.add_product_id.value == 'NULL') {
+           alert("Please enter all the required information.");
+           return;
+       } else {
+             if (isVirtual(document.addform.add_product_id.value)) {
+                document.location = '<@ofbizUrl>/product?category_id=${requestAttributes.categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
+                return;
+             } else {
+                 document.addform.submit();
+             }
+       }
+    }
+
+    function popupDetail() {
+        var defaultDetailImage = "${firstDetailImage?default(mainDetailImageUrl?default("_NONE_"))}";
+        if (defaultDetailImage == null || defaultDetailImage == "null") {
+            defaultDetailImage = "_NONE_";
+        }
+
+        if (detailImageUrl == null || detailImageUrl == "null") {
+            detailImageUrl = defaultDetailImage;
+        }
+
+        if (detailImageUrl == "_NONE_") {
+            alert("No detail image available to display.");
+            return;
+        }
+        popUp("<@ofbizUrl>/detailImage?detail=" + detailImageUrl + "</@ofbizUrl>", 'detailImage', '400', '550');
+    }
+
+    function toggleAmt(toggle) {
+        if (toggle == 'Y') {
+            changeObjectVisibility("add_amount", "visible");
+        }
+
+        if (toggle == 'N') {
+            changeObjectVisibility("add_amount", "hidden");
+        }
+    }
+
+    function findIndex(name) {
+        for (i = 0; i < OPT.length; i++) {
+            if (OPT[i] == name) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function getList(name, index, src) {
+        currentFeatureIndex = findIndex(name);
+
+        if (currentFeatureIndex == 0) {
+            // set the images for the first selection
+            if (IMG[index] != null) {
+                if (document.images['mainImage'] != null) {
+                    document.images['mainImage'].src = IMG[index];
+                    detailImageUrl = DET[index];
+                }
+            }
+
+            // set the drop down index for swatch selection
+            document.forms["addform"].elements[name].selectedIndex = (index*1)+1;
+        }
+
+        if (currentFeatureIndex < (OPT.length-1)) {
+            // eval the next list if there are more
+            var selectedValue = document.forms["addform"].elements[name].options[(index*1)+1].value;
+            eval("list" + OPT[(currentFeatureIndex+1)] + selectedValue + "()");
+
+            // set the product ID to NULL to trigger the alerts
+            setAddProductId('NULL');
+        } else {
+            // this is the final selection -- locate the selected index of the last selection
+            var indexSelected = document.forms["addform"].elements[name].selectedIndex;
+
+            // using the selected index locate the sku
+            var sku = document.forms["addform"].elements[name].options[indexSelected].value;
+
+            // set the product ID
+            setAddProductId(sku);
+
+            // check for amount box
+            toggleAmt(checkAmtReq(sku));
+        }
+    }
  //-->
  </script>
 
@@ -115,15 +215,24 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </div>
       </#if>
 
+      <p>&nbsp;</p>
+      <#if requestAttributes.disFeatureList?exists && 0 < requestAttributes.disFeatureList.size()>
+        <#list requestAttributes.disFeatureList as currentFeature>
+            <div class="tabletext">
+                ${currentFeature.productFeatureTypeId}:&nbsp;${currentFeature.description}
+            </div>
+        </#list>
+            <div class="tabletext">&nbsp;</div>
+      </#if>
+
       <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
           <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
-            <p>&nbsp;</p>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
-                <select name="${currentType}" class="selectBox" onChange="getList(this.name, this.options[this.selectedIndex].value)">
+                <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                   <option>${requestAttributes.featureTypes.get(currentType)}</option>
                 </select>
               </div>
@@ -196,22 +305,33 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <p>&nbsp;</p>
         <table cellspacing="0" cellpadding="0">
           <tr>
+            <#assign maxIndex = 7>
             <#assign indexer = 0>
             <#list imageKeys as key>
               <#assign swatchProduct = imageMap.get(key)>
-              <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request)?if_exists>
-              <#if swatchProduct?exists && imageUrl?exists>
+              <#if swatchProduct?has_content && indexer < maxIndex>
+                <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request)?if_exists>
+                <#if !imageUrl?has_content>
+                  <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL")?if_exists>
+                </#if>
+                <#if !imageUrl?has_content>
+                  <#assign imageUrl = "/images/defaultImage.jpg">
+                </#if>
                 <td align="center" valign="bottom">
-                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
+                  <a href="javascript:getList('FT${requestAttributes.featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60"></a>
                   <br>
-                  <a href="#" class="buttontext" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);">${key}</a>
+                  <a href="javascript:getList('FT${requestAttributes.featureOrderFirst}','${indexer}',1);" class="buttontext">${key}</a>
                 </td>
-                <#assign indexer = indexer + 1>
               </#if>
+              <#assign indexer = indexer + 1>
             </#list>
+            <#if (indexer > maxIndex)>
+              <div class="tabletext"><b>More options available in drop down.</b></div>
+            </#if>
           </tr>
         </table>
       </#if>
+
     </td>
   </tr>
 
