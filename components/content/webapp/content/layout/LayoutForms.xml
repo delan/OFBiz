@@ -154,7 +154,7 @@
         default-map-name="currentValue"
         target="createLayout" title="" type="single">
         <field name="contentTypeId" >
-            <hidden value="TEMPLATE"/>
+            <hidden value="DOCUMENT"/>
         </field>
         <field name="contentName">
             <text/>
