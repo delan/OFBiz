@@ -7,13 +7,13 @@
     <version>1.0</version>
 
     <!-- Order processing services -->
-    <service name="processOrder" engine="workflow" location="org.ofbiz.commonapp.order.order" invoke="ProcessOrder">
+    <service name="processOrder" engine="workflow" location="org.ofbiz.order.order" invoke="ProcessOrder">
         <description>Service for testing the workflow engine</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>        
     </service>
     
     <service name="prepareOrderEmailData" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderEmailData">
+            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderEmailData">
         <description>Prepares the data for a order notification email</description>
         <attribute name="orderId" type="String" mode="INOUT" optional="false"/>        
         <attribute name="orderItemSeqId" type="String" mode="INOUT" optional="true"/>
@@ -46,7 +46,7 @@
         <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>                  
     </service>            
     <service name="prepareOrderEmail" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderEmail">
+            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderEmail">
         <description>Service to prepare (template, addresses, etc) the order notification</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>        
         <attribute name="emailType" type="String" mode="INOUT" optional="false"/>
@@ -59,38 +59,38 @@
         <attribute name="contentType" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="prepareOrderConfirmation" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderConfirmation">
+            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderConfirmation">
         <description>Service to prepare (template, addresses, etc) the order confirmation</description>
         <implements service="prepareOrderEmail"/>
         <override name="emailType" mode="OUT"/>        
     </service>    
     <service name="prepareOrderComplete" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderComplete">
+            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderComplete">
         <description>Service to prepare (template, addresses, etc) the order notification</description>
         <implements service="prepareOrderEmail"/>                
         <override name="emailType" mode="OUT"/>
     </service>
     <service name="prepareOrderBackorder" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderBackorder">
+            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderBackorder">
         <description>Service to prepare (template, addresses, etc) the order notification</description>
         <implements service="prepareOrderEmail"/>                
         <override name="emailType" mode="OUT"/>
     </service>
     <service name="prepareOrderChange" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderChange">
+            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderChange">
         <description>Service to prepare (template, addresses, etc) the order notification</description>
         <implements service="prepareOrderEmail"/>                
         <override name="emailType" mode="OUT"/>
     </service>                        	
     <service name="sendOrderConfirmation" engine="java"
-            location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
         <description>Send a order confirmation</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>        
     </service>                	
     <service name="sendOrderChangeNotification" engine="java"
-            location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -98,7 +98,7 @@
         <attribute name="emailType" type="String" mode="IN" optional="false"/>        
     </service>    
     <service name="sendOrderCompleteNotification" engine="java"
-            location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -106,7 +106,7 @@
         <attribute name="emailType" type="String" mode="IN" optional="false"/>        
     </service>    
     <service name="sendOrderBackorderNotification" engine="java"
-            location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -115,7 +115,7 @@
     </service>        
 
     <service name="sendProcessNotification" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="sendProcessNotification">
+            location="org.ofbiz.order.order.OrderServices" invoke="sendProcessNotification">
     	<description>Limit Service for order processing workflow; sends activitiy notifications</description>
     	<attribute name="workEffortId" type="String" mode="IN"/>
     	<attribute name="adminEmailList" type="String" mode="IN"/>
@@ -124,14 +124,14 @@
     </service>
     
     <service name="createOrderNotificationLog" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="createNotificationLog">
+            location="org/ofbiz/order/order/OrderSimpleMethods.xml" invoke="createNotificationLog">
         <description>Logs when a notification was sent</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="storeOrder" engine="java" validate="true" auth="true"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
+            location="org.ofbiz.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="visitId" type="String" mode="IN" optional="true"/>
@@ -159,7 +159,7 @@
     </service>
 
     <service name="createOrderItemBilling" engine="simple"
-    	    location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="createOrderItemBilling">
+    	    location="org/ofbiz/order/order/OrderSimpleMethods.xml" invoke="createOrderItemBilling">
         <description>Create a new order item billing record</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
@@ -170,7 +170,7 @@
     </service>
     
     <service name="createOrderAdjustment" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="createOrderAdjustment">
+            location="org/ofbiz/order/order/OrderSimpleMethods.xml" invoke="createOrderAdjustment">
         <description>Creates a new order adjustment record</description>
         <attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -192,7 +192,7 @@
     </service>
     
     <service name="updateTrackingNumber" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="updateTrackingNumber">
+            location="org.ofbiz.order.order.OrderServices" invoke="updateTrackingNumber">
         <description>Sets the tracking number on a shipment preference</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
@@ -200,13 +200,13 @@
     </service>
 
     <service name="resetGrandTotal" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="resetGrandTotal">
+            location="org.ofbiz.order.order.OrderServices" invoke="resetGrandTotal">
         <description>Change the status of an existing order</description>
         <attribute name="orderId" type="String" mode="IN"/>
     </service>
         
     <service name="changeOrderStatus" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="setOrderStatus">
+            location="org.ofbiz.order.order.OrderServices" invoke="setOrderStatus">
         <description>Change the status of an existing order</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="statusId" type="String" mode="IN"/>
@@ -214,7 +214,7 @@
     </service>
     
     <service name="changeOrderItemStatus" engine="java"
-    		location="org.ofbiz.commonapp.order.order.OrderServices" invoke="setItemStatus">
+    		location="org.ofbiz.order.order.OrderServices" invoke="setItemStatus">
     	<description>Change the status of an existing order item</description>
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>
     	<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
@@ -223,33 +223,33 @@
     </service>
     
     <service name="checkOrderItemStatus" engine="java"
-    		location="org.ofbiz.commonapp.order.order.OrderServices" invoke="checkItemStatus">
+    		location="org.ofbiz.order.order.OrderServices" invoke="checkItemStatus">
     	<description>Check the status of all items and cancel/complete the order if we can</description>
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>    
     </service>    
     
     <service name="updateOrderStatusFromReceipt" engine="simple"
-    		location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="updateOrderStatusFromReceipt">
+    		location="org/ofbiz/order/order/OrderSimpleMethods.xml" invoke="updateOrderStatusFromReceipt">
     	<description>Updates the (purchase) order/order item status based on receipt</description>
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>    	
     	<attribute name="currentStatusId" type="String" mode="OUT" optional="false"/>
     </service>
     
     <service name="autoCancelOrderItems" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="cancelFlaggedSalesOrders">
+            location="org.ofbiz.order.order.OrderServices" invoke="cancelFlaggedSalesOrders">
         <description>Batch service for doing auto-cancel on set items</description>
         <!-- this service has no parameters IN or OUT -->
     </service>        
     
     <service name="setAllowOrderSplit" engine="java" auth="true"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="allowOrderSplit">
+            location="org.ofbiz.order.order.OrderServices" invoke="allowOrderSplit">
         <description>Set the Allow Split Flag To 'Y' (true)</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="addOrderRole" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">
+            location="org.ofbiz.order.order.OrderServices" invoke="addRoleType">
         <description>Adds a RoleType to an order</description>
         <attribute name="removeOld" type="Boolean" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="IN"/>
@@ -258,7 +258,7 @@
     </service>
 
     <service name="removeOrderRole" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="removeRoleType">
+            location="org.ofbiz.order.order.OrderServices" invoke="removeRoleType">
         <description>Removes a RoleType from an order</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
@@ -266,7 +266,7 @@
     </service>
 
     <service name="createOrderPaymentPreference" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createPaymentPreference">
+            location="org.ofbiz.order.order.OrderServices" invoke="createPaymentPreference">
         <description>Creates an order payment preference</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="paymentMethodTypeId" type="String" mode="IN"/>
@@ -276,7 +276,7 @@
     </service>
 
     <service name="createOrderNote" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrderNote" auth="true">
+            location="org.ofbiz.order.order.OrderServices" invoke="createOrderNote" auth="true">
         <description>Create a note item and associate with a order header</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="note" type="String" mode="IN"/>
@@ -284,13 +284,13 @@
 
     <!-- Order Return Services -->
     <service name="createReturnHeader" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="createReturnHeader">
+            location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnHeader">
         <description>Create a new ReturnHeader</description>      
         <auto-attributes entity-name="ReturnHeader" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="ReturnHeader" include="pk" mode="OUT" optional="false"/>
     </service>
     <service name="updateReturnHeader" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="updateReturnHeader">
+            location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="updateReturnHeader">
         <description>Update a ReturnHeader</description>      
         <auto-attributes entity-name="ReturnHeader" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="ReturnHeader" include="nonpk" mode="IN" optional="true"/>
@@ -305,34 +305,34 @@
         <override name="statusId" optional="true"/>
     </service>
     <service name="createReturnItem" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="createReturnItem">
+            location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnItem">
         <description>Create a new ReturnItem</description>
         <implements service="returnItemInterface"/>
         <attribute name="returnItemSeqId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateReturnItem" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="updateReturnItem">
+            location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="updateReturnItem">
         <description>Update a ReturnItem</description>
         <implements service="returnItemInterface"/>
         <attribute entity-name="ReturnItem" name="returnItemSeqId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="removeReturnItem" engine="simple"   
-            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="removeReturnItem">
+            location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="removeReturnItem">
         <description>Remove a ReturnItem</description>
         <auto-attributes entity-name="ReturnItem" include="pk" mode="IN" optional="false"/>
     </service>
     <service name="processCreditReturn" engine="java" auth="true"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="processCreditReturn">
+            location="org.ofbiz.order.order.OrderServices" invoke="processCreditReturn">
         <description>Process the credits in a return</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="processRefundReturn" engine="java" auth="true"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="processRefundReturn">
+            location="org.ofbiz.order.order.OrderServices" invoke="processRefundReturn">
         <description>Process the refunds in a return</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="updateReturnStatusFromReceipt" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="updateReturnStatusFromReceipt">      
+            location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="updateReturnStatusFromReceipt">      
         <description>Update return/item status when items have been received</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
         <attribute name="returnHeaderStatus" type="String" mode="OUT" optional="false"/>
@@ -340,7 +340,7 @@
     
     <!-- Tax Services -->
     <service name="calcTax" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="simpleTaxCalc">
+            location="org.ofbiz.order.order.OrderServices" invoke="simpleTaxCalc">
         <description>Calc Tax Service</description>
         <attribute name="productStoreId" type="String" mode="IN"/>
         <attribute name="itemProductList" type="java.util.List" mode="IN"/>
@@ -353,7 +353,7 @@
     </service>
 
     <service name="createTaxRate" engine="simple"
-            location="org/ofbiz/commonapp/order/order/TaxRateServices.xml" invoke="createTaxRate">
+            location="org/ofbiz/order/order/TaxRateServices.xml" invoke="createTaxRate">
         <description>Create a Tax Rate entry</description>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
@@ -368,7 +368,7 @@
     </service>
 
     <service name="removeTaxRate" engine="simple"
-            location="org/ofbiz/commonapp/order/order/TaxRateServices.xml" invoke="removeTaxRate">
+            location="org/ofbiz/order/order/TaxRateServices.xml" invoke="removeTaxRate">
         <description>Remove a Tax Rate entry</description>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
@@ -391,14 +391,14 @@
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createCustRequest" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequest" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequest" auth="true">
         <description>Create a custRequest record</description>
         <implements service="interfaceCustRequest"/>
         <attribute name="requestPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>        
     </service>
     <service name="updateCustRequest" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="updateCustRequest" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="updateCustRequest" auth="true">
         <description>Update a custRequest record</description>
         <implements service="interfaceCustRequest"/>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
@@ -406,7 +406,7 @@
     </service>
 
     <service name="createCustRequestAttribute" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestAttribute" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestAttribute" auth="true">
         <description>Create CustRequestAttribute record</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="attrName" type="String" mode="IN" optional="false"/>
@@ -414,7 +414,7 @@
     </service>
 
    <service name="updateCustRequestAttribute" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="updateCustRequestAttribute" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="updateCustRequestAttribute" auth="true">
         <description>Update CustRequestAttribute record</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="attrName" type="String" mode="IN" optional="false"/>
@@ -435,20 +435,20 @@
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createCustRequestItem" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
         <description>Create a CustRequestItem record</description>
         <implements service="interfaceCustRequestItem"/>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="updateCustRequestItem" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="updateCustRequestItem" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="updateCustRequestItem" auth="true">
         <description>Update a CustRequestItem record</description>
         <implements service="interfaceCustRequestItem"/>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="createCustRequestRole" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestRole" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestRole" auth="true">
         <description>Create a CustRequestRole record</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
@@ -456,7 +456,7 @@
     </service>
 
     <service name="removeCustRequestRole" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="removeCustRequestRole" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="removeCustRequestRole" auth="true">
         <description>Remove a CustRequestRole record</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
@@ -464,7 +464,7 @@
     </service>
 
     <service name="createCustRequestItemNote" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestItemNote" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestItemNote" auth="true">
         <description>Create a CustRequestRole record</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
@@ -473,7 +473,7 @@
     
     <!-- Services for finding Associated CustRequests -->
     <service name="getCustRequestsByRole" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="getCustRequestsByRole" auth="true">
+            location="org/ofbiz/order/request/CustRequestServices.xml" invoke="getCustRequestsByRole" auth="true">
         <description>Get CustRequests Associated By Role</description>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="custRequestAndRoles" type="java.util.List" mode="OUT" optional="false"/>
@@ -481,7 +481,7 @@
     
   <!-- Requirement Services -->
     <service name="interfaceRequirement" engine="simple"
-            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="createRequirement">
+            location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="createRequirement">
         <description>Requirement Interface</description>
         <attribute name="requirementTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
@@ -496,7 +496,7 @@
         <attribute name="reason" type="String" mode="IN" optional="true"/>   
     </service>
     <service name="createRequirement" engine="simple"
-            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="createRequirement">
+            location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="createRequirement">
         <description>Create a new requirement</description>
         <implements service="interfaceRequirement"/>
         <attribute name="custRequestId" type="String" mode="IN" optional="true"/>
@@ -504,20 +504,20 @@
         <attribute name="requirementId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="updateRequirement" engine="simple"
-            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="updateRequirement">
+            location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="updateRequirement">
         <description>Update an existing requirement</description>
         <implements service="interfaceRequirement"/>
         <attribute name="requirementId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="deleteRequirement" engine="simple"
-            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="deleteRequirement">
+            location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="deleteRequirement">
         <description>Delete a requirement</description>
         <attribute name="requirementId" type="String" mode="IN" optional="false"/>
     </service>
     
     <service name="associatedRequirementWithRequestItem" engine="simple"
-    		location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="associateRequirementWithRequestItem">
+    		location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="associateRequirementWithRequestItem">
     	<description>Creates a CustRequestItem/Requirement association</description>
     	<attribute name="requirementId" type="String" mode="IN" optional="false"/>
     	<attribute name="custRequestId" type="String" mode="IN" optional="false"/>
@@ -525,7 +525,7 @@
     </service>
 
     <service name="addRequirementTask" engine="simple"
-            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="addTaskToRequirement">
+            location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="addTaskToRequirement">
         <description>Associate an existing task w/ a requirement</description>
         <attribute name="requirementId" type="String" mode="IN" optional="false"/>
         <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
@@ -543,24 +543,24 @@
         <attribute name="isPublic" type="String" mode="IN" optional="true"/>        
     </service>
     <service name="createShoppingList" engine="simple" auth="true"
-            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingList">
+            location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingList">
         <description>Create a shopping list entity</description>
         <implements service="shoppingListInterface"/>
         <attribute name="shoppingListId" type="String" mode="OUT" optional="false"/>
     </service>    
     <service name="updateShoppingList" engine="simple" auth="true"
-            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="updateShoppingList">
+            location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="updateShoppingList">
         <description>Update a shopping list entity</description>
         <implements service="shoppingListInterface"/>
         <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
     </service> 
     <service name="removeShoppingList" engine="simple" auth="true"
-            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="removeShoppingList">
+            location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="removeShoppingList">
         <description>Remove a shopping list entity</description>       
         <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
     </service>    
     <service name="calculateShoppingListDeepTotalPrice" engine="simple" auth="true"
-            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="calculateShoppingListDeepTotalPrice">
+            location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="calculateShoppingListDeepTotalPrice">
         <description>Remove a shopping list entity</description>       
         <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
@@ -581,7 +581,7 @@
         <attribute name="quantityPurchased" type="Double" mode="IN" optional="true"/>
     </service>
     <service name="createShoppingListItem" engine="simple" auth="true"
-            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingListItem">
+            location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingListItem">
         <description>Create a shopping list item</description>
         <implements service="shoppingListItemInterface"/>
         <attribute name="shoppingListId" type="String" mode="INOUT" optional="true"/>
@@ -589,13 +589,13 @@
         <attribute name="shoppingListItemSeqId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateShoppingListItem" engine="simple" auth="true"
-            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="updateShoppingListItem">
+            location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="updateShoppingListItem">
         <description>Update a shopping list item</description>
         <implements service="shoppingListItemInterface"/>
         <attribute name="shoppingListItemSeqId" type="String" mode="IN" optional="false"/>
     </service>    
     <service name="removeShoppingListItem" engine="simple" auth="true"
-            location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="removeShoppingListItem">
+            location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="removeShoppingListItem">
         <description>Remove a shopping list item</description>
         <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
         <attribute name="shoppingListItemSeqId" type="String" mode="IN" optional="false"/>
@@ -603,7 +603,7 @@
     
     <!-- Order View Services -->
     <service name="getOrderInformation" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="getOrderInformation">
+            location="org.ofbiz.order.order.OrderServices" invoke="getOrderInformation">
         <description>Get basic order information.</description>
         <attribute name="orderId" type="String" mode="INOUT"/>
         <attribute name="orderHeader" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
@@ -619,7 +619,7 @@
     </service>
     
     <service name="getOrderHeaderInformation" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="getOrderHeaderInformation">
+            location="org.ofbiz.order.order.OrderServices" invoke="getOrderHeaderInformation">
         <description>Get basic order header information.</description>
         <auto-attributes entity-name="OrderHeader" include="pk" mode="INOUT" optional="false"/>
         <auto-attributes entity-name="OrderHeader" include="nonpk" mode="OUT" optional="true"/>
@@ -627,27 +627,27 @@
 
     <!-- Order Delivery Services -->
     <service name="createOrderDeliverySchedule" default-entity-name="OrderDeliverySchedule" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="createOrderDeliverySchedule">
+            location="org/ofbiz/order/order/OrderDeliveryServices.xml" invoke="createOrderDeliverySchedule">
         <description>Creates a delivery schedule for the specified order</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="orderItemSeqId" optional="true"/>
     </service>
     <service name="updateOrderDeliverySchedule" default-entity-name="OrderDeliverySchedule" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="updateOrderDeliverySchedule">
+            location="org/ofbiz/order/order/OrderDeliveryServices.xml" invoke="updateOrderDeliverySchedule">
         <description>Update an existing delivery schedule for a specified purchase order</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="sendOrderDeliveryScheduleNotification" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="sendOrderDeliveryScheduleNotification">
+            location="org/ofbiz/order/order/OrderDeliveryServices.xml" invoke="sendOrderDeliveryScheduleNotification">
         <description>Send Order Delivery Schedule Notification</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="checkSupplierRelatedOrderPermission" engine="simple"
-            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="checkSupplierRelatedOrderPermissionService">
+            location="org/ofbiz/order/order/OrderDeliveryServices.xml" invoke="checkSupplierRelatedOrderPermissionService">
         <description>Check Supplier Related Order Permission</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="checkAction" type="String" mode="IN" optional="true"/>
