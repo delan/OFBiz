@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.8 2003/12/06 00:47:01 jonesde Exp $
+ * $Id: ServiceUtil.java,v 1.9 2003/12/06 08:13:25 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,12 +47,17 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ServiceUtil {
     
     public static final String module = ServiceUtil.class.getName();
+    
+    /** A little short-cut method to check to see if a service returned an error */
+    public static boolean isError(Map results) {
+        return ModelService.RESPOND_ERROR.equals(results.get(ModelService.RESPONSE_MESSAGE));
+    }
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(String errorMessage) {
