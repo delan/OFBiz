@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<!--  $Id: config_deploy_maint.html,v 1.2 2004/04/23 16:35:55 dengkane Exp $ -->
+<!--  $Id: config_deploy_maint.html,v 1.3 2004/04/25 14:12:30 dengkane Exp $ -->
   <title>The Open For Business Project: General Setup</title>
 </head>
 <body>
@@ -632,7 +632,43 @@ minimum and 20 connections in the pool at the maximum.<br>
 <br>
 <span style="font-weight: bold;">JMS Configuration</span><br>
 <br>
+N/A<br>
 <br>
+<br>
+<h5>Production Oriented Settings</h5>
+<span style="font-weight: bold;">URL Settings</span><br>
+<br>
+You can define URL settings with the <span style="font-weight: bold;">ofbiz/components/content/config/url.properties</span>
+, the HTTPS port setting is as following:<br>
+<br>
+<pre># HTTPS Port (Secure port)<br>port.https.enabled=Y<br>port.https=8443<br>force.https.host=<br><br></pre>
+<br>
+We can set the <span style="font-weight: bold;">force.https.host</span>
+to redirect HTTPS requests to other servers. The HTTP setting is :<br>
+<br>
+<pre># HTTP Port (Not Secure port)<br>port.http=8080<br>force.http.host=<br><br></pre>
+<br>
+We can set the <span style="font-weight: bold;">force.http.host</span>
+to redirect HTTP requests to other servers, but this is not necessary.<br>
+<br>
+Maybe you want to move static contents to other servers, and this can
+lower load on this server, the settings is:<br>
+<br>
+<pre>content.url.prefix.secure=<br>content.url.prefix.standard=<br><br></pre>
+<br>
+If the above two settings are empty, OFBiz will use current server. You
+can set above lines as following to redirect static page requests to
+another server.<br>
+<br>
+<pre>content.url.prefix.secure=https://the_host_name<br>content.url.prefix.standard=http://the_host_name<br><br></pre>
+<br>
+Detailed settings of content component are in <span
+ style="font-weight: bold;">ofbiz/components/content/config/content.properties</span>
+file, current settings are as follows:<br>
+<br>
+<pre>owner.content.id=CONTENT_ROOT<br>img.request=/content/control/img/<br>img.request.param.name=imgId<br>#baseUrl=http://localhost:8080<br>disable.ftl.template.cache=true<br>permissionRecorderOn=true<br></pre>
+<br>
+You can modify these settings according to your needs.<br>
 <br>
 <hr style="width: 100%; height: 2px;">
 <h3><a name="Restarting_versus_Run-time_Changable"></a>Restarting
