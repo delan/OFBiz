@@ -1034,7 +1034,7 @@ public class GenericDAO {
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
         List whereFields = new ArrayList();
         
-        if (fields != null || fields.size() > 0) {
+        if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
             
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
@@ -1048,7 +1048,7 @@ public class GenericDAO {
         GenericValue dummyValue = new GenericValue(modelEntity, fields);
         String sql = "DELETE FROM " + modelEntity.getTableName();
         
-        if (fields != null || fields.size() > 0) {
+        if (fields != null && fields.size() > 0) {
             sql += " WHERE " + SqlJdbcUtil.makeWhereStringAnd(whereFields, dummyValue);
         }
         
@@ -1056,7 +1056,7 @@ public class GenericDAO {
         try {
             sqlP.prepareStatement(sql);
             
-            if (fields != null || fields.size() > 0) {
+            if (fields != null && fields.size() > 0) {
                 SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
             }
             
