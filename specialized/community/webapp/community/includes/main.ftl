@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -30,28 +30,25 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
     <script language='javascript' src='<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>' type='text/javascript'></script>
+    <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/community/images/blog.css</@ofbizContentUrl>' type='text/css'>
 </head>
 <body>
-
-                <div class="centerarea">
-                    <div class="toparea">
-                        ${sections.render("top")}
-                    </div>
-                    <div class="contentarea">
-                        <!-- by default will render left-bar only if leftbarScreen value not empty -->
-                        ${sections.render("leftbar")}
-                        <div class="columncenter">
-                          ${sections.render("messages")}
-                          ${sections.render("body")}
-                        </div>
-                        ${sections.render("rightbar")}
-                    </div>
-                </div>
-   
+    <div class="centerarea">
+        <div class="toparea">
+            ${sections.render("top")}
+        </div>
+        <div class="contentarea">
+            <!-- by default will render left-bar only if leftbarScreen value not empty -->
+            ${sections.render("leftbar")}
+            <div class="columncenter">
+              ${sections.render("messages")}
+              ${sections.render("body")}
+            </div>
+            ${sections.render("rightbar")}
+        </div>
+    </div>
 </body>
 </html>
-
-

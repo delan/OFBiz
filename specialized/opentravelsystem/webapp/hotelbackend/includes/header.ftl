@@ -1,7 +1,7 @@
 <!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org -->
+<!-- Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org -->
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -40,6 +40,7 @@
     <title>${layoutSettings.companyName}: <#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)?if_exists}</#if></title>
     <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
     <script language='javascript' src='<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>' type='text/javascript'></script>
+    <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
     <link rel='stylesheet' href='<@ofbizContentUrl>/hotelbackend//images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
 	${layoutSettings.extraHead?if_exists}

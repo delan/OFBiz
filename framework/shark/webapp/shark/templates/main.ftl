@@ -1,7 +1,7 @@
 <!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Copyright (c) 2003 The Open For Business Project - www.ofbiz.org -->
+<!-- Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org -->
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -36,6 +36,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${layoutSettings.companyName}: ${page.title}</title>
     <script language="javascript" src="<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>" type="text/javascript"></script>
+    <script language="javascript" src="<@ofbizContentUrl>/images/fieldlookup.js</@ofbizContentUrl>" type="text/javascript"></script>
     <link rel="stylesheet" href="<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>" type="text/css">
     <link rel="stylesheet" href="<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>" type="text/css">    
 </head>
