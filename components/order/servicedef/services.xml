@@ -732,7 +732,7 @@
     <!-- Order View Services -->
     <service name="getOrderedSummaryInformation" engine="simple"
             location="org/ofbiz/order/order/OrderServices.xml" invoke="getOrderedSummaryInformation">
-        <description>Get basic order header information.</description>
+        <description>Get Ordered Summary Information</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/> <!-- defaults to PLACING_CUSTOMER -->
         <attribute name="orderTypeId" type="String" mode="IN" optional="true"/> <!-- defaults to SALES_ORDER -->

@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.19 $
+ *@version    $Revision: 1.20 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -108,6 +108,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                     </#list>
                                 </select>
                                 <input type=text size="25" name="condValue" value="${(productPromoCond.condValue)?if_exists}" class="inputBox">
+                                Other:<input type=text size="10" name="otherValue" value="${(productPromoCond.otherValue)?if_exists}" class="inputBox">
                                 <input type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </form>
                             <#-- ======================= Categories ======================== -->
@@ -202,6 +203,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 </#list>
                             </select>
                             <input type="text" size="25" name="condValue" class="inputBox">
+                            Other:<input type=text size="10" name="otherValue" class="inputBox">
                             <input type=submit value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                         </form>
                     </td>

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.47 2004/06/27 03:27:42 ajzeneski Exp $
+ * $Id: ProductPromoWorker.java,v 1.48 2004/08/16 11:36:06 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,21 +49,23 @@ import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductSearch;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * ProductPromoWorker - Worker class for catalog/product promotion related functionality
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.47 $
+ * @version    $Revision: 1.48 $
  * @since      2.0
  */
 public class ProductPromoWorker {
 
     public static final String module = ProductPromoWorker.class.getName();
 
-    public static List getStoreProductPromos(GenericDelegator delegator, ServletRequest request) {
+    public static List getStoreProductPromos(GenericDelegator delegator, LocalDispatcher dispatcher, ServletRequest request) {
         List productPromos = new LinkedList();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
@@ -116,13 +118,13 @@ public class ProductPromoWorker {
 
                                 // evaluate the party related conditions; so we don't show the promo if it doesn't apply.
                                 if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
-                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
+                                    condResult = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
                                 } else if ("PRIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId"))) {
-                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
+                                    condResult = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
                                 } else if ("PRIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId"))) {
-                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
+                                    condResult = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
                                 } else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId"))) {
-                                    condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
+                                    condResult = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
                                 }
                             }
                         }
@@ -596,7 +598,7 @@ public class ProductPromoWorker {
                 while (productPromoCondIter != null && productPromoCondIter.hasNext()) {
                     GenericValue productPromoCond = (GenericValue) productPromoCondIter.next();
 
-                    boolean condResult = checkCondition(productPromoCond, cart, delegator, nowTimestamp);
+                    boolean condResult = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
 
                     // any false condition will cause it to NOT perform the action
                     if (condResult == false) {
@@ -649,8 +651,9 @@ public class ProductPromoWorker {
         return cartChanged;
     }
 
-    protected static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
+    protected static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp) throws GenericEntityException {
         String condValue = productPromoCond.getString("condValue");
+        String otherValue = productPromoCond.getString("otherValue");
         String inputParamEnumId = productPromoCond.getString("inputParamEnumId");
         String operatorEnumId = productPromoCond.getString("operatorEnumId");
 
@@ -866,6 +869,31 @@ public class ProductPromoWorker {
             Double orderSubTotal = new Double(cart.getSubTotalForPromotions());
             if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal, module);
             compare = orderSubTotal.compareTo(Double.valueOf(condValue));
+        } else if ("PPIP_ORST_HIST".equals(inputParamEnumId)) {
+            // description="Order sub-total X in last Y Months"
+            if (partyId != null) {
+                // call the getOrderedSummaryInformation service to get the sub-total
+                double monthsToInclude = 12;
+                if (otherValue != null) {
+                    monthsToInclude = Double.parseDouble(condValue);
+                }
+                Map serviceIn = UtilMisc.toMap("partyId", partyId, "roleTypeId", "PLACING_CUSTOMER", "orderTypeId", "SALES_ORDER", "statusId", "ORDER_COMPLETED", "monthsToInclude", new Double(monthsToInclude));
+                try {
+                    Map result = dispatcher.runSync("getOrderedSummaryInformation", serviceIn);
+                    if (ServiceUtil.isError(result)) {
+                        Debug.logError("Error calling getOrderedSummaryInformation service for the PPIP_ORST_HIST ProductPromo condition input value: " + ServiceUtil.getErrorMessage(result), module);
+                    } else {
+                        Double orderSubTotal = (Double) result.get("totalSubRemainingAmount");
+                        if (Debug.verboseOn()) Debug.logVerbose("Doing order history sub-total compare: orderSubTotal=" + orderSubTotal + ", for the last " + monthsToInclude + " months.", module);
+                        compare = orderSubTotal.compareTo(Double.valueOf(condValue));
+                    }
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Error getting order history sub-total in the getOrderedSummaryInformation service, evaluating condition to false.", module);
+                    compare = 1;
+                }
+            } else {
+                compare = 1;
+            }
         } else {
             Debug.logWarning("An un-supported productPromoCond input parameter (lhs) was used: " + productPromoCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
             return false;

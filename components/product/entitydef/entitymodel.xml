@@ -4,7 +4,7 @@
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.99 $
+ * @version    $Revision: 1.100 $
  */
 -->
 
@@ -2029,6 +2029,7 @@
       <field name="inputParamEnumId" type="id"></field>
       <field name="operatorEnumId" type="id"></field>
       <field name="condValue" type="long-varchar"></field>
+      <field name="otherValue" type="long-varchar"></field>
       <prim-key field="productPromoId"/>
       <prim-key field="productPromoRuleId"/>
       <prim-key field="productPromoCondSeqId"/>
