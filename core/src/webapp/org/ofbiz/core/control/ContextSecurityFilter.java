@@ -64,6 +64,8 @@ public class ContextSecurityFilter implements Filter {
 
         // check if we are told to redirect everthing
         String redirectAllTo = config.getInitParameter("forceRedirectAll");
+        if (Debug.verboseOn())
+            Debug.logVerbose("RedirectAllForce Set To: " + redirectAllTo, module);
         if (redirectAllTo != null && redirectAllTo.length() > 0) {
             if (request.getAttribute("_FORCE_REDIRECT_") == null) {
                 request.setAttribute("_FORCE_REDIRECT_", "true");
