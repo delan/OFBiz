@@ -1,5 +1,5 @@
 /*
- * $Id: JPublishViewHandler.java,v 1.2 2003/08/19 20:54:08 jonesde Exp $
+ * $Id: JPublishViewHandler.java,v 1.3 2004/03/15 21:43:44 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,19 +25,23 @@
 package org.ofbiz.content.webapp.view;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilJ2eeCompat;
 
 /**
  * Handles JPublish type view rendering
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class JPublishViewHandler implements ViewHandler {
@@ -62,9 +66,18 @@ public class JPublishViewHandler implements ViewHandler {
      */
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         try {
-            // Jetty throws IllegalStateException when doing response.getOutputStream()
-            // this is only used for static content, why would we use JP for static content?
-            Writer writer = response.getWriter();           
+        	// use UtilJ2eeCompat to get this setup properly
+        	boolean useOutputStreamNotWriter = false;
+        	if (this.servletContext != null) {
+        		useOutputStreamNotWriter = UtilJ2eeCompat.useOutputStreamNotWriter(this.servletContext);
+        	}
+            Writer writer = null;
+        	if (useOutputStreamNotWriter) {
+        		ServletOutputStream ros = response.getOutputStream();
+                writer = new OutputStreamWriter(ros, "UTF-8");
+        	} else {
+                writer = response.getWriter();
+        	}
             wrapper.render(page, request, response, writer, null, true);
             writer.close();
         } catch (IOException e) {
