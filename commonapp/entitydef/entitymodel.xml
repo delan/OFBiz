@@ -250,6 +250,9 @@
       <field name="periodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="periodTypeId"/>
+      <relation type="many" rel-entity-name="StandardTimePeriod">
+        <key-map field-name="periodTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="StandardTimePeriod"
             package-name="org.ofbiz.commonapp.common.period"
@@ -259,6 +262,9 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <prim-key field="standardTimePeriodId"/>
+      <relation type="one" fk-name="STD_TM_PER_TYPE" rel-entity-name="PeriodType">
+        <key-map field-name="periodTypeId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->

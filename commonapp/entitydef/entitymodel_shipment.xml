@@ -249,26 +249,26 @@
       <prim-key field="shipmentCostEstimateId"/>
       <relation type="one" fk-name="SHPMNT_CE_CSHMTH" rel-entity-name="CarrierShipmentMethod">
         <key-map field-name="shipmentMethodTypeId"/>
-        <key-map field-name="carrierPartyId"/>
-        <key-map field-name="carrierRoleTypeId"/>
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="SHPMNT_CE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="SHPMNT_CE_PROLE" rel-entity-name="PartyRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
       <relation type="one" fk-name="SHPMNT_CE_ROLET" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" fk-name="SHPMNT_CE_WUOM" rel-entity-name="Uom">
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_CE_WUOM" title="Weight" rel-entity-name="Uom">
         <key-map field-name="weightUomId" rel-field-name="uomId"/>
       </relation>
-      <relation type="one" fk-name="SHPMNT_CE_QUOM" rel-entity-name="Uom">
+      <relation type="one" fk-name="SHPMNT_CE_QUOM" title="Quantity" rel-entity-name="Uom">
         <key-map field-name="quantityUomId" rel-field-name="uomId"/>
       </relation>
-      <relation type="one" fk-name="SHPMNT_CE_PUOM" rel-entity-name="Uom">
+      <relation type="one" fk-name="SHPMNT_CE_PUOM" title="Price" rel-entity-name="Uom">
         <key-map field-name="priceUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one" fk-name="SHPMNT_CE_TGEO" title="To" rel-entity-name="Geo">

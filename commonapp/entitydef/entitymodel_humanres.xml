@@ -274,14 +274,6 @@
       <prim-key field="benefitTypeId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="PayCheck"
-            package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Pay Check Entity">
-      <field name="paymentId" type="id-ne"></field>
-      <field name="partyId" type="id"></field>
-      <field name="roleTypeId" type="id"></field>
-      <prim-key field="paymentId"/>
-    </entity>
     <entity entity-name="PayGrade"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Pay Grade Entity">

@@ -786,28 +786,7 @@
       <relation type="one" fk-name="INV_ITEM_VAR_ITEM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
-      <relation type="many" rel-entity-name="ItemVarianceAcctgTrans">
-        <key-map field-name="inventoryItemId"/>
-        <key-map field-name="physicalInventoryId"/>
-      </relation>
-    </entity>
-    <entity entity-name="ItemVarianceAcctgTrans"
-            package-name="org.ofbiz.commonapp.product.inventory"
-            title="Item Variance Accounting Transaction Entity">
-      <field name="acctgTransId" type="id-ne"></field>
-      <field name="inventoryItemId" type="id"></field>
-      <field name="physicalInventoryId" type="id"></field>
-      <prim-key field="acctgTransId"/>
-      <relation type="one" fk-name="ITEM_VAR_ACCT_TRNS" rel-entity-name="AcctgTrans">
-        <key-map field-name="acctgTransId"/>
-      </relation>
-      <relation type="one" fk-name="ITEM_VAR_PHS_INV" rel-entity-name="PhysicalInventory">
-        <key-map field-name="physicalInventoryId"/>
-      </relation>
-      <relation type="one" fk-name="ITEM_VAR_ITEM" rel-entity-name="InventoryItem">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-      <relation type="one" fk-name="ITEM_VAR_ITEM_VAR" rel-entity-name="InventoryItemVariance">
+      <relation type="many" rel-entity-name="AcctgTrans">
         <key-map field-name="inventoryItemId"/>
         <key-map field-name="physicalInventoryId"/>
       </relation>

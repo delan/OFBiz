@@ -269,7 +269,6 @@
       <field name="description" type="description"></field>
       <field name="locationDesc" type="description"></field>
       <field name="revisionNumber" type="numeric"></field>
-      <field name="assetId" type="id"></field>
       <field name="fixedAssetId" type="id"></field>
       <field name="facilityId" type="id"></field>
       <field name="createdDate" type="date-time"></field>
@@ -377,7 +376,6 @@
       <alias entity-alias="WE" name="description"/>
       <alias entity-alias="WE" name="locationDesc"/>
       <alias entity-alias="WE" name="revisionNumber"/>
-      <alias entity-alias="WE" name="assetId"/>
       <alias entity-alias="WE" name="fixedAssetId"/>
       <alias entity-alias="WE" name="facilityId"/>
       <alias entity-alias="WE" name="createdDate"/>
@@ -652,7 +650,6 @@
       <alias entity-alias="WE" name="description"/>
       <alias entity-alias="WE" name="locationDesc"/>
       <alias entity-alias="WE" name="revisionNumber"/>
-      <alias entity-alias="WE" name="assetId"/>
       <alias entity-alias="WE" name="fixedAssetId"/>
       <alias entity-alias="WE" name="facilityId"/>
       <alias entity-alias="WE" name="createdDate"/>
@@ -733,7 +730,6 @@
       <alias entity-alias="WE" name="description"/>
       <alias entity-alias="WE" name="locationDesc"/>
       <alias entity-alias="WE" name="revisionNumber"/>
-      <alias entity-alias="WE" name="assetId"/>
       <alias entity-alias="WE" name="fixedAssetId"/>
       <alias entity-alias="WE" name="facilityId"/>
       <alias entity-alias="WE" name="createdDate"/>

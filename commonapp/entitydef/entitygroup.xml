@@ -58,7 +58,6 @@
   <!-- org.ofbiz.commonapp.accounting.fixedasset -->
   <!-- ========================================================= -->
 	
-    <entity-group group="org.ofbiz.commonapp" entity="Depreciation" />	
     <entity-group group="org.ofbiz.commonapp" entity="DepreciationMethod" />	
     <entity-group group="org.ofbiz.commonapp" entity="FixedAsset" />	
     <entity-group group="org.ofbiz.commonapp" entity="FixedAssetAttribute" />	
@@ -94,13 +93,10 @@
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransDetail" />	
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransType" />	
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransTypeAttr" />	
-    <entity-group group="org.ofbiz.commonapp" entity="ExternalAcctgTrans" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerAccount" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerAccountType" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeneralLedgerBudgetXref" />	
-    <entity-group group="org.ofbiz.commonapp" entity="InternalAcctgTrans" />	
     <entity-group group="org.ofbiz.commonapp" entity="OrganizationGlAccount" />	
-    <entity-group group="org.ofbiz.commonapp" entity="SalesAcctgTrans" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.accounting.payment -->
@@ -113,7 +109,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="DeductionType" />	
     <entity-group group="org.ofbiz.commonapp" entity="EftAccount" />	
     <entity-group group="org.ofbiz.commonapp" entity="FinAccount" />	
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccountAdjustment" />	
     <entity-group group="org.ofbiz.commonapp" entity="FinAccountAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="FinAccountRole" />	
     <entity-group group="org.ofbiz.commonapp" entity="FinAccountTrans" />	
@@ -123,7 +118,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="FinAccountType" />	
     <entity-group group="org.ofbiz.commonapp" entity="FinAccountTypeAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="Payment" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentAcctgTrans" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentApplication" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentBudgetAllocation" />	
@@ -131,8 +125,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="PaymentMethodType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentTypeAttr" />	
-    <entity-group group="org.ofbiz.commonapp" entity="Receipt" />	
-    <entity-group group="org.ofbiz.commonapp" entity="Withdrawal" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.currency -->
@@ -563,7 +555,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemType" />	
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemTypeAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemVariance" />	
-    <entity-group group="org.ofbiz.commonapp" entity="ItemVarianceAcctgTrans" />	
     <entity-group group="org.ofbiz.commonapp" entity="Lot" />	
     <entity-group group="org.ofbiz.commonapp" entity="PhysicalInventory" />	
     <entity-group group="org.ofbiz.commonapp" entity="VarianceReason" />
