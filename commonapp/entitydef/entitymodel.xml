@@ -1326,9 +1326,10 @@
             never-cache="true"
             title="Server Hit Entity">
       <field name="visitId" type="id-ne"></field>
-      <field name="contentId" type="id-ne"></field>
+      <field name="contentId" type="id-vlong-ne"></field>
       <field name="hitStartDateTime" type="date-time"></field>
       <field name="hitTypeId" type="id-ne"></field>
+      <field name="internalContentId" type="id"></field>
       <field name="numOfBytes" type="numeric"></field>
       <field name="runningTimeMillis" type="numeric"></field>
       <field name="userLoginId" type="id-vlong"></field>
@@ -1365,8 +1366,8 @@
       <relation type="one" fk-name="SERVER_HIT_USER" rel-entity-name="UserLogin">
         <key-map field-name="userLoginId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="Content">
-        <key-map field-name="contentId"/>
+      <relation type="one" fk-name="SERVER_HIT_CNT" rel-entity-name="Content">
+        <key-map field-name="internalContentId" rel-field-name="contentId"/>
       </relation>
     </entity>
     <entity entity-name="ServerHitBin"
@@ -1374,7 +1375,8 @@
             never-cache="true"
             title="Server Hit Bin Entity">
       <field name="serverHitBinId" type="id-ne"></field>
-      <field name="contentId" type="id-ne"></field>
+      <field name="contentId" type="id-vlong-ne"></field>
+      <field name="internalContentId" type="id"></field>
       <field name="hitTypeId" type="id-ne"></field>
       <field name="serverIpAddress" type="id"></field>
       <field name="serverHostName" type="long-varchar"></field>
@@ -1388,8 +1390,8 @@
       <relation type="one" fk-name="SERVER_HBIN_TYPE" rel-entity-name="ServerHitType">
         <key-map field-name="hitTypeId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="Content">
-        <key-map field-name="contentId"/>
+      <relation type="one" fk-name="SERVER_HBIN_CNT" rel-entity-name="Content">
+        <key-map field-name="internalContentId" rel-field-name="contentId"/>
       </relation>
     </entity>
     <entity entity-name="ServerHitType"
