@@ -1,5 +1,5 @@
 /*
- * $Id: SequenceUtil.java,v 1.2 2004/01/18 11:36:28 jonesde Exp $
+ * $Id: SequenceUtil.java,v 1.3 2004/02/06 22:13:25 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * Uses a collision detection approach to safely get unique sequenced ids in banks from the database
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class SequenceUtil {
@@ -188,11 +188,16 @@ public class SequenceUtil {
             try {
                 connection = ConnectionFactory.getConnection(parentUtil.helperName);
             } catch (SQLException sqle) {
-                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:", module);
-                Debug.logWarning(sqle.getMessage(), module);
+                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:" + sqle.toString(), module);
+                return;
             } catch (GenericEntityException e) {
-                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:", module);
-                Debug.logWarning(e.getMessage(), module);
+                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was: " + e.toString(), module);
+                return;
+            }
+            
+            if (connection == null) {
+                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database, connection was null...", module);
+                return;
             }
 
             String sql = null;
