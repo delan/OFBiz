@@ -210,12 +210,23 @@ public class ServiceDispatcher {
             // pre-commit ECA
             if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), ecaContext, result, isError);
 
-            // commit the transaction
-            try {
-                TransactionUtil.commit(beganTrans);
-            } catch (GenericTransactionException e) {
-                //Debug.logError(te, "Cannot commit transaction", module);
-                throw new GenericServiceException("Could not commit the transaction:", e);
+            
+            //if there was an error, rollback transaction, otherwise commit
+            if (isError) {
+                // rollback the transaction
+                try {
+                    TransactionUtil.rollback(beganTrans);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Could not rollback transaction", module);
+                }
+            } else {
+                // commit the transaction
+                try {
+                    TransactionUtil.commit(beganTrans);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Could not commit transaction", module);
+                    //NOTE DEJ 25 Oct 2002 NEVER throw this exception, it masks the REAL problem which should already be in an error message, just log it:throw new GenericServiceException("Could not commit the transaction:", e);
+                }
             }
 
             // pre-return ECA
@@ -295,12 +306,12 @@ public class ServiceDispatcher {
             // pre-commit ECA
             if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context, null, false);
 
-            // commit the transaction
+            // always try to commit the transaction since we don't know in this case if its was an error or not
             try {
                 TransactionUtil.commit(beganTrans);
             } catch (GenericTransactionException e) {
-                //Debug.logError(te, "Cannot commit transaction", module);
-                throw new GenericServiceException("Could not commit the transaction:", e);
+                Debug.logError(e, "Could not commit transaction", module);
+                //NOTE DEJ 25 Oct 2002 NEVER throw this exception, it masks the REAL problem which should already be in an error message, just log it:throw new GenericServiceException("Could not commit the transaction:", e);
             }
 
             // pre-return ECA
