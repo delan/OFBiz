@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    October 19, 2002
+ *@created    October 24, 2002
  *@version    1.0
 --%>
 
@@ -33,35 +33,29 @@
 
 <%if (security.hasEntityPermission("MARKETING", "_VIEW", session)) {%>
 <%
-    List trackingCodes = delegator.findAll("TrackingCode");
-    if (trackingCodes != null) pageContext.setAttribute("trackingCodes", trackingCodes);
+    List marketingCampaigns = delegator.findAll("MarketingCampaign");
+    if (marketingCampaigns != null) pageContext.setAttribute("marketingCampaigns", marketingCampaigns);
 %>
 <br>
 
-<div class="head1">TrackingCodes List</div>
+<div class="head1">MarketingCampaigns List</div>
 
-<div><a href='<ofbiz:url>/EditTrackingCode</ofbiz:url>' class="buttontext">[Create New TrackingCode]</a></div>
+<div><a href='<ofbiz:url>/EditMarketingCampaign</ofbiz:url>' class="buttontext">[Create New MarketingCampaign]</a></div>
 <br>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>ID</b></div></td>
-    <td><div class="tabletext"><b>Type</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
-    <td><div class="tabletext"><b>Campaign</b></div></td>
+    <td><div class="tabletext"><b>Campaign Name</b></div></td>
+    <td><div class="tabletext"><b>Parent Name</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
-<ofbiz:iterator name="trackingCode" property="trackingCodes">
-  <%GenericValue trackingCodeType = trackingCode.getRelatedOne("TrackingCodeType");%>
-  <%if (trackingCodeType != null) pageContext.setAttribute("trackingCodeType", trackingCodeType); else pageContext.removeAttribute("trackingCodeType");%>
-  <%GenericValue marketingCampaign = trackingCode.getRelatedOne("MarketingCampaign");%>
-  <%if (marketingCampaign != null) pageContext.setAttribute("marketingCampaign", marketingCampaign); else pageContext.removeAttribute("marketingCampaign");%>
+<ofbiz:iterator name="marketingCampaign" property="marketingCampaigns">
+  <%GenericValue parentCampaign = marketingCampaign.getRelatedOne("ParentMarketingCampaign");%>
+  <%if (parentCampaign != null) pageContext.setAttribute("parentCampaign", parentCampaign); else pageContext.removeAttribute("parentCampaign");%>
   <tr valign="middle">
-    <td><div class='tabletext'>&nbsp;[<a href='<ofbiz:url>/EditTrackingCode?trackingCodeId=<ofbiz:inputvalue entityAttr="trackingCode" field="trackingCodeId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="trackingCode" field="trackingCodeId"/></a>]</div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="trackingCodeType" field="description"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="trackingCode" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditMarketingCampaign?marketingCampaignId=<ofbiz:inputvalue entityAttr="marketingCampaign" field="marketingCampaignId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="marketingCampaign" field="campaignName"/></a></div></td>
+    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditMarketingCampaign?marketingCampaignId=<ofbiz:inputvalue entityAttr="parentCampaign" field="marketingCampaignId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="parentCampaign" field="campaignName"/></a></div></td>
     <td>
-      <a href='<ofbiz:url>/EditTrackingCode?trackingCodeId=<ofbiz:inputvalue entityAttr="trackingCode" field="trackingCodeId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/EditMarketingCampaign?marketingCampaignId=<ofbiz:inputvalue entityAttr="marketingCampaign" field="marketingCampaignId"/></ofbiz:url>' class="buttontext">
       [Edit]</a>
     </td>
   </tr>

@@ -64,4 +64,17 @@
         <put section='title'>Find Tracking Code Visits</put>
         <put section='content' content='/trackingcode/FindTrackingCodeVisits.jsp'/>
     </define>
+
+    <define id='FindMarketingCampaign' region='MAIN_REGION'>
+        <put section='title'>Find Marketing Campaign</put>
+        <put section='content' content='/campaign/FindMarketingCampaign.jsp'/>
+    </define>
+    <define id='EditMarketingCampaign' region='MAIN_REGION'>
+        <put section='title'>Edit Marketing Campaign</put>
+        <put section='content' content='/campaign/EditMarketingCampaign.jsp'/>
+    </define>
+    <define id='EditMarketingCampaignRoles' region='MAIN_REGION'>
+        <put section='title'>Edit Marketing Campaign Roles</put>
+        <put section='content' content='/campaign/EditMarketingCampaignRoles.jsp'/>
+    </define>
 </regions>

@@ -70,6 +70,7 @@
         <response name="error" type="view" value="error"/>
     </request-map>
     
+    <!-- =========== DataSource =========== -->
     <request-map uri="EditDataSources"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditDataSources"/>
     </request-map>
@@ -89,6 +90,7 @@
     	<response name="error" type="view" value="EditDataSources"/>
     </request-map>
     
+    <!-- =========== TrackingCode =========== -->
     <request-map uri="FindTrackingCode"><security https="true" auth="true"/>
     	<response name="success" type="view" value="FindTrackingCode"/>
     </request-map>
@@ -114,6 +116,39 @@
     	<response name="success" type="view" value="FindTrackingCodeVisits"/>
     </request-map>
     
+    <!-- =========== MarketingCampaign =========== -->
+    <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindMarketingCampaign"/>
+    </request-map>
+    
+    <request-map uri="EditMarketingCampaign"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditMarketingCampaign"/>
+    </request-map>
+    <request-map uri="createMarketingCampaign"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createMarketingCampaign"/>
+    	<response name="success" type="view" value="EditMarketingCampaign"/>
+    	<response name="error" type="view" value="EditMarketingCampaign"/>
+    </request-map>
+    <request-map uri="updateMarketingCampaign"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateMarketingCampaign"/>
+    	<response name="success" type="view" value="EditMarketingCampaign"/>
+    	<response name="error" type="view" value="EditMarketingCampaign"/>
+    </request-map>
+    
+    <request-map uri="EditMarketingCampaignRoles"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditMarketingCampaignRoles"/>
+    </request-map>
+    <request-map uri="addRoleToMarketingCampaign"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addRoleToMarketingCampaign"/>
+    	<response name="success" type="view" value="EditMarketingCampaignRoles"/>
+    	<response name="error" type="view" value="EditMarketingCampaignRoles"/>
+    </request-map>
+    <request-map uri="removeRoleFromMarketingCampaign"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeRoleFromMarketingCampaign"/>
+    	<response name="success" type="view" value="EditMarketingCampaignRoles"/>
+    	<response name="error" type="view" value="EditMarketingCampaignRoles"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -127,5 +162,9 @@
     <view-map name="EditTrackingCode" type="region"/>
     <view-map name="FindTrackingCodeOrders" type="region"/>
     <view-map name="FindTrackingCodeVisits" type="region"/>
+
+    <view-map name="FindMarketingCampaign" type="region"/>
+    <view-map name="EditMarketingCampaign" type="region"/>
+    <view-map name="EditMarketingCampaignRoles" type="region"/>
     <!-- end of view mappings -->
 </site-conf>

@@ -1,6 +1,5 @@
 <%--
- *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -42,6 +41,7 @@
     }
     GenericValue trackingCode = delegator.findByPrimaryKey("TrackingCode", UtilMisc.toMap("trackingCodeId", trackingCodeId));
     GenericValue trackingCodeType = null;
+    GenericValue marketingCampaign = null;
     if(trackingCode == null) {
         tryEntity = false;
     } else {
@@ -49,6 +49,9 @@
 
         trackingCodeType = trackingCode.getRelatedOne("TrackingCodeType");
         if (trackingCodeType != null) pageContext.setAttribute("trackingCodeType", trackingCodeType);
+
+        marketingCampaign = trackingCode.getRelatedOne("MarketingCampaign");
+        if (marketingCampaign != null) pageContext.setAttribute("marketingCampaign", marketingCampaign);
     }
 
     //TrackingCode types
@@ -58,6 +61,8 @@
     //MarketingCampaigns
     Collection marketingCampaigns = delegator.findAll("MarketingCampaign");
     if (marketingCampaigns != null) pageContext.setAttribute("marketingCampaigns", marketingCampaigns);
+
+    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 %>
 
 <br>
@@ -129,11 +134,12 @@
         <td width="74%">
           <select name="marketingCampaignId" size=1>
             <ofbiz:if name="marketingCampaign">
-              <option selected value='<ofbiz:inputvalue entityAttr="marketingCampaign" field="marketingCampaignId"/>'><ofbiz:inputvalue entityAttr="marketingCampaign" field="description"/> <%--<ofbiz:entityfield attribute="marketingCampaign" field="marketingCampaignId" prefix="[" suffix="]"/>--%></option>
-              <option value='<ofbiz:inputvalue entityAttr="marketingCampaign" field="marketingCampaignId"/>'>----</option>
+              <option selected value='<ofbiz:inputvalue entityAttr="marketingCampaign" field="marketingCampaignId"/>'><ofbiz:inputvalue entityAttr="marketingCampaign" field="campaignName"/> <%--<ofbiz:entityfield attribute="marketingCampaign" field="marketingCampaignId" prefix="[" suffix="]"/>--%></option>
             </ofbiz:if>
-            <ofbiz:iterator name="nextMarketingCampaignId" property="marketingCampaigns">
-              <option value='<ofbiz:inputvalue entityAttr="nextMarketingCampaignId" field="marketingCampaignId"/>'><ofbiz:inputvalue entityAttr="nextMarketingCampaignId" field="description"/> <%--<ofbiz:entityfield attribute="nextTrackingCodeType" field="marketingCampaignId" prefix="[" suffix="]"/>--%></option>
+            <!-- always allow the options of no marketingCampaign -->
+            <option value=''></option>
+            <ofbiz:iterator name="nextMarketingCampaign" property="marketingCampaigns">
+              <option value='<ofbiz:inputvalue entityAttr="nextMarketingCampaign" field="marketingCampaignId"/>'><ofbiz:inputvalue entityAttr="nextMarketingCampaign" field="campaignName"/> <%--<ofbiz:entityfield attribute="nextMarketingCampaign" field="marketingCampaignId" prefix="[" suffix="]"/>--%></option>
             </ofbiz:iterator>
           </select>
         </td>

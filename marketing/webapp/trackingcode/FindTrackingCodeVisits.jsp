@@ -1,5 +1,5 @@
 <%--
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -74,7 +74,7 @@
   </div>
 <%}%>
 
-<div class="head1">Inventory Items <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(trackingCode==null?null:trackingCode.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(trackingCodeId)%>]</span></div>
+<div class="head1">Visits <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(trackingCode==null?null:trackingCode.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(trackingCodeId)%>]</span></div>
 
 <a href="<ofbiz:url>/EditTrackingCode</ofbiz:url>" class="buttontext">[New TrackingCode]</a>
 
