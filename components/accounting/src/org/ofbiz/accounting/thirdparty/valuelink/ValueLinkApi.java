@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkApi.java,v 1.5 2004/03/12 21:53:57 ajzeneski Exp $
+ * $Id: ValueLinkApi.java,v 1.6 2004/03/12 23:22:51 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,6 +41,7 @@ import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.DHPublicKeySpec;
 import javax.crypto.spec.DHPrivateKeySpec;
+import javax.crypto.spec.DESKeySpec;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
@@ -54,7 +55,7 @@ import java.text.ParseException;
  * ValueLinkApi - Implementation of ValueLink Encryption & Transport
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ValueLinkApi {
@@ -489,15 +490,36 @@ public class ValueLinkApi {
     public byte[] generateMwk() {
         KeyGenerator keyGen = null;
         try {
-            keyGen = KeyGenerator.getInstance("DESede");
+            keyGen = KeyGenerator.getInstance("DES");
         } catch (NoSuchAlgorithmException e) {
             Debug.logError(e, module);
         }
 
-        // generate the DESede key
-        SecretKey mwkdes3 = keyGen.generateKey();
+        // generate the DES key 1
+        SecretKey des1 = keyGen.generateKey();
+        SecretKey des2 = keyGen.generateKey();
 
-        return generateMwk(mwkdes3);
+        if (des1 != null && des2 != null) {
+            byte[] desByte1 = des1.getEncoded();
+            byte[] desByte2 = des2.getEncoded();
+            byte[] desByte3 = des1.getEncoded();
+
+            // check for weak keys
+            try {
+                if (DESKeySpec.isWeak(des1.getEncoded(), 0) || DESKeySpec.isWeak(des2.getEncoded(), 0)) {
+                    return generateMwk();
+                }
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+
+            byte[] des3 = copyBytes(desByte1, copyBytes(desByte2, desByte3, 0), 0);            
+            return generateMwk(des3);
+        } else {
+            Debug.log("Null DES keys returned", module);
+        }
+
+        return null;
     }
 
     /**
