@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.9 2004/04/25 05:34:56 byersa Exp $
+ * $Id: HtmlFormRenderer.java,v 1.10 2004/04/26 17:45:54 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.content.widget.WidgetWorker;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -359,7 +359,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(modelFormField.getEntry(context, dateTimeField.getDefaultDateTimeString(context)));
             buffer.append("');\">");
             buffer.append("<img src=\"");
-            this.appendContentUrl(buffer, "/images/cal.gif");
+            this.appendContentUrl(buffer, "/content/images/cal.gif");
             buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
         }
 
@@ -1274,7 +1274,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getEntry(context, dateFindField.getDefaultDateTimeString(context)));
         buffer.append("');\">");
         buffer.append("<img src=\"");
-        this.appendContentUrl(buffer, "/images/cal.gif");
+        this.appendContentUrl(buffer, "/content/images/cal.gif");
         buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
 
         buffer.append(" <span");
@@ -1348,7 +1348,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getEntry(context, dateFindField.getDefaultDateTimeString(context)));
         buffer.append("');\">");
         buffer.append("<img src=\"");
-        this.appendContentUrl(buffer, "/images/cal.gif");
+        this.appendContentUrl(buffer, "/content/images/cal.gif");
         buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
 
         buffer.append(" <span");
@@ -1435,7 +1435,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(lookupField.getFormName());
         buffer.append("');\">");
         buffer.append("<img src=\"");
-        this.appendContentUrl(buffer, "/images/fieldlookup.gif");
+        this.appendContentUrl(buffer, "/content/images/fieldlookup.gif");
         buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Lookup\"></a>");
 
         this.makeHyperlinkString(buffer, lookupField.getSubHyperlink(), context);
