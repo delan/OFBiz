@@ -27,6 +27,7 @@ package org.ofbiz.core.workflow.client;
 import java.sql.*;
 import java.util.*;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
@@ -42,8 +43,25 @@ import org.ofbiz.core.workflow.*;
 public class WorkflowClient {
 
     public static final String module = WorkflowClient.class.getName();
-
-    protected DispatchContext context;
+    
+    protected GenericDelegator delegator = null;
+    protected LocalDispatcher dispatcher = null;
+  
+    protected WorkflowClient() {}
+    
+    /**
+     * Get a new instance of the Workflow Client
+     * @param delegator the GenericDelegator object which matchs the delegator used by the workflow engine.
+     * @param dispatcher a LocalDispatcher object to invoke the workflow services.
+     */  
+    public WorkflowClient(GenericDelegator delegator, LocalDispatcher dispatcher) {
+        if (delegator == null)
+            throw new IllegalArgumentException("GenericDelegator cannot be null");
+        if (dispatcher == null)
+            throw new IllegalArgumentException("LocalDispatcher cannot be null");
+        this.delegator = delegator;
+        this.dispatcher = dispatcher;  
+    }
 
     /**
      * Get a new instance of the Workflow Client
@@ -51,9 +69,7 @@ public class WorkflowClient {
      * *** Note the delegator from this object must match the delegator used by the workflow engine.
      */
     public WorkflowClient(DispatchContext context) {
-        if (context == null)
-            throw new IllegalArgumentException("DispatchContext cannot be null");
-        this.context = context;
+        this(context.getDelegator(), context.getDispatcher());               
     }
 
     /**
@@ -66,8 +82,8 @@ public class WorkflowClient {
      * @throws WfException
      */
     public WfAssignment assign(String workEffortId, String partyId, String roleTypeId, Timestamp fromDate, boolean append) throws WfException {            
-        WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
-        WfResource resource = WfFactory.getWfResource(context.getDelegator(), null, null, partyId, roleTypeId);
+        WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
+        WfResource resource = WfFactory.getWfResource(delegator, null, null, partyId, roleTypeId);
 
         if (!append) {
             Iterator i = activity.getIteratorAssignment();
@@ -89,7 +105,7 @@ public class WorkflowClient {
      * @throws WfException
      */
     public void accept(String workEffortId, String partyId, String roleTypeId, Timestamp fromDate) throws WfException {
-        WfAssignment assign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, partyId, roleTypeId, fromDate);           
+        WfAssignment assign = WfFactory.getWfAssignment(delegator, workEffortId, partyId, roleTypeId, fromDate);           
         assign.accept();
     }
 
@@ -120,7 +136,7 @@ public class WorkflowClient {
      * @throws WfException
      */
     public WfAssignment delegate(String workEffortId, String fromPartyId, String fromRoleTypeId, Timestamp fromFromDate, String toPartyId, String toRoleTypeId, Timestamp toFromDate) throws WfException {                    
-        WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
+        WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
         WfAssignment fromAssign = null;
         
         // check status and delegateAfterStart attribute
@@ -136,7 +152,7 @@ public class WorkflowClient {
         }
 
         if (fromAssign == null)
-            fromAssign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, fromPartyId, fromRoleTypeId, fromFromDate);                    
+            fromAssign = WfFactory.getWfAssignment(delegator, workEffortId, fromPartyId, fromRoleTypeId, fromFromDate);                    
         fromAssign.delegate();   
         
         // check for a restartOnDelegate
@@ -199,7 +215,7 @@ public class WorkflowClient {
      * @throws WfException
      */
     public void start(String workEffortId) throws WfException {        
-        WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
+        WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
 
         if (Debug.verboseOn()) Debug.logVerbose("Starting activity: " + activity.name(), module);
         if (activityRunning(activity))
@@ -209,7 +225,7 @@ public class WorkflowClient {
 
         if (Debug.verboseOn()) Debug.logVerbose("Job: " + job, module);
         try {
-            context.getDispatcher().getJobManager().runJob(job);
+            dispatcher.getJobManager().runJob(job);
         } catch (JobManagerException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -226,7 +242,7 @@ public class WorkflowClient {
      * @throws WfException
      */
     public void complete(String workEffortId, String partyId, String roleTypeId, Timestamp fromDate, Map result) throws WfException {                    
-        WfAssignment assign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, partyId, roleTypeId, fromDate);
+        WfAssignment assign = WfFactory.getWfAssignment(delegator, workEffortId, partyId, roleTypeId, fromDate);
         if (result != null && result.size() > 0)
             assign.setResult(result);
         assign.complete();        
@@ -238,7 +254,7 @@ public class WorkflowClient {
      * @throws WfException
      */
     public void suspend(String workEffortId) throws WfException {
-        WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
+        WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
         
         if (Debug.verboseOn()) Debug.logVerbose("Suspending activity: " + activity.name(), module);
         if (!activityRunning(activity))
@@ -253,7 +269,7 @@ public class WorkflowClient {
      * @throws WfException
      */
     public void resume(String workEffortId) throws WfException {
-        WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
+        WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
 
         if (Debug.verboseOn()) Debug.logVerbose("Resuming activity: " + activity.name(), module);
         if (activityRunning(activity))
@@ -354,12 +370,12 @@ public class WorkflowClient {
         WfExecutionObject obj = null;
 
         try {
-            obj = (WfExecutionObject) WfFactory.getWfActivity(context.getDelegator(), workEffortId);
+            obj = (WfExecutionObject) WfFactory.getWfActivity(delegator, workEffortId);
         } catch (WfException e) {// ingore
         }
         if (obj == null) {
             try {
-                obj = (WfExecutionObject) WfFactory.getWfProcess(context.getDelegator(), workEffortId);
+                obj = (WfExecutionObject) WfFactory.getWfProcess(delegator, workEffortId);
             } catch (WfException e) {// ignore
             }
         }
@@ -368,7 +384,7 @@ public class WorkflowClient {
 
     // Test an activity for running state.
     private boolean activityRunning(String workEffortId) throws WfException {
-        return activityRunning(WfFactory.getWfActivity(context.getDelegator(), workEffortId));
+        return activityRunning(WfFactory.getWfActivity(delegator, workEffortId));
     }
 
     // Test an activity for running state.
