@@ -1,5 +1,5 @@
 /*
- * $Id: OFBizSecurity.java,v 1.4 2003/09/23 17:29:34 jonesde Exp $
+ * $Id: OFBizSecurity.java,v 1.5 2004/01/15 09:12:32 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class OFBizSecurity extends org.ofbiz.security.Security {
@@ -225,7 +225,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
         // quick test for special cases where were just want to check the permission (find screens)              
         if (primaryKey.equals("") && roles == null) {
             if (hasEntityPermission(application, action, userLogin)) return true;
-            if (hasEntityPermission(application, action + "_ROLE", userLogin)) return true;
+            if (hasEntityPermission(application + "_ROLE", action, userLogin)) return true;
         }            
         
         Map simpleRoleMap = (Map) OFBizSecurity.simpleRoleEntity.get(application);
@@ -273,7 +273,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
         if (entityName == null || condition == null) return false;
         
         // now check the user for the role permission
-        if (hasEntityPermission(application, action + "_ROLE", userLogin)) {
+        if (hasEntityPermission(application + "_ROLE", action, userLogin)) {
             // we have the permission now, we check to make sure we are allowed access
             List roleTest = null;
             try {
