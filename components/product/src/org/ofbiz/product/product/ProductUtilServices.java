@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.32 2004/01/28 22:17:05 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.33 2004/01/29 05:31:06 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.32 $
+ * @version    $Revision: 1.33 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -749,7 +749,11 @@ while (allCatIter.hasNext()) {
         }
     }
 
-    public static void removeAllFeatureGroupsForCategory(String productCategoryId, GenericDelegator delegator, boolean doSubCategories, Timestamp nowTimestamp) throws GenericEntityException {
+    public static Map removeAllFeatureGroupsForCategory(DispatchContext dctx, Map context) {
+        return ServiceUtil.returnSuccess();
+    }
+    
+    public static void getFeatureGroupsForCategory(String productCategoryId, Set productFeatureGroupIdsToRemove, GenericDelegator delegator, boolean doSubCategories, Timestamp nowTimestamp) throws GenericEntityException {
         
     }
 }
