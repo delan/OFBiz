@@ -36,14 +36,17 @@ import org.ofbiz.core.util.*;
  * Created on July 1, 2001, 5:03 PM
  */
 public class ConnectionFactory {
+    //Debug module name
+    public static final String module = ConnectionFactory.class.getName();
 
     static UtilCache dsCache = new UtilCache("JNDIDataSources", 0, 0);
 
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
-
+        Debug.logVerbose("Getting a connection", module);
+        
         String jndiName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.jndi.name");
         if (jndiName != null && jndiName.length() > 0) {
-            //Debug.logInfo("[ConnectionFactory.getConnection] Trying JNDI name " + jndiName);
+            //Debug.logVerbose("[ConnectionFactory.getConnection] Trying JNDI name " + jndiName, module);
             DataSource ds;
             ds = (DataSource) dsCache.get(jndiName);
             if (ds != null)
@@ -78,7 +81,7 @@ public class ConnectionFactory {
                         return con;
                     }
                 } catch (NamingException ne) {
-                    // Debug.logWarning("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.");
+                    Debug.logVerbose("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.", module);
                 }
             }
         }
@@ -103,7 +106,7 @@ public class ConnectionFactory {
                                                UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.password"));
         }
 
-        Debug.log("******* ERROR: No database connection found for helperName \"" + helperName + "\"");
+        Debug.log("******* ERROR: No database connection found for helperName \"" + helperName + "\"", module);
         return null;
     }
 }
