@@ -310,8 +310,8 @@
     promoText="Spend more than $100 on your favorite widgets and gizmos and get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=WG-1111&apos; class=&apos;buttontext&apos;&gt;Micro Chrome Widget&lt;/a&gt;!"/>
   <ProductPromoRule productPromoId="testpromo1" productPromoRuleId="rule1" ruleName="Rule 1: Free Widget" />
   <ProductPromoCond inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GT" condValue="100"
-    productPromoId="testpromo1" productPromoRuleId="rule1" productPromoCondSeqId="2" />
-  <ProductPromoAction productPromoId="testpromo1" productPromoRuleId="rule1" productPromoActionSeqId="2"
+    productPromoId="testpromo1" productPromoRuleId="rule1" productPromoCondSeqId="01" />
+  <ProductPromoAction productPromoId="testpromo1" productPromoRuleId="rule1" productPromoActionSeqId="01"
     orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productId="WG-1111" productPromoActionEnumId="PROMO_GWP" quantity="1.0" />
 
   <ProductStorePromoAppl fromDate="2001-01-01 12:00:00.0" productStoreId="9000" productPromoId="testpromo1" />
