@@ -74,8 +74,15 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 visibility: hidden;
 }
 
-.tabletext {
+A.tabletext, DIV.tabletext, SPAN.tabletext, P.tabletext, .tabletext {
 font-size: 10px;
+text-decoration: none;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+A.tabletext:hover {
+font-size: 10px;
+text-decoration: underline;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
