@@ -87,9 +87,7 @@ public class IfInstanceOf extends MethodOperation {
             fieldVal = fieldAcsr.get(methodContext);
         }
 
-        Debug.log("Checking - " + fieldVal + " with - " + className, module);
         runSubOps = ObjectType.instanceOf(fieldVal, className);
-        Debug.log("And the result was - " + runSubOps, module);
 
         if (runSubOps) {
             return SimpleMethod.runSubOps(subOps, methodContext);
