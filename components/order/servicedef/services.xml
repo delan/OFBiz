@@ -337,6 +337,11 @@
         <description>Process the refunds in a return</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="processReplacementReturn" engine="java" auth="true"
+            location="org.ofbiz.order.order.OrderServices" invoke="processReplacementReturn">
+        <description>Process the replacements in a return</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+    </service>    
     <service name="updateReturnStatusFromReceipt" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="updateReturnStatusFromReceipt">      
         <description>Update return/item status when items have been received</description>

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.12 2003/09/02 04:18:04 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.13 2003/09/04 23:24:14 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 
@@ -1908,6 +1908,187 @@ public class OrderServices {
         } 
              
         return ServiceUtil.returnSuccess();
+    }
+    
+    public static Map processReplacementReturn(DispatchContext ctx, Map context) {
+        LocalDispatcher dispatcher = ctx.getDispatcher();   
+        GenericDelegator delegator = ctx.getDelegator();
+        String returnId = (String) context.get("returnId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
+        GenericValue returnHeader = null;
+        List returnItems = null;
+        try {
+            returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
+            if (returnHeader != null) {
+                returnItems = returnHeader.getRelatedByAnd("ReturnItem", UtilMisc.toMap("returnTypeId", "RTN_REPLACE"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems looking up return information", module);
+            return ServiceUtil.returnError("Error getting ReturnHeader/Item information");
+        }
+        
+        List createdOrderIds = new ArrayList();
+        if (returnHeader != null && returnItems != null && returnItems.size() > 0) {
+            Map itemsByOrder = new HashMap();
+            Map totalByOrder = new HashMap();
+            groupReturnItemsByOrder(returnItems, itemsByOrder, totalByOrder);
+            
+            // process each one by order            
+            Set itemSet = itemsByOrder.entrySet();
+            Iterator itemByOrderIt = itemSet.iterator();
+            while (itemByOrderIt.hasNext()) {
+                Map.Entry entry = (Map.Entry) itemByOrderIt.next();
+                String orderId = (String) entry.getKey();
+                List items = (List) entry.getValue();
+                
+                // get order header & payment prefs
+                GenericValue orderHeader = null;                             
+                try {
+                    orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));                    
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Cannot get Order details for #" + orderId, module);
+                    continue;
+                }
+                
+                OrderReadHelper orh = new OrderReadHelper(orderHeader);               
+                            
+                // create the replacement order
+                Map orderMap = UtilMisc.toMap("userLogin", userLogin);
+                GenericValue placingParty = orh.getPlacingParty();
+                String placingPartyId = null;
+                if (placingParty != null) {
+                    placingPartyId = placingParty.getString("partyId");
+                }                                               
+                
+                orderMap.put("orderTypeId", "SALES_ORDER");
+                orderMap.put("partyId", placingPartyId);
+                orderMap.put("productStoreId", orderHeader.get("productStoreId"));
+                orderMap.put("webSiteId", orderHeader.get("webSiteId"));
+                orderMap.put("visitId", orderHeader.get("visitId"));
+                orderMap.put("currencyUom", orderHeader.get("currencyUom"));
+                orderMap.put("grandTotal",  new Double(0.00));
+                
+                // make the contact mechs
+                List contactMechs = new ArrayList();
+                List orderCm = null;
+                try {
+                    orderCm = orderHeader.getRelated("OrderContactMech");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+                if (orderCm != null) {
+                    Iterator orderCmi = orderCm.iterator();
+                    while (orderCmi.hasNext()) {
+                        GenericValue v = (GenericValue) orderCmi.next();
+                        contactMechs.add(new GenericValue(v));
+                    }
+                    orderMap.put("orderContactMechs", contactMechs);
+                }
+                
+                // make the shipment prefs
+                List shipmentPrefs = new ArrayList();
+                List orderSp = null;
+                try {
+                    orderSp = orderHeader.getRelated("OrderShipmentPreference");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+                if (orderSp != null) {
+                    Iterator orderSpi = orderSp.iterator();
+                    while (orderSpi.hasNext()) {
+                        GenericValue v = (GenericValue) orderSpi.next();
+                        shipmentPrefs.add(new GenericValue(v));
+                    }
+                    orderMap.put("orderShipmentPreferences", shipmentPrefs);
+                }
+                
+                // make the order items
+                double itemTotal = 0.00;
+                List orderItems = new ArrayList();
+                if (items != null) {
+                    Iterator ri = items.iterator();
+                    int itemCount = 1;
+                    while (ri.hasNext()) {
+                        GenericValue returnItem = (GenericValue) ri.next();
+                        GenericValue orderItem = null;
+                        try {
+                            orderItem = returnItem.getRelatedOne("OrderItem");
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, module);
+                            continue;                                                           
+                        }
+                        if (orderItem != null) {
+                            Double quantity = returnItem.getDouble("returnQuantity");
+                            Double unitPrice = returnItem.getDouble("returnPrice");
+                            if (quantity != null && unitPrice != null) {
+                                itemTotal = (quantity.doubleValue() * unitPrice.doubleValue());
+                                GenericValue newItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", new Integer(itemCount).toString()));
+                                
+                                newItem.set("orderItemTypeId", "PRODUCT_ORDER_ITEM");
+                                newItem.set("productId", orderItem.get("productId"));
+                                newItem.set("productFeatureId", orderItem.get("productFeatureId"));
+                                newItem.set("prodCatalogId", orderItem.get("prodCatalogId"));
+                                newItem.set("productCategoryId", orderItem.get("productCategoryId"));
+                                newItem.set("quantity", quantity);
+                                newItem.set("unitPrice", unitPrice);
+                                newItem.set("unitListPrice", orderItem.get("unitListPrice"));
+                                newItem.set("itemDescription", orderItem.get("itemDescription"));
+                                newItem.set("comments", orderItem.get("comments"));
+                                newItem.set("correspondingPoId", orderItem.get("correspondingPoId"));
+                                newItem.set("statusId", "ITEM_CREATED");                            
+                                orderItems.add(newItem);
+                            }
+                        }                        
+                    }                                    
+                    orderMap.put("orderItems", orderItems);
+                } else {
+                    Debug.logError("No return items found??", module);
+                    continue;
+                }
+                
+                // create the replacement adjustment
+                GenericValue adj = delegator.makeValue("OrderAdjustment", new HashMap());
+                adj.set("orderAdjustmentTypeId", "REPLACEMENT_ADJUSTMENT");
+                adj.set("amount", new Double(itemTotal * -1));
+                adj.set("comments", "Replacement Item Return #" + returnId);
+                orderMap.put("orderAdjustments", UtilMisc.toList(adj));
+                
+                // create the order
+                String createdOrderId = null;
+                Map orderResult = null;
+                try {
+                    orderResult = dispatcher.runSync("storeOrder", orderMap);
+                } catch (GenericServiceException e) {
+                    Debug.logInfo(e, "Problem creating the order!", module);
+                }
+                if (orderResult != null) {
+                    createdOrderId = (String) orderResult.get("orderId");
+                    createdOrderIds.add(createdOrderId);
+                }
+                
+                // since there is no payments required; order is ready for processing/shipment
+                if (createdOrderId != null) {
+                    boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, createdOrderId);
+                }
+            }                
+        }
+        
+        StringBuffer successMessage = new StringBuffer();
+        if (createdOrderIds.size() > 0) {
+            successMessage.append("The following new orders have been created : ");
+            Iterator i = createdOrderIds.iterator();
+            while (i.hasNext()) {            
+                successMessage.append(i.next());
+                if (i.hasNext()) {
+                    successMessage.append(", ");
+                }
+            }
+        } else {
+            successMessage.append("No orders were created.");
+        }
+        
+        return ServiceUtil.returnSuccess(successMessage.toString());
     }
     
     public static void groupReturnItemsByOrder(List returnItems, Map itemsByOrder, Map totalByOrder) {                     
