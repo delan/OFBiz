@@ -44,5 +44,8 @@ public class ModelParam {
 
     /** Is this Parameter required or optional? Default to false, or required. */
     public boolean optional = false;
+    
+    /** Is this Parameter set internally? */
+    public boolean internal = false;
 }
 
