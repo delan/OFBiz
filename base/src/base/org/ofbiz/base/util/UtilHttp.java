@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: UtilHttp.java,v 1.2 2003/08/26 22:12:24 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.FileNameMap;
 import java.net.URLConnection;
@@ -49,7 +50,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -219,9 +220,17 @@ public class UtilHttp {
                 
                 if (valueStr != null && valueStr.length() > 0) {
                     if (buf.length() > 0) buf.append('&');
-                    buf.append(URLEncoder.encode(name));
+                    try {
+                        buf.append(URLEncoder.encode(name, "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        Debug.logError(e, module);                        
+                    }
                     buf.append('=');
-                    buf.append(URLEncoder.encode(valueStr));
+                    try {
+                        buf.append(URLEncoder.encode(valueStr, "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        Debug.logError(e, module);                        
+                    }
                 }
             }
         }
