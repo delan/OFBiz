@@ -114,7 +114,8 @@
                 <set field="randomSurveyGroup" value="testSurveyGroup"/>
 
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/main.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>
+                <!--<script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/catalog/category.bsh"/>-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/category.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
