@@ -220,16 +220,16 @@ public class ServerHitBin {
         
         //find the first previous millis that are even on the hour
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(curTime);
+        cal.setTime(new Date(curTime));
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         
-        while (cal.getTimeInMillis() < (curTime - binLength)) {
+        while (cal.getTime().getTime() < (curTime - binLength)) {
             cal.add(Calendar.MILLISECOND, (int) binLength);
         }
         
-        return cal.getTimeInMillis();
+        return cal.getTime().getTime();
     }
     
     static long getNewBinLength() {
