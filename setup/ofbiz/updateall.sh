@@ -1,32 +1,32 @@
-cd core
+cd $OFBIZ_HOME/core
 echo "--- core ---"
-cvs update
+cvs update -P -d
 cd ../commonapp
 echo "--- commonapp ---"
-cvs update
+cvs update -P -d
 cd ../webtools
 echo "--- webtools ---"
-cvs update
+cvs update -P -d
 cd ../ecommerce
 echo "--- ecommerce ---"
-cvs update
+cvs update -P -d
 cd ../catalog
 echo "--- catalog ---"
-cvs update
+cvs update -P -d
 cd ../ordermgr
 echo "--- ordermgr ---"
-cvs update
+cvs update -P -d
 cd ../partymgr
 echo "--- partymgr ---"
-cvs update
+cvs update -P -d
 cd ../workeffort
 echo "--- workeffort ---"
-cvs update
+cvs update -P -d
 cd ../setup
 echo "--- setup ---"
-cvs update
+cvs update -P -d
 cd ../website
 echo "--- website ---"
-cvs update
+cvs update -P -d
 cd ..
 
