@@ -25,7 +25,7 @@
           <tr>
             <td>
               <a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:entityfield attribute="miniProduct" field="productId"/></ofbiz:url>' class='buttontext'>
-                <ofbiz:entityfield attribute="miniProduct" field="name"/>
+                <ofbiz:entityfield attribute="miniProduct" field="productName"/>
               </a>
               <div class='tabletext'>
                 <b>

@@ -138,12 +138,12 @@
   </tr>
 
   <tr>
-    <%fieldName = "name";%><%paramName = "NAME";%>    
+    <%fieldName = "productName";%><%paramName = "NAME";%>    
     <td width="26%"><div class="tabletext">Name</div></td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="30" maxlength="60"></td>
   </tr>
   <tr>
-    <%fieldName = "comment";%><%paramName = "COMMENT";%>    
+    <%fieldName = "comments";%><%paramName = "COMMENT";%>    
     <td width="26%"><div class="tabletext">Comment</div></td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
   </tr>

@@ -165,8 +165,8 @@ public class ProductEvents {
     product.set("introductionDate", introductionDate);
     product.set("salesDiscontinuationDate", salesDiscontinuationDate);
     product.set("supportDiscontinuationDate", supportDiscontinuationDate);
-    product.set("name", name);
-    product.set("comment", comment);
+    product.set("productName", name);
+    product.set("comments", comment);
     product.set("description", description);
     product.set("longDescription", longDescription);
     product.set("smallImageUrl", smallImageUrl);

@@ -219,7 +219,7 @@
     <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Return to Edit Product]</a>
   <%}%>
     <form method="POST" enctype="multipart/form-data" action="<ofbiz:url>/UploadImage?PRODUCT_ID=<%=productId%>&upload_file_type=<%=fileType%></ofbiz:url>">
-    Upload a <b><%=fileType%></b> image for the product with the ID: "<b><%=productId%></b>" and Name "<b><%=product.getString("name")%></b>".
+    Upload a <b><%=fileType%></b> image for the product with the ID: "<b><%=productId%></b>" and Name "<b><%=product.getString("productName")%></b>".
     <br>
     Enter local file name to upload:
     <br>
