@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,7 +30,6 @@
         <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingCalendarWeek}</a>
 </div>
 
-<div class="head1">${uiLabelMap.ManufacturingCalendar}</div>
 <div><a href="<@ofbizUrl>/EditCalendar</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingNewCalendar}]</a></div>
 
 <br>

@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -182,7 +182,7 @@ function lookupBom() {
         </td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingSequenceNum}:</div></td>
+        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.CommonSequenceNum}:</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="SEQUENCE_NUM" <#if useValues>value="${(productAssoc.sequenceNum)?if_exists}"<#else>value="${(request.getParameter("SEQUENCE_NUM"))?if_exists}"</#if> size="5" maxlength="10"></td>
     </tr>
@@ -220,7 +220,7 @@ function lookupBom() {
             <td><div class="tabletext"><b>${uiLabelMap.ManufacturingPartName}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.ManufacturingSequenceNum}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonSequenceNum}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ManufacturingQuantity}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ManufacturingPartBOMType}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>

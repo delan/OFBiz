@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="titleProperty">PageTitleEditMachineGroup</property>
-    <property name="headerItem">machine</property>   
+    <property name="headerItem">routing</property>   
+    <property name="tabButtonItem">machineGroup</property>   
     <content-action name="/routing/EditMachineGroup.bsh"/> 
 </page>

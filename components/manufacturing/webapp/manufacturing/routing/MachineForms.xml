@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -32,31 +32,31 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
             >
         <auto-fields-service service-name="updateMachine" map-name="machine"/>
-        <field name="machineId" title="${uiLabelMap.ManufacturingMachineId}"><display/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="machineGroupId" title="${uiLabelMap.ManufacturingMachineGroup}">
-        	<display description="${machineGroup.description} "/></field>
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachineId}"><display/></field>
+        <field name="fixedAssetName" title="${uiLabelMap.CommonDescription}"><display/></field>
+        <field name="fixedAssetTypeId" ><hidden/></field>
+        <field name="parentFixedAssetId" title="${uiLabelMap.ManufacturingMachineGroup}">
+        	<display description="${machineGroup.fixedAssetName} "/></field>
         <field name="calendarId" title="${uiLabelMap.ManufacturingCalendar}" >
         	<display description="${calendar.description} "/></field>
         <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="EditMachine?machineId=${machine.machineId}" description="[${uiLabelMap.CommonSelected}]" />
+            <hyperlink target="EditMachine?fixedAssetId=${machine.fixedAssetId}" description="[${uiLabelMap.CommonSelected}]" />
         </field> 
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="RemoveMachine?machineId=${machine.machineId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+            <hyperlink target="RemoveMachine?fixedAssetId=${machine.fixedAssetId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
  
      <form name="UpdateMachine" type="single" 
             target="UpdateMachine" title=""
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateMachine" map-name="machine"/>
-        <field name="machineId" title="${uiLabelMap.ManufacturingMachineId}"><display/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}" position="2" ></field>
-        <field name="machineGroupId" title="${uiLabelMap.ManufacturingMachineGroup}" position="3" >
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachineId}"><display/></field>
+        <field name="fixedAssetName" title="${uiLabelMap.CommonDescription}" position="2" ></field>
+        <field name="parentFixedAssetId" title="${uiLabelMap.ManufacturingMachineGroup}" position="3" >
 			<drop-down>
-				<entity-options entity-name="TechDataMachineGroup" description="${description}">
-					<entity-order-by field-name="description"/>
-				</entity-options>
+				<list-options list-name="allMachineGroups" list-entry-name="machineGroup" 
+								key-name="machineGroup.fixedAssetId" description="${machineGroup.fixedAssetName}"/>
 			</drop-down>
         </field>
         <field name="calendarId" title="${uiLabelMap.ManufacturingCalendar}" position="4" >
@@ -71,15 +71,14 @@
 
      <form name="AddMachine" type="single" 
             target="CreateMachine" title=""
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createMachine" map-name="machine"/>
-        <field name="machineId" title="${uiLabelMap.ManufacturingMachineId}"></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}" ></field>
-        <field name="machineGroupId" title="${uiLabelMap.ManufacturingMachineGroup}">
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachineId}"></field>
+        <field name="fixedAssetName" title="${uiLabelMap.CommonDescription}" ></field>
+        <field name="parentFixedAssetId" title="${uiLabelMap.ManufacturingMachineGroup}">
 			<drop-down>
-				<entity-options entity-name="TechDataMachineGroup" description="${description}">
-					<entity-order-by field-name="description"/>
-				</entity-options>
+				<list-options list-name="allMachineGroups" list-entry-name="machineGroup" 
+							key-name="machineGroup.fixedAssetId" description="${machineGroup.fixedAssetName}"/>
 			</drop-down>
         </field>
         <field name="calendarId" title="${uiLabelMap.ManufacturingCalendar}">
@@ -97,31 +96,32 @@
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
             >
         <auto-fields-service service-name="updateMachineGroup" map-name="machineGroup"/>
-        <field name="machineGroupId" title="${uiLabelMap.ManufacturingMachineGroupId}"><display/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachineGroupId}"><display/></field>
+        <field name="fixedAssetName" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="EditMachineGroup?machineGroupId=${machineGroupId}" description="[${uiLabelMap.CommonSelected}]" />
+            <hyperlink target="EditMachineGroup?fixedAssetId=${fixedAssetId}" description="[${uiLabelMap.CommonSelected}]" />
         </field> 
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="RemoveMachineGroup?machineGroupId=${machineGroupId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+            <hyperlink target="RemoveMachineGroup?fixedAssetId=${fixedAssetId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
  
      <form name="UpdateMachineGroup" type="single" 
             target="UpdateMachineGroup" title=""
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateMachineGroup" map-name="machineGroup"/>
-        <field name="machineGroupId" title="${uiLabelMap.ManufacturingMachineGroupId}"><display/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}" position="2" ></field>
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachineGroupId}"><display/></field>
+        <field name="fixedAssetName" title="${uiLabelMap.CommonDescription}" position="2" ></field>
+        <field name="fixedAssetTypeId" ><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" position="3" ><submit button-type="button"/></field>
     </form>
 
      <form name="AddMachineGroup" type="single" 
             target="CreateMachineGroup" title=""
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="createMachineGroup" map-name="machineGroup"/>
-        <field name="machineGroupId" title="${uiLabelMap.ManufacturingMachineGroupId}"></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}" ></field>
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachineGroupId}"></field>
+        <field name="fixedAssetName" title="${uiLabelMap.CommonDescription}" ></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" ><submit button-type="button"/></field>
     </form>
  

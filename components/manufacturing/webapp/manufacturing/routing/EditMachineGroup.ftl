@@ -20,17 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign locale = requestAttributes.locale>
 
 <#if hasPermission>
-<div class='tabContainer'>
-        <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingMachine}</a>
-        <a href="<@ofbizUrl>/FindMachineGroup</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingMachineGroup}</a>
-</div>
+${pages.get("/routing/RoutingTabBar.ftl")}
 
 	<div class="head1">${uiLabelMap.ManufacturingEditMachineGroup}&nbsp; 
 	</div>

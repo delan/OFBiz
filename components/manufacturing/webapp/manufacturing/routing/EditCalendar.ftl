@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -61,7 +61,6 @@ ${pages.get("/routing/CalendarTabBar.ftl")}
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.ManufacturingCalendarWeekId}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-<#--      <input type="text" class="inputBox" size="40" name="calendarWeekId" value="${calendarData.calendarWeekId?if_exists}"></td> -->
          <select class="selectBox" name="calendarWeekId">
           <#list calendarWeeks as calendarWeek>
           <option value="${calendarWeek.calendarWeekId}" <#if calendarData?has_content && calendarData.calendarWeekId?default("") == calendarWeek.calendarWeekId>SELECTED</#if>>${(calendarWeek.get("description", locale))?if_exists}</option>

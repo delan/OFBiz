@@ -27,10 +27,7 @@
 <#assign locale = requestAttributes.locale>
 
 <#if hasPermission>
-<div class='tabContainer'>
-        <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingMachine}</a>
-        <a href="<@ofbizUrl>/EditMachineGroup</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingMachineGroup}</a>
-</div>
+${pages.get("/routing/RoutingTabBar.ftl")}
 
 	<div class="head1">${uiLabelMap.ManufacturingEditMachine}&nbsp; 
 	</div>
