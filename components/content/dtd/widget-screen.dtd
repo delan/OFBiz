@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.7 2004/07/08 09:27:36 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.8 2004/07/10 04:56:43 jonesde Exp $
 -->
 
 <!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific">
@@ -64,7 +64,7 @@
         list-name CDATA #REQUIRED
     >
 
-    <!ELEMENT entity-condition ( ( condition | condition-list ), having-condition-list?, select-field*, order-by*, ( limit-range | limit-view )? )>
+    <!ELEMENT entity-condition ( ( condition-expr | condition-list ), having-condition-list?, select-field*, order-by*, ( limit-range | limit-view )? )>
     <!ATTLIST entity-condition
         entity-name CDATA #REQUIRED
         use-cache ( true | false ) "false"
@@ -72,16 +72,16 @@
         distinct ( true | false ) "false"
         list-name CDATA #REQUIRED
     >
-        <!ELEMENT condition-list ( ( condition | condition-list )+ )>
+        <!ELEMENT condition-list ( ( condition-expr | condition-list )+ )>
         <!ATTLIST condition-list
             combine ( and | or ) "and"
         >
-        <!ELEMENT having-condition-list ( ( condition | condition-list )+ )>
+        <!ELEMENT having-condition-list ( ( condition-expr | condition-list )+ )>
         <!ATTLIST having-condition-list
             combine ( and | or ) "and"
         >
-        <!ELEMENT condition EMPTY>
-        <!ATTLIST condition
+        <!ELEMENT condition-expr EMPTY>
+        <!ATTLIST condition-expr
             field-name CDATA #REQUIRED
             operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) #REQUIRED
             env-name CDATA #IMPLIED
