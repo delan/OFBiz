@@ -511,5 +511,11 @@
                 <store-value value-name="responseAnswer"/>
             </if-not-empty>
         </iterate>
+
+        <!-- run the survey response service (async) -->
+        <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="respServiceCtx"/>
+        <if-not-empty field-name="responseService" map-name="survey">
+            <call-service-asynch service-name="${survey.responseService}" in-map-name="respServiceCtx" include-user-login="true"/>  
+        </if-not-empty> 
     </simple-method>
 </simple-methods>
