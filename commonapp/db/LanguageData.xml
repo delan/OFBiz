@@ -171,7 +171,7 @@
     <StandardLanguage standardLanguageId="6469" langCode3t="iku" langCode3b="iku" langCode2="iu" langName="Inuktitut"/>
     <StandardLanguage standardLanguageId="6470" langCode3t="ile" langCode3b="ile" langCode2="ie" langName="Interlingue" langFamily="International aux."/>
     <StandardLanguage standardLanguageId="6471" langCode3t="ilo" langCode3b="ilo" langName="Iloko"/>
-    <StandardLanguage standardLanguageId="6472" langCode3t="ina" langCode3b="ina" langCode2="ia" langName="Interlingua (International Auxiliary StandardLanguage Association)" langFamily="International aux."/>
+    <StandardLanguage standardLanguageId="6472" langCode3t="ina" langCode3b="ina" langCode2="ia" langName="Interlingua" langFamily="International aux."/>
     <StandardLanguage standardLanguageId="6473" langCode3t="inc" langCode3b="inc" langName="Indic (Other)"/>
     <StandardLanguage standardLanguageId="6474" langCode3t="ind" langCode3b="ind" langCode2="id" langName="Indonesian"/>
     <StandardLanguage standardLanguageId="6475" langCode3t="ine" langCode3b="ine" langName="Indo-European (Other)"/>
