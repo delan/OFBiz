@@ -1679,6 +1679,7 @@
       <field name="visitId" type="id-ne"></field>
       <field name="cartAbandonedLineSeqId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
+      <field name="prodCatalogId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="unitPrice" type="currency-amount"></field>
       <field name="totalWithAdjustments" type="currency-amount"></field>
@@ -1690,6 +1691,9 @@
       </relation>
       <relation type="one" fk-name="CART_ABLN_PRD" rel-entity-name="Product">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="CART_ABLN_PRDCAT" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
       </relation>
     </entity>
 
