@@ -38,41 +38,7 @@
 		<field use-when="prodCatalog==null&amp;&amp;prodCatalogId==null" name="prodCatalogId"><text size="20" maxlength="20"/></field>
 
 		<field name="catalogName"><text size="30" maxlength="60"/></field>
-		<field name="title"><text size="30" maxlength="60"/></field>
-		<field name="subtitle" title="Sub-title"><text size="60" maxlength="250"/></field>
 		
-		<field name="inventoryFacilityId" title="Inventory Facility" widget-style="selectBox">
-			<drop-down allow-empty="true">
-				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
-					<entity-order-by field-name="facilityName"/>
-				</entity-options>
-			</drop-down>
-		</field>
-		<field use-when="prodCatalog!=null&amp;&amp;prodCatalog.getString(&quot;inventoryFacilityId&quot;)!=null" name="inventoryFacilityLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="EditFacility?facilityId=${prodCatalog.inventoryFacilityId}"
-				description="[Edit Facility ${prodCatalog.inventoryFacilityId}]" also-hidden="false"/>
-		</field>
-
-		<field name="checkInventory" widget-style="selectBox">
-			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
-		</field>
-		<field name="requireInventory" title="Require Inventory for Purchase" widget-style="selectBox">
-			<drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
-		</field>
-		<field name="reserveInventory" widget-style="selectBox">
-			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
-		</field>
-		<field name="reserveOrderEnumId" title="Reservation Order" widget-style="selectBox">
-			<drop-down allow-empty="true">
-				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="INV_RES_ORDER"/>
-					<entity-order-by field-name="description"/>
-				</entity-options>
-			</drop-down>
-		</field>
-		<field name="oneInventoryFacility" widget-style="selectBox">
-			<drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
-		</field>
 		<field name="useQuickAdd" widget-style="selectBox">
 			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
 		</field>

@@ -71,9 +71,11 @@
 		<field name="oneInventoryFacility" widget-style="selectBox">
 			<drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
 		</field>
+		<!--
 		<field name="useQuickAdd" widget-style="selectBox">
 			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
 		</field>
+        -->
 
 		<field name="styleSheet"><text size="60" maxlength="250"/></field>
 		<field name="headerLogo"><text size="60" maxlength="250"/></field>

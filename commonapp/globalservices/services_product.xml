@@ -139,16 +139,14 @@
         <description>Create a ProdCatalog</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="catalogName" optional="false"/>
-        <override name="title" optional="false"/>        
+        <override name="catalogName" optional="false"/>        
     </service>
     <service name="updateProdCatalog" default-entity-name="ProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalog" auth="true">
         <description>Update an ProdCatalog</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="catalogName" optional="false"/>
-        <override name="title" optional="false"/>
+        <override name="catalogName" optional="false"/>        
     </service>
     <service name="deleteProdCatalog" default-entity-name="ProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="deleteProdCatalog" auth="true">
@@ -1175,8 +1173,8 @@
     <service name="updateProductStore" engine="simple"
             location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="updateProductStore">
         <description>Update a Product Store</description>
-        <auto-attributes entity-name="ProductStore" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="ProductStore" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProductStore" include="nonpk" mode="IN" optional="true"/>
         <override name="storeName" optional="false"/>
     </service>          
 
@@ -1205,7 +1203,7 @@
         <description>Gets a tree of product variants based on a virtual product and a list of features.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="featureOrder" type="java.util.Collection" mode="IN"/>
-        <attribute name="prodCatalogId" type="String" mode="IN"/>
+        <attribute name="productStoreId" type="String" mode="IN"/>
         <attribute name="variantTree" type="java.util.Map" mode="OUT"/>
         <attribute name="variantSample" type="java.util.Map" mode="OUT"/>
     </service>

@@ -32,9 +32,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.commonapp.order.order.OrderReadHelper;
+import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericPK;
@@ -81,7 +83,8 @@ public class ShoppingCart implements java.io.Serializable {
 
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
-    private HttpSession session;
+    private String productStoreId = null;
+    private HttpSession session = null;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -90,6 +93,7 @@ public class ShoppingCart implements java.io.Serializable {
     public ShoppingCart(ShoppingCart cart, HttpSession session) {
         this.delegator = cart.getDelegator();
         this.delegatorName = delegator.getDelegatorName();
+        this.productStoreId = cart.getProductStoreId();
         this.session = session;
         this.paymentMethodIds = cart.getPaymentMethodIds();
         this.paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
@@ -112,10 +116,11 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Creates new empty ShoppingCart object. */
-    public ShoppingCart(GenericDelegator delegator, HttpSession session) {
-        this.delegator = delegator;
+    public ShoppingCart(HttpServletRequest request) {
+        this.delegator = (GenericDelegator) request.getAttribute("delegator");
         this.delegatorName = delegator.getDelegatorName();
-        this.session = session;
+        this.productStoreId = ProductStoreWorker.getProductStoreId(request);
+        this.session = request.getSession();
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
     }
 
@@ -124,6 +129,10 @@ public class ShoppingCart implements java.io.Serializable {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
         }
         return delegator;
+    }
+    
+    public String getProductStoreId() {
+        return this.productStoreId;
     }
 
     // =======================================================================
@@ -859,6 +868,7 @@ public class ShoppingCart implements java.io.Serializable {
                 orderItem.set("orderItemSeqId", orderItemSeqId);
                 orderItem.set("orderItemTypeId", item.getItemType());
                 orderItem.set("productId", item.getProductId());
+                orderItem.set("prodCatalogId", item.getProdCatalogId());
                 orderItem.set("productCategoryId", item.getProductCategoryId());
                 orderItem.set("quantity", new Double(item.getQuantity()));
                 orderItem.set("unitPrice", new Double(item.getBasePrice()));

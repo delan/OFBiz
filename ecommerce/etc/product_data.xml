@@ -12,15 +12,12 @@
   <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-01-01 12:00:00.0"/>
   <FacilityContactMechPurpose facilityId="WebStoreWarehouse" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-01-01 12:00:00.0"/>
 
-  <WebSite webSiteId="WebStore" siteName="eCommerce Web Site"/>
-  <WebSite webSiteId="OrderEntry" siteName="Order Entry Web Site"/>
+  <ProductStore productStoreId="9000" storeName="OFBiz Ecommerce Store" title="Open For Commerce" subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" requireInventory="N" allowPassword="Y" explodeOrderItems="N"/>
+  <WebSite webSiteId="WebStore" siteName="eCommerce Web Site" productStoreId="9000"/>
+  <WebSite webSiteId="OrderEntry" siteName="Order Entry Web Site" productStoreId="9000"/>
 
-  <ProdCatalog prodCatalogId="DemoCatalog" catalogName="Demo Catalog" title="Open For Commerce" 
-    subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" 
-    oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" useQuickAdd="Y"/>
-  <ProdCatalog prodCatalogId="TestCatalog" catalogName="Test Catalog" title="Open For Commerce" 
-    subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" 
-    oneInventoryFacility="Y" checkInventory="Y" reserveInventory="Y" useQuickAdd="N"/>
+  <ProdCatalog prodCatalogId="DemoCatalog" catalogName="Demo Catalog" useQuickAdd="Y"/>
+  <ProdCatalog prodCatalogId="TestCatalog" catalogName="Test Catalog" useQuickAdd="N"/>
   <WebSiteCatalog webSiteId="WebStore" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
   <WebSiteCatalog webSiteId="WebStore" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
   <WebSiteCatalog webSiteId="OrderEntry" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>

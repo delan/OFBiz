@@ -39,6 +39,7 @@ import org.ofbiz.core.workflow.WfUtil;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
@@ -109,9 +110,9 @@ public class OrderServices {
             result.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource, "items.none", locale));
             return result;
         }
-
+        
         // check inventory and other things for each item
-        String prodCatalogId = (String) context.get("prodCatalogId");
+        String productStoreId = (String) context.get("productStoreId");
         List errorMessages = new LinkedList();
         Map normalizedItemQuantities = new HashMap();
         Map normalizedItemNames = new HashMap();
@@ -183,8 +184,8 @@ public class OrderServices {
                  
             if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {
                 // check to see if we have inventory available    
-                if (CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator)) {
-                    if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, currentProductId, 
+                if (ProductStoreWorker.isStoreInventoryRequired(productStoreId, product, delegator)) {
+                    if (!ProductStoreWorker.isStoreInventoryAvailable(productStoreId, currentProductId, 
                     		currentQuantity.doubleValue(), delegator, dispatcher)) {
                         String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock", 
                         		new Object[] { getProductName(product, itemName), currentProductId }, locale);
@@ -451,7 +452,7 @@ public class OrderServices {
                     GenericValue orderItem = (GenericValue) invDecItemIter.next();                        
                     if (orderItem.get("productId") != null) {
                         // only reserve product items; ignore non-product items                        
-                        Double inventoryNotReserved = CatalogWorker.reserveCatalogInventory(prodCatalogId,
+                        Double inventoryNotReserved = ProductStoreWorker.reserveStoreInventory(productStoreId,
                             orderItem.getString("productId"), orderItem.getDouble("quantity"),
                             orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
                             userLogin, delegator, dispatcher);                        

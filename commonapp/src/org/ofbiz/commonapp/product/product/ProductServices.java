@@ -123,8 +123,8 @@ public class ProductServices {
     public static Map prodMakeFeatureTree(DispatchContext dctx, Map context) {
         // * String productId      -- Parent (virtual) product ID
         // * List featureOrder     -- Order of features
-        // * String prodCatalogId      -- Product Catalog ID for Inventory
-        String prodCatalogId = (String) context.get("prodCatalogId");
+        // * String productStoreId -- Product Store ID for Inventory
+        String productStoreId = (String) context.get("productStoreId");
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map result = new HashMap();
@@ -190,8 +190,8 @@ public class ProductServices {
             }
 
             // next check inventory for each item: if inventory is not required or is available
-            if (!org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryRequired(prodCatalogId, productIdTo, delegator) ||
-                org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productIdTo, 1.0, delegator, dispatcher)) {
+            if (!org.ofbiz.commonapp.product.store.ProductStoreWorker.isStoreInventoryRequired(productStoreId, productIdTo, delegator) ||
+                org.ofbiz.commonapp.product.store.ProductStoreWorker.isStoreInventoryAvailable(productStoreId, productIdTo, 1.0, delegator, dispatcher)) {
                 items.add(productIdTo);
             }
         }

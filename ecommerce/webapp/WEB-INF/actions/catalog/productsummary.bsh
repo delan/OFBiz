@@ -28,6 +28,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.product.store.*;
 
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
@@ -39,8 +40,8 @@ productId = request.getAttribute("productId");
 
 webSiteId = CatalogWorker.getWebSiteId(request);
 catalogId = CatalogWorker.getCurrentCatalogId(request);
-prodCatalog = CatalogWorker.getProdCatalog(request);
-facilityId = prodCatalog.getString("inventoryFacilityId");
+productStore = ProductStoreWorker.getProductStore(request);
+facilityId = productStore.getString("inventoryFacilityId");
 autoUserLogin = session.getAttribute("autoUserLogin");
 userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 

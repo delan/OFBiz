@@ -50,9 +50,8 @@ public class CartEventListener implements HttpSessionListener {
     }
 
     public void sessionDestroyed(HttpSessionEvent event) {
-        HttpSession session = event.getSession();
-        //passing null for the delegator here because we don't want it to create a cart if none exists
-        ShoppingCart cart = ShoppingCartEvents.getCartObject(session, null);
+        HttpSession session = event.getSession();        
+        ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);       
         if (cart == null) {
             Debug.logInfo("No cart to save, doing nothing.", module);
             return;

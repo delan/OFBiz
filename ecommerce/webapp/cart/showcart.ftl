@@ -176,9 +176,9 @@ function addToList() {
 
                     <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                     <#assign itemProduct = cartLine.getProduct()>
-                    <#assign isCatalogInventoryRequired = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryRequired(request, itemProduct)>
-                    <#assign isCatalogInventoryAvailable = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryAvailable(request, cartLine.getProductId(), cartLine.getQuantity())>
-                    <#if !isCatalogInventoryRequired && !isCatalogInventoryAvailable && itemProduct.inventoryMessage?has_content>
+                    <#assign isStoreInventoryRequired = Static["org.ofbiz.commonapp.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, itemProduct)>
+                    <#assign isStoreInventoryAvailable = Static["org.ofbiz.commonapp.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, cartLine.getProductId(), cartLine.getQuantity())>
+                    <#if !isStoreInventoryRequired && !isStoreInventoryAvailable && itemProduct.inventoryMessage?has_content>
                         <b>(${itemProduct.inventoryMessage})</b>
                     </#if>
                     

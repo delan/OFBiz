@@ -48,6 +48,7 @@ import org.ofbiz.commonapp.order.order.OrderChangeHelper;
 import org.ofbiz.commonapp.order.order.OrderReadHelper;
 import org.ofbiz.commonapp.party.contact.ContactHelper;
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 import org.ofbiz.core.entity.EntityExpr;
 import org.ofbiz.core.entity.EntityOperator;
 import org.ofbiz.core.entity.EntityUtil;
@@ -239,7 +240,7 @@ public class CheckOutEvents {
         context.put("grandTotal", grandTotal);
         context.put("userLogin", userLogin);
         context.put("partyId", partyId);
-        context.put("prodCatalogId", CatalogWorker.getCurrentCatalogId(request));
+        context.put("productStoreId", ProductStoreWorker.getProductStoreId(request));
         context.put("visitId", VisitHandler.getVisitId(session));
         context.put("webSiteId", CatalogWorker.getWebSiteId(request));
 

@@ -576,19 +576,15 @@ public class ShoppingCartEvents {
     }
 
     /** Gets the shopping cart from the session. Used by all events. */
-    public static ShoppingCart getCartObject(HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        return getCartObject(session, delegator);
-    }
-    
-    /** Gets the shopping cart from the session. Used by all events. Will create a ShoppingCart object if none exists and if a delegator is passed. */
-    public static ShoppingCart getCartObject(HttpSession session, GenericDelegator delegator) {
-        ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);
-        if (cart == null && delegator != null) {
-            cart = new ShoppingCart(delegator, session);
+    public static ShoppingCart getCartObject(HttpServletRequest request) {        
+        HttpSession session = request.getSession(true);        
+        ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);        
+        
+        if (cart == null) {
+            cart = new ShoppingCart(request);
             session.setAttribute(SiteDefs.SHOPPING_CART, cart);
         }
+        
         return cart;
-    }
+    }        
 }
