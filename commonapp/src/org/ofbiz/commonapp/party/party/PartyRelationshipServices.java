@@ -77,18 +77,17 @@ public class PartyRelationshipServices {
             roleTypeIdTo = "_NA_";
         }
         
-        String fromDate = (String)context.get("fromDate");
-        String thruDate = (String)context.get("thruDate");
-        String priorityTypeId = (String) context.get("priorityTypeId");
-        String comments = (String) context.get("comments");
-        String partyRelationshipTypeId = (String) context.get("partyRelationshipTypeId");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        if (fromDate == null) {
+            fromDate = UtilDateTime.nowTimestamp();
+        }
         
         GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom, "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", fromDate));
         
-        partyRelationship.set( "thruDate", thruDate, false);
-        partyRelationship.set( "priorityTypeId", priorityTypeId, false);
-        partyRelationship.set( "comments", comments, false);
-        partyRelationship.set( "partyRelationshipTypeId", partyRelationshipTypeId, false);
+        partyRelationship.set( "thruDate", context.get("thruDate"), false);
+        partyRelationship.set( "priorityTypeId", context.get("priorityTypeId"), false);
+        partyRelationship.set( "comments", context.get("comments"), false);
+        partyRelationship.set( "partyRelationshipTypeId", context.get("partyRelationshipTypeId"), false);
         
         try {
             if (delegator.findByPrimaryKey(partyRelationship.getPrimaryKey()) != null) {
@@ -100,7 +99,7 @@ public class PartyRelationshipServices {
         }
         
         try {
-            partyRelationship.store();
+            partyRelationship.create();
         } catch(GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             return ServiceUtil.returnError("Could not create party relationship (write failure): " + e.getMessage());
@@ -145,11 +144,10 @@ public class PartyRelationshipServices {
             roleTypeIdTo = "_NA_";
         }
         
-        String fromDate = (String)context.get("fromDate");
-        
         GenericValue partyRelationship = null;
         try {
-            partyRelationship = delegator.findByPrimaryKey("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom, "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", fromDate));
+            partyRelationship = delegator.findByPrimaryKey("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom, 
+                    "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", context.get("fromDate")));
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Could not update party realtion (read failure): " + e.getMessage());
@@ -159,11 +157,11 @@ public class PartyRelationshipServices {
             return ServiceUtil.returnError("Could not update party relationship (relationship not found)");
         }
         
-        partyRelationship.set("thruDate", (String)context.get("thruDate"), false);
-        partyRelationship.set("statusId", (String) context.get("statusId"), false);
-        partyRelationship.set("priorityTypeId", (String) context.get("priorityTypeId"), false);
-        partyRelationship.set("partyRelationshipTypeId", (String) context.get("partyRelationshipTypeId"), false);
-        partyRelationship.set("comments", (String) context.get("comments"), false);
+        partyRelationship.set("thruDate", context.get("thruDate"), false);
+        partyRelationship.set("statusId", context.get("statusId"), false);
+        partyRelationship.set("priorityTypeId", context.get("priorityTypeId"), false);
+        partyRelationship.set("partyRelationshipTypeId", context.get("partyRelationshipTypeId"), false);
+        partyRelationship.set("comments", context.get("comments"), false);
         
         try {
             partyRelationship.store();
