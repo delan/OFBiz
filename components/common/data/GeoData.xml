@@ -301,7 +301,7 @@
     <Geo abbreviation="VA" geoCode="VA" geoId="VA" geoName="Virginia" geoTypeId="STATE"/>
     <Geo abbreviation="VT" geoCode="VT" geoId="VT" geoName="Vermont" geoTypeId="STATE"/>
     <Geo abbreviation="WA" geoCode="WA" geoId="WA" geoName="Washington" geoTypeId="STATE"/>
-    <Geo abbreviation="WI" geoCode="WI" geoId="WI" geoName="Wisconson" geoTypeId="STATE"/>
+    <Geo abbreviation="WI" geoCode="WI" geoId="WI" geoName="Wisconsin" geoTypeId="STATE"/>
     <Geo abbreviation="WV" geoCode="WV" geoId="WV" geoName="West Virginia" geoTypeId="STATE"/>
     <Geo abbreviation="WY" geoCode="WY" geoId="WY" geoName="Wyoming" geoTypeId="STATE"/>
     <Geo abbreviation="VI" geoCode="VI" geoId="VI" geoName="Virgin Islands" geoTypeId="STATE"/>
