@@ -633,14 +633,12 @@ public class ShoppingCart implements Serializable {
 
     /** adds a payment method/payment method type */
     public void addPaymentAmount(String id, Double amount, boolean isSingleUse) {
-        if (Character.isDigit(id.charAt(0))) {
-            // payment methods are numeric
+        if (!isPaymentMethodType(id)) {
             paymentMethodAmounts.put(id, amount);
             if (isSingleUse) {
                 singleUsePaymentIds.add(id);
             }
         } else {
-            // alpha-numeric is a payment method type
             paymentMethodTypeAmounts.put(id, amount);
             // ignore single use; only applies to payment methods
         }
@@ -668,7 +666,7 @@ public class ShoppingCart implements Serializable {
 
     /** returns the payment method/payment method type amount */
     public Double getPaymentAmount(String id) {
-        if (Character.isDigit(id.charAt(0))) {
+        if (!isPaymentMethodType(id)) {
             return (Double) paymentMethodAmounts.get(id);
         } else {
             return (Double) paymentMethodTypeAmounts.get(id);
@@ -847,6 +845,24 @@ public class ShoppingCart implements Serializable {
         }
 
         return giftCards;
+    }
+
+    /* determines if the id supplied is a payment method or not by searching in the entity engine */
+    
+    public boolean isPaymentMethodType(String id){
+    	GenericValue paymentMethodType = null;
+    	try{
+    		paymentMethodType = delegator.findByPrimaryKeyCache("PaymentMethodType",UtilMisc.toMap("paymentMethodTypeId", id));
+    	}
+    	catch(GenericEntityException e) {
+    		Debug.logInfo(e,"Problems getting PaymentMethodType", module);
+    	}
+   	 	if (paymentMethodType == null){
+   	 		return false;
+   	 	}
+   	 	else{
+   	 		return true;
+   	 	}
     }
 
     // =======================================================================
