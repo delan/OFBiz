@@ -158,6 +158,20 @@ public class PaymentServices {
             return ServiceUtil.returnError("Error authorizing payment: " + e.getMessage());
         }
     }
+    
+    public static Map makeExpireDate(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        String expMonth = (String) context.get("expMonth");
+        String expYear = (String) context.get("expYear");
+        
+        StringBuffer expDate = new StringBuffer();
+        expDate.append(expMonth);
+        expDate.append("/");
+        expDate.append(expYear);
+        result.put("expireDate", expDate.toString());
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
 
     /**
      * Creates CreditCard and PaymentMethod entities according to the parameters passed in the context
