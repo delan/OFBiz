@@ -24,7 +24,6 @@
  */
 package org.ofbiz.content.webapp.ftl;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -122,23 +121,24 @@ public class FreeMarkerWorker {
                     URL locationUrl = FlexibleLocation.resolveLocation(location);
                     Reader locationReader = new InputStreamReader(locationUrl.openStream());
                     
-                    if (context == null) {
-                        context = new HashMap();
-                    }
-                    
                     Configuration config = makeDefaultOfbizConfig();
                     String locationString = locationUrl.getPath();
                     //Debug.logInfo("FreeMarker render: locationString=" + locationString, module);
                     //DEJ20050104 Don't know what to do here, FreeMarker does some funky stuff when loading includes and can't find a way to make it happy...
                     template = new Template(locationString, locationReader, config);            
-                    // add the OFBiz transforms/methods
-                    addAllOfbizTransforms(context);
                     
                     cachedTemplates.put(location, template);
                 }
             }
         }
         
+        if (context == null) {
+            context = new HashMap();
+        }
+        
+        // add the OFBiz transforms/methods
+        addAllOfbizTransforms(context);
+
         // process the template with the given data and write
         // the email body to the String buffer
         template.process(context, outWriter);
