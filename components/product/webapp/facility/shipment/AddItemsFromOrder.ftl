@@ -30,10 +30,15 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#if shipment?exists>
 
-<form action="<@ofbizUrl>/AddItemsFromOrder</@ofbizUrl>">
+<form name="additemsfromorder" action="<@ofbizUrl>/AddItemsFromOrder</@ofbizUrl>">
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
 	<div class="tabletext">
         ${uiLabelMap.ProductOrderId} : <input type="text" class='inputBox' size="20" name="orderId" value="${orderId?if_exists}"/>
+        <span class='tabletext'>
+            <a href="javascript:call_fieldlookup2(document.additemsfromorder.orderId,'LookupOrderHeaderAndShipInfo');">
+                <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+            </a>
+        </span>
         ${uiLabelMap.ProductOrderShipGroupId} : <input type="text" class='inputBox' size="20" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
         <input type="submit" value="Select" class="smallSubmit"/>
     </div>

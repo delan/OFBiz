@@ -32,6 +32,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <br>
     <#if addToShipmentPlanRows?has_content>
         ${addToShipmentPlanForm.renderFormString()}
+
 <SCRIPT language="javascript">
     function submitRows(rowCount) {
         var rowCountElement = document.createElement("input");
@@ -54,6 +55,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<br>
     </#if>
     ${listShipmentPlanForm.renderFormString()}
+    <div class="head2">Total weight: ${totWeight}</div>
+    <div class="head2">Total volume: ${totVolume}</div>
     ${shipmentPlanToOrderItemsForm.renderFormString()}
 
 <#else>

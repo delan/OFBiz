@@ -61,6 +61,8 @@ if (UtilValidate.isNotEmpty(action) && UtilValidate.isNotEmpty(orderId)) {
 // **************************************
 // ShipmentPlan list form
 // **************************************
+totWeight = 0;
+totVolume = 0;
 shipmentPlans = null;
 shipmentPlansIt = null;
 rows = new ArrayList();
@@ -180,7 +182,8 @@ if (shipmentPlans != null) {
                                     widthUom.getString("abbreviation") + "x" +
                                     depthUom.getString("abbreviation"));
         }
-
+        totWeight += weight;
+        totVolume += volume;
         rows.add(oneRow);
     }
 }
@@ -297,4 +300,6 @@ context.put("addToShipmentPlanRows", addRows);
 context.put("rowCount", addRows.size());
 context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);
+context.put("totWeight", totWeight);
+context.put("totVolume", totVolume);
 
