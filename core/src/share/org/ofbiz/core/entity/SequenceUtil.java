@@ -123,27 +123,27 @@ public class SequenceUtil
         while(val1+bankSize != val2)
         {
           Debug.logInfo("[SequenceUtil.SequenceBank.fillBank]: Trying to get a bank of sequenced ids for " + this.seqName + "; start of loop val1=" + val1 + ", val2=" + val2 + ", bankSize=" + bankSize);
-          sql = "SELECT SEQ_ID FROM SEQUENCE WHERE SEQ_NAME='" + this.seqName + "'";
+          sql = "SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME='" + this.seqName + "'";
           rs = stmt.executeQuery(sql);
           if(rs.next()) { val1 = rs.getInt("SEQ_ID"); } 
           else 
           { 
             Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: first select failed: trying to add row, result set was empty for sequence: " + seqName);
             try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
-            sql = "INSERT INTO SEQUENCE (SEQ_NAME, SEQ_ID) VALUES ('" + this.seqName + "', " + startSeqId + ")";
+            sql = "INSERT INTO SEQUENCE_VALUE_ITEM (SEQ_NAME, SEQ_ID) VALUES ('" + this.seqName + "', " + startSeqId + ")";
             if(stmt.executeUpdate(sql) <= 0) return;
             continue;
           }
           try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
 
-          sql = "UPDATE SEQUENCE SET SEQ_ID=SEQ_ID+" + this.bankSize + " WHERE SEQ_NAME='" + this.seqName + "'";
+          sql = "UPDATE SEQUENCE_VALUE_ITEM SET SEQ_ID=SEQ_ID+" + this.bankSize + " WHERE SEQ_NAME='" + this.seqName + "'";
           if(stmt.executeUpdate(sql) <= 0)
           {
             Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: update failed, no rows changes for seqName: " + seqName);
             return;
           }
 
-          sql = "SELECT SEQ_ID FROM SEQUENCE WHERE SEQ_NAME='" + this.seqName + "'";
+          sql = "SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME='" + this.seqName + "'";
           rs = stmt.executeQuery(sql);
           if(rs.next()) { val2 = rs.getInt("SEQ_ID"); } 
           else 
