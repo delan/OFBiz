@@ -11,14 +11,18 @@
     <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
     <handler name="simple" class="org.ofbiz.core.event.SimpleEventHandler"/>
     
+    <!-- Events to run on every request before security (chains exempt) -->
     <preprocessor>
-    	<!-- Events to run on every request before security (chains exempt) -->
-    	<event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
+        <!-- This event allows affilate/distributor entry on any page -->
+    	<event type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="setAssociationId"/>
     </preprocessor>
+
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
     <postprocessor>
-    	<!-- Events to run on every request after all other processing (chains exempt) -->
     	<event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
     </postprocessor>
+    -->
 
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
@@ -47,14 +51,14 @@
     <!-- Request Mappings -->
     <request-map uri="setdistributor">
       <security https="true" auth="false"/>
-      <event type="java" path="org.ofbiz.ecommerce.distributor.DistributorEvents" invoke="setDistributor"/>
+      <event type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="setAssociationId"/>
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="main"/>
     </request-map>
 
     <request-map uri="updatedistributor">
       <security https="true" auth="false"/>
-      <event type="java" path="org.ofbiz.ecommerce.distributor.DistributorEvents" invoke="updateAssociatedDistributor"/>
+      <event type="java" path="org.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="updateAssociatedDistributor"/>
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="main"/>
     </request-map>
@@ -346,6 +350,10 @@
 	    <response name="success" type="view" value="main"/>
 	    <response name="error" type="view" value="error"/>
 	</request-map>    
+
+	<request-map uri="newaffiliate">
+	    <response name="success" type="view" value="newaffiliate"/>
+	</request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -374,6 +382,7 @@
 
     <view-map name="viewprofile" page="/customer/viewprofile.jsp"/>
     <view-map name="newcustomer" page="/customer/newcustomer.jsp"/>
+	<view-map name="newaffiliate" page="/newaffiliate.jsp"/>
     <view-map name="editcontactmech" page="/customer/editcontactmech.jsp"/>
     <view-map name="editcreditcard" page="/customer/editcreditcard.jsp"/>
     <view-map name="changepassword" page="/customer/changepassword.jsp"/>
