@@ -131,9 +131,12 @@ public class DispatchContext {
             }
         }
         
-        if ( !serviceMap.containsKey(serviceName) )
-            return getGlobalModelService(serviceName);
-        return (ModelService)serviceMap.get(serviceName);
+        ModelService retVal = null;
+        if (serviceMap != null)
+            retVal = (ModelService) serviceMap.get(serviceName);
+        if (retVal == null)
+            retVal =  getGlobalModelService(serviceName);
+        return retVal;
     }
     
     private ModelService getGlobalModelService(String serviceName) throws GenericServiceException {
@@ -149,9 +152,10 @@ public class DispatchContext {
             }
         }
         
-        if ( !serviceMap.containsKey(serviceName) )
+        ModelService retVal = (ModelService) serviceMap.get(serviceName);
+        if (retVal == null)
             throw new GenericServiceException("Cannot locate service by name");
-        return (ModelService)serviceMap.get(serviceName);
+        return retVal;
     }
     
     /** Gets the LocalDispatcher used to create this context
