@@ -41,8 +41,6 @@
     <!ATTLIST entity
 	package-name CDATA #REQUIRED >
     <!ATTLIST entity
-	dependent-on CDATA #IMPLIED >
-    <!ATTLIST entity
 	title CDATA #IMPLIED >
     <!ATTLIST entity
 	copyright CDATA #IMPLIED >
