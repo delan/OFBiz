@@ -497,6 +497,13 @@
   <ServerHitType description="Entity" hitTypeId="ENTITY"/>
   <ServerHitType description="Service" hitTypeId="SERVICE"/>
 
+  <ShipmentContactMechType description="Ship-To Address" shipmentContactMechTypeId="SHIP_TO_ADDRESS"/>
+  <ShipmentContactMechType description="Ship-From Address" shipmentContactMechTypeId="SHIP_FROM_ADDRESS"/>
+  <ShipmentContactMechType description="Ship-To Telecom Number" shipmentContactMechTypeId="SHIP_TO_TELECOM"/>
+  <ShipmentContactMechType description="Ship-From Telecom Number" shipmentContactMechTypeId="SHIP_FROM_TELECOM"/>
+  <ShipmentContactMechType description="Ship-To E-Mail" shipmentContactMechTypeId="SHIP_TO_EMAIL"/>
+  <ShipmentContactMechType description="Ship-From E-Mail" shipmentContactMechTypeId="SHIP_TO_EMAIL"/>
+
   <ShipmentMethodType description="Standard" shipmentMethodTypeId="standard"/>
   <ShipmentMethodType description="Express" shipmentMethodTypeId="express"/>
   <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
@@ -553,38 +560,53 @@
   <StatusItem description="Available" sequenceId="02" statusCode="AVAILABLE" statusId="INV_AVAILABLE" statusTypeId="INV_SERIALIZED_STTS"/>
   <StatusItem description="Promised" sequenceId="03" statusCode="PROMISED" statusId="INV_PROMISED" statusTypeId="INV_SERIALIZED_STTS"/>
   <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="INV_DELIVERED" statusTypeId="INV_SERIALIZED_STTS"/>
+
   <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDER_ORDERED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ORDER_APPROVED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Shipped" sequenceId="05" statusCode="SHIPPED" statusId="ORDER_SHIPPED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ORDER_COMPLETED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ORDER_BACKORDERED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ORDER_REJECTED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="ORDER_STATUS"/>
+
   <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ITEM_ORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ITEM_APPROVED" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusItem description="Shipped" sequenceId="05" statusCode="SHIPPED" statusId="ITEM_SHIPPED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ITEM_COMPLETED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ITEM_BACKORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ITEM_REJECTED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
+
   <StatusItem description="Authorized" sequenceId="01" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusItem description="Settled" sequenceId="02" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="PAYMENT_DECLINED" statusTypeId="PAYMENT_PREF_STATUS"/>
+
+  <StatusItem description="Scheduled" sequenceId="01" statusCode="SCHEDULED" statusId="SHIPMENT_SCHEDULED" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Shipped" sequenceId="02" statusCode="SHIPPED" statusId="SHIPMENT_SHIPPED" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="In-Route" sequenceId="03" statusCode="INROUTE" statusId="SHIPMENT_INROUTE" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="SHIPMENT_DELIVERED" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="SHIPMENT_CANCELLED" statusTypeId="SHIPMENT_STATUS"/>
+
   <StatusItem description="Not-Synchronized" sequenceId="01" statusCode="NOT_SYNCHRONIZED" statusId="NOT_SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
   <StatusItem description="Synchronized" sequenceId="02" statusCode="SYNCHRONIZED" statusId="SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
+
   <StatusItem description="Needs Action" sequenceId="01" statusCode="NEEDS ACTION" statusId="CAL_NEEDS_ACTION" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Sent" sequenceId="02" statusCode="SENT" statusId="CAL_SENT" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="CAL_DECLINED" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Delegated" sequenceId="04" statusCode="DELEGATED" statusId="CAL_DELEGATED" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="05" statusCode="CANCELLED" statusId="CAL_CANCELLED" statusTypeId="CALENDAR_STATUS"/>
+
   <StatusItem description="Accepted" sequenceId="01" statusCode="ACCEPTED" statusId="CAL_ACCEPTED" statusTypeId="TASK_STATUS"/>
   <StatusItem description="Completed" sequenceId="02" statusCode="COMPLETED" statusId="CAL_COMPLETED" statusTypeId="TASK_STATUS"/>
+
   <StatusItem description="Tentative" sequenceId="01" statusCode="TENTATIVE" statusId="CAL_TENTATIVE" statusTypeId="EVENT_STATUS"/>
   <StatusItem description="Confirmed" sequenceId="02" statusCode="CONFIRMED" statusId="CAL_CONFIRMED" statusTypeId="EVENT_STATUS"/>
+
   <StatusItem description="Not Started" sequenceId="01" statusCode="open.not_running.not_started" statusId="WF_NOT_STARTED" statusTypeId="WORKFLOW_STATUS"/>
   <StatusItem description="Suspended" sequenceId="02" statusCode="open.not_running.suspended" statusId="WF_SUSPENDED" statusTypeId="WORKFLOW_STATUS"/>
   <StatusItem description="Running" sequenceId="03" statusCode="open.running" statusId="WF_RUNNING" statusTypeId="WORKFLOW_STATUS"/>
   <StatusItem description="Completed" sequenceId="04" statusCode="closed.completed" statusId="WF_COMPLETED" statusTypeId="WORKFLOW_STATUS"/>
   <StatusItem description="Terminated" sequenceId="05" statusCode="closed.terminated" statusId="WF_TERMINATED" statusTypeId="WORKFLOW_STATUS"/>
   <StatusItem description="Aborted" sequenceId="06" statusCode="closed.aborted" statusId="WF_ABORTED" statusTypeId="WORKFLOW_STATUS"/>
+
   <StatusItem description="Under Revision" sequenceId="01" statusCode="UNDER_REVISION" statusId="WPS_UNDER_REVISION" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusItem description="Under Test"  sequenceId="02" statusCode="UNDER_TEST" statusId="WPS_UNDER_TEST" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusItem description="Released"  sequenceId="03" statusCode="RELEASED" statusId="WPS_RELEASED" statusTypeId="WORKFLOW_PUB_STATUS"/>
