@@ -42,169 +42,6 @@ import org.ofbiz.core.entity.*;
  */
 public class CategoryWorker {
 
-    public static void getRelatedProducts(PageContext pageContext, String attributePrefix) {
-        getRelatedProducts(pageContext, attributePrefix, null, true, 10);
-    }
-
-    public static void getRelatedProducts(PageContext pageContext, String attributePrefix, String parentId) {
-        getRelatedProducts(pageContext, attributePrefix, parentId, true, 10);
-    }
-
-    /**
-     * Puts the following into the pageContext attribute list with a prefix, if specified:
-     *  productList, productCategoryMembers, categoryId, viewIndex, viewSize, lowIndex, highIndex, listSize
-     * Puts the following into the session attribute list:
-     *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
-     *@param pageContext The pageContext of the calling JSP
-     *@param attributePrefix A prefix to put on each attribute name in the pageContext
-     *@param parentId The ID of the parent category
-     */
-    public static void getRelatedProducts(PageContext pageContext, String attributePrefix,
-                                          String parentId, boolean limitView, int defaultViewSize) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        if (attributePrefix == null)
-            attributePrefix = "";
-        
-        getRelatedProductCategoryMembers(pageContext, attributePrefix, parentId, limitView, defaultViewSize);
-        
-        Integer lowIndex = (Integer) pageContext.getAttribute(attributePrefix + "lowIndex");
-        Integer highIndex = (Integer) pageContext.getAttribute(attributePrefix + "highIndex");
-        if (lowIndex == null || highIndex == null) return;
-        
-        ArrayList prodCatMembers = (ArrayList) pageContext.getAttribute(attributePrefix + "productCategoryMembers");
-
-        ArrayList someProducts = new ArrayList();
-        if (prodCatMembers != null) {
-            for (int ind = lowIndex.intValue(); ind <= highIndex.intValue(); ind++) {
-                GenericValue prodCatMember = (GenericValue) prodCatMembers.get(ind - 1);
-                GenericValue prod = null;
-                try {
-                    prod = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId",
-                                                                                     prodCatMember.get("productId")));
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e.getMessage());
-                    prod = null;
-                }
-                if (prod != null)
-                    someProducts.add(prod);
-            }
-        }
-
-        if (someProducts.size() > 0)
-            pageContext.setAttribute(attributePrefix + "productList", someProducts);
-    }
-
-    /**
-     * Puts the following into the pageContext attribute list with a prefix, if specified:
-     *  productCategoryMembers, categoryId, viewIndex, viewSize, lowIndex, highIndex, listSize
-     * Puts the following into the session attribute list:
-     *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
-     *@param pageContext The pageContext of the calling JSP
-     *@param attributePrefix A prefix to put on each attribute name in the pageContext
-     *@param parentId The ID of the parent category
-     */
-    public static void getRelatedProductCategoryMembers(PageContext pageContext, String attributePrefix,
-                                                        String parentId, boolean limitView, int defaultViewSize) {
-        boolean useSessionCache = false;
-                                                            
-        ServletRequest request = pageContext.getRequest();
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        if (attributePrefix == null)
-            attributePrefix = "";
-
-        int viewIndex = 0;
-        try {
-            viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
-        } catch (Exception e) {
-            viewIndex = 0;
-        }
-
-        int viewSize = defaultViewSize;
-        try {
-            viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
-        } catch (Exception e) {
-            viewSize = defaultViewSize;
-        }
-
-        if (parentId == null)
-            parentId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"),
-                                               request.getParameter("category_id"),
-                    request.getParameter("CATEGORY_ID"));
-        if (parentId == null || parentId.length() <= 0)
-            return;
-
-        String curFindString = "ProductCategoryByParentId:" + parentId;
-        ArrayList prodCatMembers = null;
-        String resultArrayName = null;
-
-        if (useSessionCache) {
-            prodCatMembers = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
-            resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
-        }
-        
-        if (!useSessionCache || prodCatMembers == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
-            //since cache is invalid, should not use prodCatMembers
-            prodCatMembers = null;
-
-            if (Debug.infoOn()) Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
-            if (Debug.infoOn()) Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
-
-            GenericValue category = null;
-            try {
-                category = delegator.findByPrimaryKeyCache("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                category = null;
-            }
-
-            if (category != null) {
-                Collection prodCatMemberCol = null;
-                try {
-                    prodCatMemberCol = EntityUtil.filterByDate(category.getRelatedCache("ProductCategoryMember", null,
-                                                                                        UtilMisc.toList("sequenceNum")), true);
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e.getMessage());
-                    prodCatMemberCol = null;
-                }
-                if (prodCatMemberCol != null) {
-                    prodCatMembers = new ArrayList(prodCatMemberCol);
-                }
-            }
-
-            if (useSessionCache && prodCatMembers != null) {
-                pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", prodCatMembers);
-                pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
-            }
-        }
-
-        int lowIndex;
-        int highIndex;
-        int listSize = 0;
-        if (prodCatMembers != null) {
-            listSize = prodCatMembers.size();
-        }
-
-        if (limitView) {
-            lowIndex = viewIndex * viewSize + 1;
-            highIndex = (viewIndex + 1) * viewSize;
-            if (listSize < highIndex)
-                highIndex = listSize;
-        } else {
-            lowIndex = 1;
-            highIndex = listSize;
-        }
-
-        pageContext.setAttribute(attributePrefix + "viewIndex", new Integer(viewIndex));
-        pageContext.setAttribute(attributePrefix + "viewSize", new Integer(viewSize));
-        pageContext.setAttribute(attributePrefix + "lowIndex", new Integer(lowIndex));
-        pageContext.setAttribute(attributePrefix + "highIndex", new Integer(highIndex));
-        pageContext.setAttribute(attributePrefix + "listSize", new Integer(listSize));
-        pageContext.setAttribute(attributePrefix + "categoryId", parentId);
-        if (prodCatMembers != null && prodCatMembers.size() > 0) {
-            pageContext.setAttribute(attributePrefix + "productCategoryMembers", prodCatMembers);
-        }
-    }
-
     public static String getCatalogTopCategory(PageContext pageContext, String defaultTopCategory) {
         String topCatName;
         boolean fromSession = false;
@@ -271,7 +108,7 @@ public class CategoryWorker {
         ArrayList categories = new ArrayList();
         ServletRequest request = pageContext.getRequest();
 
-        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
+        if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Collection rollups = null;
@@ -312,7 +149,7 @@ public class CategoryWorker {
     
     public static void setTrail(ServletRequest request, String currentCategory) {
         String previousCategory = request.getParameter("pcategory");
-        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory +
+        if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory +
                       " currentCategory=" + currentCategory);
 
         //if there is no current category, just return and do nothing to that the last settings will stay
@@ -367,7 +204,7 @@ public class CategoryWorker {
 
         //add the current category to the end of the list
         crumb.add(currentCategory);
-        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Continuing list: Added currentCategory: " + currentCategory);
+        if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.setTrail] Continuing list: Added currentCategory: " + currentCategory);
         setTrail(request, crumb);
     }
 

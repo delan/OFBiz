@@ -28,6 +28,7 @@
         <attribute name="mediumImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="largeImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="detailImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="detailTemplate" type="String" mode="IN" optional="true"/>
         <attribute name="quantityIncluded" type="Double" mode="IN" optional="true"/>
         <attribute name="quantityUomId" type="String" mode="IN" optional="true"/>
         <attribute name="piecesIncluded" type="Long" mode="IN" optional="true"/>
@@ -63,6 +64,7 @@
         <attribute name="mediumImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="largeImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="detailImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="detailTemplate" type="String" mode="IN" optional="true"/>
         <attribute name="quantityIncluded" type="Double" mode="IN" optional="true"/>
         <attribute name="quantityUomId" type="String" mode="IN" optional="true"/>
         <attribute name="piecesIncluded" type="Long" mode="IN" optional="true"/>
@@ -141,6 +143,7 @@
         <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
+        <attribute name="contentPathPrefix" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalog" auth="true">
@@ -156,6 +159,7 @@
         <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
+        <attribute name="contentPathPrefix" type="String" mode="IN" optional="true"/>
     </service>
     <service name="deleteProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="deleteProdCatalog" auth="true">
@@ -229,6 +233,7 @@
         <attribute name="categoryImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="linkImageUrlOne" type="String" mode="IN" optional="true"/>
         <attribute name="linkImageUrlTwo" type="String" mode="IN" optional="true"/>
+        <attribute name="detailTemplate" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateProductCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="updateProductCategory" auth="true">
@@ -241,6 +246,7 @@
         <attribute name="categoryImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="linkImageUrlOne" type="String" mode="IN" optional="true"/>
         <attribute name="linkImageUrlTwo" type="String" mode="IN" optional="true"/>
+        <attribute name="detailTemplate" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="safeAddProductToCategory" engine="simple"
@@ -868,5 +874,20 @@
         <attribute name="previousProductId" type="String" mode="OUT" optional="true"/>
         <attribute name="nextProductId" type="String" mode="OUT" optional="true"/>
     </service>
-
+    <service name="getProductCategoryAndLimitedMembers" engine="java"
+            location="org.ofbiz.commonapp.product.category.CategoryServices" invoke="getProductCategoryAndLimitedMembers">
+        <description>Gets a productCategory and a Collection of associated productCategoryMembers and calculates limiting parameters</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="defaultViewSize" type="Integer" mode="IN" optional="false"/>
+        <attribute name="limitView" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="viewIndexString" type="String" mode="IN" optional="true"/>
+        <attribute name="viewSizeString" type="String" mode="IN" optional="true"/>
+        <attribute name="productCategory" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
+        <attribute name="productCategoryMembers" type="java.util.Collection" mode="OUT" optional="true"/>
+        <attribute name="viewIndex" type="Integer" mode="OUT" optional="false"/>
+        <attribute name="viewSize" type="Integer" mode="OUT" optional="false"/>
+        <attribute name="lowIndex" type="Integer" mode="OUT" optional="false"/>
+        <attribute name="highIndex" type="Integer" mode="OUT" optional="false"/>
+        <attribute name="listSize" type="Integer" mode="OUT" optional="false"/>
+    </service>
 </services>

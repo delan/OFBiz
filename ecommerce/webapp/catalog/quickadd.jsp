@@ -12,25 +12,27 @@
   Collection quickAddCategories = CatalogWorker.getCatalogQuickaddCategories(pageContext);
   pageContext.setAttribute("quickAddCats", quickAddCategories);
 %>
-<%GenericValue category = null;
-  try { category = delegator.findByPrimaryKeyCache("ProductCategory",UtilMisc.toMap("productCategoryId",categoryId)); }
-  catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); category = null; }
-  if(category != null) pageContext.setAttribute("listingCategory", category);
-%>
-<%CategoryWorker.getRelatedProducts(pageContext,"",categoryId,false,10);%>
+
+<ofbiz:service name='getProductCategoryAndLimitedMembers'>
+    <ofbiz:param name='productCategoryId' value='<%=categoryId%>'/>
+    <ofbiz:param name='defaultViewSize' value='<%=new Integer(10)%>'/>
+    <ofbiz:param name='limitView' value='<%=new Boolean(false)%>'/>
+    <%-- Returns: viewIndex, viewSize, lowIndex, highIndex, listSize, productCategory, productCategoryMembers --%>
+</ofbiz:service>
+<ofbiz:object name='productCategory' type='org.ofbiz.core.entity.GenericValue'/>
 
 <br>
 
-<ofbiz:if name="listingCategory">
+<ofbiz:if name="productCategory">
 <table border='0' width="100%" cellpadding='3' cellspacing='0'>
   <tr>
     <td align=left>
-      <div class="head2"><ofbiz:entityfield attribute="listingCategory" field="description"/></div>
+      <div class="head2"><ofbiz:entityfield attribute="productCategory" field="description"/></div>
     </td>
     <td align=right>
       <form name="choosequickaddform" method="POST" action="<ofbiz:url>/quickadd</ofbiz:url>" style='margin: 0;'>
         <SELECT name='category_id'>
-          <OPTION value='<%=categoryId%>'><ofbiz:entityfield attribute="listingCategory" field="description"/></OPTION>
+          <OPTION value='<%=categoryId%>'><ofbiz:entityfield attribute="productCategory" field="description"/></OPTION>
           <OPTION value='<%=categoryId%>'></OPTION>
           <ofbiz:iterator name="quickAddCatalogId" property="quickAddCats" type="java.lang.String">
             <%GenericValue loopCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", quickAddCatalogId));%>
@@ -43,8 +45,8 @@
       </form>
     </td>
   </tr>
-  <%String categoryImageUrl = category.getString("categoryImageUrl");%>
-  <%String categoryLongDescription = category.getString("longDescription");%>
+  <%String categoryImageUrl = productCategory.getString("categoryImageUrl");%>
+  <%String categoryLongDescription = productCategory.getString("longDescription");%>
   <%if(UtilValidate.isNotEmpty(categoryImageUrl) || UtilValidate.isNotEmpty(categoryLongDescription)) pageContext.setAttribute("showCategoryDetails", "true");%>
   <ofbiz:if name="showCategoryDetails">
     <tr><td colspan='2'><hr class='sepbar'></td></tr>
@@ -62,13 +64,16 @@
 </table>
 </ofbiz:if>
 
-<ofbiz:if name="productList" size="0">
+<ofbiz:if name="productCategoryMembers" size="0">
 <br>
 <center>
 <form method="POST" action="<ofbiz:url>/addtocartbulk</ofbiz:url>" name="bulkaddform" style='margin: 0;'>
   <input type='hidden' name='category_id' value='<%=categoryId%>'>
   <table border='1' width='100%' cellpadding='2' cellspacing='0'>
-    <ofbiz:iterator name="product" property="productList">
+    <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers">
+        <%GenericValue product = productCategoryMember.getRelatedOneCache("Product");%>
+        <%if (product != null) {%>
+            <%pageContext.setAttribute("product", product);%>
         <%-- calculate the "your" price --%>
         <ofbiz:service name='calculateProductPrice'>
             <ofbiz:param name='product' attribute='product'/>
@@ -113,6 +118,7 @@
           <%}%>
         </td>
       </tr>
+      <%}%>
     </ofbiz:iterator>
     <%-- <tr><td colspan="2"><hr class='sepbar'></td></tr> --%>
     <tr>
@@ -125,7 +131,7 @@
 </center>
 </ofbiz:if>
 
-<ofbiz:unless name="productList" size="0">
+<ofbiz:unless name="productCategoryMembers" size="0">
 <table border="0" width="100%" cellpadding="2">
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>

@@ -42,18 +42,18 @@ public class CategoryServices {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         String categoryId = (String) context.get("categoryId");
-        GenericValue category = null;
+        GenericValue productCategory = null;
         Collection members = null;
         try {
-            category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", categoryId));
-            members = EntityUtil.filterByDate(category.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")), true);
-            if (Debug.verboseOn()) Debug.logVerbose("Category: " + category + " Member Size: " + members.size() + " Members: " + members);
+            productCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", categoryId));
+            members = EntityUtil.filterByDate(productCategory.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")), true);
+            if (Debug.verboseOn()) Debug.logVerbose("Category: " + productCategory + " Member Size: " + members.size() + " Members: " + members);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading product categories: " + e.getMessage());
             return result;
         }
-        result.put("category", category);
+        result.put("category", productCategory);
         result.put("categoryMembers", members);
         return result;
     }
@@ -127,5 +127,66 @@ public class CategoryServices {
         return result;
     }
 
-}
+    public static Map getProductCategoryAndLimitedMembers(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String productCategoryId = (String) context.get("productCategoryId");
+        boolean limitView = ((Boolean) context.get("limitView")).booleanValue();
+        int defaultViewSize = ((Integer) context.get("defaultViewSize")).intValue();
 
+        int viewIndex = 0;
+        try {
+            viewIndex = Integer.valueOf((String) context.get("viewIndexString")).intValue();
+        } catch (Exception e) {
+            viewIndex = 0;
+        }
+        int viewSize = defaultViewSize;
+        try {
+            viewSize = Integer.valueOf((String) context.get("viewSizeString")).intValue();
+        } catch (Exception e) {
+            viewSize = defaultViewSize;
+        }
+
+        GenericValue productCategory = null;
+        try {
+            productCategory = delegator.findByPrimaryKeyCache("ProductCategory",UtilMisc.toMap("productCategoryId",productCategoryId));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            productCategory = null;
+        }
+
+        Collection productCategoryMembers = null;
+        if (productCategory != null) {
+            try {
+                productCategoryMembers = EntityUtil.filterByDate(productCategory.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")), true);
+            } catch (GenericEntityException e) {
+                Debug.logError(e);
+            }
+        }
+
+        int lowIndex;
+        int highIndex;
+        int listSize = 0;
+        if (productCategoryMembers != null) {
+            listSize = productCategoryMembers.size();
+        }
+
+        if (limitView) {
+            lowIndex = viewIndex * viewSize + 1;
+            highIndex = (viewIndex + 1) * viewSize;
+            if (listSize < highIndex) highIndex = listSize;
+        } else {
+            lowIndex = 1;
+            highIndex = listSize;
+        }
+
+        Map result = new HashMap();
+        result.put("viewIndex", new Integer(viewIndex));
+        result.put("viewSize", new Integer(viewSize));
+        result.put("lowIndex", new Integer(lowIndex));
+        result.put("highIndex", new Integer(highIndex));
+        result.put("listSize", new Integer(listSize));
+        if (productCategory != null) result.put("productCategory", productCategory);
+        if (productCategoryMembers != null) result.put("productCategoryMembers", productCategoryMembers);
+        return result;
+    }
+}
