@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="titleProperty">PageTitleEditMachine</property>
-    <property name="headerItem">routing</property>   
-    <property name="tabButtonItem">machine</property>
-    <content-action name="/routing/EditMachine.bsh"/> 
-</page>
