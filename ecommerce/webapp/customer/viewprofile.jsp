@@ -196,9 +196,13 @@
               <%}else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))){%>
                 <%GenericValue telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
                   <div class="tabletext">
-                    <%=UtilFormatOut.checkNull(telecomNumber.getString("countryCode"))%>
-                    <%=UtilFormatOut.ifNotEmpty(telecomNumber.getString("areaCode"), "", "-")%><%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>
-                    <%=UtilFormatOut.ifNotEmpty(partyContactMech.getString("extension"), "ext&nbsp;", "")%>
+                    <%if(telecomNumber != null) {%>
+                      <%=UtilFormatOut.checkNull(telecomNumber.getString("countryCode"))%>
+                      <%=UtilFormatOut.ifNotEmpty(telecomNumber.getString("areaCode"), "", "-")%><%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>
+                      <%=UtilFormatOut.ifNotEmpty(partyContactMech.getString("extension"), "ext&nbsp;", "")%>
+                    <%}else{%>
+                      <div class="tabletext">Phone Number Information Not Found</div>
+                    <%}%>
                   </div>
               <%}else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
                   <div class="tabletext">

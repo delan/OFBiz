@@ -92,8 +92,8 @@
         <%}else{ cmNewPurposeTypeId = null; }%>
       <%}%>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-+ donePage%></ofbiz:url>" name="editcontactmechform"> --%>
-        <form method="post" action="<ofbiz:url><%="/updatecontactmech?DONE_PAGE=" + donePage%></ofbiz:url>" name="editcontactmechform">
+        <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
+        <form method="post" action="<ofbiz:url>/updatecontactmech?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcontactmechform">
         <input type=hidden name="CONTACT_MECH_TYPE_ID" value="<%=contactMechTypeId%>">
         <input type=hidden name="UPDATE_MODE" value="CREATE">
         <%=UtilFormatOut.ifNotEmpty(cmNewPurposeTypeId, "<input type='hidden' name='CM_NEW_PURPOSE_TYPE_ID' value='", "'>")%>
@@ -143,8 +143,8 @@
             </table>
           </td>
         </tr>
-+ donePage%></ofbiz:url>" name="editcontactmechform"> --%>
-        <form method="post" action="<ofbiz:url><%="/updatecontactmech?DONE_PAGE=" + donePage%></ofbiz:url>" name="editcontactmechform">
+        <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
+        <form method="post" action="<ofbiz:url>/updatecontactmech?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcontactmechform">
         <input type=hidden name="CONTACT_MECH_ID" value="<%=contactMechId%>">
         <input type=hidden name="UPDATE_MODE" value="UPDATE">
     <%}%>
@@ -211,13 +211,14 @@
   <%}else if("TELECOM_NUMBER".equals(contactMechTypeId)){%>
     <%GenericValue telecomNumber = null;%>
     <%if(contactMech != null) telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
+    <%if(telecomNumber == null) useValues = false;%>
     <tr>
       <td width="26%"><div class="tabletext">Phone Number</div></td>
       <td width="74%">
-          <input type="text" name="CM_COUNTRY_CODE" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("countryCode"):request.getParameter("CM_COUNTRY_CODE"))%>" size="4" maxlength="10">
-          -&nbsp;<input type="text" name="CM_AREA_CODE" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("areaCode"):request.getParameter("CM_AREA_CODE"))%>" size="4" maxlength="10">
-          -&nbsp;<input type="text" name="CM_CONTACT_NUMBER" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("contactNumber"):request.getParameter("CM_CONTACT_NUMBER"))%>" size="15" maxlength="15">
-          &nbsp;ext&nbsp;<input type="text" name="CM_EXTENSION" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("extension"):request.getParameter("CM_EXTENSION"))%>" size="6" maxlength="10">
+        <input type="text" name="CM_COUNTRY_CODE" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("countryCode"):request.getParameter("CM_COUNTRY_CODE"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CM_AREA_CODE" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("areaCode"):request.getParameter("CM_AREA_CODE"))%>" size="4" maxlength="10">
+        -&nbsp;<input type="text" name="CM_CONTACT_NUMBER" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("contactNumber"):request.getParameter("CM_CONTACT_NUMBER"))%>" size="15" maxlength="15">
+        &nbsp;ext&nbsp;<input type="text" name="CM_EXTENSION" value="<%=UtilFormatOut.checkNull(useValues?partyContactMech.getString("extension"):request.getParameter("CM_EXTENSION"))%>" size="6" maxlength="10">
       </td>
     </tr>
     <tr>

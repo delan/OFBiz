@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2001/09/11 00:51:46  jonesde
+ * A few changes to correspond with the moving of the KeywordSearch file, etc.
+ *
  * Revision 1.18  2001/09/06 23:12:49  jonesde
  * Credit Cards and Contact Mechs no longer update if no info has changed, some other things cleaned up too.
  *
@@ -376,6 +379,7 @@ public class CustomerEvents {
       //never change a contact mech, just create a new one with the changes
       GenericValue newContactMech = new GenericValue(contactMech);
       GenericValue newPartyContactMech = new GenericValue(partyContactMech);
+      GenericValue relatedEntityToSet = null;
       
       if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
         String toName = request.getParameter("CM_TO_NAME");
@@ -399,22 +403,21 @@ public class CustomerEvents {
         }
         
         GenericValue addr = helper.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId));
-        GenericValue newAddr = new GenericValue(addr);
-        newAddr.set("toName", toName);
-        newAddr.set("attnName", attnName);
-        newAddr.set("address1", address1);
-        newAddr.set("address2", address2);
-        newAddr.set("directions", directions);
-        newAddr.set("city", city);
-        newAddr.set("postalCode", postalCode);
-        newAddr.set("stateProvinceGeoId", state);
-        newAddr.set("countryGeoId", country);
-        //newAddr.set("postalCodeGeoId", postalCodeGeoId);
-        if(!newAddr.equals(addr)) {
+        relatedEntityToSet = new GenericValue(addr);
+        relatedEntityToSet.set("toName", toName);
+        relatedEntityToSet.set("attnName", attnName);
+        relatedEntityToSet.set("address1", address1);
+        relatedEntityToSet.set("address2", address2);
+        relatedEntityToSet.set("directions", directions);
+        relatedEntityToSet.set("city", city);
+        relatedEntityToSet.set("postalCode", postalCode);
+        relatedEntityToSet.set("stateProvinceGeoId", state);
+        relatedEntityToSet.set("countryGeoId", country);
+        //relatedEntityToSet.set("postalCodeGeoId", postalCodeGeoId);
+        if(!relatedEntityToSet.equals(addr)) {
           isModified = true;
-          newAddr.set("contactMechId", newCmId.toString());
-          partyContactMech.preStoreOther(newAddr);
         }
+        relatedEntityToSet.set("contactMechId", newCmId.toString());
       }
       else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
         String countryCode = request.getParameter("CM_COUNTRY_CODE");
@@ -423,16 +426,15 @@ public class CustomerEvents {
         String extension = request.getParameter("CM_EXTENSION");
 
         GenericValue telNum = helper.findByPrimaryKey("TelecomNumber", UtilMisc.toMap("contactMechId", contactMechId));
-        GenericValue newTelNum = new GenericValue(telNum);
-        newTelNum.set("countryCode", countryCode);
-        newTelNum.set("areaCode", areaCode);
-        newTelNum.set("contactNumber", contactNumber);
+        relatedEntityToSet = new GenericValue(telNum);
+        relatedEntityToSet.set("countryCode", countryCode);
+        relatedEntityToSet.set("areaCode", areaCode);
+        relatedEntityToSet.set("contactNumber", contactNumber);
         
-        if(!newTelNum.equals(telNum)) {
+        if(!relatedEntityToSet.equals(telNum)) {
           isModified = true;
-          newTelNum.set("contactMechId", newCmId.toString());
-          partyContactMech.preStoreOther(newTelNum);
         }
+        relatedEntityToSet.set("contactMechId", newCmId.toString());
         newPartyContactMech.set("extension", extension);
       }
       else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
@@ -460,9 +462,12 @@ public class CustomerEvents {
       partyContactMech.preStoreOther(newPartyContactMech);
 
       if(isModified) {
+        if(relatedEntityToSet != null) partyContactMech.preStoreOther(relatedEntityToSet);
+
         newContactMech.set("contactMechId", newCmId.toString());
         newPartyContactMech.set("contactMechId", newCmId.toString());
         newPartyContactMech.set("fromDate", UtilDateTime.nowTimestamp());
+        newPartyContactMech.set("thruDate", null);
 
         Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
         while(partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
@@ -637,6 +642,7 @@ public class CustomerEvents {
         }
       }
       else {
+        //is CREATE, set values
         newCc.set("creditCardId", newCcId.toString());
         newCc.set("fromDate", UtilDateTime.nowTimestamp());
         isModified = true;
@@ -663,7 +669,8 @@ public class CustomerEvents {
         }
       }
 
-      if(isModified) {        
+      if(isModified) {
+        Debug.logInfo("yes, is modified");
         if(newPartyContactMechPurpose != null) newCc.preStoreOther(newPartyContactMechPurpose);
         if("UPDATE".equals(updateMode)) {
           //if it is an update, set thru date on old card
@@ -678,7 +685,7 @@ public class CustomerEvents {
         }
       }
       else {
-        request.setAttribute("CREDIT_CARD_ID", creditCardInfo.getString("creditCardId"));
+        request.setAttribute("CREDIT_CARD_ID", newCc.getString("creditCardId"));
       }
       
     }
