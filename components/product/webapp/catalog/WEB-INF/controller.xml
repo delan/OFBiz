@@ -337,17 +337,17 @@
     	<response name="success" type="view" value="EditProductKeyword"/>
     </request-map>
     <request-map uri="UpdateProductKeyword"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeyword"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="updateProductKeyword"/>
         <response name="success" type="view" value="EditProductKeyword"/>
         <response name="error" type="view" value="EditProductKeyword"/>
     </request-map>
     <request-map uri="UpdateProductKeywords"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeywords"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="updateProductKeywords"/>
         <response name="success" type="view" value="EditProductKeyword"/>
         <response name="error" type="view" value="EditProductKeyword"/>
     </request-map>
     <request-map uri="UpdateAllKeywords"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAllKeywords"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="updateAllKeywords"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
