@@ -52,8 +52,7 @@
 		// show active visits		
 		visitListIt = delegator.findListIteratorByCondition("Visit", new EntityExpr("thruDate", EntityOperator.EQUALS, null), null, sortList);		
 	}
-	List visitList = visitListIt.getCompleteList();
-	if (visitList != null) pageContext.setAttribute("visitList", visitList);
+
 	String rowClass = "";
 	
     int viewIndex = 0;
@@ -72,6 +71,23 @@
     } catch (Exception e) {
         viewSize = 20;
     }
+    
+    List visitList = new LinkedList();
+    for (int i = 0; i <= ((viewIndex + 1) * viewSize) + 1; i++) {
+    	if (i < viewIndex) {
+    		continue;
+    	} else {
+	    	Object ob = visitListIt.next();
+    		if (ob != null) {
+    			visitList.add(ob);
+	    	} else {
+    			break;
+    		}
+    	}
+    }
+    	  	
+	if (visitList != null) pageContext.setAttribute("visitList", visitList);
+    
     if (visitList != null) {
     	listSize = visitList.size();
     }
