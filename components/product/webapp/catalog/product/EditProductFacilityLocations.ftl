@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.1 $
  *@since      2.2
 -->
 
@@ -29,7 +29,7 @@
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Facilities <span class="head2">for <#if product?exists>${(product.productName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
+    <div class="head1">Facility Locations <span class="head2">for <#if product?exists>${(product.productName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
     
     <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
     <#if productId?exists>
@@ -40,35 +40,38 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>Facility</b></div></td>
-            <td align="center"><div class="tabletext"><b>Minimum&nbsp;Stock&nbsp;&amp;&nbsp;Reorder&nbsp;Quantity&nbsp;&amp;&nbsp;Days To Ship</b></div></td>
+            <td><div class="tabletext"><b>Location</b></div></td>
+            <td align="center"><div class="tabletext"><b>Minimum&nbsp;Stock&nbsp;&amp;&nbsp;Move&nbsp;Quantity</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
-        <#list productFacilities as productFacility>
-	        <#assign facility = productFacility.getRelatedOneCache("Facility")>
+        <#list productFacilityLocations as productFacilityLocation>
+	        <#assign facility = productFacilityLocation.getRelatedOneCache("Facility")>
+	        <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation")?if_exists>
+	        <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
 	        <tr valign="middle">
-	            <td><div class="tabletext"><#if facility?exists>${facility.facilityName}<#else>[${productFacility.facilityId}]</#if></div></td>
+	            <td><div class="tabletext"><#if facility?exists>${facility.facilityName}<#else>[${productFacilityLocation.facilityId}]</#if></div></td>
+	            <td><div class="tabletext"><#if facilityLocation?exists>${facilityLocation.areaId}:${facilityLocation.aisleId}:${facilityLocation.sectionId}:${facilityLocation.levelId}:${facilityLocation.positionId}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</div></td>
 	            <td align="center">
-	                <FORM method=POST action="<@ofbizUrl>/updateProductFacility</@ofbizUrl>" name="lineForm${productFacility_index}">
-	                    <input type=hidden name="productId" value="${(productFacility.productId)?if_exists}">
-	                    <input type=hidden name="facilityId" value="${(productFacility.facilityId)?if_exists}">
-	                    <input type=text size="10" name="minimumStock" value="${(productFacility.minimumStock)?if_exists}" class="inputBox">
-	                    <input type=text size="10" name="reorderQuantity" value="${(productFacility.reorderQuantity)?if_exists}" class="inputBox">
-	                    <input type=text size="10" name="daysToShip" value="${(productFacility.daysToShip)?if_exists}" class="inputBox">
+	                <FORM method=POST action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
+	                    <input type=hidden name="productId" value="${(productFacilityLocation.productId)?if_exists}">
+	                    <input type=hidden name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}">
+	                    <input type=hidden name="locationSeqId" value="${(productFacilityLocation.facilityId)?if_exists}">
+	                    <input type=text size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)?if_exists}" class="inputBox">
+	                    <input type=text size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)?if_exists}" class="inputBox">
 	                    <INPUT type=submit value="Update" style="font-size: x-small;">
 	                </FORM>
 	            </td>
 	            <td align="center">
-	            <a href="<@ofbizUrl>/deleteProductFacility?productId=${(productFacility.productId)?if_exists}&facilityId=${(productFacility.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">
+	            <a href="<@ofbizUrl>/deleteProductFacilityLocation?productId=${(productFacilityLocation.productId)?if_exists}&facilityId=${(productFacilityLocation.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">
 	            [Delete]</a>
 	            </td>
 	        </tr>
         </#list>
         </table>
         <br>
-        <form method="POST" action="<@ofbizUrl>/createProductFacility</@ofbizUrl>" style="margin: 0;" name="createProductFacilityForm">
+        <form method="POST" action="<@ofbizUrl>/createProductFacilityLocation</@ofbizUrl>" style="margin: 0;" name="createProductFacilityLocationForm">
             <input type="hidden" name="productId" value="${productId?if_exists}">
             <input type="hidden" name="useValues" value="true">
-        
             <div class="head2">Add Facility:</div>
             <div class="tabletext">
                 Facility:
@@ -77,12 +80,11 @@ ${pages.get("/product/ProductTabBar.ftl")}
                         <option value="${(facility.facilityId)?if_exists}">${(facility.facilityName)?if_exists}</option>
                     </#list>
                 </select>
+                Location Seq ID:&nbsp;<input type=text size="10" name="locationSeqId" class="inputBox">
                 Minimum&nbsp;Stock:&nbsp;<input type=text size="10" name="minimumStock" class="inputBox">
-                Reorder&nbsp;Quantity:&nbsp;<input type=text size="10" name="reorderQuantity" class="inputBox">
-                Days&nbsp;To&nbsp;Ship:&nbsp;<input type=text size="10" name="daysToShip" class="inputBox">
+                Move&nbsp;Quantity:&nbsp;<input type=text size="10" name="moveQuantity" class="inputBox">
                 <input type="submit" value="Add" style="font-size: x-small;">
             </div>
-        
         </form>
     </#if>    
 <#else>
