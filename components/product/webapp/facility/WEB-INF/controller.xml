@@ -538,9 +538,15 @@
     <request-map uri="quickUpsConfirm">
     	<security https="true" auth="true" direct-request="false"/>
     	<event type="service" path="" invoke="upsShipmentConfirm"/>
+        <response name="success" type="request" value="quickUpsAccept"/>
+        <response name="error" type="view" value="QuickShipOrder"/>
+    </request-map>
+    <request-map uri="quickUpsAccept">
+    	<security https="true" auth="true"/>
+        <event type="service" path="" invoke="upsShipmentAccept"/>
         <response name="success" type="view" value="QuickShipOrder"/>
         <response name="error" type="view" value="QuickShipOrder"/>
-    </request-map>              	
+    </request-map>                 	
 
     <!-- ================ Shipment Items Requests ================= -->
     <request-map uri="EditShipmentItems">

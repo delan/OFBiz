@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 
@@ -35,6 +35,7 @@ function setWeight(weight) {
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
   <div class="head1">Quick Ship Order From <span class='head2'>${facility.facilityName?if_exists} [ID:${facilityId?if_exists}]</span></div>
+  <a href="<@ofbizUrl>/quickShipOrder?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[Next Shipment]</a>
   <#if shipment?has_content>
     <a href="<@ofbizUrl>/EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">[Edit Shipment]</a>
   </#if>
@@ -53,7 +54,7 @@ function setWeight(weight) {
           <#if 1 < shipmentRoutes.size()>
             <#-- multiple routes -->
             <div class="tabletext"><font color="red">More then one route segment found. You must ship this manually.</font></div>
-          <#else>
+          <#elseif !requestParameters.shipmentRouteSegmentId?exists || requestAttributes._ERROR_MESSAGE_?exists>
             <form name="routeForm" method="post" action="<@ofbizUrl>/setQuickRouteInfo</@ofbizUrl>" style='margin: 0;'>
               <#assign shipmentRoute = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRoutes))?if_exists>
               <#assign carrierPerson = (shipmentRoute.getRelatedOne("CarrierPerson"))?if_exists>
@@ -122,7 +123,14 @@ function setWeight(weight) {
             <!-- //
               document.routeForm.carrierPartyId.focus();
             // -->
-            </script>              
+            </script>
+          <#else>
+            <#-- display the links for label/packing slip -->
+            <#assign allDone = "yes">
+            <center>
+              <a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId&shipmentPackageSeqId=00001}</@ofbizUrl>" target="_blank" class="buttontext">Shipping Label</a><br>
+              <a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="buttontext">Packing Slip</a>
+            </center>                
           </#if>
         <#else>
           <form name="weightForm" method="post" action="<@ofbizUrl>/setQuickPackageWeight</@ofbizUrl>" style='margin: 0;'>
@@ -174,6 +182,9 @@ function setWeight(weight) {
       ${pages.get("/shipment/ViewShipmentInfo.ftl")}         
       <br>${pages.get("/shipment/ViewShipmentItemInfo.ftl")}
       <br>${pages.get("/shipment/ViewShipmentPackageInfo.ftl")}
+      <#if allDone?default("no") == "yes">
+        <br>${pages.get("/shipment/ViewShipmentRouteInfo.ftl")}
+      </#if>
     </#if>
   <#else>
     <form name="selectOrderForm" method="post" action="<@ofbizUrl>/createQuickShipment</@ofbizUrl>" style='margin: 0;'>
