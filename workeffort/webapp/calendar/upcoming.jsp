@@ -62,7 +62,7 @@
         <tr>
           <td>
             <ofbiz:if name="days" size="0">
-              <ofbiz:iterator name="workEfforts" property="days">
+              <ofbiz:iterator name="workEfforts" property="days" type="java.util.List">
                 <ofbiz:iterator name="workEffort" property="workEfforts">
                   <DIV class='tabletext'>
                     <ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/> -
