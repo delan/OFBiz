@@ -102,11 +102,11 @@
 %>
 
 <p class="head1">Order #<%=orderHeader.getString("orderId")%> Information</p>
-  <table border="1" width="100%" cellpadding="1" cellspacing="0">
-    <tr valign="top" bgcolor="<%=bColorA2%>">
-      <td><div class="tabletext"><b>Person Username</b></div></td>
+  <table border="0" width="100%" cellpadding="1" cellspacing="2">
+    <tr valign="top" bgcolor="<%=bColorA1%>">
+      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Person Username</b></div></td>
       <td>
-        <div class="tabletext">
+        <div class="tabletext">&nbsp;
           <%GenericValue userPerson = userLogin.getRelatedOne("Person");%>
           <%=UtilFormatOut.checkNull(userLogin.getString("userLoginId"))%>
           <%if(userPerson!=null){%>
@@ -116,19 +116,19 @@
       </td>
     </tr>
     <tr valign="top" bgcolor="<%=bColorA2%>">
-      <td><div class="tabletext"><b>Order Status</b></div></td>
-      <td><div class="tabletext"><%=order.getStatusString()%></div></td>
+      <td><div class="tabletext"><b>&nbsp;Order Status</b></div></td>
+      <td><div class="tabletext">&nbsp;<%=order.getStatusString()%></div></td>
     </tr>
     <tr valign="top" bgcolor="<%=bColorA1%>">
-      <td><div class="tabletext"><b>Date Created</b></div></td>
+      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Date Created</b></div></td>
       <td>
-        <div class="tabletext">
+        <div class="tabletext">&nbsp;
           <%=UtilDateTime.toDateTimeString(orderHeader.getTimestamp("orderDate"))%>
         </div>
       </td>
     </tr>
     <tr valign="top" bgcolor="<%=bColorA2%>">
-      <td><div class="tabletext"><b>Desired Ship Date</b></div></td>
+      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Desired Ship Date</b></div></td>
 
     <%
       String dsDateString = null;
@@ -151,26 +151,26 @@
             }
         }//else no OrderShipment
     %>
-      <td><div class="tabletext"><%=UtilFormatOut.checkNull(dsDateString)%> <%=UtilFormatOut.checkNull(dsTimeString)%></div></td>
+      <td><div class="tabletext">&nbsp;<%=UtilFormatOut.checkNull(dsDateString)%> <%=UtilFormatOut.checkNull(dsTimeString)%></div></td>
     </tr>
 <%--    <tr valign="top" bgcolor="<%=bColorA1%>">
       <td><div class="tabletext"><b>Splitting Preference</b></div></td>
       <td><div class="tabletext"><%=UtilFormatOut.checkNull(orderHeader.getSplittingPreference())%></div></td>
     </tr> --%>
-    <tr valign="top" bgcolor="<%=bColorA2%>">
-      <td><div class="tabletext"><b>Handling Instructions</b></div></td>
-      <td><div class="tabletext"><%=UtilFormatOut.checkNull(shipmentInstructions)%></div></td>
-    </tr>
     <tr valign="top" bgcolor="<%=bColorA1%>">
-      <td><div class="tabletext"><b>Shipping Method</b></div></td>
+      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Handling Instructions</b></div></td>
+      <td><div class="tabletext">&nbsp;<%=UtilFormatOut.checkNull(shipmentInstructions)%></div></td>
+    </tr>
+    <tr valign="top" bgcolor="<%=bColorA2%>">
+      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Shipping Method</b></div></td>
       <td>
-        <div class="tabletext">
+        <div class="tabletext">&nbsp;
           <%=UtilFormatOut.checkNull(shipmentTypeId)%>
         </div>
       </td>
     </tr>
-    <tr valign="top" bgcolor="<%=bColorA2%>">
-      <td valign="top"><div class="tabletext"><b>Shipping Address</b></div></td>
+    <tr valign="top" bgcolor="<%=bColorA1%>">
+      <td valign="top" width='1%' nowrap><div class="tabletext"><b>&nbsp;Shipping Address</b></div></td>
       <td valign="top">
         <div class="tabletext">
         <% if(shippingAddress != null) { %>
@@ -187,8 +187,8 @@
         </div>
       </td>
     </tr>
-    <tr valign="top" bgcolor="<%=bColorA1%>">
-      <td valign="top"><div class="tabletext"><b>Payment Info</b></div></td>
+    <tr valign="top" bgcolor="<%=bColorA2%>">
+      <td valign="top" width='1%' nowrap><div class="tabletext"><b>&nbsp;Payment Info</b></div></td>
       <td valign="top">
         <div class="tabletext">
           <% GenericValue billToPerson = order.getBillToPerson();
@@ -248,8 +248,8 @@
       <td width="1"><div class="button" nowrap><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Back to Order History</a></div></td>
       <td align="right">
         <table border="0" cellspacing="0" cellpadding="0"><tr>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttonlink">Add All to Cart</a></div></td>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="buttonlink">Add Checked to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttontext">Add All to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="buttontext">Add Checked to Cart</a></div></td>
         </tr></table>
       </td>
     </tr></table>
@@ -273,10 +273,10 @@
         </td>
       <%}else{%>
         <td>
-          <a href="<ofbiz:url><%="/details?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="itemlink"><%=orderItem.getString("productId")%></a>
+          <a href="<ofbiz:url><%="/details?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="buttontext"><%=orderItem.getString("productId")%></a>
         </td>
         <td>
-          <a href="<ofbiz:url><%="/details?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="itemlink"><%=orderItem.getString("itemDescription")%></a>
+          <a href="<ofbiz:url><%="/details?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="buttontext"><%=orderItem.getString("itemDescription")%></a>
         </td>
         <td align="right">
             <div nowrap>
@@ -354,22 +354,22 @@
   <tr><td><font color="red">ERROR: Sales Order lookup failed.</font></td></tr> --%>
 </table>
 
-<% } //end if customerId matches %>
-<% } //end if orderHeader null %>
+<%} //end if customerId matches %>
+<%} //end if orderHeader null %>
 
   <table border="0" cellpadding="1" width="100%"><tr><td>
     <table border="0" cellspacing="0" cellpadding="2" width="100%"><tr>
       <td width="1"><div class="button" nowrap><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Back to Order History</a></div></td>
       <td align="right">
         <table border="0" cellspacing="0" cellpadding="0"><tr>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttonlink">Add All to Cart</a></div></td>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="buttonlink">Add Checked to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttontext">Add All to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="buttontext">Add Checked to Cart</a></div></td>
         </tr></table>
       </td>
     </tr></table>
   </td></tr></table>
 
-<%@ include file="/includes/onecolumnclose.jsp" %>
+<%@ include file="/includes/rightcolumn.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
 
 

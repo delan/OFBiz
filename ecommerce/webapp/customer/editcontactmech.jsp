@@ -236,7 +236,7 @@
       <td width="26%"><div class="tabletext">Allow Solicitation?</div></td>
       <td width="74%">
         <select name="CM_ALLOW_SOL">
-          <option><%=UtilFormatOut.checkNull(useValues?contactMech.getString("allowSolicitation"):request.getParameter("CM_ADDRESS_ALLOW_SOL"), "Y")%></option>
+          <option><%=UtilFormatOut.checkNull(useValues?partyContactMech.getString("allowSolicitation"):request.getParameter("CM_ADDRESS_ALLOW_SOL"), "Y")%></option>
           <option></option><option>Y</option><option>N</option>
         </select>
       </td>

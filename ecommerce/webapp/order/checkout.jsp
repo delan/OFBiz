@@ -64,7 +64,7 @@
 <ofbiz:unless name="shippingAddress">
   <h3>ERROR: Shipping address must be specified, please go back or start over.</h3>
 </ofbiz:unless>
-<ofbiz:if name="shippingAddresss">
+<ofbiz:if name="shippingAddress">
 <table width="100%" cellpadding="3" cellspacing="0" border="0">
   <%-- row to set cell widths --%>
   <tr>
@@ -84,8 +84,8 @@
         <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getRelatedOne("StateProvinceGeo").getString("name"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getRelatedOne("CountryGeo").getString("name"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
       </div>
     </td>
   </tr>
@@ -123,56 +123,34 @@
         </div>
     </td>
   </tr> --%>
-<%-- <ofbiz:if name="customerPaymentType" value="STORE_CREDIT">
       <tr>
         <td align="left" colspan="5"><div class="head2">Payment Information</div></td>
       </tr>
       <tr>
         <td>&nbsp;</td>
-        <td align="left">
-            <div class="tabletext"><b>Store Credit</b></div>
-        </td>
-      </tr>
-</ofbiz:if> --%> 
-<ofbiz:if name="billingAddress">
-      <tr>
-        <td align="left" colspan="5"><div class="head2">Payment Information</div></td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td align="left">
-            <div class="tabletext"><b>Purchase Order Number: <%=UtilFormatOut.checkNull(customerPoNumber)%></b></div>
-        </td>
-      </tr>
-</ofbiz:if>
+        <td align="left" valign="top" nowrap>
 <ofbiz:if name="creditCardInfo"> 
-          <tr>
-            <td align="left" colspan="5"><div class="head2">Payment Information</div></td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td align="left" valign="top" nowrap>
-              <div class="tabletext">
-                <b>Name on Card:</b> <%=creditCardInfo.getString("nameOnCard")%><br>
-                <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-                <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-                <%=UtilFormatOut.checkNull(billingAddress.getString("address1"))%><br>
-                <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("address2"),  "", "<br>")%>
-                <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("city"), "", "<br>")%>
-                <%=UtilFormatOut.checkNull(billingAddress.getRelatedOne("StateProvinceGeo").getString("name"))%> &nbsp; <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
-                <%=UtilFormatOut.ifNotEmpty(billingAddress.getRelatedOne("CountryGeo").getString("name"), "", "")%>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>&nbsp;</td>
-            <td align="left">
-                <div class="tabletext"><b><%=creditCardInfo.getString("cardType")%>: <%=creditCardInfo.getString("cardNumber").substring(creditCardInfo.getString("cardNumber").length()-4)%> <%=creditCardInfo.getString("expireDate")%></b></div>
-            </td>
-          </tr>
+        <div class="tabletext">
+          <b>Name on Card:</b> <%=creditCardInfo.getString("nameOnCard")%><br>
+        </div>
+        <div class="tabletext"><b><%=creditCardInfo.getString("cardType")%>: <%=creditCardInfo.getString("cardNumber").substring(creditCardInfo.getString("cardNumber").length()-4)%> <%=creditCardInfo.getString("expireDate")%></b></div>
 </ofbiz:if>
-</ofbiz:if> <%-- shippingAddress --%>
+<ofbiz:if name="billingAddress">
+        <div class="tabletext"><b>Purchase Order Number: <%=UtilFormatOut.checkNull(customerPoNumber)%></b></div>
+        <div class="tabletext">
+          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+          <%=UtilFormatOut.checkNull(billingAddress.getString("address1"))%><br>
+          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("address2"),  "", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("city"), "", "<br>")%>
+          <%=UtilFormatOut.checkNull(billingAddress.getString("stateProvinceGeoId"))%> &nbsp; <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
+          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("countryGeoId"), "", "")%>
+        </div>
+</ofbiz:if>
+        </td>
+      </tr>
 </table>
+</ofbiz:if> <%-- shippingAddress --%>
 <%-- table for shoppingcartline items --%>
   <table border="0" cellpadding="1" width="100%">
     <%-- use this row to set the widths on all the columns --%>
@@ -284,9 +262,9 @@
     </tr>
    <tr>
       <td colspan="4" align="left">
-      <a href="<ofbiz:url><%=prevPage%></ofbiz:url>" class="buttonlinkbig">&nbsp;[Back]</a></td>
+      <a href="<ofbiz:url><%=prevPage%></ofbiz:url>" class="buttontextbig">&nbsp;[Back]</a></td>
       <td align="right">
-        <a href="<ofbiz:url>/createorder</ofbiz:url>" class="buttonlinkbig">[Submit&nbsp;Order]&nbsp;</a>
+        <a href="<ofbiz:url>/createorder</ofbiz:url>" class="buttontextbig">[Submit&nbsp;Order]&nbsp;</a>
       </td>
     </tr>
   </table>

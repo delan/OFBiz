@@ -14,6 +14,8 @@
   A.buttontext:hover {color: red;}
   A.lightbuttontext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: yellow;}
   A.lightbuttontext:hover {color: red;}
+  A.buttontextbig {font-family: Helvetica,sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: blue; }
+  A.buttontextbig:hover {color: red;}
 
   .ontab {FONT-SIZE: 10pt; background-color: black; padding: 2; border-style: inset; border-width: 3;}
   a.onlnk {FONT-SIZE: 10pt; FONT: bold; COLOR: white; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2;}

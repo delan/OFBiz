@@ -81,7 +81,7 @@
       Enter account code here, or ship freight collect: <input size="25" type="text" name="SHIPPING_ACCOUNT" value="">
       </td>
     </tr --%>
-<%--    <tr>
+    <tr>
       <td colspan="2">
         <hr size="1">
       </td>
@@ -93,7 +93,7 @@
     </tr>
     <tr>
       <td valign="top">
-        <input CHECKED type="radio" name="<%=HttpRequestConstants.SPLITTING_PREFERENCE_CODE%>" value="<%=HttpRequestConstants.SPLITTING_PREFERENCE_NO_SPLIT_CODE%>">
+        <input CHECKED type="radio" name="SPLITTING_PREFERENCE_CODE" value="NO_SPLIT">
       </td>
       <td valign="top">
         <div class="tabletext">Please wait until the entire order is ready before shipping.</div>
@@ -101,7 +101,7 @@
     </tr>
     <tr>
       <td valign="top">
-        <input type="radio" name="<%=HttpRequestConstants.SPLITTING_PREFERENCE_CODE%>" value="<%=HttpRequestConstants.SPLITTING_PREFERENCE_SPLIT_CODE%>">
+        <input type="radio" name="SPLITTING_PREFERENCE_CODE" value="SPLIT">
       </td>
       <td valign="top">
         <div class="tabletext">Please ship items I ordered as they become available (you may incur additional shipping charges).</div>
@@ -111,7 +111,7 @@
       <td colspan="2">
         <hr size="1">
       </td>
-    </tr>  --%>
+    </tr>
     <tr>
       <td colspan="2">
         <div class="head2"><b>Special Instructions</b></div>
@@ -144,10 +144,10 @@
           </ofbiz:iterator>
           </b>
         </div>
-        <div class="tabletext">Your may update these in your <a href="<ofbiz:url>/viewprofile?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">profile</a>.</div>
+        <div class="tabletext">Your may update these in your <a href="<ofbiz:url>/viewprofile?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">profile</a>.</div>
         <br>
         <div class="tabletext">You may add other comma separated email addresses here that will be used only for the current order:</div>
-        <input type="text" size="38" name="order_additional_emails" value="<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getOrderAdditionalEmails())%></ofbiz:if>">
+        <input type="text" size="38" name="order_additional_emails" value='<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getOrderAdditionalEmails())%></ofbiz:if>'>
       </td>
     </tr>
   </table>
@@ -166,41 +166,43 @@
 
 <div class="head2" nowrap><b>Where shall WE ship it?</b></div>
 
-  <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">[Add New Address]</a>
+  <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a>
  <ofbiz:if name="shippingPartyContactPurposeList" size="0">
   <table width="90%" border="0" cellpadding="0" cellspacing="0">
     <tr>
       <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
     </tr>
     <ofbiz:iterator name="shippingPartyContactPurpose" property="shippingPartyContactPurposeList">
-    <%GenericValue shippingLocation = shippingPartyContactPurpose.getRelatedOne("PartyContactMech")
-            .getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
-      pageContext.setAttribute("shippingLocation", shippingLocation);%>
-    <ofbiz:if name="shippingLocation">
-    <tr>
-      <td align="left" valign="top" width="1%" nowrap>
-          <%String shippingContactMechId = (String) shippingLocation.get("contactMechId");%>
-          <input type="radio" name="shipping_contact_mech_id" value="<%=shippingContactMechId%>"
-            <ofbiz:if name="cart"><%=shippingContactMechId.equals(cart.getShippingContactMechId()) ? "CHECKED" : ""%></ofbiz:if>>
-      </td>
-      <td align="left" valign="top" width="99%" nowrap>
-        <div class="tabletext">
-        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("toName"), "<b>To:</b> ", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("address1"), "", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("address2"), "", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("city"), "", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingLocation.getString("postalCode"))%><br>
-        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("countryGeoId"), "", "<br>")%>
-<%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingLocation.getAddressId()%></ofbiz:url>" class="buttonlink">[Update]</a>
-          <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingLocation.getAddressId()%></ofbiz:url>" class="buttonlink">[Delete]</a>--%>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
-    </tr>
-    </ofbiz:if>
+    <%GenericValue partyContactMech = shippingPartyContactPurpose.getRelatedOne("PartyContactMech");%>
+    <%GenericValue shippingLocation = partyContactMech.getRelatedOne("ContactMech").getRelatedOne("PostalAddress");%>
+    <%pageContext.setAttribute("shippingLocation", shippingLocation);%>
+    <%if(partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date())) {%>
+      <ofbiz:if name="shippingLocation">
+      <tr>
+        <td align="left" valign="top" width="1%" nowrap>
+            <%String shippingContactMechId = (String) shippingLocation.get("contactMechId");%>
+            <input type="radio" name="shipping_contact_mech_id" value="<%=shippingContactMechId%>"
+              <ofbiz:if name="cart"><%=shippingContactMechId.equals(cart.getShippingContactMechId()) ? "CHECKED" : ""%></ofbiz:if>>
+        </td>
+        <td align="left" valign="top" width="99%" nowrap>
+          <div class="tabletext">
+          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("toName"), "<b>To:</b> ", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("address1"), "", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("address2"), "", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("city"), "", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingLocation.getString("postalCode"))%><br>
+          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("countryGeoId"), "", "<br>")%>
+  <%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Update]</a>
+            <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Delete]</a>--%>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
+      </tr>
+      </ofbiz:if>
+    <%}%>
   </ofbiz:iterator>
   </table>
  </ofbiz:if>
@@ -218,34 +220,36 @@
 
 <div class="head2" nowrap><b>How shall YOU pay?</b></div>
 <%-- the add new credit card buttons --%>
-<a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">[Add Credit Card]</a>
+<a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add Credit Card]</a>
 
 <ofbiz:if name="creditCardInfoList" size="0"> 
 <table width="90%" cellpadding="1" cellspacing="0" border="0">
   <tr>
-    <td colspan="3"><hr size="1"></td>
+    <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
   </tr>
-    <ofbiz:iterator name="creditCardInfo" property="creditCardInfoList">
-  <tr>
-    <td width="1%" nowrap>
-      <%String creditCardId = creditCardInfo.getString("creditCardId");%>
-      <input type="radio" name="payment_code" value="ccard:<%=creditCardId%>"
-        <ofbiz:if name="cart"><%=creditCardId.equals(cart.getCreditCardId()) ? "CHECKED" : ""%></ofbiz:if>>
-    </td>
-    <td width="50%" nowrap>
-      <span class="tabletext">
-        <%=creditCardInfo.getString("cardType")%>
-        <%String cardNumber = creditCardInfo.getString("cardNumber");
-          if(cardNumber != null && cardNumber.length() > 4) {%> <%=cardNumber.substring(cardNumber.length()-4)%>  <% } %>
-        <%=creditCardInfo.getString("expireDate")%>
-      </span>
-        <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions&CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttonlink">[Update]</a>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="3" height="1" bgcolor="888888"></td>
-  </tr>
-</ofbiz:iterator>
+  <ofbiz:iterator name="creditCardInfo" property="creditCardInfoList">
+    <%if(creditCardInfo.get("thruDate") == null || creditCardInfo.getTimestamp("thruDate").after(new java.util.Date())) {%>
+      <tr>
+        <td width="1%" nowrap>
+          <%String creditCardId = creditCardInfo.getString("creditCardId");%>
+          <input type="radio" name="payment_code" value="ccard:<%=creditCardId%>"
+            <ofbiz:if name="cart"><%=creditCardId.equals(cart.getCreditCardId()) ? "CHECKED" : ""%></ofbiz:if>>
+        </td>
+        <td width="50%" nowrap>
+          <span class="tabletext">
+            <%=creditCardInfo.getString("cardType")%>
+            <%String cardNumber = creditCardInfo.getString("cardNumber");%>
+            <%if(cardNumber != null && cardNumber.length() > 4) {%> <%=cardNumber.substring(cardNumber.length()-4)%>  <% } %>
+            <%=creditCardInfo.getString("expireDate")%>
+          </span>
+            <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions&CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">[Update]</a>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" height="1" bgcolor="888888"></td>
+      </tr>
+    <%}%>
+  </ofbiz:iterator>
 </table>
 </ofbiz:if>
 <ofbiz:unless name="creditCardInfoList" size="0">
@@ -285,8 +289,8 @@
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("city"), "", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(billingLocation.getString("postalCode"))%><br>
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("countryGeoId"), "", "<br>")%>
-<!--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttonlink">[Update]</a>
-          <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttonlink">[Delete]</a>-->
+<!--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Update]</a>
+          <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Delete]</a>-->
         </div>
       </td>
     </tr>
@@ -297,7 +301,7 @@
   </ofbiz:iterator>
   </table>
  </ofbiz:if>
-  <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=BILLING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">[Add New Address]</a>
+  <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=BILLING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a>
 --%>
 
 </td>
@@ -308,16 +312,11 @@
 <table width="100%">
 <tr valign="top">
 <td align="left">
-&nbsp;<a href="<ofbiz:url>/shoppingcart</ofbiz:url>" class="buttonlinkbig">[Back to Shopping Cart]</a>
+&nbsp;<a href="<ofbiz:url>/shoppingcart</ofbiz:url>" class="buttontextbig">[Back to Shopping Cart]</a>
 </td>
 <td align="right">
-<a href="javascript:document.checkoutInfoForm.submit()" class="buttonlinkbig">[Continue to Final Order Review]</a>
+<a href="javascript:document.checkoutInfoForm.submit()" class="buttontextbig">[Continue to Final Order Review]</a>
 </td>
 </tr>
 </table>
 <%@ include file="/includes/footer.jsp" %>
-
-
-
-
-
