@@ -43,17 +43,15 @@ distribution and following some simple instructions. For more
 options and explanations, see the rest of this document.</p>
 <ol>
   <li>Download and install the Java 2 v1.3 or later JDK (not the JRE) from <a href='java.sun.com'>Sun's Java site</a>, and make sure your JAVA_HOME environment variable is set</li>
-  <li>Download the OFBiz Complete archive and unzip it in the directory of your choice.
-    This should create three directories: <b>ofbiz</b>,
-    <b>data</b>, &amp; <b>catalina</b> (note that &quot;catalina&quot; is the code name, and
-    semi-official name, for Jakarta Tomcat 4.0). The ofbiz directory created will be the OFBIZ_HOME.</li>
-  <li>Start Catalina by going into the <b>catalina/bin</b> directory and then running
-    <b>&quot;ofbiz.bat run&quot;</b> for Windows,
-    or <b>&quot;./ofbiz.sh run&quot;</b> for Linux/Unix.</li>
+  <li>Download the OFBiz Apps archive and unzip it in the directory of your choice.
+    This should create one sub-directory: <b>ofbiz</b>. This will be the OFBIZ_HOME location.</li>
+  <li>Start OFBiz with embedded Jetty by going into the <b>ofbiz</b> directory and then running
+    <b>&quot;%JAVA_HOME%\bin\java -jar ofbiz.jar&quot;</b> for Windows,
+    or <b>&quot;$JAVA_HOME/bin/java -jar ofbiz.jar&quot;</b> for Linux/Unix.</li>
   <li>Open a browser and go to <b><a href='http://127.0.0.1:8080/ecommerce'>http://127.0.0.1:8080/ecommerce</a></b> for the ecommerce application or
       <b><a href='http://127.0.0.1:8080/webtools'>http://127.0.0.1:8080/webtools</a></b> for the WebTools application or
       <b><a href='http://127.0.0.1:8080/catalog'>http://127.0.0.1:8080/catalog</a></b> for the Catalog Manager application.</li>
-  <li>Have fun with it! You are running on a Java database, which isn't the best for development or deployment, but it's great for a demo...</li>
+  <li>Have fun with it! You are running on a Java database, which isn't the best for deployment, but it's great for a demo...</li>
   <li>For more detailed options and configuration information, read on!</li>
 </ol>
 
@@ -66,42 +64,39 @@ options and explanations, see the rest of this document.</p>
 as is expected for a Java application.</p>
 
 <p>Open For Business can be run with either a simple servlet engine alone (like
-Tomcat) or with a full J2EE container (like Weblogic or JBoss &amp; Tomcat together). 
+Tomcat) or with a full J2EE container (like Orion or JBoss &amp; Jetty together). 
 A full J2EE application server is also useful for services other than the basic
 EJB container, such as JNDI, connection pooling, transaction management,
 various resource and configuration management conveniences and so forth. Many
 other J2EE application servers are available for these sorts of features, and
 Open For Business should be easily adaptable to various ones.</p>
 
-<p>Tomcat 4.1 is the current default application server for Open For Business.
-JTA (distributed transaction) support is currently done with Tyrex from Exolab, 
+<p>Jetty is the current default application server for Open For Business.
+JTA (distributed transaction) support is currently done with JOTM, 
 but could also be provided by JBoss or another J2EE application server.</p>
 
-<p>Tomcat can be downloaded at <a href="http://jakarta.apache.org/site/binindex.html">jakarta.apache.org/site/binindex.html</a>,
-and you will generally want the latest version of the Tomcat 4
-series. The latest version of OFBiz has been tested on Tomcat 4.1.18. If
+<p>Jetty can be downloaded at <a href="http://jetty.mortbay.com">jetty.mortbay.com</a>,
+and you will generally want the latest version of the Jetty 4
+series. The latest version of OFBiz has been tested on Jetty 4.2.9. If
 you download an OFBiz package with these included, you of course don't need to
-download them again, and you don't have to worry about copying the configuration
-files later on. It should run in place, as is.</p>
+download them again. It should run in place, as is.</p>
 <p>You can download JBoss, a complete J2EE application server from <a href="http://sf.net/projects/jboss" target="_blank">sf.net/projects/jboss</a>,
 you will generally want the most recent version. </p>
 
 <p>Things will be much easier if you have Ant installed, which can also be
 downloaded from the <a href="http://jakarta.apache.org/site/binindex.html">jakarta.apache.org</a> site listed above.
 Instructions are available on the Ant site for installing the
-application. Just make sure that 'ant' is on the system path and can be run from
+application. Just make sure that 'ant' is on the system execution path and can be run from
 the command line.</p>
 
-<p>To run the Ant scripts, and Tomcat, make sure the various
-environment variables are set as described below (JAVA_HOME, ANT_HOME, CATALINA_HOME, and
-yes, even OFBIZ_HOME).</p>
+<p>To run the Ant scripts, and Jetty, make sure the various
+environment variables are set as described below.</p>
 
 <hr>
 <h3><a name="Paths">Paths</a></h3>
 <hr>
 <p>The last step is to make sure the directories are correct, especially the JDK path. This is
-done by making sure the various environment variables are set (JAVA_HOME,
-ANT_HOME, CATALINA_HOME, OFBIZ_HOME). These directories
+done by making sure the various environment variables are set. These directories
 are setup as follows:</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
@@ -110,121 +105,56 @@ are setup as follows:</p>
     <td><b>Example</b></td>
     <td><b>Description</b></td>
   </tr>
-  <tr><td>JAVA_HOME</td><td>/usr/local/java or c:\jdk1.3.1_02</td>
+  <tr><td>JAVA_HOME</td><td>/usr/local/java or c:\jdk1.4.1_02</td>
     <td>where the Java 2 SDK is installed</td></tr>
   <tr><td>ANT_HOME</td><td>/usr/local/ant or c:\tools\ant</td>
-    <td>where Ant is installed, should contain bin, docs, lib, etc</td></tr>
-  <tr><td>CATALINA_HOME</td><td>/ofbiz/work/catalina</td>
-    <td>where Tomcat4/Catalina is installed, should contain bin, lib, common, work, and so forth</td></tr>
+    <td>where Ant is installed, should contain bin, docs, lib, etc; this is optional and is only needed if you want to build</td></tr>
   <tr><td>OFBIZ_HOME</td><td>/ofbiz/work/ofbiz</td>
-    <td>where OFBiz is installed; contains all of the OFBiz CVS modules like core, commonapp, webtools, lib, ecommerce, and so forth</td></tr>
+    <td>where OFBiz is installed; contains all of the OFBiz CVS modules like core, commonapp, webtools, lib, ecommerce, and so forth; this setting is optional and is only required if you are running OFBiz from a directory different from the OFBiz home directory</td></tr>
+  <tr><td>CATALINA_HOME</td><td>/ofbiz/work/catalina</td>
+    <td>where Tomcat4/Catalina is installed, should contain bin, lib, common, work, and so forth; this setting is optional and only needs to be used for automated Tomcat setup since Tomcat has special file copying needs...</td></tr>
 </table>
 <br>
 <hr>
-<h3><a name="File_Locations">File Locations and Building</a></h3>
+<h3><a name="File_Locations">File Locations</a></h3>
 <hr>
-
-<p>Catalina comes with a number of jar files in place, but some jar and other files 
-need to be copied into the catalina directory from the ofbiz directories. This can be done
-most easily by making sure the environment variables are all set, then going to the
-OFBIZ_HOME directory and running "ant install" to copy the 3rd party jars and server.xml file
-and just plain "ant" to build and deploy the OFBiz jar and configuration files. </p>
 
 <p>If you have just checked out the OFBiz modules from CVS you will beed to copy the Ant 
 build.xml file from OFBIZ_HOME/setup/ofbiz/build.xml to OFBIZ_HOME. All of the jar files needed
-to build OFBiz are included in the 'lib' module. Some of these need to be copied to
-the catalina/lib and catalina/common/lib directories, but not all. Some are only
-included to make it easier to build the project.</p>
+to build OFBiz are included in the 'lib' module. Some of these need to be included on the classpath
+when running, but not all. Some are only included to make it easier to build the project and to
+provide a consistent platform to work from.</p>
 
-<p>Here is a list of all of the files, their original locations, and where
-in the catalina directory they need be copied to.</p>
+<p>Here is a list of the directories that need to be, or whose contents need to be, on the classpath for running:</p>
 
-<h4>3rd Party Libraries</h4>
 <table cellpadding='2' cellspacing='0' border='1'>
   <tr>
-    <td><b>Filename</b></td>
-    <td><b>Original Location</b></td>
-    <td><b>Destination Location</b></td>
+    <td><b>Location</b></td>
   </tr>
-  <tr><td>castor-0.9.3.9.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-  <tr><td>tyrex-1.0.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-  <tr><td>tyrex-0.9.7.0.jar</td><td>catalina/common/lib</td><td>REMOVE (comes with catalina)</td></tr>
-  <tr><td>ots-jts_1.0.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-  <tr><td>log4j.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-  <tr><td>axis.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
-  <tr><td>clutil.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
-  <tr><td>wsdl4j.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
-  <tr><td>bsh.jar</td><td>ofbiz/lib/scripting</td><td>catalina/lib</td></tr>
-  <tr><td>jakarta-oro-2.0.6.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
-  <tr><td>velocity-1.3.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
+  <tr><td>ofbiz/lib/common</td></tr>
+  <tr><td>ofbiz/lib/datavision</td></tr>
+  <tr><td>ofbiz/lib/jasperreports</td></tr>
+  <tr><td>ofbiz/lib/jotm</td></tr>
+  <tr><td>ofbiz/lib/scripting</td></tr>
+  <tr><td>ofbiz/lib/share</td></tr>
+  <tr><td>ofbiz/lib/weka</td></tr>
+  <tr><td>ofbiz/lib/worldpay</td></tr>
+  <tr><td>ofbiz/core/lib</td></tr>
+  <tr><td>ofbiz/commonapp/lib</td></tr>
+  <tr><td>ofbiz/commonapp/etc</td></tr>
 </table>
 
-<h4>JDBC Drivers</h4>
-<p>JDBC Drivers need to be put in <b>catalina/common/lib</b> so that Tyrex or Poolman
-can find them. If you need any additional ones put them there.</p>
-<table cellpadding='2' cellspacing='0' border='1'>
-  <tr>
-    <td><b>Filename</b></td>
-    <td><b>Original Location</b></td>
-    <td><b>Destination Location</b></td>
-  </tr>
-  <tr><td>hsqldb.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-  <tr><td>postgresql.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-  <tr><td>mm.mysql-2.0.14-bin.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-  <tr><td>sapdb.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-</table>
+<p>In addition to these certain less complete app servers will need some addition classes from
+the <code>ofbiz/lib/compile</code> directory. For instance, Jetty needs: <code>xerces.jar</code>,
+<code>activation.jar</code>, <code>mail.jar</code>, and <code>jdbc2_0-stdext.jar</code>. 
 
-<h4>OFBiz Libraries</h4>
-<table cellpadding='2' cellspacing='0' border='1'>
-  <tr>
-    <td><b>Filename</b></td>
-    <td><b>Original Location</b></td>
-    <td><b>Destination Location</b></td>
-  </tr>
-  <tr><td>ofbcore-share.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
-  <tr><td>ofbcore-entity.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
-  <tr><td>ofbcore-service.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
-  <tr><td>ofbcore-extutil.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
-  <tr><td>ofbcore-extentity.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
-  <tr><td>ofbcore-rules.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
-  <tr><td>ofbcore-workflow.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
-  <tr><td>ofbcore-minilang.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
-  <tr><td>ofbcore-datafile.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
-  <tr><td>ofbcommonapp.jar</td><td>ofbiz/commonapp/lib</td><td>catalina/lib</td></tr>
-</table>
+<p>If this list looks worrysome to you don't worry too much about it. We have startup scripts and
+config files for various app servers to set up these paths and with the embedded Jetty startup
+class everything is done "auto-magically".
 
-<h4>OFBiz Configuration Files</h4>
-<table cellpadding='2' cellspacing='0' border='1'>
-  <tr>
-    <td><b>Filename</b></td>
-    <td><b>Original Location</b></td>
-    <td><b>Destination Location</b></td>
-  </tr>
-  <tr><td>cache.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>debug.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>entityengine.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>general.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>inventoryalerts.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>jndiservers.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>localdtds.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>payment.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>prodsearch.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>security.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>security.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>serverstats.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>serviceengine.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>taxware.properties(optional)</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>tyrex.config(optional)</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>tyrexdomain.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>url.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-</table>
-
-<p>NOTE: for Tomcat 4.1 and later use catalina/shared/lib instead of catalina/lib and
-use catalina/shared/classes instead of catalina/classes.</p>
-
-<p>NOTE: Poolman is not being used right now, instead we are using Tyrex for
-connection pooling and JTA support. The config files have been left in place just
-in case anyone wants to change the configuration to use it (ie entityengine.xml).</p>
+<p>There may be additional JARs and other resources that you need to put on your classpath, such as
+JDBC drivers. We do include JDBC drivers for Postgres, MySQL, SAP DB and of Hypersonic SQL, which
+comes with it.</p>
 
 <hr>
 <h3><a name="Running">Running</a></h3>
@@ -247,7 +177,7 @@ entityengine.xml file for the given group name. The default group name for all
 of the default entities in OFBiz is &quot;org.ofbiz.commonapp&quot;, which you
 will notice pre-populated in the form on the install page. Just click on
 &quot;Load Data&quot;, and after reviewing the summary of what it will do, click
-on &quot;Yes, Load Now&quot;, and be patient as the data is loaded into you
+on &quot;Yes, Load Now&quot;, and be patient as the data is loaded into your
 database.</p>
 
 <p>That data loader can load XML Entity Engine files or SQL files.
@@ -273,35 +203,27 @@ the ecommerce application can be accessed at <a href="http://localhost:8080/ecom
 <p>Database setup is done in the entityengine.xml file. There are many
 options there which are described in the Entity Engine Guide.</p>
 
-<p>The OFBiz Complete archive comes with Hypersonic SQL, a Java database that
+<p>The OFBiz Apps archive comes with Hypersonic SQL, a Java database that
 runs in memory. This database is good for demonstration purposes because it is
 easy to setup and use. It is not meant to handle large data sets and does not
 provide the same performance or scalability that a major database would.</p>
 
 <p>There are many open source databases that will scale well and deliver good performance.
 The two most popular are MySQL and PostgreSQL. Postgres is a very full featured
-database with transaction support, stored procedures, et cetera. MySQL is known
+database with transaction support, foreign keys, stored procedures, et cetera. MySQL is known
 for performing very well but the transaction support is limited (and improving) and
 there is no support for stored procedures. The stored procedures issue is not
 a big deal for OFBiz as it stands now because they are not used, but transaction
 support is VERY important for production business systems. Another good open source
-option is SAP DB, which deserves special mention. SAP decided to start encouraging
-users to use commercial databases instead of their own and open sourced their
+option is SAP DB, and it deserves special mention. SAP decided to start making it easier
+for users to use commercial databases instead of their own and open sourced their
 database, SAP DB. While maybe not as good as Oracle or other commercial DBs it
-has many features and performs well.</p>
+has many development and production features and performs well.</p>
 
 <p>Commercial databases are also supported. If you have database licenses for other
 needs, or have major in-house familiarity with and support for a certain commercial
 database, then there is no reason not to take advantage of that. OFBiz has been tested
 with Oracle and should work fine with any database that has a JDBC driver.</p>
-
-<p>You can download MySQL from <a href="http://www.mysql.com/" target="_blank">www.mysql.com</a>,
-get the most recent stable version. You will also need the MySQL JDBC driver, get the most recent stable version
-from Mark Matthews on his SourceForge site at <a href="http://mmmysql.sourceforge.net/" target="_blank">mmmysql.sourceforge.net</a>.
-If you download the jar files there, you can't just put it in <b>catalina/lib</b>
-because it has all of the source and docs and is not
-just the driver jar. Open up the jar and get the jar in the base path of the
-archive and use that, it is the real binary jar driver file.</p>
 
 <p>There is no need to run any SQL scripts to create the tables or populate them
 with the default data. The entity engine can create missing tables or fields
@@ -321,7 +243,7 @@ going to a JSP, which is listed below in the Running section.</p>
 <h3><a name="DeployOptions">Alternative Deployment Options</a></h3>
 <hr>
 <p>Future releases of The Open For Business Project will support alternative deployment 
-options, for use with application servers other then Jakarta Tomcat and JBoss. 
+options, for use with application servers other then Jetty/JOTM. 
 The <i>webapp</i> directory in each module is a fully self sufficient web application. 
 Each of these may be packaged into a WAR file and deployed normally. Please 
 keep in mind the OFBiz required libraries must be in the global classpath. An 
@@ -343,26 +265,26 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
         <td><b>Comments</b></td>
     </tr>
     <tr>
+        <td><a href='http://jetty.mortbay.com'>Jetty 4 (current: 4.2.9)</a></td>
+        <td><a href='http://tyrex.sf.net'>JOTM 1.3</a></td>
+        <td>Default config; freely available; easy to configure/deploy</td>
+    </tr>
+    <tr>
         <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer 
         4.1.18 or later, much faster, more stable, etc) - Catalina</a></td>
-        <td><a href='http://tyrex.sf.net'>Tyrex 1.0</a></td>
-        <td>Default config; freely available; comparatively slow</td>
+        <td><a href='http://tyrex.sf.net'>JOTM 1.3</a></td>
+        <td>Default config; freely available; requires copying many files to deploy</td>
     </tr>
     <tr>
-        <td><a href='http://jetty.mortbay.com'>Jetty 4</a></td>
-        <td><a href='http://tyrex.sf.net'>Tyrex 1.0</a></td>
-        <td>Freely available; also slow, Jetty appears to run even slower than Tomcat4</td>
-    </tr>
-    <tr>
-        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer 4.1.18 or later, much faster) - Catalina</a></td>
+        <td><a href='http://jakarta.apache.org'>Jetty</a></td>
         <td><a href='http://www.jboss.org'>JBoss 2.4.4 or later, or many earlier too</a></td>
-        <td>Freely available; similar to Catalina/Tyrex, but can interoperate 
+        <td>Freely available; similar to Catalina/JOTM, but can interoperate 
             with other JBoss resources like EJBs, etc</td>
     </tr>
     <tr>
         <td><a href='http://www.caucho.com'>Caucho Resin 2.1.4</a></td>
-        <td><a href='http://tyrex.sf.net'>Tyrex 1.0</a></td>
-        <td>Resin $500/server, Tyrex free; runs MUCH faster than Tomcat or Jetty
+        <td><a href='http://tyrex.sf.net'>JOTM 1.3</a></td>
+        <td>Resin $500/server, Tyrex free; runs faster than Tomcat or Jetty
         (or used to, Jasper has been sped up a lot, and both Tomcat and Jetty use it)</td>
     </tr>
     <tr>
