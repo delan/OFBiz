@@ -64,11 +64,11 @@ public class MethodContext {
 
     public MethodContext(HttpServletRequest request, HttpServletResponse response, ClassLoader loader) {
         this.methodType = MethodContext.EVENT;
-        this.parameters = UtilMisc.getParameterMap(request);
+        this.parameters = UtilHttp.getParameterMap(request);
         this.loader = loader;
         this.request = request;
         this.response = response;
-        this.locale = UtilMisc.getLocale(request);
+        this.locale = UtilHttp.getLocale(request);
         this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         this.delegator = (GenericDelegator) request.getAttribute("delegator");
         this.security = (Security) request.getAttribute("security");
