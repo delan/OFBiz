@@ -53,8 +53,8 @@
         <copy file="setup/jboss3/bin/ofbiz.sh" toDir="${jboss3.dir}/bin" />
         <copy file="setup/jboss3/bin/ofbiz.bat" toDir="${jboss3.dir}/bin" /> 
 
-        <copy file="setup/jboss3/server/ofbiz/conf/debug.properties" toDir="${conf.dir}" />
-        <copy file="setup/jboss3/server/ofbiz/deploy/entityengine.xml" toDir="${j2eedeploy.dir}" />
+        <copy file="commonapp/etc/debug.properties" toDir="${conf.dir}" />
+        <copy file="commonapp/etc/entityengine.xml" toDir="${j2eedeploy.dir}" />
 
         <copy file="lib/common/postgresql.jar" toDir="${j2eedeploy.dir}"/>
         <copy file="lib/common/mm.mysql-2.0.8-bin.jar" toDir="${j2eedeploy.dir}"/>
