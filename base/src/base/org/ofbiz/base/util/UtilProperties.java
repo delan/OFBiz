@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.4 2003/09/21 05:58:51 jonesde Exp $
+ * $Id: UtilProperties.java,v 1.5 2003/10/10 09:46:45 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -23,14 +23,15 @@
  */
 package org.ofbiz.base.util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -38,7 +39,7 @@ import java.util.ResourceBundle;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      1.0
  */
 public class UtilProperties {
@@ -364,7 +365,7 @@ public class UtilProperties {
         } catch (Exception e) {
             Debug.log(e.getMessage(), module);
         }
-        return value == null ? "" : value.trim();
+        return value == null ? "" : iso88591ToUtf8(value).trim();
     }
 
     /** Returns the value of the specified property name from the specified resource/properties file corresponding 
@@ -492,10 +493,27 @@ public class UtilProperties {
         Map resourceBundleMap = new HashMap();
         while (keyNum.hasMoreElements()) {
             String key = (String) keyNum.nextElement();
-            resourceBundleMap.put(key, bundle.getObject(key));
+            //resourceBundleMap.put(key, bundle.getObject(key));
+            Object value = bundle.getObject(key);
+            if (value instanceof java.lang.String) {
+                resourceBundleMap.put(key, iso88591ToUtf8((String) value));
+            } else {
+                resourceBundleMap.put(key, value);
+            }
         }
         resourceBundleMap.put("_RESOURCE_BUNDLE_", bundle);
         return resourceBundleMap;
+    }
+    
+    protected static String iso88591ToUtf8(String isoString) {
+        if (isoString == null) return null;
+        // any more efficient way to do this?
+        try {
+            return new String(isoString.getBytes("ISO-8859-1"), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Debug.logError(e, "This shouldn't happen because the encondings here are static, but: " + e.toString(), module);
+            return isoString;
+        }
     }
     
     /** Returns the specified resource/properties file
