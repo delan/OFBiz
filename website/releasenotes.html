@@ -77,6 +77,11 @@ fixes a number of bugs. There are also a couple of new features, but not many.</
     <li class='contenttext'>Added missing ofbcore-extentity.jar reference for
     Jetty (in the not usually used ofbiz.sh file) and for Tomcat in the Tomcat
     deploy section of the Ant build script.</li>
+    <li class='contenttext'>The result-to-result, result-to-request and result-to-session
+    sub-operations of the call-service operation now use the ContextAccessor and
+    ServletAccessor helper classes to support the flexible syntax, and no longer
+    put the name of the result in place instead of the value (bad bug making the
+    profile pages not work, among other things).</li>    
 </ul>
 
 <h4>New Features & Improvements</h4>
