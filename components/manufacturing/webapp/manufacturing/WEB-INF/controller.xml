@@ -340,28 +340,21 @@
     </request-map>
  
     <!-- Lookup request mappings -->
-    <request-map uri="GenericLookup">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="GenericLookup"/>
-    </request-map> 
     <request-map uri="LookupRouting">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupRouting"/>
-    	<response name="success" type="view" value="GenericLookup"/>
+    	<response name="success" type="view" value="LookupRouting"/>
     </request-map> 
     <request-map uri="LookupRoutingTask">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupRoutingTask"/>
-    	<response name="success" type="view" value="GenericLookup"/>
+    	<response name="success" type="view" value="LookupRoutingTask"/>
     </request-map> 
-    <request-map uri="LookupVirtualProduct">
-        <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupVirtualProduct"/>
-        <response name="success" type="view" value="GenericLookup"/>
-    </request-map>
     <request-map uri="LookupProduct">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupProduct"/>
+    </request-map>
+    <request-map uri="LookupVirtualProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupVirtualProduct"/>
     </request-map>
 
      <!-- MRP request mappings -->
@@ -509,7 +502,6 @@
 
     <!-- end of request mappings -->
 
-
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="jpublish" page="/jobshopmgt/FindProductionRun.ftl"/>
@@ -532,9 +524,11 @@
     <view-map name="InitLowLevelCode" type="jpublish" page="/bom/InitLowLevelCode.ftl"/>
     <view-map name="EditProductManufacturingRules" type="jpublish" page="/bom/EditProductManufacturingRules.ftl"/>
     <!-- Lookup request mappings -->
-    <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
     <view-map name="LookupProduct" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupProduct" type="screen"/>
-
+    <view-map name="LookupVirtualProduct" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
+    <view-map name="LookupRouting" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRouting" type="screen"/>
+    <view-map name="LookupRoutingTask" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRoutingTask" type="screen"/>
+    
     <!-- MRP view mappings -->
     <view-map name="FindProposedOrder" type="jpublish" page="/mrp/findProposedOrder.ftl"/>
     <view-map name="FindInventoryEventPlan" type="jpublish" page="/mrp/findInventoryEventPlan.ftl"/>
