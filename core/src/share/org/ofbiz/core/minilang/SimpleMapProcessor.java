@@ -39,26 +39,26 @@ import org.ofbiz.core.util.*;
 public class SimpleMapProcessor {
     protected static UtilCache simpleMapProcessors = new UtilCache("SimpleMapProcessors", 0, 0);
     
-    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages) throws MiniLangException {
-        runSimpleMapProcessor(xmlResource, inMap, results, messages, null);
+    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages, Locale locale) throws MiniLangException {
+        runSimpleMapProcessor(xmlResource, inMap, results, messages, locale, null);
     }
 
-    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages, Class contextClass) throws MiniLangException {
+    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages, Locale locale, Class contextClass) throws MiniLangException {
         URL xmlURL = UtilURL.fromResource(contextClass, xmlResource);
         if (xmlURL == null) {
             throw new MiniLangException("Could not find SimpleMapProcessor XML document in resource: " + xmlResource);
         }
                     
-        runSimpleMapProcessor(xmlURL, inMap, results, messages, contextClass);
+        runSimpleMapProcessor(xmlURL, inMap, results, messages, locale, contextClass);
     }
 
-    public static void runSimpleMapProcessor(URL xmlURL, Map inMap, Map results, List messages, Class contextClass) throws MiniLangException {
+    public static void runSimpleMapProcessor(URL xmlURL, Map inMap, Map results, List messages, Locale locale, Class contextClass) throws MiniLangException {
         List simpleMapProcesses = getSimpleMapProcesses(xmlURL);
         if (simpleMapProcesses != null && simpleMapProcesses.size() > 0) {
             Iterator strPrsIter = simpleMapProcesses.iterator();
             while (strPrsIter.hasNext()) {
                 SimpleMapProcess simpleMapProcess = (SimpleMapProcess) strPrsIter.next();
-                simpleMapProcess.exec(inMap, results, messages, contextClass);
+                simpleMapProcess.exec(inMap, results, messages, locale, contextClass);
             }
         }
     }
@@ -120,11 +120,11 @@ public class SimpleMapProcessor {
             return field;
         }
         
-        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
             Iterator strOpsIter = simpleMapOperations.iterator();
             while (strOpsIter.hasNext()) {
                 SimpleMapOperation simpleMapOperation = (SimpleMapOperation) strOpsIter.next();
-                simpleMapOperation.exec(inMap, results, messages, contextClass);
+                simpleMapOperation.exec(inMap, results, messages, locale, contextClass);
             }
         }
         
@@ -182,7 +182,7 @@ public class SimpleMapProcessor {
             this.fieldName = simpleMapProcess.getFieldName();
         }
         
-        public abstract void exec(Map inMap, Map results, List messages, Class contextClass);
+        public abstract void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass);
         
         public void addMessage(List messages, Class contextClass) {
             if (!isProperty && message != null) {
@@ -214,7 +214,7 @@ public class SimpleMapProcessor {
             this.className = element.getAttribute("class");
         }
         
-        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
             Object obj = inMap.get(fieldName);
             
             if (!(obj instanceof java.lang.String)) {
@@ -286,14 +286,14 @@ public class SimpleMapProcessor {
             }
         }
         
-        public void doCompare(Object value1, Object value2, List messages, Class contextClass) {
+        public void doCompare(Object value1, Object value2, List messages, Locale locale, Class contextClass) {
             //Debug.logInfo("[BaseCompare.doCompare] Comparing value1: \"" + value1 + "\", value2:\"" + value2 + "\"");
             
             int result = 0;
             
             Object convertedValue1 = null;
             try {
-                convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format);
+                convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format, locale);
             } catch (GeneralException e) {
                 messages.add("Could not convert value1 for comparison: " + e.getMessage());
                 return;
@@ -301,7 +301,7 @@ public class SimpleMapProcessor {
 
             Object convertedValue2 = null;
             try {
-                convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format);
+                convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format, locale);
             } catch (GeneralException e) {
                 messages.add("Could not convert value2 for comparison: " + e.getMessage());
                 return;
@@ -384,6 +384,10 @@ public class SimpleMapProcessor {
                 messages.add("Specified compare operator \"" + operator + "\" not known.");
             }
         }
+        
+        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
+        }
+        
     }
     
     public static class Compare extends BaseCompare {
@@ -394,10 +398,10 @@ public class SimpleMapProcessor {
             this.value = element.getAttribute("value");
         }
         
-        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
             Object fieldValue = inMap.get(fieldName);
             
-            doCompare(fieldValue, value, messages, contextClass);
+            doCompare(fieldValue, value, messages, locale, contextClass);
         }
     }
 
@@ -409,11 +413,11 @@ public class SimpleMapProcessor {
             this.compareName = element.getAttribute("field");
         }
         
-        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
             Object compareValue = inMap.get(compareName);
             Object fieldValue = inMap.get(fieldName);
             
-            doCompare(fieldValue, compareValue, messages, contextClass);
+            doCompare(fieldValue, compareValue, messages, locale, contextClass);
         }
     }
 
@@ -433,7 +437,7 @@ public class SimpleMapProcessor {
             }
         }
         
-        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
             Object obj = inMap.get(fieldName);
             
             if (!(obj instanceof java.lang.String)) {
@@ -461,7 +465,7 @@ public class SimpleMapProcessor {
             super(element, simpleMapProcess);
         }
         
-        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
             Object obj = inMap.get(fieldName);
             
             if (obj instanceof java.lang.String) {
@@ -490,7 +494,7 @@ public class SimpleMapProcessor {
             replace = "true".equals(element.getAttribute("replace"));
         }
         
-        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
             Object fieldValue = inMap.get(fieldName);
             
             if (fieldValue == null)
@@ -529,7 +533,7 @@ public class SimpleMapProcessor {
             this.format = element.getAttribute("format");
         }
         
-        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Locale locale, Class contextClass) {
             Object fieldObject = inMap.get(fieldName);
             
             if (fieldObject == null) {
@@ -543,7 +547,7 @@ public class SimpleMapProcessor {
             
             Object convertedObject = null;
             try {
-                convertedObject = ObjectType.simpleTypeConvert(fieldObject, type, format);
+                convertedObject = ObjectType.simpleTypeConvert(fieldObject, type, format, locale);
             } catch (GeneralException e) {
                 messages.add(e.getMessage());
                 return;

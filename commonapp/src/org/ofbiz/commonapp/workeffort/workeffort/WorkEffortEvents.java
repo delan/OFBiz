@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2002/01/03 07:03:46  jonesde
+ * Changed StringProcessor to SimpleMapProcessor
+ *
  * Revision 1.13  2002/01/03 03:05:54  jonesde
  * Added new Proc and SimpleEvents XML file, removed old WorkEffortProcessors file
  *
@@ -130,7 +133,7 @@ public class WorkEffortEvents {
         Map parameters = UtilMisc.getParameterMap(request);
 
         try {
-            SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcUpdate.xml", parameters, context, messages);
+            SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcUpdate.xml", parameters, context, messages, request.getLocale());
         } catch (MiniLangException e) {
             messages.add("Error running SimpleMapProcessor: " + e.toString());
         }
