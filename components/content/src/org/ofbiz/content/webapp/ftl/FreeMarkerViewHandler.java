@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewHandler.java,v 1.3 2003/11/08 20:54:18 ajzeneski Exp $
+ * $Id: FreeMarkerViewHandler.java,v 1.4 2003/12/05 21:36:26 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.view.ViewHandler;
 import org.ofbiz.content.webapp.view.ViewHandlerException;
 
@@ -46,12 +48,19 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.WrappingTemplateModel;
+import freemarker.template.Environment;
+
+import freemarker.ext.beans.BeanModel;
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
+
 
 /**
  * FreemarkerViewHandler - Freemarker Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class FreeMarkerViewHandler implements ViewHandler {
@@ -62,6 +71,9 @@ public class FreeMarkerViewHandler implements ViewHandler {
     public static OfbizContentTransform ofbizContentUrl = new OfbizContentTransform();
     public static OfbizCurrencyTransform ofbizCurrency = new OfbizCurrencyTransform();
     public static SetRequestAttributeMethod setRequestAttribute = new SetRequestAttributeMethod();
+    public static EditRenderSubContentTransform  editRenderSubContent = new EditRenderSubContentTransform();
+    public static RenderSubContentTransform  renderSubContent = new RenderSubContentTransform();
+    public static RenderWrappedTextTransform  renderWrappedText = new RenderWrappedTextTransform();
     
     protected ServletContext servletContext = null;
     protected Configuration config = null;
@@ -162,5 +174,9 @@ public class FreeMarkerViewHandler implements ViewHandler {
         root.put("ofbizContentUrl", ofbizContentUrl);
         root.put("ofbizCurrency", ofbizCurrency);
         root.put("setRequestAttribute", setRequestAttribute);
+        root.put("editRenderSubContent", editRenderSubContent);
+        root.put("renderSubContent", renderSubContent);
+        root.put("renderWrappedText", renderWrappedText);
     }
+
 }
