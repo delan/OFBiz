@@ -46,10 +46,4 @@
     <ContactMech contactMechId="GUEST_CONTACT" contactMechTypeId="EMAIL_ADDRESS" infoString="admin@dum.com" lastUpdatedStamp="2004-03-27 10:04:54.031" lastUpdatedTxStamp="2004-03-27 10:04:54.031" createdStamp="2004-03-27 10:04:54.031" createdTxStamp="2004-03-27 10:04:54.031"/>
     <PartyContactMech partyId="BLOG_GUEST" contactMechId="GUEST_CONTACT" fromDate="2004-03-27 10:04:54.038" lastUpdatedStamp="2004-03-27 10:04:54.038" lastUpdatedTxStamp="2004-03-27 10:04:54.031" createdStamp="2004-03-27 10:04:54.038" createdTxStamp="2004-03-27 10:04:54.031"/>
     <PartyContactMechPurpose partyId="BLOG_GUEST" contactMechId="GUEST_CONTACT" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2004-03-27 10:04:54.062" lastUpdatedStamp="2004-03-27 10:04:54.062" lastUpdatedTxStamp="2004-03-27 10:04:54.062" createdStamp="2004-03-27 10:04:54.062" createdTxStamp="2004-03-27 10:04:54.062"/>
-
-    <Party partyId="AL_BYERS" partyTypeId="PERSON" createdDate="2004-03-27 09:38:48.337" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:38:48.337" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:38:48.34" lastUpdatedTxStamp="2004-03-27 09:38:48.34" createdStamp="2004-03-27 09:38:48.34" createdTxStamp="2004-03-27 09:38:48.34"/>
-    <Person partyId="AL_BYERS" lastName="Byers" firstName="Al"/>
-    <UserLogin userLoginId="byersa" partyId="AL_BYERS" currentPassword="ofbiz" lastUpdatedStamp="2004-03-27 09:38:48.394" lastUpdatedTxStamp="2004-03-27 09:38:48.393" createdStamp="2004-03-27 09:38:48.394" createdTxStamp="2004-03-27 09:38:48.393"/>
-    <PartyRole partyId="AL_BYERS" roleTypeId="BLOG_ADMIN" lastUpdatedStamp="2004-03-27 09:39:19.363" lastUpdatedTxStamp="2004-03-27 09:39:19.363" createdStamp="2004-03-27 09:39:19.363" createdTxStamp="2004-03-27 09:39:19.363"/>
 </entity-engine-xml>
-
