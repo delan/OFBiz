@@ -3441,6 +3441,7 @@
       <field><col-name>ENTRY_DATE</col-name><type>date-time</type></field>
       <field><col-name>VISIT_ID</col-name><type>id</type></field>
       <field><col-name>STATUS_ID</col-name><type>id</type></field>	
+      <field><col-name>SHIPPING_INSTRUCTIONS</col-name><type>description</type></field>	
       <prim-key-col>ORDER_ID</prim-key-col>
       <relation>
         <type>one</type>
