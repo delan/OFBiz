@@ -48,8 +48,9 @@
       <property name="commonapp.etc.dir" value="../commonapp/etc" />
 
       <!-- Classpath setting -->
-      <property name="ofbcore.jar"    value="../core/lib/ofbcore.jar" />		
-      <property name="ofbcommonapp.jar" value="../commonapp/lib/ofbcommonapp.jar"             />
+      <property name="ofbcore-share.jar"  value="../core/lib/ofbcore-share.jar" />
+      <property name="ofbcore-webapp.jar" value="../core/lib/ofbcore-webapp.jar" />
+      <property name="ofbcommonapp.jar"   value="../commonapp/lib/ofbcommonapp.jar" />
 
       <property name="servlet1.jar"  value="${env.CATALINA_HOME}/common/lib/servlet.jar" />
       <property name="servlet2.jar"  value="${env.TOMCAT_HOME}/lib/servlet.jar" />
