@@ -1,4 +1,4 @@
-/*
+<#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -19,30 +19,16 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Johan Isacsson
- *@version    $Rev:$
- *@since      2.2
- */
+-->
 
-import java.util.*;
-import org.ofbiz.content.widget.html.*;
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
-formName = request.getParameter("formName");
-HtmlFormWrapper lookupFieldWrapper = new HtmlFormWrapper("/includes/FieldLookupForms.xml", formName, request, response);
-action = request.getParameter("submitButton");
-if("Lookup".equals(action)) {
-    lookupService = request.getParameter("lookupService");
-    dispatcher = request.getAttribute("dispatcher");
- 
-    serviceCtx = lookupFieldWrapper.getFromContext("parameters");
-    serviceCtx.remove("formName");
-    serviceCtx.remove("lookupService");
-    serviceCtx.remove("submitButton");
-    serviceCtx.remove("id");
-    serviceCtx.put("userLogin",context.getSession().getAttribute("userLogin"));
-    Map result = dispatcher.runSync(lookupService, serviceCtx);
-    context.put("resultList", result.get("lookupResult"));    
-}
-lookupFieldWrapper.putInContext("formName", formName);
-lookupFieldWrapper.putInContext("id", request.getParameter("id"));
-context.put("lookupFieldWrapper", lookupFieldWrapper);
+<#if custRequestItem?exists>
+  <#if quoteId?has_content>
+  <div><a href="<@ofbizUrl>/EditQuoteItemForRequest?quoteId=${quoteId}&custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.WorkEffortNewQuoteItemForQuote}]</a> [${quoteId}]</div>
+  <#else>
+  <div><a href="<@ofbizUrl>/CreateQuoteAndQuoteItemForRequest?custRequestId=${custRequestItem.custRequestId}&custRequestItemSeqId=${custRequestItem.custRequestItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.WorkEffortNewQuoteAndQuoteItem}]</a></div>
+  </#if>
+</#if>
