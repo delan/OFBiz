@@ -4,6 +4,7 @@ importPackage(Packages.java.util);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
 importPackage(Packages.org.ofbiz.commonapp.product.catalog);
+importPackage(Packages.org.ofbiz.commonapp.order.shoppingcart);
 
 var userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
@@ -41,4 +42,13 @@ if (errorMsgReq != null) {
 if (errorMsgSes != null) {
     request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
     session.removeAttribute(SiteDefs.ERROR_MESSAGE);
+}
+
+//shopping cart prep
+var shoppingCart = session.getAttribute(SiteDefs.SHOPPING_CART);
+if (shoppingCart != null) {
+    request.setAttribute("shoppingCartSize", new Integer(shoppingCart.size()));
+    request.setAttribute("shoppingCartGrandTotal", new Double(shoppingCart.getGrandTotal()));
+} else {
+    request.setAttribute("shoppingCartSize", new Integer(0));
 }

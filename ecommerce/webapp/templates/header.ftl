@@ -36,7 +36,7 @@
               <#if layoutSettings.companySubtitle?exists><br><span class='headerCompanySubtitle'>${layoutSettings.companySubtitle}</span></#if>
           </TD>
           <TD align=right width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='<transform ofbizContentUrl>${layoutSettings.headerRightBackgroundUrl}</transform>'</#if> >
-            ${pages.get("/cart/microcart.jsp")}
+            ${pages.get("/cart/microcart.ftl")}
           </td>
         </tr>
       </table>
