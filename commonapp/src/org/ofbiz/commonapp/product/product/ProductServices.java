@@ -51,7 +51,7 @@ public class ProductServices {
     /**
      * Finds a specific product or products which contain the selected features.
      */
-    public static Map prodFindSelectedVariant(DispatchContext dctx. Map context) {
+    public static Map prodFindSelectedVariant(DispatchContext dctx, Map context) {
         // * String productId      -- Parent (virtual) product ID
         // * Map selectedFeatures  -- Selected features
         GenericDelegator delegator = dctx.getDelegator();
