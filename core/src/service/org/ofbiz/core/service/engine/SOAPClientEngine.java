@@ -30,104 +30,180 @@ import java.util.*;
 import org.apache.axis.client.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
+import org.apache.axis.Message;
+import org.apache.axis.message.*;
+import org.apache.axis.encoding.DefaultTypeMappingImpl;
+import org.apache.axis.encoding.DefaultSOAP12TypeMappingImpl;
+import org.apache.axis.encoding.TypeMapping;
+import org.apache.axis.encoding.TypeMappingImpl;
+import org.apache.axis.encoding.XMLType;
+import org.apache.axis.Constants;
+import javax.xml.rpc.namespace.QName;
+import javax.xml.rpc.ParameterMode;
+import javax.xml.rpc.ServiceException;
 
 /**
  * Generic Service SOAP Interface
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:">Andy Chen</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision$
  * @since      2.0
  */
 public final class SOAPClientEngine extends GenericAsyncEngine {
-
+    
     public static final String module = SOAPClientEngine.class.getName();
-   
+    
     public SOAPClientEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
     
     /**
-     * @see org.ofbiz.core.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSyncIgnore(java.lang.
+     * String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
     public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {
         Map result = runSync(localName, modelService, context);
     }
-   
+    
     /**
-     * @see org.ofbiz.core.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSync(java.lang.String,
+     * org.ofbiz.core.service.ModelService, java.util.Map)
      */
     public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException {
         Object result = serviceInvoker(localName, modelService, context);
-
+        
         if (result == null)
             throw new GenericServiceException("Service did not return expected result");
         if (!(result instanceof Map)) {
             Map newResult = new HashMap();
-
+            
             newResult.put("result", result);
             return newResult;
         }
         return (Map) result;
     }
-
+    
     // Invoke the remote SOAP service
     private Object serviceInvoker(String localName, ModelService modelService, Map context) throws GenericServiceException {
         if (modelService.location == null || modelService.invoke == null)
             throw new GenericServiceException("Cannot locate service to invoke");
-
+        
         Service service = null;
         Call call = null;
-
+        
         try {
             service = new Service();
             call = (Call) service.createCall();
         } catch (javax.xml.rpc.JAXRPCException e) {
             throw new GenericServiceException("RPC service error", e);
+        } catch (ServiceException e) {//Add by Andy.Chen 2003.01.15
+            throw new GenericServiceException("RPC service error", e);
         }
-
+        
         URL endPoint = null;
-
+        
         try {
             endPoint = new URL(modelService.location);
         } catch (MalformedURLException e) {
             throw new GenericServiceException("Location not a valid URL", e);
         }
-
+        
         List inModelParamList = modelService.getInModelParamList();
         Object[] params = new Object[inModelParamList.size()];
-
-        if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " +
-                params.length, module);
-
+        
+        if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " + params.length, module);
+        
         call.setTargetEndpointAddress(endPoint);
-        call.setOperationName(modelService.invoke);
-        if (!modelService.nameSpace.equals(""))
-            call.setProperty(Call.NAMESPACE, modelService.nameSpace);
-
+        
+        if (!"".equals(modelService.nameSpace)){
+            call.setOperationName(new QName(modelService.nameSpace, modelService.invoke));
+        } else {
+            call.setOperationName(modelService.invoke);
+        }
+        
         Iterator iter = inModelParamList.iterator();
         int i = 0;
-
+        
+        Vector vParams=new Vector();
         while (iter.hasNext()) {
             ModelParam p = (ModelParam) iter.next();
-
-            if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke} : Parameter : " + p.name + " (" +
-                    p.mode + ") - " + i, module);
-
+            
+            if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke} : Parameter: " + p.name + " (" + p.mode + ") - " + i, module);
+            
+            //Exclude params that ModelServiceReader insert into
+            if(!p.name.trim().equals("userLogin") && !p.name.trim().equals("locale")) {
+                QName qName = call.getParameterTypeByName(p.name); //.getTypeMapping().getTypeQName((Class) ObjectType.classNameClassMap.get(p.type));
+                call.addParameter(p.name, qName, getMode(p.mode));
+                vParams.add(context.get(p.name));
+            }
+            
             // if the value is null, that's fine, it will go in null...
             params[i] = context.get(p.name);
+            
             i++;
         }
-
+        
+        call.setReturnType(XMLType.XSD_ANYTYPE);
+        params=vParams.toArray();
+        
         Object result = null;
-
+        
         try {
             Debug.logInfo("[SOAPClientEngine.invoke] : Sending Call To SOAP Server", module);
             result = call.invoke(params);
         } catch (java.rmi.RemoteException e) {
             throw new GenericServiceException("RPC error", e);
         }
-        return result;
+        
+        return getResponseParams(call.getMessageContext().getResponseMessage());
     }
-
+    
+    
+    private Map getResponseParams(Message respMessage){
+        Map mRet=new Hashtable();
+        try{
+            SOAPEnvelope resEnv = (SOAPEnvelope) respMessage.getSOAPEnvelope();
+            List bodies = resEnv.getBodyElements();
+            Iterator i = bodies.iterator();
+            while (i.hasNext()) {
+                Object o = i.next();
+                
+                if (o instanceof RPCElement) {
+                    RPCElement body = (RPCElement) o;
+                    String serviceName = body.getMethodName();
+                    List params = null;
+                    
+                    params = body.getParams();
+                    
+                    Map serviceContext = new HashMap();
+                    Iterator p = params.iterator();
+                    
+                    while (p.hasNext()) {
+                        RPCParam param = (RPCParam) p.next();
+                        mRet.put(param.getName(), param.getValue());
+                        System.out.println(param.getName() + "=" + param.getValue());
+                    }
+                }
+            }
+        } catch (org.apache.axis.AxisFault e) {
+            System.out.println("AxisFault:" + e.toString());
+        } catch (org.xml.sax.SAXException e) {
+            System.out.println("SAXException:" + e.toString());
+        }
+        return mRet;
+    }
+    
+    private ParameterMode getMode(String sMode) {
+        if (sMode.equals("IN")) {
+            return ParameterMode.PARAM_MODE_IN;
+        } else if (sMode.equals("OUT")) {
+            return ParameterMode.PARAM_MODE_OUT;
+        } else if (sMode.equals("INOUT")) {
+            return ParameterMode.PARAM_MODE_INOUT;
+        } else {
+            return null;
+        }
+    }
 }
-
