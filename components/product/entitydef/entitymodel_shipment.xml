@@ -800,6 +800,8 @@
       <field name="shipmentPackageSeqId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="subProductId" type="id"></field>
+      <field name="subProductQuantity" type="floating-point"></field>
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentPackageSeqId"/>
       <prim-key field="shipmentItemSeqId"/>
@@ -813,6 +815,9 @@
       <relation type="one" fk-name="PCK_CNTNT_SHITM" rel-entity-name="ShipmentItem">
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="PCK_CNTNT_PROD" title="Sub" rel-entity-name="Product">
+        <key-map field-name="subProductId" rel-field-name="productId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentPackageRouteSeg"
