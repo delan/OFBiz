@@ -34,14 +34,14 @@
     <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
 
     <!-- view handlers -->
-    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>        
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
-    <handler name="jsp" type="view" class="org.ofbiz.content.webapp.JspViewHandler"/>
+    <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
     
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
-    <handler name="jasperpdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
-    <handler name="jasperxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
+    <handler name="jasperreportspdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
+    <handler name="jasperreportsxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
         
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
@@ -61,14 +61,12 @@
         <response name="success" type="view" value="main" />
         <response name="error" type="view" value="login" />
     </request-map>
-
     <request-map uri="login">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
-
     <request-map uri="logout">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="logout"/>
@@ -98,7 +96,8 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/main.ftl"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>       
+
+    <view-map name="main" type="screen" page="component://example/widget/example/CommonScreens.xml#main"/>
+    <view-map name="login" type="screen" page="component://example/widget/example/CommonScreens.xml#login"/>
     <!-- end of view mappings -->
 </site-conf>
