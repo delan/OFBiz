@@ -232,7 +232,7 @@ public class HttpClient {
             if (Debug.verboseOn()) {
                 try {
                     Debug.logVerbose("ContentEncoding: " + con.getContentEncoding() + "; ContentType: " + 
-                            con.getContentType() + " or: " + URLConnection.guessContentTypeFromStream(in));                            
+                            con.getContentType() + " or: " + URLConnection.guessContentTypeFromStream(in), module);                            
                 } catch (IOException ioe) {
                     Debug.logWarning(ioe, "Caught exception printing content debugging information", module);
                 }
@@ -240,13 +240,15 @@ public class HttpClient {
             
             String charset = null;
             String contentType = con.getContentType();
-            if (contentType == null) {
+            if (contentType == null) {                
                 try {                 
                     contentType = URLConnection.guessContentTypeFromStream(in);
                 } catch (IOException ioe) {
                     Debug.logWarning(ioe, "Problems guessing content type from steam", module);
                 }
             }
+            
+            if (Debug.verboseOn()) Debug.logVerbose("Content-Type: " + contentType, module);
             
             if (contentType != null) {
                 contentType = contentType.toUpperCase();
