@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFunction.java,v 1.1 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: EntityFunction.java,v 1.2 2004/05/02 05:46:40 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,12 +60,12 @@ public abstract class EntityFunction extends EntityCondition {
     public static class UPPER extends EntityFunction {
         public UPPER(EntityFunction nested) { super(ID_UPPER, "UPPER", nested); }
         public UPPER(Object value, boolean asEntity) { super(ID_UPPER, "UPPER", value, asEntity); }
-        public Object doEval(Object value) { return new Integer(value.toString().toUpperCase()); }
+        public Object doEval(Object value) { return value.toString().toUpperCase(); }
     };
     public static class LOWER extends EntityFunction {
         public LOWER(EntityFunction nested) { super(ID_LOWER, "LOWER", nested); }
         public LOWER(Object value, boolean asEntity) { super(ID_LOWER, "LOWER", value, asEntity); }
-        public Object doEval(Object value) { return new Integer(value.toString().toLowerCase()); }
+        public Object doEval(Object value) { return value.toString().toLowerCase(); }
     };
 
     protected int idInt;
