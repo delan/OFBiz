@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -57,14 +57,14 @@
                     <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == chosenShippingMethod?default("N@A")>checked</#if>>       
                   </td>
                   <td valign="top">                            
-                    <div class='tabletext'>
-                       <#if cart.getShippingContactMechId()?exists>
-                         <#assign shippingEstMap = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
-                         <#if shippingEstMap?has_content && shippingEstMap.shippingTotal?exists>
-                           <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>                                  
-                         </#if>                              
-                       </#if>                                                  
-                      <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}${shippingEstimate?if_exists}
+                    <div class='tabletext'>                                                 
+                      <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}
+                      <#if cart.getShippingContactMechId()?exists>
+                        <#assign shippingEstMap = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
+                        <#if shippingEstMap?has_content && shippingEstMap.shippingTotal?exists>
+                          - <@ofbizCurrency amount=shippingEstMap.shippingTotal isoCode=cart.getCurrency()/>
+                        </#if>
+                      </#if>
                     </div>                           
                   </td>
                 </tr>

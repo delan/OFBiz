@@ -21,11 +21,12 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
+<#assign currencyUomId = shoppingCart.getCurrency()>
 <#if shoppingCart?has_content>
     <#assign shoppingCartSize = shoppingCart.size()>
 <#else>
@@ -66,12 +67,12 @@
                         <div class="tabletext"><b>${cartLine.getItemTypeDescription()?if_exists}</b></div>
                       </#if>
                     </td>
-                    <td align="right" valign="top"><div class="tabletext" nowrap>${cartLine.getItemSubTotal()?string.currency}</div></td>
+                    <td align="right" valign="top"><div class="tabletext" nowrap><@ofbizCurrency amount=cartLine.getItemSubTotal() isoCode=currencyUomId/></div></td>
                   </tr>
                 </#list>
                 <tr>
                   <td colspan="3" align="right">
-                    <div class="tabletext"><b>Total: ${shoppingCart.getGrandTotal()?string.currency}</b></div>
+                    <div class="tabletext"><b>Total: <@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></b></div>
                   </td>
                 </tr>                
               <#else>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 */
 
@@ -38,6 +38,7 @@ delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 cart = ShoppingCartEvents.getCartObject(request);
 context.put("cart", cart);
+context.put("currencyUomId", cart.getCurrency());
 
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");

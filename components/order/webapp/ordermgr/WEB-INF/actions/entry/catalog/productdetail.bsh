@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 */
 
@@ -46,6 +46,7 @@ import org.ofbiz.content.webapp.taglib.*;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
+import org.ofbiz.order.shoppingcart.*;
 
 String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
     keySet = map.keySet();
@@ -89,6 +90,7 @@ dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 requestParams = UtilHttp.getParameterMap(request);
+cart = ShoppingCartEvents.getCartObject(request);
 
 // get the shopping lists for the user (if logged in)
 if (userLogin != null) {
@@ -172,7 +174,7 @@ if (product != null) {
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
     autoUserLogin = request.getSession().getAttribute("autoUserLogin");
     fieldMap = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId,
-        "currencyUomId", UtilHttp.getCurrencyUom(session), "autoUserLogin", autoUserLogin);
+        "currencyUomId", cart.getCurrency(), "autoUserLogin", autoUserLogin);
     priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
     request.setAttribute("priceMap", priceMap);
 

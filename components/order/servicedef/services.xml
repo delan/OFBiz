@@ -171,6 +171,7 @@
         <attribute name="orderProductPromoUses" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemSurveyResponses" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="trackingCodeOrders" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderAdditionalPartyRoleMap" type="java.util.Map" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="OUT" optional="false"/>
         <attribute name="statusId" type="String" mode="OUT" optional="false"/>
     </service>

@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.15 2004/07/01 23:42:15 jonesde Exp $
+ * $Id: ShoppingCartHelper.java,v 1.16 2004/07/29 20:56:36 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -137,6 +137,22 @@ public class ShoppingCartHelper {
         String comment = (String) context.get("itemComment");
         if (UtilValidate.isEmpty(comment)) {
             context.remove("itemComment");
+        }
+
+        // stores the default desired delivery date in the cart if need
+        if (!UtilValidate.isEmpty((String) context.get("useAsDefaultDesiredDeliveryDate"))) {
+            cart.setDefaultItemDeliveryDate((String) context.get("itemDesiredDeliveryDate"));
+        } else {
+            // do we really want to clear this if it isn't checked?
+            cart.setDefaultItemDeliveryDate(null);
+        }
+
+        // stores the default comment in session if need
+        if (!UtilValidate.isEmpty((String) context.get("useAsDefaultComment"))) {
+            cart.setDefaultItemComment((String) context.get("itemComment"));
+        } else {
+            // do we really want to clear this if it isn't checked?
+            cart.setDefaultItemComment(null);
         }
 
         // Create a HashMap of product attributes - From ShoppingCartItem.attributeNames[]

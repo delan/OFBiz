@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.55 2004/07/27 06:08:35 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.56 2004/07/29 20:56:35 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.55 $
+ * @version    $Revision: 1.56 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -80,6 +80,9 @@ public class ShoppingCart implements Serializable {
     private double billingAccountAmt = 0.00;
     private String currencyUom = null;
 
+    private String defaultItemDeliveryDate = null;
+    private String defaultItemComment = null;
+
     private GenericValue orderShipmentPreference = null;
     private String orderAdditionalEmails = null;
     private boolean viewCartOnAdd = false;
@@ -88,6 +91,9 @@ public class ShoppingCart implements Serializable {
     private List adjustments = new LinkedList();
     private List cartLines = new ArrayList();
     private Map contactMechIdsMap = new HashMap();
+    
+    /** contains a list of partyId for each roleTypeId (key) */
+    private Map additionalPartyRole = new HashMap();
 
     public static class ProductPromoUseInfo implements Serializable {
         public String productPromoId;
@@ -151,6 +157,14 @@ public class ShoppingCart implements Serializable {
         this.locale = cart.getLocale();
         this.currencyUom = cart.getCurrency();
         this.viewCartOnAdd = cart.viewCartOnAdd();
+        
+        // clone the additionalPartyRoleMap
+        this.additionalPartyRole = new HashMap();
+        Iterator it = cart.additionalPartyRole.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            this.additionalPartyRole.put(me.getKey(), new LinkedList((Collection) me.getValue()));
+        }
 
         // clone the items
         List items = cart.items();
@@ -509,7 +523,14 @@ public class ShoppingCart implements Serializable {
         this.adjustments.clear();
         this.expireSingleUsePayments();
         this.cartLines.clear();
-
+        // clear the additionalPartyRole Map
+        Iterator it = this.additionalPartyRole.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry me = (Map.Entry) it.next();
+            ((LinkedList) me.getValue()).clear();
+        }
+        this.additionalPartyRole.clear();        
+        
         // clear the auto-save info
         if (org.ofbiz.product.store.ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
             GenericValue ul = this.getUserLogin();
@@ -558,6 +579,22 @@ public class ShoppingCart implements Serializable {
     /** Returns the po number. */
     public String getPoNumber() {
         return poNumber;
+    }
+
+    public void setDefaultItemDeliveryDate(String date) {
+        this.defaultItemDeliveryDate = date;
+    }
+
+    public String getDefaultItemDeliveryDate() {
+        return this.defaultItemDeliveryDate;
+    }
+
+    public void setDefaultItemComment(String comment) {
+        this.defaultItemComment = comment;
+    }
+
+    public String getDefaultItemComment() {
+        return this.defaultItemComment;
     }
 
     // =======================================================================
@@ -1391,6 +1428,56 @@ public class ShoppingCart implements Serializable {
         }
     }
 
+    /**
+     * Associates a party with a role to the order.
+     * @param partyId identifier of the party to associate to order
+     * @param roleTypeId identifier of the role used in party-order association
+     */
+    public void addAdditionalPartyRole(String partyId, String roleTypeId) {
+        // search if there is an existing entry
+        List parties = (List) additionalPartyRole.get(roleTypeId);
+        if (parties != null) {
+            Iterator it = parties.iterator();
+            while (it.hasNext()) {
+                if (((String) it.next()).equals(partyId)) {
+                    return;
+                }
+            }
+        } else {
+            parties = new LinkedList();
+            additionalPartyRole.put(roleTypeId, parties);
+        }
+
+        parties.add(0, partyId);
+    }
+    
+    /**
+     * Removes a previously associated party to the order.
+     * @param partyId identifier of the party to associate to order
+     * @param roleTypeId identifier of the role used in party-order association
+     */    
+    public void removeAdditionalPartyRole(String partyId, String roleTypeId) {
+        List parties = (List) additionalPartyRole.get(roleTypeId);
+
+        if (parties != null) {
+            Iterator it = parties.iterator();
+            while (it.hasNext()) {
+                if (((String) it.next()).equals(partyId)) {
+                    it.remove();
+
+                    if (parties.isEmpty()) {
+                        additionalPartyRole.remove(roleTypeId);
+                    }
+                    return;
+                }
+            }
+        }
+    }
+    
+    public Map getAdditionalPartyRoleMap() {
+        return additionalPartyRole;
+    }
+
     // =======================================================================
     // Methods used for order creation
     // =======================================================================
@@ -1771,6 +1858,7 @@ public class ShoppingCart implements Serializable {
         result.put("orderPaymentPreferences", this.makeAllOrderPaymentPreferences());
         result.put("orderShipmentPreferences", this.makeAllOrderShipmentPreferences());
         result.put("orderItemSurveyResponses", this.makeAllOrderItemSurveyResponses());
+        result.put("orderAdditionalPartyRoleMap", this.getAdditionalPartyRoleMap());
 
         result.put("firstAttemptOrderId", this.getFirstAttemptOrderId());
         result.put("currencyUom", this.getCurrency());

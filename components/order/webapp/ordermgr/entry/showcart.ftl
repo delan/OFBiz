@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.14 $
+ *@version    $Revision: 1.15 $
  *@since      2.1
 -->
 
@@ -153,30 +153,43 @@ function gwAll(e) {
               <table border="0">
                 <tr>
                   <td align="right"><div class="tableheadtext">Product Id :<div></td>
-                  <td><input type="text" class="inputBox" size="25" name="add_product_id"
-		                     value="${requestParameters.add_product_id?if_exists}"></td>
+                  <td><input type="text" class="inputBox" size="25" name="add_product_id" value="${requestParameters.add_product_id?if_exists}"></td>
                 </tr>
                 <tr>
                   <td align="right"><div class="tableheadtext">Quantity :</div></td>
-                  <td><input type="text" class="inputBox" size="6" name="quantity"
-		                     value="${requestParameters.quantity?default("1")}"></td>
+                  <td><input type="text" class="inputBox" size="6" name="quantity" value="${requestParameters.quantity?default("1")}"></td>
                 </tr>
                 <tr>
                   <td align="right"><div class="tableheadtext">Desired Delivery Date :</div></td>
-                  <td><input type="text" class="inputBox" size="25" maxlength="30"
-                             name="itemDesiredDeliveryDate" ></td>
-                  <td valign="bottom">
+                  <td><input type="text" class="inputBox" size="25" maxlength="30" name="itemDesiredDeliveryDate" <#if useAsDefaultDesiredDeliveryDate?exists>value="${defaultDesiredDeliveryDate}"</#if>>
                     <a href="javascript:call_cal(document.quickaddform.itemDesiredDeliveryDate,'${defaultDesiredDeliveryDate} 00:00:00.0');">
-                      <img src="/images/cal.gif" width="16" height="16" border="0"
-		                   alt="Click here For Calendar">
+                      <img src="/images/cal.gif" width="16" height="16" border="0" alt="Click here For Calendar">
                     </a>
                   </td>
+		        </tr>
+		        <tr>
+		          <td></td>
+		          <td colspan="2">
+		            <div class="tabletext">
+		              <input type="checkbox" class="inputBox" name="useAsDefaultDesiredDeliveryDate" value="true" <#if useAsDefaultDesiredDeliveryDate?exists>checked</#if>>
+		              Use as default desired delivery date for next entry
+		            </div>
+		          </td>
                 </tr>
                 <tr>
                   <td align="right"><div class="tableheadtext">Comment :</div></td>
-                  <td><input type="text" class="inputBox" size="25" name="itemComment" value=""></td>
+                  <td><input type="text" class="inputBox" size="25" name="itemComment" value="${defaultComment?if_exists}"></td>
+		        </tr>
+		        <tr>
+		          <td></td>
+		          <td colspan="2">
+		            <div class="tabletext">
+		              <input type="checkbox" class="inputBox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment?exists>checked</#if>>
+		              Use as default comment for next entry
+		            </div>
+		          </td>
                 </tr>
-                  <tr>
+                <tr>
                   <td></td>
                   <td><input type="submit" class="smallSubmit" value="Add To Order"></td>
                 </tr>
@@ -245,6 +258,7 @@ function gwAll(e) {
         <input type="hidden" name="finalizeReqShipInfo" value="false">
         <input type="hidden" name="finalizeReqOptions" value="false">
         <input type="hidden" name="finalizeReqPayInfo" value="false">
+        <input type="hidden" name="finalizeReqAdditionalParty" value="false">
       </#if>
       <table width="100%" cellspacing="0" cellpadding="1" border="0">
         <TR> 
@@ -256,7 +270,7 @@ function gwAll(e) {
                 <option value="">Gift Wrap All Items</option>
                 <option value="NO^">No Gift Wrap</option>
                 <#list allgiftWraps as option>
-                  <option value="${option.productFeatureId}">${option.description} : ${option.defaultAmount?default(0)?string.currency}</option>
+                  <option value="${option.productFeatureId}">${option.description} : <@ofbizCurrency amount=option.defaultAmount?default(0) isoCode=currencyUomId/></option>
                 </#list>
               </select>
           <#else>
@@ -334,7 +348,7 @@ function gwAll(e) {
                 <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onChange="javascript:document.cartform.submit()">
                   <option value="NO^">No Gift Wrap</option>
                   <#list giftWrapOption as option>
-                    <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?exists && selectedOption.productFeatureId == option.productFeatureId)>SELECTED</#if>>${option.description} : ${option.amount?default(0)?string.currency}</option>
+                    <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?exists && selectedOption.productFeatureId == option.productFeatureId)>SELECTED</#if>>${option.description} : <@ofbizCurrency amount=option.amount?default(0) isoCode=currencyUomId/></option>
                   </#list>
                 </select>
               <#elseif showNoGiftWrapOptions>
@@ -359,14 +373,14 @@ function gwAll(e) {
             <td nowrap align="right">
               <div class="tabletext">
                 <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
-                  ${cartLine.getBasePrice()?string.currency}
+                  <@ofbizCurrency amount=cartLine.getBasePrice() isoCode=currencyUomId/>
                 <#else>
                   <input size="6" class="inputBox" type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}">
                 </#if>
               </div>
             </td>
-            <td nowrap align="right"><div class="tabletext">${cartLine.getOtherAdjustments()?string.currency}</div></td>
-            <td nowrap align="right"><div class="tabletext">${cartLine.getItemSubTotal()?string.currency}</div></td>
+            <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=currencyUomId/></div></td>
+            <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=cartLine.getItemSubTotal() isoCode=currencyUomId/></div></td>
           </TR>
         </#list>
 
@@ -374,7 +388,7 @@ function gwAll(e) {
             <tr><td colspan="7"><hr class="sepbar"></td></tr>
               <tr>
                 <td colspan="4" nowrap align="right"><div class="tabletext">Sub&nbsp;Total:</div></td>
-                <td nowrap align="right"><div class="tabletext">${shoppingCart.getSubTotal()?string.currency}</div></td>
+                <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=currencyUomId/></div></td>
                 <td>&nbsp;</td>
               </tr>
             <#list shoppingCart.getAdjustments() as cartAdjustment>
@@ -386,7 +400,7 @@ function gwAll(e) {
                     <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a></#if>:
                   </div>
                 </td>
-                <td nowrap align="right"><div class="tabletext">${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
+                <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=currencyUomId/></div></td>
                 <td>&nbsp;</td>
               </tr>
             </#list>
@@ -398,7 +412,7 @@ function gwAll(e) {
           </td>
           <td align="right" valign=bottom>
             <hr size=1 class="sepbar">
-            <div class="tabletext"><b>${shoppingCart.getGrandTotal()?string.currency}</b></div>
+            <div class="tabletext"><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></b></div>
           </td>
         </tr>       
         <tr>

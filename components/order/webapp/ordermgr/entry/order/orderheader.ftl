@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -36,7 +36,7 @@
                 <#if !orderHeader?exists>
                 <td align="right">
                   <div class="tabletext">
-                    <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">Items</a><#if cart?has_content && cart.getOrderType() != "PURCHASE_ORDER"><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">Shipping</a><a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">Options</a><a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="submenutext">Payment</a></#if><a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="submenutextright">Create Order</a>
+                    <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">Items</a><#if cart?has_content && cart.getOrderType() != "PURCHASE_ORDER"><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">Shipping</a><a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">Options</a><a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="submenutext">Payment</a></#if><a href="<@ofbizUrl>/setAdditionalParty</@ofbizUrl>" class="submenutext">Parties</a><a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="submenutextright">Create Order</a>
                   </div>
                 </td>   
                 </#if>                             

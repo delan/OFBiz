@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.35 2004/07/24 20:33:05 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.36 2004/07/29 20:56:35 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  * @since 2.0
  */
 public class CheckOutEvents {
@@ -778,13 +778,15 @@ public class CheckOutEvents {
         String requireShipping = null;
         String requireOptions = null;
         String requirePayment = null;
-
+        String requireAdditionalParty = null;
+	
         // these options are not available to anonymous shoppers (security)
         if (userLogin != null && !"anonymous".equals(userLogin.getString("userLoginId"))) {
             requireCustomer = request.getParameter("finalizeReqCustInfo");
             requireShipping = request.getParameter("finalizeReqShipInfo");
             requireOptions = request.getParameter("finalizeReqOptions");
             requirePayment = request.getParameter("finalizeReqPayInfo");
+            requireAdditionalParty = request.getParameter("finalizeReqAdditionalParty");
         }
 
         // these are the default values
@@ -796,6 +798,8 @@ public class CheckOutEvents {
             requireOptions = "true";
         if (requirePayment == null)
             requirePayment = "true";
+        if (requireAdditionalParty == null)
+            requireAdditionalParty = "true";
 
         String shipContactMechId = cart.getShippingContactMechId();
         String customerPartyId = cart.getPartyId();
@@ -821,6 +825,10 @@ public class CheckOutEvents {
                     return "payment";
                 }
             }
+        }
+
+        if (requireAdditionalParty.equalsIgnoreCase("true") && cart.getAdditionalPartyRoleMap().size() == 0) {
+            return "addparty";
         }
 
         if (isSingleUsePayment) {

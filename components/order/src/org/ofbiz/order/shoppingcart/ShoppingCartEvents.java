@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.18 2004/07/19 15:47:33 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.19 2004/07/29 20:56:36 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.LinkedList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +57,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -409,51 +410,30 @@ public class ShoppingCartEvents {
 
     /** Gets or creates the shopping cart object */
     public static ShoppingCart getCartObject(HttpServletRequest request, Locale locale, String currencyUom) {
-        if (locale == null) {
-            locale = UtilHttp.getLocale(request);
-        }
-        if (currencyUom == null) {
-            currencyUom = UtilHttp.getCurrencyUom(request);
-        }
-
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession(true);
         ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
 
-
         if (cart == null) {
+            if (locale == null) {
+                locale = UtilHttp.getLocale(request);
+            }
+            if (currencyUom == null) {
+                currencyUom = UtilHttp.getCurrencyUom(request);
+            }
             cart = new WebShoppingCart(request, locale, currencyUom);
             session.setAttribute("shoppingCart", cart);
         } else {
-            if (!locale.equals(cart.getLocale())) {
-                cart.setLocale(locale);
+            if (locale != null && !locale.equals(cart.getLocale())) {
+                cart.setLocale(locale);                
             }
-            if (!currencyUom.equals(cart.getCurrency())) {
+            if (currencyUom != null && !currencyUom.equals(cart.getCurrency())) {
                 try {
                     cart.setCurrency(dispatcher, currencyUom);
                 } catch (CartItemModifyException e) {
                     Debug.logError(e, "Unable to modify currency in cart", module);
                 }
             }
-        }
-        return cart;
-    }
-
-    /** Special get method for getting a cart for a specific store */
-    public static ShoppingCart getCartObject(HttpServletRequest request, String productStoreId) {
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
-        Locale locale = null;
-        String currency = null;
-
-        if (productStore != null) {
-            String localeStr = productStore.getString("defaultLocaleString");
-            locale = UtilMisc.parseLocale(localeStr);
-            currency = productStore.getString("defaultCurrencyUomId");
-        }
-        ShoppingCart cart = getCartObject(request, locale, currency);
-        if (productStore != null) {
-            cart.setProductStoreId(productStoreId);
         }
         return cart;
     }
@@ -558,7 +538,68 @@ public class ShoppingCartEvents {
         request.setAttribute("_ERROR_MESSAGE_", "Could not select alternate gift, cart line item found for #" + alternateGwpLine + " does not appear to be a valid promotional gift.");
         return "error";
     }
+
+    /** Associates a party to order */
+    public static String addAdditionalParty(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = getCartObject(request);
+        String partyId = request.getParameter("additionalPartyId");
+        String roleTypeId[] = request.getParameterValues("additionalRoleTypeId");
+        List eventList = new LinkedList();
+        int i;
+
+        if (UtilValidate.isEmpty(partyId) || roleTypeId.length < 1) {
+            request.setAttribute("_ERROR_MESSAGE_", "partyId and/or roleTypeId not defined.");
+            return "error";
+        }
+
+        if (request.getAttribute("_EVENT_MESSAGE_LIST_") != null) {
+            eventList.addAll((List) request.getAttribute("_EVENT_MESSAGE_LIST_"));
+        }
+
+        for (i = 0; i < roleTypeId.length; i++) {
+            try {
+                cart.addAdditionalPartyRole(partyId, roleTypeId[i]);
+            } catch (Exception e) {
+                eventList.add(e.getLocalizedMessage());
+            }
+        }
+
+        request.removeAttribute("_EVENT_MESSAGE_LIST_");
+        request.setAttribute("_EVENT_MESSAGE_LIST_", eventList);
+        return "success";
+    }
     
+    /** Removes a previously associated party to order */
+    public static String removeAdditionalParty(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = getCartObject(request);
+        String partyId = request.getParameter("additionalPartyId");
+        String roleTypeId[] = request.getParameterValues("additionalRoleTypeId");
+        List eventList = new LinkedList();
+        int i;
+
+        if (UtilValidate.isEmpty(partyId) || roleTypeId.length < 1) {
+            request.setAttribute("_ERROR_MESSAGE_", "partyId and/or roleTypeId not defined.");
+            return "error";
+        }
+
+        if (request.getAttribute("_EVENT_MESSAGE_LIST_") != null) {
+            eventList.addAll((List) request.getAttribute("_EVENT_MESSAGE_LIST_"));
+        }
+
+        for (i = 0; i < roleTypeId.length; i++) {
+            try {
+                cart.removeAdditionalPartyRole(partyId, roleTypeId[i]);
+            } catch (Exception e) {
+                Debug.logInfo(e.getLocalizedMessage(), module);
+                eventList.add(e.getLocalizedMessage());
+            }
+        }
+
+        request.removeAttribute("_EVENT_MESSAGE_LIST_");
+        request.setAttribute("_EVENT_MESSAGE_LIST_", eventList);
+        return "success";
+    }
+
     /**
      * This should be called to translate the error messages of the
      * <code>ShoppingCartHelper</code> to an appropriately formatted
