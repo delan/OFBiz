@@ -325,6 +325,7 @@
 
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_SALES_ENTRY"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_ROLE_VIEW"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_VIEW"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_NOTE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_UPDATE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_CREATE"/>
@@ -348,8 +349,8 @@
   <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_UPDATE"/>
 
   <SecurityGroupPermission groupId="CATALOGADMIN" permissionId="CATALOG_ADMIN"/>
-  <SecurityGroupPermission groupId="ORDERADMIN" permissionId="ORDER_ADMIN"/>
-  <SecurityGroupPermission groupId="PARTYADMIN" permissionId="PARTY_ADMIN"/>
+  <SecurityGroupPermission groupId="ORDERADMIN" permissionId="ORDERMGR_ADMIN"/>
+  <SecurityGroupPermission groupId="PARTYADMIN" permissionId="PARTYMGR_ADMIN"/>
 
   <UserLogin userLoginId="anonymous" currentPassword="anonymous" passwordHint=""/>
   <UserLogin userLoginId="admin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
