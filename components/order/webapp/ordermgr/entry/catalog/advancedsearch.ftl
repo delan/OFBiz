@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -19,8 +19,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -83,9 +84,15 @@
       <td valign="middle">
         <div class="tabletext">
           <select name="sortOrder" class="selectBox">
-            <option value="SortKeywordRelevancy">Keyword Relevancy</option>
-            <option value="SortProductField:productName">Product Name</option>
+            <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevency}</option>
+            <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
+            <option value="SortProductField:totalQuantityOrdered">Popularity by Orders</option>
+            <option value="SortProductField:totalTimesViewed">Popularity by Views</option>
+            <option value="SortProductPrice:LIST_PRICE">List Price</option>
+            <option value="SortProductPrice:DEFAULT_PRICE">Default Price</option>
           </select>
+          Low to High<input type="RADIO" name="sortAscending" value="Y" checked>
+          High to Low<input type="RADIO" name="sortAscending" value="N">
         </div>
       </td>
     </tr>

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.32 2004/05/10 17:41:45 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.33 2004/05/11 08:26:28 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.32 $
+ * @version    $Revision: 1.33 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -1029,6 +1029,13 @@ public class ProductSearch {
         }
 
         public String prettyPrintSortOrder(boolean detailed) {
+            if ("productName".equals(this.fieldName)) {
+                return "Product Name";
+            } else if ("totalQuantityOrdered".equals(this.fieldName)) {
+                return "Popularity by Orders";
+            } else if ("totalTimesViewed".equals(this.fieldName)) {
+                return "Popularity by Views";
+            }
             return this.fieldName;
         }
 
@@ -1039,21 +1046,41 @@ public class ProductSearch {
 
     public static class SortProductPrice extends ResultSortOrder {
         protected String productPriceTypeId;
+        protected String currencyUomId;
+        protected String productStoreGroupId;
         protected boolean ascending;
+
         public SortProductPrice(String productPriceTypeId, boolean ascending) {
             this.productPriceTypeId = productPriceTypeId;
             this.ascending = ascending;
         }
 
+        public SortProductPrice(String productPriceTypeId, String currencyUomId, String productStoreGroupId, boolean ascending) {
+            this.productPriceTypeId = productPriceTypeId;
+            this.currencyUomId = currencyUomId;
+            this.productStoreGroupId = productStoreGroupId;
+            this.ascending = ascending;
+        }
+
         public void setSortOrder(ProductSearchContext productSearchContext) {
-            // TODO: implement SortListPrice, this will be a bit more complex, need to add a ProductPrice member entity
+            if (this.currencyUomId == null) {
+                this.currencyUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
+            }
+            if (this.productStoreGroupId == null) {
+                this.productStoreGroupId = "_NA_";
+            }
+
+            // SortProductPrice, this will be a bit more complex, need to add a ProductPrice member entity
             productSearchContext.dynamicViewEntity.addMemberEntity("SPPRC", "ProductPrice");
             productSearchContext.dynamicViewEntity.addViewLink("PROD", "SPPRC", Boolean.TRUE, UtilMisc.toList(new ModelKeyMap("productId", "productId")));
-            // TODO: add uom and store group fields, set values as needed like productPriceTypeId
             productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortProductPriceTypeId", "productPriceTypeId", null, null, null, null);
+            productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortCurrencyUomId", "currencyUomId", null, null, null, null);
+            productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortProductStoreGroupId", "productStoreGroupId", null, null, null, null);
             productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortPrice", "price", null, null, null, null);
             
             productSearchContext.entityConditionList.add(new EntityExpr("sortProductPriceTypeId", EntityOperator.EQUALS, this.productPriceTypeId));
+            productSearchContext.entityConditionList.add(new EntityExpr("sortCurrencyUomId", EntityOperator.EQUALS, this.currencyUomId));
+            productSearchContext.entityConditionList.add(new EntityExpr("sortProductStoreGroupId", EntityOperator.EQUALS, this.productStoreGroupId));
 
             if (ascending) {
                 productSearchContext.orderByList.add("+sortPrice");
