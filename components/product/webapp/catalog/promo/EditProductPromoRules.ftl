@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.17 $
+ *@version    $Revision: 1.18 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -120,7 +120,8 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                     ${(condProductCategory.description)?if_exists} [${condProductPromoCategory.productCategoryId}]
                                     - ${(condApplEnumeration.description)?default(condProductPromoCategory.productPromoApplEnumId)}
                                     - SubCats? ${condProductPromoCategory.includeSubCategories?default("N")}
-                                    <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(condProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(condProductPromoCategory.productCategoryId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    - And Group: ${condProductPromoCategory.andGroupId}
+                                    <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(condProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(condProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(condProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(condProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(condProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(condProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
                             </#list>
@@ -144,6 +145,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                         <option value="N">N</option>
                                         <option value="Y">Y</option>
                                     </select>
+                                    And Group: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
                                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
                                 </form>
                             </div>
@@ -270,7 +272,8 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                     ${(actionProductCategory.description)?if_exists} [${actionProductPromoCategory.productCategoryId}]
                                     - ${(actionApplEnumeration.description)?default(actionProductPromoCategory.productPromoApplEnumId)}
                                     - SubCats? ${actionProductPromoCategory.includeSubCategories?default("N")}
-                                    <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(actionProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoCategory.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoCategory.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productCategoryId=${(actionProductPromoCategory.productCategoryId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    - And Group: ${actionProductPromoCategory.andGroupId}
+                                    <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(actionProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoCategory.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(actionProductPromoCategory.productPromoCondSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productCategoryId=${(actionProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(actionProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
                                     [${uiLabelMap.CommonDelete}]</a>
                                 </div>
                             </#list>
@@ -294,6 +297,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                         <option value="N">N</option>
                                         <option value="Y">Y</option>
                                     </select>
+                                    And Group: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
                                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
                                 </form>
                             </div>
@@ -390,7 +394,8 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                 ${(promoProductCategory.description)?if_exists} [${promoProductPromoCategory.productCategoryId}]
                 - ${(promoApplEnumeration.description)?default(promoProductPromoCategory.productPromoApplEnumId)}
                 - SubCats? ${promoProductPromoCategory.includeSubCategories?default("N")}
-                <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(promoProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(promoProductPromoCategory.productCategoryId)?if_exists}</@ofbizUrl>" class="buttontext">
+                - And Group: ${promoProductPromoCategory.andGroupId}
+                <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(promoProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(promoProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(promoProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoCondSeqId=${(promoProductPromoCategory.productPromoCondSeqId)?if_exists}&productCategoryId=${(promoProductPromoCategory.productCategoryId)?if_exists}&andGroupId=${(promoProductPromoCategory.andGroupId)?if_exists}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
             </div>
         </#list>
@@ -414,6 +419,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                     <option value="N">N</option>
                     <option value="Y">Y</option>
                 </select>
+                And Group: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_" class="inputBox"/>*
                 <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
             </form>
         </div>
@@ -436,7 +442,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                 <input type="hidden" name="productPromoRuleId" value="_NA_">
                 <input type="hidden" name="productPromoActionSeqId" value="_NA_">
                 <input type="hidden" name="productPromoCondSeqId" value="_NA_">
-                Product ID: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>
+                Product ID: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>*
                 <select name="productPromoApplEnumId" class="selectBox">
                     <#list productPromoApplEnums as productPromoApplEnum>
                         <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
