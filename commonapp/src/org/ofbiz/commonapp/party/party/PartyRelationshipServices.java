@@ -92,11 +92,7 @@ public class PartyRelationshipServices {
         }
 
         GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom, "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", fromDate));
-
-        partyRelationship.set("thruDate", context.get("thruDate"), false);
-        partyRelationship.set("priorityTypeId", context.get("priorityTypeId"), false);
-        partyRelationship.set("comments", context.get("comments"), false);
-        partyRelationship.set("partyRelationshipTypeId", context.get("partyRelationshipTypeId"), false);
+        partyRelationship.setNonPKFields(context);
 
         try {
             if (delegator.findByPrimaryKey(partyRelationship.getPrimaryKey()) != null) {
@@ -159,7 +155,6 @@ public class PartyRelationshipServices {
         }
 
         GenericValue partyRelationship = null;
-
         try {
             partyRelationship = delegator.findByPrimaryKey("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom,
                             "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", context.get("fromDate")));
@@ -171,12 +166,8 @@ public class PartyRelationshipServices {
         if (partyRelationship == null) {
             return ServiceUtil.returnError("Could not update party relationship (relationship not found)");
         }
-
-        partyRelationship.set("thruDate", context.get("thruDate"), false);
-        partyRelationship.set("statusId", context.get("statusId"), false);
-        partyRelationship.set("priorityTypeId", context.get("priorityTypeId"), false);
-        partyRelationship.set("partyRelationshipTypeId", context.get("partyRelationshipTypeId"), false);
-        partyRelationship.set("comments", context.get("comments"), false);
+        
+        partyRelationship.setNonPKFields(context);
 
         try {
             partyRelationship.store();
