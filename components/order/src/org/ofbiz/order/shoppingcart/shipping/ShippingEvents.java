@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.8 2003/11/21 02:35:39 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.9 2003/12/10 15:43:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.common.geo.GeoWorker;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -66,7 +66,7 @@ public class ShippingEvents {
         cart.removeAdjustmentByType("SHIPPING_CHARGES");
 
         // creat the new adjustment and add it to the cart
-        if (shippingTotal.doubleValue() > 0) {
+        if (shippingTotal != null && shippingTotal.doubleValue() > 0) {
             GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
                     UtilMisc.toMap("orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingTotal));
             cart.addAdjustment(orderAdjustment);
