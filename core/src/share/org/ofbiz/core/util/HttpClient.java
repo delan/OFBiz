@@ -1,6 +1,9 @@
-/* 
+/*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.4  2001/09/20 18:59:03  jonesde
  * Improved exception error reporting.
  *
@@ -57,13 +60,16 @@ import java.net.URLEncoder;
  * Created on June 29, 2001, 6:18 PM
  */
 public class HttpClient {
-        
+    
     private String url = null;
+    private boolean lineFeed = true;
     private HashMap parameters = null;
     private HashMap headers = null;
+    private URL requestUrl;
+    private URLConnection con;
     
     /** Creates an empty HttpClient object. */
-    public HttpClient() {        
+    public HttpClient() {
     }
     
     /** Creates a new HttpClient object. */
@@ -102,6 +108,11 @@ public class HttpClient {
         this.headers = headers;
     }
     
+    /** Turns on or off line feeds in the request. (default is on) */
+    public void setLineFeed(boolean lineFeed) {
+        this.lineFeed = lineFeed;
+    }
+    
     /** Set the URL for this request. */
     public void setUrl(URL url) {
         this.url = url.toExternalForm();
@@ -119,7 +130,7 @@ public class HttpClient {
     
     /** Set an individual parameter for this request. */
     public void setParameter(String name, String value) {
-        if ( parameters == null ) 
+        if ( parameters == null )
             parameters = new HashMap();
         parameters.put(name,value);
     }
@@ -150,7 +161,7 @@ public class HttpClient {
     public String getUrl() {
         return url;
     }
-     
+    
     /** Invoke HTTP request GET. */
     public String get() throws HttpClientException {
         return sendHttpRequest("get");
@@ -165,40 +176,72 @@ public class HttpClient {
     public String post() throws HttpClientException {
         return sendHttpRequest("post");
     }
-
+    
     /** Invoke HTTP request POST. */
     public InputStream postStream() throws HttpClientException {
         return sendHttpRequestStream("post");
     }
     
+    /** Returns the value of the specified named response header field. */
+    public String getResponseHeader(String header) {
+        return con.getHeaderField(header);
+    }
+    
+    /** Returns the key for the nth response header field. */
+    public String getResponseHeaderFieldKey(int n) {
+        return con.getHeaderFieldKey(n);
+    }
+    
+    /** Returns the value for the nth response header field. It returns null of there are fewer then n fields. */
+    public String getResponseHeaderField(int n) {
+        return con.getHeaderField(n);
+    }
+    
+    /** Returns the content of the response. */
+    public Object getResponseContent() throws java.io.IOException {
+        return con.getContent();
+    }
+    
+    /** Returns the content-type of the response. */
+    public String getResponseContentType() {
+        return con.getContentType();
+    }
+    
+    /** Returns the content length of the response */
+    public int getResponseContentLength() {
+        return con.getContentLength();
+    }
+    
+    /** Returns the content encoding of the response. */
+    public String getResponseContentEncoding() {
+        return con.getContentEncoding();
+    }
+    
     private String sendHttpRequest(String method) throws HttpClientException {
-      InputStream in = sendHttpRequestStream(method);
-      if(in == null) return null;
-
-      StringBuffer buf = new StringBuffer();      
-      try
-      {
-        BufferedReader post = new BufferedReader(new InputStreamReader(in));
-        String line = new String();
-        while ((line = post.readLine()) != null)
-        {
-            buf.append(line);
-            buf.append("\n");
+        InputStream in = sendHttpRequestStream(method);
+        if(in == null) return null;
+        
+        StringBuffer buf = new StringBuffer();
+        try {
+            BufferedReader post = new BufferedReader(new InputStreamReader(in));
+            String line = new String();
+            while ((line = post.readLine()) != null) {
+                buf.append(line);
+                if ( lineFeed )
+                    buf.append("\n");
+            }
         }
-      }
-      catch ( Exception e ) {
-          throw new HttpClientException("Error processing input stream", e);
-      }
-      return buf.toString();
+        catch ( Exception e ) {
+            throw new HttpClientException("Error processing input stream", e);
+        }
+        return buf.toString();
     }
     
     private InputStream sendHttpRequestStream(String method) throws HttpClientException {
-        URL requestUrl;
-        URLConnection con;
         String arguments = null;
         InputStream in = null;
         
-        if ( url == null ) 
+        if ( url == null )
             throw new HttpClientException("Cannot process a null URL.");
         
         if ( parameters != null && parameters.size() > 0 )
@@ -207,7 +250,7 @@ public class HttpClient {
         // Append the arguments to the query string if GET.
         if ( method.equalsIgnoreCase("get") && arguments != null )
             url = url + "?" + arguments;
-                        
+        
         // Create the URL and open the connection.
         try {
             requestUrl = new URL(url);
@@ -229,7 +272,7 @@ public class HttpClient {
                     con.setRequestProperty(headerName,headerValue);
                 }
             }
-                
+            
             if ( method.equalsIgnoreCase("post") ) {
                 DataOutputStream out = new DataOutputStream(con.getOutputStream());
                 out.writeBytes(arguments);
@@ -260,5 +303,5 @@ public class HttpClient {
                 buf.append("&");
         }
         return buf.toString();
-    }            
+    }
 }
