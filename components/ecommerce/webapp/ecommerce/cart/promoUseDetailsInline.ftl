@@ -20,12 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -46,7 +45,7 @@
                 <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
                     <div class="tabletext">
 	                    <#-- TODO: when promo pretty print is done show promo short description here -->
-                    	${uiLabelMap.EcommercePromotion} <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a>
+                    	   ${uiLabelMap.EcommercePromotion} <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a>
 	                    <#if productPromoUseInfo.productPromoCodeId?has_content> - with Code [${productPromoUseInfo.productPromoCodeId}]</#if>
     	                <#if (productPromoUseInfo.totalDiscountAmount != 0)> - Total Value <@ofbizCurrency amount=(-1*productPromoUseInfo.totalDiscountAmount) isoCode=shoppingCart.getCurrency()/></#if>
     	            </div>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,21 +24,21 @@
  *@version    $Rev$
  *@since      2.1.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <script>
-         <!-- function to add extra info for Timestamp format -->
-         function TimestampSubmit(obj){
-            if (obj.elements["reservStartStr"].value.length == 10)
-                obj.elements["reservStart"].value = obj.elements["reservStartStr"].value + " 00:00:00.000000000";
-            else
-                obj.elements["reservStart"].value = obj.elements["reservStartStr"].value;
-            obj.submit();
-            }
- </script>
+    <!-- function to add extra info for Timestamp format -->
+    function TimestampSubmit(obj) {
+       if (obj.elements["reservStartStr"].value.length == 10) {
+           obj.elements["reservStart"].value = obj.elements["reservStartStr"].value + " 00:00:00.000000000";
+       } else {
+           obj.elements["reservStart"].value = obj.elements["reservStartStr"].value;
+       }
+       obj.submit();
+    }
+</script>
 
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -86,7 +86,7 @@
 <#if shoppingList?has_content>
     <#if canView>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -189,7 +189,7 @@
 <#if shoppingListType?exists && shoppingListType.shoppingListTypeId == "SLT_AUTO_REODR">
   <#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].monthBegin()>
   <br/>
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -370,7 +370,7 @@
 
 <#if childShoppingListDatas?has_content>
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -432,7 +432,7 @@
 </#if>
 
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -558,7 +558,7 @@
 </TABLE>
 
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -608,7 +608,7 @@
 </TABLE>
 
 <br>
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
