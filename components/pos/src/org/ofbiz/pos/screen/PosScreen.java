@@ -248,8 +248,8 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     // run method for auto-locking POS on inactivity
     public void run() {
         while (monitorRunning) {
-            if (!isLocked && (System.currentTimeMillis() - lastActivity) > MAX_INACTIVITY) {
-                this.showPage("main/pospanel").setLock(true);                
+            if (!isLocked && (System.currentTimeMillis() - lastActivity) > MAX_INACTIVITY) {                
+                this.showPage("main/pospanel").setLock(true);
             }
             try {
                 Thread.sleep(5000);

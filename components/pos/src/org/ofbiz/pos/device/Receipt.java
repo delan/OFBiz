@@ -163,19 +163,19 @@ public class Receipt extends GenericDevice implements DialogCallback {
                 while ((line = dis.readLine()) != null) {
                     if (line.trim().startsWith("#")) {
                         String[] code = line.trim().split("\\=");
-                        if ("#descripion.length=".equals(code[0])) {
+                        if ("#descripion.length".equals(code[0])) {
                             try {
                                 this.descLength = Integer.parseInt(code[1]);
                             } catch (NumberFormatException e) {
                                 Debug.logWarning(e, module);
                             }
-                        } else if ("#price.length=".equals(code[0])) {
+                        } else if ("#price.length".equals(code[0])) {
                             try {
                                 this.priceLength = Integer.parseInt(code[1]);
                             } catch (NumberFormatException e) {
                                 Debug.logWarning(e, module);
                             }
-                        } else if ("#quantity.length=".equals(code[0])) {
+                        } else if ("#quantity.length".equals(code[0])) {
                             try {
                                 this.qtyLength = Integer.parseInt(code[1]);
                             } catch (NumberFormatException e) {
