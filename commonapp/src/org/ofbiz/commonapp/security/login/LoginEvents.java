@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/01/27 08:33:13  jonesde
+ * Changed update password to use new service, also added createUserLogin service
+ *
  * Revision 1.3  2002/01/25 06:59:06  jonesde
  * A small addition for ecommerce to maintain the current catalog setting
  *
@@ -116,7 +119,7 @@ public class LoginEvents {
                 Debug.logWarning(e);
             }
             if(userLogin != null) {
-                if(password.compareTo(userLogin.getString("currentPassword")) == 0) {
+                if(userLogin.get("currentPassword") != null && password.equals(userLogin.getString("currentPassword"))) {
                     request.getSession().setAttribute(SiteDefs.USER_LOGIN, userLogin);
                     try {
                         delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
