@@ -215,9 +215,9 @@
 
   <Enumeration description="Product" enumCode="PRODUCT_ID" enumId="PRIP_PRODUCT_ID" sequenceId="01" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Quantity" enumCode="QUANTITY" enumId="PRIP_QUANTITY" sequenceId="02" enumTypeId="PROD_PRICE_IN_PARAM"/>
-  <Enumeration description="Product Category" enumCode="PRODUCT_CATEGORY_ID" enumId="PRIP_PRODUCT_CATEGORY_ID" sequenceId="03" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Product Category" enumCode="PRODUCT_CATEGORY_ID" enumId="PRIP_PROD_CAT_ID" sequenceId="03" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Party" enumCode="PARTY_ID" enumId="PRIP_PARTY_ID" sequenceId="04" enumTypeId="PROD_PRICE_IN_PARAM"/>
-  <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PRIP_PARTY_GROUP_MEMBER" sequenceId="05" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PRIP_PARTY_GRP_MEM" sequenceId="05" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PRIP_PARTY_CLASS" sequenceId="06" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Role Type" enumCode="PRODUCT_ID" enumId="PRIP_PRODUCT_ID" sequenceId="07" enumTypeId="PROD_PRICE_IN_PARAM"/>
 
@@ -441,6 +441,12 @@
   <ProductPromoActionType description="Item Amount Discount (per quantity)" productPromoActionTypeId="PROMO_ITEM_AMNTPQ"/>
   <ProductPromoActionType description="Order Percent Discount" productPromoActionTypeId="PROMO_ORDER_PERCENT"/>
   <ProductPromoActionType description="Order Amount Discount (flat)" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
+
+  <ProductPriceActionType description="Percent Of List Price" productPriceActionTypeId="PRICE_POL"/>
+  <ProductPriceActionType description="Percent Of Average Cost" productPriceActionTypeId="PRICE_POAC"/>
+  <ProductPriceActionType description="Percent Of Margin" productPriceActionTypeId="PRICE_POM"/>
+  <ProductPriceActionType description="Flat Dollar Off List" productPriceActionTypeId="PRICE_FOL"/>
+  <ProductPriceActionType description="Flat Dollar Override" productPriceActionTypeId="PRICE_FLAT"/>
 
   <ProductType description="Service" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
   <ProductType description="Good" hasTable="N" parentTypeId="" productTypeId="GOOD"/>
