@@ -111,7 +111,7 @@
   <%GenericValue orderHeader = trackingCodeOrder.getRelatedOne("OrderHeader");%>
   <%if (orderHeader != null) pageContext.setAttribute("orderHeader", orderHeader);%>
   <tr valign="middle">
-    <td><div class='tabletext'>&nbsp;<a href='/ordermgr/control/orderview?order_id=<ofbiz:entityfield attribute="trackingCodeOrder" field="orderId"/>' class='buttontext'><ofbiz:inputvalue entityAttr="trackingCodeOrder" field="orderId"/></a></div></td>
+    <td><div class='tabletext'>&nbsp;<a href='/ordermgr/control/orderview?order_id=<ofbiz:entityfield attribute="trackingCodeOrder" field="orderId"/>' target="ordermgr" class='buttontext'><ofbiz:inputvalue entityAttr="trackingCodeOrder" field="orderId"/></a></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="orderHeader" field="orderDate"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="curTrackingCodeType" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="trackingCodeOrder" field="isBillable"/></div></td>
