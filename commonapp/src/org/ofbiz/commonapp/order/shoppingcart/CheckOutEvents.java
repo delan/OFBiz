@@ -24,6 +24,7 @@
 package org.ofbiz.commonapp.order.shoppingcart;
 
 import java.net.*;
+import java.text.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -863,6 +864,7 @@ public class CheckOutEvents {
             
     public static String finalizeOrderEntry(HttpServletRequest request, HttpServletResponse response) {        
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
                                          
         // get the mode
         String mode = request.getParameter("finalizeMode");
@@ -925,17 +927,81 @@ public class CheckOutEvents {
             if (checkOutPaymentId == null)  
                 checkOutPaymentId = (String) request.getAttribute("paymentMethodId");                                               
             if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
-                // clear out the old payments
-                cart.clearPaymentMethodTypeIds();
-                cart.clearPaymentMethodIds();
-                // all payment method ids will be numeric, type ids will start with letter
-                if (Character.isLetter(checkOutPaymentId.charAt(0))) {
-                    cart.addPaymentMethodTypeId(checkOutPaymentId);
+                if (!checkOutPaymentId.equals("OFFLINE_PAYMENT")) {                
+                    // clear out the old payments
+                    cart.clearPaymentMethodTypeIds();
+                    cart.clearPaymentMethodIds();
+                    // all payment method ids will be numeric, type ids will start with letter
+                    if (Character.isLetter(checkOutPaymentId.charAt(0))) {
+                        cart.addPaymentMethodTypeId(checkOutPaymentId);
+                    } else {
+                        cart.addPaymentMethodId(checkOutPaymentId);
+                    }
                 } else {
-                    cart.addPaymentMethodId(checkOutPaymentId);
+                    cart.clearPaymentMethodIds();
+                    cart.clearPaymentMethodTypeIds();                    
+                    request.setAttribute("OFFLINE_PAYMENT", new Boolean(true));
                 }
             }
-        }  
+        } 
+        
+        // create offline payments
+        if (mode != null && mode.equals("offline_payments")) {
+            // get a list of payment types
+            List paymentTypes = null;
+            try {
+                paymentTypes = delegator.findAll("PaymentMethodType");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot get payment method types from datasource", module);
+            }   
+            if (paymentTypes != null) {
+                Map paymentPrefs = new HashMap();
+                double paymentTally = 0.00;
+                Iterator pi = paymentTypes.iterator();
+                while (pi.hasNext()) {
+                    GenericValue paymentMethodType = (GenericValue) pi.next();   
+                    String paymentType = null;
+                    if (paymentMethodType != null && paymentMethodType.get("paymentMethodTypeId") != null) {
+                        paymentType = paymentMethodType.getString("paymentMethodTypeId");
+                    }
+                    
+                    // get the amount by type
+                    double paymentAmount = 0.00;
+                    if (paymentType != null && !paymentType.equals("OFFLINE")) {                                      
+                        String amount = request.getParameter(paymentMethodType.getString("paymentMethodTypeId"));
+                        if (amount != null && amount.length() > 0) {
+                            try {                                                                                
+                                paymentAmount = NumberFormat.getNumberInstance().parse(amount).doubleValue();                                                           
+                            } catch (java.text.ParseException pe) {
+                                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems parsing amount.");
+                                return "error";
+                            }
+                        }
+                    }
+                    
+                    // only worry about types w/ an amount
+                    if (paymentAmount > 0.00) {
+                       paymentPrefs.put(paymentType, new Double(paymentAmount));
+                       paymentTally += paymentAmount;                        
+                    }                    
+                }
+                
+                double cartTotal = cart.getGrandTotal();
+                if (cartTotal != paymentTally) {
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Totals do not match order total.");
+                    return "error";
+                } else {
+                    Set keySet = paymentPrefs.keySet();
+                    Iterator i = keySet.iterator();
+                    while (i.hasNext()) {
+                        String type = (String) i.next();
+                        Double amt = (Double) paymentPrefs.get(type);
+                        cart.addPaymentMethodTypeId(type, amt);
+                    }
+                    request.getSession().setAttribute("OFFLINE_PAYMENTS", new Boolean(true));
+                }
+            }
+        } 
         
         String requireShipping = request.getParameter("finalizeReqShipInfo");
         String requirePayment = request.getParameter("finalizeReqPayInfo");                         
