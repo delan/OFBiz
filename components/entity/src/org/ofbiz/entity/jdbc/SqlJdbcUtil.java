@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.6 2003/11/07 00:33:56 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.7 2003/11/07 11:46:17 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -234,10 +234,18 @@ public class SqlJdbcUtil {
         Iterator iter = modelFields.iterator();
 
         while (iter.hasNext()) {
-            ModelField modelField = (ModelField) iter.next();
-
-            returnString.append(modelField.getColName());
-            Object fieldValue = fields.get(modelField.getName());
+            Object item = iter.next();
+            Object name = null;
+            ModelField modelField = null;
+            if (item instanceof ModelField) {
+                modelField = (ModelField) item;
+                returnString.append(modelField.getColName());
+                name = modelField.getName();
+            } else {
+                returnString.append(item);
+                name = item;
+            }
+            Object fieldValue = fields.get(name);
 
             if (fieldValue != null) {
                 returnString.append('=');
