@@ -47,8 +47,10 @@ public class ServerHitBin {
     public static final int REQUEST = 1;
     public static final int EVENT = 2;
     public static final int VIEW = 3;
-    public static final String[] typeNames = {"", "Request", "Event", "View"};
-    public static final String[] typeIds = {"", "REQUEST", "EVENT", "VIEW"};
+    public static final int ENTITY = 4;
+    public static final int SERVICE = 5;
+    public static final String[] typeNames = {"", "Request", "Event", "View", "Entity", "Service"};
+    public static final String[] typeIds = {"", "REQUEST", "EVENT", "VIEW", "ENTITY", "SERVICE"};
     
     public static void countRequest(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator) {
@@ -62,6 +64,14 @@ public class ServerHitBin {
             GenericDelegator delegator) {
         countHit(id, VIEW, visitId, startTime, runningTime, userLogin, delegator);
     }
+    public static void countEntity(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+            GenericDelegator delegator) {
+        countHit(id, ENTITY, visitId, startTime, runningTime, userLogin, delegator);
+    }
+    public static void countService(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+            GenericDelegator delegator) {
+        countHit(id, SERVICE, visitId, startTime, runningTime, userLogin, delegator);
+    }
     
     public static void countHit(String id, int type, String visitId, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator) {
@@ -72,6 +82,8 @@ public class ServerHitBin {
         advanceAllBins(toTime, requestHistory);
         advanceAllBins(toTime, eventHistory);
         advanceAllBins(toTime, viewHistory);
+        advanceAllBins(toTime, entityHistory);
+        advanceAllBins(toTime, serviceHistory);
     }
 
     static void advanceAllBins(long toTime, Map binMap) {
@@ -94,6 +106,8 @@ public class ServerHitBin {
             case REQUEST: binList = (LinkedList) requestHistory.get(id); break;
             case EVENT: binList = (LinkedList) eventHistory.get(id); break;
             case VIEW: binList = (LinkedList) viewHistory.get(id); break;
+            case ENTITY: binList = (LinkedList) entityHistory.get(id); break;
+            case SERVICE: binList = (LinkedList) serviceHistory.get(id); break;
         }
 
         if (binList == null) {
@@ -102,6 +116,8 @@ public class ServerHitBin {
                     case REQUEST: binList = (LinkedList) requestHistory.get(id); break;
                     case EVENT: binList = (LinkedList) eventHistory.get(id); break;
                     case VIEW: binList = (LinkedList) viewHistory.get(id); break;
+                    case ENTITY: binList = (LinkedList) entityHistory.get(id); break;
+                    case SERVICE: binList = (LinkedList) serviceHistory.get(id); break;
                 }
                 if (binList == null) {
                     binList = new LinkedList();
@@ -109,6 +125,8 @@ public class ServerHitBin {
                         case REQUEST: requestHistory.put(id, binList); break;
                         case EVENT: eventHistory.put(id, binList); break;
                         case VIEW: viewHistory.put(id, binList); break;
+                        case ENTITY: entityHistory.put(id, binList); break;
+                        case SERVICE: serviceHistory.put(id, binList); break;
                     }
                 }
             }
@@ -156,6 +174,8 @@ public class ServerHitBin {
             case REQUEST: bin = (ServerHitBin) requestSinceStarted.get(id); break;
             case EVENT: bin = (ServerHitBin) eventSinceStarted.get(id); break;
             case VIEW: bin = (ServerHitBin) viewSinceStarted.get(id); break;
+            case ENTITY: bin = (ServerHitBin) entitySinceStarted.get(id); break;
+            case SERVICE: bin = (ServerHitBin) serviceSinceStarted.get(id); break;
         }
         
         if (bin == null) {
@@ -164,6 +184,8 @@ public class ServerHitBin {
                     case REQUEST: bin = (ServerHitBin) requestSinceStarted.get(id); break;
                     case EVENT: bin = (ServerHitBin) eventSinceStarted.get(id); break;
                     case VIEW: bin = (ServerHitBin) viewSinceStarted.get(id); break;
+                    case ENTITY: bin = (ServerHitBin) entitySinceStarted.get(id); break;
+                    case SERVICE: bin = (ServerHitBin) serviceSinceStarted.get(id); break;
                 }
 
                 if (bin == null) {
@@ -172,6 +194,8 @@ public class ServerHitBin {
                         case REQUEST: requestSinceStarted.put(id, bin); break;
                         case EVENT: eventSinceStarted.put(id, bin); break;
                         case VIEW: viewSinceStarted.put(id, bin); break;
+                        case ENTITY: entitySinceStarted.put(id, bin); break;
+                        case SERVICE: serviceSinceStarted.put(id, bin); break;
                     }
                 }
             }
@@ -187,11 +211,15 @@ public class ServerHitBin {
     public static Map requestHistory = new HashMap();
     public static Map eventHistory = new HashMap();
     public static Map viewHistory = new HashMap();
+    public static Map entityHistory = new HashMap();
+    public static Map serviceHistory = new HashMap();
 
     //these Maps contain ServerHitBin objects by id
     public static Map requestSinceStarted = new HashMap();
     public static Map eventSinceStarted = new HashMap();
     public static Map viewSinceStarted = new HashMap();
+    public static Map entitySinceStarted = new HashMap();
+    public static Map serviceSinceStarted = new HashMap();
 
     GenericDelegator delegator;
     String id;
@@ -342,6 +370,12 @@ public class ServerHitBin {
                     break;
                 case VIEW:
                     binList = (LinkedList) viewHistory.get(id);
+                    break;
+                case ENTITY:
+                    binList = (LinkedList) entityHistory.get(id);
+                    break;
+                case SERVICE:
+                    binList = (LinkedList) serviceHistory.get(id);
                     break;
             }
 
