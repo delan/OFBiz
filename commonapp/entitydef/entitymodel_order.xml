@@ -94,7 +94,7 @@
       <relation type="one-nofk" rel-entity-name="ProductPromoAction">
         <key-map field-name="productPromoId"/>
         <key-map field-name="productPromoRuleId"/>
-        <key-map field-name="productPromoActionId"/>
+        <key-map field-name="productPromoActionSeqId"/>
       </relation>
     </entity>
     <entity entity-name="OrderAdjustmentAttribute"
