@@ -169,8 +169,8 @@ public class LoginEvents {
                     session.setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
                 }
 
-                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString);
-                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo());
+                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString, module);
+                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo(), module);
 
                 return "error";
             }
@@ -215,7 +215,7 @@ public class LoginEvents {
         try {
             result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password, "visitId", visitId));
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Error calling userLogin service");
+            Debug.logError(e, "Error calling userLogin service", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<b>The following error occurred during login:</b><br>" + e.getMessage());
             return "error";
         }
@@ -336,7 +336,7 @@ public class LoginEvents {
         try {
             supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee);
+            Debug.logWarning(gee, "", module);
         }
         if (supposedUserLogin == null) {
             // the Username was not found
@@ -408,7 +408,7 @@ public class LoginEvents {
                 passwordToSend = supposedUserLogin.getString("currentPassword");
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, "", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error accessing password: " + e.toString());
             return "error";
         }
@@ -424,7 +424,7 @@ public class LoginEvents {
         try {
             party = supposedUserLogin.getRelatedOne("Party");
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e, "", module);
             party = null;
         }
         if (party != null) {         
@@ -485,7 +485,7 @@ public class LoginEvents {
                 return "error";
             }
         } catch (GenericServiceException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, "", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error occurred: unable to email password.  Please try again later or contact customer service.");
             return "error";
         }
@@ -495,7 +495,7 @@ public class LoginEvents {
             try {
                 supposedUserLogin.store();
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, "", module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error saving new password, the email that you receive will not have the correct password in it, your old password is still being used: " + e.toString());
                 return "error";
             }
@@ -516,7 +516,7 @@ public class LoginEvents {
     public static String getAutoUserLoginId(HttpServletRequest request) {
         String autoUserLoginId = null;
         Cookie[] cookies = request.getCookies();
-        Debug.logInfo("Cookies:" + cookies, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Cookies:" + cookies, module);
         if (cookies != null) {
             for (int i = 0; i < cookies.length; i++) {
                 if (cookies[i].getName().equals(getAutoLoginCookieName(request))) {
@@ -537,7 +537,7 @@ public class LoginEvents {
 
     private static String autoLoginCheck(GenericDelegator delegator, HttpSession session, String autoUserLoginId) {
         if (autoUserLoginId != null) {
-            Debug.logInfo("Running autoLogin check.");
+            Debug.logInfo("Running autoLogin check.", module);
             try {
                 GenericValue autoUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", autoUserLoginId));
                 GenericValue person = null;
@@ -553,7 +553,7 @@ public class LoginEvents {
                     session.setAttribute("autoName", group.getString("groupName"));
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot get autoUserLogin information: " + e.getMessage());
+                Debug.logError(e, "Cannot get autoUserLogin information: " + e.getMessage(), module);
             }
         }
         return "success";
@@ -596,7 +596,7 @@ public class LoginEvents {
      * Gets (and creates if necessary) a key to be used for an external login parameter
      */
     public static String getExternalLoginKey(HttpServletRequest request) {
-        Debug.logInfo("Running getExternalLoginKey, externalLoginKeys.size=" + externalLoginKeys.size());
+        Debug.logInfo("Running getExternalLoginKey, externalLoginKeys.size=" + externalLoginKeys.size(), module);
         GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
         
         String externalKey = (String) request.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
@@ -650,7 +650,7 @@ public class LoginEvents {
 
             doBasicLogin(userLogin, request);
         } else {
-            Debug.logWarning("Could not find userLogin for external login key: " + externalKey);
+            Debug.logWarning("Could not find userLogin for external login key: " + externalKey, module);
         }
         
         return "success";

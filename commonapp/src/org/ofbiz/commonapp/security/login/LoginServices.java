@@ -96,7 +96,7 @@ public class LoginServices {
                         userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
                     }
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, "", module);
                 }
 
                 if (userLogin != null) {
@@ -107,7 +107,7 @@ public class LoginServices {
                         loginDisableMinutes = Long.parseLong(ldmStr);
                     } catch (Exception e) {
                         loginDisableMinutes = 30;
-                        Debug.logWarning("Could not parse login.disable.minutes from security.properties, using default of 30");
+                        Debug.logWarning("Could not parse login.disable.minutes from security.properties, using default of 30", module);
                     }
 
                     Timestamp disabledDateTime = userLogin.getTimestamp("disabledDateTime");
@@ -129,7 +129,7 @@ public class LoginServices {
                         if (userLogin.get("currentPassword") != null &&
                             (realPassword.equals(userLogin.getString("currentPassword")) ||
                                 ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword"))))) {
-                            Debug.logVerbose("[LoginServices.userLogin] : Password Matched");
+                            Debug.logVerbose("[LoginServices.userLogin] : Password Matched", module);
 
                             // reset failed login count if necessry
                             Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
@@ -177,7 +177,7 @@ public class LoginServices {
                                 continue;
                             }
 
-                            Debug.logInfo("[LoginServices.userLogin] : Password Incorrect");
+                            Debug.logInfo("[LoginServices.userLogin] : Password Incorrect", module);
                             // password invalid...
                             errMsg = "Password incorrect.";
 
@@ -199,7 +199,7 @@ public class LoginServices {
                                 maxFailedLogins = Long.parseLong(mflStr);
                             } catch (Exception e) {
                                 maxFailedLogins = 3;
-                                Debug.logWarning("Could not parse max.failed.logins from security.properties, using default of 3");
+                                Debug.logWarning("Could not parse max.failed.logins from security.properties, using default of 3", module);
                             }
 
                             if (maxFailedLogins > 0 && currentFailedLogins.longValue() >= maxFailedLogins) {
@@ -223,9 +223,9 @@ public class LoginServices {
                                     parentTx = txMgr.suspend();
                                     beganTransaction = TransactionUtil.begin();
                                 } catch (SystemException se) {
-                                    Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
+                                    Debug.logError(se, "Cannot suspend transaction: " + se.getMessage(), module);
                                 } catch (GenericTransactionException e) {
-                                    Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage());
+                                    Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
                                 }
                             }
                         
@@ -233,7 +233,7 @@ public class LoginServices {
                                 try {
                                     userLogin.store();
                                 } catch (GenericEntityException e) {
-                                    Debug.logWarning(e);
+                                    Debug.logWarning(e, "", module);
                                 }
                             }
 
@@ -250,7 +250,7 @@ public class LoginServices {
                                                 "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
                                                 "partyId", userLogin.get("partyId"), "successfulLogin", successfulLogin));
                                     } catch (GenericEntityException e) {
-                                        Debug.logWarning(e);
+                                        Debug.logWarning(e, "", module);
                                     }
                                 }
                             }
@@ -258,7 +258,7 @@ public class LoginServices {
                             try {
                                 TransactionUtil.commit(beganTransaction);
                             } catch (GenericTransactionException e) {
-                                Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage());
+                                Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
                             }
                         } finally {
                             // resume/restore parent transaction                        
@@ -267,9 +267,9 @@ public class LoginServices {
                                     txMgr.resume(parentTx);
                                     Debug.logVerbose("Resumed the parent transaction.", module);
                                 } catch (InvalidTransactionException ite) {
-                                    Debug.logError(ite, "Cannot resume transaction: " + ite.getMessage());
+                                    Debug.logError(ite, "Cannot resume transaction: " + ite.getMessage(), module);
                                 } catch (SystemException se) {
-                                    Debug.logError(se, "Unexpected transaction error: " + se.getMessage());
+                                    Debug.logError(se, "Unexpected transaction error: " + se.getMessage(), module);
                                 }
                             }
                         }
@@ -298,7 +298,7 @@ public class LoginServices {
                 } else {
                     // userLogin record not found, user does not exist
                     errMsg = "User not found.";
-                    Debug.logInfo("[LoginServices.userLogin] : Invalid User");
+                    Debug.logInfo("[LoginServices.userLogin] : Invalid User : " + errMsg, module);
                 }
             }
         }
@@ -338,7 +338,7 @@ public class LoginServices {
             try {
                 party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e, "", module);
             }
 
             if (party != null) {
@@ -367,7 +367,7 @@ public class LoginServices {
                 errorMessageList.add("Could not create login user: user with ID \"" + userLoginId + "\" already exists");
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, "", module);
             errorMessageList.add("Could not create login user (read failure): " + e.getMessage());
         }
 
@@ -378,7 +378,7 @@ public class LoginServices {
         try {
             userLoginToCreate.create();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e, "", module);
             return ServiceUtil.returnError("Could create login user (write failure): " + e.getMessage());
         }
 
@@ -497,7 +497,7 @@ public class LoginServices {
             try {
                 party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e, "", module);
             }
 
             if (loggedInUserLogin != null) {
@@ -517,7 +517,7 @@ public class LoginServices {
         try {
             newUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, "", module);
             errorMessageList.add("Could not create login user (read failure): " + e.getMessage());
         }
 
@@ -548,7 +548,7 @@ public class LoginServices {
                 newUserLogin.store();
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e, "", module);
             return ServiceUtil.returnError("Couldn't create login user (write failure): " + e.getMessage());
         }
 
@@ -558,7 +558,7 @@ public class LoginServices {
         try {
             loggedInUserLogin.store();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e, "", module);
             return ServiceUtil.returnError("Couldn't disable old login user (write failure): " + e.getMessage());
         }
 
