@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.7 2003/08/25 21:56:55 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.8 2003/08/26 14:07:50 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 
@@ -608,7 +608,9 @@ public class OrderServices {
         }
         
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        Debug.log("Shippable Total : " + orh.getShippableTotal(), module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Shippable Total : " + orh.getShippableTotal(), module);
+        }
         
         Map shippingEstMap = ShippingEvents.getShipEstimate(delegator, orh);
         
@@ -617,12 +619,17 @@ public class OrderServices {
             shippingTotal = new Double(0.00);
         } else {
             shippingTotal = (Double) shippingEstMap.get("shippingTotal");    
-        }                
-        Debug.log("New Shipping Total : " + shippingTotal, module);
+        }
+        if (Debug.verboseOn()) {               
+            Debug.logVerbose("New Shipping Total : " + shippingTotal, module);
+        }
         
         double currentShipping = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orh.getOrderItems(), orh.getAdjustments(), false, false, true);
         currentShipping += OrderReadHelper.calcOrderAdjustments(orh.getOrderHeaderAdjustments(), orh.getOrderItemsSubTotal(), false, false, true);
-        Debug.log("Old Shipping Total : " + currentShipping);
+        
+        if (Debug.verboseOn()) {
+            Debug.log("Old Shipping Total : " + currentShipping);
+        }
         
         List errorMessageList = (List) shippingEstMap.get(ModelService.ERROR_MESSAGE_LIST);
         if (errorMessageList != null) {
