@@ -23,12 +23,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.8 2004/01/26 18:34:40 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.9 2004/02/10 23:24:11 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
-	<!-- load the ofbiz components (always first) -->
-	<container name="component-container" class="org.ofbiz.base.container.ComponentContainer"/>
+    <!-- load the ofbiz components (always first) -->
+    <container name="component-container" class="org.ofbiz.base.container.ComponentContainer"/>
 
     <!-- load the cached classloader container (always second) -->
     <container name="classloader-container" class="org.ofbiz.base.container.ClassLoaderContainer"/>
@@ -44,50 +44,50 @@
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>
     </container>
 
-	<!-- load jetty and all web applications -->
-	<container name="jetty-container" class="org.ofbiz.base.container.JettyContainer">
-		<property name="default-server">
-                        <property name="https-listener" value="listener">
-                                <property name="type" value="sun-jsse"/>
-                                <property name="host" value="0.0.0.0"/>
-                                <property name="port" value="8443"/>
-                                <property name="min-threads" value="5"/>
-                                <property name="max-threads" value="100"/>
-                                <property name="max-idle-time" value="30000"/>
-                                <property name="keystore" value="base/config/ofbizssl.jks"/>
-                                <property name="password" value="changeit"/>
-                                <property name="key-password" value="changeit"/>
-                                <property name="identify-listener" value="true"/>
-                                <property name="low-resource-persist-time" value="5000"/>
-                        </property>
-			<property name="http-listener" value="listener">
-				<property name="type" value="default"/>
-				<property name="host" value="0.0.0.0"/>
-				<property name="port" value="8080"/>
-				<property name="min-threads" value="5"/>
-				<property name="max-threads" value="100"/>
-				<property name="max-idle-time" value="30000"/>
-                                <property name="identify-listener" value="true"/>
-				<property name="low-resource-persist-time" value="5000"/>
-			</property>
-                        <property name="ajp13-listener" value="listener">
-                                <property name="type" value="ajp13"/>
-                                <property name="host" value="0.0.0.0"/>
-                                <property name="port" value="8009"/>
-                                <property name="min-threads" value="5"/>
-                                <property name="max-threads" value="100"/>
-                                <property name="max-idle-time" value="30000"/>
-                                <property name="buffer-size" value="8192"/>
-                                <property name="identify-listener" value="true"/>
-                        </property>
-			<property name="request-log" value="request-log">
-				<property name="filename" value="logs/yyyy_mm_dd.request.log"/>
-				<property name="buffered" value="false"/>
-				<property name="append" value="true"/>
-				<property name="extended" value="true"/>
-				<property name="timezone" value="GMT"/>
-				<property name="retain-days" value="90"/>
-			</property>
-		</property>
-	</container>
+    <!-- load jetty and all web applications -->
+    <container name="jetty-container" class="org.ofbiz.base.container.JettyContainer">
+        <property name="default-server">
+            <property name="https-listener" value="listener">
+                <property name="type" value="sun-jsse"/>
+                <property name="host" value="0.0.0.0"/>
+                <property name="port" value="8443"/>
+                <property name="min-threads" value="5"/>
+                <property name="max-threads" value="100"/>
+                <property name="max-idle-time" value="30000"/>
+                <property name="keystore" value="base/config/ofbizssl.jks"/>
+                <property name="password" value="changeit"/>
+                <property name="key-password" value="changeit"/>
+                <property name="identify-listener" value="true"/>
+                <property name="low-resource-persist-time" value="5000"/>
+             </property>
+            <property name="http-listener" value="listener">
+                <property name="type" value="default"/>
+                <property name="host" value="0.0.0.0"/>
+                <property name="port" value="8080"/>
+                <property name="min-threads" value="5"/>
+                <property name="max-threads" value="100"/>
+                <property name="max-idle-time" value="30000"/>
+                <property name="identify-listener" value="true"/>
+                <property name="low-resource-persist-time" value="5000"/>
+            </property>
+            <property name="ajp13-listener" value="listener">
+                <property name="type" value="ajp13"/>
+                <property name="host" value="0.0.0.0"/>
+                <property name="port" value="8009"/>
+                <property name="min-threads" value="5"/>
+                <property name="max-threads" value="100"/>
+                <property name="max-idle-time" value="30000"/>
+                <property name="buffer-size" value="8192"/>
+                <property name="identify-listener" value="true"/>
+            </property>
+            <property name="request-log" value="request-log">
+                <property name="filename" value="logs/yyyy_mm_dd.request.log"/>
+                <property name="buffered" value="false"/>
+                <property name="append" value="true"/>
+                <property name="extended" value="true"/>
+                <property name="timezone" value="GMT"/>
+                <property name="retain-days" value="90"/>
+            </property>
+        </property>
+    </container>
 </ofbiz-containers>
