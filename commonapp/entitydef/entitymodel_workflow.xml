@@ -580,9 +580,6 @@
       <relation type="many" rel-entity-name="WorkflowParticipant">
         <key-map field-name="participantTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="WorkflowParticipantsView">
-        <key-map field-name="participantTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="WorkflowProcess"
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -645,9 +642,6 @@
         <key-map field-name="publicationStatusId" rel-field-name="statusId"/>
       </relation>
       <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantList">
-        <key-map field-name="responsibleListId" rel-field-name="participantListId"/>
-      </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="responsibleListId" rel-field-name="participantListId"/>
       </relation>
       <relation type="one-nofk" title="Duration" rel-entity-name="Uom">
