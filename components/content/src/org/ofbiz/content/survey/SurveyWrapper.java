@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.9 2004/05/21 05:53:49 ajzeneski Exp $
+ * $Id: SurveyWrapper.java,v 1.10 2004/05/21 07:05:38 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -81,6 +81,10 @@ public class SurveyWrapper {
             this.passThru = new HashMap(passThru);
         }
         this.checkParameters();
+    }
+
+    public SurveyWrapper(GenericDelegator delegator, String surveyId) {
+        this(delegator, null, null, surveyId, null);
     }
 
     protected void checkParameters() {
@@ -154,7 +158,7 @@ public class SurveyWrapper {
     }
 
     // returns the GenericValue object for the current Survey
-    protected GenericValue getSurvey() {
+    public GenericValue getSurvey() {
         GenericValue survey = null;
         try {
             survey = delegator.findByPrimaryKey("Survey", UtilMisc.toMap("surveyId", surveyId));
@@ -165,7 +169,7 @@ public class SurveyWrapper {
     }
 
     // true if we can update this survey
-    protected boolean canUpdate() {
+    public boolean canUpdate() {
         GenericValue survey = this.getSurvey();
         if (!"Y".equals(survey.getString("allowMultiple")) || !"Y".equals(survey.getString("allowUpdate"))) {
             return false;
@@ -187,7 +191,7 @@ public class SurveyWrapper {
     }
 
     // returns a list of SurveyQuestions (in order by sequence number) for the current Survey
-    protected List getSurveyQuestions() {
+    public List getSurveyQuestions() {
         List questions = new LinkedList();
 
         try {
@@ -237,8 +241,28 @@ public class SurveyWrapper {
         this.responseId = responseId;
     }
 
+    public long getNumberResponses() throws SurveyWrapperException {
+        long responses = 0;
+        try {
+            responses = delegator.findCountByAnd("SurveyResponse", UtilMisc.toMap("surveyId", surveyId));
+        } catch (GenericEntityException e) {
+            throw new SurveyWrapperException(e);
+        }
+        return responses;
+    }
+
+    public List getSurveyResponses(GenericValue question) throws SurveyWrapperException {
+        List responses = null;
+        try {
+            responses = delegator.findByAnd("SurveyResponse", UtilMisc.toMap("surveyQuestionId", question.getString("surveyQuestionId")));
+        } catch (GenericEntityException e) {
+            throw new SurveyWrapperException(e);
+        }
+        return responses;
+    }
+
     // returns a Map of answers keyed on SurveyQuestion ID from the most current SurveyResponse ID
-    protected Map getResponseAnswers(String responseId) throws SurveyWrapperException {
+    public Map getResponseAnswers(String responseId) throws SurveyWrapperException {
         if (responseId == null) {
             throw new SurveyWrapperException("Null response ID is not supported at this time");
         }
@@ -287,7 +311,7 @@ public class SurveyWrapper {
         return answerMap;
     }
 
-    protected Map getResults(List questions) throws SurveyWrapperException {
+    public Map getResults(List questions) throws SurveyWrapperException {
         Map questionResults = new HashMap();
         if (questions != null) {
             Iterator i = questions.iterator();
@@ -303,7 +327,7 @@ public class SurveyWrapper {
     }
 
     // returns a map of question reqsults
-    protected Map getResultInfo(GenericValue question) throws SurveyWrapperException {
+    public Map getResultInfo(GenericValue question) throws SurveyWrapperException {
         Map resultMap = new HashMap();
 
         // special keys in the result:
