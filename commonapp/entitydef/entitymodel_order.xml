@@ -169,12 +169,11 @@
     <entity entity-name="OrderContactMech"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Contact Mechanism Entity">
-      <field name="contactMechId" type="id-ne"></field>
-      <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
-      <prim-key field="contactMechId"/>
-      <prim-key field="contactMechPurposeTypeId"/>
+      <field name="contactMechPurposeTypeId" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>
       <prim-key field="orderId"/>
+      <prim-key field="contactMechPurposeTypeId"/>
       <relation type="one" fk-name="ORDER_CMECH_HDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
@@ -492,14 +491,13 @@
     <entity entity-name="OrderItemContactMech"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Contact Mechanism Entity">
-      <field name="contactMechId" type="id-ne"></field>
-      <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
-      <prim-key field="contactMechId"/>
-      <prim-key field="contactMechPurposeTypeId"/>
+      <field name="contactMechPurposeTypeId" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
+      <prim-key field="contactMechPurposeTypeId"/>
       <relation type="one" fk-name="ORDER_ITCM_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
