@@ -46,8 +46,8 @@
 <div class="head1">Facilities List</div>
 
 <br>
+<div><a href='<ofbiz:url>/EditFacility</ofbiz:url>' class="buttontext">[Create New Facility]</a></div>
 <br>
-<%if (productId != null){%>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Facility&nbsp;ID</b></div></td>
@@ -62,21 +62,17 @@
   <%if (facilityType != null) pageContext.setAttribute("facilityType", facilityType);%>
   <tr valign="middle">
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="facilityId"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facilityType" field="description"/> [<ofbiz:inputvalue entityAttr="facilityType" field="description"/>]</div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facilityType" field="description"/> [<ofbiz:inputvalue entityAttr="facilityType" field="facilityTypeId"/>]</div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="facilityName"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="squareFootage"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="description"/></div></td>
     <td>
-      <a href='<ofbiz:url>/EditInventoryItem?facilityId=<ofbiz:inputvalue entityAttr="facility" field="facilityId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="facility" field="facilityId"/></ofbiz:url>' class="buttontext">
       [Edit]</a>
     </td>
   </tr>
 </ofbiz:iterator>
 </table>
-<br>
-<a href='<ofbiz:url>/EditInventoryItem?productId=<%=productId%></ofbiz:url>' class="buttontext">
-[Create New Inventory Item for this Product]</a>
-<%}%>
 <br>
 
 <%}else{%>

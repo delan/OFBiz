@@ -167,10 +167,10 @@
         <td width="74%">
            Select a Facility:
            <select name="facilityId">
-             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'><ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/></option>
+             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'><ofbiz:entityfield attribute="inventoryItem" field="facilityId" prefix="[" suffix="]"/></option>
              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'>----</option>
              <ofbiz:iterator name="facility" property="facilities">
-               <option value='<ofbiz:inputvalue entityAttr="facility" field="facilityId"/>'><ofbiz:inputvalue entityAttr="facility" field="description"/></option>
+               <option value='<ofbiz:inputvalue entityAttr="facility" field="facilityId"/>'><ofbiz:inputvalue entityAttr="facility" field="facilityName"/> [<ofbiz:inputvalue entityAttr="facility" field="facilityId"/>]</option>
              </ofbiz:iterator>
            </select>
            <br>OR enter a Container ID:

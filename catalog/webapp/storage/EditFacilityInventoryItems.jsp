@@ -37,11 +37,11 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-    String productId = request.getParameter("productId");
-    Collection productInventoryItems = delegator.findByAnd("InventoryItem", 
-            UtilMisc.toMap("productId", productId), 
+    String facilityId = request.getParameter("facilityId");
+    Collection facilityInventoryItems = delegator.findByAnd("InventoryItem", 
+            UtilMisc.toMap("facilityId", facilityId), 
             UtilMisc.toList("statusId", "quantityOnHand", "serialNumber"));
-    if (productInventoryItems != null) pageContext.setAttribute("productInventoryItems", productInventoryItems);
+    if (facilityInventoryItems != null) pageContext.setAttribute("facilityInventoryItems", facilityInventoryItems);
 %>
 <br>
 
@@ -51,11 +51,11 @@
   <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="buttontextdisabled">[InventoryItems]</a>
 <%}%>
 
-<div class="head1">Inventory Items for Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
+<div class="head1">Inventory Items for Facility with ID "<%=UtilFormatOut.checkNull(facilityId)%>"</div>
 
 <br>
 <br>
-<%if (productId != null){%>
+<%if (facilityId != null){%>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Item&nbsp;ID</b></div></td>
@@ -67,7 +67,7 @@
     <td><div class="tabletext">&nbsp;</div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
-<ofbiz:iterator name="inventoryItem" property="productInventoryItems">
+<ofbiz:iterator name="inventoryItem" property="facilityInventoryItems">
   <%GenericValue curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType");%>
   <%if (curInventoryItemType != null) pageContext.setAttribute("curInventoryItemType", curInventoryItemType);%>
   <%boolean isQuantity = inventoryItem.get("quantityOnHand") != null && (inventoryItem.get("serialNumber") == null || inventoryItem.getString("serialNumber").length() == 0);%>
@@ -121,15 +121,15 @@
       [Edit]</a>
     </td>
     <td>
-      <a href='<ofbiz:url>/DeleteProductInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/DeleteFacilityInventoryItem?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
 </ofbiz:iterator>
 </table>
 <br>
-<a href='<ofbiz:url>/EditInventoryItem?productId=<%=productId%></ofbiz:url>' class="buttontext">
-[Create New Inventory Item for this Product]</a>
+<a href='<ofbiz:url>/EditInventoryItem?facilityId=<%=facilityId%></ofbiz:url>' class="buttontext">
+[Create New Inventory Item for this Facility]</a>
 <%}%>
 <br>
 

@@ -55,6 +55,7 @@
 
         facilityType = facility.getRelatedOne("FacilityType");
         if (facilityType != null) pageContext.setAttribute("facilityType", facilityType);
+    }
 
     //Facility types
     Collection facilityTypes = delegator.findAll("FacilityType");
@@ -69,16 +70,16 @@
 <%}%>
 
 <div class="head1">Edit Facility with ID "<%=UtilFormatOut.checkNull(facilityId)%>"</div>
-<%if(facility == null){%>
-  <%if(facilityId != null){%>
+<%if (facility == null) {%>
+  <%if (facilityId != null) {%>
     <form action="<ofbiz:url>/CreateFacility</ofbiz:url>" method=POST style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <h3>Could not find facility with ID "<%=facilityId%>".</h3>
-  <%}else{%>
+  <%} else {%>
     <form action="<ofbiz:url>/CreateFacility</ofbiz:url>" method=POST style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
   <%}%>
-<%}else{%>
+<%} else {%>
   <form action="<ofbiz:url>/UpdateFacility</ofbiz:url>" method=POST style='margin: 0;'>
   <table border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="facilityId" value="<%=facilityId%>">
@@ -112,7 +113,7 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Square Footage</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facility" field="squareFootage" fullattrs="true"/> size="30" maxlength="60"></td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="facility" field="squareFootage" fullattrs="true"/> size="10" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Description</div></td>
@@ -127,7 +128,7 @@
 </table>
 </form>
 
-<%}else{%>
+<%} else {%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
 </td><td>&nbsp;&nbsp;</td></tr></table>

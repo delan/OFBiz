@@ -40,8 +40,11 @@
           <ofbiz:if name="person">
             <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
           </ofbiz:if>
+          <td class="headerButtonRight"><a href="#" class="buttontext">WebSites</a></td>
+          <td class="headerButtonRight"><a href="#" class="buttontext">Catalogs</a></td>
           <td class="headerButtonRight"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Products</a></td>
           <td class="headerButtonRight"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="buttontext">Features</a></td>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/FindFacility</ofbiz:url>" class="buttontext">Facilities</a></td>
         </TR>
       </TABLE>
     </TD>
