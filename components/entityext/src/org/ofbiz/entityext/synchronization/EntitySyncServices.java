@@ -139,7 +139,7 @@ public class EntitySyncServices {
         List valuesToStore = (List) context.get("valuesToStore");
         List keysToRemove = (List) context.get("keysToRemove");
 
-        if (Debug.infoOn()) Debug.logInfo("Running storeEntitySyncData - [" + valuesToCreate.size() + "] to create; [" + valuesToStore.size() + "] to store; [" + keysToRemove.size() + "] to remove.", module);
+        if (Debug.infoOn()) Debug.logInfo("Running storeEntitySyncData (" + entitySyncId + ") - [" + valuesToCreate.size() + "] to create; [" + valuesToStore.size() + "] to store; [" + keysToRemove.size() + "] to remove.", module);
         try {
             long toCreateInserted = 0;
             long toCreateUpdated = 0;
