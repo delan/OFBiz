@@ -93,18 +93,6 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="createEntitySyncHistory" default-entity-name="EntitySyncHistory" engine="simple"
-            location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="createEntitySyncHistory" auth="true">
-        <description>Create EntitySyncHistory</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="updateEntitySyncHistory" default-entity-name="EntitySyncHistory" engine="simple"
-            location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="updateEntitySyncHistory" auth="true">
-        <description>Update EntitySyncHistory</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
     <service name="createEntitySyncInclude" default-entity-name="EntitySyncInclude" engine="simple"
             location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="createEntitySyncInclude" auth="true">
         <description>Create EntitySyncInclude</description>
@@ -123,15 +111,32 @@
         <description>Delete EntitySyncInclude</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="updateEntitySyncRunning" engine="simple"
+            location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="updateEntitySync" auth="true" require-new-transaction="true">
+        <description>Update EntitySync while Running</description>
+        <implements service="updateEntitySync"/>
+    </service>
+    <service name="createEntitySyncHistory" default-entity-name="EntitySyncHistory" engine="simple"
+            location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="createEntitySyncHistory" auth="true" require-new-transaction="true">
+        <description>Create EntitySyncHistory</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateEntitySyncHistory" default-entity-name="EntitySyncHistory" engine="simple"
+            location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="updateEntitySyncHistory" auth="true" require-new-transaction="true">
+        <description>Update EntitySyncHistory</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
 
     <!-- Entity Remote Synchronization services -->
     <service name="runEntitySync" engine="java"
-            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="runEntitySync" auth="true">
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="runEntitySync" auth="true" require-new-transaction="true" transaction-timout="7200">
         <description>Run Entity Sync</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="storeEntitySyncData" engine="java"
-            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="storeEntitySyncData" auth="true">
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="storeEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
         <description>Run Entity Sync</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
         <attribute name="valuesToStore" type="List" mode="IN" optional="false"/>
