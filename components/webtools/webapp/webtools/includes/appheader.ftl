@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,25 +24,24 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign security = requestAttributes.security>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+<#if (requestAttributes.security)?exists><#assign security = requestAttributes.security></#if>
+<#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
+<#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
+
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {(page.headerItem)?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {(page.headerItem)?default("void") : "headerButtonRightSelected"}>
 
-<div class="apptitle">&nbsp;${uiLabelMap.ProductFacilityManagerApplication}&nbsp;</div>
-<div class="row"> 
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.ProductMain}</a></div>
-  <div class="col"><a href="<@ofbizUrl>/FindFacility</@ofbizUrl>" class="${selectedLeftClassMap.facility?default(unselectedLeftClassName)}">${uiLabelMap.ProductFacilities}</a></div> 
-  <div class="col"><a href="<@ofbizUrl>/FindFacilityGroup</@ofbizUrl>" class="${selectedLeftClassMap.facilityGroup?default(unselectedLeftClassName)}">${uiLabelMap.ProductFacilityGroups}</a></div>
-  <div class="col"><a href="<@ofbizUrl>/FindShipment</@ofbizUrl>" class="${selectedLeftClassMap.shipment?default(unselectedLeftClassName)}">${uiLabelMap.ProductShipments}</a></div> 
-  
+<div class="apptitle">${uiLabelMap.FrameworkWebTools}</div>
+<div class="row">
+  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerButtonLeft">Main</a></div>  
+
   <#if requestAttributes.userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>
-

@@ -4,3 +4,5 @@
   <div class="tabletext">Powered By <a href="http://www.ofbiz.org" class="tabletext" target="_blank">OFBiz</a></div>
 </div>
 <br>
+</body>
+</html>

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
@@ -29,8 +29,8 @@
 <#assign security = requestAttributes.security>
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
-<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
-<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
+<#assign selectedLeftClassMap = {(page.headerItem)?default("void") : "headerButtonLeftSelected"}>
+<#assign selectedRightClassMap = {(page.headerItem)?default("void") : "headerButtonRightSelected"}>
 
 <div class="apptitle">&nbsp;${uiLabelMap.PartyManagerApplication}&nbsp;</div>
 <div class="row">

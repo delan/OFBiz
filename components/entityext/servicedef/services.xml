@@ -162,6 +162,17 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <service name="cleanSyncRemoveInfo" engine="java"
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="cleanSyncRemoveInfo" auth="true" transaction-timout="600">
+        <description>Clean EntitySyncRemove Info - Generally should be run asynchronously after each sync run, or periodically run on a schedule</description>
+    </service>
+    <service name="resetEntitySyncStatusToNotStarted" engine="simple"
+            location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="resetEntitySyncStatusToNotStarted" auth="true" transaction-timout="600">
+        <description>Generally run manually to reset the status of an EntitySync when it has "crashed". Update a EntitySync, set the Status to ESR_NOT_STARTED, but ONLY if running (ie in ESR_RUNNING)</description>
+        <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
+    </service>
+
+
     <!-- Entity Remote Synchronization services -->
     <service name="runEntitySync" engine="java"
             location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="runEntitySync" 
@@ -185,10 +196,6 @@
         <attribute name="toStoreNotUpdated" type="Long" mode="OUT" optional="false"/>
         <attribute name="toRemoveDeleted" type="Long" mode="OUT" optional="false"/>
         <attribute name="toRemoveAlreadyDeleted" type="Long" mode="OUT" optional="false"/>
-    </service>
-    <service name="cleanSyncRemoveInfo" engine="java"
-            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="cleanSyncRemoveInfo" auth="true" transaction-timout="600">
-        <description>Clean EntitySyncRemove Info - Generally should be run asynchronously after each sync run, or periodically run on a schedule</description>
     </service>
 
     <!-- Services for Entity Sync Data Pulling -->

@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -30,8 +30,8 @@
 <#assign security = requestAttributes.security>
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
-<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
-<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
+<#assign selectedLeftClassMap = {(page.headerItem)?default("void") : "headerButtonLeftSelected"}>
+<#assign selectedRightClassMap = {(page.headerItem)?default("void") : "headerButtonRightSelected"}>
 
 <div class="apptitle">&nbsp;${uiLabelMap.ManufacturingManagerApplication}&nbsp;</div>
 <div class="row">

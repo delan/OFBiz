@@ -83,13 +83,11 @@ public class ByConditionFinder {
         this.delegatorNameExdr = new FlexibleStringExpander(element.getAttribute("delegator-name"));
         this.listAcsr = new FlexibleMapAccessor(element.getAttribute("list-name"));
         this.resultSetTypeExdr = new FlexibleStringExpander(element.getAttribute("result-set-type"));
-        
+
+        // NOTE: the whereCondition can be null, ie (condition-expr | condition-list) is optional; if left out, means find all, or with no condition in essense  
         // process condition-expr | condition-list
         Element conditionExprElement = UtilXml.firstChildElement(element, "condition-expr");
         Element conditionListElement = UtilXml.firstChildElement(element, "condition-list");
-        if (conditionExprElement != null && conditionListElement != null) {
-            throw new IllegalArgumentException("In entity find by condition element, cannot have condition-expr and condition-list sub-elements");
-        }
         if (conditionExprElement != null) {
             this.whereCondition = new ConditionExpr(conditionExprElement);
         } else if (conditionListElement != null) {

@@ -46,9 +46,21 @@
         <check-errors/>
 
         <field-to-field field-name="entitySyncId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="EntitySync" map-name="lookupPKMap" value-name="store"/>
-        <set-nonpk-fields map-name="parameters" value-name="store"/>
-        <store-value value-name="store"/>
+        <find-by-primary-key entity-name="EntitySync" map-name="lookupPKMap" value-name="valueToStore"/>
+        <set-nonpk-fields map-name="parameters" value-name="valueToStore"/>
+        <store-value value-name="valueToStore"/>
+    </simple-method>
+    <simple-method method-name="resetEntitySyncStatusToNotStarted" short-description="Update a EntitySync, set the Status to ESR_NOT_STARTED, but ONLY if running (ie in ESR_RUNNING)">
+        <check-permission permission="ENTITY_SYNC" action="_UPDATE"><fail-message message="Security Error: to run resetEntitySyncStatusToNotStarted you must have the ENTITY_SYNC_UPDATE or ENTITY_SYNC_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <!-- TODO: add some code to make sure, as much as possible, that this really isn't running -->
+        <field-to-field field-name="entitySyncId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="EntitySync" map-name="lookupPKMap" value-name="valueToStore"/>
+        <if-compare field-name="valueToStore.runStatusId" operator="equals" value="ESR_RUNNING">
+            <string-to-field string="ESR_NOT_STARTED" field-name="valueToStore.runStatusId"></string-to-field>
+            <store-value value-name="valueToStore"/>
+        </if-compare>
     </simple-method>
 
     <!-- EntitySyncHistory services -->

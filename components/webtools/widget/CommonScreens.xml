@@ -29,13 +29,13 @@
     <screen name="main">
         <section>
             <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="layoutSettings.companyName" from-field="uiLabelMap.CatalogCompanyName" global="true"/>
-                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ProductCompanySubtitle" global="true"/>
+                <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.WebtoolsCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.WebtoolsCompanySubtitle" global="true"/>
                 <set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.jpg" global="true"/>
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
-                <set field="activeApp" value="accountingmgr" global="true"/>
+                <set field="activeApp" value="webtools" global="true"/>
             </actions>
             <widgets>
                 <!-- render header -->

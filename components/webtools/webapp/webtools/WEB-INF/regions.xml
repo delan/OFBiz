@@ -4,11 +4,12 @@
 <regions>
     <define id="MAIN_REGION" template="/templates/main_template.jsp">
         <put section="title">Application Page</put> <!-- this is a default and is meant to overridden -->
-        <put section="header" type="jpublish" content="/includes/header.ftl"/>
-        <put section="appbar" type="jpublish" content="/includes/appbar.ftl"/>
-        <put section="error" type="jpublish" content="/includes/errormsg.ftl"/>
+        <put section="header" type="ftl" content="/includes/header.ftl"/>
+        <put section="appbar" type="ftl" content="/includes/appbar.ftl"/>
+        <put section="appheader" type="ftl" content="/includes/appheader.ftl"/>
+        <put section="error" type="ftl" content="/includes/messages.ftl"/>
         <put section="content" content="/main.jsp"/> <!-- this is a default and is meant to overridden -->
-        <put section="footer" type="jpublish" content="/includes/footer.ftl"/>
+        <put section="footer" type="ftl" content="/includes/footer.ftl"/>
     </define>
 
     <!-- ====== Start View Specific Regions ====== -->
