@@ -127,7 +127,13 @@ public class FlexibleMapAccessor {
         Object ret = null;
         if (this.isListReference) {
             List lst = (List) newBase.get(this.extName);
-            ret = lst.get(this.listIndex);
+            if (lst == null) {
+                return null;
+            }
+            if (lst.size() == 0) {
+                return null;
+            }
+            ret = lst.get(this.isAddAtEnd ? lst.size() -1 : this.listIndex);
         } else {
             ret = getByLocale(this.extName, base, newBase, locale);
         }
@@ -180,6 +186,10 @@ public class FlexibleMapAccessor {
         }
         if (this.isListReference) {
             List lst = (List) base.get(this.extName);
+            if (lst == null) {
+                lst = new LinkedList();
+                base.put(this.extName, lst);
+            }
             //if brackets are empty, append to list
             if (this.isAddAtEnd) {
                 lst.add(value);
