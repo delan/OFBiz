@@ -41,36 +41,6 @@
   <ofbiz:param name="resp" mode="OUT" alias="respMgs"/>
 </ofbiz:service>
 
-<%
-    String helperName = delegator.getEntityHelperName("ProductPrice");
-    Connection con = null;
-    PreparedStatement stmt = null;
-    ResultSet result = null;
-
-    Debug.logError("\n\n----------------------------------\n\n");
-    try {
-        con = ConnectionFactory.getConnection(helperName);
-        stmt = con.prepareStatement("SELECT * FROM product_price WHERE price >= ?");
-        stmt.setDouble(1, 50.00);
-        result = stmt.executeQuery();
-        Debug.logInfo(""+result);
-    } catch (SQLException e) {
-        Debug.logError(e.getMessage());
-    } catch (Throwable t) {
-        Debug.logError(t);
-    }
-
-    Debug.logError("\n\n----------------------------------\n\n");
-    try {
-        List testList = delegator.findByAnd("ProductPrice", UtilMisc.toList(new EntityExpr("price", EntityOperator.GREATER_THAN_EQUAL_TO, new Double(50.00)))); 
-        Debug.logInfo(""+testList);
-    } catch (GenericEntityException e) {
-        Debug.logError(e.getMessage());
-    } catch (Throwable t) {
-        Debug.logError(t);
-    }
-%>
-
 <% if (Debug.verboseOn()) Debug.logVerbose("Response Message: " + pageContext.findAttribute("respMgs")); %>
 
 <BR>
