@@ -1085,13 +1085,15 @@ public class XpdlReader {
 
             String dataFieldId = dataFieldElement.getAttribute("Id");
             String dataFieldName = dataFieldElement.getAttribute("Name");
+            if (dataFieldName == null || dataFieldName.length() == 0)
+                dataFieldName = dataFieldId;
 
             dataFieldValue.set("packageId", packageId);
             dataFieldValue.set("packageVersion", packageVersion);
             dataFieldValue.set("processId", processId);
             dataFieldValue.set("processVersion", processVersion);
             dataFieldValue.set("dataFieldId", dataFieldId);
-            dataFieldValue.set("dataFieldName", dataFieldName == null ? dataFieldId : dataFieldName);
+            dataFieldValue.set("dataFieldName", dataFieldName);
 
             // IsArray attr
             dataFieldValue.set("isArray", ("TRUE".equals(dataFieldElement.getAttribute("IsArray")) ? "Y" : "N"));
