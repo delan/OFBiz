@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="base/src/base"/>
+	<classpathentry kind="src" path="components/minerva/src"/>
 	<classpathentry kind="src" path="base/src/start"/>
 	<classpathentry kind="src" path="components/entity/src"/>
 	<classpathentry kind="src" path="components/security/src"/>
@@ -89,7 +90,6 @@
 	<classpathentry kind="lib" path="components/shark/lib/sharkcaching-lru.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkassignment-standard.jar"/>
 	<classpathentry kind="lib" path="base/lib/junit.jar"/>
-	<classpathentry kind="lib" path="components/minerva/build/lib/ofbiz-minerva.jar"/>
 	<classpathentry kind="lib" path="base/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="base/lib/log4j.jar"/>
 	<classpathentry kind="lib" path="base/lib/jsp-api.jar"/>

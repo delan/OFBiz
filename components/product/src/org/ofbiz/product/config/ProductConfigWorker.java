@@ -26,14 +26,11 @@ package org.ofbiz.product.config;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.service.LocalDispatcher;
 
 /**
  * Product Config Worker class to reduce code in templates.
