@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Apply Features From Category</property>
+    <property name="titleProperty">PageTitleApplyFeaturesFromCategory</property>
+    <property name="tabButtonItem">EditProductFeatures</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <content-action name="/product/ApplyFeaturesFromCategory.bsh"/>
+</page>

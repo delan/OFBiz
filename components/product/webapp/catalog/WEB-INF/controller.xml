@@ -773,7 +773,7 @@
     </request-map>
     <request-map uri="UpdateProductFeatureInCategory">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProductFeature"/>
+        <event type="service-multi" path="" invoke="updateProductFeature"/>
         <response name="success" type="view" value="EditFeatureCategoryFeatures"/>
         <response name="error" type="view" value="EditFeatureCategoryFeatures"/>
     </request-map>
@@ -871,6 +871,12 @@
     <request-map uri="QuickAddChosenVariant">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.product.product.VariantEvents" invoke="quickAddChosenVariant" />
+        <response name="success" type="view" value="QuickAddVariants"/>
+        <response name="error" type="view" value="QuickAddVariants"/>
+    </request-map>
+    <request-map uri="QuickAddChosenVariants">
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="quickAddVariant" />
         <response name="success" type="view" value="QuickAddVariants"/>
         <response name="error" type="view" value="QuickAddVariants"/>
     </request-map>
@@ -1609,6 +1615,7 @@
     <view-map name="EditProductAssoc" type="jpublish" page="/product/EditProductAssoc.ftl"/>
     <view-map name="EditProductAttributes" type="jpublish" page="/product/EditProductAttributes.ftl"/>
     <view-map name="EditProductFeatures" type="jpublish" page="/product/EditProductFeatures.ftl"/>
+    <view-map name="ApplyFeaturesFromCategory" type="jpublish" page="/product/ApplyFeaturesFromCategory.ftl"/>
     <view-map name="EditProductFacilities" type="jpublish" page="/product/EditProductFacilities.ftl"/>
     <view-map name="EditProductFacilityLocations" type="jpublish" page="/product/EditProductFacilityLocations.ftl"/>
     <view-map name="EditProductInventoryItems" type="jpublish" page="/product/EditProductInventoryItems.ftl"/>

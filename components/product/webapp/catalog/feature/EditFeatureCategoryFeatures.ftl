@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.2
 -->
 
@@ -31,13 +31,6 @@
 ${pages.get("/feature/FeatureTabBar.ftl")}
 <div class="head1">${uiLabelMap.ProductEditFeaturesForFeatureCategory} "${(curProductFeatureCategory.description)?if_exists}"</div>
 <a href="<@ofbizUrl>/EditFeature?productFeatureCategoryId=${productFeatureCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewFeature}]</a>
-<#if productId?has_content>
-    <div class="head2">${uiLabelMap.ProductAndApplyFeaturesToProductWithId} "${productId}"</div>
-    <div>
-        <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProduct}]</a>
-        <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductReturnToEditProductFeatures}]</a>
-    </div>
-</#if>
 
 <br>
 <p class="head2">${uiLabelMap.ProductProductFeatureMaintenance}</p>
@@ -64,6 +57,10 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
     </table>
 </#if>
 <table border="1" cellpadding='2' cellspacing='0'>
+    <form method='POST' action='<@ofbizUrl>/UpdateProductFeatureInCategory</@ofbizUrl>' name="selectAllForm">
+    <input type="hidden" name="_useRowSubmit" value="Y">
+    <input type="hidden" name="_checkGlobalScope" value="N">
+    <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}">
   <tr class='viewOneTR1'>
     <td><div class="tabletext"><b>${uiLabelMap.CommonId}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.CommonDescription}</b></div></td>
@@ -75,29 +72,17 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
     <td><div class="tabletext"><b>${uiLabelMap.ProductIdSeqNum}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductIdCode}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductAbbrev}</b></div></td>
-    <td><div class="tabletext">&nbsp;</div></td>
-    <#if productId?has_content>
-      </tr>
-      <tr class='viewOneTR2'>
-        <td><div class="tabletext">&nbsp;</div></td>
-        <td><div class="tabletext"><b>${uiLabelMap.ProductApplType}</b></div></td>
-        <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
-        <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
-        <td><div class="tabletext"><b>${uiLabelMap.ProductAmount}</b></div></td>
-        <td><div class="tabletext"><b>${uiLabelMap.CommonSequence}</b></div></td>
-        <td colspan="5"><div class="tabletext">&nbsp;</div></td>
-    </#if>
+    <td><div class="tabletext"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this);"></div></td>
   </tr>
 <#if (listSize > 0)>
+    <#assign rowCount = 0>
 <#list productFeatures as productFeature>
   <#assign curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType")>
   <tr valign="middle" class='viewOneTR1'>
-    <form method='POST' action='<@ofbizUrl>/UpdateProductFeatureInCategory</@ofbizUrl>'>
-        <#if productId?has_content><input type="hidden" name="productId" value="${productId}"></#if>
-        <input type="hidden" name="productFeatureId" value="${productFeature.productFeatureId}">
+      <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}">
       <td><a href="<@ofbizUrl>/EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="buttontext">${productFeature.productFeatureId}</a></td>
-      <td><input type="text" class='inputBox' size='15' name="description" value="${productFeature.description}"></td>
-      <td><select name='productFeatureTypeId' size=1 class='selectBox'>
+      <td><input type="text" class='inputBox' size='15' name="description_o_${rowCount}" value="${productFeature.description}"></td>
+      <td><select name='productFeatureTypeId_o_${rowCount}' size=1 class='selectBox'>
         <#if productFeature.productFeatureTypeId?has_content>
           <option value='${productFeature.productFeatureTypeId}'><#if curProductFeatureType?exists>${curProductFeatureType.description}<#else> [${productFeature.productFeatureTypeId}]</#if></option>
           <option value='${productFeature.productFeatureTypeId}'>---</option>
@@ -106,7 +91,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
           <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.description}</option>
         </#list>
       </select></td>
-      <td><select name='productFeatureCategoryId' size=1 class='selectBox'>
+      <td><select name='productFeatureCategoryId_o_${rowCount}' size=1 class='selectBox'>
         <#if productFeature.productFeatureCategoryId?has_content>
           <#assign curProdFeatCat = productFeature.getRelatedOne("ProductFeatureCategory")>
           <option value='${productFeature.productFeatureCategoryId}'>${(curProdFeatCat.description)?if_exists} [${productFeature.productFeatureCategoryId}]</option>
@@ -116,37 +101,19 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
           <option value='${productFeatureCategory.productFeatureCategoryId}'>${productFeatureCategory.description} [${productFeatureCategory.productFeatureCategoryId}]</option>
         </#list>
       </select></td>
-      <td><input type=text class='inputBox' size='10' name="uomId" value="${productFeature.uomId?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="numberSpecified" value="${productFeature.numberSpecified?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="defaultAmount" value="${productFeature.defaultAmount?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="defaultSequenceNum" value="${productFeature.defaultSequenceNum?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="idCode" value="${productFeature.idCode?if_exists}"></td>
-      <td><input type=text class='inputBox' size='5' name="abbrev" value="${productFeature.abbrev?if_exists}"></td>
-      <td><input type=submit value='Update'></td>
-    </form>
-    <#if productId?has_content>
-      </tr>
-      <tr class='viewOneTR2'>
-      <form method='POST' action='<@ofbizUrl>/ApplyFeatureToProduct</@ofbizUrl>' name='lineForm${productFeature_index}'>
-        <input type=hidden name='productId' value='${productId}'>
-        <input type=hidden name="productFeatureId" value="${productFeature.productFeatureId}">
-        <td><div class="tabletext">&nbsp;</div></td>
-        <td>
-          <select name='productFeatureApplTypeId' size=1 class='selectBox'>
-            <#list productFeatureApplTypes as productFeatureApplType>
-              <option value='${productFeatureApplType.productFeatureApplTypeId}'>${productFeatureApplType.description}</option>
-            </#list>
-          </select>
-        </td>
-        <td><input type=text size='25' name='fromDate' class='inputBox'><a href="javascript:call_cal(document.lineForm${productFeature_index}.fromDate, '${nowTimestampString}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
-        <td><input type=text size='25' name='thruDate' class='inputBox'><a href="javascript:call_cal(document.lineForm${productFeature_index}.thruDate, '${nowTimestampString}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
-        <td><input type=text size='6' name='amount' class='inputBox' value='${productFeature.defaultAmount?if_exists}'></td>
-        <td><input type=text size='5' name='sequenceNum' class='inputBox' value='${productFeature.defaultSequenceNum?if_exists}'></td>
-        <td colspan="5" align="left"><input type=submit value='Apply'></td>
-      </form>
-    </#if>
+      <td><input type=text class='inputBox' size='10' name="uomId_o_${rowCount}" value="${productFeature.uomId?if_exists}"></td>
+      <td><input type=text class='inputBox' size='5' name="numberSpecified_o_${rowCount}" value="${productFeature.numberSpecified?if_exists}"></td>
+      <td><input type=text class='inputBox' size='5' name="defaultAmount_o_${rowCount}" value="${productFeature.defaultAmount?if_exists}"></td>
+      <td><input type=text class='inputBox' size='5' name="defaultSequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum?if_exists}"></td>
+      <td><input type=text class='inputBox' size='5' name="idCode_o_${rowCount}" value="${productFeature.idCode?if_exists}"></td>
+      <td><input type=text class='inputBox' size='5' name="abbrev_o_${rowCount}" value="${productFeature.abbrev?if_exists}"></td>
+      <td align="right"><input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);"></td>
   </tr>
+<#assign rowCount = rowCount + 1>
 </#list>
+<input type="hidden" name="_rowCount" value="${rowCount}">
+<tr><td colspan="11" align="center"><input type="submit" value='Update'/></td></tr>
+</form>
 </#if>
 </table>
 <br>
