@@ -258,6 +258,8 @@
     <entity-group group="org.ofbiz.commonapp" entity="PlatformType" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProtocolType" />	
     <entity-group group="org.ofbiz.commonapp" entity="ServerHit" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ServerHitBin" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ServerHitType" />	
     <entity-group group="org.ofbiz.commonapp" entity="UserAgent" />	
     <entity-group group="org.ofbiz.commonapp" entity="UserAgentMethodType" />	
     <entity-group group="org.ofbiz.commonapp" entity="UserAgentType" />	
@@ -468,7 +470,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="PartyRelationship" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyRelationshipType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyRole" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PartySurveyResponse" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyTypeAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="Person" />	

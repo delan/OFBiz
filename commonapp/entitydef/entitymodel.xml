@@ -69,7 +69,6 @@
     <entity entity-name="CurrencyCode" 
             package-name="org.ofbiz.commonapp.common.currency"
             title="Currency ISO Code Chart"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org"
             author="Andy Zeneski (jaz@zsolv.com)">
       <field name="currencyCode" type="id-ne"></field>
       <field name="currencyName" type="description"></field>	
@@ -82,8 +81,7 @@
 
     <entity entity-name="Enumeration" 
             package-name="org.ofbiz.commonapp.common.enum"
-            title="Enumeration Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Enumeration Entity">
       <field name="enumId" type="id-ne"></field>
       <field name="enumTypeId" type="id-ne"></field>
       <field name="enumCode" type="short-varchar"></field>
@@ -96,8 +94,7 @@
     </entity>
     <entity entity-name="EnumerationType" 
             package-name="org.ofbiz.commonapp.common.enum"
-            title="Enumeration Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Enumeration Type Entity">
       <field name="enumTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -122,7 +119,6 @@
             package-name="org.ofbiz.commonapp.common.geo"
             dependent-on="CountryCode"
             title="Country Capital Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org"
             author="Andy Zeneski (jaz@zsolv.com)">
       <field name="countryCode" type="id-ne"></field>
       <field name="countryCapital" type="description"></field>	
@@ -134,7 +130,6 @@
     <entity entity-name="CountryCode" 
             package-name="org.ofbiz.commonapp.common.geo"
             title="ISO Country Code Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org"
             author="Andy Zeneski (jaz@zsolv.com)">
       <field name="countryCode" type="id-ne"></field>
       <field name="countryAbbr" type="short-varchar"></field>
@@ -152,7 +147,6 @@
             package-name="org.ofbiz.commonapp.common.geo"
             dependent-on="CountryCode"
             title="Telephone Country Code Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org"
             author="Andy Zeneski (jaz@zsolv.com)">
       <field name="countryCode" type="id-ne"></field>
       <field name="teleCode" type="short-varchar"></field>	
@@ -163,8 +157,7 @@
     </entity>
     <entity entity-name="Geo" 
             package-name="org.ofbiz.commonapp.common.geo"
-            title="Geographic Boundary Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Geographic Boundary Entity">
       <field name="geoId" type="id-ne"></field>
       <field name="geoTypeId" type="id"></field>
       <field name="geoName" type="name"></field>
@@ -186,8 +179,7 @@
     </entity>
     <entity entity-name="GeoAssoc" 
             package-name="org.ofbiz.commonapp.common.geo"
-            title="Geographic Boundary Association Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Geographic Boundary Association Entity">
       <field name="geoId" type="id-ne"></field>
       <field name="geoIdTo" type="id-ne"></field>
       <field name="geoAssocTypeId" type="id"></field>	
@@ -205,8 +197,7 @@
     </entity>
     <entity entity-name="GeoAssocType" 
             package-name="org.ofbiz.commonapp.common.geo"
-            title="Geographic Boundary Association Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Geographic Boundary Association Entity">
       <field name="geoAssocTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="geoAssocTypeId" />
@@ -216,8 +207,7 @@
     </entity>
     <entity entity-name="GeoType" 
             package-name="org.ofbiz.commonapp.common.geo"
-            title="Geographic Boundary Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Geographic Boundary Type Entity">
       <field name="geoTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -240,8 +230,7 @@
 
     <entity entity-name="NoteData" 
             package-name="org.ofbiz.commonapp.common.note"
-            title="Note Data Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Note Data Entity">
       <field name="noteId" type="id-ne"></field>
       <field name="noteName" type="name"></field>
       <field name="noteInfo" type="very-long"></field>
@@ -256,16 +245,14 @@
 
     <entity entity-name="PeriodType" 
             package-name="org.ofbiz.commonapp.common.period"
-            title="Period Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Period Type Entity">
       <field name="periodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="periodTypeId" />
     </entity>
     <entity entity-name="StandardTimePeriod" 
             package-name="org.ofbiz.commonapp.common.period"
-            title="Standard Time Period Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Standard Time Period Entity">
       <field name="standardTimePeriodId" type="id-ne"></field>
       <field name="periodTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
@@ -279,8 +266,7 @@
 
     <entity entity-name="SequenceValueItem" 
             package-name="org.ofbiz.commonapp.common.sequence"
-            title="Sequence Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Sequence Entity">
       <field name="seqName" type="id-long-ne"></field>
       <field name="seqId" type="numeric"></field>	
       <prim-key field="seqName" />
@@ -292,8 +278,7 @@
 
     <entity entity-name="StatusItem" 
             package-name="org.ofbiz.commonapp.common.status"
-            title="Status Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Status Entity">
       <field name="statusId" type="id-ne"></field>
       <field name="statusTypeId" type="id"></field>
       <field name="statusCode" type="short-varchar"></field>
@@ -315,8 +300,7 @@
     </entity>
     <entity entity-name="StatusType" 
             package-name="org.ofbiz.commonapp.common.status"
-            title="Status Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Status Type Entity">
       <field name="statusTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -334,8 +318,7 @@
     </entity>
     <entity entity-name="StatusValidChange" 
             package-name="org.ofbiz.commonapp.common.status"
-            title="Status Valid Change Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Status Valid Change Entity">
       <field name="statusId" type="id-ne"></field>
       <field name="statusIdTo" type="id-ne"></field>
       <field name="conditionExpression" type="long-varchar"></field>
@@ -351,10 +334,9 @@
     </entity>	
     <view-entity entity-name="StatusValidChangeToDetail" 
             package-name="org.ofbiz.commonapp.common.status"
-            title="Status Valid Change To Detail View Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">	
-      <member-entity entity-alias="SVC" entity-name="StatusValidChange" />	
-      <member-entity entity-alias="SI" entity-name="StatusItem" />
+            title="Status Valid Change To Detail View Entity">	
+      <member-entity entity-alias="SI" entity-name="StatusItem" />	
+      <member-entity entity-alias="SVC" entity-name="StatusValidChange" />
       <alias entity-alias="SVC" name="statusId" prim-key="true" />
       <alias entity-alias="SVC" name="statusIdTo" prim-key="true" />
       <alias entity-alias="SVC" name="conditionExpression" />
@@ -381,8 +363,7 @@
 
     <entity entity-name="Uom" 
             package-name="org.ofbiz.commonapp.common.uom"
-            title="Unit Of Measure Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Unit Of Measure Entity">
       <field name="uomId" type="id-ne"></field>
       <field name="uomTypeId" type="id"></field>
       <field name="abbreviation" type="short-varchar"></field>
@@ -400,8 +381,7 @@
     </entity>
     <entity entity-name="UomConversion" 
             package-name="org.ofbiz.commonapp.common.uom"
-            title="Unit Of Measure Conversion Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Unit Of Measure Conversion Type Entity">
       <field name="uomId" type="id-ne"></field>
       <field name="uomIdTo" type="id-ne"></field>
       <field name="conversionFactor" type="floating-point"></field>	
@@ -416,8 +396,7 @@
     </entity>
     <entity entity-name="UomType" 
             package-name="org.ofbiz.commonapp.common.uom"
-            title="Unit Of Measure Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Unit Of Measure Type Entity">
       <field name="uomTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -440,9 +419,8 @@
 
     <entity entity-name="Content" 
             package-name="org.ofbiz.commonapp.content.content"
-            title="Content Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
-      <field name="contentId" type="id-ne"></field>
+            title="Content Entity">
+      <field name="contentId" type="id-vlong-ne"></field>
       <field name="contentTypeId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="description" type="description"></field>
@@ -473,10 +451,9 @@
     </entity>
     <entity entity-name="ContentAssociation" 
             package-name="org.ofbiz.commonapp.content.content"
-            title="Content Association Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
-      <field name="contentIdFrom" type="id-ne"></field>
-      <field name="contentIdTo" type="id-ne"></field>
+            title="Content Association Entity">
+      <field name="contentIdFrom" type="id-vlong-ne"></field>
+      <field name="contentIdTo" type="id-vlong-ne"></field>
       <field name="contactMechId" type="id"></field>
       <field name="functionTypeId" type="id"></field>
       <field name="upperLeftCoordinate" type="numeric"></field>	
@@ -485,9 +462,8 @@
     </entity>
     <entity entity-name="ContentAttribute" 
             package-name="org.ofbiz.commonapp.content.content"
-            title="Content Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
-      <field name="contentId" type="id-ne"></field>
+            title="Content Attribute Entity">
+      <field name="contentId" type="id-vlong-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
       <prim-key field="contentId" />	
@@ -501,8 +477,7 @@
     </entity>
     <entity entity-name="ContentCategory" 
             package-name="org.ofbiz.commonapp.content.content"
-            title="Content Category Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Content Category Entity">
       <field name="contentCategoryId" type="id-ne"></field>
       <field name="parentCategoryId" type="id"></field>
       <field name="parentSeqId" type="id"></field>
@@ -517,10 +492,9 @@
     </entity>
     <entity entity-name="ContentCategoryClass" 
             package-name="org.ofbiz.commonapp.content.content"
-            title="Content Category Classification Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Content Category Classification Entity">
       <field name="contentCategoryId" type="id-ne"></field>
-      <field name="contentId" type="id-ne"></field>
+      <field name="contentId" type="id-vlong-ne"></field>
       <field name="seqId" type="id-ne"></field>	
       <prim-key field="contentCategoryId" />	
       <prim-key field="contentId" />	
@@ -534,9 +508,8 @@
     </entity>
     <entity entity-name="ContentDataObjectUsage" 
             package-name="org.ofbiz.commonapp.content.content"
-            title="Content Data Object Usage Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
-      <field name="contentId" type="id-ne"></field>
+            title="Content Data Object Usage Entity">
+      <field name="contentId" type="id-vlong-ne"></field>
       <field name="dataObjectId" type="id-ne"></field>
       <field name="seqId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -554,10 +527,9 @@
     </entity>
     <entity entity-name="ContentRole" 
             package-name="org.ofbiz.commonapp.content.content"
-            title="Content Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Content Role Entity">
       <description>Data Type Of: Party Role</description>
-      <field name="contentId" type="id-ne"></field>
+      <field name="contentId" type="id-vlong-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -569,8 +541,7 @@
     </entity>
     <entity entity-name="ContentType" 
             package-name="org.ofbiz.commonapp.content.content"
-            title="Content Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Content Type Entity">
       <field name="contentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -591,8 +562,7 @@
     </entity>
     <entity entity-name="ContentTypeAttr" 
             package-name="org.ofbiz.commonapp.content.content"
-            title="Content Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Content Type Attribute Entity">
       <field name="contentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="contentTypeId" />	
@@ -614,8 +584,7 @@
 
     <entity entity-name="DataCategory" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Data Category Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Data Category Entity">
       <field name="dataCategoryId" type="id-ne"></field>
       <field name="parentCategoryId" type="id"></field>
       <field name="categoryName" type="name"></field>	
@@ -635,8 +604,7 @@
     </entity>
     <entity entity-name="DataCategoryMember" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Data Category Member Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Data Category Member Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataCategoryId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>	
@@ -651,8 +619,7 @@
     </entity>
     <entity entity-name="DataObject" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Data Object Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataObjectTypeId" type="id"></field>
       <field name="dataObjectName" type="name"></field>
@@ -708,8 +675,7 @@
     </entity>
     <entity entity-name="DataObjectAttribute" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Data Object Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Data Object Attribute Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -724,8 +690,7 @@
     </entity>
     <entity entity-name="DataObjectPurpose" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Data Object Purpose Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Data Object Purpose Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataObjectPurposeTypeId" type="id-ne"></field>	
       <prim-key field="dataObjectId" />	
@@ -739,8 +704,7 @@
     </entity>
     <entity entity-name="DataObjectPurposeType" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Data Object Purpose Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Data Object Purpose Type Entity">
       <field name="dataObjectPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="dataObjectPurposeTypeId" />
@@ -750,8 +714,7 @@
     </entity>
     <entity entity-name="DataObjectType" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Data Object Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Data Object Type Entity">
       <field name="dataObjectTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -772,8 +735,7 @@
     </entity>
     <entity entity-name="DataObjectTypeAttr" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Data Object Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Data Object Type Attribute Entity">
       <field name="dataObjectTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="dataObjectTypeId" />	
@@ -790,8 +752,7 @@
     </entity>
     <entity entity-name="ElectronicText" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Electronic Text Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Electronic Text Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="textData" type="very-long"></field>	
       <prim-key field="dataObjectId" />
@@ -801,16 +762,14 @@
     </entity>
     <entity entity-name="FunctionType" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Function Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Function Type Entity">
       <field name="functionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="functionTypeId" />
     </entity>
     <entity entity-name="ImageDataObject" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Image Data Object Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Image Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="imageData" type="blob"></field>	
       <prim-key field="dataObjectId" />
@@ -820,8 +779,7 @@
     </entity>
     <entity entity-name="OtherDataObject" 
             package-name="org.ofbiz.commonapp.content.data"
-            title="Other Data Object Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Other Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataObjectContent" type="blob"></field>	
       <prim-key field="dataObjectId" />
@@ -836,8 +794,7 @@
 
     <entity entity-name="Document" 
             package-name="org.ofbiz.commonapp.content.document"
-            title="Document Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Document Entity">
       <field name="documentId" type="id-ne"></field>
       <field name="documentTypeId" type="id"></field>
       <field name="dateCreated" type="date-time"></field>
@@ -858,8 +815,7 @@
     </entity>
     <entity entity-name="DocumentAttribute" 
             package-name="org.ofbiz.commonapp.content.document"
-            title="Document Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Document Attribute Entity">
       <field name="documentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -874,8 +830,7 @@
     </entity>
     <entity entity-name="DocumentType" 
             package-name="org.ofbiz.commonapp.content.document"
-            title="Document Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Document Type Entity">
       <field name="documentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -896,8 +851,7 @@
     </entity>
     <entity entity-name="DocumentTypeAttr" 
             package-name="org.ofbiz.commonapp.content.document"
-            title="Document Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Document Type Attribute Entity">
       <field name="documentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="documentTypeId" />	
@@ -919,8 +873,7 @@
 
     <entity entity-name="WebPreferenceType" 
             package-name="org.ofbiz.commonapp.content.preference"
-            title="Web Preference Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Web Preference Type Entity">
       <field name="webPreferenceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="webPreferenceTypeId" />
@@ -930,8 +883,7 @@
     </entity>
     <entity entity-name="WebUserPreference" 
             package-name="org.ofbiz.commonapp.content.preference"
-            title="Web User Preference Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Web User Preference Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="webPreferenceTypeId" type="id-ne"></field>	
@@ -955,8 +907,7 @@
 
     <entity entity-name="Subscription" 
             package-name="org.ofbiz.commonapp.content.subscription"
-            title="Subscription Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Subscription Entity">
       <field name="subscriptionId" type="id-ne"></field>
       <field name="communicationEventId" type="id"></field>
       <field name="contactMechId" type="id"></field>
@@ -1027,8 +978,7 @@
     </entity>
     <entity entity-name="SubscriptionActivity" 
             package-name="org.ofbiz.commonapp.content.subscription"
-            title="Subscription Activity Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Subscription Activity Entity">
       <field name="subscriptionActivityId" type="id-ne"></field>
       <field name="comments" type="comment"></field>
       <field name="dateSent" type="date-time"></field>	
@@ -1039,8 +989,7 @@
     </entity>
     <entity entity-name="SubscriptionAttribute" 
             package-name="org.ofbiz.commonapp.content.subscription"
-            title="Subscription Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Subscription Attribute Entity">
       <field name="subscriptionId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -1055,8 +1004,7 @@
     </entity>
     <entity entity-name="SubscriptionFulfillmentPiece" 
             package-name="org.ofbiz.commonapp.content.subscription"
-            title="Subscription Fulfillment Piece Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Subscription Fulfillment Piece Entity">
       <field name="subscriptionActivityId" type="id-ne"></field>
       <field name="subscriptionId" type="id-ne"></field>	
       <prim-key field="subscriptionActivityId" />	
@@ -1070,8 +1018,7 @@
     </entity>
     <entity entity-name="SubscriptionType" 
             package-name="org.ofbiz.commonapp.content.subscription"
-            title="Subscription Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Subscription Type Entity">
       <field name="subscriptionTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1092,8 +1039,7 @@
     </entity>
     <entity entity-name="SubscriptionTypeAttr" 
             package-name="org.ofbiz.commonapp.content.subscription"
-            title="Subscription Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Subscription Type Attribute Entity">
       <field name="subscriptionTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="subscriptionTypeId" />	
@@ -1115,8 +1061,7 @@
 
     <entity entity-name="BrowserType" 
             package-name="org.ofbiz.commonapp.content.visit"
-            title="Browser Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Browser Type Entity">
       <field name="browserTypeId" type="id-ne"></field>
       <field name="browserName" type="name"></field>
       <field name="browserVersion" type="very-short"></field>	
@@ -1127,8 +1072,7 @@
     </entity>
     <entity entity-name="PlatformType" 
             package-name="org.ofbiz.commonapp.content.visit"
-            title="Platform Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Platform Type Entity">
       <field name="platformTypeId" type="id-ne"></field>
       <field name="platformName" type="name"></field>
       <field name="platformVersion" type="very-short"></field>	
@@ -1139,8 +1083,7 @@
     </entity>
     <entity entity-name="ProtocolType" 
             package-name="org.ofbiz.commonapp.content.visit"
-            title="Protocol Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Protocol Type Entity">
       <field name="protocolTypeId" type="id-ne"></field>
       <field name="protocolName" type="name"></field>	
       <prim-key field="protocolTypeId" />
@@ -1150,20 +1093,26 @@
     </entity>
     <entity entity-name="ServerHit" 
             package-name="org.ofbiz.commonapp.content.visit"
-            title="Server Hit Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
-      <field name="visitId" type="id-ne"></field>
-      <field name="hitDatetime" type="date-time"></field>
-      <field name="partyId" type="id"></field>
+            title="Server Hit Entity">
+      <field name="visitId" type="id-long-ne"></field>
+      <field name="contentId" type="id-vlong-ne"></field>
+      <field name="hitStartDateTime" type="date-time"></field>
+      <field name="hitTypeId" type="id-ne"></field>
       <field name="idByIpContactMechId" type="id"></field>
       <field name="refByWebContactMechId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="userAgentId" type="id"></field>
       <field name="userLoginId" type="id"></field>
-      <field name="contentId" type="id"></field>
-      <field name="numOfBytes" type="numeric"></field>	
+      <field name="partyId" type="id"></field>
+      <field name="numOfBytes" type="numeric"></field>
+      <field name="runningTimeMillis" type="numeric"></field>	
       <prim-key field="visitId" />	
-      <prim-key field="hitDatetime" />
+      <prim-key field="contentId" />	
+      <prim-key field="hitStartDateTime" />	
+      <prim-key field="hitTypeId" />
+      <relation type="one" rel-entity-name="ServerHitType">
+        <key-map field-name="hitTypeId" />
+      </relation>
       <relation type="one" rel-entity-name="Visit">
         <key-map field-name="visitId" />
       </relation>
@@ -1189,10 +1138,43 @@
         <key-map field-name="contentId" />
       </relation>
     </entity>
+    <entity entity-name="ServerHitBin" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="Server Hit Bin Entity">
+      <field name="contentId" type="id-vlong-ne"></field>
+      <field name="hitTypeId" type="id-ne"></field>
+      <field name="binStartDateTime" type="date-time"></field>
+      <field name="binEndDateTime" type="date-time"></field>
+      <field name="numberHits" type="numeric"></field>
+      <field name="totalTimeMillis" type="numeric"></field>
+      <field name="minTimeMillis" type="numeric"></field>
+      <field name="maxTimeMillis" type="numeric"></field>	
+      <prim-key field="contentId" />	
+      <prim-key field="hitTypeId" />	
+      <prim-key field="binStartDateTime" />
+      <relation type="one" rel-entity-name="ServerHitType">
+        <key-map field-name="hitTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="Content">
+        <key-map field-name="contentId" />
+      </relation>
+    </entity>
+    <entity entity-name="ServerHitType" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="Server Hit Bin Entity">
+      <field name="hitTypeId" type="id"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="hitTypeId" />
+      <relation type="many" rel-entity-name="ServerHit">
+        <key-map field-name="hitTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ServerHitBin">
+        <key-map field-name="hitTypeId" />
+      </relation>
+    </entity>
     <entity entity-name="UserAgent" 
             package-name="org.ofbiz.commonapp.content.visit"
-            title="User Agent Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="User Agent Entity">
       <field name="userAgentId" type="id-ne"></field>
       <field name="browserTypeId" type="id"></field>
       <field name="platformTypeId" type="id"></field>
@@ -1221,8 +1203,7 @@
     </entity>
     <entity entity-name="UserAgentMethodType" 
             package-name="org.ofbiz.commonapp.content.visit"
-            title="User Agent Method Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="User Agent Method Type Entity">
       <field name="userAgentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="userAgentMethodTypeId" />
@@ -1232,8 +1213,7 @@
     </entity>
     <entity entity-name="UserAgentType" 
             package-name="org.ofbiz.commonapp.content.visit"
-            title="User Agent Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="User Agent Type Entity">
       <field name="userAgentTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="userAgentTypeId" />
@@ -1243,15 +1223,15 @@
     </entity>
     <entity entity-name="Visit" 
             package-name="org.ofbiz.commonapp.content.visit"
-            title="Visit Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
-      <field name="visitId" type="id-ne"></field>
+            title="Visit Entity">
+      <field name="visitId" type="id-long-ne"></field>
       <field name="contactMechId" type="id"></field>
+      <field name="userLoginId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="cookie" type="short-varchar"></field>
-      <field name="fromDatetime" type="date-time"></field>
-      <field name="thruDatetime" type="date-time"></field>	
+      <field name="fromDateTime" type="date-time"></field>
+      <field name="thruDateTime" type="date-time"></field>	
       <prim-key field="visitId" />
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
@@ -1277,8 +1257,7 @@
 
     <entity entity-name="UserLogin" 
             package-name="org.ofbiz.commonapp.security.login"
-            title="User Login Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="User Login Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="currentPassword" type="short-varchar"></field>
@@ -1299,8 +1278,7 @@
     </entity>
     <entity entity-name="UserLoginHistory" 
             package-name="org.ofbiz.commonapp.security.login"
-            title="User Login History Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="User Login History Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
@@ -1323,8 +1301,7 @@
 
     <entity entity-name="SecurityGroup" 
             package-name="org.ofbiz.commonapp.security.securitygroup"
-            title="Security Component - Security Group Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Security Component - Security Group Entity">
       <field name="groupId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="groupId" />
@@ -1337,8 +1314,7 @@
     </entity>
     <entity entity-name="SecurityGroupPermission" 
             package-name="org.ofbiz.commonapp.security.securitygroup"
-            title="Security Component - Security Group Permission Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Security Component - Security Group Permission Entity">
       <description>Defines a permission available to a security group</description>
       <field name="groupId" type="id-ne"></field>
       <field name="permissionId" type="id-long-ne"></field>	
@@ -1353,8 +1329,7 @@
     </entity>
     <entity entity-name="SecurityPermission" 
             package-name="org.ofbiz.commonapp.security.securitygroup"
-            title="Security Component - Security Permission Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Security Component - Security Permission Entity">
       <field name="permissionId" type="id-long-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="permissionId" />
@@ -1364,8 +1339,7 @@
     </entity>
     <entity entity-name="UserLoginSecurityGroup" 
             package-name="org.ofbiz.commonapp.security.securitygroup"
-            title="Security Component - User Login Security Group Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Security Component - User Login Security Group Entity">
       <description>Maps a UserLogin to a security group</description>
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="groupId" type="id-ne"></field>	
