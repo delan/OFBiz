@@ -2,10 +2,10 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
 
+<% pageContext.setAttribute("PageName", "categoryDisplay"); %> 
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %> 
 
-<% pageContext.setAttribute("PageName", "category"); %> 
 <%
 	// Get a list of all available categories.
 	org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,request.getParameter("category_id"));

@@ -2,10 +2,10 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.ecommerce.catalog.*"%>
 
+<% pageContext.setAttribute("PageName", "product"); %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %> 
 
-<% pageContext.setAttribute("PageName", "product"); %>
 <%
 	// Get the value object of the request product id.
 	org.ofbiz.ecommerce.catalog.CatalogHelper.getProduct(pageContext,request.getParameter("product_id"));
