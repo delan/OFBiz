@@ -151,6 +151,40 @@ public class ModelUtil
   }
   
   public static String induceFieldType(String sqlTypeName, int length, int precision, ModelFieldTypeReader fieldTypeReader) {
-    return "invalid";
+    if(sqlTypeName == null) return "invalid";
+    
+    if(sqlTypeName.equals("VARCHAR") || sqlTypeName.equals("VARCHAR2")) {
+      if(length <= 10) return "very-short";
+      if(length <= 60) return "short-varchar";
+      if(length <= 255) return "long-varchar";
+      if(length <= 4000) return "very-long";
+      return "invalid";
+    }
+    else if(sqlTypeName.equals("TEXT")) {
+      return "very-long";
+    }
+    else if(sqlTypeName.equals("DECIMAL") || sqlTypeName.equals("NUMERIC")) {
+      if(length > 18) return "invalid";
+      if(precision == 0) return "numeric";
+      if(precision <= 2) return "currency-amount";
+      if(precision <= 6) return "floating-point";
+      return "invalid";
+    }
+    else if(sqlTypeName.equals("BLOB") || sqlTypeName.equals("OID")) {
+      return "blob";
+    }
+    else if(sqlTypeName.equals("DATETIME") || sqlTypeName.equals("TIMESTAMP")) {
+      return "date-time";
+    }
+    else if(sqlTypeName.equals("DATE")) {
+      return "date";
+    }
+    else if(sqlTypeName.equals("TIME")) {
+      return "time";
+    }
+    else if(sqlTypeName.equals("CHAR") && length == 1) {
+      return "indicator";
+    }
+    else return "invalid";
   }
 }
