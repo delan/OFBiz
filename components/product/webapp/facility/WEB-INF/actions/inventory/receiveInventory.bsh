@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
  */
  
@@ -72,6 +72,7 @@ if (shipmentId != null && !shipmentId.equals("_NA_")) {
     shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 }
 
+shippedQuantities = new HashMap();
 purchaseOrderItems = null;
 if (purchaseOrder != null) {
     if (product != null) {
@@ -83,14 +84,18 @@ if (purchaseOrder != null) {
         exprs = new ArrayList();
         while (issueIter.hasNext()) {
             issuance = issueIter.next();
-            exprs.add(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, issuance.getString("orderItemSeqId")));                                
+            exprs.add(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, issuance.getString("orderItemSeqId")));
+            double issuanceQty = issuance.getDouble("quantity").doubleValue();
+            if (shippedQuantities.containsKey(issuance.getString("orderItemSeqId"))) {
+                issuanceQty += ((Double)shippedQuantities.get(issuance.getString("orderItemSeqId"))).doubleValue();
+            }
+            shippedQuantities.put(issuance.getString("orderItemSeqId"), issuanceQty);
         }               
         purchaseOrderItems = EntityUtil.filterByOr(orderItems, exprs);
     } else {    
         purchaseOrderItems = purchaseOrder.getRelated("OrderItem");
     }
 }
-
 receivedQuantities = new HashMap();
 if (purchaseOrderItems != null && purchaseOrderItems.size() > 0) {
     context.put("firstOrderItem", EntityUtil.getFirst(purchaseOrderItems));
@@ -103,7 +108,13 @@ if (purchaseOrderItems != null && purchaseOrderItems.size() > 0) {
         if (receipts != null && receipts.size() > 0) {
             recIter = receipts.iterator();
             while (recIter.hasNext()) {
-                rec = recIter.next(); 
+                rec = recIter.next();
+                if (shipment != null) {
+                    if (rec.getString("shipmentId") == null || 
+                        !rec.getString("shipmentId").equals(shipment.getString("shipmentId"))) {
+                        continue;
+                    }
+                }
                 accepted = rec.getDouble("quantityAccepted");
                 rejected = rec.getDouble("quantityRejected");
                 if (accepted != null)
@@ -143,6 +154,7 @@ context.put("purchaseOrder", purchaseOrder);
 context.put("product", product);
 context.put("shipments", shipments);
 context.put("shipment", shipment);
+context.put("shippedQuantities", shippedQuantities);
 context.put("purchaseOrderItems", purchaseOrderItems);
 context.put("receivedQuantities", receivedQuantities);
 context.put("rejectReasons", rejectReasons);
