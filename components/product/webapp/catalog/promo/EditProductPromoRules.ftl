@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -175,7 +175,6 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                     <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
                                 </form>
                             </div>
-
                         </td>
                         <td align="center">
                         <a href="<@ofbizUrl>/deleteProductPromoCond?productPromoId=${(productPromoCond.productPromoId)?if_exists}&productPromoRuleId=${(productPromoCond.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(productPromoCond.productPromoCondSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
@@ -260,6 +259,71 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 Party:&nbsp;<input type=text size="10" name="partyId" value="${(productPromoAction.partyId)?if_exists}" class="inputBox">
                                 <input type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </form>
+                            </div>
+                            <#-- ======================= Categories ======================== -->
+                            <div class="tableheadtext">Action Categories:</div>
+                            <#assign actionProductPromoCategories = productPromoAction.getRelated("ProductPromoCategory")>
+                            <#list actionProductPromoCategories as actionProductPromoCategory>
+                                <#assign actionProductCategory = actionProductPromoCategory.getRelatedOneCache("ProductCategory")>
+                                <#assign actionApplEnumeration = actionProductPromoCategory.getRelatedOneCache("ApplEnumeration")>
+                                <div class="tabletext">
+                                    ${(actionProductCategory.description)?if_exists} [${actionProductPromoCategory.productCategoryId}]
+                                    - ${(actionApplEnumeration.description)?default(actionProductPromoCategory.productPromoApplEnumId)}
+                                    - SubCats? ${actionProductPromoCategory.includeSubCategories?default("N")}
+                                    <a href="<@ofbizUrl>/deleteProductPromoCategory?productPromoId=${(actionProductPromoCategory.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoCategory.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoCategory.productPromoActionSeqId)?if_exists}&productCategoryId=${(actionProductPromoCategory.productCategoryId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    [${uiLabelMap.CommonDelete}]</a>
+                                </div>
+                            </#list>
+                            <div class="tabletext">
+                                <form method="POST" action="<@ofbizUrl>/createProductPromoCategory</@ofbizUrl>">
+                                    <input type="hidden" name="productPromoId" value="${productPromoId}">
+                                    <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}">
+                                    <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}">
+                                    <input type="hidden" name="productPromoCondSeqId" value="_NA_">
+                                    <select name="productCategoryId" class="selectBox">
+                                        <#list productCategories as productCategory>
+                                            <option value="${productCategory.productCategoryId}">${productCategory.description}</option>
+                                        </#list>
+                                    </select>
+                                    <select name="productPromoApplEnumId" class="selectBox">
+                                        <#list productPromoApplEnums as productPromoApplEnum>
+                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
+                                        </#list>
+                                    </select>
+                                    <select name="includeSubCategories" class="selectBox">
+                                        <option value="N">N</option>
+                                        <option value="Y">Y</option>
+                                    </select>
+                                    <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
+                                </form>
+                            </div>
+                            <#-- ======================= Products ======================== -->
+                            <div class="tableheadtext">Action Products:</div>
+                            <#assign actionProductPromoProducts = productPromoAction.getRelated("ProductPromoProduct")>
+                            <#list actionProductPromoProducts as actionProductPromoProduct>
+                                <#assign actionProduct = actionProductPromoProduct.getRelatedOneCache("Product")?if_exists>
+                                <#assign actionApplEnumeration = actionProductPromoProduct.getRelatedOneCache("ApplEnumeration")>
+                                <div class="tabletext">
+                                    ${(actionProduct.productName)?if_exists} [${actionProductPromoProduct.productId}]
+                                    - ${(actionApplEnumeration.description)?default(actionProductPromoProduct.productPromoApplEnumId)}
+                                    <a href="<@ofbizUrl>/deleteProductPromoProduct?productPromoId=${(actionProductPromoProduct.productPromoId)?if_exists}&productPromoRuleId=${(actionProductPromoProduct.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(actionProductPromoProduct.productPromoActionSeqId)?if_exists}&productPromoActionSeqId=${(actionProductPromoProduct.productPromoActionSeqId)?if_exists}&productId=${(actionProductPromoProduct.productId)?if_exists}</@ofbizUrl>" class="buttontext">
+                                    [${uiLabelMap.CommonDelete}]</a>
+                                </div>
+                            </#list>
+                            <div class="tabletext">
+                                <form method="POST" action="<@ofbizUrl>/createProductPromoProduct</@ofbizUrl>">
+                                    <input type="hidden" name="productPromoId" value="${productPromoId}">
+                                    <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}">
+                                    <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}">
+                                    <input type="hidden" name="productPromoCondSeqId" value="_NA_">
+                                    Product ID: <input type="text" size="20" maxlength="20" name="productId" value="" class="inputBox"/>
+                                    <select name="productPromoApplEnumId" class="selectBox">
+                                        <#list productPromoApplEnums as productPromoApplEnum>
+                                            <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.description}</option>
+                                        </#list>
+                                    </select>
+                                    <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
+                                </form>
                             </div>
                         </td>
                         <td align="center">
