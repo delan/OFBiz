@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: Start.java,v 1.2 2003/08/16 23:53:41 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.1 $
+  *@version    $Revision: 1.2 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -125,6 +125,9 @@ public class Start implements Runnable {
                 }
             }
         }
+        
+        // load the ofbiz-base.jar
+        classPath.addComponent(config.baseJar);
         
         // load the config directory
         classPath.addComponent(config.baseConfig);
@@ -252,6 +255,7 @@ public class Start implements Runnable {
         public int adminPort;
         public String adminKey;
         public String ofbizHome;
+        public String baseJar;
         public String baseLib;
         public String baseConfig;
         public List loaders;
@@ -286,6 +290,12 @@ public class Start implements Runnable {
                 baseConfig = ofbizHome + "/" + props.getProperty("ofbiz.base.config", "config");
             }
             
+            // base lib directory
+            baseLib = System.getProperty("ofbiz.base.jar");            
+            if (baseLib == null) {
+                baseLib = ofbizHome + "/" + props.getProperty("ofbiz.base.jar", "base/build/lib/ofbiz-base.jar");                
+            }
+                        
             // base lib directory
             baseLib = System.getProperty("ofbiz.base.lib");            
             if (baseLib == null) {
