@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
@@ -258,7 +258,7 @@ function addToList() {
             </td>
             <td nowrap align="right">
               <div class='tabletext'>
-                <#if cartLine.getIsPromo()>
+                <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
                   ${cartLine.getBasePrice()?string.currency}
                 <#else>
                   <input size="6" class='inputBox' type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}">
