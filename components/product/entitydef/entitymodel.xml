@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  */
 -->
 
@@ -850,6 +850,11 @@
         <key-map field-name="facilityId"/>
         <key-map field-name="locationSeqId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="ProductFacilityLocation">
+        <key-map field-name="productId"/>
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
       <relation type="one" fk-name="INV_ITEM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
       </relation>
@@ -881,6 +886,26 @@
         <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
+    <view-entity entity-name="InventoryItemAndLocation"
+            package-name="org.ofbiz.product.inventory"
+            title="InventoryItem And FacilityLocation View Entity">
+      <member-entity entity-alias="II" entity-name="InventoryItem"/>
+      <member-entity entity-alias="FL" entity-name="FacilityLocation"/>
+      <alias-all entity-alias="II"/>
+      <alias-all entity-alias="FL"/>
+      <view-link entity-alias="II" rel-entity-alias="FL">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductFacilityLocation">
+        <key-map field-name="productId"/>
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="InventoryItemAttribute"
             package-name="org.ofbiz.product.inventory"
             title="Inventory Item Attribute Entity">
@@ -1141,7 +1166,33 @@
         <key-map field-name="facilityId"/>
         <key-map field-name="locationSeqId"/>
       </relation>
+      <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="productId"/>
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
     </entity>
+    <view-entity entity-name="ProductFacilityLocationView"
+            package-name="org.ofbiz.product.inventory"
+            title="ProductFacilityLocation And FacilityLocation View Entity">
+      <member-entity entity-alias="PFL" entity-name="ProductFacilityLocation"/>
+      <member-entity entity-alias="FL" entity-name="FacilityLocation"/>
+      <alias-all entity-alias="PFL"/>
+      <alias-all entity-alias="FL"/>
+      <view-link entity-alias="PFL" rel-entity-alias="FL">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductFacilityLocation">
+        <key-map field-name="productId"/>
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="VarianceReason"
             package-name="org.ofbiz.product.inventory"
             title="Variance Reason Entity">
@@ -1750,7 +1801,7 @@
       <alias entity-alias="PASC" name="assocProductCount" field="productId" function="count-distinct"/>
       <alias entity-alias="PASCPRC" name="assocPriceTypeId" field="productPriceTypeId"/>
       <alias entity-alias="PASCPRC" name="assocCurrencyUomId" field="currencyUomId"/>
-      <alias entity-alias="PASCPRC" name="assocFacilityGroupId" field="facilityGroupId"/>
+      <alias entity-alias="PASCPRC" name="assocProductStoreGroupId" field="productStoreGroupId"/>
       <alias entity-alias="PASCPRC" name="assocPriceFromDate" field="fromDate"/>
       <alias entity-alias="PASCPRC" name="assocPriceThruDate" field="thruDate"/>
       <alias entity-alias="PASCPRC" name="assocMinPrice" field="price" function="min"/>
@@ -1789,6 +1840,7 @@
       <alias entity-alias="PVARF" name="description"/>
       <alias entity-alias="PVARPRC" name="variantPriceTypeId" field="productPriceTypeId"/>
       <alias entity-alias="PVARPRC" name="variantCurrencyUomId" field="currencyUomId"/>
+      <alias entity-alias="PVARPRC" name="variantProductStoreGroupId" field="productStoreGroupId"/>
       <alias entity-alias="PVARPRC" name="variantPriceFromDate" field="fromDate"/>
       <alias entity-alias="PVARPRC" name="variantPriceThruDate" field="thruDate"/>
       <alias entity-alias="PVARPRC" name="variantPrice" field="price"/>

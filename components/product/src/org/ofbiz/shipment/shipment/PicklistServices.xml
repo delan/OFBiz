@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  -->
 <simple-methods>
@@ -31,8 +31,8 @@
         <!-- filter on:
          + OrderHeader.orderType = SALES_ORDER
          + OrderHeader.statusId = ORDER_APPROVED
-         - OrderItem.statusId = ITEM_APPROVED
-         - total number of orders to pick: limit to X
+         + OrderItem.statusId = ITEM_APPROVED
+         + total number of orders to pick: limit to X
          + OrderShipmentPreference.shipmentMethodTypeId = group by
          + ShipmentMethodType.sequenceNum = order display of methods by
          x OrderShipmentPreference.carrierPartyId = group by along with ship method?
@@ -436,11 +436,273 @@
     </simple-method>    
 
     <simple-method method-name="clearPickStarted" short-description="Clear PickStarted Dates according to specified parameters">
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
         <make-value entity-name="OrderItemInventoryRes" map-name="parameters" value-name="orderItemInventoryResLkupValue"/>
         <find-by-and entity-name="OrderItemInventoryRes" map-name="orderItemInventoryResLkupValue" list-name="orderItemInventoryResList"/>
         <iterate entry-name="orderItemInventoryRes" list-name="orderItemInventoryResList">
             <clear-field field-name="pickStartDate" map-name="orderItemInventoryRes"/>
             <store-value value-name="orderItemInventoryRes"/>
         </iterate>
+    </simple-method>
+
+    <!-- =================================================================== -->
+    <!-- ======================= Stock Move Services ======================= -->
+    <!-- =================================================================== -->
+
+    <simple-method method-name="findStockMovesNeeded" short-description="Find all Stock Moves that need to be done">
+        <check-permission permission="FACILITY" action="_VIEW">
+            <fail-message message="Security Error: to run processPhysicalStockMove you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <!-- First find all OrderItemInventoryRes that are in a FLT_BULK location in the current Facility -->
+        <string-to-field string="FLT_BULK" field-name="locationTypeEnumId" map-name="findOiirailMap"/>
+        <field-to-field field-name="facilityId" map-name="parameters" to-map-name="findOiirailMap"/>
+        <find-by-and entity-name="OrderItemInventoryResAndItemLocation" map-name="findOiirailMap" list-name="orderItemInventoryResAndItemLocationList"/>
+        
+        <!-- 
+            Consolidate into a List of infos return as moveByOiirInfoList where each info Map contains:
+             - product
+             - facilityLocationFrom
+             - facilityLocationTo
+             - totalQuantity
+             - orderItemInventoryResInfoList (to be done later if we need it)
+        -->
+        <!-- start by making a Map where the locationSeqId is the key and the value is a List of orderItemInventoryResAndItemLocation -->
+        <iterate entry-name="orderItemInventoryResAndItemLocation" list-name="orderItemInventoryResAndItemLocationList">
+            <field-to-list field-name="orderItemInventoryResAndItemLocation" list-name="oiirailByLocMap.${orderItemInventoryResAndItemLocation.locationSeqId}"/>
+        </iterate>
+
+        <!-- now get all info for each origin location -->
+        <iterate-map key-name="locationSeqId" value-name="perLocationOiirailList" map-name="oiirailByLocMap">
+            <!-- now for more fun, split up by productId; this should generally not happen, but we'll make sure here -->
+            <clear-field field-name="oiirailByProdMap"/>
+            <iterate entry-name="orderItemInventoryResAndItemLocation" list-name="perLocationOiirailList">
+                <field-to-list field-name="orderItemInventoryResAndItemLocation" list-name="oiirailByProdMap.${orderItemInventoryResAndItemLocation.productId}"/>
+            </iterate>
+            
+            <iterate-map key-name="productId" value-name="perProductOiirailList" map-name="oiirailByProdMap">
+                <!-- get product -->
+                <env-to-field env-name="productId" map-name="findProductMap"/>
+                <find-by-primary-key entity-name="Product" map-name="findProductMap" value-name="moveInfo.product"/>
+                
+                <!-- get facilityLocationFrom -->
+                <field-to-field field-name="facilityId" map-name="parameters" to-map-name="findFacilityLocationMap"/>
+                <env-to-field env-name="locationSeqId" map-name="findFacilityLocationMap"/>
+                <find-by-primary-key entity-name="FacilityLocation" map-name="findFacilityLocationMap" value-name="moveInfo.facilityLocationFrom"/>
+                
+                <!-- get facilityLocationTo: a little more tricky, find the first FLT_PICKLOC  -->
+                <env-to-field env-name="productId" map-name="findProductFacilityLocationViewMap"/>
+                <field-to-field field-name="facilitytId" map-name="parameters" to-map-name="findProductFacilityLocationViewMap"/>
+                <string-to-field string="FLT_PICKLOC" field-name="locationTypeEnumId" map-name="findProductFacilityLocationViewMap"/>
+                <find-by-and entity-name="ProductFacilityLocationView" map-name="findProductFacilityLocationViewMap" list-name="productFacilityLocationViewList"/>
+
+                <if-empty field-name="productFacilityLocationViewList">
+                    <!-- TODO: do something better with the error messages... -->
+                    <string-to-list string="Error in stock move, could not find a pick/primary location for facility [${inventoryItem.facilityId}] and product [${inventoryItem.productId}]" list-name="error_list"/>
+                    <check-errors/>
+                </if-empty>
+
+                <!-- should generally only be one pick/primary location, just choose the first... -->
+                <first-from-list entry-name="productFacilityLocationView" list-name="productFacilityLocationViewList"/>
+                <get-related-one value-name="productFacilityLocationView" relation-name="FacilityLocation" to-value-name="moveInfo.facilityLocationTo"/>
+                <get-related-one value-name="productFacilityLocationView" relation-name="ProductFacilityLocation" to-value-name="targetProductFacilityLocation"/>
+                
+                <!-- get totalQuantity: iterate through perProductOiirailList and add up quantity (from OrderItemInventoryRes) -->
+                <calculate field-name="moveInfo.totalQuantity" type="Double"><number value="0"/></calculate>
+                <iterate entry-name="perProductOiirail" list-name="perProductOiirailList">
+                    <calculate field-name="moveInfo.totalQuantity" type="Double">
+                        <calcop field-name="moveInfo.totalQuantity" operator="add"><calcop field-name="perProductOiirail.quantity" operator="get"/></calcop>
+                    </calculate>
+                </iterate>
+                
+                <!-- TODO: if moveInfo.totalQuantity is greater than the total quantity in the given location, show an error and do something intelligent -->
+                
+                <!-- check ProductFacilityLocation for where this is going and see if we should do a pre-emptive transfer too... -->
+                <!-- 
+                    now if there is enough left and there is less than the minimum for the 
+                    ProductFacilityLocation, move the restock quantity from ProductFacilityLocation
+                -->
+                <if-empty field-name="targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId}">
+                    <!-- get all InventoryItems and total the availableToPromise -->
+                    <get-related value-name="targetProductFacilityLocation" relation-name="InventoryItem" list-name="inventoryItemList"/>
+                    <iterate entry-name="inventoryItem" list-name="inventoryItemList">
+                        <calculate field-name="totalAvailableToPromise" type="Double">
+                            <calcop field-name="totalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromise" operator="get"/></calcop>
+                        </calculate>
+                    </iterate>
+
+                    <!-- if totalAvailableToPromise is less than productFacilityLocation.minimumStock, move over the targetProductFacilityLocation.moveQuantity -->
+                    <if-compare-field field-name="totalAvailableToPromise" operator="less" to-field-name="targetProductFacilityLocation.minimumStock">
+                        <!-- TODO: if trying to move more from the location than is there, find the different and put it in targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId} -->
+                        <calculate field-name="moveInfo.totalQuantity" type="Double">
+                            <calcop field-name="moveInfo.totalQuantity" operator="add"><calcop field-name="targetProductFacilityLocation.moveQuantity" operator="get"/></calcop>
+                        </calculate>
+                    </if-compare-field>
+                <else>
+                    <!-- 
+                        TODO: see if there is enough left for the full amount in 
+                        targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId}, 
+                        if not do whatever is available and put difference back in 
+                        targetLocationSimpleMoveQuantity.${targetProductFacilityLocation.locationSeqId} 
+                    -->
+                </else>
+                </if-empty>
+                
+                <!-- add the moveInfo to the master list -->
+                <field-to-list field-name="moveInfo" list-name="moveByOiirInfoList"/>
+            </iterate-map>
+        </iterate-map>
+        <field-to-result field-name="moveByOiirInfoList"/>
+        
+        <!-- TODO:
+            The last bit will be finding all stock moves for ProductFacilityLocation based pre-emptive moves.
+            These will go in a separate list returned as moveByPflInfoList where each info Map contains:
+             - product
+             - facilityLocationFrom
+             - facilityLocationTo
+             - totalQuantity
+        -->
+        <!-- TODO: start by finding all Xxx where locationTypeEnumId=FLT_PICKLOC and total of InventoryItems in the loc are less than minimumStock -->
+    </simple-method>
+    
+    <simple-method method-name="processPhysicalStockMove" short-description="Process a Physical Stock Move from one FacilityLocation to another, in the same Facility">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run processPhysicalStockMove you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run processPhysicalStockMove you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <!-- Start by processing all OrderItemInventoryRes from the origin FacilityLocation, and transfer to target, orderBy OrderHeader.statusId (approved first), orderDate -->
+        
+        <!-- Now for any remaining quantity, to a simple, ie non-OIIR, stock move -->
+    </simple-method>
+    
+    <simple-method method-name="checkPickStockMove" short-description="Check Stock Moves needed to prepare for Picking">
+        <!-- 
+            TODO TODO: refactor this service into two steps: one that figures out how much to move and 
+            where and one that does the data updates based on that after the stock move is done
+        -->
+    
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        
+        
+
+        <!--
+            to find the destination FacilityLocation look up most ProductFacilityLocationView (has 
+            ProductFacilityLocation and FacilityLocation) with type FLT_PICKLOC and the productId 
+            and facilityId of the current InventoryItem
+        -->
+        <make-value entity-name="InventoryItem" map-name="parameters" value-name="inventoryItemLkupMap"/>
+        <find-by-primary-key map-name="inventoryItemLkupMap" value-name="inventoryItem"/>
+        
+        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="findProductFacilityLocationViewMap"/>
+        <field-to-field field-name="facilitytId" map-name="inventoryItem" to-map-name="findProductFacilityLocationViewMap"/>
+        <string-to-field string="FLT_PICKLOC" field-name="locationTypeEnumId" map-name="findProductFacilityLocationViewMap"/>
+        <find-by-and entity-name="ProductFacilityLocationView" map-name="findProductFacilityLocationViewMap" list-name="productFacilityLocationViewList"/>
+
+        <if-empty field-name="productFacilityLocationViewList">
+            <string-to-list string="Error in stock move, could not find a pick/primary location for facility [${inventoryItem.facilityId}] and product [${inventoryItem.productId}]" list-name="error_list"/>
+            <check-errors/>
+        </if-empty>
+        
+        <!-- should generally only be one pick/primary location, just choose the first... -->
+        <first-from-list entry-name="productFacilityLocationView" list-name="productFacilityLocationViewList"/>
+        <get-related-one value-name="productFacilityLocationView" relation-name="ProductFacilityLocation" to-value-name="productFacilityLocation"/>
+        
+        <!-- if this is a serialized InventoryItem, then just update the location -->
+        <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="SERIALIZED_INV_ITEM">
+            <field-to-field field-name="locationSeqId" map-name="productFacilityLocationView" to-map-name="inventoryItem"/>
+            <store-value value-name="inventoryItem"/>
+            <field-to-result field-name="inventoryItemId" map-name="inventoryItem" result-name="targetInventoryItemId"/>
+        </if-compare>
+        
+        <!-- 
+            if this is a non-serialized InventoryItem, create a new targetInventoryItem in the 
+            target location and start moving all OrderItemInventoryRes over, plus min move quantity from PFL
+        -->
+        <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM">
+            <!-- create a new InventoryItem for the targetInventoryItem -->
+            <make-value entity-name="InventoryItem" map-name="inventoryItem" value-name="targetInventoryItem"/>
+            <field-to-field field-name="locationSeqId" map-name="productFacilityLocationView" to-map-name="targetInventoryItem"/>
+            <calculate field-name="targetInventoryItem.availableToPromise" type="Double"><number value="0"/></calculate>
+            <calculate field-name="targetInventoryItem.quantityOnHand" type="Double"><number value="0"/></calculate>
+
+            <!-- 
+                go through OrderItemInventoryRes and move each one over, starting with the older making 
+                sure to stay within quantityOnHand
+            -->
+            <get-related value-name="inventoryItem" relation-name="OrderItemInventoryRes" list-name="orderItemInventoryResList"/>
+            <calculate field-name="quantityOnHandMoved" type="Double"><number value="0"/></calculate>
+            <iterate entry-name="orderItemInventoryRes" list-name="orderItemInventoryResList">
+                <!-- if there aren't enough to move, put this on a list for insufficient quantities and handle later -->
+                <if-compare-field field-name="orderItemInventoryRes.quantity" operator="greater" to-field-name="inventoryItem.quantityOnHand">
+                    <field-to-list field-name="orderItemInventoryRes" list-name="insufficientQuantityOiirList"/>
+                <else>
+                    <!-- okay, move it over, start by calculating new QOHs -->
+                    <calculate field-name="inventoryItem.quantityOnHand" type="Double">
+                        <calcop field-name="inventoryItem.quantityOnHand" operator="subtract"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
+                    </calculate>
+                    <calculate field-name="targetInventoryItem.quantityOnHand" type="Double">
+                        <calcop field-name="targetInventoryItem.quantityOnHand" operator="add"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
+                    </calculate>
+                    
+                    <!-- make a new OIIR value object -->
+                    <make-value entity-name="OrderItemInventoryRes" map-name="orderItemInventoryRes" value-name="targetOrderItemInventoryRes"/>
+                    <field-to-field field-name="inventoryItemId" map-name="targetInventoryItem" to-map-name="targetOrderItemInventoryRes"/>
+                    
+                    <!-- 
+                        note that nothing needs to be done with the OIIR.quantity because if all is 
+                        balanced the new one should have a zero availableToPromise until the 
+                        ProductFacilityLocation based pre-emptive move is done
+                    -->
+                    <!-- if the OIIR has a quantityNotAvailable, move that over by adding it to the origin, and subtracting it from the target -->
+                    <if-not-empty field-name="orderItemInventoryRes.quantityNotAvailable">
+                        <if-compare field-name="orderItemInventoryRes.quantityNotAvailable" operator="greater" value="0" type="Double">
+                            <calculate field-name="inventoryItem.availableToPromise" type="Double">
+                                <calcop field-name="inventoryItem.availableToPromise" operator="add"><calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="get"/></calcop>
+                            </calculate>
+                            <calculate field-name="targetInventoryItem.availableToPromise" type="Double">
+                                <calcop field-name="targetInventoryItem.availableToPromise" operator="subtract"><calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="get"/></calcop>
+                            </calculate>
+                        </if-compare>
+                    </if-not-empty>
+                    
+                    <!-- create the new and remove the old OIIRs -->
+                    <create-value value-name="targetOrderItemInventoryRes"/>
+                    <remove-value value-name="orderItemInventoryRes"/>
+                </else>
+                </if-compare-field>
+            </iterate>
+            
+            <!-- now that targetInventoryItem is populated with quantities, etc, call createInventoryItem service -->
+            <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
+            <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
+                <result-to-result result-name="inventoryItemId" service-result-name="targetInventoryItemId"/>
+            </call-service>
+
+            <!-- also need to store the origin inventoryItem, so do that now and do it through a service since there is one -->
+            <set-service-fields map-name="inventoryItemId" service-name="updateInventoryItem" to-map-name="updateInventoryItemMap"/>
+            <call-service service-name="updateInventoryItem" in-map-name="updateInventoryItemMap"/>
+            
+            <!-- something with the insufficientQuantityOiirList -->
+            <field-to-result field-name="insufficientQuantityOiirList"/>
+
+            <!-- now at the end call checkDoProductFacilityLocationStockMove for pre-emptive moving -->
+            <set-service-fields map-name="productFacilityLocation" service-name="checkDoProductFacilityLocationStockMove" to-map-name="checkDoProductFacilityLocationStockMoveMap"/>
+            <call-service service-name="checkDoProductFacilityLocationStockMove" in-map-name="checkDoProductFacilityLocationStockMoveMap"/>
+        </if-compare>
     </simple-method>
 </simple-methods>

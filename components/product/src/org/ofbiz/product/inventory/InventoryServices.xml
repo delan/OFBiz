@@ -104,6 +104,9 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
+        
+        <!-- TODO: (possibly a big deal?) check to see if any reserved inventory needs to be changed because of a change in availableToPromise -->
+        <!-- TODO: make sure availableToPromise is never greater than the quantityOnHand -->
     </simple-method>
     <simple-method method-name="createPhysicalInventory" short-description="Create a PhysicalInventory">
         <check-permission permission="CATALOG" action="_CREATE">
