@@ -74,7 +74,7 @@
         <font_italic value="0"/>
     </style>
 
-    <!-- embedded POS [menu] button styles (required but can be customized) -->
+    <!-- dynamic button styles -->
     <style name="numButton">
         <color_back value="cccccc"/>
         <color_fore value="000000"/>
@@ -83,16 +83,16 @@
         <font_weight value="1"/>
         <font_italic value="0"/>
     </style>
-    <style name="posButton">
-        <color_back value="cccccc"/>
+    <style name="skuButton">
+        <color_back value="678FB9"/>
         <color_fore value="000000"/>
         <font_face value="verdana"/>
         <font_size value="14"/>
-        <font_weight value="0"/>
+        <font_weight value="1"/>
         <font_italic value="0"/>
     </style>
-    <style name="skuButton">
-        <color_back value="678FB9"/>
+    <style name="skuButton2">
+        <color_back value="cc0033"/>
         <color_fore value="000000"/>
         <font_face value="verdana"/>
         <font_size value="14"/>
@@ -105,6 +105,16 @@
         <font_face value="verdana"/>
         <font_size value="14"/>
         <font_weight value="1"/>
+        <font_italic value="0"/>
+    </style>
+
+    <!-- embedded POS [menu] button styles (required but can be customized) -->
+    <style name="posButton">
+        <color_back value="cccccc"/>
+        <color_fore value="000000"/>
+        <font_face value="verdana"/>
+        <font_size value="14"/>
+        <font_weight value="0"/>
         <font_italic value="0"/>
     </style>
     <style name="buttonDisabled">

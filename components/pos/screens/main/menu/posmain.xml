@@ -12,10 +12,10 @@
         <!-- col 2 -->
         <Button name="SKU.GZ-1001" x="0" y="62" w="100" h="60" style="skuButton" content="GIZMO 1" alignment="Center"/>
         <Button name="SKU.GZ-5005" x="102" y="62" w="100" h="60" style="skuButton" content="GIZMO 2" alignment="Center"/>
-        <Button name="SKU.GZ-2644" x="204" y="62" w="100" h="60" style="posButton" content="GIZMO 3" alignment="Center"/>
-        <Button name="SKU.GZ-2002" x="306" y="62" w="100" h="60" style="posButton" content="GIZMO 4" alignment="Center"/>
-        <Button name="SKU.GZ-7000" x="408" y="62" w="100" h="60" style="posButton" content="GIZMO 5" alignment="Center"/>
-        <Button name="SKU.WG-5569" x="510" y="62" w="100" h="60" style="posButton" content="WIDGET 1" alignment="Center"/>
+        <Button name="SKU.GZ-2644" x="204" y="62" w="100" h="60" style="skuButton2" content="GIZMO 3" alignment="Center"/>
+        <Button name="SKU.GZ-2002" x="306" y="62" w="100" h="60" style="skuButton" content="GIZMO 4" alignment="Center"/>
+        <Button name="SKU.GZ-7000" x="408" y="62" w="100" h="60" style="skuButton" content="GIZMO 5" alignment="Center"/>
+        <Button name="SKU.WG-5569" x="510" y="62" w="100" h="60" style="skuButton2" content="WIDGET 1" alignment="Center"/>
 
         <!-- col 3 -->
         <Button name="" x="0" y="124" w="100" h="60" style="posButton" content="" alignment="Center"/>
