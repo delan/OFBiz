@@ -26,10 +26,10 @@
                 <trace>false</trace>
             </limits>
         </dataSource>
-        <!-- disabling by default so no loading errors will occur when jar, etc not available
-        <dataSource>
+        <!-- disabling by default so no loading errors will occur when jar, etc not available -->
+        <!-- <dataSource>
             <name>localoracle</name>
-            <jar>lib/classes12.zip</jar>
+            <jar>lib/ojdbc14.jar</jar>
             <class>oracle.jdbc.xa.client.OracleXADataSource</class>
             <config>
                 <URL>jdbc:oracle:thin:@127.0.0.1:1521:ofbiz</URL>
@@ -39,7 +39,7 @@
                 <maximum>50</maximum><minimum>5</minimum><initial>5</initial>
                 <maxRetain>300</maxRetain>
                 <timeout>5</timeout>
-                <trace>true</trace>
+                <trace>false</trace>
             </limits>
         </dataSource>
         -->
