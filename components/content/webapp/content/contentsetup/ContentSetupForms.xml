@@ -246,7 +246,7 @@
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeOperationId=${contentPurposeOperationId}"/>
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeTypeId=${contentPurposeTypeId}&amp;contentOperationId=${contentOperationId}&amp;roleTypeId=${roleTypeId}&amp;statusId=${statusId}"/>
         </field>
     </form>
 </forms>
