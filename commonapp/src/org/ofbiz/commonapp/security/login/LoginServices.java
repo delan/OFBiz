@@ -127,7 +127,7 @@ public class LoginServices {
                             Debug.logWarning("Could not parse max.failed.logins from security.properties, using default of 3");
                         }
 
-                        if (currentFailedLogins.longValue() >= maxFailedLogins) {
+                        if (maxFailedLogins > 0 && currentFailedLogins.longValue() >= maxFailedLogins) {
                             userLogin.set("enabled", "N");
                             userLogin.set("disabledDateTime", UtilDateTime.nowTimestamp());
                         }
