@@ -80,6 +80,8 @@ public class EntityEcaRule {
     }
 
     public void eval(String currentOperation, DispatchContext dctx, GenericEntity value, boolean isError) throws GenericEntityException {
+        //Debug.logInfo("eval eeca rule: operation=" + currentOperation + ", in event=" + this.eventName + ", on entity=" + this.entityName + ", for value=" + value);
+        
         if (isError && !this.runOnError) {
             return;
         }
