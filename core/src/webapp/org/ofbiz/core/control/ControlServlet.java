@@ -79,6 +79,9 @@ public class ControlServlet extends HttpServlet {
 
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
+        
+        ControlEventListener listener = new ControlEventListener((GenericDelegator) this.getServletContext().getAttribute("delegator"));
+        //okay, now we have a listener, how do we mount it?
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -131,25 +134,6 @@ public class ControlServlet extends HttpServlet {
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
         // if (Debug.infoOn()) Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH), module);
 
-        StringBuffer request_url = new StringBuffer();
-        request_url.append(request.getScheme());
-        request_url.append("://" + request.getServerName());
-        if (request.getServerPort() != 80 && request.getServerPort() != 443)
-            request_url.append(":" + request.getServerPort());
-        request.setAttribute(SiteDefs.SERVER_ROOT_URL, request_url.toString());
-
-        // Store some first hit client info for later.
-        if (session.isNew()) {
-            request_url.append(request.getRequestURI());
-            if (request.getQueryString() != null)
-                request_url.append("?" + request.getQueryString());
-            session.setAttribute(SiteDefs.CLIENT_LOCALE, request.getLocale());
-            session.setAttribute(SiteDefs.CLIENT_REQUEST, request_url.toString());
-            session.setAttribute(SiteDefs.CLIENT_USER_AGENT, request.getHeader("User-Agent"));
-            session.setAttribute(SiteDefs.CLIENT_REFERER, (request.getHeader("Referer") != null ?
-                                                           request.getHeader("Referer") : ""));
-        }
-
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
         //  try to get it from the session first so that we can have a delegator/dispatcher/security for a certain user if desired
         GenericDelegator delegator = (GenericDelegator) session.getAttribute("delegator");
@@ -160,6 +144,8 @@ public class ControlServlet extends HttpServlet {
             Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext", module);
         }
         request.setAttribute("delegator", delegator);
+        //always put this in the session too so that session events can use the delegator
+        session.setAttribute("delegator", delegator);
         
         LocalDispatcher dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");
         if (dispatcher == null) {
@@ -169,6 +155,8 @@ public class ControlServlet extends HttpServlet {
             Debug.logError("[ControlServlet] ERROR: dispatcher not found in ServletContext", module);
         }
         request.setAttribute("dispatcher", dispatcher);
+        //always put this in the session too so that session events can use the dispatcher
+        session.setAttribute("dispatcher", dispatcher);
 
         Security security = (Security) session.getAttribute("security");
         if (security == null) {
@@ -186,6 +174,31 @@ public class ControlServlet extends HttpServlet {
         // we put it in the request here
         ServletContext servletContext = getServletContext();
         request.setAttribute("servletContext", servletContext);
+
+        StringBuffer request_url = new StringBuffer();
+        request_url.append(request.getScheme());
+        request_url.append("://" + request.getServerName());
+        if (request.getServerPort() != 80 && request.getServerPort() != 443)
+            request_url.append(":" + request.getServerPort());
+        request.setAttribute(SiteDefs.SERVER_ROOT_URL, request_url.toString());
+
+        // Store some first hit client info for later.
+        if (session.getAttribute("visit") == null) {
+            request_url.append(request.getRequestURI());
+            if (request.getQueryString() != null) {
+                request_url.append("?" + request.getQueryString());
+            }
+            String initialLocale = request.getLocale() != null ? request.getLocale().toString() : "";
+            String initialRequest = request_url.toString();
+            String initialReferrer = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";
+            String initialUserAgent = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
+            session.setAttribute(SiteDefs.CLIENT_LOCALE, request.getLocale());
+            session.setAttribute(SiteDefs.CLIENT_REQUEST, initialRequest);
+            session.setAttribute(SiteDefs.CLIENT_USER_AGENT, initialUserAgent);
+            session.setAttribute(SiteDefs.CLIENT_REFERER, initialUserAgent);
+            
+            VisitHandler.setInitials(session, initialLocale, initialRequest, initialReferrer, initialUserAgent);
+        }
 
         //setup chararcter encoding and content type, do before so that view can override
         String charset = getServletContext().getInitParameter("charset");
@@ -236,7 +249,7 @@ public class ControlServlet extends HttpServlet {
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
 
-        ServerHitBin.countRequest(cname + "." + rname, session.getId(), requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
+        ServerHitBin.countRequest(cname + "." + rname, VisitHandler.getVisitId(session), requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
     }
 
     private RequestHandler getRequestHandler() {

@@ -137,6 +137,7 @@ public class OrderServices {
                 UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
                         "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
                         "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
+        if (UtilValidate.isNotEmpty((String) context.get("visitId"))) order.set("visitId", context.get("visitId"));
         toBeStored.add(order);
 
         // set the orderId on all adjustments; this list will include order and item adjustments...

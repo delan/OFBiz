@@ -24,6 +24,7 @@
 
 package org.ofbiz.core.stats;
 
+import java.net.*;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
@@ -404,19 +405,37 @@ public class ServerHitBin {
 
                 //persist each bin when time ends if option turned on
                 if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".bin", "true")) {
-                    Map binData = new HashMap();
-                    binData.put("contentId", this.id);
-                    binData.put("hitTypeId", ServerHitBin.typeIds[this.type]);
-                    binData.put("binStartDateTime", new java.sql.Timestamp(this.startTime));
-                    binData.put("binEndDateTime", new java.sql.Timestamp(this.endTime));
-                    binData.put("numberHits", new Long(this.numberHits));
-                    binData.put("totalTimeMillis", new Long(this.totalRunningTime));
-                    binData.put("minTimeMillis", new Long(this.minTime));
-                    binData.put("maxTimeMillis", new Long(this.maxTime));
-                    try {
-                        getDelegator().create("ServerHitBin", binData);
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "Could not save ServerHitBin:", module);
+                    GenericValue serverHitBin = delegator.makeValue("ServerHitBin", null);
+                    Long nextId = getDelegator().getNextSeqId("ServerHitBin");
+                    if (nextId == null) {
+                        Debug.logError("Not persisting ServerHitBin, could not get next seq id", module);
+                    } else {
+                        serverHitBin.set("serverHitBinId", nextId.toString());
+                        serverHitBin.set("contentId", this.id);
+                        serverHitBin.set("hitTypeId", ServerHitBin.typeIds[this.type]);
+                        serverHitBin.set("binStartDateTime", new java.sql.Timestamp(this.startTime));
+                        serverHitBin.set("binEndDateTime", new java.sql.Timestamp(this.endTime));
+                        serverHitBin.set("numberHits", new Long(this.numberHits));
+                        serverHitBin.set("totalTimeMillis", new Long(this.totalRunningTime));
+                        serverHitBin.set("minTimeMillis", new Long(this.minTime));
+                        serverHitBin.set("maxTimeMillis", new Long(this.maxTime));
+                        //get localhost ip address and hostname to store
+                        try {
+                            InetAddress address = InetAddress.getLocalHost();
+                            if (address != null) {
+                                serverHitBin.set("serverIpAddress", address.getHostAddress());
+                                serverHitBin.set("serverHostName", address.getHostName());
+                            } else {
+                                Debug.logError("Unable to get localhost internet address, was null", module);
+                            }
+                        } catch (java.net.UnknownHostException e) {
+                            Debug.logError("Unable to get localhost internet address: " + e.toString(), module);
+                        }
+                        try {
+                            serverHitBin.create();
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Could not save ServerHitBin:", module);
+                        }
                     }
                 }
             }
@@ -441,9 +460,6 @@ public class ServerHitBin {
             if (userLogin != null) {
                 hitData.put("userLoginId", userLogin.get("userLoginId"));
                 hitData.put("partyId", userLogin.get("partyId"));
-            } else {
-                hitData.put("userLoginId", "ANONYMOUS_USER");
-                hitData.put("partyId", "ANONYMOUS_PARTY");
             }
             hitData.put("contentId", this.id);
             hitData.put("runningTimeMillis", new Long(runningTime));

@@ -18,6 +18,7 @@
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
         <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="visitId" type="String" mode="IN" optional="true"/>
         <attribute name="affiliateId" type="String" mode="IN" optional="true"/>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
         <attribute name="distributorId" type="String" mode="IN" optional="true"/>

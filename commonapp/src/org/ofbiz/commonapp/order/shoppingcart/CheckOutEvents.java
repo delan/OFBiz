@@ -33,6 +33,7 @@ import javax.mail.internet.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.party.contact.*;
@@ -148,11 +149,12 @@ public class CheckOutEvents {
 
     // Create order event - uses createOrder service for processing
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
 
         URL orderPropertiesUrl = null;
         try {
@@ -173,7 +175,7 @@ public class CheckOutEvents {
         final String ITEM_CANCEL_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_CANCELLED");
 
         // remove this whenever creating an order so quick reorder cache will refresh/recalc
-        request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
+        session.removeAttribute("_QUICK_REORDER_PRODUCTS_");
 
         String orderId = cart.getOrderId();
 
@@ -216,13 +218,14 @@ public class CheckOutEvents {
 
         // store the order - build the context
         Map context = cart.makeCartMap();
-        String distributorId = (String) request.getSession().getAttribute("_DISTRIBUTOR_ID_");
-        String affiliateId = (String) request.getSession().getAttribute("_AFFILIATE_ID_");
+        String distributorId = (String) session.getAttribute("_DISTRIBUTOR_ID_");
+        String affiliateId = (String) session.getAttribute("_AFFILIATE_ID_");
         if (distributorId != null) context.put("distributorId", distributorId);
         if (affiliateId != null) context.put("affiliateId", affiliateId);
         context.put("userLogin", userLogin);
         context.put("partyId", userLogin.get("partyId"));
         context.put("prodCatalogId", CatalogWorker.getCurrentCatalogId(request));
+        context.put("visitId", VisitHandler.getVisitId(session));
 
         // store the order - invoke the service
         Map result = null;

@@ -32,6 +32,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
+import org.ofbiz.core.stats.*;
 import org.ofbiz.commonapp.party.contact.ContactHelper;
 
 /**
@@ -58,7 +59,8 @@ public class LoginEvents {
     public static String saveEntryParams(HttpServletRequest request, HttpServletResponse response)
             throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        
+        HttpSession session = request.getSession();
+
         // save entry login parameters if we don't have a valid login object
         if (userLogin == null) {
             
@@ -66,13 +68,13 @@ public class LoginEvents {
             String password = request.getParameter("PASSWORD");
             
             // save parameters into the session - so they can be used later, if needed
-            if (username != null) request.getSession().setAttribute("USERNAME", username);
-            if (password != null) request.getSession().setAttribute("PASSWORD", password);
+            if (username != null) session.setAttribute("USERNAME", username);
+            if (password != null) session.setAttribute("PASSWORD", password);
             
         } else {
             // if the login object is valid, remove attributes
-            request.getSession().removeAttribute("USERNAME");
-            request.getSession().removeAttribute("PASSWORD");
+            session.removeAttribute("USERNAME");
+            session.removeAttribute("PASSWORD");
         }
         
         return "SUCCESS";
@@ -93,6 +95,7 @@ public class LoginEvents {
     public static String checkLogin(HttpServletRequest request, HttpServletResponse response)
             throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        HttpSession session = request.getSession();
 
         String username = null;
         String password = null;
@@ -102,8 +105,8 @@ public class LoginEvents {
             if (username == null) username = request.getParameter("USERNAME");
             if (password == null) password = request.getParameter("PASSWORD");
             // check session attributes
-            if (username == null) username = (String)request.getSession().getAttribute("USERNAME");
-            if (password == null) password = (String)request.getSession().getAttribute("PASSWORD");
+            if (username == null) username = (String) session.getAttribute("USERNAME");
+            if (password == null) password = (String) session.getAttribute("PASSWORD");
 
             if ((username == null) || (password == null) || ("error".equals(login(request, response)))) {
                 String queryString = null;
@@ -119,9 +122,9 @@ public class LoginEvents {
                     }
                 }
 
-                request.getSession().setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
+                session.setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
                 if (queryString != null)
-                    request.getSession().setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
+                    session.setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
 
                 if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString);
                 if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo());
@@ -146,11 +149,13 @@ public class LoginEvents {
      */
     public static String login(HttpServletRequest request, HttpServletResponse response)
             throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+        HttpSession session = request.getSession();
+
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
         
-        if (username == null) username = (String)request.getSession().getAttribute("USERNAME");
-        if (password == null) password = (String)request.getSession().getAttribute("PASSWORD");
+        if (username == null) username = (String) session.getAttribute("USERNAME");
+        if (password == null) password = (String) session.getAttribute("PASSWORD");
 
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map result = null;
@@ -165,7 +170,8 @@ public class LoginEvents {
         if (ModelService.RESPOND_SUCCESS.equals(result.get(ModelService.RESPONSE_MESSAGE))) {
             GenericValue userLogin = (GenericValue) result.get("userLogin");
             if (userLogin != null) {
-                request.getSession().setAttribute(SiteDefs.USER_LOGIN, userLogin);
+                session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
+                VisitHandler.setUserLogin(session, userLogin);
             }
         } else {
             String errMsg = (String) result.get(ModelService.ERROR_MESSAGE);

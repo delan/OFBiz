@@ -1223,17 +1223,18 @@
     <entity entity-name="ServerHitBin"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Server Hit Bin Entity">
+      <field name="serverHitBinId" type="id-ne"></field>
       <field name="contentId" type="id-vlong-ne"></field>
       <field name="hitTypeId" type="id-ne"></field>
+      <field name="serverIpAddress" type="id"></field>
+      <field name="serverHostName" type="long-varchar"></field>
       <field name="binStartDateTime" type="date-time"></field>
       <field name="binEndDateTime" type="date-time"></field>
       <field name="numberHits" type="numeric"></field>
       <field name="totalTimeMillis" type="numeric"></field>
       <field name="minTimeMillis" type="numeric"></field>
       <field name="maxTimeMillis" type="numeric"></field>
-      <prim-key field="contentId"/>
-      <prim-key field="hitTypeId"/>
-      <prim-key field="binStartDateTime"/>
+      <prim-key field="serverHitBinId"/>
       <relation type="one" fk-name="SERVER_HBIN_TYPE" rel-entity-name="ServerHitType">
         <key-map field-name="hitTypeId"/>
       </relation>
@@ -1311,9 +1312,16 @@
       <field name="userLoginId" type="id-vlong"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
+      <field name="sessionId" type="id-long"></field>
+      <field name="serverIpAddress" type="id"></field>
+      <field name="serverHostName" type="long-varchar"></field>
+      <field name="initialLocale" type="short-varchar"></field>
+      <field name="initialRequest" type="url"></field>
+      <field name="initialReferrer" type="url"></field>
+      <field name="initialUserAgent" type="long-varchar"></field>
       <field name="cookie" type="short-varchar"></field>
-      <field name="fromDateTime" type="date-time"></field>
-      <field name="thruDateTime" type="date-time"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <prim-key field="visitId"/>
       <relation type="one" fk-name="VISIT_CONT_MECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
