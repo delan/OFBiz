@@ -298,7 +298,7 @@ public class CoreEvents {
             // set even if null so that values will get nulled in the db later on
             serviceContext.put(name, value);
         }     
-        serviceContext = modelService.makeValid(serviceContext, ModelService.IN_PARAM);
+        serviceContext = modelService.makeValid(serviceContext, ModelService.IN_PARAM, true, null, locale);
         
         if (userLogin != null) {
             serviceContext.put("userLogin", userLogin);                             
