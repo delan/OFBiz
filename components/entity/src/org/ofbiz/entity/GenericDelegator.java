@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.12 2003/12/12 04:15:33 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.13 2003/12/12 05:11:30 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -1121,7 +1121,7 @@ public class GenericDelegator implements DelegatorInterface {
         if (serializedPK != null) {
             GenericValue entitySyncRemove = this.makeValue("EntitySyncRemove", null);
             entitySyncRemove.set("entitySyncRemoveId", this.getNextSeqId("EntitySyncRemove"));
-            entitySyncRemove.set("primaryKeyRemoved", dummyPK);
+            entitySyncRemove.set("primaryKeyRemoved", serializedPK);
             entitySyncRemove.create();
         }
     }
