@@ -127,7 +127,7 @@
         <ofbiz:entityfield attribute="userLogin" field="partyId"/></a>
     </td>
     <td>
-      <a href='<ofbiz:url>/removeUserLoginFromSecurityGroup?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/removeUserLoginFromSecurityGroup?userLoginId=<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="userLoginId"/>&groupId=<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="groupId"/>&fromDate=<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/></ofbiz:url>' class="buttontext">
       [Remove]</a>
     </td>
   </tr>
@@ -153,6 +153,22 @@
   </table>
 </ofbiz:if>
 <br>
+<form method="POST" action="<ofbiz:url>/addUserLoginToSecurityGroup</ofbiz:url>" style='margin: 0;' name='addUserLoginToSecurityGroupForm'>
+  <input type="hidden" name="groupId" value="<%=groupId%>">
+  <input type="hidden" name="useValues" value="true">
+  <%-- <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'> --%>
+
+  <script language='JavaScript'>
+      function setUltsgFromDate() { document.addUserLoginToSecurityGroupForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
+  </script>
+  <div class='head2'>Add UserLogin to this Security Group:</div>
+  <div class='tabletext'>
+    UserLogin ID: <input type=text size='60' name='userLoginId'>
+    <br>
+    From Date: <a href='#' onclick='setUltsgFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
+    <input type="submit" value="Add">
+  </div>
+</form>
 <%}%>
 <br>
 

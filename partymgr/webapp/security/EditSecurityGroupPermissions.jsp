@@ -39,6 +39,9 @@
             UtilMisc.toList("permissionId"));
     if (securityGroupPermissions != null) pageContext.setAttribute("securityGroupPermissions", securityGroupPermissions);
 
+    Collection securityPermissions = delegator.findAll("SecurityPermission", UtilMisc.toList("permissionId"));
+    if (securityPermissions != null) pageContext.setAttribute("securityPermissions", securityPermissions);
+
     int viewIndex = 0;
     int viewSize = 20;
     int highIndex = 0;
@@ -109,7 +112,7 @@
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityGroupPermission" field="permissionId"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityPermission" field="description"/></div></td>
     <td>
-      <a href='<ofbiz:url>/removeSecurityPermissionFromSecurityGroup?inventoryItemId=<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/removeSecurityPermissionFromSecurityGroup?permissionId=<ofbiz:inputvalue entityAttr="securityGroupPermission" field="permissionId"/>&groupId=<ofbiz:inputvalue entityAttr="securityGroupPermission" field="groupId"/></ofbiz:url>' class="buttontext">
       [Remove]</a>
     </td>
   </tr>
@@ -135,6 +138,31 @@
   </table>
 </ofbiz:if>
 <br>
+<form method="POST" action="<ofbiz:url>/addSecurityPermissionToSecurityGroup</ofbiz:url>" style='margin: 0;'>
+  <input type="hidden" name="groupId" value="<%=groupId%>">
+  <input type="hidden" name="useValues" value="true">
+
+  <div class='head2'>Add Permission (from list) to SecurityGroup:</div>
+  <div class='tabletext'>
+    Permission:
+      <select name="permissionId">
+      <ofbiz:iterator name="securityPermission" property="securityPermissions">
+        <option value='<ofbiz:entityfield attribute="securityPermission" field="permissionId"/>'><ofbiz:entityfield attribute="securityPermission" field="description"/> [<ofbiz:entityfield attribute="securityPermission" field="permissionId"/>]</option>
+      </ofbiz:iterator>
+      </select>
+    <input type="submit" value="Add">
+  </div>
+</form>
+<form method="POST" action="<ofbiz:url>/addSecurityPermissionToSecurityGroup</ofbiz:url>" style='margin: 0;'>
+  <input type="hidden" name="groupId" value="<%=groupId%>">
+  <input type="hidden" name="useValues" value="true">
+
+  <div class='head2'>Add Permission (manually) to SecurityGroup:</div>
+  <div class='tabletext'>
+    Permission: <input type=text size='60' name='permissionId'>
+    <input type="submit" value="Add">
+  </div>
+</form>
 <%}%>
 <br>
 
