@@ -27,7 +27,7 @@
   <tag>
     <name>print</name>
     <tagclass>org.ofbiz.core.taglib.PrintTag</tagclass>
-    <bodycontent>NONE</bodycontent>
+    <bodycontent>empty</bodycontent>
     <info>Prints an attribute from the pageContext, prints nothing if null.</info>
     <attribute><name>attribute</name><required>true</required></attribute>
     <attribute><name>default</name><required>false</required></attribute>
@@ -104,7 +104,7 @@
   <tag>
     <name>entityfield</name>
     <tagclass>org.ofbiz.core.taglib.EntityFieldTag</tagclass>
-    <bodycontent>NONE</bodycontent>
+    <bodycontent>empty</bodycontent>
     <info>
         Displays a properly formatted localized string from a field in the entity in the specified attribute.
         The prefix and suffix attribute contents will print before/after if the field is not null or empty.
@@ -119,7 +119,7 @@
   <tag>
     <name>field</name>
     <tagclass>org.ofbiz.core.taglib.EntityFieldTag</tagclass>
-    <bodycontent>NONE</bodycontent>
+    <bodycontent>empty</bodycontent>
     <info>Displays a properly formatted string from field in the specified attribute.</info>
     <attribute><name>attribute</name><required>true</required></attribute>
     <attribute><name>type</name><required>true</required></attribute>
@@ -129,7 +129,7 @@
   <tag>
     <name>inputvalue</name>
     <tagclass>org.ofbiz.core.taglib.InputValueTag</tagclass>
-    <bodycontent>NONE</bodycontent>
+    <bodycontent>empty</bodycontent>
     <info>Outputs a string for an input box from either an entity field or a request parameter. 
           Decides which to use by checking to see if the entityattr exist and using the specified field if it does.
           If the Boolean object referred to by the tryentityattr attribute is false, always tries to use the request parameter and ignores the entity field.
