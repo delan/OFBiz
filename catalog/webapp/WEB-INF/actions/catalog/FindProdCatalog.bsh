@@ -26,7 +26,6 @@
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.widgetimpl.*;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
@@ -37,13 +36,7 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-prodCatalogId = request.getParameter("prodCatalogId");
-prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+//prodCatalogs
+prodCatalogs = delegator.findAll("ProdCatalog");
+context.put("prodCatalogs", prodCatalogs);
 
-HtmlFormWrapper editProdCatalogWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "EditProdCatalog", request, response);
-editProdCatalogWrapper.putInContext("prodCatalog", prodCatalog);
-editProdCatalogWrapper.putInContext("prodCatalogId", prodCatalogId);
-
-context.put("prodCatalogId", prodCatalogId);
-context.put("prodCatalog", prodCatalog);
-context.put("editProdCatalogWrapper", editProdCatalogWrapper);

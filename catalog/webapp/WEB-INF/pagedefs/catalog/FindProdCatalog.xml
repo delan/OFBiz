@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Find Product Catalog</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <content-action name="/catalog/FindProdCatalog.bsh"/>
+</page>
