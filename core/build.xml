@@ -69,12 +69,12 @@
         <property name="commons-logging.jar" value="${extlib.dir}/common/commons-logging.jar"/>
         <property name="commons-httpclient.jar" value="${extlib.dir}/common/commons-httpclient.jar"/>
 
-        <property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b6.jar"/>
+        <property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b7.jar"/>
         <property name="axis.jar"      value="${extlib.dir}/share/axis.jar"/>
         <property name="clutil.jar"    value="${extlib.dir}/share/clutil.jar" />
         <property name="wsdl4j.jar"    value="${extlib.dir}/share/wsdl4j.jar" />
-        <property name="oro.jar"       value="${extlib.dir}/share/jakarta-oro-2.0.4.jar" />
-        <property name="velocity.jar"  value="${extlib.dir}/share/velocity-1.2.jar" />
+        <property name="oro.jar"       value="${extlib.dir}/share/jakarta-oro-2.0.6.jar" />
+        <property name="velocity.jar"  value="${extlib.dir}/share/velocity-1.3.jar" />
 
         <property name="datavision.jar"    value="${extlib.dir}/datavision/DataVision.jar" />
         <property name="jasperreports.jar" value="${extlib.dir}/jasperreports/jasperreports.jar" />

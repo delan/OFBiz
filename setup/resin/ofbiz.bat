@@ -20,9 +20,9 @@ rem ----- Set the CLASSPATH ----------------------------------------------------
 
 set _CLASSPATH=%CLASSPATH%
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\axis.jar
-set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\bsh-1.2b6.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\bsh-1.2b7.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\clutil.jar
-set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\jakarta-oro-2.0.4.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\jakarta-oro-2.0.6.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\velocity-1.2.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\velocity-dep-1.2.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\wsdl4j.jar

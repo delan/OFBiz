@@ -70,10 +70,10 @@
         <copy file="lib/common/commons-httpclient.jar" toDir="${catalina.dir}/common/lib"/>
 
         <copy file="lib/share/axis.jar" toDir="${catalina.dir}/lib"/>
-        <copy file="lib/share/bsh-1.2b6.jar" toDir="${catalina.dir}/lib"/>
+        <copy file="lib/share/bsh-1.2b7.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/clutil.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/wsdl4j.jar" toDir="${catalina.dir}/lib"/>
-        <copy file="lib/share/jakarta-oro-2.0.4.jar" toDir="${catalina.dir}/lib"/>
+        <copy file="lib/share/jakarta-oro-2.0.6.jar" toDir="${catalina.dir}/lib"/>
 
         <copy file="lib/datavision/DataVision.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/datavision/MinML.jar" toDir="${catalina.dir}/lib"/>
@@ -124,10 +124,10 @@
         <copy file="lib/common/commons-httpclient.jar" toDir="${catalina.dir}/shared/lib"/>
 
         <copy file="lib/share/axis.jar" toDir="${catalina.dir}/shared/lib"/>
-        <copy file="lib/share/bsh-1.2b6.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/bsh-1.2b7.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/share/clutil.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/share/wsdl4j.jar" toDir="${catalina.dir}/shared/lib"/>
-        <copy file="lib/share/jakarta-oro-2.0.4.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/jakarta-oro-2.0.6.jar" toDir="${catalina.dir}/shared/lib"/>
 
         <copy file="lib/datavision/DataVision.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/datavision/MinML.jar" toDir="${catalina.dir}/shared/lib"/>
@@ -610,12 +610,12 @@
         <copy file="lib/common/ots-jts_1.0.jar"              toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/tyrex-1.0.jar"                toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/axis.jar"                      toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/share/bsh-1.2b6.jar"                 toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/bsh-1.2b7.jar"                 toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/clutil.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/wsdl4j.jar"                    toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/share/jakarta-oro-2.0.4.jar"         toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/share/velocity-1.2.jar"              toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/share/velocity-dep-1.2.jar"          toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/jakarta-oro-2.0.6.jar"         toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/velocity-1.3.jar"              toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/velocity-dep-1.3.jar"          toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/compile/jdbc2_0-stdext.jar"          toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/compile/activation.jar"              toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/compile/mail.jar"                    toDir="${ext.dir}/lib/ext"/>

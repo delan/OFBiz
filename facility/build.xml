@@ -85,7 +85,7 @@
         <property name="tyrex.jar"     value="${extlib.dir}/common/tyrex-1.0.jar" />
         <property name="log4j.jar"     value="${extlib.dir}/common/log4j.jar"/>
 
-	    <property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b6.jar"/>
+	    <property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b7.jar"/>
         <property name="axis.jar"      value="${extlib.dir}/share/axis.jar"/>
         <property name="clutil.jar"    value="${extlib.dir}/share/clutil.jar" />
         <property name="wsdl4j.jar"    value="${extlib.dir}/share/wsdl4j.jar" />
