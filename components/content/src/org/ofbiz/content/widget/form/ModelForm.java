@@ -1366,18 +1366,26 @@ public class ModelForm {
         try {
             listSize = ((Integer) context.get("listSize")).intValue();
         } catch (Exception e) {
-            ListIterator listIt = getListIterator(context);
-            if (listIt != null && listIt instanceof EntityListIterator) {
-                try {
-                    ((EntityListIterator)listIt).last();
-                    listSize = ((EntityListIterator)listIt).currentIndex();
-                    ((EntityListIterator)listIt).first();
-                } catch(GenericEntityException e2) {
-                    listSize = -1;
-                }
-                
+            List items = (List) context.get(this.getListName());
+            int sz = 0;
+            if (items != null) {
+            	sz = items.hashCode();
             }
-           
+            if (sz > 0) {
+            	listSize = sz;
+            } else {
+                ListIterator listIt = getListIterator(context);
+                if (listIt != null && listIt instanceof EntityListIterator) {
+                    try {
+                        ((EntityListIterator)listIt).last();
+                        listSize = ((EntityListIterator)listIt).currentIndex();
+                        ((EntityListIterator)listIt).first();
+                    } catch(GenericEntityException e2) {
+                        listSize = -1;
+                    }
+                    
+                }
+            }
         }
         
        if (paginate) {

@@ -559,7 +559,7 @@ public class ModelMenuItem {
             protected FlexibleStringExpander targetWindowExdr;
             protected FlexibleStringExpander prefixExdr;
             protected Image image;
-            protected String urlMode = "ofbiz";
+            protected String urlMode = "intra-app";
             protected boolean fullPath = false;
             protected boolean secure = false;
             protected boolean encode = false;
@@ -600,7 +600,11 @@ public class ModelMenuItem {
             }
             
             public String getStyle(Map context) {
-                return this.styleExdr.expandString(context);
+                String style = this.styleExdr.expandString(context);
+                if (UtilValidate.isEmpty(style)) {
+                	style = this.linkMenuItem.getWidgetStyle();
+                }
+                return style;
             }
             
             public String getTarget(Map context) {
@@ -655,9 +659,7 @@ public class ModelMenuItem {
                 this.prefixExdr = new FlexibleStringExpander(val);
             }
             public void setUrlMode( String val ) {
-                if (UtilValidate.isEmpty(val))
-                    this.urlMode = "ofbiz";
-                else
+                if (UtilValidate.isNotEmpty(val))
                     this.urlMode = val;
             }
             public void setFullPath( String val ) {

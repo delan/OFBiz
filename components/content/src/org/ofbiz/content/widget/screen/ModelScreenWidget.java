@@ -800,7 +800,7 @@ public abstract class ModelScreenWidget {
         protected FlexibleStringExpander targetWindowExdr;
         protected FlexibleStringExpander prefixExdr;
         protected Image image;
-        protected String urlMode = "ofbiz";
+        protected String urlMode = "intra-app";
         protected boolean fullPath = false;
         protected boolean secure = false;
         protected boolean encode = false;
@@ -900,9 +900,7 @@ public abstract class ModelScreenWidget {
             this.prefixExdr = new FlexibleStringExpander(val);
         }
         public void setUrlMode( String val ) {
-            if (UtilValidate.isEmpty(val))
-                this.urlMode = "ofbiz";
-            else
+            if (UtilValidate.isNotEmpty(val))
                 this.urlMode = val;
         }
         public void setFullPath( String val ) {

@@ -82,6 +82,7 @@ public class ModelMenu {
     protected Boolean defaultHideIfSelected;
     protected String defaultDisabledTitleStyle;
     protected String selectedMenuItemContextFieldName;
+    protected FlexibleStringExpander menuWrapperStyleExdr;
 
     /** This List will contain one copy of each item for each item name in the order
      * they were encountered in the service, entity, or menu definition; item definitions
@@ -218,6 +219,8 @@ public class ModelMenu {
             this.defaultDisabledTitleStyle = menuElement.getAttribute("default-disabled-title-style");
         if (this.selectedMenuItemContextFieldName == null || menuElement.hasAttribute("selected-menuitem-context-field-name"))
             this.selectedMenuItemContextFieldName = menuElement.getAttribute("selected-menuitem-context-field-name");
+        if (this.menuWrapperStyleExdr == null || menuElement.hasAttribute("menu-wrapper-style"))
+            this.setMenuWrapperStyle( menuElement.getAttribute("menu-wrapper-style"));
 
 
         // read in add item defs, add/override one by one using the menuItemList and menuItemMap
@@ -315,7 +318,12 @@ public class ModelMenu {
 
             //Debug.logInfo("in ModelMenu, menuItemList:" + menuItemList, module);
         // render each menuItem row, except hidden & ignored rows
-        menuStringRenderer.renderFormatSimpleWrapperRows(buffer, context, this);
+        //menuStringRenderer.renderFormatSimpleWrapperRows(buffer, context, this);
+        Iterator iter = menuItemList.iterator();
+        while (iter.hasNext()) {
+        	ModelMenuItem item = (ModelMenuItem)iter.next();
+            item.renderMenuItemString(buffer, context, menuStringRenderer);
+        }
 
         // render formatting wrapper close
         menuStringRenderer.renderFormatSimpleWrapperClose(buffer, context, this);
@@ -537,10 +545,23 @@ public class ModelMenu {
     }
 
     /**
+     * @param string
+     */
+    public void setMenuWrapperStyle(String string) {
+        this.menuWrapperStyleExdr = new FlexibleStringExpander(string);
+    }
+
+    /**
      * @return
      */
     public String getDefaultAssociatedContentId(Map context) {
         return defaultAssociatedContentId.expandString(context);
+    }
+    /**
+     * @return
+     */
+    public String getMenuWrapperStyle(Map context) {
+        return menuWrapperStyleExdr.expandString(context);
     }
 
     /**
