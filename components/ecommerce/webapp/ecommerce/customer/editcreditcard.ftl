@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -203,7 +203,7 @@
           </#if>
           <tr>
             <td align="right" valigh="top" width="1%">
-              <input type="radio" name="contactMechId" value="_NEW_">
+              <input type="radio" name="contactMechId" value="_NEW_" checked>
             </td>
             <td align="left" valign="middle" width="80%">
               <span class="tabletext">${uiLabelMap.PartyCreateNewBillingAddress}.</span>
