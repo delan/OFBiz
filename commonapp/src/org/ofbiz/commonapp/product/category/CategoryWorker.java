@@ -150,7 +150,7 @@ public class CategoryWorker {
             if (category != null) {
                 Collection prodCatMemberCol = null;
                 try {
-                    prodCatMemberCol = category.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum"));
+                    prodCatMemberCol = EntityUtil.filterByDate(category.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")));
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     prodCatMemberCol = null;
