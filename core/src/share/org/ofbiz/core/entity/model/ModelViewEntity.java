@@ -30,7 +30,6 @@ import org.ofbiz.core.util.*;
  *@created    November 9, 2001
  *@version    1.0
  */
-
 public class ModelViewEntity extends ModelEntity {
   /** Contains member-entity definitions: key is alias, value is entity-name */
   public Map memberEntities = new HashMap();
@@ -38,4 +37,46 @@ public class ModelViewEntity extends ModelEntity {
   public Vector aliases = new Vector();
   /** List of view links to define how entities are connected (or "joined") */
   public Vector viewLinks = new Vector();
+  
+  public void populateFields(Map entityCache) {
+    for(int i=0; i<aliases.size(); i++) {
+      ModelAlias alias = (ModelAlias)aliases.get(i);
+
+      String aliasedEntityName = (String)memberEntities.get(alias.entityAlias);
+      ModelEntity aliasedEntity = (ModelEntity)entityCache.get(aliasedEntityName);
+      if(aliasedEntity == null) {
+        Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " + aliasedEntityName);
+        continue;
+      }
+      
+      ModelField field = new ModelField();
+      field.name = alias.name;
+      field.isPk = alias.isPk;
+      
+      this.fields.add(field);
+      if(field.isPk) this.pks.add(field);
+      else this.nopks.add(field);
+            
+      ModelField aliasedField = aliasedEntity.getField(alias.field);
+      field.type = aliasedField.type;
+      field.colName = alias.entityAlias + "." + aliasedField.colName;
+      field.validators = aliasedField.validators;
+    }
+  }
+  
+  public ModelAlias makeModelAlias() { return new ModelAlias(); }
+  public ModelViewLink makeModelViewLink() { return new ModelViewLink(); }
+  
+  public class ModelAlias {
+    public String entityAlias = "";
+    public String name = "";
+    public String field = "";
+    public boolean isPk = false;
+  }
+  
+  public class ModelViewLink {
+    public String entityAlias = "";
+    public String relEntityAlias = "";
+    Vector keyMaps = new Vector();
+  }
 }

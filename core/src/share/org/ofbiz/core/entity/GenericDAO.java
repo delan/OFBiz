@@ -1186,6 +1186,14 @@ public class GenericDAO {
       String entityName = (String)namesIter.next();
       ModelEntity entity = (ModelEntity)modelEntities.get(entityName);
       
+      //if this is a view entity, do not check it...
+      if(entity instanceof ModelViewEntity) {
+        String entMessage = "(" + timer.timeSinceLast() + "ms) NOT Checking #" + curEnt + "/" + totalEnt + " View Entity " + entity.entityName;
+        Debug.logInfo("[GenericDAO.checkDb] " + entMessage);
+        if(messages != null) messages.add(entMessage);
+        continue;
+      }
+      
       String entMessage = "(" + timer.timeSinceLast() + "ms) Checking #" + curEnt + "/" + totalEnt + " Entity " + entity.entityName + " with table " + entity.tableName;
       Debug.logInfo("[GenericDAO.checkDb] " + entMessage);
       if(messages != null) messages.add(entMessage);

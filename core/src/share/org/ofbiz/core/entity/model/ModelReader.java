@@ -54,6 +54,7 @@ public class ModelReader {
   public Map entityCache = null;
   
   public int numEntities = 0;
+  public int numViewEntities = 0;
   public int numFields = 0;
   public int numRelations = 0;
   
@@ -118,10 +119,12 @@ public class ModelReader {
         if(entityCache == null) //now it's safe
         {
           numEntities = 0;
+          numViewEntities = 0;
           numFields = 0;
           numRelations = 0;
           
           entityCache = new HashMap();
+          List tempViewEntityList = new LinkedList();
           
           UtilTimer utilTimer = new UtilTimer();
           
@@ -146,7 +149,9 @@ public class ModelReader {
             if(curChild != null) {
               utilTimer.timerString("Before start of entity loop in file " + entityFileName);
               do {
-                if(curChild.getNodeType() == Node.ELEMENT_NODE && "entity".equals(curChild.getNodeName())) {
+                boolean isEntity = "entity".equals(curChild.getNodeName());
+                boolean isViewEntity = "view-entity".equals(curChild.getNodeName());
+                if((isEntity || isViewEntity) && curChild.getNodeType() == Node.ELEMENT_NODE) {
                   i++;
                   Element curEntity = (Element)curChild;
                   String entityName = checkEmpty(curEntity.getAttribute("entity-name"));
@@ -170,12 +175,21 @@ public class ModelReader {
                   
                   //utilTimer.timerString("  After entityEntityName -- " + i + " --");
                   //ModelEntity entity = createModelEntity(curEntity, docElement, utilTimer, docElementValues);
-                  ModelEntity entity = createModelEntity(curEntity, docElement, null, docElementValues);
+
+                  ModelEntity entity = null;
+                  if(isEntity) entity = createModelEntity(curEntity, docElement, null, docElementValues);
+                  else {
+                    entity = createModelViewEntity(curEntity, docElement, null, docElementValues);
+                    //put the view entity in a list to get ready for the second pass to populate fields...
+                    tempViewEntityList.add(entity);
+                  }
+                  
                   //utilTimer.timerString("  After createModelEntity -- " + i + " --");
                   if(entity != null) {
                     entityCache.put(entityName, entity);
                     //utilTimer.timerString("  After entityCache.put -- " + i + " --");
-                    Debug.logInfo("-- getModelEntity: #" + i + " Loaded entity: " + entityName);
+                    if(isEntity) Debug.logInfo("-- [Entity]: #" + i + ": " + entityName);
+                    else Debug.logInfo("-- [ViewEntity]: #" + i + ": " + entityName);
                   }
                   else Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create entity for entityName: " + entityName);
 
@@ -185,7 +199,15 @@ public class ModelReader {
             else Debug.logWarning("No child nodes found.");
             utilTimer.timerString("Finished file " + entityFileName + " - Total Entities: " + i + " FINISHED");
           }
-          Debug.logInfo("FINISHED LOADING ENTITIES - ALL FILES; #entites=" + numEntities + " #fields=" + numFields + " #relations=" + numRelations);
+          
+          //do a pass on all of the view entities now that all of the entities have
+          // loaded and populate the fields
+          for(int velInd=0; velInd<tempViewEntityList.size(); velInd++) {
+            ModelViewEntity curViewEntity = (ModelViewEntity)tempViewEntityList.get(velInd);
+            curViewEntity.populateFields(entityCache);
+          }
+          
+          Debug.logInfo("FINISHED LOADING ENTITIES - ALL FILES; #Entites=" + numEntities + " #ViewEntites=" + numViewEntities + " #fields=" + numFields + " #relations=" + numRelations);
         }
       }
     }
@@ -241,19 +263,12 @@ public class ModelReader {
     return ec.keySet();
   }
   
-  ModelEntity createModelEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
-    if(entityElement == null) return null;
-    numEntities++;
-    ModelEntity entity = new ModelEntity();
-    entity.modelReader = this;
-    
-    if(utilTimer != null) utilTimer.timerString("  createModelEntity: before general");
+  protected void populateBasicInfo(ModelEntity entity, Element entityElement, Element docElement, Hashtable docElementValues) {
     entity.entityName = checkEmpty(entityElement.getAttribute("entity-name"));
     entity.tableName = checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(entity.entityName));
     entity.packageName = checkEmpty(entityElement.getAttribute("package-name"));
     entity.dependentOn = checkEmpty(entityElement.getAttribute("dependent-on"));
     
-    if(utilTimer != null) utilTimer.timerString("  createModelEntity: before comments");
     if(docElementValues == null) {
       entity.title = checkEmpty(entityElement.getAttribute("title"),childElementValue(docElement, "title"),"None");
       entity.description = checkEmpty(childElementValue(entityElement, "description"),childElementValue(docElement, "description"),"None");
@@ -273,6 +288,27 @@ public class ModelReader {
       entity.author = checkEmpty(entityElement.getAttribute("author"),(String)docElementValues.get("author"),"None");
       entity.version = checkEmpty(entityElement.getAttribute("version"),(String)docElementValues.get("version"),"1.0");
     }
+  }
+
+  protected void populateRelated(ModelEntity entity, Element entityElement) {
+    NodeList relationList = entityElement.getElementsByTagName("relation");
+    for(int i=0; i<relationList.getLength(); i++) {
+      Element relationElement = (Element)relationList.item(i);
+      if(relationElement.getParentNode() == entityElement) {
+        ModelRelation relation = createRelation(entity, relationElement);
+        if(relation != null) entity.relations.add(relation);
+      }
+    }
+  }
+  
+  ModelEntity createModelEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
+    if(entityElement == null) return null;
+    numEntities++;
+    ModelEntity entity = new ModelEntity();
+    entity.modelReader = this;
+    
+    if(utilTimer != null) utilTimer.timerString("  createModelEntity: before general/basic info");
+    this.populateBasicInfo(entity, entityElement, docElement, docElementValues);
     
     if(utilTimer != null) utilTimer.timerString("  createModelEntity: before fields");
     NodeList fieldList = entityElement.getElementsByTagName("field");
@@ -302,14 +338,67 @@ public class ModelReader {
     }
     
     if(utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
-    NodeList relationList = entityElement.getElementsByTagName("relation");
-    for(int i=0; i<relationList.getLength(); i++) {
-      Element relationElement = (Element)relationList.item(i);
-      if(relationElement.getParentNode() == entityElement) {
-        ModelRelation relation = createRelation(entity, relationElement);
-        if(relation != null) entity.relations.add(relation);
+    this.populateRelated(entity, entityElement);
+    
+    return entity;
+  }
+  
+  ModelEntity createModelViewEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
+    if(entityElement == null) return null;
+    numViewEntities++;
+    ModelViewEntity entity = new ModelViewEntity();
+    entity.modelReader = this;
+    
+    if(utilTimer != null) utilTimer.timerString("  createModelViewEntity: before general/basic info");
+    this.populateBasicInfo(entity, entityElement, docElement, docElementValues);
+    
+    if(utilTimer != null) utilTimer.timerString("  createModelViewEntity: before \"member-entity\"s");
+    NodeList membEntList = entityElement.getElementsByTagName("member-entity");
+    for(int i=0; i<membEntList.getLength(); i++) {
+      Element membEnt = (Element)membEntList.item(i);
+      String alias = checkEmpty(membEnt.getAttribute("entity-alias"));
+      String name = checkEmpty(membEnt.getAttribute("entity-name"));
+      if(name.length() <= 0 || alias.length() <= 0) {
+        Debug.logWarning("[ModelReader.createModelViewEntity] Warning: entity-alias or entity-name missing on member-entity element");
       }
+      else entity.memberEntities.put(alias, name);
     }
+    
+    //when reading aliases, just read them into the alias list, there will be a pass
+    // after loading all entities to go back and fill in all of the ModelField entries
+    if(utilTimer != null) utilTimer.timerString("  createModelViewEntity: before aliases");
+    NodeList aliasList = entityElement.getElementsByTagName("alias");
+    for(int i=0; i<aliasList.getLength(); i++) {
+      ModelViewEntity.ModelAlias alias = entity.makeModelAlias();
+      Element aliasElement = (Element)aliasList.item(i);
+      alias.entityAlias = checkEmpty(aliasElement.getAttribute("entity-alias"));
+      alias.name = checkEmpty(aliasElement.getAttribute("name"));
+      alias.field = checkEmpty(aliasElement.getAttribute("field"), alias.name);
+      alias.isPk = "true".equals(aliasElement.getAttribute("prim-key"));
+      entity.aliases.add(alias);
+    }
+    
+    NodeList viewLinkList = entityElement.getElementsByTagName("view-link");
+    for(int i=0; i<viewLinkList.getLength(); i++) {
+      Element viewLinkElement = (Element)viewLinkList.item(i);
+      ModelViewEntity.ModelViewLink viewLink = entity.makeModelViewLink();
+      viewLink.entityAlias = checkEmpty(viewLinkElement.getAttribute("entity-alias"));
+      viewLink.relEntityAlias = checkEmpty(viewLinkElement.getAttribute("rel-entity-alias"));
+
+      NodeList keyMapList = viewLinkElement.getElementsByTagName("key-map");
+      for(int j=0; j<keyMapList.getLength(); j++) {
+        Element keyMapElement = (Element)keyMapList.item(j);
+        ModelKeyMap keyMap = createKeyMap(keyMapElement);
+        if(keyMap != null) viewLink.keyMaps.add(keyMap);
+      }
+      entity.viewLinks.add(viewLink);
+    }
+
+    if(utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
+    this.populateRelated(entity, entityElement);
+    
+    //before finishing, make sure the table name is null, this should help bring up errors early...
+    entity.tableName = null;
     
     return entity;
   }
