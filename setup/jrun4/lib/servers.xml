@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE servers PUBLIC "-//Macromedia, Inc.//DTD servers 4.0//EN" "http://jrun.macromedia.com/dtds/servers.dtd">
+
+<servers>
+  <server>
+    <name>default</name>
+    <directory>{jrun.home}/servers/default</directory>
+  </server>
+  <server>
+    <name>samples</name>
+    <directory>{jrun.home}/servers/samples</directory>
+  </server>
+  <server>
+    <name>admin</name>
+    <directory>{jrun.home}/servers/admin</directory>
+  </server>
+  <server>
+    <name>ofbiz</name>
+    <directory>{jrun.home}/../ofbiz/setup/jrun4/servers/ofbiz</directory>
+  </server>
+</servers>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+ <display-name>Default Web Application Settings</display-name>
+ <description>Settings </description>
+
+<!--
+ <filter>
+   <filter-name>JRunTimingFilter</filter-name>
+   <filter-class>jrun.servlet.filters.TimingFilter</filter-class>
+ </filter>
+
+ <filter-mapping>
+   <filter-name>JRunTimingFilter</filter-name>
+   <url-pattern>/*</url-pattern>
+ </filter-mapping>
+-->
+
+ <servlet>
+   <servlet-name>FileServlet</servlet-name>
+   <servlet-class>jrun.servlet.file.FileServlet</servlet-class>
+   <init-param>
+     <param-name>browseDirs</param-name>
+     <param-value>false</param-value>
+   </init-param>  
+ </servlet>
+
+ <servlet>
+   <servlet-name>ServletInvoker</servlet-name>
+   <servlet-class>jrun.servlet.ServletInvoker</servlet-class>
+ </servlet>
+
+ <servlet>
+   <servlet-name>JSPServlet</servlet-name>
+   <servlet-class>jrun.jsp.JSPServlet</servlet-class>
+   <load-on-startup>1</load-on-startup>
+   <init-param>
+     <param-name>keepGenerated</param-name>
+     <param-value>false</param-value>
+   </init-param>
+   <init-param>
+     <param-name>translationDisabled</param-name>
+     <param-value>false</param-value>
+   </init-param>  
+   <init-param>
+     <param-name>cacheTags</param-name>
+     <param-value>true</param-value>
+   </init-param>  
+ </servlet>
+
+ <servlet>
+   <servlet-name>JSTServlet</servlet-name>
+   <servlet-class>jrun.jsp.JSTServlet</servlet-class>
+ </servlet>
+
+ <servlet>
+    <servlet-name>AxisServlet</servlet-name>
+    <display-name>Apache-Axis Servlet</display-name>
+    <servlet-class>org.apache.axis.transport.http.AxisServlet</servlet-class>
+    <init-param>
+      <param-name>use-servlet-security</param-name>
+      <param-value>true</param-value>
+    </init-param>
+ </servlet>
+
+ <servlet>
+   <servlet-name>JRunStatistics</servlet-name>
+   <jsp-file>/jrunx/instrument/Results.jsp</jsp-file>
+ </servlet>
+
+ <servlet-mapping>
+     <servlet-name>AxisServlet</servlet-name>
+     <url-pattern>*.jws</url-pattern>
+ </servlet-mapping>
+
+ <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+ </servlet-mapping>
+
+ <servlet-mapping>
+   <servlet-name>FileServlet</servlet-name>
+   <url-pattern>/</url-pattern>
+ </servlet-mapping>
+
+ <servlet-mapping>
+   <servlet-name>ServletInvoker</servlet-name>
+   <url-pattern>/servlet/*</url-pattern>
+ </servlet-mapping>
+
+ <servlet-mapping>
+   <servlet-name>JSPServlet</servlet-name>
+   <url-pattern>*.jsp</url-pattern>
+ </servlet-mapping>
+
+ <servlet-mapping>
+   <servlet-name>JSTServlet</servlet-name>
+   <url-pattern>*.jst</url-pattern>
+ </servlet-mapping>
+
+ <servlet-mapping>
+   <servlet-name>JRunStatistics</servlet-name>
+   <url-pattern>/JRunStatistics</url-pattern>
+ </servlet-mapping>
+
+ <welcome-file-list>
+  <welcome-file>index.html</welcome-file>
+  <welcome-file>index.jsp</welcome-file>
+ </welcome-file-list>
+
+ <error-page>
+    <exception-type>jrun.jsp.compiler.JSPCompiler$CompoundCompilerException</exception-type>
+    <location>/jrun/jsp/error-pages/CompoundCompilerException.jsp</location>
+ </error-page>
+
+ <error-page>
+    <exception-type>javax.io.FileNotFoundException</exception-type>
+    <location>/jrun/servlet/error-pages/404.jsp</location>
+ </error-page>
+
+</web-app>
