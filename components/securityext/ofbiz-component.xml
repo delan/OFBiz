@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.6 2004/07/31 00:24:09 ajzeneski Exp $
+ *  $Id: ofbiz-component.xml,v 1.7 2004/08/01 03:52:34 ajzeneski Exp $
 -->
 
 <ofbiz-component name="securityext">
@@ -29,6 +29,6 @@
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
     <classpath type="dir" location="script"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/SecurityData.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/SecurityExtData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 </ofbiz-component>

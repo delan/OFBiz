@@ -16,11 +16,13 @@
     <SecurityPermission description="Sales Order Entry in the Order Manager." permissionId="ORDERMGR_SALES_ENTRY"/>
     <SecurityPermission description="Price change permission for sales orders." permissionId="ORDERMGR_SALES_PRICEMOD"/>
     <SecurityPermission description="Purchase Order Entry in the Order Manager." permissionId="ORDERMGR_PURCHASE_ENTRY"/>
+
     <SecurityGroup description="Admin group for restricted order processing." groupId="ORDERPROC"/>
     <SecurityGroup description="Order Entry Admin group; permissions for creating orders." groupId="ORDERENTRY"/>
     <SecurityGroup description="Order Admin group, has all order permissions." groupId="ORDERADMIN"/>
     <SecurityGroup description="Limited Order Admin group, has all limited order permissions." groupId="ORDERADMIN_LTD"/>
     <SecurityGroup description="Limited Order Admin group for Supplier Agents." groupId="ORDERSUPPLIER_LTD"/>
+    
     <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_VIEW"/>
     <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_CREATE"/>
     <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_UPDATE"/>

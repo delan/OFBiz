@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <!-- OFBiz Core security -->
+    <!-- Target file: components/security/data/SecurityData.xml -->
+    <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
+    <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
+    <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
+</entity-engine-xml>
