@@ -220,7 +220,8 @@ Error messages go on the error list and are handled with the check-errors tag.
 >
 
 <!-- Operations to copy map fields in the current env to context specific containers -->
-    
+
+<!-- Event specific operations -->    
 <!ELEMENT field-to-request EMPTY>
 <!ATTLIST field-to-request
     map-name CDATA #REQUIRED
@@ -246,7 +247,7 @@ Error messages go on the error list and are handled with the check-errors tag.
     session-name CDATA #IMPLIED
 >
 
-<!-- TODO: implement event env ops -->
+<!-- Event specific env operations -->    
 <!ELEMENT env-to-request EMPTY>
 <!ATTLIST env-to-request
     env-name CDATA #REQUIRED
@@ -268,19 +269,20 @@ Error messages go on the error list and are handled with the check-errors tag.
     session-name CDATA #IMPLIED
 >
 
+<!-- Service specific operations -->    
 <!ELEMENT field-to-result EMPTY>
 <!ATTLIST field-to-result
     map-name CDATA #REQUIRED
     field-name CDATA #REQUIRED
     result-name CDATA #IMPLIED
 >
-<!-- TODO: implement env-to-result -->
 <!ELEMENT env-to-result EMPTY>
 <!ATTLIST env-to-result
     env-name CDATA #REQUIRED
     result-name CDATA #IMPLIED
 >
 
+<!-- Environment specific operations -->    
 <!ELEMENT field-to-field EMPTY>
 <!ATTLIST field-to-field
     map-name CDATA #REQUIRED
@@ -288,7 +290,6 @@ Error messages go on the error list and are handled with the check-errors tag.
     to-map-name CDATA #IMPLIED
     to-field-name CDATA #IMPLIED
 >
-<!-- TODO: implement env related ops -->
 <!ELEMENT env-to-list EMPTY>
 <!ATTLIST env-to-list
     env-name CDATA #REQUIRED
@@ -297,12 +298,14 @@ Error messages go on the error list and are handled with the check-errors tag.
 <!ELEMENT env-to-field EMPTY>
 <!ATTLIST env-to-field
     env-name CDATA #REQUIRED
-    list-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+    field-name CDATA #IMPLIED
 >
 <!ELEMENT field-to-env EMPTY>
 <!ATTLIST field-to-env
     env-name CDATA #REQUIRED
-    list-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+    field-name CDATA #IMPLIED
 >
 
 <!--
