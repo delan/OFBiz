@@ -65,6 +65,6 @@
     <process field="infoUrl"><copy/></process>
   </simple-map-processor>
   <simple-map-processor name="delete">
-    <process field="workEffortId"><copy replace="false"/></process>
+    <process field="workEffortId"><copy/><not-empty><fail-message message="Work Effort ID is missing."/></not-empty></process>
   </simple-map-processor>
 </simple-map-processors>

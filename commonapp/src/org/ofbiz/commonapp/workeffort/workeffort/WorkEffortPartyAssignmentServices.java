@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/12/30 04:22:56  jonesde
+ * Finished WorkEffortPartyAssignment services, cleaned up WorkEffort services
+ *
  *
  */
 package org.ofbiz.commonapp.workeffort.workeffort;
@@ -66,7 +69,7 @@ public class WorkEffortPartyAssignmentServices {
         newWorkEffortPartyAssignment.set("fromDate", fromDate);
         newWorkEffortPartyAssignment.set("thruDate", context.get("thruDate"), false);
         newWorkEffortPartyAssignment.set("facilityId", context.get("facilityId"), false);
-        newWorkEffortPartyAssignment.set("comments", context.get("statusId"), false);
+        newWorkEffortPartyAssignment.set("comments", context.get("comments"), false);
         newWorkEffortPartyAssignment.set("mustRsvp", context.get("mustRsvp"), false);
         newWorkEffortPartyAssignment.set("expectationEnumId", context.get("expectationEnumId"), false);
         
@@ -145,7 +148,7 @@ public class WorkEffortPartyAssignmentServices {
         newWorkEffortPartyAssignment.set("fromDate", context.get("fromDate"));
         newWorkEffortPartyAssignment.set("thruDate", context.get("thruDate"), false);
         newWorkEffortPartyAssignment.set("facilityId", context.get("facilityId"), false);
-        newWorkEffortPartyAssignment.set("comments", context.get("statusId"), false);
+        newWorkEffortPartyAssignment.set("comments", context.get("comments"), false);
         newWorkEffortPartyAssignment.set("mustRsvp", context.get("mustRsvp"), false);
         newWorkEffortPartyAssignment.set("expectationEnumId", context.get("expectationEnumId"), false);
         

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Map Processors//EN" "http://www.ofbiz.org/dtds/simple-map-processors.dtd">
+
+<!--
+ * <p><b>Title:</b> WorkEffortPartyAssignment Processors
+ * <p><b>Description:</b> Events to handle form input and other data changes
+ * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on January 9, 2001
+ -->
+<simple-map-processors>
+  <simple-map-processor name="create">
+    <process field="workEffortId"><copy/><not-empty><fail-message message="Work Effort ID is missing."/></not-empty></process>
+    <process field="partyId"><copy/><not-empty><fail-message message="Party ID is missing."/></not-empty></process>
+    <process field="roleTypeId"><copy/><not-empty><fail-message message="Role Type ID is missing."/></not-empty></process>
+    <process field="thruDate">
+        <convert type="Timestamp"><fail-message message="Thru Date is not a valid Date-Time."/></convert></process>
+    <process field="facilityId"><copy/></process>
+    <process field="statusId"><copy/><not-empty><fail-message message="Status ID is missing."/></not-empty></process>
+    <process field="comments"><copy/></process>
+    <process field="mustRsvp"><copy/></process>
+    <process field="expectationEnumId"><copy/></process>
+  </simple-map-processor>
+  <simple-map-processor name="update">
+    <process field="workEffortId"><copy/><not-empty><fail-message message="Work Effort ID is missing."/></not-empty></process>
+    <process field="partyId"><copy/><not-empty><fail-message message="Party ID is missing."/></not-empty></process>
+    <process field="roleTypeId"><copy/><not-empty><fail-message message="Role Type ID is missing."/></not-empty></process>
+    <process field="fromDate">
+        <not-empty><fail-message message="From Date is missing."/></not-empty>
+        <convert type="Timestamp"><fail-message message="Thru Date is not a valid Date-Time."/></convert></process>
+    <process field="thruDate">
+        <compare-field operator="greater" field="fromDate" type="Timestamp"><fail-message message="Thru date/time must be AFTER From date/time."/></compare-field>
+        <convert type="Timestamp"><fail-message message="Thru Date is not a valid Date-Time."/></convert></process>
+    <process field="facilityId"><copy/></process>
+    <process field="statusId"><copy/><not-empty><fail-message message="Status ID is missing."/></not-empty></process>
+    <process field="comments"><copy/></process>
+    <process field="mustRsvp"><copy/></process>
+    <process field="expectationEnumId"><copy/></process>
+    <process field="actualStartDate">
+        <compare-field operator="less" field="actualCompletionDate" type="Timestamp"><fail-message message="Actual Start date/time must be BEFORE End date/time."/></compare-field>
+        <convert type="Timestamp"><fail-message message="Actual Start Date is not a valid Date-Time."/></convert></process>
+  </simple-map-processor>
+  <simple-map-processor name="delete">
+    <process field="workEffortId"><copy/><not-empty><fail-message message="Work Effort ID is missing."/></not-empty></process>
+    <process field="partyId"><copy/><not-empty><fail-message message="Party ID is missing."/></not-empty></process>
+    <process field="roleTypeId"><copy/><not-empty><fail-message message="Role Type ID is missing."/></not-empty></process>
+    <process field="fromDate">
+        <not-empty><fail-message message="From Date is missing."/></not-empty>
+        <convert type="Timestamp"><fail-message message="Thru Date is not a valid Date-Time."/></convert></process>
+  </simple-map-processor>
+</simple-map-processors>
