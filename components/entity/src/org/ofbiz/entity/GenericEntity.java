@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.28 2004/04/23 14:57:04 doogie Exp $
+ * $Id: GenericEntity.java,v 1.29 2004/06/17 00:10:50 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.28 $
+ *@version    $Revision: 1.29 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -230,11 +230,11 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     /** Returns true if the entity contains all of the primary key fields, but NO others. */
     public boolean isPrimaryKey() {
-        TreeSet fieldKeys = new TreeSet(fields.keySet());
-
+        TreeSet fieldKeys = new TreeSet(this.fields.keySet());
         for (int i = 0; i < getModelEntity().getPksSize(); i++) {
-            if (!fieldKeys.contains(getModelEntity().getPk(i).getName())) return false;
-            fieldKeys.remove(getModelEntity().getPk(i).getName());
+            String fieldName = getModelEntity().getPk(i).getName();
+            if (this.fields.get(fieldName) == null) return false;
+            fieldKeys.remove(fieldName);
         }
         if (!fieldKeys.isEmpty()) return false;
         return true;
@@ -243,9 +243,9 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     /** Returns true if the entity contains all of the primary key fields. */
     public boolean containsPrimaryKey() {
         TreeSet fieldKeys = new TreeSet(fields.keySet());
-
         for (int i = 0; i < getModelEntity().getPksSize(); i++) {
-            if (!fieldKeys.contains(getModelEntity().getPk(i).getName())) return false;
+            String fieldName = getModelEntity().getPk(i).getName();
+            if (this.fields.get(fieldName) == null) return false;
         }
         return true;
     }
