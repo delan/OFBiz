@@ -41,12 +41,12 @@
             <sequenced-id-to-env sequence-name="Product" env-name="productId"/>
             <to-string field-name="productId"/>
             <env-to-field env-name="productId" map-name="newEntity"/>
-            <field-to-result field-name="productId" result-name="productId"/>
         <else>
             <check-id field-name="productId" map-name="newEntity"/>
             <check-errors/>
         </else>
         </if-empty>
+        <field-to-result field-name="productId" map-name="newEntity" result-name="productId"/>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>
         <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
