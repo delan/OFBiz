@@ -515,7 +515,7 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="region"/>
+    <view-map name="main" type="wsp" page="/main.ftl"/>
     <view-map name="login" type="region"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
