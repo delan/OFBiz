@@ -886,6 +886,13 @@
         <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="CreateVirtualWithVariantsForm"/>
     </request-map>
+    <request-map uri="addVariantsToVirtual">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="quickCreateVirtualWithVariants"/>
+        <response name="success" type="view" value="EditProductAssoc"/>
+        <response name="error" type="view" value="QuickAddVariants"/>
+    </request-map>
+    
 
     <request-map uri="QuickAddVariants">
         <security https="true" auth="true"/>
