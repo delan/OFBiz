@@ -48,7 +48,7 @@ import javax.servlet.http.HttpSession;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -105,18 +105,26 @@ public class UploadContentAndImage {
                     imageBytes = imageFi.get();
                 }
             }
-            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]passedParams: " + passedParams, module);
+            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]passedParams: " + passedParams, module);
 
             TransactionUtil.begin();
+            List contentPurposeList = ContentWorker.prepContentPurposeList(passedParams);
+            passedParams.put("contentPurposeList", contentPurposeList );
+            String entityOperation = (String)passedParams.get("entityOperation");
+            String passedContentId = (String)passedParams.get("ftlContentId");
+            List targetOperationList = ContentWorker.prepTargetOperationList(passedParams, entityOperation);
+            passedParams.put("targetOperationList", targetOperationList );
             // Create or update FTL template
             Map ftlContext = new HashMap();
             ftlContext.put("userLogin", userLogin);
             ftlContext.put("contentId", passedParams.get("ftlContentId"));
             ftlContext.put("ownerContentId", passedParams.get("ownerContentId"));
-            ftlContext.put("contentTypeId", "DOCUMENT");
+            String contentTypeId = (String)passedParams.get("contentTypeId");
+            ftlContext.put("contentTypeId", contentTypeId);
             ftlContext.put("statusId", passedParams.get("statusId"));
-            ftlContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
-            ftlContext.put("targetOperationList", StringUtil.split((String)passedParams.get("targetOperation"),"|"));
+            ftlContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeList")));
+            ftlContext.put("contentPurposeList", contentPurposeList);
+            ftlContext.put("targetOperationList",targetOperationList);
             ftlContext.put("contentName", passedParams.get("contentName"));
             ftlContext.put("dataTemplateTypeId", passedParams.get("dataTemplateTypeId"));
             ftlContext.put("description", passedParams.get("description"));
@@ -131,6 +139,7 @@ public class UploadContentAndImage {
             ftlContext.put("contentAssocTypeId", passedParams.get("contentAssocTypeId"));
             if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext " + ftlContext, module);
             if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext(2):" + ftlContext, module);
+            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]persist ftlContext: " + ftlContext, module);
             Map ftlResults = dispatcher.runSync("persistContentAndAssoc", ftlContext);
             if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext(3):" + ftlContext, module);
             boolean isError = ModelService.RESPOND_ERROR.equals(ftlResults.get(ModelService.RESPONSE_MESSAGE));
@@ -141,9 +150,12 @@ public class UploadContentAndImage {
             }
 
             String ftlContentId = (String)ftlResults.get("contentId");
+            if (UtilValidate.isEmpty(ftlContentId)) 
+                ftlContentId = passedContentId;
+          
             String ftlDataResourceId = drid;
 
-            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]ftlContentId:" + ftlContentId, module);
+            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]ftlContentId:" + ftlContentId, module);
             //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]ftlDataResourceId:" + ftlDataResourceId, module);
             // Create or update summary text subContent
             if ( passedParams.containsKey("summaryData") ) {
@@ -153,8 +165,8 @@ public class UploadContentAndImage {
                 sumContext.put("ownerContentId", ftlContentId);
                 sumContext.put("contentTypeId", "DOCUMENT");
                 sumContext.put("statusId", passedParams.get("statusId"));
-                sumContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
-                sumContext.put("targetOperationList", StringUtil.split((String)passedParams.get("targetOperation"),"|"));
+                sumContext.put("contentPurposeList", contentPurposeList);
+                sumContext.put("targetOperationList",targetOperationList);
                 sumContext.put("contentName", passedParams.get("contentName"));
                 sumContext.put("description", passedParams.get("description"));
                 sumContext.put("privilegeEnumId", passedParams.get("privilegeEnumId"));
@@ -176,31 +188,33 @@ public class UploadContentAndImage {
             }
 
             // Create or update electronic text subContent
-            Map txtContext = new HashMap();
-            txtContext.put("userLogin", userLogin);
-            txtContext.put("contentId", passedParams.get("txtContentId"));
-            txtContext.put("ownerContentId", ftlContentId);
-            txtContext.put("contentTypeId", "DOCUMENT");
-            txtContext.put("statusId", passedParams.get("statusId"));
-            txtContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
-            txtContext.put("targetOperationList", StringUtil.split((String)passedParams.get("targetOperation"),"|"));
-            txtContext.put("contentName", passedParams.get("contentName"));
-            txtContext.put("description", passedParams.get("description"));
-            txtContext.put("privilegeEnumId", passedParams.get("privilegeEnumId"));
-            txtContext.put("dataResourceId", passedParams.get("txtDataResourceId"));
-            txtContext.put("dataResourceTypeId", "ELECTRONIC_TEXT");
-            txtContext.put("contentIdTo", ftlContentId);
-            txtContext.put("contentAssocTypeId", "SUB_CONTENT");
-            txtContext.put("textData", passedParams.get("textData"));
-            txtContext.put("mapKey", "ARTICLE");
-            txtContext.put("dataTemplateTypeId", "NONE");
-            if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]txtContext " + txtContext, module);
-            Map txtResults = dispatcher.runSync("persistContentAndAssoc", txtContext);
-            isError = ModelService.RESPOND_ERROR.equals(txtResults.get(ModelService.RESPONSE_MESSAGE));
-            if (isError) {
-                request.setAttribute("_ERROR_MESSAGE_", txtResults.get(ModelService.ERROR_MESSAGE));
-                    TransactionUtil.rollback();
-                return "error";
+            if ( passedParams.containsKey("textData") ) {
+                Map txtContext = new HashMap();
+                txtContext.put("userLogin", userLogin);
+                txtContext.put("contentId", passedParams.get("txtContentId"));
+                txtContext.put("ownerContentId", ftlContentId);
+                txtContext.put("contentTypeId", "DOCUMENT");
+                txtContext.put("statusId", passedParams.get("statusId"));
+                txtContext.put("contentPurposeList", contentPurposeList);
+                txtContext.put("targetOperationList",targetOperationList);
+                txtContext.put("contentName", passedParams.get("contentName"));
+                txtContext.put("description", passedParams.get("description"));
+                txtContext.put("privilegeEnumId", passedParams.get("privilegeEnumId"));
+                txtContext.put("dataResourceId", passedParams.get("txtDataResourceId"));
+                txtContext.put("dataResourceTypeId", "ELECTRONIC_TEXT");
+                txtContext.put("contentIdTo", ftlContentId);
+                txtContext.put("contentAssocTypeId", "SUB_CONTENT");
+                txtContext.put("textData", passedParams.get("textData"));
+                txtContext.put("mapKey", "ARTICLE");
+                txtContext.put("dataTemplateTypeId", "NONE");
+                if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]txtContext " + txtContext, module);
+                Map txtResults = dispatcher.runSync("persistContentAndAssoc", txtContext);
+                isError = ModelService.RESPOND_ERROR.equals(txtResults.get(ModelService.RESPONSE_MESSAGE));
+                if (isError) {
+                    request.setAttribute("_ERROR_MESSAGE_", txtResults.get(ModelService.ERROR_MESSAGE));
+                        TransactionUtil.rollback();
+                    return "error";
+                }
             }
 
             // Create or update image subContent
@@ -213,17 +227,23 @@ public class UploadContentAndImage {
                 imgContext.put("statusId", passedParams.get("statusId"));
                 imgContext.put("contentName", passedParams.get("contentName"));
                 imgContext.put("description", passedParams.get("description"));
-                imgContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
+                imgContext.put("contentPurposeList", contentPurposeList);
                 imgContext.put("privilegeEnumId", passedParams.get("privilegeEnumId"));
-                imgContext.put("targetOperationList", StringUtil.split((String)passedParams.get("targetOperation"),"|"));
+                imgContext.put("targetOperationList",targetOperationList);
                 imgContext.put("dataResourceId", passedParams.get("imgDataResourceId"));
-                imgContext.put("dataResourceTypeId", "IMAGE_OBJECT");
+                //String dataResourceTypeId = (String)passedParams.get("dataResourceTypeId");
+                //if (UtilValidate.isEmpty(dataResourceTypeId))
+                    //dataResourceTypeId = "IMAGE_OBJECT";
+                String dataResourceTypeId = "IMAGE_OBJECT";
+                imgContext.put("dataResourceTypeId", dataResourceTypeId);
                 imgContext.put("contentIdTo", ftlContentId);
                 imgContext.put("contentAssocTypeId", "SUB_CONTENT");
                 imgContext.put("imageData", new ByteWrapper(imageBytes));
                 imgContext.put("mapKey", "IMAGE");
                 imgContext.put("dataTemplateTypeId", "NONE");
-            if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]imgContext " + imgContext, module);
+                String rootDir = request.getSession().getServletContext().getRealPath("/");
+                imgContext.put("rootDir", "rootDir");
+                if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]imgContext " + imgContext, module);
                 Map imgResults = dispatcher.runSync("persistContentAndAssoc", imgContext);
                 isError = ModelService.RESPOND_ERROR.equals(imgResults.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) {

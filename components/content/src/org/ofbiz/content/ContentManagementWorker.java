@@ -55,7 +55,7 @@ import org.ofbiz.minilang.MiniLangException;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
  *
  * 
@@ -620,16 +620,18 @@ public class ContentManagementWorker {
             if (contentIdTo.equals(topContentId)) {
                 subArr[3] =  contentAssoc.get("fromDate");
             } else {
-                List subPointList = (List)subArr[1];
-                Iterator it5 = subPointList.iterator();
-                Object [] subArr2 = null;
-                while (it5.hasNext()) {
-                    subArr2 = (Object [])it5.next();
-                    String contentId5 = (String)subArr2[0];
-                    if (contentId5.equals(contentIdTo))
-                        break;
+                if (subArr != null) {
+                    List subPointList = (List)subArr[1];
+                    Iterator it5 = subPointList.iterator();
+                    Object [] subArr2 = null;
+                    while (it5.hasNext()) {
+                        subArr2 = (Object [])it5.next();
+                        String contentId5 = (String)subArr2[0];
+                        if (contentId5.equals(contentIdTo))
+                            break;
+                    }
+                    subArr2[2] =  contentAssoc.get("fromDate");
                 }
-                subArr2[2] =  contentAssoc.get("fromDate");
             }
         }
 

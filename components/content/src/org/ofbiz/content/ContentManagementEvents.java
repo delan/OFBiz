@@ -45,6 +45,7 @@ import org.ofbiz.content.content.ContentServices;
 import org.ofbiz.content.data.DataServices;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.PermissionRecorder;
+import org.ofbiz.content.widget.html.HtmlMenuWrapper;
 
 
 
@@ -52,7 +53,7 @@ import org.ofbiz.content.content.PermissionRecorder;
  * ContentManagementEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  *
  * 
