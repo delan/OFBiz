@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.1 2003/11/19 06:52:16 ajzeneski Exp $
+ * $Id: SurveyWrapper.java,v 1.2 2003/11/19 21:48:50 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -109,7 +109,9 @@ public class SurveyWrapper {
         GenericValue survey = this.getSurvey();
         List surveyQuestions = null;
         try {
-            surveyQuestions = delegator.findByAnd("SurveyQuestionAndAppl", UtilMisc.toMap("surveyId", surveyId));
+            Map fields = UtilMisc.toMap("surveyId", surveyId);
+            List order = UtilMisc.toList("sequenceNum");
+            surveyQuestions = delegator.findByAnd("SurveyQuestionAndAppl", fields, order);
             if (surveyQuestions != null) {
                 surveyQuestions = EntityUtil.filterByDate(surveyQuestions);
             }

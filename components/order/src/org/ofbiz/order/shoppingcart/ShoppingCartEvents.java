@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.2 2003/10/30 19:29:41 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.3 2003/11/19 21:50:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,10 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.product.store.ProductStoreSurveyWrapper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -46,7 +49,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -82,7 +85,7 @@ public class ShoppingCartEvents {
         // Get the parameters as a MAP, remove the productId and quantity params.
         Map paramMap = UtilHttp.getParameterMap(request);
 
-            // Get shoppingList info if passed
+        // Get shoppingList info if passed
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListItemSeqId = request.getParameter("shoppingListItemSeqId");
 
@@ -100,7 +103,6 @@ public class ShoppingCartEvents {
         if (productCategoryId != null && productCategoryId.length() == 0) {
             productCategoryId = null;
         }
-
 
         if (productId == null) {
             // before returning error; check make sure we aren't adding a special item type
@@ -160,12 +162,40 @@ public class ShoppingCartEvents {
             quantity = 1;
         }
 
+        // check for an add-to cart survey
+        List surveyResponses = null;
+        if (productId != null) {
+            String productStoreId = ProductStoreWorker.getProductStoreId(request);
+            List productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");
+            if (productSurvey != null) {
+                // TODO: implement multiple survey per product
+                GenericValue survey = EntityUtil.getFirst(productSurvey);
+                String surveyResponseId = (String) request.getAttribute("surveyResponseId");
+                if (surveyResponseId != null) {
+                    surveyResponses = UtilMisc.toList(surveyResponseId);
+                } else {
+                    Map surveyContext = UtilHttp.getParameterMap(request);
+                    GenericValue userLogin = cart.getUserLogin();
+                    if (userLogin != null) {
+                        surveyContext.put("partyId", userLogin.getString("partyId"));
+                    }
+                    ProductStoreSurveyWrapper wrapper = new ProductStoreSurveyWrapper(survey, surveyContext);
+                    request.setAttribute("surveyWrapper", wrapper);
+                    request.setAttribute("surveyAction", "/additemsurvey"); // will be used as the form action of the survey
+                    return "survey";
+                }
+            }
+        }
+        if (surveyResponses != null) {
+            paramMap.put("surveyResponses", surveyResponses);
+        }
+
         // Translate the parameters and add to the cart
         result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
             itemType, itemDescription, price, quantity, paramMap);
         controlDirective = processResult(result, request);
 
-        //Determine where to send the browser
+        // Determine where to send the browser
         if (controlDirective.equals(NON_CRITICAL_ERROR)) {
             return "success";
         } else if (controlDirective.equals(ERROR)) {

@@ -901,13 +901,10 @@
     <service name="createSurveyResponse" engine="simple" auth="false"
             location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyResponse">
         <description>Create a Survey Response w/ Response Answers</description>
-        <attribute name="surveyId" type="String" mode="IN" optional="false"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="responseDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="referenceId" type="String" mode="IN" optional="true"/>
-        <attribute name="generalFeedback" type="String" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" entity-name="SurveyResponse" include="nonpk" optional="true"/>
+        <override name="surveyId" optional="false"/>
         <attribute name="answers" type="Map" mode="IN" optional="false" string-map-prefix="answers_"/>
-        <attribute name="surveyResponse" type="GenericValue" mode="OUT" optional="false"/>
+        <attribute name="surveyResponseId" type="String" mode="OUT" optional="false"/>
     </service>
 
     <!-- Util -->

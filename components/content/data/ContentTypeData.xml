@@ -79,6 +79,7 @@
   <SurveyApplType surveyApplTypeId="PORDITM_PLACE" description="Purchase Order Item Placement"/>
 
   <SurveyQuestionType surveyQuestionTypeId="BOOLEAN" description="Boolean (Yes/No)"/>
-  <SurveyQuestionType surveyQuestionTypeId="TEXT" description="Free-form Text"/>
+  <SurveyQuestionType surveyQuestionTypeId="TEXT" description="Free-form Text (single-line)"/>
+  <SurveyQuestionType surveyQuestionTypeId="TEXTAREA" description="Free-form Text (multi-line)"/>
   <SurveyQuestionType surveyQuestionTypeId="OPTION" description="Selected Option"/>
 </entity-engine-xml>

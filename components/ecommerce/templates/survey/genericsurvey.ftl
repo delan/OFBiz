@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -33,6 +33,7 @@
       <input type="hidden" name="${field}" value="${additionalFields.get(field)}">
     </#list>
   </#if>
+  <input type="hidden" name="surveyId" value="${survey.surveyId}">
   <div class="head2">${survey.description?if_exists}</div>
   <br>
 
@@ -43,16 +44,23 @@
         <td width='1'>&nbsp;</td>
         <td>
           <#if question.surveyQuestionTypeId == "BOOLEAN">
-            <select class="selectBox" name="answer_${question.surveyQuestionId}">
+            <select class="selectBox" name="answers_${question.surveyQuestionId}">
               <option>Y</option>
               <option>N</option>
             </select>
+          <#elseif question.surveyQuestionTypeId == "TEXTAREA">
+            <textarea class="textAreaBox" cols="40" rows="5" name="answers_${question.surveyQuestionId}"></textarea>
           <#elseif question.surveyQuestionTypeId == "TEXT">
-            <input type="text" class="textBox" name="answer_${question.surveyQuestionId}">
+            <input type="text" size="30" class="textBox" name="answers_${question.surveyQuestionId}">
           <#elseif question.surveyQuestionTypeId == "OPTION">
             <div class="tabletext">Question type OPTION is not yet supported</div>
           <#else>
             <div class="tabletext">Unsupported question type : ${question.surveyQuestionTypeId}</div>
+          </#if>
+          <#if question.requiredField?default("N") == "Y">
+            <span class="tabletext">*</span>
+          <#else>
+            <span class="tabletext">[optional]</span>
           </#if>
         </td>
       </tr>

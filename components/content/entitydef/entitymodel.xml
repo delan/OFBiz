@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  */
 -->
 
@@ -1093,18 +1093,24 @@
     <entity entity-name="SurveyResponse"
             package-name="org.ofbiz.content.survey"
             title="Survey Response Entity">
-      <field name="partyId" type="id-ne"></field>
+      <field name="surveyResponseId" type="id-ne"></field>
       <field name="surveyId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
       <field name="responseDate" type="date-time"></field>
       <field name="referenceId" type="id-vlong"></field>
       <field name="generalFeedback" type="very-long"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="surveyId"/>
-      <prim-key field="responseDate"/>
-      <relation type="one" fk-name="SRVYRSP_PTY" rel-entity-name="Party">
+      <prim-key field="surveyResponseId"/>
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
       </relation>
       <relation type="one" fk-name="SRVYRSP_SRVY" rel-entity-name="Survey">
         <key-map field-name="surveyId"/>
@@ -1113,21 +1119,15 @@
     <entity entity-name="SurveyResponseAnswer"
             package-name="org.ofbiz.content.survey"
             title="Survey Response Answer Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="surveyId" type="id-ne"></field>
-      <field name="responseDate" type="date-time"></field>
+      <field name="surveyResponseId" type="id-ne"></field>
       <field name="surveyQuestionId" type="id-ne"></field>
       <field name="booleanResponse" type="indicator"></field>
       <field name="textResponse" type="very-long"></field>
       <field name="surveyOptionSeqId" type="id"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="surveyId"/>
-      <prim-key field="responseDate"/>
+      <prim-key field="surveyResponseId"/>
       <prim-key field="surveyQuestionId"/>
       <relation type="one" fk-name="SRVYRSPA_SVRSP" rel-entity-name="SurveyResponse">
-        <key-map field-name="partyId"/>
-        <key-map field-name="surveyId"/>
-        <key-map field-name="responseDate"/>
+        <key-map field-name="surveyResponseId"/>
       </relation>
       <relation type="one" fk-name="SRVYRSPA_SVQU" rel-entity-name="SurveyQuestion">
         <key-map field-name="surveyQuestionId"/>
