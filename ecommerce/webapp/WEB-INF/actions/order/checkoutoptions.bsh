@@ -59,7 +59,7 @@ if (billingAccountRoleList != null && billingAccountRoleList.size() > 0) {
     while (billingAcctIter.hasNext()) {
         billingAccountRole = billingAcctIter.next();        
         billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");                        
-        accountBalance = BillingAccountWorker.getBillingAccountBalance(delegator, billingAccountVO);
+        accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
         
         billingAccount = new HashMap(billingAccountVO);
         billingAccount.put("accountBalance", new Double(accountBalance));        
