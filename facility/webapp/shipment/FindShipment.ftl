@@ -36,10 +36,6 @@ function lookupShipments() {
     }
     document.lookupShipmentForm.submit();
 }
-function newShipment() {
-	document.lookupShipmentForm.action = "<@ofbizUrl>/EditShipment</@ofbizUrl>";
-    document.lookupShipmentForm.submit();
-}
 // -->
 </script>
 
@@ -53,7 +49,7 @@ function newShipment() {
           <td><div class="boxhead">Find Orders</div></td>
           <td align="right">
             <div class="tabletext">
-              <a href="javascript:newShipment();" class="submenutext">New Shipment</a>
+              <a href="<@ofbizUrl>/EditShipment</@ofbizUrl>" class="submenutext">New Shipment</a>
               <a href="javascript:lookupShipments();" class="submenutext">Lookup Shipment(s)</a>
             </div>
           </td>
@@ -197,12 +193,12 @@ function newShipment() {
           <#list shipmentList[lowIndex..highIndex-1] as shipment>
             <#assign originFacility = shipment.getRelatedOneCache("OriginFacility")>
             <#assign statusItem = shipment.getRelatedOneCache("StatusItem")>
-            <#assign shipmentType = shipment.getRelatedOneCache("OrderType")>
+            <#assign shipmentType = shipment.getRelatedOneCache("ShipmentType")>
             <tr class="${rowClass}">
               <td><a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">${shipment.shipmentId}</a></td>
               <td><div class="tabletext">${shipmentType.description?default(shipmentType.shipmentTypeId?default(""))}</div></td>
               <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
-              <td><div class="tabletext"><nobr>${shipment.estimatedShipDate.toString()}</nobr></div></td>
+              <td><div class="tabletext"><nobr>${(shipment.estimatedShipDate.toString())?if_exists}</nobr></div></td>
               <td><div class="tabletext">${(originFacility.facilityName)?if_exists} [${shipment.originFacilityId}]</div></td>
               <td align="right">
                 <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="buttontext">View</a>

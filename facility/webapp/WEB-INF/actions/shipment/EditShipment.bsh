@@ -32,6 +32,7 @@ import org.ofbiz.core.widgetimpl.*;
 delegator = request.getAttribute("delegator");
 
 shipmentId = request.getParameter("shipmentId");
+if (UtilValidate.isEmpty(shipmentId)) shipmentId = request.getAttribute("shipmentId");
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 
 HtmlFormWrapper editShipmentWrapper = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "EditShipment", request, response);

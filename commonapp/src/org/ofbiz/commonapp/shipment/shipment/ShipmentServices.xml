@@ -41,16 +41,17 @@
         <sequenced-id-to-env sequence-name="Shipment" env-name="sequencedId"/>
         <to-string field-name="sequencedId"/>
         <env-to-field env-name="sequencedId" field-name="shipmentId" map-name="newEntity"/>
+        <field-to-result field-name="sequencedId" result-name="shipmentId"/>
+        
+        <create-value value-name="newEntity"/>
         
         <if-not-empty field-name="statusId" map-name="newEntity">
             <make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
-            <field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
-            <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
+            <field-to-field field-name="statusId" map-name="newEntity" to-map-name="newStatusValue"/>
+            <field-to-field field-name="shipmentId" map-name="newEntity" to-map-name="newStatusValue"/>
             <now-timestamp-to-env env-name="newStatusValue.statusDate"/>
             <create-value value-name="newStatusValue"/>
         </if-not-empty>
-        
-        <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateShipment" short-description="Update Shipment">
         <check-permission permission="FACILITY" action="_UPDATE">
@@ -62,13 +63,15 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="Shipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
         
-        <if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="lookedUpValue.statusId">
-            <make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
-            <field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
-            <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
-            <now-timestamp-to-env env-name="newStatusValue.statusDate"/>
-            <create-value value-name="newStatusValue"/>
-        </if-compare-field>
+        <if-not-empty field-name="parameters.statusId">
+			<if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="lookedUpValue.statusId">
+				<make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
+				<field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
+				<field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
+				<now-timestamp-to-env env-name="newStatusValue.statusDate"/>
+				<create-value value-name="newStatusValue"/>
+			</if-compare-field>
+        </if-not-empty>
         
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>

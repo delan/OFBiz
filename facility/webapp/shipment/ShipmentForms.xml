@@ -33,9 +33,8 @@
 		<auto-fields-service service-name="updateShipment" map-name=""/>
 		
 		<field use-when="shipment!=null" name="shipmentId" tooltip="This cannot be changed without re-creating the Shipment"><display/></field>
-		<field use-when="shipment==null&amp;&amp;shipmentId!=null" name="shipmentId" tooltip="Could not find Shipment with ID [${shipmentId}]"><text size="20" maxlength="20"/></field>
-		<!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
-		<field use-when="shipment==null&amp;&amp;shipmentId==null" name="shipmentId"><text size="20" maxlength="20"/></field>
+		<field use-when="shipment==null&amp;&amp;shipmentId!=null" name="shipmentId" tooltip="Could not find Shipment with ID [${shipmentId}]"><display description="" also-hidden="false"/></field>
+		<field use-when="shipment==null&amp;&amp;shipmentId==null" name="shipmentId"><ignored/></field>
 
 		<field name="shipmentTypeId" title="Shipment Type" widget-style="selectBox">
 			<drop-down allow-empty="false" current="first-in-list">
