@@ -24,7 +24,7 @@
  *
  * @author     Tristan Austin (tristana@twibble.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  -->
 <simple-methods>
@@ -121,7 +121,7 @@
             <string-append string=" Item #${orderDeliverySchedule.orderItemSeqId}" field-name="subject" map-name="sendEmailMap"/>
         </if-compare>
         <string-to-field string="text/html" field-name="contentType" map-name="sendEmailMap"/>
-        <string-to-field string="org/ofbiz/order/order/OrderDeliveryUpdatedNotice.ftl" field-name="templateName" map-name="sendEmailMap"/>
+        <string-to-field string="default/OrderDeliveryUpdatedNotice.ftl" field-name="templateName" map-name="sendEmailMap"/>
         <env-to-env env-name="orderDeliverySchedule" to-env-name="sendEmailMap.templateData.orderDeliverySchedule"/>
         
         <!-- call sendGenericNotificationEmail service, if enough information was found -->

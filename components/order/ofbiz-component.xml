@@ -21,13 +21,14 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.6 2003/08/27 18:12:56 jonesde Exp $
+ *  $Id: ofbiz-component.xml,v 1.7 2003/10/11 04:08:28 jonesde Exp $
 -->
 
 <ofbiz-component name="order">
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
+    <classpath type="dir" location="email"/>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/OrderTypeData.xml"/>
@@ -35,10 +36,10 @@
     <entity-resource type="data" reader-name="main" loader="main" location="data/OrderScheduledServices.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
-	<webapp name="order" 
-    	    title="Order" 
-    	    server="default-server" 
-    	    location="webapp/ordermgr" 
-    	    mount-point="/ordermgr"/>    
+    <webapp name="order" 
+            title="Order" 
+            server="default-server" 
+            location="webapp/ordermgr" 
+            mount-point="/ordermgr"/>    
 </ofbiz-component>
 
