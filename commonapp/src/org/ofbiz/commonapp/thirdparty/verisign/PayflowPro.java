@@ -46,12 +46,12 @@ public class PayflowPro {
     public static final String module = PayflowPro.class.getName();
 
     /**
-     * Authorize payment service. Service wrapper around PayFlow Pro API.
+     * Authorize credit card payment service. Service wrapper around PayFlow Pro API.
      * @param dctx Service Engine DispatchContext.
      * @param context Map context of parameters.
      * @return Response map, including RESPMSG, and RESULT keys.
      */
-    public static Map authorizePayment(DispatchContext dctx, Map context) {
+    public static Map ccProcessor(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         String orderId = (String) context.get("orderId");
         Double processAmount = (Double) context.get("processAmount");
