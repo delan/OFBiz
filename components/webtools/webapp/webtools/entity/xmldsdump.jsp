@@ -114,12 +114,10 @@
   Collection ec = reader.getEntityNames();
   TreeSet entityNames = new TreeSet(ec);
 
-  int numberOfEntities = 0;
+  int numberOfEntities = passedEntityNames.size();
   long numberWritten = 0;
   Document document = null;
-  if(filename != null && filename.length() > 0 && entityName != null && entityName.length > 0) {
-    numberOfEntities = passedEntityNames.size();
-    
+  if(filename != null && filename.length() > 0 && numberOfEntities > 0) {
     PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")));
     writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     writer.println("<entity-engine-xml>");
