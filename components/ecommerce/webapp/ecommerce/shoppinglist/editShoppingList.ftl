@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -273,7 +273,7 @@
                         <td>
                           <div class='tabletext'>
                              <a href="<@ofbizUrl>/product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class='buttontext'>${shoppingListItem.productId} - 
-                             ${productContentWrapper.get("PRODUCT_NAME")?if_exists}</a> : ${productContentWrapper.get("DESCRIPTION")?if_exists}
+                             ${productContentWrapper.get("PRODUCT_NAME")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION")?if_exists}
                           </div>
                         </td>
                         <td nowrap align="center">
@@ -312,7 +312,7 @@
                               	  <#assign variantProduct = productVariantAssoc.getRelatedOneCache("AssocProduct")>
                               	  <#if variantProduct?exists>
                                     <#assign variantProductContentWrapper = Static["org.ofbiz.product.product.ProductContentWrapper"].makeProductContentWrapper(variantProduct, request)>
-                              	    <option value="${variantProduct.productId}">${variantProductContentWrapper.get("PRODUCT_NAME")} [${variantProduct.productId}]</option>
+                              	    <option value="${variantProduct.productId}">${variantProductContentWrapper.get("PRODUCT_NAME")?default("No Name")} [${variantProduct.productId}]</option>
                               	  </#if>
                               	</#list>
                               </select>
