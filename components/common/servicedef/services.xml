@@ -144,6 +144,26 @@
         <attribute name="lastName" type="String" form-display="true" form-label="Last name" mode="IN" optional="true"/>
         <attribute name="lookupResult" type="List" mode="OUT" optional="false"/>
     </service>
+    <service name="prepareFind" auth="false" engine="java" invoke="prepareFind"
+            location="org.ofbiz.common.FindServices">
+        <description>Generic service to return a entity conditions</description>
+        <attribute name="entityName" type="String" mode="IN" optional="false"/>
+        <attribute name="inputFields" type="java.util.Map" mode="IN" optional="false"/>
+        <attribute name="orderBy" type="String" mode="IN" optional="true"/>
+        <attribute name="queryString" type="String" mode="OUT" optional="true"/>
+        <attribute name="queryStringMap" type="java.util.Map" mode="OUT" optional="true"/>
+        <attribute name="orderByList" type="java.util.List" mode="OUT" optional="true"/>
+        <attribute name="entityConditionList" type="org.ofbiz.entity.condition.EntityConditionList" mode="OUT" optional="true"/>
+    </service>
+    <service name="executeFind" auth="false" engine="java" invoke="executeFind"
+            location="org.ofbiz.common.FindServices">
+        <description>Generic service to return an entity iterator</description>
+        <attribute name="entityName" type="String" mode="IN" optional="false"/>
+        <attribute name="orderByList" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="entityConditionList" type="org.ofbiz.entity.condition.EntityConditionList" mode="IN" optional="true"/>
+        <attribute name="listIt" type="org.ofbiz.entity.util.EntityListIterator" mode="OUT" optional="true"/>
+    </service>
+
     <service name="performFind" auth="false" engine="java" invoke="performFind"
             location="org.ofbiz.common.FindServices">
         <description>Generic service to return an entity iterator</description>

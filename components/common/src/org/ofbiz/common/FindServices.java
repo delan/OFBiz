@@ -35,6 +35,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -48,6 +49,8 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 
 /**
  * FindServices Class
@@ -337,6 +340,7 @@ public class FindServices {
         }
         return tmpList;
     }
+    
     /**
      * performFind
      *
@@ -347,8 +351,45 @@ public class FindServices {
 
         String entityName = (String) context.get("entityName");
         String orderBy = (String) context.get("orderBy");
-
         Map inputFields = (Map) context.get("inputFields"); // Input
+
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+
+        Map prepareResult = null;
+        try {
+            prepareResult = dispatcher.runSync("prepareFind", UtilMisc.toMap("entityName", entityName, "orderBy", orderBy, "inputFields", inputFields));
+        } catch (GenericServiceException gse) {
+            return ServiceUtil.returnError("Error preparing conditions: " + gse.getMessage());
+        }
+        EntityConditionList exprList = (EntityConditionList)prepareResult.get("entityConditionList");
+        List orderByList = (List)prepareResult.get("orderByList");
+        
+        Map executeResult = null;
+        try {
+            executeResult = dispatcher.runSync("executeFind", UtilMisc.toMap("entityName", entityName, "orderByList", orderByList, "entityConditionList", exprList));
+        } catch (GenericServiceException gse) {
+            return ServiceUtil.returnError("Error finding iterator: " + gse.getMessage());
+        }
+        
+        Map results = ServiceUtil.returnSuccess();
+        results.put("listIt", executeResult.get("listIt"));
+        results.put("queryString", prepareResult.get("queryString"));
+        results.put("queryStringMap", prepareResult.get("queryStringMap"));
+        return results;
+    }
+    
+    /**
+     * prepareFind
+     *
+     * This is a generic method that expects entity data affixed with special suffixes
+     * to indicate their purpose in formulating an SQL query statement.
+     */
+    public static Map prepareFind(DispatchContext dctx, Map context) {
+
+        String entityName = (String) context.get("entityName");
+        String orderBy = (String) context.get("orderBy");
+        Map inputFields = (Map) context.get("inputFields"); // Input
+        
         // parameters run thru UtilHttp.getParameterMap
         Map queryStringMap = new HashMap();
         Map origValueMap = new HashMap();
@@ -364,42 +405,52 @@ public class FindServices {
         List keys = modelEntity.getAllFieldNames();
         ArrayList tmpList = createCondition(keys, normalizedFields, queryStringMap, origValueMap);
 
-        EntityOperator entOp = EntityOperator.AND;
-        EntityConditionList exprList = new EntityConditionList(tmpList, (EntityJoinOperator) entOp);
-        EntityListIterator listIt = null;
+        EntityConditionList exprList = null;
+        if (tmpList.size() > 0) {
+            exprList = new EntityConditionList(tmpList, (EntityJoinOperator) EntityOperator.AND);
+        }
+        
         List orderByList = null;
         if (UtilValidate.isNotEmpty(orderBy)) {
             orderByList = StringUtil.split(orderBy,"|");
         }
 
-        if (tmpList.size() > 0) {
-            // Retrieve entities  - an iterator over all the values
-            try {
-                listIt = delegator.findListIteratorByCondition(entityName, exprList,
-                        null, null, orderByList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
-            } catch (GenericEntityException e) {
-                return ServiceUtil.returnError("Error finding iterator: " + e.getMessage());
-            }
-        } else {
-            try {
-                List pkList = delegator.getModelEntity(entityName).getPkFieldNames();
-                String pkName = (String)pkList.get(0);
-                EntityExpr pkExpr = new EntityExpr(pkName, EntityOperator.LIKE, "%");
-                listIt = delegator.findListIteratorByCondition(entityName, null,
-                        null, null, orderByList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
-            } catch (GenericEntityException e) {
-                return ServiceUtil.returnError("Error finding all: " + e.getMessage());
-            }
+        Map results = ServiceUtil.returnSuccess();
+        String queryString = UtilHttp.urlEncodeArgs(queryStringMap);
+        results.put("queryString", queryString);
+        results.put("queryStringMap", queryStringMap);
+        
+        results.put("orderByList", orderByList);
+        results.put("entityConditionList", exprList);
+        return results;
+    }
+    /**
+     * executeFind
+     *
+     * This is a generic method that returns an EntityListIterator.
+     */
+    public static Map executeFind(DispatchContext dctx, Map context) {
+
+        String entityName = (String)context.get("entityName");
+        EntityConditionList exprList = (EntityConditionList)context.get("entityConditionList");
+        List orderByList = (List)context.get("orderByList");
+        
+        GenericDelegator delegator = dctx.getDelegator();
+        
+        // Retrieve entities  - an iterator over all the values
+        EntityListIterator listIt = null;
+        try {
+            listIt = delegator.findListIteratorByCondition(entityName, exprList,
+                    null, null, orderByList, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError("Error finding iterator: " + e.getMessage());
         }
 
         Map results = ServiceUtil.returnSuccess();
         results.put("listIt", listIt);
-        String queryString = UtilHttp.urlEncodeArgs(queryStringMap);
-        results.put("queryString", queryString);
-        results.put("queryStringMap", queryStringMap);
         return results;
     }
-
+    
     private static String dayStart(String timeStampString, int daysLater) {
         String retValue = null;
         Timestamp ts = null;
