@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.34 2004/07/09 17:29:11 jonesde Exp $
+ * $Id: DataResourceWorker.java,v 1.35 2004/07/10 06:04:08 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,25 +65,13 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  * @since 3.0
  */
 public class DataResourceWorker {
 
     public static final String module = DataResourceWorker.class.getName();
-    /**
-     * Contains the property file name for translation of error
-     * messages.
-     */
-    public static final String RESOURCE = "ContentErrorUiLabel";
-    /**
-     * Contains an error message.
-     */
-    private static String errMsg = "";
-    /**
-     * Language setting.
-     */
-    private static Locale locale;
+    public static final String err_resource = "ContentErrorUiLabel";
 
     /**
      * Traverses the DataCategory parent/child structure and put it in categoryNode. Returns non-null error string if there is an error.
@@ -191,8 +179,9 @@ public class DataResourceWorker {
         String idFieldValue = null;
         DiskFileUpload fu = new DiskFileUpload();
         java.util.List lst = null;
+        Locale locale = UtilHttp.getLocale(request);
+
         try {
-            DataResourceWorker.locale = UtilHttp.getLocale(request);
             lst = fu.parseRequest(request);
         } catch (FileUploadException e4) {
             request.setAttribute("_ERROR_MESSAGE_", e4.getMessage());
@@ -200,11 +189,7 @@ public class DataResourceWorker {
         }
 
         if (lst.size() == 0) {
-            DataResourceWorker.errMsg = UtilProperties.getMessage(
-            DataEvents.RESOURCE,
-                    "dataResourceWorker.no_files_uploaded", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + ".";           
+            String errMsg = UtilProperties.getMessage(DataResourceWorker.err_resource, "dataResourceWorker.no_files_uploaded", locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[DataEvents.uploadImage] No files uploaded", module);
             return "error";
@@ -228,11 +213,7 @@ public class DataResourceWorker {
         if (imageFi == null || idFieldValue == null) {
             Map messageMap = UtilMisc.toMap("imageFi",
                     imageFi, "idFieldValue", idFieldValue);            
-            DataResourceWorker.errMsg = UtilProperties.getMessage(
-            DataEvents.RESOURCE,
-                    "dataResourceWorker.image_or_field_null", messageMap, (locale != null
-                            ? locale
-                                : Locale.getDefault())) + ".";
+            String errMsg = UtilProperties.getMessage(DataResourceWorker.err_resource, "dataResourceWorker.image_or_field_null", messageMap, locale);                                
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[DataEvents.uploadImage] imageFi(" + imageFi + " or idFieldValue(" + idFieldValue + " is null", module);
             return "error";

@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMethod.java,v 1.10 2004/07/09 17:23:33 jonesde Exp $
+ * $Id: SimpleMethod.java,v 1.11 2004/07/10 06:04:09 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -56,17 +56,13 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class SimpleMethod {
     
     public static final String module = SimpleMethod.class.getName();
-    /**
-     * Contains the property file name for translation of error
-     * messages.
-     */
-    public static final String RESOURCE = "MiniLangErrorUiLabels";
+    public static final String err_resource = "MiniLangErrorUiLabels";
 
     protected static UtilCache simpleMethodsDirectCache = new UtilCache("minilang.SimpleMethodsDirect", 0, 0);
     protected static UtilCache simpleMethodsResourceCache = new UtilCache("minilang.SimpleMethodsResource", 0, 0);
@@ -512,11 +508,7 @@ public class SimpleMethod {
         if (loginRequired) {
             if (userLogin == null) {
                 Map messageMap = UtilMisc.toMap("shortDescription", shortDescription);
-                String errMsg = UtilProperties.getMessage(
-                SimpleMethod.RESOURCE,
-                        "simpleMethod.must_logged_process", messageMap, (locale != null
-                                ? locale
-                                    : Locale.getDefault())) + ".";
+                String errMsg = UtilProperties.getMessage(SimpleMethod.err_resource, "simpleMethod.must_logged_process", messageMap, locale) + ".";
 
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
                      methodContext.getRequest().setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -536,12 +528,7 @@ public class SimpleMethod {
             try {
                 beganTransaction = TransactionUtil.begin();
             } catch (GenericTransactionException e) {
-                String errMsg = UtilProperties.getMessage(
-                SimpleMethod.RESOURCE,
-                        "simpleMethod.error_begin_transaction", (locale != null
-                                ? locale
-                                    : Locale.getDefault())) + ": " + e.getMessage();
-
+                String errMsg = UtilProperties.getMessage(SimpleMethod.err_resource, "simpleMethod.error_begin_transaction", locale) + ": " + e.getMessage();
                 Debug.logWarning(errMsg, module);
                 Debug.logWarning(e, module);
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -563,11 +550,7 @@ public class SimpleMethod {
             finished = runSubOps(methodOperations, methodContext);
         } catch (Throwable t) {
             // make SURE nothing gets thrown through
-            String errMsg = UtilProperties.getMessage(
-            SimpleMethod.RESOURCE,
-                    "simpleMethod.error_running", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + ": " + t.getMessage();
+            String errMsg = UtilProperties.getMessage(SimpleMethod.err_resource, "simpleMethod.error_running", locale) + ": " + t.getMessage();                                
             Debug.log(t, errMsg, module);
             finished = false;
             errorMsg += errMsg + "<br>";

@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.14 2004/07/09 16:53:54 jonesde Exp $
+ * $Id: ServiceUtil.java,v 1.15 2004/07/10 06:04:10 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,26 +48,14 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ServiceUtil {
     
     public static final String module = ServiceUtil.class.getName();
-    /**
-     * Contains the property file name for translation of error
-     * messages.
-     */
-    public static final String RESOURCE = "ServiceErrorUiLabel";
-    /**
-     * Contains an error message.
-     */
-    private static String errMsg = "";
-    /**
-     * Language setting.
-     */
-    private static Locale locale;
-    
+    public static final String resource = "ServiceErrorUiLabels";
+
     /** A little short-cut method to check to see if a service returned an error */
     public static boolean isError(Map results) {
         return ModelService.RESPOND_ERROR.equals(results.get(ModelService.RESPONSE_MESSAGE));
@@ -148,7 +136,7 @@ public class ServiceUtil {
      */
     public static String getPartyIdCheckSecurity(GenericValue userLogin, Security security, Map context, Map result, String secEntity, String secOperation) {
         String partyId = (String) context.get("partyId");
-        ServiceUtil.locale = (Locale) context.get("locale");
+        Locale locale = getLocale(context);
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
@@ -156,11 +144,7 @@ public class ServiceUtil {
         // partyId might be null, so check it
         if (partyId == null || partyId.length() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            ServiceUtil.errMsg = UtilProperties.getMessage(
-            ServiceUtil.RESOURCE,
-                    "serviceUtil.party_id_missing", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + ".";
+           String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.party_id_missing", locale) + ".";
             result.put(ModelService.ERROR_MESSAGE, errMsg);
             return partyId;
         }
@@ -169,11 +153,7 @@ public class ServiceUtil {
         if (!partyId.equals(userLogin.getString("partyId"))) {
             if (!security.hasEntityPermission(secEntity, secOperation, userLogin)) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                ServiceUtil.errMsg = UtilProperties.getMessage(
-                ServiceUtil.RESOURCE,
-                        "serviceUtil.no_permission_to_operation", (locale != null
-                                ? locale
-                                    : Locale.getDefault())) + ".";
+                String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.no_permission_to_operation", locale) + ".";
                 result.put(ModelService.ERROR_MESSAGE, errMsg);
                 return partyId;
             }
@@ -347,13 +327,10 @@ public class ServiceUtil {
         GenericDelegator delegator = dctx.getDelegator();
         Security security = dctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        ServiceUtil.locale = (Locale) context.get("locale");
+        Locale locale = getLocale(context);
+
         if (!security.hasPermission("SERVICE_INVOKE_ANY", userLogin)) {
-            ServiceUtil.errMsg = UtilProperties.getMessage(
-            ServiceUtil.RESOURCE,
-                    "serviceUtil.no_permission_to_run", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + ".";            
+            String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.no_permission_to_run", locale) + ".";
             return ServiceUtil.returnError(errMsg);
         }
 
@@ -370,11 +347,7 @@ public class ServiceUtil {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            ServiceUtil.errMsg = UtilProperties.getMessage(
-            ServiceUtil.RESOURCE,
-                    "serviceUtil.unable_to_cancel_job", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + " : " + fields;            
+            String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.unable_to_cancel_job", locale) + " : " + fields;
             return ServiceUtil.returnError(errMsg);
         }
 
@@ -384,11 +357,7 @@ public class ServiceUtil {
             result.put("cancelDateTime", cancelDate);
             return result;
         } else {
-            ServiceUtil.errMsg = UtilProperties.getMessage(
-            ServiceUtil.RESOURCE,
-                    "serviceUtil.unable_to_cancel_job", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + " : " + job;            
+            String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.unable_to_cancel_job", locale) + " : " + job;
             return ServiceUtil.returnError(errMsg);
         }
     }
@@ -397,13 +366,9 @@ public class ServiceUtil {
         GenericDelegator delegator = dctx.getDelegator();
         Security security = dctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        ServiceUtil.locale = (Locale) context.get("locale");       
+        Locale locale = getLocale(context);
         if (!security.hasPermission("SERVICE_INVOKE_ANY", userLogin)) {
-            ServiceUtil.errMsg = UtilProperties.getMessage(
-            ServiceUtil.RESOURCE,
-                    "serviceUtil.no_permission_to_run", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + ".";            
+            String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.no_permission_to_run", locale) + ".";
             return ServiceUtil.returnError(errMsg);
         }
 
@@ -419,11 +384,7 @@ public class ServiceUtil {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            ServiceUtil.errMsg = UtilProperties.getMessage(
-            ServiceUtil.RESOURCE,
-                    "serviceUtil.unable_to_cancel_job_retries", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + " : " + fields;            
+            String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.unable_to_cancel_job_retries", locale) + " : " + fields;
             return ServiceUtil.returnError(errMsg);
         }
 
@@ -431,12 +392,16 @@ public class ServiceUtil {
         if (cancelDate != null) {
             return ServiceUtil.returnSuccess();
         } else {
-            ServiceUtil.errMsg = UtilProperties.getMessage(
-            ServiceUtil.RESOURCE,
-                    "serviceUtil.unable_to_cancel_job_retries", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + " : " + job;            
+            String errMsg = UtilProperties.getMessage(ServiceUtil.resource, "serviceUtil.unable_to_cancel_job_retries", locale) + " : " + job;
             return ServiceUtil.returnError(errMsg);
         }
+    }
+
+    private static Locale getLocale(Map context) {
+        Locale locale = (Locale) context.get("locale");
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+        return locale;
     }
 }

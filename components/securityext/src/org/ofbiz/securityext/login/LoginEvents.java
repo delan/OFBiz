@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.21 2004/07/09 17:50:56 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.22 2004/07/10 06:04:10 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -67,7 +67,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -75,10 +75,6 @@ public class LoginEvents {
     public static final String module = LoginEvents.class.getName();
     public static final String resource = "SecurityextUiLabels";
     public static final String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
-    /**
-     * Language setting.
-     */
-    private static Locale locale;
 
     /** This Map is keyed by the randomly generated externalLoginKey and the value is a UserLogin GenericValue object */
     public static Map externalLoginKeys = new HashMap();

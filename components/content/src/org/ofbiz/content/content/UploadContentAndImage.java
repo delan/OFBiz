@@ -42,7 +42,7 @@ import org.ofbiz.minilang.MiniLangException;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -50,20 +50,7 @@ import org.ofbiz.minilang.MiniLangException;
 public class UploadContentAndImage {
 
     public static final String module = UploadContentAndImage.class.getName();
-    /**
-     * Contains the property file name for translation of error
-     * messages.
-     */
-    public static final String RESOURCE = "ContentErrorUiLabel";
-    /**
-     * Contains an error message.
-     */
-    private static String errMsg = "";
-    /**
-     * Language setting.
-     */
-    private static Locale locale;
-
+    public static final String err_resource = "ContentErrorUiLabel";
 
     public UploadContentAndImage() {}
 
@@ -72,7 +59,7 @@ public class UploadContentAndImage {
 
        
         try {
-            UploadContentAndImage.locale = UtilHttp.getLocale(request);
+            Locale locale = UtilHttp.getLocale(request);
             LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
             GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
             HttpSession session = request.getSession();
@@ -91,11 +78,7 @@ public class UploadContentAndImage {
             //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]lst " + lst, module);
     
             if (lst.size() == 0) {
-                UploadContentAndImage.errMsg = UtilProperties.getMessage(
-                UploadContentAndImage.RESOURCE,
-                        "uploadContentAndImage.no_files_uploaded", (locale != null
-                                ? locale
-                                    : Locale.getDefault()));                
+                String errMsg = UtilProperties.getMessage(UploadContentAndImage.err_resource, "uploadContentAndImage.no_files_uploaded", locale);                                                        
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[DataEvents.uploadImage] No files uploaded", module);
                 return "error";

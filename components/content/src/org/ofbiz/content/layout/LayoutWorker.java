@@ -20,7 +20,7 @@ import org.ofbiz.service.ServiceUtil;
  * LayoutWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  *
  * 
@@ -28,19 +28,7 @@ import org.ofbiz.service.ServiceUtil;
 public class LayoutWorker {
 
     public static final String module = LayoutWorker.class.getName();
-    /**
-     * Contains the property file name for translation of error
-     * messages.
-     */
-    public static final String RESOURCE = "ContentErrorUiLabel";
-    /**
-     * Contains an error message.
-     */
-    private static String errMsg = "";
-    /**
-     * Language setting.
-     */
-    private static Locale locale;
+    public static final String err_resource = "ContentErrorUiLabel";
 
     /**
      * Uploads image data from a form and stores it in ImageDataResource. 
@@ -51,7 +39,7 @@ public class LayoutWorker {
 
         //Debug.logVerbose("in uploadAndStoreImage", "");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        LayoutWorker.locale = UtilHttp.getLocale(request); 
+        Locale locale = UtilHttp.getLocale(request);
         
         HashMap results = new HashMap();
         HashMap formInput = new HashMap();
@@ -65,12 +53,8 @@ public class LayoutWorker {
         }
 
         if (lst.size() == 0) {
-            LayoutWorker.errMsg = UtilProperties.getMessage(
-            LayoutWorker.RESOURCE,
-                    "layoutEvents.no_files_uploaded", (locale != null
-                            ? locale
-                                : Locale.getDefault())) + ".";            
-           request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            String errMsg = UtilProperties.getMessage(LayoutWorker.err_resource, "layoutEvents.no_files_uploaded", locale);                                    
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             //Debug.logWarning("[DataEvents.uploadImage] No files uploaded", module);
             return ServiceUtil.returnError("No files uploaded.");
         }
@@ -93,12 +77,8 @@ public class LayoutWorker {
 
         if (imageFi == null ) {
             Map messageMap = UtilMisc.toMap("imageFi", imageFi);          
-            LayoutWorker.errMsg = UtilProperties.getMessage(
-            LayoutWorker.RESOURCE,
-                    "layoutEvents.image_null", messageMap, (locale != null
-                            ? locale
-                                : Locale.getDefault())) + ".";            
-           request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            String errMsg = UtilProperties.getMessage(LayoutWorker.err_resource, "layoutEvents.image_null", messageMap, locale);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             //Debug.logWarning("[DataEvents.uploadImage] imageFi(" + imageFi + ") is null", module);
             return null;
         }
