@@ -33,6 +33,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     boolean tryEntity = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
@@ -76,7 +78,9 @@
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
+<%int line = 0;%>
 <ofbiz:iterator name="prodCatalogPromoAppl" property="prodCatalogPromoAppls">
+  <%line++;%>
   <%GenericValue productPromo = prodCatalogPromoAppl.getRelatedOne("ProductPromo");%>
   <tr valign="middle">
     <td><a href='<ofbiz:url>/EditProductPromo?productPromoId=<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/></ofbiz:url>' class="buttontext"><%if (productPromo!=null) {%><%=productPromo.getString("promoName")%><%}%> [<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/>]</a></td>
@@ -86,11 +90,12 @@
     <td align="center">
         <%boolean hasExpired = false;%>
         <%if (prodCatalogPromoAppl.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(prodCatalogPromoAppl.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <FORM method=POST action='<ofbiz:url>/updateProductPromoToProdCatalog</ofbiz:url>'>
+        <FORM method=POST action='<ofbiz:url>/updateProductPromoToProdCatalog</ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -103,7 +108,7 @@
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addProductPromoToProdCatalog</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/addProductPromoToProdCatalog</ofbiz:url>" style='margin: 0;' name='addNewForm'>
   <input type="hidden" name="prodCatalogId" value="<%=prodCatalogId%>">
   <input type="hidden" name="tryEntity" value="true">
 
@@ -114,7 +119,8 @@
     <option value='<ofbiz:entityfield attribute="productPromo" field="productPromoId"/>'><ofbiz:entityfield attribute="productPromo" field="promoName"/> [<ofbiz:entityfield attribute="productPromo" field="productPromoId"/>]</option>
   </ofbiz:iterator>
   </select>
-  <input type=text size='20' name='fromDate' class='inputBox'>
+  <input type=text size='25' name='fromDate' class='inputBox'>
+  <a href="javascript:call_cal(document.addNewForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
   <input type="submit" value="Add">
 </form>
 <%}%>

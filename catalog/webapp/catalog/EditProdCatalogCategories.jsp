@@ -33,6 +33,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     boolean tryEntity = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
@@ -80,7 +82,9 @@
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
+<%int line = 0;%>
 <ofbiz:iterator name="prodCatalogCategory" property="prodCatalogCategories">
+  <%line++;%>
   <%GenericValue productCategory = prodCatalogCategory.getRelatedOne("ProductCategory");%>
   <%GenericValue curProdCatalogCategoryType = prodCatalogCategory.getRelatedOneCache("ProdCatalogCategoryType");%>
   <tr valign="middle">
@@ -91,11 +95,12 @@
     <td align="center">
         <%boolean hasExpired = false;%>
         <%if (prodCatalogCategory.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(prodCatalogCategory.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <FORM method=POST action='<ofbiz:url>/updateProductCategoryToProdCatalog</ofbiz:url>'>
+        <FORM method=POST action='<ofbiz:url>/updateProductCategoryToProdCatalog</ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="fromDate" fullattrs="true"/>>
-            <input type='text' class='inputBox' size='20' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="thruDate" fullattrs="true"/> style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type='text' class='inputBox' size='25' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="thruDate" fullattrs="true"/> style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type='text' class='inputBox' size='5' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="sequenceNum" fullattrs="true"/>>
             <select class='selectBox' name='prodCatalogCategoryTypeId' size=1>
                 <%if (prodCatalogCategory.get("prodCatalogCategoryTypeId") != null) {%>
@@ -123,7 +128,7 @@
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addProductCategoryToProdCatalog</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/addProductCategoryToProdCatalog</ofbiz:url>" style='margin: 0;' name='addNewForm'>
   <input type="hidden" name="prodCatalogId" value="<%=prodCatalogId%>">
   <input type="hidden" name="tryEntity" value="true">
 
@@ -140,7 +145,8 @@
           <option value='<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>'><%=prodCatalogCategoryType.getString("description")%> <%--[<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>]--%></option>
         </ofbiz:iterator>
     </select>
-  <input type='text' class='inputBox' size='20' name='fromDate'>
+  <input type='text' class='inputBox' size='25' name='fromDate'>
+  <a href="javascript:call_cal(document.addNewForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
   <input type="submit" value="Add">
 </form>
 <%}%>

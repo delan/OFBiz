@@ -34,6 +34,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     boolean tryEntity = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
@@ -75,7 +77,9 @@
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
+<%int line = 0;%>
 <ofbiz:iterator name="partyCatalog" property="partyCatalogs">
+  <%line++;%>
   <%PartyWorker.getPartyOtherValues(pageContext, partyCatalog.getString("partyId"), "party", "lookupPerson", "lookupGroup");%>
   <%-- GenericValue party = partyCatalog.getRelatedOne("Party"); --%>
   <tr valign="middle">
@@ -105,11 +109,12 @@
     <td align="center">
         <%boolean hasExpired = false;%>
         <%if (partyCatalog.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(partyCatalog.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <FORM method=POST action='<ofbiz:url>/updateProdCatalogToParty</ofbiz:url>'>
+        <FORM method=POST action='<ofbiz:url>/updateProdCatalogToParty</ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="partyCatalog" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="partyCatalog" field="partyId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="partyCatalog" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="partyCatalog" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="partyCatalog" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="partyCatalog" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="partyCatalog" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -122,7 +127,7 @@
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addProdCatalogToParty</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/addProdCatalogToParty</ofbiz:url>" style='margin: 0;' name='addNewForm'>
   <input type="hidden" name="prodCatalogId" value="<%=prodCatalogId%>">
   <input type="hidden" name="tryEntity" value="true">
 
@@ -130,7 +135,8 @@
   <br>
   <div class='tabletext'>
     Party&nbsp;ID:&nbsp;<input type=text size='15' class='inputBox' name='partyId'>
-    From&nbsp;Date:&nbsp;<input type=text size='22' class='inputBox' name='fromDate'>
+    From&nbsp;Date:&nbsp;<input type=text size='25' class='inputBox' name='fromDate'>
+    <a href="javascript:call_cal(document.addNewForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
     <input type="submit" value="Add">
   </div>
 </form>
