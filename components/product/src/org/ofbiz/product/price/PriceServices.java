@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.8 2004/02/26 08:34:35 jonesde Exp $
+ * $Id: PriceServices.java,v 1.9 2004/04/24 22:48:04 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class PriceServices {
@@ -155,6 +155,12 @@ public class PriceServices {
         GenericValue defaultPriceValue = EntityUtil.getFirst(defaultPrices);
         if (defaultPrices != null && defaultPrices.size() > 1) {
             if (Debug.infoOn()) Debug.logInfo("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"), module);
+        }
+
+        List competitivePrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "COMPETITIVE_PRICE"));
+        GenericValue competitivePriceValue = EntityUtil.getFirst(competitivePrices);
+        if (competitivePrices != null && competitivePrices.size() > 1) {
+            if (Debug.infoOn()) Debug.logInfo("There is more than one COMPETITIVE_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + competitivePriceValue.getDouble("price"), module);
         }
 
         List averageCosts = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
@@ -280,6 +286,13 @@ public class PriceServices {
 	                            if (Debug.infoOn()) Debug.logInfo("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"), module);
 	                        }
 	                    }
+	                    if (competitivePriceValue == null) {
+	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "COMPETITIVE_PRICE"));
+	                        competitivePriceValue = EntityUtil.getFirst(virtualTempPrices);
+	                        if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
+	                            if (Debug.infoOn()) Debug.logInfo("There is more than one COMPETITIVE_PRICE with the currencyUomId " + currencyUomId + " and productId " + variantProductId + ", using the latest found with price: " + competitivePriceValue.getDouble("price"), module);
+	                        }
+	                    }
 	                    if (averageCostValue == null) {
 	                        List virtualTempPrices = EntityUtil.filterByAnd(variantProductPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
 	                        averageCostValue = EntityUtil.getFirst(virtualTempPrices);
@@ -337,6 +350,7 @@ public class PriceServices {
 
             result.put("price", new Double(defaultPrice));
             result.put("defaultPrice", new Double(defaultPrice));
+            result.put("competitivePrice", competitivePriceValue != null ? competitivePriceValue.getDouble("price") : null);
             result.put("averageCost", averageCostValue != null ? averageCostValue.getDouble("price") : null);
         } else {
             try {
@@ -718,6 +732,7 @@ public class PriceServices {
             }
         }
 
+        result.put("competitivePrice", competitivePriceValue != null ? competitivePriceValue.getDouble("price") : null);
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));
         result.put("currencyUsed", currencyUomId);

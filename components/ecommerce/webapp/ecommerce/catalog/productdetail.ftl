@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.29 $
+ *@version    $Revision: 1.30 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -181,10 +181,14 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}</div>
       <div class="tabletext"><b>${product.productId?if_exists}</b></div>
       <#-- for prices:
-              - if price < listPrice, show
+              - if price < competitivePrice, show competitive or "Compare At" price
+              - if price < listPrice, show list price
               - if price < defaultPrice and defaultPrice < listPrice, show default
               - if isSale show price with salePrice style and print "On Sale!"
       -->
+      <#if price.competitivePrice?exists && price.price?exists && price.price?double < price.competitivePrice?double>
+        <div class="tabletext">${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
+      </#if>
       <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
         <div class="tabletext">${uiLabelMap.ProductListPrice}: <span class='basePrice'><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></div>
       </#if>

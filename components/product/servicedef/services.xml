@@ -359,6 +359,7 @@
         <attribute name="price" type="Double" mode="OUT" optional="false"/>
         <attribute name="listPrice" type="Double" mode="OUT" optional="true"/>
         <attribute name="defaultPrice" type="Double" mode="OUT" optional="true"/>
+        <attribute name="competitivePrice" type="Double" mode="OUT" optional="true"/>
         <attribute name="averageCost" type="Double" mode="OUT" optional="true"/>
         <attribute name="isSale" type="Boolean" mode="OUT" optional="false"/>
         <attribute name="currencyUsed" type="String" mode="OUT" optional="false"/>
