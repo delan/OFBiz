@@ -45,41 +45,25 @@
         <property name="tccored.dir"    value="${env.TOMCAT_HOME}/lib" />
 		
         <!-- Classpath setting -->
-        <property name="servlet1.jar"  value="${env.CATALINA_HOME}/common/lib/servlet.jar" />
-        <property name="servlet2.jar"  value="${env.TOMCAT_HOME}/lib/servlet.jar" />
-        <property name="servlet.jar"   value="${servlet1.jar}:${servlet2.jar}" />
-
-        <property name="jdbc1.jar"     value="${env.CATALINA_HOME}/common/lib/jdbc2_0-stdext.jar" />
-        <property name="jdbc2.jar"     value="${env.JBOSS_HOME}/lib/jboss-jdbc_ext.jar" />
-        <property name="jdbc3.jar"     value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
-        <property name="jdbc.jar"      value="${jdbc1.jar}:${jdbc2.jar}:${jdbc3.jar}" />
-
-        <property name="jta1.jar"     value="${env.CATALINA_HOME}/common/lib/jta.jar" />
-        <property name="jta2.jar"     value="${env.JBOSS_HOME}/lib/jboss-j2ee.jar" /> <!-- ??? -->
-        <property name="jta.jar"      value="${jta1.jar}:${jta2.jar}" />
-
-        <property name="mail1.jar"     value="${env.CATALINA_HOME}/common/lib/mail.jar" />
-        <property name="mail2.jar"     value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
-        <property name="mail.jar"      value="${mail1.jar}:${mail2.jar}" />
-
-        <property name="jaxp1.jar"     value="${env.CATALINA_HOME}/common/lib/jaxp.jar" />
-        <property name="jaxp2.jar"     value="${env.JBOSS_HOME}/lib/jaxp.jar" />
-        <property name="jaxp.jar"      value="${jaxp1.jar}:${jaxp2.jar}" />
-
-        <property name="xerces.jar"    value="${env.CATALINA_HOME}/lib/xerces.jar:${env.CATALINA_HOME}/common/lib/xerces.jar" />
+        <property name="j2ee.jar"      value="../lib/compile/jboss-j2ee.jar" />
+        <property name="jdbc.jar"      value="../lib/compile/jdbc2_0-stdext.jar" />
+        <property name="mail.jar"      value="../lib/compile/mail.jar" />
+        <property name="servlet.jar"   value="../lib/compile/servlet.jar" />
+        <property name="xerces.jar"    value="../lib/compile/xerces.jar" />
         
-        <property name="tyrex.jar"    value="${env.CATALINA_HOME}/common/lib/tyrex-0.9.8.5.jar" />
-
+        <property name="castor.jar"    value="../lib/common/castor-0.9.3.9.jar" />
+        <property name="tyrex.jar"     value="../lib/common/tyrex-0.9.8.5.jar" />
         <property name="log4j.jar"     value="../lib/common/log4j.jar"/>
+
 	<property name="bsh.jar"       value="../lib/share/bsh-1.2b3.jar"/>
         <property name="axis.jar"      value="../lib/share/axis.jar"/>
         <property name="clutil.jar"    value="../lib/share/clutil.jar" />
         <property name="wsdl4j.jar"    value="../lib/share/wsdl4j.jar" />
 
-        <property name="api-jars1"     value="${servlet.jar}:${jdbc.jar}:${mail.jar}:${log4j.jar}" />
-        <property name="api-jars2"     value="${jaxp.jar}:${jta.jar}:${xerces.jar}:${tyrex.jar}:${bsh.jar}" />
-        <property name="api-jars3"     value="${axis.jar}:${clutil.jar}:${wsdl4j.jar}" />
-		<property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
+        <property name="api-jars1"     value="${j2ee.jar}:${jdbc.jar}:${mail.jar}:${servlet.jar}:${xerces.jar}" />
+        <property name="api-jars2"     value="${log4j.jar}:${tyrex.jar}:${castor.jar}" />
+        <property name="api-jars3"     value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}" />
+	<property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
         <property name="classpath"     value="${env.CLASSPATH}:${lib.dir}:${api-jars}" />
         <echo message="classpath: ${classpath}" />                
     </target>
