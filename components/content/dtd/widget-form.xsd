@@ -1,1024 +1,1084 @@
-<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  To refer to this Schema in your XML file, use the following declaration:
+    *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+    *
+    *  Permission is hereby granted, free of charge, to any person obtaining a
+    *  copy of this software and associated documentation files (the "Software"),
+    *  to deal in the Software without restriction, including without limitation
+    *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    *  and/or sell copies of the Software, and to permit persons to whom the
+    *  Software is furnished to do so, subject to the following conditions:
+    *
+    *  The above copyright notice and this permission notice shall be included
+    *  in all copies or substantial portions of the Software.
+    *
+    *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+    *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+    *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    
+    *  $Id: widget-form.dtd 3811 2004-10-29 05:43:54Z jonesde $
 -->
-
-<!--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included 
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *  $Id: $
--->
-
- <xsd:element name='forms'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='form' maxOccurs='unbounded'/>
-   </xsd:sequence>
-  </xsd:complexType>
- </xsd:element>
-
-<!--
-	map-list-name: for list type and other multiple data/form types this is
-		the name of the list in the context to iterate over
-	list-entry-name: if specified each list entry will be put in the context
-		with this name; otherwise the list entry must be a Map and the entries
-		in the Map will be put into the context by name
-	type: a single form is a simple single form with values from a single set of values;
-		a list form is a list of individual forms in a table (could be called a tabular form), it has a list of sets of values and creates one form for each list element;
-		a multi form is like a list/tabular form, but it creates a single form to submit all list item forms at once; the field names in the resulting form have an appendage attached to make them unique according to the pattern used for the multi-service event handler that will call one service for each list element
--->
- <xsd:element name='form'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='actions' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='alt-target' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='auto-fields-service' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='auto-fields-entity' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='field' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='sort-order' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='type' use='required'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='single'/>
-      <xsd:enumeration value='list'/>
-      <xsd:enumeration value='multi'/>
-      <xsd:enumeration value='upload'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='target' type='xsd:string' use='optional'/>
-   <xsd:attribute name='target-window' type='xsd:string' use='optional'/>
-   <xsd:attribute name='paginate-target' type='xsd:string' use='optional'/>
-   <xsd:attribute name='title' type='xsd:string' use='optional'/>
-   <xsd:attribute name='tooltip' type='xsd:string' use='optional'/>
-   <xsd:attribute name='list-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='list-entry-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-map-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-entity-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-service-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-title-style' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-widget-style' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-tooltip-style' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-required-field-style' type='xsd:string' use='optional'/>
-   <xsd:attribute name='item-index-separator' type='xsd:string' default='_o_'/>
-   <xsd:attribute name='extends' type='xsd:string' use='optional'/>
-   <xsd:attribute name='extends-resource' type='xsd:string' use='optional'/>
-   <xsd:attribute name='separate-columns' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='list-iterator-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='view-size' type='xsd:string' use='optional'/>
-   <xsd:attribute name='paginate' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='row-count' type='xsd:string' use='optional'/>
-   <xsd:attribute name='use-row-submit' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='alt-target'>
-  <xsd:complexType>
-   <xsd:attribute name='use-when' type='xsd:string' use='required'/>
-   <xsd:attribute name='target' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='auto-fields-service'>
-  <xsd:complexType>
-   <xsd:attribute name='service-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='map-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-field-type' default='edit'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='edit'/>
-      <xsd:enumeration value='find'/>
-      <xsd:enumeration value='display'/>
-      <xsd:enumeration value='hidden'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='auto-fields-entity'>
-  <xsd:complexType>
-   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='map-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-field-type' default='edit'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='edit'/>
-      <xsd:enumeration value='find'/>
-      <xsd:enumeration value='display'/>
-      <xsd:enumeration value='hidden'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
-<!--
-	name: a unique name for this field
-	map-name: the name (or location) of the map that contains the data for this 
-		field in the form context
-	entity-name: used along with the field-name to look up the entity field definition
-		for any information that might be helpful when rendering the form field
-	field-name: see the description of entity-name
-	service-name: used along with the attribute-name to look up the service attribute 
-		definition for any information that might be helpful when rendering the form field
-	attribute-name: see the description of service-name
-	entry-name: defaults to the value of the name attribute; is used to 
-		specify the name of the entry in the map that contains the value to populate
-	parameter-name: defaults to the value of the name attribute; is the name of the 
-		parameter to use for this field (the request parameter in a web application)
-	title: the name of this field that will be shown to the user; can use the ${} 
-		and foo.bar (dot) syntax to insert values from the context for parameterization
-		or internationalization
-	tooltip: the text to show on mouse over or help for more information; can use the ${} 
-		and foo.bar (dot) syntax to insert values from the context for parameterization
-		or internationalization
-	title-style: the name of a style (like a CSS class) to apply to the title of this field
-	widget-style: the name of a style (like a CSS class) to apply to the widget 
-		that the user will interact with for this field
-	position: for row oriented forms (single type) can specify that the field should be put 
-		a column other than the first; for column oriented forms (list type) specifies 
-		the row the field should be put in
-	red-when: the widget/interaction part will be red if the date value is
-		before-now (for thruDate), after-now (for fromDate), or by-name (if the
-		field's name or entry-name or fromDate or thruDate the corresponding 
-		action will be done); only applicable when the field is a timestamp
-	use-when: used to specify a condition that must be true to use this field;
-		the condition should be written using the Java syntax and can operate 
-		on values in the form context; if this is used the field will only be put
-		on the field list, and not in the field map meaning that values for this
-		field cannot be overridden
--->
- <xsd:element name='field'>
-  <xsd:complexType>
-   <xsd:choice minOccurs='0' maxOccurs='1'>
-    <xsd:element ref='display'/>
-    <xsd:element ref='display-entity'/>
-    <xsd:element ref='hyperlink'/>
-    <xsd:element ref='lookup'/>
-    <xsd:element ref='text'/>
-    <xsd:element ref='textarea'/>
-    <xsd:element ref='date-time'/>
-    <xsd:element ref='drop-down'/>
-    <xsd:element ref='check'/>
-    <xsd:element ref='radio'/>
-    <xsd:element ref='submit'/>
-    <xsd:element ref='reset'/>
-    <xsd:element ref='hidden'/>
-    <xsd:element ref='ignored'/>
-    <xsd:element ref='file'/>
-    <xsd:element ref='text-find'/>
-    <xsd:element ref='date-find'/>
-    <xsd:element ref='range-find'/>
-    <xsd:element ref='password'/>
-    <xsd:element ref='image'/>
-   </xsd:choice>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='map-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='entity-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='service-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='entry-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='parameter-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='field-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='attribute-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='title' type='xsd:string' use='optional'/>
-   <xsd:attribute name='tooltip' type='xsd:string' use='optional'/>
-   <xsd:attribute name='title-style' type='xsd:string' use='optional'/>
-   <xsd:attribute name='widget-style' type='xsd:string' use='optional'/>
-   <xsd:attribute name='tooltip-style' type='xsd:string' use='optional'/>
-   <xsd:attribute name='position' type='xsd:string' default='1'/>
-   <xsd:attribute name='red-when' default='by-name'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='never'/>
-      <xsd:enumeration value='before-now'/>
-      <xsd:enumeration value='after-now'/>
-      <xsd:enumeration value='by-name'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='use-when' type='xsd:string' use='optional'/>
-   <xsd:attribute name='id-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='separate-column' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
-<!--
-	description: specifies the string to display, can use the ${} synrax
-		to insert context values; if empty the value of the field will be
-		printed for a default
--->
- <xsd:element name='display'>
-  <xsd:complexType>
-   <xsd:attribute name='also-hidden' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='description' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
-<!-- this is just like display but looks up a description using the Entity Engine; note that if also-hidden is true then it uses the key as the value, not the shown description -->
- <xsd:element name='display-entity'>
-  <xsd:complexType>
-   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='key-field-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='description' type='xsd:string' default='${description}'/>
-   <xsd:attribute name='cache' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='also-hidden' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
-<!--
-	target: the target location of the hyperlink; can use the ${} syntax to 
-		substitute values from the context
-	description: specifies the string to display, can use the ${} synrax
-		to insert context values; if empty the value of the field will be
-		printed for a default
--->
- <xsd:element name='hyperlink'>
-  <xsd:complexType>
-   <xsd:attribute name='also-hidden' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='target-type' default='intra-app'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='intra-app'/>
-      <xsd:enumeration value='inter-app'/>
-      <xsd:enumeration value='content'/>
-      <xsd:enumeration value='plain'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='target' type='xsd:string' use='required'/>
-   <xsd:attribute name='description' type='xsd:string' use='optional'/>
-   <xsd:attribute name='target-window' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='sub-hyperlink'>
-  <xsd:complexType>
-   <xsd:attribute name='use-when' type='xsd:string' use='optional'/>
-   <xsd:attribute name='link-style' type='xsd:string' use='optional'/>
-   <xsd:attribute name='target-type' default='intra-app'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='intra-app'/>
-      <xsd:enumeration value='inter-app'/>
-      <xsd:enumeration value='content'/>
-      <xsd:enumeration value='plain'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='target' type='xsd:string' use='required'/>
-   <xsd:attribute name='description' type='xsd:string' use='optional'/>
-   <xsd:attribute name='target-window' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='text'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='sub-hyperlink' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='size' type='xsd:string' default='25'/>
-   <xsd:attribute name='maxlength' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='textarea'>
-  <xsd:complexType>
-   <xsd:attribute name='cols' type='xsd:string' default='60'/>
-   <xsd:attribute name='rows' type='xsd:string' default='3'/>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
-<!-- a special entry for date-time fields; may just have a default size text 
-	entry box and some sort of widget to make date entry/selection easier
--->
- <xsd:element name='date-time'>
-  <xsd:complexType>
-   <xsd:attribute name='type' default='timestamp'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='timestamp'/>
-      <xsd:enumeration value='date'/>
-      <xsd:enumeration value='time'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
-<!-- entity-options will look up options for the field in the given entity
-    key-field-name: the value of the key-field-name will be the value passed 
-    	to the server
-    description: will be presented to the user with field values
-    	substituted using the ${} syntax
-    key-field-name: the name of the field in the looked up entity that will be used 
-    	for the key value; defaults to the entry-name of the field this is in
--->
- <xsd:element name='entity-options'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='entity-constraint' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='entity-order-by' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='key-field-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='description' type='xsd:string' use='required'/>
-   <xsd:attribute name='cache' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='filter-by-date' default='by-name'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-      <xsd:enumeration value='by-name'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='entity-constraint'>
-  <xsd:complexType>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='operator' default='equals'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='less'/>
-      <xsd:enumeration value='greater'/>
-      <xsd:enumeration value='less-equals'/>
-      <xsd:enumeration value='greater-equals'/>
-      <xsd:enumeration value='equals'/>
-      <xsd:enumeration value='not-equals'/>
-      <xsd:enumeration value='in'/>
-      <xsd:enumeration value='between'/>
-      <xsd:enumeration value='like'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='env-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='value' type='xsd:string' use='optional'/>
-   <xsd:attribute name='ignore-if-null' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='ignore-if-empty' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='entity-order-by'>
-  <xsd:complexType>
-   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
-<!-- list-options will create options based on data in a list
-	list-name: the name of the list to iterate through to get values
-	list-entry-name: if specified the list entry will be placed in the local 
-		context, otherwise each list entry must be a Map that will be expanded 
-		into the local context
-    key-name: the value of the key-name will be the value passed 
-    	to the server; this should be the full name of the location of the
-    	key value in the context, given the list-entry-name or expanded
-    	list-entry Map as the options you would most likely use
-    description: will be presented to the user with field values
-    	substituted using the ${} syntax
--->
- <xsd:element name='list-options'>
-  <xsd:complexType>
-   <xsd:attribute name='list-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='list-entry-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='key-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='description' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
-<!--
-	description: what the user will see in the widget; defaults to the value of the key attribute
--->
- <xsd:element name='option'>
-  <xsd:complexType>
-   <xsd:attribute name='key' type='xsd:string' use='required'/>
-   <xsd:attribute name='description' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
-<!--
-	no-current-selected-key: the key to mark as selected when there is no
-		current entry value
--->
- <xsd:element name='drop-down'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:choice minOccurs='0' maxOccurs='unbounded'>
-     <xsd:element ref='entity-options'/>
-     <xsd:element ref='list-options'/>
-     <xsd:element ref='option'/>
-    </xsd:choice>
-    <xsd:element ref='sub-hyperlink' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='allow-empty' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='current' default='first-in-list'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='first-in-list'/>
-      <xsd:enumeration value='selected'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='no-current-selected-key' type='xsd:string' use='optional'/>
-   <xsd:attribute name='current-description' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='radio'>
-  <xsd:complexType>
-   <xsd:choice minOccurs='0' maxOccurs='unbounded'>
-    <xsd:element ref='entity-options'/>
-    <xsd:element ref='list-options'/>
-    <xsd:element ref='option'/>
-   </xsd:choice>
-   <xsd:attribute name='no-current-selected-key' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='check'>
-  <xsd:complexType/>
- </xsd:element>
-
- <xsd:element name='submit'>
-  <xsd:complexType>
-   <xsd:attribute name='button-type' default='button'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='button'/>
-      <xsd:enumeration value='text-link'/>
-      <xsd:enumeration value='image'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='image-location' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='reset'>
-  <xsd:complexType/>
- </xsd:element>
-
- <xsd:element name='hidden'>
-  <xsd:complexType>
-   <xsd:attribute name='value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='ignored'>
-  <xsd:complexType/>
- </xsd:element>
-
- <xsd:element name='text-find'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='sub-hyperlink' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='size' type='xsd:string' default='25'/>
-   <xsd:attribute name='maxlength' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='range-find'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='sub-hyperlink' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='size' type='xsd:string' default='25'/>
-   <xsd:attribute name='maxlength' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='lookup'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='sub-hyperlink' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='target-form-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='size' type='xsd:string' default='25'/>
-   <xsd:attribute name='maxlength' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='date-find'>
-  <xsd:complexType>
-   <xsd:attribute name='type' default='timestamp'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='timestamp'/>
-      <xsd:enumeration value='date'/>
-      <xsd:enumeration value='time'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='sort-order'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='sort-field' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='type' default='explicit'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='explicit'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='sort-field'>
-  <xsd:complexType>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='file'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='sub-hyperlink' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='size' type='xsd:string' default='25'/>
-   <xsd:attribute name='maxlength' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='password'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='sub-hyperlink' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='size' type='xsd:string' default='25'/>
-   <xsd:attribute name='maxlength' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='image'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='sub-hyperlink' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='border' type='xsd:string' default='0'/>
-   <xsd:attribute name='width' type='xsd:string' use='optional'/>
-   <xsd:attribute name='height' type='xsd:string' use='optional'/>
-   <xsd:attribute name='value' type='xsd:string' use='optional'/>
-   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='actions'>
-  <xsd:complexType>
-   <xsd:choice minOccurs='0' maxOccurs='unbounded'>
-    <xsd:element ref='set'/>
-    <xsd:element ref='property-map'/>
-    <xsd:element ref='property-to-field'/>
-    <xsd:element ref='script'/>
-    <xsd:element ref='service'/>
-    <xsd:element ref='entity-one'/>
-    <xsd:element ref='entity-and'/>
-    <xsd:element ref='entity-condition'/>
-   </xsd:choice>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='set'>
-  <xsd:complexType>
-   <xsd:attribute name='field' type='xsd:string' use='required'/>
-   <xsd:attribute name='from-field' type='xsd:string' use='optional'/>
-   <xsd:attribute name='value' type='xsd:string' use='optional'/>
-   <xsd:attribute name='global' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='type' default='String'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='PlainString'/>
-      <xsd:enumeration value='String'/>
-      <xsd:enumeration value='Double'/>
-      <xsd:enumeration value='Float'/>
-      <xsd:enumeration value='Long'/>
-      <xsd:enumeration value='Integer'/>
-      <xsd:enumeration value='Date'/>
-      <xsd:enumeration value='Time'/>
-      <xsd:enumeration value='Timestamp'/>
-      <xsd:enumeration value='Boolean'/>
-      <xsd:enumeration value='Object'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='property-map'>
-  <xsd:complexType>
-   <xsd:attribute name='resource' type='xsd:string' use='required'/>
-   <xsd:attribute name='map-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='global' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='property-to-field'>
-  <xsd:complexType>
-   <xsd:attribute name='resource' type='xsd:string' use='required'/>
-   <xsd:attribute name='property' type='xsd:string' use='required'/>
-   <xsd:attribute name='field' type='xsd:string' use='required'/>
-   <xsd:attribute name='default' type='xsd:string' use='optional'/>
-   <xsd:attribute name='no-locale' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='arg-list-name' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='service'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='field-map' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='service-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='result-map-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='auto-field-map' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='result-map-list-iterator-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='result-map-list-name' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='entity-one'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='field-map' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='select-field' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='value-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='use-cache' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='auto-field-map' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='entity-and'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='field-map' maxOccurs='unbounded'/>
-    <xsd:element ref='select-field' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='order-by' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:choice minOccurs='0' maxOccurs='1'>
-     <xsd:element ref='limit-range'/>
-     <xsd:element ref='limit-view'/>
-     <xsd:element ref='use-iterator'/>
-    </xsd:choice>
-   </xsd:sequence>
-   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='use-cache' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='filter-by-date' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-      <xsd:enumeration value='by-name'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='result-set-type' default='scroll'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='forward'/>
-      <xsd:enumeration value='scroll'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='entity-condition'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:choice minOccurs='0' maxOccurs='1'>
-     <xsd:element ref='condition-expr'/>
-     <xsd:element ref='condition-list'/>
-    </xsd:choice>
-    <xsd:element ref='having-condition-list' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='select-field' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='order-by' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:choice minOccurs='0' maxOccurs='1'>
-     <xsd:element ref='limit-range'/>
-     <xsd:element ref='limit-view'/>
-     <xsd:element ref='use-iterator'/>
-    </xsd:choice>
-   </xsd:sequence>
-   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='use-cache' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='filter-by-date' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-      <xsd:enumeration value='by-name'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='distinct' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='delegator-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='list-name' type='xsd:string' default='formResultList'/>
-   <xsd:attribute name='result-set-type' default='scroll'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='forward'/>
-      <xsd:enumeration value='scroll'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='condition-list'>
-  <xsd:complexType>
-   <xsd:choice maxOccurs='unbounded'>
-    <xsd:element ref='condition-expr'/>
-    <xsd:element ref='condition-list'/>
-   </xsd:choice>
-   <xsd:attribute name='combine' default='and'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='and'/>
-      <xsd:enumeration value='or'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='having-condition-list'>
-  <xsd:complexType>
-   <xsd:choice maxOccurs='unbounded'>
-    <xsd:element ref='condition-expr'/>
-    <xsd:element ref='condition-list'/>
-   </xsd:choice>
-   <xsd:attribute name='combine' default='and'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='and'/>
-      <xsd:enumeration value='or'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='condition-expr'>
-  <xsd:complexType>
-   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='operator' default='equals'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='less'/>
-      <xsd:enumeration value='greater'/>
-      <xsd:enumeration value='less-equals'/>
-      <xsd:enumeration value='greater-equals'/>
-      <xsd:enumeration value='equals'/>
-      <xsd:enumeration value='not-equals'/>
-      <xsd:enumeration value='in'/>
-      <xsd:enumeration value='between'/>
-      <xsd:enumeration value='like'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='env-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='value' type='xsd:string' use='optional'/>
-   <xsd:attribute name='ignore-if-null' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='ignore-if-empty' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='select-field'>
-  <xsd:complexType>
-   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='order-by'>
-  <xsd:complexType>
-   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='limit-range'>
-  <xsd:complexType>
-   <xsd:attribute name='start' type='xsd:string' use='required'/>
-   <xsd:attribute name='size' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='limit-view'>
-  <xsd:complexType>
-   <xsd:attribute name='view-index' type='xsd:string' use='required'/>
-   <xsd:attribute name='view-size' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='use-iterator'>
-  <xsd:complexType/>
- </xsd:element>
-
- <xsd:element name='field-map'>
-  <xsd:complexType>
-   <xsd:attribute name='env-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='field-name' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='script'>
-  <xsd:complexType>
-   <xsd:attribute name='location' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-</xsd:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="AllFields" abstract="true"/>
+    <xs:element name="AllActions" abstract="true"/>
+    <xs:element name="forms">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="form"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!--
+        map-list-name: for list type and other multiple data/form types this is
+        	the name of the list in the context to iterate over
+        list-entry-name: if specified each list entry will be put in the context
+        	with this name; otherwise the list entry must be a Map and the entries
+        	in the Map will be put into the context by name
+        type: a single form is a simple single form with values from a single set of values;
+        	a list form is a list of individual forms in a table (could be called a tabular form), it has a list of sets of values and creates one form for each list element;
+        	a multi form is like a list/tabular form, but it creates a single form to submit all list item forms at once; the field names in the resulting form have an appendage attached to make them unique according to the pattern used for the multi-service event handler that will call one service for each list element
+    -->
+    <xs:element name="form">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="actions"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="alt-target"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="auto-fields-service"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="auto-fields-entity"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field"/>
+                <xs:element minOccurs="0" ref="sort-order"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.form"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.form">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="type" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="single"/>
+                    <xs:enumeration value="list"/>
+                    <xs:enumeration value="multi"/>
+                    <xs:enumeration value="upload"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="target"/>
+        <xs:attribute name="target-window"/>
+        <xs:attribute name="paginate-target"/>
+        <xs:attribute name="title"/>
+        <xs:attribute name="tooltip"/>
+        <xs:attribute name="list-name"/>
+        <xs:attribute name="list-entry-name"/>
+        <xs:attribute name="default-map-name"/>
+        <xs:attribute name="default-entity-name"/>
+        <xs:attribute name="default-service-name"/>
+        <xs:attribute name="default-title-style"/>
+        <xs:attribute name="default-widget-style"/>
+        <xs:attribute name="default-tooltip-style"/>
+        <xs:attribute name="default-required-field-style"/>
+        <xs:attribute name="item-index-separator" default="_o_"/>
+        <xs:attribute name="extends"/>
+        <xs:attribute name="extends-resource"/>
+        <xs:attribute name="separate-columns" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="list-iterator-name"/>
+        <xs:attribute name="view-size"/>
+        <xs:attribute name="paginate" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="row-count"/>
+        <xs:attribute name="use-row-submit" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="alt-target">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.alt-target"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.alt-target">
+        <xs:attribute name="use-when" use="required"/>
+        <xs:attribute name="target"/>
+    </xs:attributeGroup>
+    <xs:element name="auto-fields-service">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.auto-fields-service"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.auto-fields-service">
+        <xs:attribute name="service-name" use="required"/>
+        <xs:attribute name="map-name"/>
+        <xs:attribute name="default-field-type" default="edit">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="edit"/>
+                    <xs:enumeration value="find"/>
+                    <xs:enumeration value="display"/>
+                    <xs:enumeration value="hidden"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="auto-fields-entity">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.auto-fields-entity"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.auto-fields-entity">
+        <xs:attribute name="entity-name" use="required"/>
+        <xs:attribute name="map-name"/>
+        <xs:attribute name="default-field-type" default="edit">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="edit"/>
+                    <xs:enumeration value="find"/>
+                    <xs:enumeration value="display"/>
+                    <xs:enumeration value="hidden"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <!--
+        name: a unique name for this field
+        map-name: the name (or location) of the map that contains the data for this 
+        	field in the form context
+        entity-name: used along with the field-name to look up the entity field definition
+        	for any information that might be helpful when rendering the form field
+        field-name: see the description of entity-name
+        service-name: used along with the attribute-name to look up the service attribute 
+        	definition for any information that might be helpful when rendering the form field
+        attribute-name: see the description of service-name
+        entry-name: defaults to the value of the name attribute; is used to 
+        	specify the name of the entry in the map that contains the value to populate
+        parameter-name: defaults to the value of the name attribute; is the name of the 
+        	parameter to use for this field (the request parameter in a web application)
+        title: the name of this field that will be shown to the user; can use the ${} 
+        	and foo.bar (dot) syntax to insert values from the context for parameterization
+        	or internationalization
+        tooltip: the text to show on mouse over or help for more information; can use the ${} 
+        	and foo.bar (dot) syntax to insert values from the context for parameterization
+        	or internationalization
+        title-style: the name of a style (like a CSS class) to apply to the title of this field
+        widget-style: the name of a style (like a CSS class) to apply to the widget 
+        	that the user will interact with for this field
+        position: for row oriented forms (single type) can specify that the field should be put 
+        	a column other than the first; for column oriented forms (list type) specifies 
+        	the row the field should be put in
+        red-when: the widget/interaction part will be red if the date value is
+        	before-now (for thruDate), after-now (for fromDate), or by-name (if the
+        	field's name or entry-name or fromDate or thruDate the corresponding 
+        	action will be done); only applicable when the field is a timestamp
+        use-when: used to specify a condition that must be true to use this field;
+        	the condition should be written using the Java syntax and can operate 
+        	on values in the form context; if this is used the field will only be put
+        	on the field list, and not in the field map meaning that values for this
+        	field cannot be overridden
+    -->
+    <xs:element name="field">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="AllFields"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.field"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.field">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="map-name"/>
+        <xs:attribute name="entity-name"/>
+        <xs:attribute name="service-name"/>
+        <xs:attribute name="entry-name"/>
+        <xs:attribute name="parameter-name"/>
+        <xs:attribute name="field-name"/>
+        <xs:attribute name="attribute-name"/>
+        <xs:attribute name="title"/>
+        <xs:attribute name="tooltip"/>
+        <xs:attribute name="title-style"/>
+        <xs:attribute name="widget-style"/>
+        <xs:attribute name="tooltip-style"/>
+        <xs:attribute name="position" default="1"/>
+        <xs:attribute name="red-when" default="by-name">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="never"/>
+                    <xs:enumeration value="before-now"/>
+                    <xs:enumeration value="after-now"/>
+                    <xs:enumeration value="by-name"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="use-when"/>
+        <xs:attribute name="id-name"/>
+        <xs:attribute name="separate-column" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <!--
+        description: specifies the string to display, can use the ${} synrax
+        	to insert context values; if empty the value of the field will be
+        	printed for a default
+    -->
+    <xs:element name="display" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.display"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.display">
+        <xs:attribute name="also-hidden" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="description"/>
+    </xs:attributeGroup>
+    <!-- this is just like display but looks up a description using the Entity Engine; note that if also-hidden is true then it uses the key as the value, not the shown description -->
+    <xs:element name="display-entity" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.display-entity"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.display-entity">
+        <xs:attribute name="entity-name" use="required"/>
+        <xs:attribute name="key-field-name"/>
+        <xs:attribute name="description" default="${description}"/>
+        <xs:attribute name="cache" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="also-hidden" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <!--
+        target: the target location of the hyperlink; can use the ${} syntax to 
+        	substitute values from the context
+        description: specifies the string to display, can use the ${} synrax
+        	to insert context values; if empty the value of the field will be
+        	printed for a default
+    -->
+    <xs:element name="hyperlink" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.hyperlink"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.hyperlink">
+        <xs:attribute name="also-hidden" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="target-type" default="intra-app">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="intra-app"/>
+                    <xs:enumeration value="inter-app"/>
+                    <xs:enumeration value="content"/>
+                    <xs:enumeration value="plain"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="target" use="required"/>
+        <xs:attribute name="description"/>
+        <xs:attribute name="target-window"/>
+    </xs:attributeGroup>
+    <xs:element name="sub-hyperlink">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.sub-hyperlink"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.sub-hyperlink">
+        <xs:attribute name="use-when"/>
+        <xs:attribute name="link-style"/>
+        <xs:attribute name="target-type" default="intra-app">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="intra-app"/>
+                    <xs:enumeration value="inter-app"/>
+                    <xs:enumeration value="content"/>
+                    <xs:enumeration value="plain"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="target" use="required"/>
+        <xs:attribute name="description"/>
+        <xs:attribute name="target-window"/>
+    </xs:attributeGroup>
+    <xs:element name="text" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.text"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.text">
+        <xs:attribute name="size" default="25"/>
+        <xs:attribute name="maxlength"/>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="textarea" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.textarea"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.textarea">
+        <xs:attribute name="cols" default="60"/>
+        <xs:attribute name="rows" default="3"/>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <!--
+        a special entry for date-time fields; may just have a default size text 
+        entry box and some sort of widget to make date entry/selection easier
+    -->
+    <xs:element name="date-time" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.date-time"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.date-time">
+        <xs:attribute name="type" default="timestamp">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="timestamp"/>
+                    <xs:enumeration value="date"/>
+                    <xs:enumeration value="time"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <!--
+        entity-options will look up options for the field in the given entity
+        key-field-name: the value of the key-field-name will be the value passed 
+            to the server
+        description: will be presented to the user with field values
+            substituted using the ${} syntax
+        key-field-name: the name of the field in the looked up entity that will be used 
+            for the key value; defaults to the entry-name of the field this is in
+    -->
+    <xs:element name="entity-options">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="entity-constraint"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="entity-order-by"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-options"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-options">
+        <xs:attribute name="entity-name" use="required"/>
+        <xs:attribute name="key-field-name"/>
+        <xs:attribute name="description" use="required"/>
+        <xs:attribute name="cache" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="filter-by-date" default="by-name">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                    <xs:enumeration value="by-name"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="entity-constraint">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.entity-constraint"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-constraint">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="operator" default="equals">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="less"/>
+                    <xs:enumeration value="greater"/>
+                    <xs:enumeration value="less-equals"/>
+                    <xs:enumeration value="greater-equals"/>
+                    <xs:enumeration value="equals"/>
+                    <xs:enumeration value="not-equals"/>
+                    <xs:enumeration value="in"/>
+                    <xs:enumeration value="between"/>
+                    <xs:enumeration value="like"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="env-name"/>
+        <xs:attribute name="value"/>
+        <xs:attribute name="ignore-if-null" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="ignore-if-empty" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="entity-order-by">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.entity-order-by"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-order-by">
+        <xs:attribute name="field-name" use="required"/>
+    </xs:attributeGroup>
+    <!--
+        list-options will create options based on data in a list
+            list-name: the name of the list to iterate through to get values
+            list-entry-name: if specified the list entry will be placed in the local 
+        	    context, otherwise each list entry must be a Map that will be expanded 
+        	    into the local context
+        key-name: the value of the key-name will be the value passed 
+            to the server; this should be the full name of the location of the
+            key value in the context, given the list-entry-name or expanded
+            list-entry Map as the options you would most likely use
+        description: will be presented to the user with field values
+            substituted using the ${} syntax
+    -->
+    <xs:element name="list-options">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.list-options"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.list-options">
+        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute name="list-entry-name"/>
+        <xs:attribute name="key-name" use="required"/>
+        <xs:attribute name="description"/>
+    </xs:attributeGroup>
+    <!-- description: what the user will see in the widget; defaults to the value of the key attribute -->
+    <xs:element name="option">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.option"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.option">
+        <xs:attribute name="key" use="required"/>
+        <xs:attribute name="description"/>
+    </xs:attributeGroup>
+    <!--
+        no-current-selected-key: the key to mark as selected when there is no
+        	current entry value
+    -->
+    <xs:element name="drop-down" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element ref="entity-options"/>
+                    <xs:element ref="list-options"/>
+                    <xs:element ref="option"/>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.drop-down"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.drop-down">
+        <xs:attribute name="allow-empty" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="current" default="first-in-list">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="first-in-list"/>
+                    <xs:enumeration value="selected"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="no-current-selected-key"/>
+        <xs:attribute name="current-description"/>
+    </xs:attributeGroup>
+    <xs:element name="radio" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="entity-options"/>
+                <xs:element ref="list-options"/>
+                <xs:element ref="option"/>
+            </xs:choice>
+            <xs:attributeGroup ref="attlist.radio"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.radio">
+        <xs:attribute name="no-current-selected-key"/>
+    </xs:attributeGroup>
+    <xs:element name="check" substitutionGroup="AllFields">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="submit" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.submit"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.submit">
+        <xs:attribute name="button-type" default="button">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="button"/>
+                    <xs:enumeration value="text-link"/>
+                    <xs:enumeration value="image"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="image-location"/>
+    </xs:attributeGroup>
+    <xs:element name="reset" substitutionGroup="AllFields">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="hidden" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.hidden"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.hidden">
+        <xs:attribute name="value"/>
+    </xs:attributeGroup>
+    <xs:element name="ignored" substitutionGroup="AllFields">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="text-find" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.text-find"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.text-find">
+        <xs:attribute name="size" default="25"/>
+        <xs:attribute name="maxlength"/>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="range-find" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.range-find"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.range-find">
+        <xs:attribute name="size" default="25"/>
+        <xs:attribute name="maxlength"/>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="lookup" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.lookup"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.lookup">
+        <xs:attribute name="target-form-name" use="required"/>
+        <xs:attribute name="size" default="25"/>
+        <xs:attribute name="maxlength"/>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="date-find" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.date-find"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.date-find">
+        <xs:attribute name="type" default="timestamp">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="timestamp"/>
+                    <xs:enumeration value="date"/>
+                    <xs:enumeration value="time"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="sort-order">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="sort-field"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.sort-order"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.sort-order">
+        <xs:attribute name="type" default="explicit">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="explicit"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="sort-field">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.sort-field"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.sort-field">
+        <xs:attribute name="name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="file" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.file"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.file">
+        <xs:attribute name="size" default="25"/>
+        <xs:attribute name="maxlength"/>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="password" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.password"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.password">
+        <xs:attribute name="size" default="25"/>
+        <xs:attribute name="maxlength"/>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="image" substitutionGroup="AllFields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.image"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.image">
+        <xs:attribute name="border" default="0"/>
+        <xs:attribute name="width"/>
+        <xs:attribute name="height"/>
+        <xs:attribute name="value"/>
+        <xs:attribute name="default-value"/>
+    </xs:attributeGroup>
+    <xs:element name="actions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="AllActions"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="set" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.set"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.set">
+        <xs:attribute name="field" use="required"/>
+        <xs:attribute name="from-field"/>
+        <xs:attribute name="value"/>
+        <xs:attribute name="global" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="type" default="String">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="PlainString"/>
+                    <xs:enumeration value="String"/>
+                    <xs:enumeration value="Double"/>
+                    <xs:enumeration value="Float"/>
+                    <xs:enumeration value="Long"/>
+                    <xs:enumeration value="Integer"/>
+                    <xs:enumeration value="Date"/>
+                    <xs:enumeration value="Time"/>
+                    <xs:enumeration value="Timestamp"/>
+                    <xs:enumeration value="Boolean"/>
+                    <xs:enumeration value="Object"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="property-map" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.property-map"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.property-map">
+        <xs:attribute name="resource" use="required"/>
+        <xs:attribute name="map-name" use="required"/>
+        <xs:attribute name="global" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="property-to-field" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.property-to-field"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.property-to-field">
+        <xs:attribute name="resource" use="required"/>
+        <xs:attribute name="property" use="required"/>
+        <xs:attribute name="field" use="required"/>
+        <xs:attribute name="default"/>
+        <xs:attribute name="no-locale" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="arg-list-name"/>
+    </xs:attributeGroup>
+    <xs:element name="service" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field-map"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.service"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.service">
+        <xs:attribute name="service-name" use="required"/>
+        <xs:attribute name="result-map-name"/>
+        <xs:attribute name="auto-field-map" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="result-map-list-iterator-name"/>
+        <xs:attribute name="result-map-list-name"/>
+    </xs:attributeGroup>
+    <xs:element name="entity-one" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field-map"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-one"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-one">
+        <xs:attribute name="entity-name" use="required"/>
+        <xs:attribute name="value-name"/>
+        <xs:attribute name="use-cache" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="auto-field-map" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="entity-and" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="field-map"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="order-by"/>
+                <xs:choice minOccurs="0">
+                    <xs:element ref="limit-range"/>
+                    <xs:element ref="limit-view"/>
+                    <xs:element ref="use-iterator"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-and"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-and">
+        <xs:attribute name="entity-name" use="required"/>
+        <xs:attribute name="use-cache" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="filter-by-date" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                    <xs:enumeration value="by-name"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="result-set-type" default="scroll">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="forward"/>
+                    <xs:enumeration value="scroll"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="entity-condition" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0">
+                    <xs:element ref="condition-expr"/>
+                    <xs:element ref="condition-list"/>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="having-condition-list"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="order-by"/>
+                <xs:choice minOccurs="0">
+                    <xs:element ref="limit-range"/>
+                    <xs:element ref="limit-view"/>
+                    <xs:element ref="use-iterator"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-condition"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-condition">
+        <xs:attribute name="entity-name" use="required"/>
+        <xs:attribute name="use-cache" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="filter-by-date" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                    <xs:enumeration value="by-name"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="distinct" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="delegator-name"/>
+        <xs:attribute name="list-name" default="formResultList"/>
+        <xs:attribute name="result-set-type" default="scroll">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="forward"/>
+                    <xs:enumeration value="scroll"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="condition-list">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="condition-expr"/>
+                <xs:element ref="condition-list"/>
+            </xs:choice>
+            <xs:attributeGroup ref="attlist.condition-list"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.condition-list">
+        <xs:attribute name="combine" default="and">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="and"/>
+                    <xs:enumeration value="or"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="having-condition-list">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="condition-expr"/>
+                <xs:element ref="condition-list"/>
+            </xs:choice>
+            <xs:attributeGroup ref="attlist.having-condition-list"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.having-condition-list">
+        <xs:attribute name="combine" default="and">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="and"/>
+                    <xs:enumeration value="or"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="condition-expr">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.condition-expr"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.condition-expr">
+        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute name="operator" default="equals">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="less"/>
+                    <xs:enumeration value="greater"/>
+                    <xs:enumeration value="less-equals"/>
+                    <xs:enumeration value="greater-equals"/>
+                    <xs:enumeration value="equals"/>
+                    <xs:enumeration value="not-equals"/>
+                    <xs:enumeration value="in"/>
+                    <xs:enumeration value="between"/>
+                    <xs:enumeration value="like"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="env-name"/>
+        <xs:attribute name="value"/>
+        <xs:attribute name="ignore-if-null" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="ignore-if-empty" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="select-field">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.select-field"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.select-field">
+        <xs:attribute name="field-name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="order-by">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.order-by"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.order-by">
+        <xs:attribute name="field-name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="limit-range">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.limit-range"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.limit-range">
+        <xs:attribute name="start" use="required"/>
+        <xs:attribute name="size" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="limit-view">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.limit-view"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.limit-view">
+        <xs:attribute name="view-index" use="required"/>
+        <xs:attribute name="view-size" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="use-iterator">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="field-map">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.field-map"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.field-map">
+        <xs:attribute name="env-name" use="required"/>
+        <xs:attribute name="field-name"/>
+    </xs:attributeGroup>
+    <xs:element name="script" substitutionGroup="AllActions">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.script"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.script">
+        <xs:attribute name="location" use="required"/>
+    </xs:attributeGroup>
+</xs:schema>
