@@ -1,5 +1,5 @@
 /*
- * $Id: ProductContentWrapper.java,v 1.2 2003/12/20 01:17:22 jonesde Exp $
+ * $Id: ProductContentWrapper.java,v 1.3 2003/12/20 08:27:43 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Product Content Worker: gets product content to display
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ProductContentWrapper {
@@ -57,6 +57,10 @@ public class ProductContentWrapper {
     protected GenericValue product;
     protected Locale locale;
     protected String mimeTypeId;
+    
+    public static ProductContentWrapper makeProductContentWrapper(GenericValue product, HttpServletRequest request) {
+        return new ProductContentWrapper(product, request);
+    }
     
     public ProductContentWrapper(GenericValue product, Locale locale, String mimeTypeId) {
         this.product = product;
@@ -71,30 +75,35 @@ public class ProductContentWrapper {
     }
     
     public String get(String productContentTypeId) {
-        try {
-            return getProductContentAsText(product, productContentTypeId, locale, mimeTypeId, product.getDelegator());
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
-            return "";
-        } catch (IOException e) {
-            Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
-            return "";
-        }
+        return getProductContentAsText(product, productContentTypeId, locale, mimeTypeId, product.getDelegator());
     }
     
-    public static String getProductContentAsText(GenericValue product, String productContentTypeId, HttpServletRequest request) throws GenericEntityException, IOException {
+    public static String getProductContentAsText(GenericValue product, String productContentTypeId, HttpServletRequest request) {
         return getProductContentAsText(product, productContentTypeId, UtilHttp.getLocale(request), "text/html", product.getDelegator());
     }
 
-    public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, GenericDelegator delegator) throws GenericEntityException, IOException {
-        Writer outWriter = new StringWriter();
-        getProductContentAsText(null, product, productContentTypeId, locale, mimeTypeId, delegator, outWriter);
-        return outWriter.toString();
+    public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, GenericDelegator delegator) {
+        String candidateFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
+        try {
+            Writer outWriter = new StringWriter();
+            getProductContentAsText(null, product, productContentTypeId, locale, mimeTypeId, delegator, outWriter);
+            return outWriter.toString();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
+            return product.getString(candidateFieldName);
+        } catch (IOException e) {
+            Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
+            return product.getString(candidateFieldName);
+        }
     }
     
     public static void getProductContentAsText(String productId, GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, GenericDelegator delegator, Writer outWriter) throws GenericEntityException, IOException {
         if (productId == null && product != null) {
             productId = product.getString("productId");
+        }
+        
+        if (delegator == null && product != null) {
+            delegator = product.getDelegator();
         }
         
         if (UtilValidate.isEmpty(mimeTypeId)) {
