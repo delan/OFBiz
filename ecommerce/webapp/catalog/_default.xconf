@@ -3,6 +3,6 @@
     <template>/templates/main_lr.ftl</template>
     <property name="title">Welcome</property>
 
-    <generator name="jsp" />
+    <generator name="ofbiz-freemarker" />
     <pageEditor>OfbizCatalogEditor</pageEditor>
 </page>
