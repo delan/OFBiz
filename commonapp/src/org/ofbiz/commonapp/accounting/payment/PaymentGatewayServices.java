@@ -24,6 +24,7 @@
 package org.ofbiz.commonapp.accounting.payment;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -97,11 +98,19 @@ public class PaymentGatewayServices {
             return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
         }
                  
-        // get the order amounts                                 
-        OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        DecimalFormat formatter = new DecimalFormat("##0.00");
+        // get the order amounts                               
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");  
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);                
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
         String grandTotalString = formatter.format(orh.getOrderGrandTotal());
-        Double grandTotal = new Double(grandTotalString);
+        Double grandTotal = null;
+        try {
+            grandTotal = (Double) formatter.parse(grandTotalString);
+        } catch (ParseException e) {
+            Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
+            grandTotal = new Double(orh.getOrderGrandTotal());
+        }
+        
         double amountToBill = grandTotal.doubleValue();        
                       
         // loop through and auth each payment   

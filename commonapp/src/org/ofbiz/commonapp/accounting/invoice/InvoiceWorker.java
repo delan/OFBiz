@@ -24,6 +24,7 @@
 package org.ofbiz.commonapp.accounting.invoice;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
@@ -91,9 +92,17 @@ public class InvoiceWorker {
             }
         }
 
-        DecimalFormat formatter = new DecimalFormat("##0.00");
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
         String invoiceTotalString = formatter.format(invoiceTotal);
-        Double formattedTotal = new Double(invoiceTotalString);
+        Double formattedTotal = null;
+        try {
+            formattedTotal = (Double) formatter.parse(invoiceTotalString);
+        } catch (ParseException e) {
+            Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
+            formattedTotal = new Double(invoiceTotal);
+        }
+        
         return formattedTotal.doubleValue();        
     }
     

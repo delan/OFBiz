@@ -26,6 +26,8 @@ package org.ofbiz.commonapp.order.order;
 import java.io.*;
 import java.net.*;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
@@ -1451,7 +1453,18 @@ public class OrderServices {
                         taxable += shippingAmount;
                     }
                     
-                    Double taxAmount = new Double(taxable * taxRate);
+                    String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+                    DecimalFormat formatter = new DecimalFormat(currencyFormat);
+                    double taxTotal = taxable * taxRate;
+                    String amountStr = formatter.format(taxTotal);
+                    Double taxAmount = null;
+                    try {
+                        taxAmount = (Double) formatter.parse(amountStr);
+                    } catch (ParseException e) {
+                        Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
+                        taxAmount = new Double(taxTotal);    
+                    }
+                                       
                     adjustments.add(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", taxLookup.getString("description"))));                        
                 }                                              
             }                                                                                             

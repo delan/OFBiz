@@ -208,15 +208,16 @@ public class CheckOutEvents {
         String orderId = cart.getOrderId();
         
         // format the grandTotal
-        DecimalFormat formatter = new DecimalFormat("##0.00");
-        double grandTotalPrimitive = cart.getGrandTotal();
-		String grandTotalString = formatter.format(grandTotalPrimitive);               
-        Double grandTotal = new Double(grandTotalPrimitive);
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
+        double cartTotal = cart.getGrandTotal();
+		String grandTotalString = formatter.format(cartTotal);               
+        Double grandTotal = null;
 		try {
-			grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
-		} catch (ParseException e1) {
-			// If this happends something is probably wrong but it should still be possible to proceed
-			e1.printStackTrace();
+			grandTotal = (Double) formatter.parse(grandTotalString);
+		} catch (ParseException e) {
+            Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
+            grandTotal = new Double(cartTotal);			
 		}
 
         // store the order - build the context
