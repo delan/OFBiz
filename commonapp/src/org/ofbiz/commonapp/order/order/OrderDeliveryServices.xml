@@ -28,102 +28,87 @@
 <simple-methods>
 	<simple-method method-name="createSchedule"
 			short-description="Creates a new Purchase Order Schedule">
-			<string-to-field string="true" field-name="doCreation"/>
-			<call-simple-method method-name="storeSchedule"/>
+
+    	<make-value entity-name="OrderDeliverySchedule" value-name="schedule"/>
+    	<set-pk-fields map-name="parameters" value-name="schedule"/>
+    	<set-nonpk-fields map-name="parameters" value-name="schedule"/>
+    	
+    	<if-empty field-name="orderItemSeqId" map-name="schedule">
+	    	<string-to-field string="_NA_" field-name="orderItemSeqId" map-name="schedule"/>
+    	</if-empty>
+    	
+    	<!-- always create the WorkEfforts, even if dates aren't specified yet; when they are they will be set in the update service... -->
+    	
+    	<!-- Define the fields and values of the WorkEffort entity -->
+    	<string-to-field string="Purchase Order Delivery" field-name="workEffortName" map-name="deliveryWorkEffortMap"/>
+        <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="deliveryWorkEffortMap"/>
+        <string-to-field string="CAL_CONFIRMED" field-name="currentStatusId" map-name="deliveryWorkEffortMap"/>
+        <field-to-field map-name="parameters" field-name="deliveryDate" to-field-name="estimatedStartDate" to-map-name="deliveryWorkEffortMap"/>
+        <field-to-field map-name="parameters" field-name="deliveryDate" to-field-name="estimatedCompletionDate" to-map-name="deliveryWorkEffortMap"/>
+		<env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="deliveryWorkEffortMap"/>
+        
+		<!-- Create and obtain the delivery WorkEffort ID-->
+		<call-service service-name="createWorkEffort" in-map-name="deliveryWorkEffortMap">
+			<result-to-field result-name="workEffortId" map-name="schedule" field-name="deliveryWorkEffortId"/>
+		</call-service>
+		
+    	<!-- Define the fields and values of the WorkEffort entity -->
+    	<string-to-field string="Purchase Order Pickup" field-name="workEffortName" map-name="pickupWorkEffortMap"/>
+        <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="pickupWorkEffortMap"/>
+        <string-to-field string="CAL_CONFIRMED" field-name="currentStatusId" map-name="pickupWorkEffortMap"/>
+        <field-to-field map-name="parameters" field-name="pickupDate" to-field-name="estimatedStartDate" to-map-name="pickupWorkEffortMap"/>
+        <field-to-field map-name="parameters" field-name="pickupDate" to-field-name="estimatedCompletionDate" to-map-name="pickupWorkEffortMap"/>
+		<env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="pickupWorkEffortMap"/>
+
+		<!-- Create and obtain the pickup WorkEffort ID-->
+		<call-service service-name="createWorkEffort" in-map-name="pickupWorkEffortMap">
+			<result-to-field result-name="workEffortId" map-name="schedule" field-name="pickupWorkEffortId"/>
+		</call-service>
+		
+		<!-- Create the actul schedule -->
+		<log level="info" message="Delivery ID is: ${schedule.deliveryWorkEffortId}"/>
+		<log level="info" message="Pickup ID is: ${schedule.pickupWorkEffortId}"/>
+		<create-value value-name="schedule"/>
 	</simple-method>
 	
 	<simple-method method-name="updateSchedule"
 			short-description="Updates an existing Purchase Order Schedule">
-			<string-to-field string="false" field-name="doCreation"/>
-			<call-simple-method method-name="storeSchedule"/>
+
+    	<make-value entity-name="OrderDeliverySchedule" value-name="lookupPkMap"/>
+    	<set-pk-fields map-name="parameters" value-name="lookupPkMap"/>
+    	<find-by-primary-key entity-name="OrderDeliverySchedule" map-name="lookupPkMap" value-name="schedule"/>
+
+		<!-- Update the existing WorkEfforts -->
+		<if>
+			<condition>
+				<not><if-empty field-name="deliveryDate" map-name="parameters"/></not>
+				<if-compare-field field-name="parameters.deliveryDate" operator="not-equals" to-field-name="schedule.deliveryDate"/>
+			</condition>
+			<then>
+				<field-to-field map-name="schedule" field-name="deliveryWorkEffortId" to-map-name="deliveryWorkEffortMap" to-field-name="workEffortId"/>
+				<find-by-primary-key entity-name="WorkEffort" map-name="deliveryWorkEffortMap" value-name="deliveryWorkEffort"/>
+				<field-to-field map-name="schedule" field-name="deliveryDate" to-field-name="estimatedStartDate" to-map-name="deliveryWorkEffort"/>
+				<field-to-field map-name="schedule" field-name="deliveryDate" to-field-name="estimatedCompletionDate" to-map-name="deliveryWorkEffort"/>
+				<store-value value-name="deliveryWorkEffort"/>
+			</then>
+		</if>
+		<if>
+			<condition>
+				<not><if-empty field-name="pickupDate" map-name="parameters"/></not>
+				<if-compare-field field-name="parameters.pickupDate" operator="not-equals" to-field-name="schedule.pickupDate"/>
+			</condition>
+			<then>
+				<field-to-field map-name="schedule" field-name="pickupWorkEffortId" to-map-name="pickupWorkEffortMap" to-field-name="workEffortId"/>
+				<find-by-primary-key entity-name="WorkEffort" map-name="pickupWorkEffortMap" value-name="pickupWorkEffort"/>
+				<field-to-field map-name="schedule" field-name="pickupDate" to-field-name="estimatedStartDate" to-map-name="pickupWorkEffort"/>
+				<field-to-field map-name="schedule" field-name="pickupDate" to-field-name="estimatedCompletionDate" to-map-name="pickupWorkEffort"/>
+				<store-value value-name="pickupWorkEffort"/>
+			</then>
+		</if>
+		
+		<!-- Update the actul schedule -->
+    	<set-nonpk-fields map-name="parameters" value-name="schedule"/>
+		<store-value value-name="schedule"/>
 	</simple-method>
-
-    <simple-method method-name="storeSchedule"
-    		short-description="Creates or updates a schedule for a Purchase Order">
-    	
-    	<!-- Verify the user is logged in -->
-    	<check-id field-name="userLogin"/>
-        <check-errors/>
-    		
-    	<!-- Prepare the fields for the schedule entity -->
-    	<field-to-field map-name="parameters" field-name="orderId" to-map-name="scheduleParams"/>
-    	<string-to-field string="_NA_" field-name="orderItemSeqId" map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="shipmentMethodTypeId" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="trackingNumber" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="deliveryDate" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="pickupDate" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="cartons" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="skidsPallets" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="unitsPieces" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="totalCubicSize" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="totalCubicUomId" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="totalWeight" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="totalWeightUomId" to-map-name="scheduleParams"/>
-    	<field-to-field map-name="parameters" field-name="statusId" to-map-name="scheduleParams"/>
-    	
-    	<!-- Define the data structure to submit -->
-    	<make-value entity-name="OrderDeliverySchedule" value-name="schedule" map-name="scheduleParams"/>
-    	
-    	<!-- Define the fields and values of the WorkEffort entity -->
-    	<string-to-field string="Purchase Order Delivery" field-name="workEffortName" map-name="deliveryWorkEffortMap"/>
-    	<string-to-field string="deliveryWorkEffortMap" field-name="workEffortMapName"/>
-    	<field-to-field map-name="parameters" field-name="deliveryDate" to-field-name="workEffortDate"/>
-    	<call-simple-method method-name="prepareWorkEffort"/>
-        
-    	<!-- Define the fields and values of the WorkEffort entity -->
-    	<string-to-field string="Purchase Order Pickup" field-name="workEffortName" map-name="pickupWorkEffortMap"/>
-    	<string-to-field string="pickupWorkEffortMap" field-name="workEffortMapName"/>
-    	<field-to-field map-name="parameters" field-name="pickupDate" to-field-name="workEffortDate"/>
-    	<call-simple-method method-name="prepareWorkEffort"/>
-    	
-    	<!-- Determine whether to create or update the schedule and WorkEfforts -->
-    	<if-compare field-name="doCreation" operator="equals" value="true">
-    		<!-- Create and obtain the delivery WorkEffort ID-->
-    		<string-to-field string="${userLogin.partyId}" field-name="quickAssignPartyId" map-name="deliveryWorkEffortMap"/>
-    		<call-service service-name="createWorkEffort" in-map-name="deliveryWorkEffortMap">
-	    		<result-to-field map-name="schedule" result-name="workEffortId" field-name="deliveryWorkEffortId"/>
-	    	</call-service>
-	    	
-    		<!-- Create and obtain the pickup WorkEffort ID-->
-    		<string-to-field string="${userLogin.partyId}" field-name="quickAssignPartyId" map-name="pickupWorkEffortMap"/>
-    		<call-service service-name="createWorkEffort" in-map-name="pickupWorkEffortMap">
-	    		<result-to-field map-name="schedule" result-name="workEffortId" field-name="pickupWorkEffortId"/>
-	    	</call-service>
-	    	
-	    	<!-- Create the actul schedule -->
-	    	<log level="info" message="Delivery ID is: ${schedule.deliveryWorkEffortId}"/>
-	    	<log level="info" message="Pickup ID is: ${schedule.pickupWorkEffortId}"/>
-	    	<create-value value-name="schedule"/>
-    	<else>
-    		<!-- Copy the existing WorkEffort IDs to the entities to update -->
-    		<field-to-field map-name="parameters" to-map-name="schedule" field-name="deliveryWorkEffortId"/>
-    		<field-to-field map-name="parameters" to-map-name="schedule" field-name="pickupWorkEffortId"/>
-    		<field-to-field map-name="parameters" to-map-name="deliveryWorkEffortMap" field-name="deliveryWorkEffortId" to-field-name="workEffortId"/>
-    		<field-to-field map-name="parameters" to-map-name="pickupWorkEffortMap" field-name="pickupWorkEffortId" to-field-name="workEffortId"/>
-    		
-    		<!-- Update the existing WorkEfforts -->
-    		<call-service service-name="updateWorkEffort" in-map-name="deliveryWorkEffortMap"/>
-    		<call-service service-name="updateWorkEffort" in-map-name="pickupWorkEffortMap"/>
-	    	
-	    	<!-- Update the actul schedule -->
-	    	<store-value value-name="schedule"/>
-    	</else>
-    	</if-compare>
-    </simple-method>
-    
-    <simple-method method-name="prepareWorkEffort"
-    		short-description="Copies the appropriate values to initialize a WorkEffort entity">
-
-        <!-- Define the fields and values of the WorkEffort entity -->
-	    <log level="info" message="Work effort map name is: ${workEffortMapName}"/>
-        <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="${workEffortMapName}"/>
-        <string-to-field string="CAL_CONFIRMED" field-name="currentStatusId" map-name="${workEffortMapName}"/>
-        <field-to-field field-name="workEffortTypeId" to-map-name="${workEffortMapName}"/>
-        <field-to-field field-name="currentStatusId" to-map-name="${workEffortMapName}"/>
-        <field-to-field field-name="workEffortName" to-map-name="${workEffortMapName}"/>
-        <field-to-field map-name="parameters" field-name="workEffortDate" to-field-name="estimatedStartDate" to-map-name="${workEffortMapName}"/>
-        <field-to-field map-name="parameters" field-name="workEffortDate" to-field-name="estimatedCompletionDate" to-map-name="${workEffortMapName}"/>
-	    <log level="info" message="Work effort date is: ${parameters.workEffortDate}"/>
-    </simple-method>
 </simple-methods>
      
