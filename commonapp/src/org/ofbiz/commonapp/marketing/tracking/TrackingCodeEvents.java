@@ -89,7 +89,16 @@ public class TrackingCodeEvents {
             
             //TODO: keep a tracking code history in cookies too
             
-            //TODO: if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
+            //if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
+            String redirectUrl = trackingCode.getString("redirectUrl");
+            if (UtilValidate.isNotEmpty(redirectUrl)) {
+                try {
+                    response.sendRedirect(redirectUrl);
+                } catch (java.io.IOException e) {
+                    Debug.logError(e, "Could not redirect as requested in the trackingCode to: " + redirectUrl);
+                }
+                return null;
+            }
         }
         
         return "success";
