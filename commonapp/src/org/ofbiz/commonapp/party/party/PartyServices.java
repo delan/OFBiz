@@ -543,7 +543,9 @@ public class PartyServices {
         Collection parties = new ArrayList();
         String email = (String) context.get("email");
         try {
-            Collection c = delegator.findByLike("ContactMech", UtilMisc.toMap("infoString", "%" + email + "%"));
+            List exprs = new LinkedList();
+            exprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%" + email.toUpperCase() + "%", true));
+            Collection c = delegator.findByAnd("ContactMech", exprs, UtilMisc.toList("infoString"));
             Debug.logInfo("Collection: " + c);
             if (c != null) {
                 Iterator i = c.iterator();
@@ -581,7 +583,9 @@ public class PartyServices {
         Collection parties = new ArrayList();
         String userLoginId = (String) context.get("userLoginId");
         try {
-            Collection ulc = delegator.findByLike("UserLogin", UtilMisc.toMap("userLoginId", "%" + userLoginId + "%"));
+            List exprs = new LinkedList();
+            exprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%" + userLoginId.toUpperCase() + "%", true));
+            Collection ulc = delegator.findByAnd("UserLogin", exprs, UtilMisc.toList("userloginId"));
             Debug.logInfo("Collection: " + ulc);
             if (ulc != null) {
                 Iterator i = ulc.iterator();
@@ -616,8 +620,10 @@ public class PartyServices {
         if (lastName == null)
             lastName = "";
         try {
-            Collection pc = delegator.findByLike("Person", UtilMisc.toMap("firstName", "%" + firstName + "%",
-                    "lastName", "%" + lastName + "%"));
+            List exprs = new LinkedList();
+            exprs.add(new EntityExpr("firstName", true, EntityOperator.LIKE, "%" + firstName.toUpperCase() + "%", true));
+            exprs.add(new EntityExpr("lastName", true, EntityOperator.LIKE, "%" + lastName.toUpperCase() + "%", true));
+            Collection pc = delegator.findByAnd("Person", exprs, UtilMisc.toList("lastName", "firstName", "partyId"));
             Debug.logInfo("Collection: " + pc);
             if (pc != null) {
                 Iterator i = pc.iterator();
