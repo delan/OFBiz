@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.8 2003/12/05 18:55:19 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.9 2004/02/06 22:43:52 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -101,7 +101,7 @@ public class ShoppingCartHelper {
         }
 
         // quantity sanity check
-        if (quantity < 0) {
+        if (quantity < 1) {
             errMsg = UtilProperties.getMessage(resource,"cart.quantity_not_positive_number", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;
