@@ -62,8 +62,10 @@
         <property name="jaxp2.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar" />
         <property name="jaxp.jar"     value="${jaxp1.jar}:${jaxp2.jar}" />
 
+        <property name="xerces.jar"    value="${env.CATALINA_HOME}/lib/xerces.jar" />
+
         <property name="api-jars"      value="${servlet.jar}:${jdbc.jar}:${mail.jar}" />
-        <property name="xml-jars"      value="${jaxp.jar}" />
+        <property name="xml-jars"      value="${jaxp.jar}:${xerces.jar}" />
         <property name="classpath"     value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
         <echo message="classpath: ${classpath}" />                
     </target>

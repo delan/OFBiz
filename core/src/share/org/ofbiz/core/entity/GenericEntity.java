@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
 //needed for XML writing with Crimson
 import org.apache.crimson.tree.*;
 //needed for XML writing with Xerces
-//import org.apache.xml.serialize.*;
+import org.apache.xml.serialize.*;
 
 /**
  * <p><b>Title:</b> Generic Entity Value Object
@@ -287,30 +287,27 @@ public class GenericEntity implements Serializable {
     return true;
   }
 
-  public static void writeXmlDocument(String filename, Collection values) {
-    if(values == null) return;
+  public static void writeXmlDocument(String filename, Document document) {
+    if(document == null) return;
 
-    Document document = GenericEntity.makeXmlDocument(values);
-    if(document == null) {
-      Debug.logWarning("[GenericEntity.writeXmlDocument] Could not create document, makeXmlDocument return null; aborting.");
-      return;
-    }
-    
     File outFile = new File(filename);
     FileOutputStream fos = null;
     try { 
       fos = new FileOutputStream(outFile);
     
-      //Crimson writer
-      XmlDocument xdoc = (XmlDocument) document;
-      xdoc.write(fos);
-
-      //Xerces writer
-      //OutputFormat format = new OutputFormat(document);
-      //format.setIndent(2);
-      //XMLSerializer serializer = new XMLSerializer(fos, format);
-      //serializer.asDOMSerializer();
-      //serializer.serialize(document.getDocumentElement());
+      if(document instanceof XmlDocument) {
+        //Crimson writer
+        XmlDocument xdoc = (XmlDocument) document;
+        xdoc.write(fos);
+      }
+      else {
+        //Xerces writer
+        OutputFormat format = new OutputFormat(document);
+        format.setIndent(2);
+        XMLSerializer serializer = new XMLSerializer(fos, format);
+        serializer.asDOMSerializer();
+        serializer.serialize(document.getDocumentElement());
+      }
     }
     catch(java.io.FileNotFoundException e) { Debug.logError(e); }
     catch(java.io.IOException e) { Debug.logError(e); }
@@ -321,8 +318,6 @@ public class GenericEntity implements Serializable {
   }
   
   public static Document makeXmlDocument(Collection values) {
-    if(values == null) return null;
-
     Document document = null;
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setValidating(true);
@@ -335,13 +330,26 @@ public class GenericEntity implements Serializable {
     
     if(document == null) return null;
     
+    Element rootElement = document.createElement("entity-engine-xml");
+    document.appendChild(rootElement);
+    
+    addToXmlDocument(values, document);
+    
+    return document;
+  }
+
+  public static void addToXmlDocument(Collection values, Document document) {
+    if(values == null) return;
+    if(document == null) return;
+
+    Element rootElement = document.getDocumentElement();
+
     Iterator iter = values.iterator();
     while(iter.hasNext()) {
       GenericValue value = (GenericValue)iter.next();
-      value.makeXmlElement(document);
+      Element valueElement = value.makeXmlElement(document);
+      rootElement.appendChild(valueElement);
     }
-    
-    return document;
   }
 
   /** Makes an XML Element object with an attribute for each field of the entity

@@ -854,6 +854,7 @@ public class GenericDelegator {
     
     Element docElement = document.getDocumentElement();
     if(docElement == null) return null;
+    if(!"entity-engine-xml".equals(docElement.getTagName())) Debug.logWarning("[GenericDelegator.makeValues] Root node was not <entity-engine-xml>");
     docElement.normalize();
     Node curChild = docElement.getFirstChild();
 
