@@ -104,7 +104,7 @@ public class OrderServices {
 
             // check to see if introductionDate hasn't passed yet
             if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
-                String excMsg = "Tried to order the Product " + product.getString("productName") +
+                String excMsg = "Tried to order the Product " + getProductName(product, orderItem) +
                     " (productId: " + product.getString("productId") + ") to the cart. This product has not yet been made available for sale.";
 
                 Debug.logWarning(excMsg);
@@ -114,7 +114,7 @@ public class OrderServices {
 
             // check to see if salesDiscontinuationDate has passed
             if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
-                String excMsg = "Tried to order the Product " + product.getString("productName") +
+                String excMsg = "Tried to order the Product " + getProductName(product, orderItem) +
                     " (productId: " + product.getString("productId") + ") to the cart. This product is no longer available for sale.";
 
                 Debug.logWarning(excMsg);
@@ -126,7 +126,7 @@ public class OrderServices {
                 if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
                     String invErrMsg = "The product ";
 
-                    invErrMsg += product.getString("productName");
+                    invErrMsg += getProductName(product, orderItem);
                     invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
                     Debug.logWarning(invErrMsg);
                     errorMessages.add(invErrMsg);
@@ -361,7 +361,7 @@ public class OrderServices {
                         String invErrMsg = "The product ";
 
                         if (product != null) {
-                            invErrMsg += product.getString("productName");
+                            invErrMsg += getProductName(product, orderItem);
                         }
                         invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
                         resErrorMessages.add(invErrMsg);
@@ -392,6 +392,14 @@ public class OrderServices {
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create order (transaction error on write: " + e.getMessage() + ").");
         }
         return result;
+    }
+    
+    public static String getProductName(GenericValue product, GenericValue orderItem) {
+        if (UtilValidate.isNotEmpty(product.getString("productName"))) {
+            return product.getString("productName");
+        } else {
+            return orderItem.getString("itemDescription");
+        }
     }
 
     /** Service for changing the status on an order */
