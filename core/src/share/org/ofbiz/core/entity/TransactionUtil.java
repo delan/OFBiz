@@ -36,62 +36,111 @@ import org.ofbiz.core.util.*;
  */
 public class TransactionUtil implements javax.transaction.Status {
     /** Begins a transaction in the current thread IF transactions are available */
-    public static void begin() throws NotSupportedException, SystemException {
+    public static void begin() throws GenericTransactionException  {
         UserTransaction ut = TransactionFactory.getUserTransaction();
-        if (ut != null)
-            ut.begin();
+        if (ut != null) {
+            try {
+                ut.begin();
+            } catch (NotSupportedException e) {
+                throw new GenericTransactionException("Not Supported error, could not begin transaction (probably a nesting problem)", e);
+            } catch (SystemException e) {
+                throw new GenericTransactionException("System error, could not begin transaction", e);
+            }
+        }
     }
     
-    /** Gets the status of the transaction in the current thread IF 
-    * transactions are available, otherwise returns STATUS_NO_TRANSACTION */
-    public static int getStatus() throws SystemException {
+    /** Gets the status of the transaction in the current thread IF
+     * transactions are available, otherwise returns STATUS_NO_TRANSACTION */
+    public static int getStatus() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
-        if (ut != null)
-            return ut.getStatus();
-        else
+        if (ut != null) {
+            try {
+                return ut.getStatus();
+            } catch (SystemException e) {
+                throw new GenericTransactionException("System error, could not get status", e);
+            }
+        }  else {
             return STATUS_NO_TRANSACTION;
+        }
     }
     
     /** Commits the transaction in the current thread IF transactions are available */
-    public static void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SystemException {
+    public static void commit() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
-        if (ut != null)
-            ut.commit();
+        if (ut != null) {
+            try {
+                ut.commit();
+            } catch (RollbackException e) {
+                throw new GenericTransactionException("Roll back error, could not commit transaction, was rolled back instead", e);
+            } catch (HeuristicMixedException e) {
+                throw new GenericTransactionException("Could not commit transaction", e);
+            } catch (HeuristicRollbackException e) {
+                throw new GenericTransactionException("Could not commit transaction", e);
+            } catch (SystemException e) {
+                throw new GenericTransactionException("System error, could not commit transaction", e);
+            }
+        }
     }
     
     /** Rolls back transaction in the current thread IF transactions are available */
-    public static void rollback() throws SystemException {
+    public static void rollback() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
-        if (ut != null)
-            ut.rollback();
+        if (ut != null) {
+            try {
+                ut.rollback();
+            } catch (SystemException e) {
+                throw new GenericTransactionException("System error, could not roll back transaction", e);
+            }
+        }
     }
     
     /** Makes a roll back the only possible outcome of the transaction in the current thread IF transactions are available */
-    public static void setRollbackOnly() throws SystemException {
+    public static void setRollbackOnly() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
-        if (ut != null)
-            ut.setRollbackOnly();
+        if (ut != null) {
+            try {
+                ut.setRollbackOnly();
+            } catch (SystemException e) {
+                throw new GenericTransactionException("System error, could not set roll back only on transaction", e);
+            }
+        }
     }
     
     /** Sets the timeout of the transaction in the current thread IF transactions are available */
-    public static void setTransactionTimeout(int seconds) throws SystemException {
+    public static void setTransactionTimeout(int seconds) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
-        if (ut != null)
-            ut.setTransactionTimeout(seconds);
+        if (ut != null) {
+            try {
+                ut.setTransactionTimeout(seconds);
+            } catch (SystemException e) {
+                throw new GenericTransactionException("System error, could not set transaction timeout", e);
+            }
+        }
     }
-
+    
     /** Enlists the given Connection if it is an XAConnection and if a transaction is active in the current thread */
-    public static void enlistConnection(Connection connection) throws SQLException, RollbackException, SystemException {
+    public static void enlistConnection(Connection connection) throws GenericTransactionException {
+        if (connection == null)
+            return;
+        
         if (connection instanceof XAConnection) {
             XAConnection xAConnection = (XAConnection) connection;
             
-            TransactionManager tm = TransactionFactory.getTransactionManager();
-            if (tm != null && tm.getStatus() == STATUS_ACTIVE) {
-                Transaction tx = tm.getTransaction();
-                if (tx != null) {
-                    XAResource resource = xAConnection.getXAResource();
-                    tx.enlistResource(resource);
+            try {
+                TransactionManager tm = TransactionFactory.getTransactionManager();
+                if (tm != null && tm.getStatus() == STATUS_ACTIVE) {
+                    Transaction tx = tm.getTransaction();
+                    if (tx != null) {
+                        XAResource resource = xAConnection.getXAResource();
+                        tx.enlistResource(resource);
+                    }
                 }
+            } catch (SQLException e) {
+                throw new GenericTransactionException("SQL error, could not enlist connection in transaction even though transactions are available", e);
+            } catch (RollbackException e) {
+                throw new GenericTransactionException("Roll Back error, could not enlist connection in transaction even though transactions are available, current transaction rolled back", e);
+            } catch (SystemException e) {
+                throw new GenericTransactionException("System error, could not enlist connection in transaction even though transactions are available", e);
             }
         }
     }
