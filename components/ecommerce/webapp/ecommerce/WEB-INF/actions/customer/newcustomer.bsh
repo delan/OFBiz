@@ -29,25 +29,34 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.product.store.ProductStoreWorker;
 
 delegator = request.getAttribute("delegator");
+
 productStore = ProductStoreWorker.getProductStore(request);
 context.put("productStoreId", productStore.get("productStoreId"));
-if (productStore.getString("allowPassword").equals("Y")) {
+context.put("productStore", productStore);
+
+if ("Y".equals(productStore.getString("allowPassword"))) {
     context.put("createAllowPassword", true);
 } else {
     context.put("createAllowPassword", false);
 }
 
-// load the geo names for selected countries and states/regions
-if ( request.getParameter( "CUSTOMER_COUNTRY" ) != null ) {
-	geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", request.getParameter("CUSTOMER_COUNTRY")));
-	if ( geoValue != null )
-		context.put("selectedCountryName", geoValue.get("geoName") );
+if ("Y".equals(productStore.getString("usePrimaryEmailUsername"))) {
+    context.put("getUsername", false);
+} else {
+    context.put("getUsername", true);
 }
 
-if ( request.getParameter( "CUSTOMER_STATE" ) != null ) {
-	geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", request.getParameter("CUSTOMER_STATE")));
-	if ( geoValue != null )
-		context.put("selectedStateName", geoValue.get("geoName") );
+// load the geo names for selected countries and states/regions
+if (request.getParameter("CUSTOMER_COUNTRY") != null) {
+    geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", request.getParameter("CUSTOMER_COUNTRY")));
+    if (geoValue != null)
+        context.put("selectedCountryName", geoValue.get("geoName") );
+}
+
+if (request.getParameter("CUSTOMER_STATE") != null) {
+    geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", request.getParameter("CUSTOMER_STATE")));
+    if ( geoValue != null )
+        context.put("selectedStateName", geoValue.get("geoName") );
 }
 
 previousParams = session.getAttribute("_PREVIOUS_PARAMS_");

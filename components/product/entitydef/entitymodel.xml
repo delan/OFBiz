@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.61 $
+ * @version    $Revision: 1.62 $
  */
 -->
 
@@ -2771,6 +2771,7 @@
       <field name="headerLogo" type="url"></field>
       <field name="headerMiddleBackground" type="url"></field>
       <field name="headerRightBackground" type="url"></field>
+      <field name="usePrimaryEmailUsername" type="indicator"></field>
       <prim-key field="productStoreId"/>
       <relation type="one" fk-name="PROD_STR_PRSTRGP" title="Primary" rel-entity-name="ProductStoreGroup">
         <key-map field-name="primaryStoreGroupId" rel-field-name="productStoreGroupId"/>
