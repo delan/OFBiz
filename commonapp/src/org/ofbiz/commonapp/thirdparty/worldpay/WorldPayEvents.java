@@ -311,6 +311,7 @@ public class WorldPayEvents {
         linkParms.setValue("M_dispatchName", dispatcher.getName());
         linkParms.setValue("M_delegatorName", delegator.getDelegatorName());        
         linkParms.setValue("M_webSiteId", webSiteId);        
+        linkParms.setValue("M_localLocale", UtilHttp.getLocale(request).toString());
         linkParms.setValue("M_confirmTemplate", confirmTemplate != null ? confirmTemplate : "");
                     
         // redirect to worldpay
