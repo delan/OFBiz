@@ -252,6 +252,7 @@
             title="Order Header Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderTypeId" type="id"></field>
+      <field name="salesChannelEnumId" type="id"></field>
       <field name="orderDate" type="date-time"></field>
       <field name="entryDate" type="date-time"></field>
       <field name="visitId" type="id"></field>
@@ -272,6 +273,9 @@
       <prim-key field="orderId"/>
       <relation type="one" fk-name="ORDER_HDR_TYPE" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_HDR_SCENUM" title="SalesChannel" rel-entity-name="Enumeration">
+        <key-map field-name="salesChannelEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="ORDER_HDR_OFAC" title="Origin" rel-entity-name="Facility">
         <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
