@@ -25,10 +25,7 @@
           <td>
             <div style='margin-left: 10px;'>
       <ofbiz:iterator name="category" property="topLevelList">
-        <%request.setAttribute("subcat", category);%>
-        <%request.setAttribute("curcatid", curCategoryId);%>
-        <%request.setAttribute("topPageContext", pageContext);%>
-        <jsp:include page="/catalog/sidesubcategory.jsp" />        
+        <%printSubCategories(null, category, curCategoryId, pageContext);%>
       </ofbiz:iterator>
             </div>
           </td>
@@ -37,3 +34,39 @@
     </TD>
   </TR>
 </TABLE>
+
+<%!
+public static void printSubCategories(GenericValue pcategory, GenericValue category, String curcatid, PageContext pageContext) throws java.io.IOException {
+    String controlPath = (String) pageContext.getRequest().getAttribute(SiteDefs.CONTROL_PATH);
+    JspWriter out = pageContext.getOut();
+
+    if (curcatid != null && curcatid.equals(category.getString("productCategoryId"))) {
+        out.print("<div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;");
+        out.print(category.getString("description"));
+        out.print("</b></div>");
+    } else {
+        String pstr = "";
+        if (pcategory != null) pstr = "&pcategory=" + pcategory.getString("productCategoryId");
+        out.print("<div style='text-indent: -10px;'><a href='");
+        HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+        out.print(response.encodeURL(controlPath + "/category?category_id=" + category.getString("productCategoryId") + pstr));
+        out.print("' class='buttontext'>-&nbsp;");
+        out.print(category.getString("description"));
+        out.println("</a></div>");
+    }
+
+    if (CategoryWorker.checkTrailItem(pageContext, category.getString("productCategoryId")) || 
+            (curcatid != null && curcatid.equals(category.getString("productCategoryId")))) {
+        List subCatList = CategoryWorker.getRelatedCategoriesRet(pageContext, "subCatList", category.getString("productCategoryId"));
+        if (subCatList != null && subCatList.size() > 0) {
+            Iterator iter = subCatList.iterator();
+            while (iter.hasNext()) {
+                GenericValue subcat = (GenericValue) iter.next();
+                out.println("<div style='margin-left: 10px;'>");
+                printSubCategories(category, subcat, curcatid, pageContext);
+                out.println("</div>");
+            }
+        }
+    }
+}
+%>
