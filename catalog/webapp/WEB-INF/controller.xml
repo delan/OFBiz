@@ -576,7 +576,7 @@
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteProductPriceRule"/>
     	<response name="success" type="view" value="FindPriceRules"/>
-    	<response name="error" type="view" value="FindPriceRules"/>
+    	<response name="error" type="view" value="EditProductPriceRules"/>
     </request-map>
 
     <request-map uri="createProductPriceCond">
