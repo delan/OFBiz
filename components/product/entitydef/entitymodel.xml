@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.74 $
+ * @version    $Revision: 1.75 $
  */
 -->
 
@@ -3152,6 +3152,7 @@
       <field name="requireUspsAddr" type="indicator"></field>
       <field name="allowCompanyAddr" type="indicator"></field>
       <field name="requireCompanyAddr" type="indicator"></field>
+      <field name="includeNoChargeItems" type="indicator"></field>
       <field name="includeFeatureGroup" type="id"></field>
       <field name="excludeFeatureGroup" type="id"></field>
       <field name="includeGeoId" type="id"></field>
@@ -3191,6 +3192,7 @@
       <alias entity-alias="PSSM" name="requireUspsAddr"/>
       <alias entity-alias="PSSM" name="allowCompanyAddr"/>
       <alias entity-alias="PSSM" name="requireCompanyAddr"/>
+      <alias entity-alias="PSSM" name="includeNoChargeItems"/>
       <alias entity-alias="PSSM" name="includeGeoId"/>
       <alias entity-alias="PSSM" name="excludeGeoId"/>
       <alias entity-alias="PSSM" name="includeFeatureGroup"/>

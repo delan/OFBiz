@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.22 2004/02/24 05:27:33 jonesde Exp $
+ * $Id: ProductStoreWorker.java,v 1.23 2004/02/28 23:35:23 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -254,6 +254,16 @@ public class ProductStoreWorker {
                     returnShippingMethods.remove(method);
                     Debug.logInfo("Removed shipping method due to NON-Company address", module);
                     continue;
+                }
+
+                // check the items excluded from shipping
+                String includeFreeShipping = method.getString("includeNoChargeItems");
+                if (includeFreeShipping != null && "N".equalsIgnoreCase(includeFreeShipping)) {
+                    if ((itemSizes == null || itemSizes.size() == 0) && orderTotal == 0) {
+                        returnShippingMethods.remove(method);
+                        Debug.logInfo("Removed shipping method due to all items being exempt from shipping", module);
+                        continue;
+                    }
                 }
 
                 // check the geos
