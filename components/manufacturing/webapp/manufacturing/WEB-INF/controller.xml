@@ -36,19 +36,14 @@
     <handler name="bsf" type="request" class="org.ofbiz.content.webapp.event.BsfEventHandler"/>
 
     <!-- view handlers -->
-    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>        
     <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
+    <handler name="screenfop" type="view" class="org.ofbiz.content.webapp.view.ScreenFopPdfViewHandler"/>
+    <handler name="jasperpdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
-    <handler name="fop" type="view" class="org.ofbiz.content.webapp.view.FopPdfViewHandler"/>
-    <handler name="screenfop" type="view" class="org.ofbiz.content.webapp.view.ScreenFopPdfViewHandler"/>
-    
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
-    <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
-    <handler name="jasperpdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
-    <handler name="jasperxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
-        
+    
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
     	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
@@ -111,6 +106,28 @@
     <request-map uri="main">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="main"/>
+    </request-map>
+
+    <!-- Lookup request mappings -->
+    <request-map uri="LookupRouting">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="LookupRouting"/>
+    </request-map> 
+    <request-map uri="LookupRoutingTask">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="LookupRoutingTask"/>
+    </request-map> 
+    <request-map uri="LookupProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProduct"/>
+    </request-map>
+    <request-map uri="LookupVirtualProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupVirtualProduct"/>
+    </request-map>
+    <request-map uri="LookupProductFeature">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProductFeature"/>
     </request-map>
 
     <!-- Routing requests -->
@@ -339,46 +356,24 @@
         <response name="error" type="view" value="EditProductManufacturingRules"/>
     </request-map>
  
-    <!-- Lookup request mappings -->
-    <request-map uri="LookupRouting">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="LookupRouting"/>
-    </request-map> 
-    <request-map uri="LookupRoutingTask">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="LookupRoutingTask"/>
-    </request-map> 
-    <request-map uri="LookupProduct">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupProduct"/>
-    </request-map>
-    <request-map uri="LookupVirtualProduct">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupVirtualProduct"/>
-    </request-map>
-    <request-map uri="LookupProductFeature">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupProductFeature"/>
-    </request-map>
-
      <!-- MRP request mappings -->
     <request-map uri="FindProposedOrder">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindProposedOrder"/>
+        <response name="success" type="view" value="FindRequirements"/>
     </request-map>
     <request-map uri="FindInventoryEventPlan">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindInventoryEventPlan"/>
+        <response name="success" type="view" value="FindMrpPlannedEvents"/>
     </request-map>
     <request-map uri="RunningMrp">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="RunningMrp"/>
+        <response name="success" type="view" value="MrpExecution"/>
     </request-map>
     <request-map uri="RunningMrpGo">
         <security https="true" auth="true"/>
         <event type="service" invoke="runningMrp"/>
-        <response name="success" type="view" value="RunningMrp"/>
-        <response name="error" type="view" value="RunningMrp"/>
+        <response name="success" type="view" value="MrpExecution"/>
+        <response name="error" type="view" value="MrpExecution"/>
     </request-map>
     
      <!-- JobShop Management request mappings -->
@@ -470,8 +465,8 @@
     <request-map uri="approveRequirements">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="approveRequirement"/>
-        <response name="success" type="view" value="FindProposedOrder"/>
-        <response name="error" type="view" value="FindProposedOrder"/>
+        <response name="success" type="view" value="FindRequirements"/>
+        <response name="error" type="view" value="FindRequirements"/>
     </request-map>
     <request-map uri="createProductionRunsForOrder">
         <security https="true" auth="true"/>
@@ -503,49 +498,52 @@
         <event type="bsf" path="/jobshopmgt/" invoke="ShipmentWorkEffortTasksPrepare.bsh"/>
         <response name="success" type="view" value="ShipmentWorkEffortTasks"/>
     </request-map>
-
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/jobshopmgt/FindProductionRun.ftl"/>
+    <view-map name="main" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#FindProductionRun" type="screen"/>
     <view-map name="login" type="screen" page="component://manufacturing/widget/manufacturing/CommonScreens.xml#login"/>
 
     <!-- Routing view mappings -->
-    <view-map name="FindCalendar" type="jpublish" page="/routing/FindCalendar.ftl"/>
-    <view-map name="EditCalendar" type="jpublish" page="/routing/EditCalendar.ftl"/>
-    <view-map name="EditCalendarWeek" type="jpublish" page="/routing/EditCalendarWeek.ftl"/>
-    <view-map name="ListCalendarWeek" type="jpublish" page="/routing/ListCalendarWeek.ftl"/>
-    <view-map name="EditCalendarExceptionDay" type="jpublish" page="/routing/EditCalendarExceptionDay.ftl"/>
-    <view-map name="EditCalendarExceptionWeek" type="jpublish" page="/routing/EditCalendarExceptionWeek.ftl"/>
-    <view-map name="FindRoutingTask" type="jpublish" page="/routing/FindRoutingTask.ftl"/>
-    <view-map name="FindRouting" type="jpublish" page="/routing/FindRouting.ftl"/>
-    <view-map name="EditRoutingTaskAssoc" type="jpublish" page="/routing/EditRoutingTaskAssoc.ftl"/>
-    <view-map name="EditRoutingProductLink" type="jpublish" page="/routing/EditRoutingProductLink.ftl"/>
-    <!-- BOM view mappings -->
-    <view-map name="EditProductBom" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductBom" type="screen"/>
-    <view-map name="EditProductManufacturingRules" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductManufacturingRules" type="screen"/>
-    <view-map name="InitLowLevelCode" page="component://manufacturing/widget/manufacturing/BomScreens.xml#InitLowLevelCode" type="screen"/>
-    <view-map name="BomSimulation" page="component://manufacturing/widget/manufacturing/BomScreens.xml#BomSimulation" type="screen"/>
-
-    <!-- Lookup request mappings -->
+    <view-map name="FindCalendar" page="component://manufacturing/widget/manufacturing/CalendarScreens.xml#FindCalendar" type="screen"/>
+    <view-map name="EditCalendar" page="component://manufacturing/widget/manufacturing/CalendarScreens.xml#EditCalendar" type="screen"/>
+    <view-map name="EditCalendarWeek" page="component://manufacturing/widget/manufacturing/CalendarScreens.xml#EditCalendarWeek" type="screen"/>
+    <view-map name="ListCalendarWeek" page="component://manufacturing/widget/manufacturing/CalendarScreens.xml#ListCalendarWeek" type="screen"/>
+    <view-map name="EditCalendarExceptionDay" page="component://manufacturing/widget/manufacturing/CalendarScreens.xml#EditCalendarExceptionDay" type="screen"/>
+    <view-map name="EditCalendarExceptionWeek" page="component://manufacturing/widget/manufacturing/CalendarScreens.xml#EditCalendarExceptionWeek" type="screen"/>
+    
+    <view-map name="FindRoutingTask" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#FindRoutingTask" type="screen"/>
+    <view-map name="FindRouting" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#FindRouting" type="screen"/>
+    <view-map name="EditRoutingTaskAssoc" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingTaskAssoc" type="screen"/>
+    <view-map name="EditRoutingProductLink" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingProductLink" type="screen"/>
+    
+    <!-- Lookup view mappings -->
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupVirtualProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
     <view-map name="LookupRouting" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRouting" type="screen"/>
     <view-map name="LookupRoutingTask" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRoutingTask" type="screen"/>
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
+
+    <!-- BOM view mappings -->
+    <view-map name="EditProductBom" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductBom" type="screen"/>
+    <view-map name="EditProductManufacturingRules" page="component://manufacturing/widget/manufacturing/BomScreens.xml#EditProductManufacturingRules" type="screen"/>
+    <view-map name="InitLowLevelCode" page="component://manufacturing/widget/manufacturing/BomScreens.xml#InitLowLevelCode" type="screen"/>
+    <view-map name="BomSimulation" page="component://manufacturing/widget/manufacturing/BomScreens.xml#BomSimulation" type="screen"/>
     
     <!-- MRP view mappings -->
-    <view-map name="FindProposedOrder" type="jpublish" page="/mrp/findProposedOrder.ftl"/>
-    <view-map name="FindInventoryEventPlan" type="jpublish" page="/mrp/findInventoryEventPlan.ftl"/>
-    <view-map name="RunningMrp" type="jpublish" page="/mrp/RunningMrp.ftl"/>
-     <!-- JobShop Management request mappings -->
-    <view-map name="CreateProductionRun" type="jpublish" page="/jobshopmgt/CreateProductionRun.ftl"/>
-    <view-map name="FindProductionRun" type="jpublish" page="/jobshopmgt/FindProductionRun.ftl"/>
-    <view-map name="EditProductionRun" type="jpublish" page="/jobshopmgt/EditProductionRun.ftl"/>
-    <view-map name="ProductionRunDeclaration" type="jpublish" page="/jobshopmgt/ProductionRunDeclaration.ftl"/>
-    <view-map name="WorkWithShipmentPlans" type="jpublish" page="/jobshopmgt/WorkWithShipmentPlans.ftl"/>
+    <view-map name="FindRequirements" page="component://manufacturing/widget/manufacturing/MrpScreens.xml#FindRequirements" type="screen"/>
+    <view-map name="FindMrpPlannedEvents" page="component://manufacturing/widget/manufacturing/MrpScreens.xml#FindMrpPlannedEvents" type="screen"/>
+    <view-map name="MrpExecution" page="component://manufacturing/widget/manufacturing/MrpScreens.xml#MrpExecution" type="screen"/>
     
+    <!-- JobShop Management view mappings -->
+    <view-map name="CreateProductionRun" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#CreateProductionRun" type="screen"/>
+    <view-map name="FindProductionRun" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#FindProductionRun" type="screen"/>
+    <view-map name="EditProductionRun" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#EditProductionRun" type="screen"/>
+    <view-map name="ProductionRunDeclaration" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#ProductionRunDeclaration" type="screen"/>
+    <view-map name="WorkWithShipmentPlans" page="component://manufacturing/widget/manufacturing/JobshopScreens.xml#WorkWithShipmentPlans" type="screen"/>
+    
+    <!-- Report view mappings -->
     <view-map name="CuttingListReport" type="screenfop" page="component://manufacturing/widget/manufacturing/ReportScreens.xml#CuttingListReport" content-type="application/pdf" encoding="none"/>
     <view-map name="ShipmentPlanStockReport" type="jasperpdf" page="/jobshopmgt/ShipmentPlanStockReport.xml" content-type="application/pdf" encoding="none"/>
     <view-map name="ShipmentLabel" type="jasperpdf" page="/jobshopmgt/ShipmentLabel.xml" content-type="application/pdf" encoding="none"/>
