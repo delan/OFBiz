@@ -7,5 +7,5 @@
 
     <JobSandbox jobName="BackOrder Notification" runTime="2000-01-01 00:00:00.000" serviceName="checkInventoryAvailability" poolId="pool" runAsUser="admin" recurrenceInfoId="200"/>
     <JobSandbox jobName="Re-Try Failed Auths" runTime="2000-01-01 01:00:00.000" serviceName="retryFailedAuths" poolId="pool" runAsUser="admin" recurrenceInfoId="201"/>
-    <JobSandbox jobName="Order Auto-Cancel" runTime="2000-01-01 03:00:00.000" serviceName="autoCancelOrderItems" poolId="pool" runAsUser="admin" recurrenceInfoId="202"/>    
+    <JobSandbox jobName="Order Auto-Cancel" runTime="2000-01-01 03:00:00.000" serviceName="autoCancelOrderItems" poolId="pool" runAsUser="admin" recurrenceInfoId="202"/>
 </entity-engine-xml>

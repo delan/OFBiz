@@ -21,10 +21,10 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.1 2004/03/31 02:36:20 ajzeneski Exp $
+ *  $Id: ofbiz-component.xml,v 1.2 2004/07/31 00:23:56 ajzeneski Exp $
 -->
 
 <ofbiz-component name="appservers">
-    <resource-loader name="main" type="component"/>    
-    <classpath type="jar" location="build/lib/*"/>    
+    <resource-loader name="main" type="component"/>
+    <classpath type="jar" location="build/lib/*"/>
 </ofbiz-component>

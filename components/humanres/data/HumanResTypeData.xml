@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-  <StatusType description="Employment Application" hasTable="N" parentTypeId="" statusTypeId="EMPLOYMENT_APP_STTS"/>
-  <StatusType description="Position" hasTable="N" parentTypeId="" statusTypeId="POSITION_STATUS"/>
-  <StatusType description="Unemployment Claim" hasTable="N" parentTypeId="" statusTypeId="UNEMPL_CLAIM_STATUS"/>
+    <StatusType description="Employment Application" hasTable="N" parentTypeId="" statusTypeId="EMPLOYMENT_APP_STTS"/>
+    <StatusType description="Position" hasTable="N" parentTypeId="" statusTypeId="POSITION_STATUS"/>
+    <StatusType description="Unemployment Claim" hasTable="N" parentTypeId="" statusTypeId="UNEMPL_CLAIM_STATUS"/>
 </entity-engine-xml>

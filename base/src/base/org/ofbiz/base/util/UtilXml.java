@@ -1,5 +1,5 @@
 /*
- * $Id: UtilXml.java,v 1.6 2004/07/22 04:41:25 ajzeneski Exp $
+ * $Id: UtilXml.java,v 1.7 2004/07/31 00:23:55 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class UtilXml {
@@ -530,6 +530,9 @@ public class UtilXml {
             if (dtd != null && dtd.length() > 0) {
                 try {
                     URL dtdURL = UtilURL.fromResource(dtd);
+                    if (dtdURL == null) {
+                        throw new GeneralException("Local DTD not found - " + dtd);   
+                    }
                     InputStream dtdStream = dtdURL.openStream();
                     InputSource inputSource = new InputSource(dtdStream);
 
