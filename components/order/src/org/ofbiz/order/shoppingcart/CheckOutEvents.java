@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.26 2004/03/05 23:13:21 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.27 2004/03/07 01:18:38 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -374,7 +374,7 @@ public class CheckOutEvents {
             Double billUpTo = cart.getPaymentMethodAmount(gc.getString("paymentMethodId"));
 
             // null bill-up to means use the full balance || update the bill-up to with the balance
-            if (billUpTo == null || gcBalance < billUpTo.doubleValue()) {
+            if (billUpTo == null || billUpTo.doubleValue() == 0 || gcBalance < billUpTo.doubleValue()) {
                 cart.setPaymentMethodAmount(gc.getString("paymentMethodId"), new Double(gcBalance));
             }                        
         }
