@@ -51,6 +51,22 @@
         <property environment="env"/>
     </target>
 
+    <target name="dir-init" depends="ofbiz-init">
+        <mkdir dir="logs"/>
+        <mkdir dir="data"/>
+        <mkdir dir="data/derby"/>
+        <mkdir dir="data/hsql"/>
+
+        <condition property="isMac">
+            <os family="mac"/>
+        </condition>
+        <antcall target="copy-derby-props" inheritall="true"/>
+    </target>
+
+    <target name="copy-derby-props" if="isMac">
+        <copy file="website/derby/derby.properties" todir="data/derby"/>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
@@ -109,7 +125,7 @@
     <!-- Build Components                                                   -->
     <!-- ================================================================== -->
 
-    <target name="build" depends="ofbiz-init">
+    <target name="build" depends="dir-init">
         <echo message="[build] ========== Start Building (Compile) =========="/>
 
         <!-- make sure the data and logs directories exist, since they aren't in CVS -->

@@ -591,6 +591,13 @@ public class Start implements Runnable {
                 adminPort = 0;
             }
 
+            // set the Derby system home
+            String derbyPath = System.getProperty("derby.system.home");
+            if (derbyPath == null) {
+                derbyPath = props.getProperty("derby.system.home", "data/derby");
+            }
+            System.setProperty("derby.system.home", derbyPath);
+
             // set the property to tell Log4J to use debug.properties
             String log4jConfig = System.getProperty("log4j.configuration");
             if (log4jConfig == null) {
