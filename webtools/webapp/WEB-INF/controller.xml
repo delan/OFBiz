@@ -148,7 +148,21 @@
 
     <request-map uri="FindUtilCacheClear">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
+        <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="clearEvent"/>
+        <response name="success" type="view" value="FindUtilCache"/>
+        <response name="error" type="view" value="FindUtilCache"/>
+    </request-map>
+
+    <request-map uri="FindUtilCacheClearAll">
+    	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="clearAllEvent"/>
+        <response name="success" type="view" value="FindUtilCache"/>
+        <response name="error" type="view" value="FindUtilCache"/>
+    </request-map>
+
+    <request-map uri="FindUtilCacheClearAllExpired">
+    	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="clearAllExpiredEvent"/>
         <response name="success" type="view" value="FindUtilCache"/>
         <response name="error" type="view" value="FindUtilCache"/>
     </request-map>
@@ -160,14 +174,14 @@
 
     <request-map uri="EditUtilCacheUpdate">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="updateEvent"/>
+        <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="updateEvent"/>
         <response name="success" type="view" value="EditUtilCache"/>
         <response name="error" type="view" value="EditUtilCache"/>
     </request-map>
 
     <request-map uri="EditUtilCacheClear">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
+        <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="clearEvent"/>
         <response name="success" type="view" value="EditUtilCache"/>
         <response name="error" type="view" value="EditUtilCache"/>
     </request-map>
@@ -180,7 +194,7 @@
 
     <request-map uri="FindUtilCacheElementsRemoveElement">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="removeElementEvent"/>
+        <event type="java" path="org.ofbiz.core.extutil.UtilCacheEvents" invoke="removeElementEvent"/>
         <response name="success" type="view" value="FindUtilCacheElements"/>
         <response name="error" type="view" value="FindUtilCacheElements"/>
     </request-map>

@@ -36,7 +36,13 @@
 <h2 style='margin:0;'>Cache Maintenance Page</h2>
 
 <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
-<p><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Reload Cache List</A></p>
+
+<div>
+	<a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>[Reload Cache List]</a>
+	<a href='<ofbiz:url>/FindUtilCacheClearAll</ofbiz:url>' class='buttontext'>[Clear All Caches]</a>
+	<a href='<ofbiz:url>/FindUtilCacheClearAllExpired</ofbiz:url>' class='buttontext'>[Clear Expired From All]</a>
+</div>
+
 <TABLE border='0' cellpadding='2' cellspacing='2'>
 <%
   String rowColor1 = "99CCFF";
@@ -90,7 +96,13 @@
       </TR>
   <%}%>
 </TABLE>
-<p><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Reload Cache List</A></p>
+
+<div>
+	<a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>[Reload Cache List]</a>
+	<a href='<ofbiz:url>/FindUtilCacheClearAll</ofbiz:url>' class='buttontext'>[Clear All Caches]</a>
+	<a href='<ofbiz:url>/FindUtilCacheClearAllExpired</ofbiz:url>' class='buttontext'>[Clear Expired From All]</a>
+</div>
+
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_VIEW needed).</h3>
 <%}%>

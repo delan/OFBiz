@@ -83,9 +83,15 @@
       <TD><input type="text" size="15" maxlength="15" name="UTIL_CACHE_EXPIRE_TIME" value="<%=utilCache.getExpireTime()%>"></TD>
     </TR>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+	  <%String softRefValue = (new Boolean(utilCache.getUseSoftReference())).toString();%>
       <TD>useSoftReference?</TD>
-      <TD><%=(new Boolean(utilCache.getUseSoftReference())).toString()%></TD>
-      <TD><input type="text" size="6" maxlength="5" name="UTIL_CACHE_USE_SOFT_REFERENCE" value="<%=(new Boolean(utilCache.getUseSoftReference())).toString()%>"></TD>
+      <TD><%=softRefValue%></TD>
+      <TD>
+		<select name="UTIL_CACHE_USE_SOFT_REFERENCE">
+			<option <%="true".equals(softRefValue)?"selected":""%>>true</option>
+			<option <%="false".equals(softRefValue)?"selected":""%>>false</option>
+		</select>
+      </TD>
     </TR>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
       <TD colspan="3"><INPUT type="submit" value="Update"></TD>
