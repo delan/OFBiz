@@ -55,7 +55,7 @@
     <TD>Entity&nbsp;Name</TD>
     <TD>Create</TD>
     <TD>Find</TD>
-    <TD>View</TD>
+    <TD>Find All</TD>
   </TR>
 
 <%while(classNamesIterator != null && classNamesIterator.hasNext()) { ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());%>
@@ -68,7 +68,7 @@
         <%}%>
       </TD>
       <TD><a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entity.entityName)%>" class="buttontext">Find</a></TD>
-      <TD><a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entity.entityName)%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0" class="buttontext">View</a></TD>
+      <TD><a href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entity.entityName)%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0" class="buttontext">Find All</a></TD>
     </TR>
   <%}%>
 <%}%>
