@@ -902,33 +902,26 @@
     <!-- ========= General Ledger Services ========= -->
 
     <!-- GlAccount & Related -->
-    <service name="interfaceGlAccount" engine="interface" location="" invoke="">
-        <attribute name="glAccountTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="glAccountClassId" type="String" mode="IN" optional="false"/>
-        <attribute name="glResourceTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="glXbrlClassId" type="String" mode="IN" optional="true"/>
-        <attribute name="parentGlAccountId" type="String" mode="IN" optional="true"/>
-        <attribute name="accountCode" type="String" mode="IN" optional="true"/>
-        <attribute name="accountName" type="String" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="createGlAccount" engine="simple"
+    <service name="createGlAccount" default-entity-name="GlAccount" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlAccount" auth="true">
         <description>Create a GlAccount record</description>
-        <implements service="interfaceGlAccount"/>
-        <attribute name="glAccountId" type="String" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="glAccountTypeId" optional="false"/>
+        <override name="glAccountClassId" optional="false"/>
+        <override name="glResourceTypeId" optional="false"/>
+        <override name="accountName" optional="false"/>
     </service>
-    <service name="updateGlAccount" engine="simple"
+    <service name="updateGlAccount" default-entity-name="GlAccount" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlAccount" auth="true">
         <description>Update a GlAccount record</description>
-        <implements service="interfaceGlAccount"/>
-        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteGlAccount" engine="simple"
+    <service name="deleteGlAccount" default-entity-name="GlAccount" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="deleteGlAccount" auth="true">
         <description>Delete a GlAccount record</description>
-        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <service name="interfaceGlAccountOrganization" engine="interface" location="" invoke="">
@@ -936,22 +929,22 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
-    <service name="addGlAccountToOrganization" engine="simple"
-            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="addGlAccountToOrganization" auth="true">
+    <service name="createGlAccountOrganization" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlAccountOrganization" auth="true">
         <description>Create a GlAccount record</description>
         <implements service="interfaceGlAccountOrganization"/>
         <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="updateGlAccountToOrganization" engine="simple"
-            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlAccountToOrganization" auth="true">
+    <service name="updateGlAccountOrganization" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlAccountOrganization" auth="true">
         <description>Update a GlAccount record</description>
         <implements service="interfaceGlAccountOrganization"/>
         <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="removeGlAccountFromOrganization" engine="simple"
-            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="removeGlAccountFromOrganization" auth="true">
+    <service name="deleteGlAccountOrganization" engine="simple"
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="deleteGlAccountOrganization" auth="true">
         <description>Delete a GlAccount record</description>
         <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
         <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>

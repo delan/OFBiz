@@ -51,6 +51,7 @@
   <GlAccountClass description="Equity" glAccountClassId="EQUITY" parentClassId=""/>
   <GlAccountClass description="Income" glAccountClassId="INCOME" parentClassId=""/>
   <GlAccountClass description="Expense" glAccountClassId="EXPENSE" parentClassId=""/>
+  <GlAccountClass description="Non-Posting" glAccountClassId="NON_POSTING" parentClassId=""/>
 
   <GlAccountType description="Balance" glAccountTypeId="BALANCE_ACCOUNT" hasTable="N" parentTypeId=""/>
   <GlAccountType description="Bank Settlement" glAccountTypeId="BANK_STLMNT_ACCOUNT" hasTable="N" parentTypeId=""/>

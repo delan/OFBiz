@@ -35,14 +35,16 @@
         <make-value entity-name="GlAccount" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <!-- GlAccount uses a sequenced id, so get the next one now and set it... -->        
-        <sequenced-id-to-env sequence-name="GlAccount" env-name="newSequencedId"/>
-        <to-string field-name="newSequencedId"/>
-        <env-to-field env-name="newSequencedId" field-name="glAccountId" map-name="newEntity"/>
+        <!-- GlAccount uses a sequenced id, so get the next one now and set it... -->
+        <if-empty field-name="parameters.glAccountId">
+            <sequenced-id-to-env sequence-name="GlAccount" env-name="newEntity.glAccountId" to-string="true"/>
+        <else>
+            <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        </else>
+        </if-empty>
+        <field-to-result field-name="newEntity.glAccountId" result-name="glAccountId"/>
         
         <create-value value-name="newEntity"/>
-        
-        <field-to-result field-name="newSequencedId" result-name="glAccountId"/>
     </simple-method>
     <simple-method method-name="updateGlAccount" short-description="Update an GlAccount">
         <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateGlAccount you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
@@ -50,9 +52,8 @@
 
         <make-value entity-name="GlAccount" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="GlAccount" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteGlAccount" short-description="Delete an GlAccount">
@@ -61,13 +62,13 @@
 
         <make-value entity-name="GlAccount" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="GlAccount" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     
     <!-- ========= GlAccountOrganization methods ========= -->
-    <simple-method method-name="addGlAccountToOrganization" short-description="Add GlAccount To Organization">
-        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run addGlAccountToOrganization you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+    <simple-method method-name="createGlAccountOrganization" short-description="Add GlAccount To Organization">
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createGlAccountOrganization you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="GlAccountOrganization" value-name="newEntity"/>
@@ -76,8 +77,8 @@
 
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateGlAccountToOrganization" short-description="Update GlAccount To Organization">
-        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateGlAccountToOrganization you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+    <simple-method method-name="updateGlAccountOrganization" short-description="Update GlAccount To Organization">
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateGlAccountOrganization you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="GlAccountOrganization" value-name="lookupPKMap"/>
@@ -87,8 +88,8 @@
 
         <store-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="removeGlAccountFromOrganization" short-description="Remove GlAccount from Organization">
-        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run removeGlAccountFromOrganization you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
+    <simple-method method-name="deleteGlAccountOrganization" short-description="Remove GlAccount from Organization">
+        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run deleteGlAccountOrganization you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="GlAccountOrganization" value-name="lookupPKMap"/>
