@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  */
 -->
 
@@ -88,6 +88,14 @@
     <entity-group group="org.ofbiz" entity="WorkOrderItemFulfillment" />
     <entity-group group="org.ofbiz" entity="ZipSalesRuleLookup" />
     <entity-group group="org.ofbiz" entity="ZipSalesTaxLookup" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.order.picklist -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="Picklist" />
+    <entity-group group="org.ofbiz" entity="PicklistBin" />
+    <entity-group group="org.ofbiz" entity="PicklistItem" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.quote -->
