@@ -131,6 +131,9 @@
       <relation type="one" fk-name="CONTENT_PCNTNT" title="Owner" rel-entity-name="Content">
         <key-map field-name="ownerContentId" rel-field-name="contentId"/>
       </relation>
+      <relation type="many" rel-entity-name="ContentPurpose">
+          <key-map field-name="contentId"/>
+      </relation>
     </entity>
     <entity entity-name="ContentAssoc"
             package-name="org.ofbiz.commonapp.content.content"
