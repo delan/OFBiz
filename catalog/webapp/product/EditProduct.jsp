@@ -413,12 +413,9 @@ function insertImageName(size,ext) {
     </td>
   </tr>
 
-  <tr><td colspan="7">&nbsp;</td></tr>
   <tr>
-    <td colspan='1' align=right><input type="submit" name="Update" value="Update"></td>
-    <td colspan='2'>&nbsp;</td>
+    <td colspan='7'><input type="submit" name="Update" value="Update"></td>
   </tr>
-  <tr><td colspan="7">&nbsp;</td></tr>
 </table>
 </form>
     <%if (productId != null) {%>

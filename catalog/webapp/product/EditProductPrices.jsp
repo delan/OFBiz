@@ -154,9 +154,9 @@
     </div>
     <div class='tabletext'>
         From Date: <a href='#' onclick='setPpcFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
-        Price: <input type=text size='8' name='price'>
+        Price: <input type=text size='8' name='price'>&nbsp;<input type="submit" value="Add">
     </div>
-    <input type="submit" value="Add">
+
 </form>
 <%}%>
 <br>

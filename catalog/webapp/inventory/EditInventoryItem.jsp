@@ -102,15 +102,15 @@
 <%if(inventoryItem == null){%>
   <%if(inventoryItemId != null){%>
     <form action="<ofbiz:url>/CreateInventoryItem</ofbiz:url>" method=POST style='margin: 0;'>
-    <table border='0' cellpadding='2' cellspacing='0'>
+    <table class="boxoutside" border='0' cellpadding='2' cellspacing='0'>
     <h3>Could not find inventoryItem with ID "<%=inventoryItemId%>".</h3>
   <%}else{%>
     <form action="<ofbiz:url>/CreateInventoryItem</ofbiz:url>" method=POST style='margin: 0;'>
-    <table border='0' cellpadding='2' cellspacing='0'>
+    <table class="boxoutside" border='0' cellpadding='2' cellspacing='0'>
   <%}%>
 <%}else{%>
   <form action="<ofbiz:url>/UpdateInventoryItem</ofbiz:url>" method=POST style='margin: 0;'>
-  <table border='0' cellpadding='2' cellspacing='0'>
+  <table class="boxoutside" border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="inventoryItemId" value="<%=inventoryItemId%>">
   <tr>
     <td align=right><div class="tabletext">InventoryItem ID</div></td>
@@ -240,8 +240,7 @@
     <%}%>
 
   <tr>
-    <td colspan='1' align=right><input type="submit" name="Update" value="Update"></td>
-    <td colspan='2'>&nbsp;</td>
+    <td colspan='7'><input type="submit" name="Update" value="Update"></td>
   </tr>
 </table>
 </form>
