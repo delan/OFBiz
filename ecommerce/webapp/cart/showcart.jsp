@@ -2,7 +2,7 @@
 <% pageContext.setAttribute("PageName", "showcart"); %>
 
 <%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ include file="/includes/leftcolumn.jsp" %> 
 
 <BR>
 <table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
@@ -24,7 +24,6 @@
   <tr>
     <td bgcolor='white' colspan='2'>
       <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="quickaddform" style='margin: 0;'>
-        &nbsp;
         <input type='text' name="product_id" value="<%=UtilFormatOut.checkNull(request.getParameter("product_id"))%>">
         <input type='text' size="5" name="quantity" value="<%=UtilFormatOut.checkNull(request.getParameter("quantity"), "1")%>">
         <input type='submit' value="Add To Cart">
