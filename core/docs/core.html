@@ -29,19 +29,44 @@ $Id$ <br>
 <h3><a name="Related_Documents">Related Documents:</a></h3>
 <hr>
 <ul>
-  <li><a href="api/index.html">Core JavaDoc</a></li>
-  <li><a href="coreconfig.html">Core Configuration Guide</a></li>
-  <li><a href="control.html">Control Servlet Guide</a></li>
-  <li><a href="entity.html">Entity Engine Guide</a></li>
-  <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
-  <li><a href="services.html">Service Engine Guide</a></li>
-  <li><a href="workflow.html">Workflow Engine Guide</a></li>
-  <li><a href="rules.html">Rule Engine Guide</a></li>
-  <li><a href="minilang.html">Mini-Languages Guide</a></li>
-  <li><a href="/dtds/entitymodel.dtd">Entity Model DTD</a></li>
-  <li><a href="/dtds/entitygroup.dtd">Entity Group DTD</a></li>
-  <li><a href="/dtds/fieldtypemodel.dtd">Field Type Model DTD</a></li>
-  <li><a href="/dtds/simple-methods.dtd">Simple Methods Mini-Lang DTD</a></li>
+  <li class='contenttext'><a href="api/index.html">Core JavaDoc</a></li>
+  <li class='contenttext'><a href="coreconfig.html">Core Configuration Guide</a></li>
+  <li class='contenttext'><a href="control.html">Control Servlet Guide</a></li>
+  <li class='contenttext'><a href="entity.html">Entity Engine Guide</a></li>
+  <li class='contenttext'><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
+  <li class='contenttext'><a href="services.html">Service Engine Guide</a></li>
+  <li class='contenttext'><a href="serviceconfig.html">Service Engine Configuration Guide</a></li>
+  <li class='contenttext'><a href="workflow.html">Workflow Engine Guide</a></li>
+  <li class='contenttext'><a href="rules.html">Rule Engine Guide</a></li>
+  <li class='contenttext'><a href="minilang.html">Mini-Languages Guide</a></li>
+  <li class='contenttext'>General XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/jndi-config.dtd">JNDI Server Config DTD (jndiservers.xml)</a></li>
+    <li class='contenttext'><a href="dtds/security-config.dtd">Security Config DTD (security.xml)</a></li>
+  </ul>
+  <li class='contenttext'>Entity Engine XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/entity-config.dtd">Entity Config DTD (entityengine.xml)</a></li>
+    <li class='contenttext'><a href="dtds/entitygroup.dtd">Entity Group DTD (entitygroup.xml)</a></li>
+    <li class='contenttext'><a href="dtds/entitymodel.dtd">Entity Model DTD (entitymodel_*.xml)</a></li>
+    <li class='contenttext'><a href="dtds/fieldtypemodel.dtd">Field Type Model DTD (fieldtype*.xml)</a></li>
+  </ul>
+  <li class='contenttext'>Service Engine XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/service-config.dtd">Service Config DTD (serviceengine.xml)</a></li>
+    <li class='contenttext'><a href="dtds/services.dtd">Service Definition DTD (services_*.xml)</a></li>
+    <li class='contenttext'><a href="dtds/service-eca.dtd">Service ECAs DTD (secas_*.xml)</a></li>
+    <li class='contenttext'><a href="dtds/service-group.dtd">Service Groups DTD (groups_*.xml)</a></li>
+  </ul>
+  <li class='contenttext'>Mini-Language XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/simple-methods.dtd">Simple Methods DTD</a></li>
+  </ul>
+  <li class='contenttext'>Webapp Framework XML Definitions
+  <ul>
+    <li class='contenttext'><a href="dtds/site-conf.dtd">Site Config DTD (controller.xml)</a></li>
+    <li class='contenttext'><a href="dtds/regions.dtd">Regions Definition DTD (regions.xml)</a></li>
+  </ul>
 </ul>
 
 <hr>
@@ -75,6 +100,13 @@ considered optional and are only required if used.</p>
     <LI>extutil</LI>
     <LI>workflow (run-time)</LI>
     <LI>rules (run-time)</LI>
+    </UL>
+<LI><B>extentity</B></LI>
+    <UL>
+    <LI>share</LI>
+    <LI>entity</LI>
+    <LI>extutil</LI>
+    <LI>service</LI>
     </UL>
 <LI><B>minilang</B></LI>
     <UL>
