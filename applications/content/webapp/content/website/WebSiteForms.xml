@@ -23,68 +23,68 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
-	<form name="EditWebSite" type="single" 
-		target="updateWebSite" title="" default-map-name="webSite"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		
-		<alt-target use-when="webSite==null" target="createWebSite"/>
-		
-		<auto-fields-service service-name="updateWebSite" map-name=""/>
-		
-		<field use-when="webSite!=null" name="webSiteId" tooltip="This cannot be changed without re-creating the WebSite."><display/></field>
-		<field use-when="webSite==null&amp;&amp;webSiteId!=null" name="webSiteId" tooltip="Could not find WebSite with ID [${webSiteId}]"><text size="20" maxlength="20"/></field>
-		<!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
-		<field use-when="webSite==null&amp;&amp;webSiteId==null" name="webSiteId"><text size="20" maxlength="20"/></field>
+    <form name="EditWebSite" type="single" 
+        target="updateWebSite" title="" default-map-name="webSite"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <alt-target use-when="webSite==null" target="createWebSite"/>
+        
+        <auto-fields-service service-name="updateWebSite" map-name=""/>
+        
+        <field use-when="webSite!=null" name="webSiteId" tooltip="This cannot be changed without re-creating the WebSite."><display/></field>
+        <field use-when="webSite==null&amp;&amp;webSiteId!=null" name="webSiteId" tooltip="Could not find WebSite with ID [${webSiteId}]"><text size="20" maxlength="20"/></field>
+        <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
+        <field use-when="webSite==null&amp;&amp;webSiteId==null" name="webSiteId"><text size="20" maxlength="20"/></field>
 
-		<field name="siteName"><text size="30" maxlength="60"/></field>
-		<field name="enableHttps" widget-style="selectBox">
-		    <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
-		</field>
-		
-		<field name="productStoreId" widget-style="selectBox">
-		    <drop-down allow-empty="true">
-		        <entity-options entity-name="ProductStore" description="${storeName}">
-		        	<entity-order-by field-name="storeName"/>
-		        </entity-options>
-				<sub-hyperlink use-when="&quot;${webSite.productStoreId}&quot;.length()>0" link-style="buttontext" target-type="inter-app" target="/catalog/control/EditProductStore?productStoreId=${webSite.productStoreId}" description="Edit Product Store"/>
-		    </drop-down>
-		</field>
+        <field name="siteName"><text size="30" maxlength="60"/></field>
+        <field name="enableHttps" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        
+        <field name="productStoreId" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductStore" description="${storeName}">
+                    <entity-order-by field-name="storeName"/>
+                </entity-options>
+                <sub-hyperlink use-when="&quot;${webSite.productStoreId}&quot;.length()>0" link-style="buttontext" target-type="inter-app" target="/catalog/control/EditProductStore?productStoreId=${webSite.productStoreId}" description="Edit Product Store"/>
+            </drop-down>
+        </field>
 
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-	</form>
-	<form name="AddWebSiteRole" type="single" 
-		target="addWebSiteRole" title=""
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="addWebSiteRole"/>
-		<field name="webSiteId" map-name="webSite"><hidden/></field>
-		<field name="roleTypeId" title="Role" widget-style="selectBox">
-			<drop-down no-current-selected-key="_NA_">
-				<entity-options entity-name="RoleType" description="${description}">
-					<entity-order-by field-name="description"/>
-				</entity-options>
-			</drop-down>
-		</field>
-		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
-	</form>
-	<form name="UpdateWebSiteRole" type="list" 
-		target="updateWebSiteRole" title="" list-name="webSiteRoleDatas"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="updateWebSiteRole" map-name="webSiteRole"/>
-		<field name="webSiteId"><hidden/></field>
-		<!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
-		<field name="partyId" title="Party [ID]" widget-style="buttontext">
-			<hyperlink target-type="inter-app" target="/partymgr/control/viewprofile?partyId=${webSiteRole.partyId}"
-				description="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName} ${person.suffix} ${partyGroup.groupName} [${webSiteRole.partyId}]"/>
-		</field>
-		<field name="roleTypeId" title="Role" widget-style="tabletext">
-			<display description="${roleType.description}"/>
-		</field>
-		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
-		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="removeWebSiteRole?webSiteId=${webSiteRole.webSiteId}&amp;partyId=${webSiteRole.partyId}&amp;roleTypeId=${webSiteRole.roleTypeId}&amp;fromDate=${webSiteRole.fromDate}"
-				description="[Delete]" also-hidden="false"/>
-		</field>
-	</form>	
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="AddWebSiteRole" type="single" 
+        target="addWebSiteRole" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="addWebSiteRole"/>
+        <field name="webSiteId" map-name="webSite"><hidden/></field>
+        <field name="roleTypeId" title="Role" widget-style="selectBox">
+            <drop-down no-current-selected-key="_NA_">
+                <entity-options entity-name="RoleType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdateWebSiteRole" type="list" 
+        target="updateWebSiteRole" title="" list-name="webSiteRoleDatas"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateWebSiteRole" map-name="webSiteRole"/>
+        <field name="webSiteId"><hidden/></field>
+        <!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
+        <field name="partyId" title="Party [ID]" widget-style="buttontext">
+            <hyperlink target-type="inter-app" target="/partymgr/control/viewprofile?partyId=${webSiteRole.partyId}"
+                description="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName} ${person.suffix} ${partyGroup.groupName} [${webSiteRole.partyId}]"/>
+        </field>
+        <field name="roleTypeId" title="Role" widget-style="tabletext">
+            <display description="${roleType.description}"/>
+        </field>
+        <field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
+        <field name="thruDate" title="Thru Date &amp;amp; Time"></field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeWebSiteRole?webSiteId=${webSiteRole.webSiteId}&amp;partyId=${webSiteRole.partyId}&amp;roleTypeId=${webSiteRole.roleTypeId}&amp;fromDate=${webSiteRole.fromDate}"
+                description="[Delete]" also-hidden="false"/>
+        </field>
+    </form>    
 </forms>
