@@ -21,12 +21,13 @@
     <service name="testError" engine="java" export="true" validate="false" require-new-transaction="true" max-retry="1"
             location="org.ofbiz.common.CommonServices" invoke="returnErrorService">
     </service>
+    <!-- see serviceengin.xml to configure the rmi location alias -->
     <service name="testRmi" engine="rmi" validate="false"
-            location="rmi://localhost:1099/RMIDispatcher" invoke="testScv">
+            location="rmi" invoke="testScv">
         <implements service="testScv"/>
     </service>
     <service name="testRmiFail" engine="rmi" validate="false"
-            location="rmi://localhost:1099/RMIDispatcher" invoke="testBsh">
+            location="rmi" invoke="testBsh">
         <implements service="testScv"/>
     </service>
 

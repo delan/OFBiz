@@ -1,5 +1,5 @@
 /*
- * $Id: RmiServiceEngine.java,v 1.1 2003/12/02 16:49:03 ajzeneski Exp $
+ * $Id: RmiServiceEngine.java,v 1.2 2004/07/01 15:27:15 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import java.rmi.RemoteException;
  * RmiServiceEngine.java
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class RmiServiceEngine extends GenericAsyncEngine {
@@ -58,7 +58,7 @@ public class RmiServiceEngine extends GenericAsyncEngine {
         // locate the remote dispatcher
         RemoteDispatcher rd = null;
         try {
-            rd = (RemoteDispatcher) Naming.lookup(service.location);
+            rd = (RemoteDispatcher) Naming.lookup(this.getLocation(service));
         } catch (NotBoundException e) {
             throw new GenericServiceException("RemoteDispatcher not bound to : " + service.location, e);
         } catch (java.net.MalformedURLException e) {

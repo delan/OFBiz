@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAsyncEngine.java,v 1.4 2004/06/17 00:52:14 ajzeneski Exp $
+ * $Id: GenericAsyncEngine.java,v 1.5 2004/07/01 15:27:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,17 +48,15 @@ import org.ofbiz.service.job.JobManagerException;
  * Generic Asynchronous Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
-public abstract class GenericAsyncEngine implements GenericEngine {
+public abstract class GenericAsyncEngine extends AbstractEngine {
     
     public static final String module = GenericAsyncEngine.class.getName();
 
-    protected ServiceDispatcher dispatcher = null;
-    
     protected GenericAsyncEngine(ServiceDispatcher dispatcher) {
-        this.dispatcher = dispatcher;       
+        super(dispatcher);    
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * $Id: JmsServiceEngine.java,v 1.1 2003/08/17 05:12:38 ajzeneski Exp $
+ * $Id: JmsServiceEngine.java,v 1.2 2004/07/01 15:27:15 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,23 +65,23 @@ import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.engine.GenericEngine;
+import org.ofbiz.service.engine.AbstractEngine;
+
 import org.w3c.dom.Element;
 
 /**
  * AbstractJMSEngine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
-public class JmsServiceEngine implements GenericEngine {
+public class JmsServiceEngine extends AbstractEngine {
 
     public static final String module = JmsServiceEngine.class.getName();
 
-    protected ServiceDispatcher dispatcher;
-
     public JmsServiceEngine(ServiceDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
+        super(dispatcher);
     }
 
     protected Element getServiceElement(ModelService modelService) throws GenericServiceException {
@@ -92,10 +92,13 @@ public class JmsServiceEngine implements GenericEngine {
         } catch (GenericConfigException e) {
             throw new GenericServiceException("Error getting JMS Service element", e);
         }
-        Element serviceElement = UtilXml.firstChildElement(rootElement, "jms-service", "name", modelService.location);
+
+        String location = this.getLocation(modelService);
+
+        Element serviceElement = UtilXml.firstChildElement(rootElement, "jms-service", "name", location);
 
         if (serviceElement == null) {
-            throw new GenericServiceException("Cannot find an JMS service definition for the name [" + modelService.location + "] in the serviceengine.xml file");
+            throw new GenericServiceException("Cannot find an JMS service definition for the name [" + location + "] in the serviceengine.xml file");
         }
         return serviceElement;
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleServiceEngine.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: SimpleServiceEngine.java,v 1.2 2004/07/01 15:27:12 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.service.engine.GenericAsyncEngine;
  * Standard Java Static Method Service Engine
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public final class SimpleServiceEngine extends GenericAsyncEngine {
@@ -83,7 +83,7 @@ public final class SimpleServiceEngine extends GenericAsyncEngine {
         // current thread's ClassLoader by default if null passed in
 
         try {
-            return SimpleMethod.runSimpleService(modelService.location, modelService.invoke, dctx, context, classLoader);
+            return SimpleMethod.runSimpleService(this.getLocation(modelService), modelService.invoke, dctx, context, classLoader);
         } catch (MiniLangException e) {
             throw new GenericServiceException("Error running simple method [" + modelService.invoke +
                     "] in XML file [" + modelService.location + "]: ", e);

@@ -1,5 +1,5 @@
 /*
- * $Id: HttpEngine.java,v 1.3 2003/12/08 20:13:42 ajzeneski Exp $
+ * $Id: HttpEngine.java,v 1.4 2004/07/01 15:27:14 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceDispatcher;
  * HttpEngine.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class HttpEngine extends GenericAsyncEngine {
@@ -77,7 +77,7 @@ public class HttpEngine extends GenericAsyncEngine {
         if (xmlContext != null)
             parameters.put("serviceContext", xmlContext);
         
-        HttpClient http = new HttpClient(modelService.location, parameters);
+        HttpClient http = new HttpClient(this.getLocation(modelService), parameters);
         String postResult = null;        
         try {
             postResult = http.post();

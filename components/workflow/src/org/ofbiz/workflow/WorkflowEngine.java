@@ -1,5 +1,5 @@
 /*
- * $Id: WorkflowEngine.java,v 1.4 2004/06/17 00:52:16 ajzeneski Exp $
+ * $Id: WorkflowEngine.java,v 1.5 2004/07/01 15:27:16 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.GenericResultWaiter;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
-import org.ofbiz.service.engine.GenericEngine;
+import org.ofbiz.service.engine.AbstractEngine;
 import org.ofbiz.service.job.AbstractJob;
 import org.ofbiz.service.job.Job;
 import org.ofbiz.service.job.JobManagerException;
@@ -57,17 +57,15 @@ import org.ofbiz.service.job.JobManagerException;
  * WorkflowEngine - Workflow Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
-public class WorkflowEngine implements GenericEngine {
+public class WorkflowEngine extends AbstractEngine {
 
     public static final String module = WorkflowEngine.class.getName();
 
-    protected ServiceDispatcher dispatcher;
-     
     public WorkflowEngine(ServiceDispatcher dispatcher) {
-        this.dispatcher = dispatcher;      
+        super(dispatcher);
     }
        
     /**
@@ -130,10 +128,12 @@ public class WorkflowEngine implements GenericEngine {
             }
 
             // Get the package and process ID::VERSION
-            String packageId = this.getSplitPosition(modelService.location, 0);
-            String packageVersion = this.getSplitPosition(modelService.location, 1);
-            String processId = this.getSplitPosition(modelService.invoke, 0);
-            String processVersion = this.getSplitPosition(modelService.invoke, 1);
+            String location = this.getLocation(modelService);
+            String invoke = modelService.invoke;
+            String packageId = this.getSplitPosition(location, 0);
+            String packageVersion = this.getSplitPosition(location, 1);
+            String processId = this.getSplitPosition(invoke, 0);
+            String processVersion = this.getSplitPosition(invoke, 1);
 
             // Build the process manager
             WfProcessMgr mgr = null;

@@ -1,5 +1,5 @@
 /*
- * $Id: SharkServiceEngine.java,v 1.1 2004/04/22 15:41:08 ajzeneski Exp $
+ * $Id: SharkServiceEngine.java,v 1.2 2004/07/01 15:27:15 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,16 +26,14 @@ package org.ofbiz.shark.service;
 
 import java.util.Map;
 
-import org.ofbiz.service.engine.GenericEngine;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.ServiceDispatcher;
+import org.ofbiz.service.engine.AbstractEngine;
 import org.ofbiz.shark.container.SharkContainer;
-import org.ofbiz.shark.requester.LoggingRequester;
 import org.ofbiz.shark.requester.PersistentRequester;
 import org.ofbiz.shark.requester.RequesterFactory;
-import org.ofbiz.entity.GenericValue;
 
 import org.enhydra.shark.api.client.wfservice.AdminInterface;
 import org.enhydra.shark.api.client.wfservice.ExecutionAdministration;
@@ -48,16 +46,15 @@ import org.enhydra.shark.api.client.wfmodel.*;
  * Shark Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
-public class SharkServiceEngine implements GenericEngine {
+public class SharkServiceEngine extends AbstractEngine {
 
     public static final String module = SharkServiceEngine.class.getName();
-    protected ServiceDispatcher dispatcher = null;
 
     public SharkServiceEngine(ServiceDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
+        super(dispatcher);
     }
 
     /**
@@ -131,7 +128,7 @@ public class SharkServiceEngine implements GenericEngine {
 
         WfProcessMgr mgr = null;
         try {
-            mgr = exec.getProcessMgr(model.location, model.name);
+            mgr = exec.getProcessMgr(this.getLocation(model), model.name);
         } catch (BaseException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (NotConnected notConnected) {
