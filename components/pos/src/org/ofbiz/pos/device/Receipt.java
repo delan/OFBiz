@@ -146,7 +146,11 @@ public class Receipt extends GenericDevice implements DialogCallback {
                 if (info.containsKey("cardNumber")) {
                     this.printReceipt(trans, storeReceipt, 1, info);
                 }
-            }
+                try {
+                    Thread.sleep(2000);
+                } catch (Exception e) {
+                }
+            }                        
         }
 
         // print the customer receipt
