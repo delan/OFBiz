@@ -483,6 +483,7 @@ engine and facilitate related operations.
     map-name CDATA #REQUIRED
     value-name CDATA #REQUIRED
     use-cache ( true | false ) "false"
+    fields-to-select-list CDATA #IMPLIED
     delegator-name CDATA #IMPLIED
 >
 <!ELEMENT find-by-and EMPTY>

@@ -59,6 +59,19 @@
         <description>Discontinue Product Sales</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <service name="countProductView" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="countProductView" auth="false">
+        <description>count Product View</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="weight" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="countProductQuantityOrdered" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="countProductQuantityOrdered" auth="true">
+        <description>count Product Quantity Ordered</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+    </service>
 
     <service name="createProductReview" engine="simple"
             location="org/ofbiz/product/product/ProductServices.xml" invoke="createProductReview" auth="true">

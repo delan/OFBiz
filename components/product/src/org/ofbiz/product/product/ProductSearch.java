@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.31 2004/05/08 17:40:35 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.32 2004/05/10 17:41:45 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -1037,22 +1037,46 @@ public class ProductSearch {
         }
     }
 
-    public static class SortListPrice extends ResultSortOrder {
+    public static class SortProductPrice extends ResultSortOrder {
+        protected String productPriceTypeId;
         protected boolean ascending;
-        public SortListPrice(boolean ascending) {
+        public SortProductPrice(String productPriceTypeId, boolean ascending) {
+            this.productPriceTypeId = productPriceTypeId;
             this.ascending = ascending;
         }
 
         public void setSortOrder(ProductSearchContext productSearchContext) {
             // TODO: implement SortListPrice, this will be a bit more complex, need to add a ProductPrice member entity
+            productSearchContext.dynamicViewEntity.addMemberEntity("SPPRC", "ProductPrice");
+            productSearchContext.dynamicViewEntity.addViewLink("PROD", "SPPRC", Boolean.TRUE, UtilMisc.toList(new ModelKeyMap("productId", "productId")));
+            // TODO: add uom and store group fields, set values as needed like productPriceTypeId
+            productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortProductPriceTypeId", "productPriceTypeId", null, null, null, null);
+            productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortPrice", "price", null, null, null, null);
+            
+            productSearchContext.entityConditionList.add(new EntityExpr("sortProductPriceTypeId", EntityOperator.EQUALS, this.productPriceTypeId));
+
+            if (ascending) {
+                productSearchContext.orderByList.add("+sortPrice");
+            } else {
+                productSearchContext.orderByList.add("-sortPrice");
+            }
+            productSearchContext.fieldsToSelect.add("sortPrice");
         }
 
         public String getOrderName() {
-            return "ListPrice";
+            return "ProductPrice:" + productPriceTypeId;
         }
 
         public String prettyPrintSortOrder(boolean detailed) {
-            return "List Price (" + (this.ascending ? "Low to High)" : "High to Low)");
+            String priceTypeName = null;
+            if ("LIST_PRICE".equals(this.productPriceTypeId)) {
+                priceTypeName = "List Price";
+            } else if ("DEFAULT_PRICE".equals(this.productPriceTypeId)) {
+                priceTypeName = "Default Price";
+            } else if ("AVERAGE_COST".equals(this.productPriceTypeId)) {
+                priceTypeName = "Average Cost";
+            }
+            return (priceTypeName == null ? "Price" : priceTypeName) + " (" + (this.ascending ? "Low to High)" : "High to Low)");
         }
 
         public boolean isAscending() {

@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  -->
 
@@ -282,6 +282,57 @@
                 <store-value value-name="assocProductAssoc"/>
             </if-empty>
         </iterate>
+    </simple-method>
+
+    <simple-method method-name="countProductView" short-description="Count Product View" login-required="false">
+        <env-to-env env-name="parameters.productId" to-env-name="productLookupMap.productId"/>
+        <string-to-list string="totalTimesViewed" list-name="fieldsToSelect"/>
+        <string-to-list string="isVariant" list-name="fieldsToSelect"/>
+        <find-by-primary-key entity-name="Product" map-name="productLookupMap" fields-to-select-list="fieldsToSelect" value-name="product" use-cache="false"/>
+        <if-empty field-name="parameters.weight">
+            <calculate field-name="parameters.weight" type="Long"><number value="1"/></calculate>
+        </if-empty>
+        <calculate field-name="product.totalTimesViewed" type="Long">
+            <calcop field-name="product.totalTimesViewed" operator="add">
+                <calcop field-name="parameters.weight" operator="get"></calcop>
+            </calcop>
+        </calculate>
+        <store-value value-name="product"/>
+
+        <!-- do the same for the virtual product... -->
+        <call-class-method class-name="org.ofbiz.product.product.ProductWorker" method-name="getVariantVirtualId" ret-field-name="virtualProductId">
+            <field field-name="product" type="GenericValue"/>
+        </call-class-method>
+        <if-not-empty field-name="virtualProductId">
+            <env-to-env env-name="virtualProductId" to-env-name="callSubMap.productId"/>
+            <env-to-env env-name="parameters.weight" to-env-name="callSubMap.weight"/>
+            <call-service service-name="countProductView" in-map-name="callSubMap"></call-service>
+        </if-not-empty>
+    </simple-method>
+    <simple-method method-name="countProductQuantityOrdered" short-description="Count Product Quantity Ordered" login-required="true">
+        <env-to-env env-name="parameters.productId" to-env-name="productLookupMap.productId"/>
+        <string-to-list string="totalQuantityOrdered" list-name="fieldsToSelect"/>
+        <string-to-list string="isVariant" list-name="fieldsToSelect"/>
+        <find-by-primary-key entity-name="Product" map-name="productLookupMap" fields-to-select-list="fieldsToSelect" value-name="product" use-cache="false"/>
+        <if-empty field-name="parameters.quantity">
+            <calculate field-name="parameters.quantity" type="Double"><number value="1"/></calculate>
+        </if-empty>
+        <calculate field-name="product.totalQuantityOrdered" type="Double">
+            <calcop field-name="product.totalQuantityOrdered" operator="add">
+                <calcop field-name="parameters.quantity" operator="get"></calcop>
+            </calcop>
+        </calculate>
+        <store-value value-name="product"/>
+
+        <!-- do the same for the virtual product... -->
+        <call-class-method class-name="org.ofbiz.product.product.ProductWorker" method-name="getVariantVirtualId" ret-field-name="virtualProductId">
+            <field field-name="product" type="GenericValue"/>
+        </call-class-method>
+        <if-not-empty field-name="virtualProductId">
+            <env-to-env env-name="virtualProductId" to-env-name="callSubMap.productId"/>
+            <env-to-env env-name="parameters.quantity" to-env-name="callSubMap.quantity"/>
+            <call-service service-name="countProductQuantityOrdered" in-map-name="callSubMap"></call-service>
+        </if-not-empty>
     </simple-method>
 
     <!-- GoodIdentification methods -->
