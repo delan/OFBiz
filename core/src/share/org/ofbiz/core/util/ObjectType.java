@@ -39,12 +39,12 @@ public class ObjectType {
     public static final String module = ObjectType.class.getName();
 
     protected static Map classCache = new HashMap();
-    
+
     public static final String LANG_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
     public static final String SQL_PACKAGE = "java.sql.";   // We will test both the raw value and this + raw value
 
     public static Map classNameClassMap = new HashMap();
-    
+
     static {
         //setup some commonly used classes...
         classNameClassMap.put("Object", java.lang.Object.class);
@@ -61,14 +61,14 @@ public class ObjectType {
         classNameClassMap.put("java.lang.Long", java.lang.Long.class);
         classNameClassMap.put("Integer", java.lang.Integer.class);
         classNameClassMap.put("java.lang.Integer", java.lang.Integer.class);
-        
+
         classNameClassMap.put("Timestamp", java.sql.Timestamp.class);
         classNameClassMap.put("java.sql.Timestamp", java.sql.Timestamp.class);
         classNameClassMap.put("Time", java.sql.Time.class);
         classNameClassMap.put("java.sql.Time", java.sql.Time.class);
         classNameClassMap.put("Date", java.sql.Date.class);
         classNameClassMap.put("java.sql.Date", java.sql.Date.class);
-        
+
         classNameClassMap.put("java.util.Date", java.util.Date.class);
         classNameClassMap.put("Collection", java.util.Collection.class);
         classNameClassMap.put("java.util.Collection", java.util.Collection.class);
@@ -80,7 +80,7 @@ public class ObjectType {
         classNameClassMap.put("java.util.Map", java.util.Map.class);
         classNameClassMap.put("HashMap", java.util.HashMap.class);
         classNameClassMap.put("java.util.HashMap", java.util.HashMap.class);
-        
+
         try {
             //note: loadClass is necessary for these since the ObjectType class doesn't know anything about the Entity Engine at compile time
             classNameClassMap.put("GenericValue", loadClass("org.ofbiz.core.entity.GenericValue"));
@@ -93,7 +93,7 @@ public class ObjectType {
             Debug.logError(e, "Could not pre-initialize dynamically loaded class: ");
         }
     }
-    
+
     /** Loads a class with the current thread's context classloader
      * @param className The name of the class to load
      */
@@ -104,7 +104,7 @@ public class ObjectType {
 
         return loadClass(className, null);
     }
-    
+
     /** Loads a class with the current thread's context classloader
      * @param className The name of the class to load
      */
@@ -114,7 +114,7 @@ public class ObjectType {
         if (theClass != null) return theClass;
 
         if (loader == null) loader = Thread.currentThread().getContextClassLoader();
-        
+
         try {
             theClass = loader.loadClass(className);
         } catch (Exception e) {
@@ -132,7 +132,7 @@ public class ObjectType {
                 }
             }
         }
-        
+
         return theClass;
     }
 
@@ -228,6 +228,7 @@ public class ObjectType {
     public static boolean instanceOf(Object obj, String typeName) {
         return instanceOf(obj, typeName, null);
     }
+
     /** Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeObject Object to test against
@@ -565,7 +566,7 @@ public class ObjectType {
     }
 
     public static Boolean doRealCompare(Object value1, Object value2, String operator, String type, String format,
-            List messages, Locale locale, ClassLoader loader) {
+                                        List messages, Locale locale, ClassLoader loader) {
         boolean verboseOn = Debug.verboseOn();
         if (verboseOn) Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"");
 
@@ -580,25 +581,27 @@ public class ObjectType {
         }
 
         Object convertedValue2 = null;
-        try {
-            convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format, locale);
-        } catch (GeneralException e) {
-            messages.add("Could not convert value2 for comparison: " + e.getMessage());
-            return null;
+        if (value2 != null) {
+            try {
+                convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format, locale);
+            } catch (GeneralException e) {
+                messages.add("Could not convert value2 for comparison: " + e.getMessage());
+                return null;
+            }
         }
 
         if (convertedValue1 == null) {
             if (verboseOn) Debug.logVerbose("Value1 was null, cannot complete comparison");
             return null;
         }
-        if (convertedValue2 == null) {
+        if (convertedValue2 == null && !"is-not-null".equals(operator) && !"is-null".equals(operator)) {
             if (verboseOn) Debug.logVerbose("Value2 was null, cannot complete comparison");
             return null;
         }
 
         if ("contains".equals(operator)) {
             if (!"String".equals(type) && !"PlainString".equals(type)) {
-                messages.add("Error in MiniLang XML file: cannot do a contains compare with a non-String type");
+                messages.add("Error in XML file: cannot do a contains compare with a non-String type");
                 return null;
             }
 
@@ -607,6 +610,14 @@ public class ObjectType {
             if (str1.indexOf(str2) < 0) {
                 return Boolean.FALSE;
             }
+        }
+
+        if ("is-null".equals(operator) || "is-not-null".equals(operator)) {
+            if (value1 == null && "is-null".equals(operator))
+                return Boolean.TRUE;
+            if (value1 != null && "is-not-null".equals(operator))
+                return Boolean.TRUE;
+            return Boolean.FALSE;
         }
 
         if ("String".equals(type) || "PlainString".equals(type)) {

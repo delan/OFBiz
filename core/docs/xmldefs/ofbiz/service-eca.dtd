@@ -41,8 +41,8 @@
 <!ATTLIST condition
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
-    operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
-    value CDATA #REQUIRED
+    operator ( less | greater | less-equals | greater-equals | equals | not-equals | is-null | is-not-null | contains ) #REQUIRED
+    value CDATA #IMPLIED
     type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Object ) "String"
     format CDATA #IMPLIED
 >
