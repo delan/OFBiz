@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<forms>
+    <form name="findContent" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        default-entity-name="ContentAssocDataResourceViewFrom"
+        target="CMSContentFind" title="" type="single">
+        <field name="caContentIdTo" title="Publish-to content" ><text-find/></field>
+        <field name="caMapKey" title="Map Key" ><text-find/></field>
+        <field name="caContentAssocTypeId" title="Assoc Type Id" ><text-find/></field>
+        <field name="caFromDate" title="From Date" ><date-find/></field>
+        <field name="contentId" title="Content Id" ><text-find/></field>
+        <field name="dataResourceId" title="Data Resource Id" ><text-find/></field>
+        <field name="contentName" title="Name" ><text-find/></field>
+        <field name="submitButton" title="Find" widget-style="standardSubmit"><submit button-type="button"/></field>
+<!--
+        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
+        </field>
+-->
+
+    </form>
+
+    <form name="listFindContent" type="list" target="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" paginate-target="/FindContent">
+        <field name="editContent" title="">
+            <hyperlink also-hidden="false" description="Edit" target="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/> 
+<!--
+            <hyperlink also-hidden="false" description="Edit" target="EditContent?caContentIdTo=${caContentIdTo}&amp;caFromDate=${caFromDate}&amp;contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}&amp;caContentId=${contentId}&amp;contentIdStart=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}"/> 
+-->
+        </field>
+<!--
+        <field name="caContentIdTo" title="Publish-to content" ><display/></field>
+        <field name="caMapKey" title="Map Key" ><display/></field>
+        <field name="caFromDate" title="From Date" ><display/></field>
+-->
+        <field name="contentId" title="Content Id" ><display/></field>
+        <field name="dataResourceId" title="Data Resource Id" ><display/></field>
+        <field name="contentName" title="Name" ><display/></field>
+    </form>
+
+    <form name="EditContent" target="uploadContentAndImage" title="" type="upload"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="imageData" >
+            <file />
+        </field>
+        <field name="dataResourceId" >
+            <drop-down allow-empty="false" no-current-selected-key="TEMPLATE_TEXT_ONLY">
+                <option key="TEMPLATE_TEXT_ONLY" description="Text only" />
+                <option key="TEMPLATE_IMAGE_CENTERED" description="Image centered above" />
+                <option key="TEMPLATE_IMAGE_LEFT" description="Image left, text flows around." />
+            </drop-down>
+        </field>
+        <field name="ftlContentId" position="1">
+            <display description="${ftlContentId}" />
+        </field>
+        <field name="contentIdTo" position="2">
+            <display description="${contentIdTo}" />
+        </field>
+        <field name="ownerContentId" >
+            <hidden value="${contentIdTo}" />
+        </field>
+        <field name="contentName">
+            <text/>
+        </field>
+        <field name="description">
+            <text size="60"/>
+        </field>
+       <field name="summaryData" title="Summary"
+            use-when="&quot;${summaryDataResourceTypeId}&quot;.length()>0"
+            id-name="summaryData">
+                <textarea rows="8" cols="80" />
+        </field>
+
+        <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="60"/></field>
+        <field name="statusId" >
+            <drop-down allow-empty="false" no-current-selected-key="SUBSCRIBE_BRONZE">
+                <list-options list-name="statusList" key-name="statusId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="privilegeEnumId" >
+            <drop-down allow-empty="false" no-current-selected-key="SUBSCRIBE_BRONZE">
+                <list-options list-name="privilegeList" key-name="enumId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="section" >
+            <drop-down no-current-selected-key="${targetSection}" allow-empty="true">
+                <list-options list-name="sectionList" key-name="contentId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="topic" position="1">
+            <drop-down  no-current-selected-key="${targetTopic}" allow-empty="true">
+                <list-options list-name="topicList" key-name="contentId" description="${description}"/>
+            </drop-down>
+        </field>
+        <!--
+        <field name="newTopicId" position="2">
+            <text size="12"/>
+        </field>
+        <field name="newTopicDescription" title="Description"  position="3">
+            <text size="24"/>
+        </field>
+        <field name="createTopic" title=""  position="4">
+            <hyperlink also-hidden="false" target="createTopic${pageName}?mode=restore" description="Create Topic"/>
+        </field>
+        -->
+        <field name="submitButton" title="Upload" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="ftlContentId" >
+            <hidden />
+        </field>
+        <field name="sumContentId" >
+            <hidden />
+        </field>
+        <field name="txtContentId" >
+            <hidden />
+        </field>
+        <field name="imgContentId" >
+            <hidden />
+        </field>
+        <field name="ftlDataResourceId" >
+            <hidden />
+        </field>
+        <field name="sumDataResourceId" >
+            <hidden />
+        </field>
+        <field name="txtDataResourceId" >
+            <hidden />
+        </field>
+        <field name="imgDataResourceId" >
+            <hidden />
+        </field>
+        <field name="statusId" >
+            <hidden />
+        </field>
+       <field name="contentPurposeString" >
+                <hidden value="${contentPurposeTypeId}"/>
+        </field>
+       <field name="targetOperationString" >
+                <hidden value="${targetOperation}"/>
+        </field>
+       <field name="nodeTrailCsv" >
+                <hidden value="${nodeTrailCsv}"/>
+        </field>
+    </form>
+</forms>
