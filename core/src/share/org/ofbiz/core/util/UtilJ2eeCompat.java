@@ -46,6 +46,7 @@ public class UtilJ2eeCompat {
     public static final String REX_IP = "TradeCity";
     public static final String OC4J = "Oracle";
     public static final String JRUN = "JRun";
+    public static final String JETTY = "Jetty";
 
     protected static Boolean doFlushOnRenderValue = null;
     protected static Boolean useOutputStreamNotWriterValue = null;
@@ -89,6 +90,9 @@ public class UtilJ2eeCompat {
                 usestream = false;
             } else if (serverInfo.indexOf(JRUN) >= 0) {
                 Debug.logImportant("JRun detected, using response.getWriter to write text out instead of response.getOutputStream");
+                usestream = false;
+            } else if (serverInfo.indexOf(JETTY) >= 0) {
+                Debug.logImportant("Jetty detected, using response.getWriter to write text out instead of response.getOutputStream");
                 usestream = false;
             } else if (serverInfo.indexOf(ORION) >= 0) {
                 Debug.logImportant("Orion detected, using non-nested JspException");
