@@ -23,16 +23,26 @@
  */
 package org.ofbiz.commonapp.order.shoppingcart;
 
-import java.text.*;
-import java.util.*;
-import javax.servlet.http.*;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import javax.servlet.http.HttpSession;
+
 import org.ofbiz.commonapp.order.order.OrderReadHelper;
-
-import sun.security.krb5.internal.crypto.r;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericPK;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.util.UtilProperties;
 
 /**
  * <p><b>Title:</b> ShoppingCart.java

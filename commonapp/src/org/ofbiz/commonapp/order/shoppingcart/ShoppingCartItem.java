@@ -23,15 +23,28 @@
  */
 package org.ofbiz.commonapp.order.shoppingcart;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
-
-import org.ofbiz.commonapp.order.order.*;
-import org.ofbiz.commonapp.product.catalog.*;
-import org.ofbiz.commonapp.product.category.*;
+import org.ofbiz.commonapp.order.order.OrderReadHelper;
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.commonapp.product.category.CategoryWorker;
+import org.ofbiz.core.entity.EntityUtil;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilDateTime;
+import org.ofbiz.core.util.UtilFormatOut;
+import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.util.UtilValidate;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -47,15 +60,15 @@ public class ShoppingCartItem implements java.io.Serializable {
     public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId" };
     
     private transient GenericDelegator delegator = null;
-    private transient GenericValue _product = null;
-    /** this is a virtual product that the current product may inherit information from */
-    private transient GenericValue _parentProduct = null;
+    private transient GenericValue _product = null;       // the actual product    
+    private transient GenericValue _parentProduct = null; // the virtual product 
 
     private String delegatorName = null;
     private String prodCatalogId = null;
     private String webSiteId = null;
     private String productId = null;
     private String itemComment = null;
+    private String itemDescription = null;
     private double quantity = 0.0;
     private double basePrice = 0.0;
     private double listPrice = 0.0;
