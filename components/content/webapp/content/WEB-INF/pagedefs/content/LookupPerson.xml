@@ -5,7 +5,7 @@
     <property name="formDefFile">/content/ContentForms.xml</property>    
     <property name="singleFormName">lookupPerson</property>    
     <property name="listFormName">listLookupPerson</property>    
-    <property name="lruFormName">lruLookupPerson</property>    
+    <property name="mruFormName">mruLookupPerson</property>    
     <property name="subMenu">/content/content_menu.ftl</property>    
     <property name="headerItem">Content</property>    
     <property name="entityName">Person</property>    
@@ -13,6 +13,6 @@
     <property name="permission">PARTYMGR</property>    
     <property name="permissionType">simple</property>    
     <page-action name="/includes/findprep.bsh"/>
-    <page-action name="/includes/lruprep.bsh"/>
+    <page-action name="/includes/mruprep.bsh"/>
     <page-action name="/includes/pagelistprep.bsh"/>
 </page>

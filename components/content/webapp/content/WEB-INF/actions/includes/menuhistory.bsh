@@ -17,7 +17,12 @@ if (queryString != null) queryString = "?" + queryString;
 else queryString = "";
 String thisPath		= request.getRequestURI();
 String menuPath		= page.getProperty("headerItem");
+String pageName		= page.getPageName();
+String pagePath		= page.getPath();
 org.ofbiz.base.util.Debug.logInfo(" menuPath:" + menuPath, "");
 org.ofbiz.base.util.Debug.logInfo(" path:" + thisPath + "   :   " + queryString, "");
-menuHistory.put(menuPath, thisPath + queryString);
+org.ofbiz.base.util.Debug.logInfo(" pageName:" + pageName, "");
+org.ofbiz.base.util.Debug.logInfo(" pagePath:" + pagePath, "");
+//menuHistory.put(menuPath, thisPath + queryString);
+menuHistory.put(menuPath, "/content/control/" + pageName + queryString);
 

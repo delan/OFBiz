@@ -1,5 +1,5 @@
 /*
- * $Id: findprep.bsh,v 1.6 2003/11/04 23:58:06 byersa Exp $
+ * $Id: findprep.bsh,v 1.7 2003/12/05 21:55:34 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.1
 
  * Calls performFind service to return an EntityListIterator of the
@@ -51,6 +51,8 @@ import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
 import org.ofbiz.content.widget.html.*;
 import org.ofbiz.content.widget.form.*;
+import org.ofbiz.base.util.BshUtil;
+import bsh.EvalError;
 
 
 import java.util.ListIterator;
@@ -66,6 +68,17 @@ singleFormName		= page.getProperty("singleFormName");
 
 HashMap inMap    		= new HashMap();
 inMap.put("entityName", entityName);
+
+//preload the query 
+staticConditionsStr = page.getProperty("staticConditions");
+if (staticConditionsStr != null && staticConditionsStr.length() > 0) {
+    String [] staticConditions = BshUtil.eval("String [] cond=" 
+                      + staticConditionsStr + "; return cond;",new HashMap());
+    for(int i=0; i < staticConditions.length; i += 2) {
+        inputFields.put(staticConditions[i], staticConditions[i+1]);
+    }
+}
+Debug.logInfo("inputFields:"+ inputFields, "");
 inMap.put("inputFields", inputFields);
 Map result    		= null;
 try {
