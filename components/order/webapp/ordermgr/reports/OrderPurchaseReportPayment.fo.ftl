@@ -37,7 +37,7 @@
 
 <fo:layout-master-set>
     <fo:simple-page-master master-name="main" page-height="11in" page-width="8.5in"
-            margin-top="0.5in" margin-bottom="1in" margin-left="1in" margin-right="1in">
+            margin-top="0.5in" margin-bottom="1in" margin-left="0.5in" margin-right="0.5in">
         <fo:region-body margin-top="1in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>
@@ -45,7 +45,7 @@
 </fo:layout-master-set>
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
 
-<#if orderPurchaseProductSummaryList?has_content>
+<#if orderPurchasePaymentSummaryList?has_content>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
             <fo:block font-size="14pt">Purchase by Product Summary</fo:block>
@@ -58,60 +58,50 @@
             <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table>
                 <#if showProductStore><fo:table-column column-width="50pt"/></#if>
-                <#if showOriginFacility><fo:table-column column-width="50pt"/></#if>
+                <#if showOriginFacility><fo:table-column column-width="80pt"/></#if>
                 <#if showTerminal><fo:table-column column-width="50pt"/></#if>
-                <#if showStatus><fo:table-column column-width="50pt"/></#if>
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="120pt"/>
-                <fo:table-column column-width="40pt"/>
-                <fo:table-column column-width="40pt"/>
+                <#if showStatus><fo:table-column column-width="110pt"/></#if>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="60pt"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
                         <#if showProductStore><fo:table-cell border-bottom="thin solid grey"><fo:block>Store ID</fo:block></fo:table-cell></#if>
                         <#if showOriginFacility><fo:table-cell border-bottom="thin solid grey"><fo:block>Facility ID</fo:block></fo:table-cell></#if>
                         <#if showTerminal><fo:table-cell border-bottom="thin solid grey"><fo:block>Terminal ID</fo:block></fo:table-cell></#if>
                         <#if showStatus><fo:table-cell border-bottom="thin solid grey"><fo:block>Status ID</fo:block></fo:table-cell></#if>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Product ID</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Product Name</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Qty</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Qty Cncld</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Payment Method</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Amount</fo:block></fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
                     <#assign rowColor = "white">
-                    <#list orderPurchaseProductSummaryList as orderPurchaseProductSummary>
+                    <#list orderPurchasePaymentSummaryList as orderPurchasePaymentSummary>
                         <fo:table-row>
                             <#if showProductStore>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${orderPurchaseProductSummary.productStoreId?if_exists}</fo:block>
+                                    <fo:block>${orderPurchasePaymentSummary.productStoreId?if_exists}</fo:block>
                                 </fo:table-cell>
                             </#if>
                             <#if showOriginFacility>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${orderPurchaseProductSummary.originFacilityId?if_exists}</fo:block>
+                                    <fo:block>${orderPurchasePaymentSummary.originFacilityId?if_exists}</fo:block>
                                 </fo:table-cell>
                             </#if>
                             <#if showTerminal>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${orderPurchaseProductSummary.terminalId?if_exists}</fo:block>
+                                    <fo:block>${orderPurchasePaymentSummary.terminalId?if_exists}</fo:block>
                                 </fo:table-cell>
                             </#if>
                             <#if showStatus>
                                 <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                    <fo:block>${orderPurchaseProductSummary.statusId?if_exists}</fo:block>
+                                    <fo:block>${orderPurchasePaymentSummary.statusId?if_exists}</fo:block>
                                 </fo:table-cell>
                             </#if>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${orderPurchaseProductSummary.productId?if_exists}</fo:block>
+                                <fo:block>${orderPurchasePaymentSummary.description?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${orderPurchaseProductSummary.internalName?if_exists}</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${orderPurchaseProductSummary.quantity?if_exists}</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${orderPurchaseProductSummary.cancelQuantity?if_exists}</fo:block>
+                                <fo:block>${orderPurchasePaymentSummary.maxAmount?if_exists}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                         <#-- toggle the row color -->
@@ -130,7 +120,7 @@
     <fo:page-sequence master-reference="main">
     <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
         <fo:block font-size="14pt">
-            No Purchased Product Information Found.
+            No Purchase Payment Method Information Found.
         </fo:block>
     </fo:flow>
     </fo:page-sequence>
