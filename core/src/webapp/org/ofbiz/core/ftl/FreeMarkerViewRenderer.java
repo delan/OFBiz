@@ -49,6 +49,7 @@ import org.ofbiz.core.util.*;
  * JPublish View Renderer For Freemarker Template Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision$
  * @since      2.1
  */
@@ -78,7 +79,9 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
                  Object value = context.get(key);
                  if (value != null) {
                      contextMap.put(key, value);
-                     root.put(key, wrapper.wrap(value));
+                     //no longer wrapping; let FM do it if needed, more efficient
+                     //root.put(key, wrapper.wrap(value));
+                     root.put(key, value);
                  }
                  //Debug.logInfo("Key: " + key + " Value: " + context.get(key), module);
              }
@@ -88,5 +91,20 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
              throw new ViewRenderException(e);            
          }          
          return root;         
+    }
+
+    public void render(JPublishContext context, String path, Reader in, Writer out) throws IOException, ViewRenderException{
+        if (Debug.verboseOn()) Debug.logVerbose("render(" + path + ")");
+        try{
+            Page page = (Page)context.get(JPublishContext.JPUBLISH_PAGE);
+            Object viewContext = createViewContext(context, path);
+            Template template = fmConfig.getTemplate(path, page.getLocale());
+            template.setObjectWrapper(BeansWrapper.getDefaultInstance());
+            template.process(viewContext, out);
+        } catch(IOException e){
+            throw e;
+        } catch(Exception e){
+            throw new ViewRenderException(e);
+        }
     }
 }

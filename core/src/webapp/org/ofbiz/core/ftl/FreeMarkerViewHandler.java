@@ -56,6 +56,10 @@ public class FreeMarkerViewHandler implements ViewHandler {
     
     public static final String module = FreeMarkerViewHandler.class.getName();
     
+    public static OfbizUrlTransform ofbizUrl = new OfbizUrlTransform();
+    public static OfbizContentTransform ofbizContentUrl = new OfbizContentTransform();
+    public static SetRequestAttributeMethod setRequestAttribute = new SetRequestAttributeMethod();
+    
     protected ServletContext servletContext = null;
     protected Configuration config = null;
 
@@ -109,45 +113,46 @@ public class FreeMarkerViewHandler implements ViewHandler {
         
         root.put("Static", wrapper.getStaticModels());
 
-        try {
+        //NOTE: no longer wrapping for efficiency reasons, FreeMarker will wrap on the fly
+        //try {
             // add in the OFBiz objects
-            root.put("delegator", wrapper.wrap(request.getAttribute("delegator")));
-            root.put("dispatcher", wrapper.wrap(request.getAttribute("dispatcher")));
-            root.put("security", wrapper.wrap(request.getAttribute("security")));
-            root.put("userLogin", wrapper.wrap(session.getAttribute("userLogin")));
+            root.put("delegator", request.getAttribute("delegator"));
+            root.put("dispatcher", request.getAttribute("dispatcher"));
+            root.put("security", request.getAttribute("security"));
+            root.put("userLogin", session.getAttribute("userLogin"));
 
             // add the response object (for transforms) to the context as a BeanModel
-            root.put("response", wrapper.wrap(response));
+            root.put("response", response);
             
             // add the application object (for transforms) to the context as a BeanModel
-            root.put("application", wrapper.wrap(servletContext));
+            root.put("application", servletContext);
             
             // add the servlet context -- this has been deprecated, and now requires servlet, do we really need it?
             //root.put("applicationAttributes", new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance()));                       
                                  
             // add the session object (for transforms) to the context as a BeanModel
-            root.put("session", wrapper.wrap(session));
+            root.put("session", session);
 
             // add the session
             root.put("sessionAttributes", new HttpSessionHashModel(session, wrapper));
 
             // add the request object (for transforms) to the context as a BeanModel
-            root.put("request", wrapper.wrap(request));
+            root.put("request", request);
 
             // add the request
             root.put("requestAttributes", new HttpRequestHashModel(request, wrapper));
 
             // add the request parameters -- this now uses a Map from UtilHttp
             Map requestParameters = UtilHttp.getParameterMap(request);
-            root.put("requestParameters", wrapper.wrap(requestParameters));
+            root.put("requestParameters", requestParameters);
 
-        } catch (freemarker.template.TemplateModelException e) {
-            Debug.logError(e, "Error creating template model in OFBiz FreeMarker preparation");
-        }
+        //} catch (freemarker.template.TemplateModelException e) {
+        //    Debug.logError(e, "Error creating template model in OFBiz FreeMarker preparation");
+        //}
         
         // add the OFBiz transforms/methods
-        root.put("ofbizUrl", new OfbizUrlTransform());
-        root.put("ofbizContentUrl", new OfbizContentTransform());
-        root.put("setRequestAttribute", new SetRequestAttributeMethod());
+        root.put("ofbizUrl", ofbizUrl);
+        root.put("ofbizContentUrl", ofbizContentUrl);
+        root.put("setRequestAttribute", setRequestAttribute);
     }
 }
