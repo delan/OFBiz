@@ -26,10 +26,8 @@ package org.ofbiz.content.widget.form;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 
@@ -47,11 +45,8 @@ import org.ofbiz.entity.finder.ByAndFinder;
 import org.ofbiz.entity.finder.ByConditionFinder;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.entity.util.EntityListIterator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 
@@ -390,29 +385,34 @@ public abstract class ModelFormAction {
 
     public static class EntityAnd extends ModelFormAction {
         protected ByAndFinder finder;
+        String actualListName;
         
         public EntityAnd(ModelForm modelForm, Element entityAndElement) {
             super (modelForm, entityAndElement);
-            Document ownerDoc = entityAndElement.getOwnerDocument();
-            boolean useCache = "true".equalsIgnoreCase(entityAndElement.getAttribute("use-cache"));
-            if (!useCache)
-                UtilXml.addChildElement(entityAndElement, "use-iterator", ownerDoc);
+
+            //don't want to default to the iterator, should be specified explicitly, not the default
+            // Document ownerDoc = entityAndElement.getOwnerDocument();
+            // boolean useCache = "true".equalsIgnoreCase(entityAndElement.getAttribute("use-cache"));
+            // if (!useCache) UtilXml.addChildElement(entityAndElement, "use-iterator", ownerDoc);
             
-            entityAndElement.setAttribute( "list-name", "_LIST_ITERATOR_");
+            // make list-name optional
+            if (UtilValidate.isEmpty(entityAndElement.getAttribute("list-name"))) {
+                entityAndElement.setAttribute("list-name", "defaultFormResultList");
+            }
+            this.actualListName = entityAndElement.getAttribute("list-name");
             finder = new ByAndFinder(entityAndElement);
         }
         
         public void runAction(Map context) {
             try {
-     
-                context.put("_LIST_ITERATOR_", null);
+                // don't want to do this: context.put("defaultFormResultList", null);
                 finder.runFind(context, this.modelForm.getDelegator(context));
-                Object obj = context.get("_LIST_ITERATOR_");
-                String modelFormListName = modelForm.getListName();
-                String modelFormIteratorName = UtilFormatOut.checkEmpty(modelForm.getListIteratorName(), "listIt");
-                if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
+                Object obj = context.get(this.actualListName);
+
+                if (obj != null && (obj instanceof EntityListIterator)) {
+                    String modelFormIteratorName = UtilFormatOut.checkEmpty(modelForm.getListIteratorName(), "formInfoList");
                     this.modelForm.setListIteratorName(modelFormIteratorName);
-                    context.put(modelFormIteratorName, (ListIterator)obj);
+                    context.put(modelFormIteratorName, obj);
                     /*
                     if (UtilValidate.isNotEmpty(modelFormListName)) {
                         List tmp = new ArrayList();
@@ -426,12 +426,9 @@ public abstract class ModelFormAction {
                     }
                     */
                 } else if (obj != null && obj instanceof List) {
-                    if (UtilValidate.isNotEmpty(modelFormListName)) {
-                        context.put(modelFormListName, obj);
-                    } else {
-                        this.modelForm.setListIteratorName(modelFormIteratorName);
-                        context.put(modelFormIteratorName, ((List)obj).listIterator());
-                    }
+                    String modelFormListName = UtilFormatOut.checkEmpty(modelForm.getListName(), "formInfoList");
+                    this.modelForm.setListName(modelFormListName);
+                    context.put(modelFormListName, obj);
                 }
             } catch (GeneralException e) {
                 String errMsg = "Error doing entity query by condition: " + e.toString();
@@ -444,28 +441,33 @@ public abstract class ModelFormAction {
 
     public static class EntityCondition extends ModelFormAction {
         ByConditionFinder finder;
+        String actualListName;
         
         public EntityCondition(ModelForm modelForm, Element entityConditionElement) {
             super (modelForm, entityConditionElement);
-            Document ownerDoc = entityConditionElement.getOwnerDocument();
-            boolean useCache = "true".equalsIgnoreCase(entityConditionElement.getAttribute("use-cache"));
-            if (!useCache)
-                UtilXml.addChildElement(entityConditionElement, "use-iterator", ownerDoc);
             
-            entityConditionElement.setAttribute( "list-name", "_LIST_ITERATOR_");
+            //don't want to default to the iterator, should be specified explicitly, not the default
+            // Document ownerDoc = entityConditionElement.getOwnerDocument();
+            // boolean useCache = "true".equalsIgnoreCase(entityConditionElement.getAttribute("use-cache"));
+            // if (!useCache) UtilXml.addChildElement(entityConditionElement, "use-iterator", ownerDoc);
+            
+            // make list-name optional
+            if (UtilValidate.isEmpty(entityConditionElement.getAttribute("list-name"))) {
+                entityConditionElement.setAttribute("list-name", "defaultFormResultList");
+            }
+            this.actualListName = entityConditionElement.getAttribute("list-name");
             finder = new ByConditionFinder(entityConditionElement);
         }
         
         public void runAction(Map context) {
             try {
-                context.put("_LIST_ITERATOR_", null);
+                // don't want to do this: context.put("defaultFormResultList", null);
                 finder.runFind(context, this.modelForm.getDelegator(context));
-                Object obj = context.get("_LIST_ITERATOR_");
-                String modelFormListName = modelForm.getListName();
-                String modelFormIteratorName = UtilFormatOut.checkEmpty(modelForm.getListIteratorName(), "listIt");
-                if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
+                Object obj = context.get(this.actualListName);
+                if (obj != null && (obj instanceof EntityListIterator)) {
+                    String modelFormIteratorName = UtilFormatOut.checkEmpty(modelForm.getListIteratorName(), "formInfoList");
                     this.modelForm.setListIteratorName(modelFormIteratorName);
-                    context.put(modelFormIteratorName, (ListIterator)obj);
+                    context.put(modelFormIteratorName, obj);
                     /*
                     if (UtilValidate.isNotEmpty(modelFormListName)) {
                         List tmp = new ArrayList();
@@ -479,12 +481,9 @@ public abstract class ModelFormAction {
                     }
                     */
                 } else if (obj != null && obj instanceof List) {
-                    if (UtilValidate.isNotEmpty(modelFormListName)) {
-                        context.put(modelFormListName, obj);
-                    } else {
-                        this.modelForm.setListIteratorName(modelFormIteratorName);
-                        context.put(modelFormIteratorName, ((List)obj).listIterator());
-                    }
+                    String modelFormListName = UtilFormatOut.checkEmpty(modelForm.getListName(), "formInfoList");
+                    this.modelForm.setListName(modelFormListName);
+                    context.put(modelFormListName, obj);
                 }
             } catch (GeneralException e) {
                 String errMsg = "Error doing entity query by condition: " + e.toString();

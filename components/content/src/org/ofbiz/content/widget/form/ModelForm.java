@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -714,9 +714,7 @@ public class ModelForm {
                 break;
             }
 
-            if (!modelFormField.shouldUse(context)) {
-                continue;
-            }
+            // DON'T check this for the header row, doesn't really make sense, should always show the header: if (!modelFormField.shouldUse(context)) { continue; }
 
             formStringRenderer.renderFormatHeaderRowCellOpen(buffer, context, this, modelFormField);
 
@@ -809,15 +807,15 @@ public class ModelForm {
     }
 
     public void renderItemRows(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, boolean formPerItem) {
-        
-    	this.rowCount = 0;
+        this.rowCount = 0;
         // if list is empty, do not render rows
         ListIterator iter = getListIterator(context);
 
         List items = null;
         String listName = this.getListName();
-        if (UtilValidate.isNotEmpty(listName))
+        if (UtilValidate.isNotEmpty(listName)) {
             items = (List) context.get(listName);
+        }
             
         if (iter != null) {
             setPaginate(true);
@@ -835,21 +833,27 @@ public class ModelForm {
             int itemIndex = -1;
             while (iter.hasNext()) {
                 itemIndex++;
-                if (itemIndex >= highIndex)
+                if (itemIndex >= highIndex) {
                     break;
+                }
                 Map localContext = new HashMap(context);
                 Object item = iter.next();
-                if (itemIndex < lowIndex)
+                if (itemIndex < lowIndex) {
                     continue;
+                }
                 if (UtilValidate.isNotEmpty(this.getListEntryName())) {
                     localContext.put(this.getListEntryName(), item);
                 } else {
                     Map itemMap = (Map) item;
                     localContext.putAll(itemMap);
+                    
                 }
+                
                 localContext.put("itemIndex", new Integer(itemIndex));
                 
-              	this.rowCount++;
+                this.rowCount++;
+
+                if (Debug.verboseOn()) Debug.logVerbose("In form got another row, context is: " + localContext, module);
 
                 // render row formatting open
                 formStringRenderer.renderFormatItemRowOpen(buffer, localContext, this);
