@@ -129,7 +129,7 @@ function insertImageName(size,ext) {
   <%}%>
 <%}else{%>
   <form action="<ofbiz:url>/updateProduct</ofbiz:url>" method=POST style='margin: 0;' name="productForm">
-  <table class="boxoutside" border='0' cellpadding='2' cellspacing='0'>
+  <table border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="productId" value="<%=productId%>">
   <tr>
     <td align=right><div class="tabletext"><b>Product ID</b></div></td>

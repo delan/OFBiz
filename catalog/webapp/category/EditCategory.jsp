@@ -84,7 +84,7 @@
   <%if(productCategoryId != null){%>
     <h3>Could not find Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>".</h3>
     <form action="<ofbiz:url>/createProductCategory</ofbiz:url>" method=POST style='margin: 0;' name='productCategoryForm'>
-    <table class="boxoutside" border='0' cellpadding='2' cellspacing='0'>
+    <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext">Product Category ID</div></td>
       <td>&nbsp;</td>
@@ -94,7 +94,7 @@
     </tr>
   <%}else{%>
     <form action="<ofbiz:url>/createProductCategory</ofbiz:url>" method=POST style='margin: 0;' name='productCategoryForm'>
-    <table class="boxoutside" border='0' cellpadding='2' cellspacing='0'>
+    <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext">Product Category ID</div></td>
       <td>&nbsp;</td>
@@ -105,7 +105,7 @@
   <%}%>
 <%}else{%>
   <form action="<ofbiz:url>/updateProductCategory</ofbiz:url>" method=POST style='margin: 0;' name='productCategoryForm'>
-  <table class="boxoutside" border='0' cellpadding='2' cellspacing='0'>
+  <table border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="productCategoryId" value="<%=productCategoryId%>">
   <tr>
     <td align=right><div class="tabletext">Product Category ID</div></td>

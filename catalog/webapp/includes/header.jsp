@@ -39,7 +39,6 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
-          <%-- <td class="headerButtonRight"><a href="#" class="buttontext">WebSites</a></td> --%>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/FindProdCatalog</ofbiz:url>" class="buttontext">Catalogs</a></td>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Products</a></td>
