@@ -61,6 +61,7 @@ request.setAttribute("availableLocales",availableLocales);
 locale = UtilHttp.getLocale(request);
 request.setAttribute("locale",locale);
 uiLabelMap = UtilProperties.getResourceBundleMap("PartyUiLabels", locale);
+uiLabelMap.addBottomResourceBundle("CommonUiLabels");
 request.setAttribute("uiLabelMap", uiLabelMap);
 
 layoutSettings = new HashMap();

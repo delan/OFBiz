@@ -1,5 +1,5 @@
 <%@ page import="java.util.*, java.net.*" %>
-<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*, org.ofbiz.base.util.collections.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -26,7 +26,8 @@
 	
 	Locale locale = UtilHttp.getLocale(request);
 	request.setAttribute("locale",locale);
-	Map uiLabelMap = UtilProperties.getResourceBundleMap("WorkEffortUiLabels", locale);
+    ResourceBundleMapWrapper uiLabelMap = (ResourceBundleMapWrapper) UtilProperties.getResourceBundleMap("WorkEffortUiLabels", locale);
+    uiLabelMap.addBottomResourceBundle("CommonUiLabels");
 	request.setAttribute("uiLabelMap", uiLabelMap);
 
     Map layoutSettings = new HashMap();
