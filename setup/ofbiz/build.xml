@@ -152,6 +152,8 @@
         <ant dir="partymgr" target="clean" inheritAll="false" />
         <echo message="[clean] ===== Cleaning ordermgr =====" />
         <ant dir="ordermgr" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning workeffort =====" />
+        <ant dir="workeffort" target="clean" inheritAll="false" />
         
         <echo message="[clean] ===== Done Cleaning =====" />
     </target>
