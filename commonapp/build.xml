@@ -22,7 +22,7 @@
         <property name="pkg-dist.name"  value="${name}-pkg"         />
 		
 	<!-- Classpath setting -->
-	<property name="ofbcore.jar"       value="../core/build/ofbcore.jar"             />
+	<property name="ofbcore.jar"       value="../core/lib/ofbcore.jar"             />
 	<property name="servlet.jar"    value="${env.TOMCAT_HOME}/lib/servlet.jar" />
 	<property name="ejb.jar"        value="${env.JBOSS_HOME}/lib/ext/ejb.jar"  />
 	<property name="jaxp.jar"       value="${env.JBOSS_HOME}/lib/jaxp.jar"     />
@@ -38,17 +38,20 @@
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
 
-    <target name="clean" depends="init">
-        <delete dir="${lib.dir}" />
-        <delete dir="${build.dir}" />
-        <delete dir="${walib.dir}" />
-        <delete dir="${waclasses.dir}" />
-        <delete file="${deploy.dir}/${name}.war" />
+    <target name="clean" depends="clean-lib">
+      <delete dir="${build.dir}" />
+    </target>
+
+    <target name="clean-lib" depends="init">
+      <delete dir="${lib.dir}" />
+      <delete dir="${walib.dir}" />
+      <delete dir="${waclasses.dir}" />
+      <delete file="${deploy.dir}/${name}.war" />
     </target>
 
     <target name="prepare-docs" depends="init">
-            <mkdir dir="${doc.dir}" />
-            <mkdir dir="${doc.dir}/api" />
+      <mkdir dir="${doc.dir}" />
+      <mkdir dir="${doc.dir}/api" />
     </target>	
 
 
@@ -56,14 +59,14 @@
     <!-- Makes sure the needed directory structure is in place              -->
     <!-- ================================================================== -->
 
-    <target name="prepare" depends="clean">
-        <mkdir dir="${lib.dir}" />
-	<mkdir dir="${lib.dir}/jar" />
-	<mkdir dir="${lib.dir}/ejb" />
-	<mkdir dir="${lib.dir}/ejb/META-INF" />
-	<mkdir dir="${lib.dir}/j2ee" />
-	<mkdir dir="${lib.dir}/j2ee/META-INF" />
+    <target name="prepare" depends="clean-lib">
         <mkdir dir="${build.dir}" />
+	<mkdir dir="${build.dir}/jar" />
+	<mkdir dir="${build.dir}/ejb" />
+	<mkdir dir="${build.dir}/ejb/META-INF" />
+	<mkdir dir="${build.dir}/j2ee" />
+	<mkdir dir="${build.dir}/j2ee/META-INF" />
+        <mkdir dir="${lib.dir}" />
         <mkdir dir="${waclasses.dir}" />
         <mkdir dir="${walib.dir}" />
     </target>
@@ -76,13 +79,13 @@
     <target name="classes" depends="prepare">
         <javac srcdir="${src.dir}"
                classpath="${classpath}"
-               destdir="${lib.dir}/jar" />               
+               destdir="${build.dir}/jar" />               
     </target>
 
     <!-- <target name="jar" depends="classes,conf-jar"> -->
     <target name="jar" depends="prepare">
-        <jar jarfile="${build.dir}/${name}.jar"
-             basedir="${lib.dir}/jar" />
+        <jar jarfile="${lib.dir}/${name}.jar"
+             basedir="${build.dir}/jar" />
     </target>
 
     <!-- ================================================================== -->
@@ -91,9 +94,9 @@
 	
     <!-- the external deploy war file which should not include properties files or ofbcore.jar -->
     <target name="war-ext" depends="prepare">
-        <copy file="${build.dir}/${name}.jar"
+        <copy file="${lib.dir}/${name}.jar"
               tofile="${walib.dir}/${name}.jar" />
-        <jar jarfile="${build.dir}/${name}-ext.war"
+        <jar jarfile="${lib.dir}/${name}-ext.war"
              basedir="${webapp.dir}" />
     </target>
 
@@ -108,7 +111,7 @@
         <copy file="${ofbcore.jar}"
               tofile="${walib.dir}/ofbcore.jar" />
         
-        <jar jarfile="${build.dir}/${name}.war"
+        <jar jarfile="${lib.dir}/${name}.war"
              basedir="${webapp.dir}" />
         
         <delete dir="${walib.dir}" />
@@ -121,23 +124,23 @@
     <!-- ================================================================== -->
 	<target name="meta-info" depends="jar,war">
             <copy file="${etc.dir}/ejb-jar.xml"
-                  tofile="${lib.dir}/ejb/META-INF/ejb-jar.xml" />
+                  tofile="${build.dir}/ejb/META-INF/ejb-jar.xml" />
             <copy file="${etc.dir}/jboss.xml"
-                  tofile="${lib.dir}/ejb/META-INF/jboss.xml" />
+                  tofile="${build.dir}/ejb/META-INF/jboss.xml" />
             <copy file="${etc.dir}/jaws.xml"
-                  tofile="${lib.dir}/ejb/META-INF/jaws.xml" />
+                  tofile="${build.dir}/ejb/META-INF/jaws.xml" />
             <copy file="${etc.dir}/application.xml"
-                  tofile="${lib.dir}/j2ee/META-INF/application.xml" />			  
+                  tofile="${build.dir}/j2ee/META-INF/application.xml" />			  
 	</target>
 	
 	<target name="ejb" depends="meta-info">
-		<jar jarfile="${lib.dir}/j2ee/${name}-ejb.jar"
-		     basedir="${lib.dir}/ejb" />
+		<jar jarfile="${build.dir}/j2ee/${name}-ejb.jar"
+		     basedir="${build.dir}/ejb" />
 	</target>
 			 
 	<target name="ear" depends="ejb">
-		<jar jarfile="${build.dir}/${name}.ear"
-		     basedir="${lib.dir}/j2ee" />
+		<jar jarfile="${lib.dir}/${name}.ear"
+		     basedir="${build.dir}/j2ee" />
 	</target>
 	
     <!-- ================================================================== -->
@@ -156,27 +159,27 @@
 
     <target name="pkg-dist" depends="prepare">
 
-        <mkdir dir="${build.dir}/${name}" />
+        <mkdir dir="${lib.dir}/${name}" />
 
-        <copy todir="${build.dir}/${name}">
+        <copy todir="${lib.dir}/${name}">
             <fileset dir="." includes="${src.dir}/**" />        
             <fileset dir="." includes="build.xml" />
         </copy>
 
-        <tar tarfile="${build.dir}/${pkg-dist.name}.tar"
-             basedir="${build.dir}"
+        <tar tarfile="${lib.dir}/${pkg-dist.name}.tar"
+             basedir="${lib.dir}"
              includes="${name}/**" />
 
-        <gzip src="${build.dir}/${pkg-dist.name}.tar"
-              zipfile="${build.dir}/${pkg-dist.name}.tar.gz" />
+        <gzip src="${lib.dir}/${pkg-dist.name}.tar"
+              zipfile="${lib.dir}/${pkg-dist.name}.tar.gz" />
 
-        <delete file="${build.dir}/${pkg-dist.name}.tar" />
+        <delete file="${lib.dir}/${pkg-dist.name}.tar" />
 
-        <zip zipfile="${build.dir}/${pkg-dist.name}.zip"
-             basedir="${build.dir}"
+        <zip zipfile="${lib.dir}/${pkg-dist.name}.zip"
+             basedir="${lib.dir}"
              includes="${name}/**" />
 
-        <delete dir="${build.dir}/${name}" />
+        <delete dir="${lib.dir}/${name}" />
 
     </target>
 

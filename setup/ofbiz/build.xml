@@ -77,7 +77,17 @@
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
 
-    <target name="clean" depends="init">
+    <target name="clean" depends="clean-lib">
+        <echo message="[clean] ===== Cleaning core =====" />
+        <ant dir="core" target="clean" />        
+        <echo message="[clean] ===== Cleaning commonapp =====" />
+        <ant dir="commonapp" target="clean" />        
+        <echo message="[clean] ===== Cleaning ecommerce =====" />
+        <ant dir="ecommerce" target="clean" />        
+        <echo message="[clean] ===== Done Cleaning =====" />
+    </target>
+
+    <target name="clean-lib" depends="init">
         <delete dir="${etc.dir}" />        
         <delete dir="${lib.dir}" />
         <delete dir="${j2eedeploy.dir}" />
@@ -88,18 +98,32 @@
     <!-- Makes sure the needed directory structure is in place              -->
     <!-- ================================================================== -->
 
-    <target name="prepare" depends="clean">
+    <target name="prepare" depends="clean-lib">
         <mkdir dir="${etc.dir}" />
         <mkdir dir="${lib.dir}" />
         <mkdir dir="${j2eedeploy.dir}" />
     </target>
 
     <!-- ================================================================== -->
+    <!-- Build Modules                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="build" depends="">
+        <echo message="[build] ===== Building core =====" />
+        <ant dir="core" />
+        <echo message="[build] ===== Building commonapp =====" />
+        <ant dir="commonapp" />
+        <echo message="[build] ===== Building ecommerce =====" />
+        <ant dir="ecommerce" />
+        <echo message="[build] ===== Done Building =====" />
+    </target>
+	
+    <!-- ================================================================== -->
     <!-- Deploy the app                                                     -->
     <!-- ================================================================== -->
 	
     <!-- Copy all files necessary for running IN PLACE (ie: OFBIZ_HOME == .) -->
-    <target name="deploy" depends="prepare">
+    <target name="deploy" depends="build, prepare">
         <copy file="commonapp/etc/servers.properties"
             toFile="${etc.dir}/servers.properties" />
         <copy file="commonapp/etc/debug.properties"
@@ -107,14 +131,14 @@
         <copy file="commonapp/etc/cache.properties"
             toFile="${etc.dir}/cache.properties" />
         
-        <copy file="core/build/ofbcore.jar"
+        <copy file="core/lib/ofbcore.jar"
             toFile="${lib.dir}/ofbcore.jar" />        
-        <copy file="core/build/ofbcore-ejb.jar"
+        <copy file="core/lib/ofbcore-ejb.jar"
             toFile="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
 
         <copy file="ecommerce/etc/ecommerce.properties"
             toFile="${etc.dir}/ecommerce.properties" />
-        <copy file="ecommerce/build/ofbecom.jar"
+        <copy file="ecommerce/lib/ofbecom.jar"
             toFile="${lib.dir}/ofbecom.jar" />
     </target>
 
@@ -126,7 +150,7 @@
         <copy file="commonapp/entitydef/fieldtypemysql.xml"
             toFile="${home.dir}/commonapp/entitydef/fieldtypemysql.xml" />
     
-        <copy file="commonapp/build/commonapp-ext.war"
+        <copy file="commonapp/lib/commonapp-ext.war"
             toFile="${j2eedeploy.dir}/commonapp-ext.war" />
     </target>
 
