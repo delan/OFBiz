@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.5 2003/09/18 16:01:22 jonesde Exp $
+ * $Id: LoginEvents.java,v 1.6 2003/10/17 16:51:38 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,11 +59,11 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class LoginEvents {
-        
+
     public static final String module = LoginEvents.class.getName();
 
     public static final String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
@@ -72,12 +72,12 @@ public class LoginEvents {
     public static Map externalLoginKeys = new HashMap();
 
     /** This Map is keyed by userLoginId and the value is another Map keyed by the webappName and the value is the sessionId.
-     * When a user logs in an entry in this Map will be populated for the given user, webapp and session. 
+     * When a user logs in an entry in this Map will be populated for the given user, webapp and session.
      * When checking security this Map will be checked if the user is logged in to see if we should log them out automatically; this implements the universal logout.
-     * When a user logs out this Map will be cleared so the user will be logged out automatically on subsequent requests. 
+     * When a user logs out this Map will be cleared so the user will be logged out automatically on subsequent requests.
      */
     public static Map loggedInSessions = new HashMap();
-    
+
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
      *
@@ -101,7 +101,7 @@ public class LoginEvents {
             if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
                 password = password.toLowerCase();
             }
-            
+
             // save parameters into the session - so they can be used later, if needed
             if (username != null) session.setAttribute("USERNAME", username);
             if (password != null) session.setAttribute("PASSWORD", password);
@@ -127,7 +127,12 @@ public class LoginEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         HttpSession session = request.getSession();
 
-        // user is logged in; check to see if there is an entry in the loggedInSessions Map, if not log out this user 
+        // anonymous shoppers are not logged in
+        if (userLogin != null && "anonymous".equals(userLogin.getString("userLoginId"))) {
+            userLogin = null;
+        }
+
+        // user is logged in; check to see if there is an entry in the loggedInSessions Map, if not log out this user
         if (userLogin != null) {
             boolean loggedInSession = isLoggedInSession(userLogin, request);
             if (!loggedInSession) {
@@ -207,7 +212,7 @@ public class LoginEvents {
 
         // get the visit id to pass to the userLogin for history
         String visitId = VisitHandler.getVisitId(session);
-        
+
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map result = null;
 
@@ -226,9 +231,9 @@ public class LoginEvents {
             if (userLogin != null) {
                 doBasicLogin(userLogin, request);
             }
-            
+
             if (userLoginSession != null) {
-            	session.setAttribute("userLoginSession", userLoginSession);
+                session.setAttribute("userLoginSession", userLoginSession);
             }
         } else {
             String errMsg = (String) result.get(ModelService.ERROR_MESSAGE);
@@ -237,14 +242,14 @@ public class LoginEvents {
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
-                
+
         request.setAttribute("_LOGIN_PASSED_", "TRUE");
         // make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
         return autoLoginSet(request, response);
     }
-    
+
     public static void doBasicLogin(GenericValue userLogin, HttpServletRequest request) {
-        HttpSession session = request.getSession(); 
+        HttpSession session = request.getSession();
         session.setAttribute("userLogin", userLogin);
         // let the visit know who the user is
         VisitHandler.setUserLogin(session, userLogin, false);
@@ -265,7 +270,7 @@ public class LoginEvents {
 
         // log out from all other sessions too; do this here so that it is only done when a user explicitly logs out
         logoutFromAllSessions(userLogin);
-        
+
         doBasicLogout(userLogin, request);
 
         if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
@@ -273,7 +278,7 @@ public class LoginEvents {
         }
         return "success";
     }
-    
+
     public static void doBasicLogout(GenericValue userLogin, HttpServletRequest request) {
         HttpSession session = request.getSession();
 
@@ -282,7 +287,7 @@ public class LoginEvents {
         if (security != null && userLogin != null) {
             Security.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
         }
-        
+
         // this is a setting we don't want to lose, although it would be good to have a more general solution here...
         String currCatalog = (String) session.getAttribute("CURRENT_CATALOG_ID");
         // also make sure the delegatorName is preserved, especially so that a new Visit can be created
@@ -304,20 +309,20 @@ public class LoginEvents {
      * @param request The HTTPRequest object for the current request
      * @param response The HTTPResponse object for the current request
      * @return String specifying the exit status of this event
-     */    
+     */
     public static String forgotPassword(HttpServletRequest request, HttpServletResponse response) {
         if ((UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT"))) || (UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT.x")))) {
             return showPasswordHint(request, response);
         } else {
             return emailPassword(request, response);
         }
-    }   
+    }
 
     /** Show the password hint for the userLoginId specified in the request object.
      *@param request The HTTPRequest object for the current request
      *@param response The HTTPResponse object for the current request
      *@return String specifying the exit status of this event
-     */    
+     */
     public static String showPasswordHint(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
@@ -356,7 +361,7 @@ public class LoginEvents {
 
         request.setAttribute("_EVENT_MESSAGE_", "The Password Hint is: " + passwordHint);
         return "success";
-    }   
+    }
 
     /**
      *  Email the password for the userLoginId specified in the request object.
@@ -364,15 +369,15 @@ public class LoginEvents {
      * @param request The HTTPRequest object for the current request
      * @param response The HTTPResponse object for the current request
      * @return String specifying the exit status of this event
-     */  
+     */
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        String productStoreId = ProductStoreWorker.getProductStoreId(request);        
-        
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
+
         Map subjectData = new HashMap();
         subjectData.put("productStoreId", productStoreId);
-      
+
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         String userLoginId = request.getParameter("USERNAME");
@@ -429,7 +434,7 @@ public class LoginEvents {
             Debug.logWarning(e, "", module);
             party = null;
         }
-        if (party != null) {         
+        if (party != null) {
             Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
             while (emailIter != null && emailIter.hasNext()) {
                 GenericValue email = (GenericValue) emailIter.next();
@@ -442,7 +447,7 @@ public class LoginEvents {
             request.setAttribute("_ERROR_MESSAGE_", "<li>No Primary Email Address has been set, please contact customer service.");
             return "error";
         }
-        
+
         // get the ProductStore email settings
         GenericValue productStoreEmail = null;
         try {
@@ -450,34 +455,34 @@ public class LoginEvents {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problem getting ProductStoreEmailSetting", module);
         }
-        
+
         if (productStoreEmail == null) {
             request.setAttribute("_ERROR_MESSAGE_", "<li>Problems with configuration; please contact customer service.");
             return "error";
         }
-        
+
         // need OFBIZ_HOME for processing
         String ofbizHome = System.getProperty("ofbiz.home");
-        
+
         // set the needed variables in new context
         Map templateData = new HashMap();
         templateData.put("useEncryption", new Boolean(useEncryption));
         templateData.put("password", UtilFormatOut.checkNull(passwordToSend));
-        
-        // prepare the parsed subject        
+
+        // prepare the parsed subject
         String subjectString = productStoreEmail.getString("subject");
         subjectString = FlexibleStringExpander.expandString(subjectString, subjectData);
-                
-        Map serviceContext = new HashMap();                        
+
+        Map serviceContext = new HashMap();
         serviceContext.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
         serviceContext.put("templateData", templateData);
         serviceContext.put("subject", subjectString);
-        serviceContext.put("sendFrom", productStoreEmail.get("fromAddress"));        
+        serviceContext.put("sendFrom", productStoreEmail.get("fromAddress"));
         serviceContext.put("sendCc", productStoreEmail.get("ccAddress"));
         serviceContext.put("sendBcc", productStoreEmail.get("ccAddress"));
         serviceContext.put("contentType", productStoreEmail.get("contentType"));
-        serviceContext.put("sendTo", emails.toString());              
-                                              
+        serviceContext.put("sendTo", emails.toString());
+
         try {
             Map result = dispatcher.runSync("sendGenericNotificationEmail", serviceContext);
 
@@ -508,7 +513,7 @@ public class LoginEvents {
             request.setAttribute("_EVENT_MESSAGE_", "Your password has been sent to you.  Please check your Email.");
         }
         return "success";
-    }  
+    }
 
     protected static String getAutoLoginCookieName(HttpServletRequest request) {
         return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
@@ -599,7 +604,7 @@ public class LoginEvents {
     public static String getExternalLoginKey(HttpServletRequest request) {
         Debug.logInfo("Running getExternalLoginKey, externalLoginKeys.size=" + externalLoginKeys.size(), module);
         GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
-        
+
         String externalKey = (String) request.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
         if (externalKey != null) return externalKey;
 
@@ -613,7 +618,7 @@ public class LoginEvents {
 
             //check the userLogin here, after the old session setting is set so that it will always be cleared
             if (userLogin == null) return "";
-            
+
             //no key made yet for this request, create one
             while (externalKey == null || externalLoginKeys.containsKey(externalKey)) {
                 externalKey = "EL" + Long.toString(Math.round(Math.random() * 1000000)) + Long.toString(Math.round(Math.random() * 1000000));
@@ -628,10 +633,10 @@ public class LoginEvents {
 
     public static String checkExternalLoginKey(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        
+
         String externalKey = request.getParameter(EXTERNAL_LOGIN_KEY_ATTR);
         if (externalKey == null) return "success";
-        
+
         GenericValue userLogin = (GenericValue) externalLoginKeys.get(externalKey);
         if (userLogin != null) {
             // found userLogin, do the external login...
@@ -643,7 +648,7 @@ public class LoginEvents {
                     // is the same user, just carry on...
                     return "success";
                 }
-                
+
                 // logout the current user and login the new user...
                 String logoutRetVal = logout(request, response);
                 // ignore the return value; even if the operation failed we want to set the new UserLogin
@@ -653,17 +658,17 @@ public class LoginEvents {
         } else {
             Debug.logWarning("Could not find userLogin for external login key: " + externalKey, module);
         }
-        
+
         return "success";
     }
-    
+
     public static void cleanupExternalLoginKey(HttpSession session) {
         String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
         if (sesExtKey != null) {
             externalLoginKeys.remove(sesExtKey);
         }
     }
-    
+
     public static boolean isLoggedInSession(GenericValue userLogin, HttpServletRequest request) {
         if (userLogin != null) {
             Map webappMap = (Map) loggedInSessions.get(userLogin.get("userLoginId"));
@@ -671,7 +676,7 @@ public class LoginEvents {
                 return false;
             } else {
                 String sessionId = (String) webappMap.get(UtilHttp.getApplicationName(request));
-                if (sessionId == null || !sessionId.equals(request.getSession().getId())) { 
+                if (sessionId == null || !sessionId.equals(request.getSession().getId())) {
                     return false;
                 }
             }
@@ -680,20 +685,20 @@ public class LoginEvents {
             return false;
         }
     }
-    
+
     public static void loginToSession(GenericValue userLogin, HttpServletRequest request) {
         if (userLogin != null) {
             Map webappMap = (Map) loggedInSessions.get(userLogin.get("userLoginId"));
             if (webappMap == null) {
                 webappMap = new HashMap();
                 loggedInSessions.put(userLogin.get("userLoginId"), webappMap);
-            } 
-    
+            }
+
             String webappName = UtilHttp.getApplicationName(request);
             webappMap.put(webappName, request.getSession().getId());
         }
     }
-    
+
     public static void logoutFromAllSessions(GenericValue userLogin) {
         if (userLogin != null) {
             loggedInSessions.remove(userLogin.get("userLoginId"));

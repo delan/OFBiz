@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.9 2003/10/16 03:05:05 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.10 2003/10/17 16:51:37 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,6 +41,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.marketing.tracking.TrackingCodeEvents;
 import org.ofbiz.product.catalog.CatalogWorker;
@@ -57,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -500,21 +501,42 @@ public class CheckOutEvents {
         String mode = request.getParameter("finalizeMode");
         Debug.logInfo("FinalizeMode: " + mode, module);
 
-        //set the customer info
+        // check the userLogin object
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        // if null then we must be an anonymous shopper
+        if (userLogin == null) {
+            // remove auto-login fields
+            request.getSession().removeAttribute("autoUserLogin");
+            request.getSession().removeAttribute("autoName");
+        }
+
+        // set the customer info
         if (mode != null && mode.equals("cust")) {
             String partyId = (String) request.getAttribute("partyId");
             if (partyId != null) {
                 request.getSession().setAttribute("orderPartyId", partyId);
+                // no userLogin means we are an anonymous shopper; fake the UL for service calls
+                if (userLogin == null) {
+                    try {
+                        userLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", "anonymous"));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                    }
+                    if (userLogin != null) {
+                        userLogin.set("partyId", partyId);
+                    }
+                    request.getSession().setAttribute("userLogin", userLogin);
+                }
             }
         }
 
-        // Get the shipping method
+        // get the shipping method
         shippingContactMechId = request.getParameter("shipping_contact_mech_id");
         if (shippingContactMechId == null) {
             shippingContactMechId = (String) request.getAttribute("contactMechId");
         }
 
-        // Get the options
+        // get the options
         shippingMethod = request.getParameter("shipping_method");
         shippingInstructions = request.getParameter("shipping_instructions");
         maySplit = request.getParameter("may_split");
@@ -534,22 +556,21 @@ public class CheckOutEvents {
         Map callResult = checkOutHelper.finalizeOrderEntry(mode, shippingContactMechId, shippingMethod, shippingInstructions,
             maySplit, giftMessage, isGift, methodType, checkOutPaymentId, paramMap);
 
-        //Generate any messages required
+        // generate any messages required
         ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
 
-        //Determine whether it was a success or not
+        // determine whether it was a success or not
         if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
             return "error";
         } else {
-            // Seems a bit suspicious that these properties have slightly different names
+            // seems a bit suspicious that these properties have slightly different names
             offlinePayments = (Boolean)callResult.get("OFFLINE_PAYMENT");
             request.setAttribute("OFFLINE_PAYMENT", offlinePayments);
             offlinePayments = (Boolean)callResult.get("OFFLINE_PAYMENTS");
             request.getSession().setAttribute("OFFLINE_PAYMENTS", offlinePayments);
         }
 
-
-        // Determine where to direct the browser
+        // determine where to direct the browser
         String requireCustomer = request.getParameter("finalizeReqCustInfo");
         String requireShipping = request.getParameter("finalizeReqShipInfo");
         String requireOptions = request.getParameter("finalizeReqOptions");
@@ -570,14 +591,17 @@ public class CheckOutEvents {
         List paymentMethodIds = cart.getPaymentMethodIds();
         List paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
 
-        if (requireCustomer.equalsIgnoreCase("true") && (customerPartyId == null || customerPartyId.equals("_NA_")))
+        if (requireCustomer.equalsIgnoreCase("true") && (customerPartyId == null || customerPartyId.equals("_NA_"))) {
             return "customer";
+        }
 
-        if (requireShipping.equalsIgnoreCase("true") && shipContactMechId == null)
+        if (requireShipping.equalsIgnoreCase("true") && shipContactMechId == null) {
             return "shipping";
+        }
 
-        if (requireOptions.equalsIgnoreCase("true") && shipmentMethodTypeId == null)
+        if (requireOptions.equalsIgnoreCase("true") && shipmentMethodTypeId == null) {
             return "options";
+        }
 
         if (requirePayment.equalsIgnoreCase("true")) {
             if (paymentMethodIds == null || paymentMethodIds.size() == 0) {
