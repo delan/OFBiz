@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.20 2004/07/13 10:23:34 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.21 2004/08/09 23:52:24 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,15 +23,24 @@
  */
 package org.ofbiz.entity.model;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.jdbc.*;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilTimer;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.jdbc.SqlJdbcUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * This class extends ModelEntity and provides additional information appropriate to view entities
@@ -39,7 +48,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {

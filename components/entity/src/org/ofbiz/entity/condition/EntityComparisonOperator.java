@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.11 2004/07/21 03:05:40 doogie Exp $
+ * $Id: EntityComparisonOperator.java,v 1.12 2004/08/09 23:52:23 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,16 +28,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.oro.text.perl.Perl5Util;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.perl.Perl5Util;
-
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
@@ -47,7 +45,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {

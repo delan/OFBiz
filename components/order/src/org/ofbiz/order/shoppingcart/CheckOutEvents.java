@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.37 2004/07/31 05:06:30 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.38 2004/08/09 23:52:25 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -62,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  * @since 2.0
  */
 public class CheckOutEvents {

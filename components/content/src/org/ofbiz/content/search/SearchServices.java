@@ -1,5 +1,5 @@
 /*
- * $Id: SearchServices.java,v 1.2 2004/07/02 20:18:23 byersa Exp $
+ * $Id: SearchServices.java,v 1.3 2004/08/09 23:52:20 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,23 +24,9 @@
 package org.ofbiz.content.search;
 
 import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.io.FileNotFoundException;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilMisc;
 
-import org.apache.lucene.document.*;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.*;
-
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -50,7 +36,7 @@ import org.ofbiz.service.ServiceUtil;
  * SearchServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.1
  * 
  *  

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreSurveyWrapper.java,v 1.4 2004/05/21 04:55:25 ajzeneski Exp $
+ * $Id: ProductStoreSurveyWrapper.java,v 1.5 2004/08/09 23:52:26 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,19 +23,18 @@
  */
 package org.ofbiz.product.store;
 
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.content.survey.SurveyWrapper;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilValidate;
-
-import java.util.Map;
 import java.io.Writer;
+import java.util.Map;
+
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.survey.SurveyWrapper;
+import org.ofbiz.entity.GenericValue;
 
 /**
  * Product Store Survey Wrapper
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ProductStoreSurveyWrapper extends SurveyWrapper {

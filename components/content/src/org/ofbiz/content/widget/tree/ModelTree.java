@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.4 2004/07/29 04:42:37 byersa Exp $
+ * $Id: ModelTree.java,v 1.5 2004/08/09 23:52:22 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,34 +23,32 @@
  */
 package org.ofbiz.content.widget.tree;
 
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.IOException;
-import java.io.FileOutputStream;
-import java.io.File;
-import java.util.*;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.collections.MapStack;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericPK;
-import org.ofbiz.entity.util.EntityListIterator;
-import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.widget.screen.ModelScreen;
-import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
-import org.ofbiz.content.widget.screen.ModelScreenWidget;
-import org.ofbiz.content.widget.screen.ScreenStringRenderer;
 import org.ofbiz.content.widget.screen.ScreenFactory;
+import org.ofbiz.content.widget.screen.ScreenStringRenderer;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import javax.xml.parsers.ParserConfigurationException;
 
 //import com.clarkware.profiler.Profiler;
 
@@ -58,7 +56,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class ModelTree {

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlTreeRenderer.java,v 1.3 2004/07/29 04:42:36 byersa Exp $
+ * $Id: HtmlTreeRenderer.java,v 1.4 2004/08/09 23:52:21 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,28 +27,24 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.content.widget.tree.ModelTree;
-import org.ofbiz.content.widget.tree.TreeStringRenderer;
-import org.ofbiz.content.widget.screen.ScreenStringRenderer;
-import org.ofbiz.content.widget.screen.ModelScreen;
-import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
-import org.ofbiz.content.widget.html.HtmlScreenRenderer;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.ofbiz.content.webapp.taglib.ContentUrlTag;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.control.RequestHandler;
+import org.ofbiz.content.webapp.taglib.ContentUrlTag;
+import org.ofbiz.content.widget.screen.ScreenStringRenderer;
+import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
+import org.ofbiz.content.widget.tree.ModelTree;
+import org.ofbiz.content.widget.tree.TreeStringRenderer;
 
 
 /**
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class HtmlTreeRenderer implements TreeStringRenderer {

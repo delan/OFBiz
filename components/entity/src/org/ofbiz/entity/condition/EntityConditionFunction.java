@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionFunction.java,v 1.8 2004/07/14 04:18:51 doogie Exp $
+ * $Id: EntityConditionFunction.java,v 1.9 2004/08/09 23:52:23 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
 

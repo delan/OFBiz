@@ -1,5 +1,5 @@
 /*
- * $Id: DelegatorInterface.java,v 1.8 2004/07/07 09:10:56 doogie Exp $
+ * $Id: DelegatorInterface.java,v 1.9 2004/08/09 23:52:22 jonesde Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.entity.cache.Cache;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.datasource.GenericHelper;
@@ -45,7 +44,7 @@ import org.ofbiz.entity.util.SequenceUtil;
  * Delegator Interface
  *
  * @author     <a href="mailto:plightbo@cisco.com">Patrick Lightbody</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public interface DelegatorInterface {

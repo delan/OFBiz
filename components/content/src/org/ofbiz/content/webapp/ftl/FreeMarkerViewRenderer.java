@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewRenderer.java,v 1.11 2004/07/30 21:45:17 ajzeneski Exp $
+ * $Id: FreeMarkerViewRenderer.java,v 1.12 2004/08/09 23:52:20 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,6 @@ import org.jpublish.SiteContext;
 import org.jpublish.page.PageInstance;
 import org.jpublish.view.ViewRenderException;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilHttp;
 
 import freemarker.ext.beans.BeansWrapper;
@@ -52,7 +51,7 @@ import freemarker.template.WrappingTemplateModel;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.1
  */
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
