@@ -414,7 +414,7 @@ public class MrpServices {
         List listResult = null;
         Map parameters = UtilMisc.toMap("billOfMaterialLevel", billOfMaterialLevel);
         // TODO : If billOfMaterialLevel == 0 the search must be done with (billOfMaterialLevel == 0 || billOfMaterialLevel == null)
-        List orderBy = UtilMisc.toList("productId","eventDate");
+        List orderBy = UtilMisc.toList("productId", "eventDate");
         try{
             listResult = delegator.findByAnd("MrpInventoryEventPlanned", parameters, orderBy);
         } catch(GenericEntityException e) {
@@ -520,7 +520,8 @@ public class MrpServices {
                 Timestamp eventDate = (routingTask == null || !routingTaskStartDate.containsKey(routingTask)) ? startDate : (Timestamp) routingTaskStartDate.get(routingTask);
                 // if the components is valid at the event Date create the Mrp requirement in the InventoryEventPlanned entity
                 if (EntityUtil.isValueActive(productComponent, eventDate)) {
-                    Map parameters = UtilMisc.toMap("productId", productComponent.getString("productIdTo"));
+                    //Map parameters = UtilMisc.toMap("productId", productComponent.getString("productIdTo"));
+                    Map parameters = UtilMisc.toMap("productId", node.getProduct().getString("productId"));
                     parameters.put("eventDate", eventDate);
                     parameters.put("inventoryEventPlanTypeId", "MRP_REQUIREMENT");
                     double componentEventQuantity = node.getQuantity();
@@ -660,7 +661,7 @@ public class MrpServices {
         // iteration for the bomLevel for which there are some events
         do {
             //get the products from the InventoryEventPlanned table for the current billOfMaterialLevel (ie. BOM)
-            parameters = UtilMisc.toMap("billOfMaterialLevel",new Long(bomLevel),"userLogin", userLogin);
+            parameters = UtilMisc.toMap("billOfMaterialLevel", new Long(bomLevel), "userLogin", userLogin);
             try {
                 result = dispatcher.runSync("listProductForMrp", parameters);
             } catch (GenericServiceException e) {
@@ -677,7 +678,10 @@ public class MrpServices {
                 while (iteratorListInventoryEventForMRP.hasNext()) {
                     inventoryEventForMRP = (GenericValue) iteratorListInventoryEventForMRP.next();
                     productId = (String) inventoryEventForMRP.getString("productId");
+                    eventQuantity = inventoryEventForMRP.getDouble("eventQuantity").doubleValue();
+
                     if (!productId.equals(oldProductId)) {
+                        double positiveEventQuantity = (eventQuantity > 0? eventQuantity: -1 * eventQuantity);
                         // It's a new product, so it's necessary to  read the MrpQoh
                         try {
                             product = inventoryEventForMRP.getRelatedOneCache("Product");
@@ -689,7 +693,7 @@ public class MrpServices {
                         // The components are also loaded thru the configurator
                         Map serviceResponse = null;
                         try {
-                            serviceResponse = dispatcher.runSync("getManufacturingComponents", UtilMisc.toMap("productId", product.getString("productId"), "quantity", new Double(eventQuantity)));
+                            serviceResponse = dispatcher.runSync("getManufacturingComponents", UtilMisc.toMap("productId", product.getString("productId"), "quantity", new Double(positiveEventQuantity)));
                         } catch (Exception e) {
                             return ServiceUtil.returnError("Problem, can not find the product for a event, for more detail look at the log");
                         }
@@ -721,7 +725,7 @@ public class MrpServices {
                         }
                         oldProductId = productId;
                     }
-                    eventQuantity = inventoryEventForMRP.getDouble("eventQuantity").doubleValue();
+                    
                     stockTmp = stockTmp + eventQuantity;
                     if(stockTmp < minimumStock){
                         double qtyToStock = minimumStock - stockTmp;
