@@ -423,6 +423,9 @@
     <xs:element name="display-entity" substitutionGroup="AllFields">
         <xs:annotation><xs:documentation>This is just like display but looks up a description using the Entity Engine; note that if also-hidden is true then it uses the key as the value, not the shown description.</xs:documentation></xs:annotation>
         <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="sub-hyperlink"/>
+            </xs:sequence>
             <xs:attributeGroup ref="attlist.display-entity"/>
         </xs:complexType>
     </xs:element>
