@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.2 2003/08/22 18:21:07 ajzeneski Exp $
+ *  $Id: build.xml,v 1.3 2004/07/22 04:58:48 jonesde Exp $
 -->
 
 <project name="OFBiz - Example Component" default="jar" basedir=".">
@@ -42,16 +42,16 @@
     
     <target name="classpath">		        
         <path id="local.class.path">
-            <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
+            <fileset dir="${lib.dir}" includes="*.jar"/>
             <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
-            <fileset dir="../entity/lib" includes="*.jar"/>
-            <fileset dir="../entity/build/lib" includes="*.jar"/>
-            <fileset dir="../security/build/lib" includes="*.jar"/>
-            <fileset dir="../service/lib" includes="*.jar"/>
-            <fileset dir="../service/build/lib" includes="*.jar"/>
-            <fileset dir="../minilang/build/lib" includes="*.jar"/>
-            <fileset dir="../content/build/lib" includes="*.jar"/>
+            <fileset dir="../../components/entity/lib" includes="*.jar"/>
+            <fileset dir="../../components/entity/build/lib" includes="*.jar"/>
+            <fileset dir="../../components/security/build/lib" includes="*.jar"/>
+            <fileset dir="../../components/service/lib" includes="*.jar"/>
+            <fileset dir="../../components/service/build/lib" includes="*.jar"/>
+            <fileset dir="../../components/minilang/build/lib" includes="*.jar"/>
+            <fileset dir="../../components/content/build/lib" includes="*.jar"/>
         </path>
     </target>
     
