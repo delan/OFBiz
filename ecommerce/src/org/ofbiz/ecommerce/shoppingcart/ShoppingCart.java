@@ -31,7 +31,9 @@ import org.ofbiz.commonapp.order.order.Adjustment;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    1.0
  * @created    August 4, 2001
  */
@@ -47,7 +49,7 @@ public class ShoppingCart implements java.io.Serializable {
     private String shippingInstructions;
     private Boolean maySplit;
     
-    /** stored in the format of <shipment method type id>@<carrier party id> */
+    /** stored in the format of [shipment method type id]@[carrier party id] */
     private String shipmentMethodTypeId;
     private String carrierPartyId;
     private String cartDiscountString;
@@ -58,6 +60,8 @@ public class ShoppingCart implements java.io.Serializable {
     private double cartDiscount;
     private boolean viewCartOnAdd = true;
     
+    /** Holds value of property adjustments. */
+    private List adjustments = new LinkedList();
     
     /** Creates new empty ShoppingCart object. */
     public ShoppingCart() {
@@ -140,16 +144,15 @@ public class ShoppingCart implements java.io.Serializable {
     }
     
     /** Returns an collection of order items. */
-    public Collection makeOrderItems(GenericDelegator delegator, String orderId) {
+    public Collection makeOrderItems(GenericDelegator delegator) {
         synchronized(cartLines) {
-            Collection result = new ArrayList(cartLines.size());
+            Collection result = new LinkedList();
             Iterator itemIter = cartLines.iterator();
             int seqId = 1;
             while (itemIter.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
                 String orderItemSeqId = String.valueOf(seqId++);
                 GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap(
-                "orderId", orderId,
                 "orderItemSeqId", orderItemSeqId,
                 "orderItemTypeId", "SALES_ORDER_ITEM",
                 "productId", item.getProductId(),
@@ -165,34 +168,16 @@ public class ShoppingCart implements java.io.Serializable {
         }
     }
     
-    /** Returns a List of order item strings */
-    public List makeItemList() {
-        // productId|productName|price|quantity|comment|poNumber
-        List result = new ArrayList();
-        Iterator i = iterator();
-        while ( i.hasNext() ) {
-            StringBuffer buf = new StringBuffer();
-            ShoppingCartItem item = (ShoppingCartItem) i.next();
-            buf.append(item.getProductId()); buf.append("|");            
-            buf.append(item.getName()); buf.append("|");
-            buf.append(item.getPrice()); buf.append("|");
-            buf.append(item.getQuantity()); buf.append("|");
-            buf.append(item.getItemComment()); buf.append("|");
-            buf.append(this.getPoNumber());
-            result.add(buf.toString());
-        }
-        return result;
-    }
-    
     /** Returns a Map of cart values */
-    public Map makeCartMap() {
+    public Map makeCartMap(GenericDelegator delegator) {
         Map result = new HashMap();
-        result.put("orderItems", makeItemList());
+        result.put("orderItems", makeOrderItems(delegator));
         result.put("shippingInstructions",getShippingInstructions());
         result.put("billingAccountId",getBillingAccountId());
         result.put("cartDiscount", new Double(getCartDiscount()));
-        result.put("shippingAmount", new Double(getShipping()));
-        result.put("taxAmount", new Double(getSalesTax()));
+        
+        result.put("orderAdjustments", makeAdjustments(delegator));
+        
         result.put("shippingContactMechId", getShippingContactMechId());
         result.put("shipmentMethodTypeId", getShipmentMethodTypeId());
         result.put("carrierPartyId", getCarrierPartyId());
@@ -200,12 +185,43 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("paymentMethodId", getPaymentMethodId());
         return result;
     }
-                
-    public Collection getAdjustments() {
-        Collection result = new ArrayList(3);
-        result.add(new Adjustment("Shipping and Handling", this.getShipping()));
-        result.add(new Adjustment("Sales Tax", this.getSalesTax()));
-        return result;
+    
+    /** Getter for property adjustments.
+     * @return Value of property adjustments.
+     */
+    public List getAdjustments() {
+        // add in default adjustments
+        LinkedList realAdjustments = new LinkedList();
+        realAdjustments.addAll(this.adjustments);
+        realAdjustments.add(new Adjustment("Shipping and Handling", this.getShipping(), Adjustment.SHIPPING_TYPE_ID));
+        realAdjustments.add(new Adjustment("Sales Tax", this.getSalesTax(), Adjustment.SALES_TAX_TYPE_ID));
+        
+        return realAdjustments;
+    }
+    
+    /** Setter for property adjustments.
+     * @param adjustments New value of property adjustments.
+     */
+    public void setAdjustments(List adjustments) {
+        this.adjustments = adjustments;
+    }
+    
+    public void addAdjustment(Adjustment adjustment) {
+        adjustments.add(adjustment);
+    }
+    
+    public List makeAdjustments(GenericDelegator delegator)	{
+        LinkedList list = new LinkedList();
+        // gotta pick up the tax and shipping
+        List adjustments = getAdjustments();
+        for (int i=0; i < adjustments.size(); i++) {
+            Adjustment adjustment = (Adjustment)adjustments.get(i);
+            list.add(delegator.makeValue("OrderAdjustment",
+            UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
+            "orderAdjustmentTypeId", adjustment.getTypeId(),
+            "amount", new Double(adjustment.getAmount()))));
+        }
+        return list;
     }
     
     /** Returns this item's index. */

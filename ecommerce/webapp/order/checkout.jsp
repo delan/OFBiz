@@ -63,7 +63,7 @@
   Boolean maySplit = cart.getMaySplit();
 //  if (creditCardInfo == null) {
 
-  Collection orderItemList = cart.makeOrderItems(delegator, null);
+  Collection orderItemList = cart.makeOrderItems(delegator);
   Iterator orderAdjustmentIterator = cart.getAdjustments().iterator();
 %>
 

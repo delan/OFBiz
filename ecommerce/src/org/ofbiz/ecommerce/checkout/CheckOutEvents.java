@@ -1,5 +1,25 @@
 /*
  * $Id$ 
+ *
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.ecommerce.checkout;
@@ -18,28 +38,11 @@ import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.ecommerce.shoppingcart.*;
 
 /**
- * <p><b>Title:</b> CheckOutEvents.java
- * <p><b>Description:</b> Events used for processing checkout and orders.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
+ * Events used for processing checkout and orders.
  *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @author Andy Zeneski (jaz@zsolv.com)
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version 1.0
  * Created on August 23, 2001, 7:58 PM
  */
@@ -111,7 +114,7 @@ public class CheckOutEvents {
             errorMessage.append("<li>There are no items in the cart.");
         }
         
-        if ( errorMessage.length() > 0 ) {
+        if (errorMessage.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,errorMessage.toString());
             return "error";
         } else {
@@ -123,17 +126,18 @@ public class CheckOutEvents {
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
         //remove this whenever creating an order so quick reorder cache will refresh/recalc
         request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
         
         // build the service context
-        Map context = cart.makeCartMap();        
+        Map context = cart.makeCartMap(delegator);
         String distributorId =  (String) request.getSession().getAttribute("_DISTRIBUTOR_ID_");
         String affiliateId = (String) request.getSession().getAttribute("_AFFILIATE_ID_");
-        if ( distributorId != null ) context.put("distributorId", distributorId);
-        if ( affiliateId != null ) context.put("affiliateId", affiliateId);
+        if (distributorId != null) context.put("distributorId", distributorId);
+        if (affiliateId != null) context.put("affiliateId", affiliateId);
         context.put("partyId", userLogin.get("partyId"));
         
         // invoke the service
@@ -141,16 +145,16 @@ public class CheckOutEvents {
         try {
             result = dispatcher.runSync("storeOrder",context);
             cart.clear();
-        }
-        catch ( GenericServiceException e ) {
+        } catch (GenericServiceException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not create order (problem invoking the service: " + e.getMessage() + ")");
             Debug.logError(e);
             return "error";
         }
         
         // check for error message(s)
-        if ( result.containsKey(ModelService.ERROR_MESSAGE) )
+        if (result.containsKey(ModelService.ERROR_MESSAGE)) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,result.get(ModelService.ERROR_MESSAGE));
+        }
         
         // set the orderId for future use
         request.setAttribute("order_id", result.get("orderId"));
@@ -165,8 +169,11 @@ public class CheckOutEvents {
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
-        try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
-        catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
+        try {
+            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+        } catch(java.net.MalformedURLException e) {
+            Debug.logWarning(e);
+        }
         
         final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.securityCode");
         
@@ -201,8 +208,11 @@ public class CheckOutEvents {
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
-        try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
-        catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
+        try {
+            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+        } catch(java.net.MalformedURLException e) {
+            Debug.logWarning(e);
+        }
         try {
             final String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
             final String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
@@ -244,19 +254,16 @@ public class CheckOutEvents {
                 mail.setContent(content, "text/html");
                 Transport.send(mail);
                 return "success";
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
                 return "success"; //"error";
             }
-        }
-        catch (RuntimeException re) {
+        } catch (RuntimeException re) {
             re.printStackTrace();
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
             return "success"; //"error";
-        }
-        catch (Error e) {
+        } catch (Error e) {
             e.printStackTrace();
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
             return "success"; //"error";
