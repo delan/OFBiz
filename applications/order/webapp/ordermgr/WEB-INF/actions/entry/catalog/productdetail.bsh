@@ -26,16 +26,8 @@
 */
 
 /*
- *  WARNING:
- *  the same copy of this file is used in the ecommerce 
- *  application (catalog/productdetail.bsh) and in the ordermgr 
- *  application (entry/catalog/productdetail.bsh).
- *
- *  For this reason this file should only contain code that is
- *  relevant for both the applications.
- *
- *  It's also very important to keep the two files synchronized in CVS.
- *
+ * This script is also referenced by the ecommerce's screens and
+ * should not contain order component's specific code.
  */
 
 import org.ofbiz.base.util.*;
