@@ -110,7 +110,7 @@
 <!ATTLIST alias-all
     entity-alias CDATA #REQUIRED
     prefix CDATA #IMPLIED>
-<!ELEMENT alias EMPTY>
+<!ELEMENT alias ( complex-alias? )>
 <!ATTLIST alias
     entity-alias CDATA #REQUIRED
     name CDATA #REQUIRED
