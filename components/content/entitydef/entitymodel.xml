@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  */
 -->
 
@@ -142,6 +142,9 @@
       <relation type="many" rel-entity-name="ContentPurpose">
           <key-map field-name="contentId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
     </entity>
     <entity entity-name="ContentAssoc"
             package-name="org.ofbiz.content.content"
@@ -193,16 +196,28 @@
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <member-entity entity-alias="DR" entity-name="DataResource"/>
-      <alias-all entity-alias="CO"/>
-      <alias-all entity-alias="CA" prefix="assoc"/>
+      <alias-all entity-alias="CA" prefix="ca"/>
+      <alias-all entity-alias="CO" />
       <alias-all entity-alias="DR" prefix="dr"/>
       <alias entity-alias="CA" name="contentIdStart" field="contentIdTo"/>
-      <view-link entity-alias="CO" rel-entity-alias="CA">
-        <key-map field-name="contentId"/>
+      <view-link entity-alias="CA" rel-entity-alias="CO">
+        <key-map field-name="contentId" rel-field-name="contentId"/>
       </view-link>
-      <view-link entity-alias="CO" rel-entity-alias="DR">
-        <key-map field-name="dataResourceId"/>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="true">
+        <key-map field-name="dataResourceId" rel-field-name="dataResourceId"/>
       </view-link>
+      <relation type="one-nofk" rel-entity-name="ElectronicText">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OtherDataResource">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
     </view-entity>
     <view-entity entity-name="ContentAssocDataResourceViewTo"
                 package-name="org.ofbiz.commonapp.content"
@@ -210,16 +225,25 @@
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <member-entity entity-alias="DR" entity-name="DataResource"/>
-      <alias-all entity-alias="CO"/>
-      <alias-all entity-alias="CA" prefix="assoc"/>
+      <alias-all entity-alias="CA" prefix="ca"/>
+      <alias-all entity-alias="CO" />
       <alias-all entity-alias="DR" prefix="dr"/>
       <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
-      <view-link entity-alias="CO" rel-entity-alias="CA">
-        <key-map field-name="contentId" rel-field-name="contentIdTo"/>
+      <view-link entity-alias="CA" rel-entity-alias="CO">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
       </view-link>
-      <view-link entity-alias="CO" rel-entity-alias="DR">
-        <key-map field-name="dataResourceId"/>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="true">
+        <key-map field-name="dataResourceId" rel-field-name="dataResourceId"/>
       </view-link>
+      <relation type="one-nofk" rel-entity-name="ElectronicText">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OtherDataResource">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
     </view-entity>
     <entity entity-name="ContentAssocPredicate"
             package-name="org.ofbiz.content.content"
@@ -247,7 +271,7 @@
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <alias-all entity-alias="CO"/>
-      <alias-all entity-alias="CA" prefix="assoc"/>
+      <alias-all entity-alias="CA" prefix="ca"/>
       <alias entity-alias="CA" name="contentIdStart" field="contentIdTo"/>
       <view-link entity-alias="CO" rel-entity-alias="CA">
         <key-map field-name="contentId"/>
@@ -259,7 +283,7 @@
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
       <alias-all entity-alias="CO"/>
-      <alias-all entity-alias="CA" prefix="assoc"/>
+      <alias-all entity-alias="CA" prefix="ca"/>
       <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
       <view-link entity-alias="CO" rel-entity-alias="CA">
         <key-map field-name="contentId" rel-field-name="contentIdTo"/>
@@ -280,6 +304,29 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
+    <view-entity entity-name="ContentDataResourceView"
+                package-name="org.ofbiz.commonapp.content"
+                title="Content and DataResource">
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <alias-all entity-alias="CO" />
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="true">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ElectronicText">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OtherDataResource">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+    </view-entity>
     <entity entity-name="ContentMetaData"
             package-name="org.ofbiz.content.content"
             title="Content Meta-Data Predicate Entity">
@@ -420,7 +467,33 @@
       <relation type="many" rel-entity-name="Content">
         <key-map field-name="contentTypeId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
     </entity>
+    <view-entity entity-name="SubContentDataResourceView"
+                package-name="org.ofbiz.commonapp.content"
+                title="Content and DataResource for SubContent">
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <alias-all entity-alias="CO" />
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="true">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ElectronicText">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OtherDataResource">
+        <key-map field-name="drDataResourceId" rel-field-name="dataResourceId" />
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart" />
+      </relation>
+    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.content.data -->
@@ -538,6 +611,56 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
+    <view-entity entity-name="DataResourceContentView"
+                package-name="org.ofbiz.commonapp.content"
+                title="DataResource and Content View">
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <alias-all entity-alias="DR"/>
+      <alias-all entity-alias="CO"  prefix="co"/>
+      <view-link entity-alias="DR" rel-entity-alias="CO" rel-optional="true">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ElectronicText">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OtherDataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_REC_TO_TYPE" rel-entity-name="DataResourceType">
+        <key-map field-name="dataResourceTypeId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_REC_TO_CAT" rel-entity-name="DataCategory">
+        <key-map field-name="dataCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_REC_DTSRC" rel-entity-name="DataSource">
+        <key-map field-name="dataSourceId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_REC_MMTP" rel-entity-name="MimeType">
+        <key-map field-name="mimeTypeId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_REC_CHST" rel-entity-name="CharacterSet">
+        <key-map field-name="characterSetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DataResourceTypeAttr">
+        <key-map field-name="dataResourceTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DataResourceAttribute">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DataResourceRole">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_REC_CB_ULGN" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_REC_LMB_ULGN" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="DataResourceMetaData"
             package-name="org.ofbiz.content.data"
             title="Data Resource Meta-Data Predicate Entity">

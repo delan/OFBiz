@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  */
 -->
 
@@ -45,6 +45,7 @@
     <entity-group group="org.ofbiz" entity="ContentAssocViewFrom" />
     <entity-group group="org.ofbiz" entity="ContentAssocViewTo" />
     <entity-group group="org.ofbiz" entity="ContentAttribute" />
+    <entity-group group="org.ofbiz" entity="ContentDataResourceView" />
     <entity-group group="org.ofbiz" entity="ContentMetaData" />
     <entity-group group="org.ofbiz" entity="ContentOperation" />
     <entity-group group="org.ofbiz" entity="ContentPurpose" />
@@ -53,6 +54,7 @@
     <entity-group group="org.ofbiz" entity="ContentRole" />
     <entity-group group="org.ofbiz" entity="ContentType" />
     <entity-group group="org.ofbiz" entity="ContentTypeAttr" />
+    <entity-group group="org.ofbiz" entity="SubContentDataResourceView" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.content.data -->
@@ -62,6 +64,7 @@
     <entity-group group="org.ofbiz" entity="DataCategory" />
     <entity-group group="org.ofbiz" entity="DataResource" />
     <entity-group group="org.ofbiz" entity="DataResourceAttribute" />
+    <entity-group group="org.ofbiz" entity="DataResourceContentView" />
     <entity-group group="org.ofbiz" entity="DataResourceMetaData" />
     <entity-group group="org.ofbiz" entity="DataResourcePurpose" />
     <entity-group group="org.ofbiz" entity="DataResourceRole" />
