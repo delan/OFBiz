@@ -28,17 +28,20 @@
  */
 %>
 
-<%UtilTimer timer = new UtilTimer();%>
-<%Debug.logTiming(timer.timerString("Start viewprofile"));%>
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
 
-<% pageContext.setAttribute("PageName", "viewprofile"); %>
+<%! public static final boolean viewProfileTiming = false;%>
+<%UtilTimer timer = null;%>
+<%if (viewProfileTiming) { timer = new UtilTimer(); timer.setLog(true); }%>
+<%if (viewProfileTiming) timer.timerString("Start viewprofile");%>
+
+<%pageContext.setAttribute("PageName", "viewprofile");%>
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
-<%Debug.logTiming(timer.timerString("Before workers"));%>
+<%if (viewProfileTiming) timer.timerString("Before workers");%>
 <%
     PartyWorker.getPartyOtherValues(pageContext, userLogin.getString("partyId"), "party", "person", "partyGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
@@ -46,30 +49,31 @@
     ContactMechWorker.getPartyContactMechValueMaps(pageContext, userLogin.getString("partyId"), showOld, "partyContactMechValueMaps");
     ContactMechWorker.getPartyCreditCardInfos(pageContext, userLogin.getString("partyId"), showOld, "creditCardInfos");
 %>
-<%Debug.logTiming(timer.timerString("After workers, before page"));%>
+<%if (viewProfileTiming) timer.timerString("After workers, before page");%>
 <ofbiz:if name="party">
 <%-- Main Heading --%>
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
     <td align=left>
       <div class="head1">The Profile of
-<%Debug.logTiming(timer.timerString("Test time, before before if"));%>
-<%Debug.logTiming(timer.timerString("Before if person"));%>
+<%if (viewProfileTiming) timer.timerString("Test time, before before if");%>
+<%if (viewProfileTiming) timer.timerString("Before if person");%>
         <ofbiz:if name="person">
-<%Debug.logTiming(timer.timerString("After if person, before fields"));%>
-          <ofbiz:entityfield attribute="person" field="personalTitle"/>
-<%Debug.logTiming(timer.timerString("After personalTitle"));%>
-          <ofbiz:entityfield attribute="person" field="firstName"/>
-<%Debug.logTiming(timer.timerString("After firstName"));%>
-          <ofbiz:entityfield attribute="person" field="middleName"/>
-<%Debug.logTiming(timer.timerString("After middleName"));%>
-          <ofbiz:entityfield attribute="person" field="lastName"/>
-<%Debug.logTiming(timer.timerString("After lastName"));%>
-          <ofbiz:entityfield attribute="person" field="suffix"/>
-<%Debug.logTiming(timer.timerString("After suffix"));%>
-<%Debug.logTiming(timer.timerString("After fields, before close if"));%>
+<%if (viewProfileTiming) timer.timerString("After if person, before fields");%>
+          <%entityField.run("person", "personalTitle");%>
+          <%-- <ofbiz:entityfield attribute="person" field="personalTitle"/> --%>
+<%if (viewProfileTiming) timer.timerString("After personalTitle");%>
+          <%entityField.run("person", "firstName");%>
+<%if (viewProfileTiming) timer.timerString("After firstName");%>
+          <%entityField.run("person", "middleName");%>
+<%if (viewProfileTiming) timer.timerString("After middleName");%>
+          <%entityField.run("person", "lastName");%>
+<%if (viewProfileTiming) timer.timerString("After lastName");%>
+          <%entityField.run("person", "suffix");%>
+<%if (viewProfileTiming) timer.timerString("After suffix");%>
+<%if (viewProfileTiming) timer.timerString("After fields, before close if");%>
         </ofbiz:if>
-<%Debug.logTiming(timer.timerString("After close if"));%>
+<%if (viewProfileTiming) timer.timerString("After close if");%>
         <ofbiz:unless name="person">"New User"</ofbiz:unless>
       </div>
     </td>
@@ -113,28 +117,28 @@
       <td width="5">&nbsp;</td>
       <td align="left" width="90%">
         <div class="tabletext">
-          <ofbiz:entityfield attribute="person" field="personalTitle"/>
-          <ofbiz:entityfield attribute="person" field="firstName"/>
-          <ofbiz:entityfield attribute="person" field="middleName"/>
-          <ofbiz:entityfield attribute="person" field="lastName"/>
-          <ofbiz:entityfield attribute="person" field="suffix"/>
+          <%entityField.run("person", "personalTitle");%>
+          <%entityField.run("person", "firstName");%>
+          <%entityField.run("person", "middleName");%>
+          <%entityField.run("person", "lastName");%>
+          <%entityField.run("person", "suffix");%>
         </div>
       </td>
     </tr>
-<%Debug.logTiming(timer.timerString("Before all person fields"));%>
-    <ofbiz:entityfield attribute="person" field="nickname" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Nickname</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="gender" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Gender</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="birthDate" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Birth Date</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="height" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Height</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="weight" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Weight</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="mothersMaidenName" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Mothers Maiden Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="maritalStatus" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Marital Status</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="socialSecurityNumber" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Social Security Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="passportNumber" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Passport Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="passportExpireDate" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Passport Expire</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="totalYearsWorkExperience" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Years Work</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-    <ofbiz:entityfield attribute="person" field="comments" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Comments</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
-<%Debug.logTiming(timer.timerString("After all person fields"));%>
+<%if (viewProfileTiming) timer.timerString("Before all person fields");%>
+    <%entityField.run("person", "nickname", "<tr><td align=right nowrap><div class='tabletext'><b>Nickname</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "gender", "<tr><td align=right nowrap><div class='tabletext'><b>Gender</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "birthDate", "<tr><td align=right nowrap><div class='tabletext'><b>Birth Date</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "height", "<tr><td align=right nowrap><div class='tabletext'><b>Height</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "weight", "<tr><td align=right nowrap><div class='tabletext'><b>Weight</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "mothersMaidenName", "<tr><td align=right nowrap><div class='tabletext'><b>Mothers Maiden Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "maritalStatus", "<tr><td align=right nowrap><div class='tabletext'><b>Marital Status</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "socialSecurityNumber", "<tr><td align=right nowrap><div class='tabletext'><b>Social Security Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "passportNumber", "<tr><td align=right nowrap><div class='tabletext'><b>Passport Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "passportExpireDate", "<tr><td align=right nowrap><div class='tabletext'><b>Passport Expire</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "totalYearsWorkExperience", "<tr><td align=right nowrap><div class='tabletext'><b>Years Work</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("person", "comments", "<tr><td align=right nowrap><div class='tabletext'><b>Comments</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+<%if (viewProfileTiming) timer.timerString("After all person fields");%>
   </table>
 </ofbiz:if>
 <ofbiz:unless name="person">
@@ -178,14 +182,14 @@
         <th colspan='2'>Soliciting&nbsp;OK?</th>
         <th>&nbsp;</th>
       </tr>
-<%Debug.logTiming(timer.timerString("Before ContactMechs iterator"));%>
+<%if (viewProfileTiming) timer.timerString("Before ContactMechs iterator");%>
       <ofbiz:iterator name="partyContactMechValueMap" property="partyContactMechValueMaps" type="java.util.Map" expandMap="true">
-<%Debug.logTiming(timer.timerString("Start ContactMechs iterator"));%>
+<%if (viewProfileTiming) timer.timerString("Start ContactMechs iterator");%>
         <%GenericValue contactMech = (GenericValue) pageContext.getAttribute("contactMech");%>
           <tr><td colspan="7"><hr class='sepbar'></td></tr>
           <tr>
             <td align="right" valign="top" width="10%">
-              <div class="tabletext">&nbsp;<b><ofbiz:entityfield attribute="contactMechType" field="description"/></b></div>
+              <div class="tabletext">&nbsp;<b><%entityField.run("contactMechType", "description");%></b></div>
             </td>
             <td width="5">&nbsp;</td>
             <td align="left" valign="top" width="80%">
@@ -197,19 +201,19 @@
                       <%} else {%>
                         <b>Purpose Type not found with ID: "<%=partyContactMechPurpose.getString("contactMechPurposeTypeId")%>"</b>
                       <%}%>
-                      <ofbiz:entityfield attribute="partyContactMechPurpose" field="thruDate" prefix="(Expire:" suffix=")"/>
+                      <%entityField.run("partyContactMechPurpose", "thruDate", "(Expire:", ")");%>
                     </div>
               </ofbiz:iterator>
               <%if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {%>
                   <div class="tabletext">
-                    <ofbiz:entityfield attribute="postalAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
-                    <ofbiz:entityfield attribute="postalAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
-                    <ofbiz:entityfield attribute="postalAddress" field="address1"/><br>
-                    <ofbiz:entityfield attribute="postalAddress" field="address2" prefix="" suffix="<br>"/>
-                    <ofbiz:entityfield attribute="postalAddress" field="city"/>,
-                    <ofbiz:entityfield attribute="postalAddress" field="stateProvinceGeoId"/>
-                    <ofbiz:entityfield attribute="postalAddress" field="postalCode"/>
-                    <ofbiz:entityfield attribute="postalAddress" field="countryGeoId" prefix="<br>" suffix=""/>
+                    <%entityField.run("postalAddress", "toName", "<b>To:</b> ", "<br>");%>
+                    <%entityField.run("postalAddress", "attnName", "<b>Attn:</b> ", "<br>");%>
+                    <%entityField.run("postalAddress", "address1");%><br>
+                    <%entityField.run("postalAddress", "address2", "", "<br>");%>
+                    <%entityField.run("postalAddress", "city");%>,
+                    <%entityField.run("postalAddress", "stateProvinceGeoId");%>
+                    <%entityField.run("postalAddress", "postalCode");%>
+                    <%entityField.run("postalAddress", "countryGeoId", "<br>", "");%>
                   </div>
                   <%GenericValue postalAddress = (GenericValue) pageContext.getAttribute("postalAddress");%>
                   <%if (postalAddress != null && (UtilValidate.isEmpty(postalAddress.getString("countryGeoId")) || postalAddress.getString("countryGeoId").equals("USA"))) {%>
@@ -222,9 +226,9 @@
                   <%}%>
               <%} else if ("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {%>
                   <div class="tabletext">
-                    <ofbiz:entityfield attribute="telecomNumber" field="countryCode"/>
-                    <ofbiz:entityfield attribute="telecomNumber" field="areaCode" prefix="" suffix="-"/><ofbiz:entityfield attribute="telecomNumber" field="contactNumber"/>
-                    <ofbiz:entityfield attribute="partyContactMech" field="extension" prefix="ext&nbsp;" suffix=""/>
+                    <%entityField.run("telecomNumber", "countryCode");%>
+                    <%entityField.run("telecomNumber", "areaCode", "", "-");%><%entityField.run("telecomNumber", "contactNumber");%>
+                    <%entityField.run("partyContactMech", "extension", "ext&nbsp;", "");%>
                     <%GenericValue telecomNumber = (GenericValue) pageContext.getAttribute("telecomNumber");%>
                     <%if (telecomNumber != null && (UtilValidate.isEmpty(telecomNumber.getString("countryCode")) || telecomNumber.getString("countryCode").equals("011"))) {%>
                       <a target='_blank' href='http://www.anywho.com/qry/wp_rl?npa=<%=UtilFormatOut.checkNull(telecomNumber.getString("areaCode"))%>&telephone=<%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>&btnsubmit.x=20&btnsubmit.y=8' class='buttontext'>(lookup:anywho.com)</a>
@@ -233,38 +237,38 @@
                   </div>
               <%} else if ("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {%>
                   <div class="tabletext">
-                    <ofbiz:entityfield attribute="contactMech" field="infoString"/>
-                    <a href='mailto:<ofbiz:entityfield attribute="contactMech" field="infoString"/>' class='buttontext'>(send&nbsp;email)</a>
+                    <%entityField.run("contactMech", "infoString");%>
+                    <a href='mailto:<%entityField.run("contactMech", "infoString");%>' class='buttontext'>(send&nbsp;email)</a>
                   </div>
               <%} else if ("WEB_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {%>
                   <div class="tabletext">
-                    <ofbiz:entityfield attribute="contactMech" field="infoString"/>
+                    <%entityField.run("contactMech", "infoString");%>
                     <%String openAddress = UtilFormatOut.checkNull(contactMech.getString("infoString"));%>
                     <%if(!openAddress.startsWith("http") && !openAddress.startsWith("HTTP")) openAddress = "http://" + openAddress;%>
                     <a target='_blank' href='<%=openAddress%>' class='buttontext'>(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
                   </div>
               <%} else {%>
                   <div class="tabletext">
-                    <ofbiz:entityfield attribute="contactMech" field="infoString"/>
+                    <%entityField.run("contactMech", "infoString");%>
                   </div>
               <%}%>
-              <div class="tabletext">(Updated:&nbsp;<ofbiz:entityfield attribute="partyContactMech" field="fromDate"/>)</div>
-              <ofbiz:entityfield attribute="partyContactMech" field="thruDate" prefix="<div class='tabletext'><b>Delete:&nbsp;" suffix="</b></div>"/>
+              <div class="tabletext">(Updated:&nbsp;<%entityField.run("partyContactMech", "fromDate");%>)</div>
+              <%entityField.run("partyContactMech", "thruDate", "<div class='tabletext'><b>Delete:&nbsp;", "</b></div>");%>
             </td>
-            <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<ofbiz:entityfield attribute="partyContactMech" field="allowSolicitation"/>)</b></div></td>
+            <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%entityField.run("partyContactMech", "allowSolicitation");%>)</b></div></td>
             <td width="5">&nbsp;</td>
             <td align="right" valign="top" nowrap width="1%">
-              <div><a href='<ofbiz:url>/editcontactmech?contactMechId=<ofbiz:entityfield attribute="contactMech" field="contactMechId"/></ofbiz:url>' class="buttontext">
+              <div><a href='<ofbiz:url>/editcontactmech?contactMechId=<%entityField.run("contactMech", "contactMechId");%></ofbiz:url>' class="buttontext">
               [Update]</a>&nbsp;</div>
             </td>
             <td align="right" valign="top" width="1%">
-              <div><a href='<ofbiz:url>/deleteContactMech/viewprofile?contactMechId=<ofbiz:entityfield attribute="contactMech" field="contactMechId"/></ofbiz:url>' class="buttontext">
+              <div><a href='<ofbiz:url>/deleteContactMech/viewprofile?contactMechId=<%entityField.run("contactMech", "contactMechId");%></ofbiz:url>' class="buttontext">
               [Delete]</a>&nbsp;&nbsp;</div>
             </td>
           </tr>
-<%Debug.logTiming(timer.timerString("End ContactMechs iterator"));%>
+<%if (viewProfileTiming) timer.timerString("End ContactMechs iterator");%>
       </ofbiz:iterator>
-<%Debug.logTiming(timer.timerString("After ContactMechs iterator"));%>
+<%if (viewProfileTiming) timer.timerString("After ContactMechs iterator");%>
     </table>
   </ofbiz:if>
   <ofbiz:unless name="partyContactMechValueMaps" size="0">
@@ -309,19 +313,19 @@
                   <td width="90%" valign="top">
                     <div class="tabletext">
                       <b>
-                        <ofbiz:entityfield attribute="creditCardInfo" field="nameOnCard"/> - <%=ContactHelper.formatCreditCard(creditCardInfo)%>
+                        <%entityField.run("creditCardInfo", "nameOnCard");%> - <%=ContactHelper.formatCreditCard(creditCardInfo)%>
                       </b>
-                      (Updated:&nbsp;<ofbiz:entityfield attribute="creditCardInfo" field="fromDate"/>)
-                      <ofbiz:entityfield attribute="creditCardInfo" field="thruDate" prefix="(Delete:&nbsp;" suffix=")"/>
+                      (Updated:&nbsp;<%entityField.run("creditCardInfo", "fromDate");%>)
+                      <%entityField.run("creditCardInfo", "thruDate", "(Delete:&nbsp;", ")");%>
                     </div>
                   </td>
                   <td width="5">&nbsp;</td>
                   <td align="right" valign="top" width='1%' nowrap>
-                    <div><a href='<ofbiz:url>/editcreditcard?creditCardId=<ofbiz:entityfield attribute="creditCardInfo" field="creditCardId"/></ofbiz:url>' class="buttontext">
+                    <div><a href='<ofbiz:url>/editcreditcard?creditCardId=<%entityField.run("creditCardInfo", "creditCardId");%></ofbiz:url>' class="buttontext">
                     [Update]</a></div>
                   </td>
                   <td align="right" valign="top" width='1%'>
-                    <div><a href='<ofbiz:url>/deleteCreditCardInfo/viewprofile?creditCardId=<ofbiz:entityfield attribute="creditCardInfo" field="creditCardId"/></ofbiz:url>' class="buttontext">
+                    <div><a href='<ofbiz:url>/deleteCreditCardInfo/viewprofile?creditCardId=<%entityField.run("creditCardInfo", "creditCardId");%></ofbiz:url>' class="buttontext">
                     [Delete]</a></div>
                   </td>
                 </tr>
@@ -366,7 +370,7 @@
   <tr>
     <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>User Name</b></div></td>
     <td width="5">&nbsp;</td>
-    <td align="left" valign="top" width="90%"><div class="tabletext"><ofbiz:entityfield attribute="userLogin" field="userLoginId"/></div></td>
+    <td align="left" valign="top" width="90%"><div class="tabletext"><%entityField.run("userLogin", "userLoginId");%></div></td>
   </tr>
 </table>
           </td>
@@ -377,10 +381,10 @@
 </TABLE>
 </ofbiz:if>
 <ofbiz:unless name="party">
-    No party found for current user with user name: <ofbiz:entityfield attribute="userLogin" field="userLoginId"/>
+    No party found for current user with user name: <%entityField.run("userLogin", "userLoginId");%>
 </ofbiz:unless>
 
-<%Debug.logTiming(timer.timerString("After page"));%>
+<%if (viewProfileTiming) timer.timerString("After page");%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %> 
