@@ -40,9 +40,9 @@
         <property file="${user.home}/build.properties"/>
         <!-- Allow module-level defaults for this build -->
         <property file="build.properties"/>
-        
+
         <property name="ofbiz.version" value=""/>
-        
+
         <property environment="env" />
         <property name="catalina.dir" value="${env.CATALINA_HOME}" />
 
@@ -61,7 +61,7 @@
         <copy file="lib/common/jms_1.0.2a.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/ots-jts_1.0.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/tyrex-1.0.jar" toDir="${catalina.dir}/common/lib"/>
-        
+
         <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/common/lib"/>
@@ -75,13 +75,63 @@
         <copy file="lib/datavision/DataVision.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/datavision/MinML.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/datavision/jcalendar.jar" toDir="${catalina.dir}/lib"/>
-        
+
         <copy file="lib/jasperreports/jasperreports.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/jasperreports/itext-0.81.jar" toDir="${catalina.dir}/lib"/>
-        
+
         <copy file="lib/weka/weka.jar" toDir="${catalina.dir}/lib"/>
-        
+
         <delete file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar"/>
+    </target>
+
+    <target name="install-catalina41">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+        <property name="ofbiz.version" value=""/>
+
+        <property environment="env" />
+        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
+
+        <move file="${catalina.dir}/conf/server.xml" toFile="${catalina.dir}/conf/server.orig.xml" />
+        <copy file="setup/catalina41/conf/server.xml" toDir="${catalina.dir}/conf" />
+
+        <copy file="setup/catalina41/bin/ofbiz.sh" toDir="${catalina.dir}/bin" />
+        <copy file="setup/catalina41/bin/ofbiz.bat" toDir="${catalina.dir}/bin" />
+
+        <copy file="lib/common/castor-0.9.3.9.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/hsqldb.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/postgresql.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/log4j.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/mm.mysql-2.0.8-bin.jar" toDir="${catalina.dir}/shared/lib"/>
+
+        <copy file="lib/common/jms_1.0.2a.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/ots-jts_1.0.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/tyrex-1.0.jar" toDir="${catalina.dir}/shared/lib"/>
+
+        <!--
+        <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/shared/lib"/>
+        -->
+
+        <copy file="lib/share/axis.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/bsh-1.2b6.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/clutil.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/wsdl4j.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/share/jakarta-oro-2.0.4.jar" toDir="${catalina.dir}/shared/lib"/>
+
+        <copy file="lib/datavision/DataVision.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/datavision/MinML.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/datavision/jcalendar.jar" toDir="${catalina.dir}/shared/lib"/>
+
+        <copy file="lib/jasperreports/jasperreports.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/jasperreports/itext-0.81.jar" toDir="${catalina.dir}/shared/lib"/>
+
+        <copy file="lib/weka/weka.jar" toDir="${catalina.dir}/shared/lib"/>
+
     </target>
 
     <!-- ================================================================== -->
@@ -93,10 +143,10 @@
         <property file="${user.home}/build.properties"/>
         <!-- Allow module-level defaults for this build -->
         <property file="build.properties"/>
-        
+
         <property name="ofbiz.version" value=""/>
         <property name="ofbcore-webapp.jar"   value="core/lib/ofbcore-webapp${ofbiz.version}.jar" />
-        
+
         <property environment="env" />
         <property name="home.dir"       value="${env.OFBIZ_HOME}" />
     </target>
@@ -106,15 +156,32 @@
         <property file="${user.home}/build.properties"/>
         <!-- Allow module-level defaults for this build -->
         <property file="build.properties"/>
-        
+
         <property name="ofbiz.version" value=""/>
-        
+
         <property environment="env" />
         <property name="catalina.dir"    value="${env.CATALINA_HOME}" />
         <property name="home.dir"        value="${env.OFBIZ_HOME}" />
 
         <property name="classes.dir"     value="${catalina.dir}/classes" />
         <property name="lib.dir"         value="${catalina.dir}/lib" />
+        <property name="j2eedeploy.dir"  value="${catalina.dir}/webapps" />
+    </target>
+
+    <target name="catalina41-init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+        <property name="ofbiz.version" value=""/>
+
+        <property environment="env" />
+        <property name="catalina.dir"    value="${env.CATALINA_HOME}" />
+        <property name="home.dir"        value="${env.OFBIZ_HOME}" />
+
+        <property name="classes.dir"     value="${catalina.dir}/shared/classes" />
+        <property name="lib.dir"         value="${catalina.dir}/shared/lib" />
         <property name="j2eedeploy.dir"  value="${catalina.dir}/webapps" />
     </target>
 
@@ -233,7 +300,7 @@
 
         <echo message="[build] ===== Done Building (Compile), Ignored Core =====" />
     </target>
-    
+
     <target name="war" depends="build">
         <echo message="[war] ===== Building commonapp =====" />
         <ant dir="commonapp" target="war" inheritAll="false" />
@@ -323,6 +390,10 @@
         <antcall target="int-deploy" />
     </target>
 
+    <target name="catalina41-deploy" depends="catalina41-init">
+        <antcall target="int-deploy" />
+    </target>
+
     <target name="catalina-deploy-ext" depends="catalina-init, war">
         <antcall target="int-deploy" />
         <antcall target="int-deploy-ext" />
@@ -354,7 +425,7 @@
         <copy file="commonapp/etc/cybersource.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/payflow.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/taxware.properties" toDir="${classes.dir}" />
-        
+
         <copy file="commonapp/etc/jndiservers.xml" toDir="${classes.dir}" />
         <copy file="commonapp/etc/entityengine.xml" toDir="${classes.dir}" />
         <copy file="commonapp/etc/serviceengine.xml" toDir="${classes.dir}" />
