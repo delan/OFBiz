@@ -373,7 +373,7 @@
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
-        <tr><td colspan="2"><div class="head2">Try these instead of <ofbiz:entityfield attribute="productValue" field="productName"/>:</div></td></tr>
+        <tr><td colspan="2"><div class="head2">Try these instead of <ofbiz:entityfield attribute="product" field="productName"/>:</div></td></tr>
         <tr><td><hr class='sepbar'></td></tr>
 
         <ofbiz:iterator name="productAssoc" property="assocProducts">
