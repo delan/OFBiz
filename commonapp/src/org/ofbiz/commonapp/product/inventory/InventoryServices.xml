@@ -65,12 +65,12 @@
         <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapOne"/>
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
-        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
-        <field-to-field field-name="facilityId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
+        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
+        <field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapTwo"/>
 
-        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
-        <field-to-field field-name="containerId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
+        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
+        <field-to-field field-name="containerId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
     </simple-method>
     <simple-method method-name="deleteInventoryItem" short-description="Delete an InventoryItem">
@@ -82,15 +82,15 @@
         <remove-value value-name="inventoryItem"/>
         
         <!-- clear the by and caches -->        
-        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapOne"/>
+        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapOne"/>
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
-        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
-        <field-to-field field-name="facilityId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
+        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
+        <field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapTwo"/>
 
-        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
-        <field-to-field field-name="containerId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
+        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
+        <field-to-field field-name="containerId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
     </simple-method>
 
@@ -156,15 +156,15 @@
                         <store-value value-name="inventoryItem"/>
 
                         <!-- clear the by and caches -->        
-                        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapOne"/>
+                        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapOne"/>
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
-                        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
-                        <field-to-field field-name="facilityId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
+                        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
+                        <field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapTwo"/>
 
-                        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
-                        <field-to-field field-name="containerId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
+                        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
+                        <field-to-field field-name="containerId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
 
                         <!-- store OrderItemInventoryRes record -->
@@ -173,7 +173,7 @@
                         <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                         <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="newOiirEntity"/>
                         <call-bsh><![CDATA[ newOiirEntity.put("quantity", new Double(1)); ]]></call-bsh>
-                        <store-value value-name="newOiirEntity"/>
+                        <create-value value-name="newOiirEntity"/>
 
                         <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(((Double) parameters.get("quantityNotReserved")).doubleValue() - 1.0)); ]]></call-bsh>
                     </if-compare>
@@ -192,15 +192,15 @@
                         <store-value value-name="inventoryItem"/>
 
                         <!-- clear the by and caches -->        
-                        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapOne"/>
+                        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapOne"/>
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
-                        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
-                        <field-to-field field-name="facilityId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
+                        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
+                        <field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapTwo"/>
 
-                        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
-                        <field-to-field field-name="containerId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
+                        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
+                        <field-to-field field-name="containerId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
 
                         <!-- store OrderItemInventoryRes record -->
@@ -209,7 +209,7 @@
                         <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                         <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="newOiirEntity"/>
                         <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
-                        <store-value value-name="newOiirEntity"/>
+                        <create-value value-name="newOiirEntity"/>
 
                         <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(((Double) parameters.get("quantityNotReserved")).doubleValue() - ((Double) parameters.get("deductAmount")).doubleValue())); ]]></call-bsh>
                     </if-not-empty>
