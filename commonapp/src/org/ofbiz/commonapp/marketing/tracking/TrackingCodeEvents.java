@@ -29,6 +29,7 @@ import javax.servlet.http.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.product.category.*;
 
 /**
  * Events used for maintaining TrackingCode related information
@@ -214,14 +215,19 @@ public class TrackingCodeEvents {
             response.addCookie(billableCookie);
         }
 
-        // if we have overridden logo and/or css set some session attributes
+        // if we have overridden logo, css and/or catalogId set some session attributes
         HttpSession session = request.getSession();
         String overrideLogo = trackingCode.getString("overrideLogo");
         if (overrideLogo != null)
             session.setAttribute("overrideLogo", overrideLogo);
         String overrideCss = trackingCode.getString("overrideCss");
         if (overrideCss != null)
-            session.setAttribute("overrideCss", overrideCss);               
+            session.setAttribute("overrideCss", overrideCss);   
+        String prodCatalogId = trackingCode.getString("prodCatalogId");
+        if (prodCatalogId != null && prodCatalogId.length() > 0) {  
+            session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);   
+            CategoryWorker.setTrail(request, new ArrayList());       
+        }
         
         // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
         String redirectUrl = trackingCode.getString("redirectUrl");

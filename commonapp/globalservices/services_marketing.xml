@@ -127,6 +127,7 @@
         <attribute name="redirectUrl" type="String" mode="IN" optional="true"/>
         <attribute name="overrideLogo" type="String" mode="IN" optional="true"/>
         <attribute name="overrideCss" type="String" mode="IN" optional="true"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="trackableLifetime" type="Long" mode="IN" optional="true"/>

@@ -170,6 +170,11 @@
         <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="trackingCode" field="overrideCss" fullattrs="true"/> size="60" maxlength="250"> (No override (co-brand) if empty)</td>
       </tr>
       <tr>
+        <td width="26%" align=right><div class="tabletext">Default Product Catalog ID</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="trackingCode" field="prodCatalogId" fullattrs="true"/> size="20" maxlength="20"> (No override (co-brand) if empty)</td>
+      </tr>      
+      <tr>
         <td width="26%" align=right><div class="tabletext">Trackable Lifetime</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="trackingCode" field="trackableLifetime" fullattrs="true"/> size="8" maxlength="18"> (seconds)</td>
