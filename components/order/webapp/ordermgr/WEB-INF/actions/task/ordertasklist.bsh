@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -71,7 +71,10 @@ while (pri.hasNext()) {
 
 custList = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"), new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
 baseList = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
-expressions = UtilMisc.toList(new EntityExprList(custList, EntityOperator.OR), new EntityExprList(pRolesList, EntityOperator.OR), new EntityExprList(baseList, EntityOperator.AND));
+expressions = new LinkedList();
+if (custList.size() > 0) expressions.add(new EntityExprList(custList, EntityOperator.OR));
+if (pRolesList.size() > 0) expressions.add(new EntityExprList(pRolesList, EntityOperator.OR));
+if (baseList.size() > 0) expressions.add(new EntityExprList(baseList, EntityOperator.AND));
 conditions = new EntityConditionList(expressions, EntityOperator.AND);
     
 // invoke the query
