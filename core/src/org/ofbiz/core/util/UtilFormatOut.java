@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/31 17:44:04  epabst
+ * added shopping cart code
+ *
  * Revision 1.2  2001/08/30 20:55:40  jonesde
  * Added a simple function to only return pre and post text if the base string is not empty.
  *
@@ -171,6 +174,22 @@ public class UtilFormatOut
     if(string1 != null) return string1;
     else if(string2 != null) return string2;
     else if(string3 != null) return string3;
+    else return "";
+  }
+  
+  /** Returns the first passed String if not null, otherwise the second if not null, otherwise the third if not null, otherwise the fourth if not null, otherwise an empty but non-null String.
+   * @param string1 The first passed String
+   * @param string2 The second passed String
+   * @param string3 The third passed String
+   * @param string4 The fourth passed String
+   * @return The first passed String if not null, otherwise the second if not null, otherwise the third if not null, otherwise the fourth if not null, otherwise an empty but non-null String
+   */  
+  public static String checkNull(String string1, String string2, String string3, String string4)
+  {
+    if(string1 != null) return string1;
+    else if(string2 != null) return string2;
+    else if(string3 != null) return string3;
+    else if(string4 != null) return string4;
     else return "";
   }
   
