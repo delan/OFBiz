@@ -226,13 +226,15 @@
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="UTIL_DEBUG_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ENTITY_DATA_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="WORKFLOW_MAINT"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="CATALOG_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_NOTE"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_NOTE"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SHIPRATE_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="TAXRATE_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PAY_INFO_VIEW"/>
+  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PAYPROC_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SECURITY_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="WORKEFFORTMGR_VIEW"/>
   <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ACCOUNTING_VIEW"/>
