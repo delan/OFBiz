@@ -13,7 +13,7 @@
   </PackageHeader>
   <RedefinableHeader PublicationStatus="UNDER_REVISION">
     <Author>OFBiz</Author>
-    <Version>0.02</Version>
+    <Version>0.01</Version>
     <Responsibles>
       <Responsible>admin</Responsible>
     </Responsibles>
@@ -87,7 +87,7 @@
 
       <RedefinableHeader PublicationStatus="UNDER_REVISION">
         <Author>OFBiz</Author>
-        <Version>0.02</Version>
+        <Version>0.01</Version>
         <Responsibles>
           <Responsible>admin</Responsible>
         </Responsibles>
