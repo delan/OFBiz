@@ -16,7 +16,6 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.ecommerce.shoppingcart.*;
-import org.ofbiz.ecommerce.distributor.*;
 
 /**
  * <p><b>Title:</b> CheckOutEvents.java
