@@ -9,7 +9,7 @@
 <%if(cart != null && cart.size() > 0) {%>
   <%pageContext.setAttribute("cartIter", cart.iterator());%>
   <%pageContext.setAttribute("cartAdjustments", cart.getAdjustments());%>
-  <%org.ofbiz.commonapp.product.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "associatedProducts");%>
+  <%org.ofbiz.commonapp.product.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "associatedProducts", true);%>
 <%}%>
 <%-- get these for the promoText --%>
 <%pageContext.setAttribute("productPromos", ProductPromoWorker.getCatalogProductPromos(delegator, request));%>
