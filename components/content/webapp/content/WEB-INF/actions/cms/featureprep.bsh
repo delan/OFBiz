@@ -1,5 +1,5 @@
 /*
- * $Id: featureprep.bsh,v 1.1 2004/06/19 19:52:49 byersa Exp $
+ * $Id: featureprep.bsh,v 1.2 2004/07/01 20:05:25 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -68,13 +68,15 @@ if (UtilValidate.isNotEmpty(dataResourceId)) {
         productFeatureId = productFeature.get("productFeatureId");
         description = productFeature.get("description");
         productFeatureDataResource = delegator.findByPrimaryKeyCache("ProductFeatureDataResource", UtilMisc.toMap("productFeatureId", productFeatureId, "dataResourceId", dataResourceId));
-        action = productFeatureDataResource != null ? "Y" : "N";
-        feature = new HashMap();
-        feature.put("productFeatureId", productFeatureId );
-        feature.put("dataResourceId", dataResourceId);
-        feature.put("action", action);
-        feature.put("description", description);
-        featureList.add(feature);
+        if (productFeatureDataResource != null) {
+            // action = productFeatureDataResource != null ? "Y" : "N";
+            feature = new HashMap();
+            feature.put("productFeatureId", productFeatureId );
+            feature.put("dataResourceId", dataResourceId);
+            feature.put("action", "Y");
+            feature.put("description", description);
+            featureList.add(feature);
+        }
     }
     context.put("featureList", featureList);
 }
