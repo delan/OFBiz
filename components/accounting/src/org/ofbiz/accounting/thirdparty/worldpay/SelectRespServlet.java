@@ -62,13 +62,14 @@ import com.worldpay.select.merchant.SelectServletResponse;
  * WorldPay Select Pro Response Servlet
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SelectRespServlet extends SelectServlet implements SelectDefs {
     
     public static final String module = SelectRespServlet.class.getName();
-          
+    protected JPublishWrapper jp = null;
+
     protected void doRequest(SelectServletRequest request, SelectServletResponse response) throws ServletException, IOException {
         Debug.logInfo("Response received from worldpay..", module);
                 
@@ -81,7 +82,12 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         
         // get the ServletContext
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
-        JPublishWrapper jp = (JPublishWrapper) context.getAttribute("jpublishWrapper");        
+        if (this.jp == null) {
+            this.jp = (JPublishWrapper) context.getAttribute("jpublishWrapper");
+            if (this.jp == null) {
+                this.jp = new JPublishWrapper(context);
+            }
+        }                
         
         // get the delegator
         GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);

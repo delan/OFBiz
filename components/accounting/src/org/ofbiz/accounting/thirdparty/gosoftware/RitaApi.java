@@ -43,68 +43,78 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev$
- * @since      3.2
+ * @version    $Rev:$
+ * @since      Sep 28, 2004
  */
-public class PcChargeApi {
+public class RitaApi {
 
-    public static final String module = PcChargeApi.class.getName();
+    public static final String module = RitaApi.class.getName();
     public static final String xschema = "x-schema:..\\dtd\\stnd.xdr";
     public static final String rootElement = "XML_FILE";
     public static final String reqElement = "XML_REQUEST";
 
+    // request fields
+    public static final String FUNCTION_TYPE = "FUNCTION_TYPE";
+    public static final String PAYMENT_TYPE = "PAYMENT_TYPE";
     public static final String USER_ID = "USER_ID";
     public static final String USER_PW = "USER_PW";
     public static final String COMMAND = "COMMAND";
-    public static final String TROUTD = "TROUTD";
-    public static final String PROCESSOR_ID = "PROCESSOR_ID";
-    public static final String MERCH_NUM = "MERCH_NUM";
+    public static final String CLIENT_ID = "CLIENT_ID";
+
     public static final String ACCT_NUM = "ACCT_NUM";
-    public static final String EXP_DATE = "EXP_DATE";
-    public static final String MANUAL_FLAG = "MANUAL_FLAG";
+    public static final String EXP_MONTH = "EXP_MONTH";
+    public static final String EXP_YEAR = "EXP_YEAR";
     public static final String TRANS_AMOUNT = "TRANS_AMOUNT";
-    public static final String REFERENCE = "REFERENCE";
-    public static final String TRACK_DATA = "TRACK_DATA";
-    public static final String CUSTOMER_CODE = "CUSTOMER_CODE";
-    public static final String TAX_AMOUNT = "TAX_AMOUNT";
-    public static final String PRINT_RECEIPTS_FLAG = "PRINT_RECEIPTS_FLAG";
-    public static final String PERIODIC_PAYMENT_FLAG = "PERIODIC_PAYMENT_FLAG";
-    public static final String OFFLINE_FLAG = "OFFLINE_FLAG";
-    public static final String VOID_FLAG = "VOID_FLAG";
-    public static final String ZIP_CODE = "ZIP_CODE";
-    public static final String STREET = "STREET";
-    public static final String TICKET_NUM = "TICKET_NUM";
+
     public static final String CARDHOLDER = "CARDHOLDER";
-    public static final String TRANS_STORE = "TRANS_STORE";
-    public static final String TRANS_ID = "TRANS_ID";
-    public static final String TOTAL_AUTH = "TOTAL_AUTH";
-    public static final String MULTI_FLAG = "MULTI_FLAG";
+    public static final String TRACK_DATA = "TRACK_DATA";
+    public static final String INVOICE = "INVOICE";
     public static final String PRESENT_FLAG = "PRESENT_FLAG";
+    public static final String CUSTOMER_STREET = "CUSTOMER_STREET";
+    public static final String CUSTOMER_ZIP = "CUSTOMER_ZIP";
     public static final String CVV2 = "CVV2";
+    public static final String TAX_AMOUNT = "TAX_AMOUNT";
+    public static final String PURCHASE_ID = "PURCHASE_ID";
+    public static final String FORCE_FLAG = "FORCE_FLAG";
+    public static final String ORIG_SEQ_NUM = "ORIG_SEQ_NUM";
+
+    // response fields
+    public static final String TERMINATION_STATUS = "TERMINATION_STATUS";
+    public static final String INTRN_SEQ_NUM = "INTRN_SEQ_NUM";
+    public static final String RESULT = "RESULT";
+    public static final String RESULT_CODE = "RESULT_CODE";
+    public static final String RESPONSE_TEXT = "RESPONSE_TEXT";
 
     public static final String AUTH_CODE = "AUTH_CODE";
-    public static final String RESULT = "RESULT";
     public static final String AVS_CODE = "AVS_CODE";
-    public static final String TRANS_DATE = "TRANS_DATE";
-    public static final String TICKET = "TICKET";
-    public static final String CARD_ID_CODE = "CARD_ID_CODE";
     public static final String CVV2_CODE = "CVV2_CODE";
+    public static final String REFERENCE = "REFERENCE";
+    public static final String TRANS_DATE = "TRANS_DATE";
+    public static final String TRANS_TIME = "TRANS_TIME";
+    public static final String ORIG_TRANS_AMOUNT = "ORIG_TRANS_AMOUNT";
 
-    protected static final String[] validOut = { RESULT, TRANS_DATE, AVS_CODE, CVV2_CODE, CARD_ID_CODE, TICKET };
-    protected static final String[] validIn = { PROCESSOR_ID, MERCH_NUM, ACCT_NUM, EXP_DATE, TRANS_AMOUNT, TRACK_DATA,
-            CUSTOMER_CODE, TAX_AMOUNT, PRINT_RECEIPTS_FLAG, PERIODIC_PAYMENT_FLAG, OFFLINE_FLAG, VOID_FLAG, ZIP_CODE,
-            STREET, TICKET_NUM, CARDHOLDER, TRANS_STORE, TOTAL_AUTH, MULTI_FLAG, PRESENT_FLAG, CVV2 };
+    // IN/OUT validation array
+    protected static final String[] validOut = { TERMINATION_STATUS, INTRN_SEQ_NUM, RESULT, RESULT_CODE, RESPONSE_TEXT,
+                                                 AUTH_CODE, AVS_CODE, CVV2_CODE, REFERENCE, TRANS_DATE, TRANS_TIME,
+                                                 ORIG_TRANS_AMOUNT };
 
+    protected static final String[] validIn = { FUNCTION_TYPE, PAYMENT_TYPE, USER_ID, USER_PW, COMMAND, CLIENT_ID,
+                                                ACCT_NUM, EXP_MONTH, EXP_YEAR, TRANS_AMOUNT, CARDHOLDER, TRACK_DATA,
+                                                INVOICE, PRESENT_FLAG, CUSTOMER_STREET, CUSTOMER_ZIP, CVV2, TAX_AMOUNT,
+                                                PURCHASE_ID, FORCE_FLAG, ORIG_TRANS_AMOUNT };
+
+    // mode definition
     protected static final int MODE_OUT = 20;
     protected static final int MODE_IN = 10;
 
+    // instance variables
     protected Document document = null;
     protected Element req = null;
     protected String host = null;
     protected int port = 0;
     protected int mode = 0;
 
-    public PcChargeApi(Document document) {
+    public RitaApi(Document document) {
         this.document = document;
         Element rootElement = this.document.getDocumentElement();
         if (reqElement.equals(rootElement.getNodeName())) {
@@ -115,7 +125,7 @@ public class PcChargeApi {
         this.mode = MODE_OUT;
     }
 
-    public PcChargeApi(boolean isFile) {
+    public RitaApi(boolean isFile) {
         // initialize the document
         String initialElement = rootElement;
         if (!isFile) {
@@ -133,13 +143,13 @@ public class PcChargeApi {
         this.mode = MODE_IN;
     }
 
-    public PcChargeApi(String host, int port) {
+    public RitaApi(String host, int port) {
         this(false);
         this.host = host;
         this.port = port;
     }
 
-    public PcChargeApi() {
+    public RitaApi() {
         this(true);
     }
 
@@ -189,7 +199,7 @@ public class PcChargeApi {
         return this.document;
     }
 
-    public PcChargeApi send() throws IOException, GeneralException {
+    public RitaApi send() throws IOException, GeneralException {
         if (host == null || port == 0) {
             throw new GeneralException("TCP transaction not supported without valid host/port configuration");
         }
@@ -216,7 +226,7 @@ public class PcChargeApi {
                 throw new GeneralException(e);
             }
 
-            PcChargeApi out = new PcChargeApi(outDoc);
+            RitaApi out = new RitaApi(outDoc);
             return out;
         } else {
             throw new IllegalStateException("Cannot send output object");
