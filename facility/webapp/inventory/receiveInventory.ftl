@@ -263,82 +263,81 @@ function removeSelected() {
         </tr>
                
         <#list purchaseOrderItems as orderItem>
+          <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>
           <input type="hidden" name="orderId|${rowCount}" value="${orderItem.orderId}">
           <input type="hidden" name="orderItemSeqId|${rowCount}" value="${orderItem.orderItemSeqId}"> 
           <input type="hidden" name="facilityId|${rowCount}" value="${requestParameters.facilityId?if_exists}">       
           <input type="hidden" name="datetimeReceived|${rowCount}" value="${now}">        
           <tr>
             <td colspan="2"><hr class="sepbar"></td>
-          </tr>        
-          <#if orderItem.productId?exists>
-            <#assign product = orderItem.getRelatedOneCache("Product")>  
-            <input type="hidden" name="productId|${rowCount}" value="${product.productId}">  
-            <tr>
-              <td>
-                <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-                  <tr>
+          </tr>                 
+          <tr>
+            <td>
+              <table width="100%" border='0' cellpadding='2' cellspacing='0'>
+                <tr>
+                  <#if orderItem.productId?exists>
+                    <#assign product = orderItem.getRelatedOneCache("Product")>  
+                    <input type="hidden" name="productId|${rowCount}" value="${product.productId}">                      
                     <td width="45%">
                       <div class="tabletext">
                         ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productId}&nbsp;-&nbsp;${product.productName?if_exists}</a> : ${product.description?if_exists}
                       </div>                       
-                    </td>                
-                    <td align="right">
-                      <div class="tableheadtext">Location:</div>
                     </td>
-                    <td align="right">
-                      <input type="text" class="inputBox" name="locationSeqId|${rowCount}" size="12">
-                    </td>
-                    <td align="right">
-                      <div class="tableheadtext">Qty Received:</div>
-                    </td>
-                    <td align="right">
-                      <input type="text" class="inputBox" name="quantityAccepted|${rowCount}" size="6" value="${orderItem.quantity?string.number}">
-                    </td>                                                      
-                  </tr>
-                  <tr>
+                  <#else>
                     <td width="45%">
-                      <span class="tableheadtext">Inventory Item Type:</span>&nbsp;&nbsp;
-                      <select name="inventoryItemTypeId|${rowCount}" size='1' class="selectBox">  
-                        <#list inventoryItemTypes as nextInventoryItemType>                      
-                        <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
-                        </#list>
-                      </select>                    
-                    </td>                    
-                    <td align="right">
-                      <div class="tableheadtext">Rejection Reason:</div>
+                      <div class="tabletext">
+                        <b>${orderItemType.description}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
+                        <input type="text" class="inputBox" size="12" name="productId|${rowCount}">
+                        <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">Create Product</a>
+                      </div>
                     </td>
-                    <td align="right">
-                      <select name="rejectionId|${rowCount}" size='1' class='selectBox'>   
-                        <option></option>    
-                        <#list rejectReasons as nextRejection>                 
-                        <option value='${nextRejection.rejectionId}'>${nextRejection.description?default(nextRejection.rejectionId)}</option>
-                        </#list>
-                      </select>
-                    </td>
-                    <td align="right">
-                      <div class="tableheadtext">Qty Rejected:</div>
-                    </td>
-                    <td align="right">
-                      <input type="text" class="inputBox" name="quantityRejected|${rowCount}" size="6">
-                    </td>
-                  </tr>
-                </table>
-              </td>
-              <td align="right">              
-                <input type="checkbox" name="_rowSubmit|${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
-              </td>
-            </tr>
-          <#else>
-            <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>
-            <tr>
-              <td>
-                <div class="tabletext">No Product Available</div>
-              </td>
-              <td align="right">              
-                <input type="checkbox" name="_rowSubmit|${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
-              </td>              
-            </tr>
-          </#if>
+                  </#if>
+                  <td align="right">
+                    <div class="tableheadtext">Location:</div>
+                  </td>
+                  <td align="right">
+                    <input type="text" class="inputBox" name="locationSeqId|${rowCount}" size="12">
+                  </td>
+                  <td align="right">
+                    <div class="tableheadtext">Qty Received:</div>
+                  </td>
+                  <td align="right">
+                    <input type="text" class="inputBox" name="quantityAccepted|${rowCount}" size="6" value="${orderItem.quantity?string.number}">
+                  </td>                                                      
+                </tr>
+                <tr>
+                  <td width="45%">
+                    <span class="tableheadtext">Inventory Item Type:</span>&nbsp;&nbsp;
+                    <select name="inventoryItemTypeId|${rowCount}" size='1' class="selectBox">  
+                      <#list inventoryItemTypes as nextInventoryItemType>                      
+                      <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+                      </#list>
+                    </select>                    
+                  </td>                    
+                  <td align="right">
+                    <div class="tableheadtext">Rejection Reason:</div>
+                  </td>
+                  <td align="right">
+                    <select name="rejectionId|${rowCount}" size='1' class='selectBox'>   
+                      <option></option>    
+                      <#list rejectReasons as nextRejection>                 
+                      <option value='${nextRejection.rejectionId}'>${nextRejection.description?default(nextRejection.rejectionId)}</option>
+                      </#list>
+                    </select>
+                  </td>
+                  <td align="right">
+                    <div class="tableheadtext">Qty Rejected:</div>
+                  </td>
+                  <td align="right">
+                    <input type="text" class="inputBox" name="quantityRejected|${rowCount}" size="6">
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td align="right">              
+              <input type="checkbox" name="_rowSubmit|${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+            </td>
+          </tr>          
           <#assign rowCount = rowCount + 1>
         </#list> 
         <tr>
