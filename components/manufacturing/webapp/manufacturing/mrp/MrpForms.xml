@@ -46,7 +46,7 @@
       <submit button-type="button"/>
      </field>
   </form>
-  <form name="listProposedOrder" type="multi" row-count="${listSize}"
+  <form name="listProposedOrder" type="multi" use-row-submit="true" 
         target="createProductionRunsFromRequirements" title="" list-name="requirementList" paginate-target="/FindProposedOrder"
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
     <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><display/></field>
