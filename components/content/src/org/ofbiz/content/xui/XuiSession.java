@@ -40,7 +40,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class XuiSession {
@@ -85,6 +85,14 @@ public class XuiSession {
 
     public String getId() {
         return this.id;
+    }
+
+    public String getUserId() {
+        if (this.userLogin == null) {
+            return null;
+        } else {
+            return this.userLogin.getString("userLoginId");
+        }
     }
 
     public void checkLogin(String username, String password) throws UserLoginFailure {
