@@ -1,5 +1,5 @@
 /*
- * $Id: TrackingCodeEvents.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: TrackingCodeEvents.java,v 1.2 2003/10/23 06:33:02 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.stats.VisitHandler;
+import org.ofbiz.content.website.WebSiteWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -47,7 +48,7 @@ import org.ofbiz.product.category.CategoryWorker;
  * Events used for maintaining TrackingCode related information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class TrackingCodeEvents {
@@ -211,7 +212,24 @@ public class TrackingCodeEvents {
         // write trackingCode cookies with the value set to the trackingCodeId
         // NOTE: just write these cookies and if others exist from other tracking codes they will be overwritten, ie only keep the newest
         
-        String cookieDomain = UtilProperties.getPropertyValue("url", "cookie.domain", "");
+        // load the properties from the website entity        
+        String cookieDomain = null;
+        
+        String webSiteId = WebSiteWorker.getWebSiteId(request);
+        if (webSiteId != null) {
+            try {
+                GenericValue webSite = delegator.findByPrimaryKeyCache("WebSite", UtilMisc.toMap("webSiteId", webSiteId));
+                if (webSite != null) {
+                    cookieDomain = webSite.getString("cookieDomain");
+                }
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Problems with WebSite entity; using global default cookie domain", module);
+            }
+        }
+
+        if (cookieDomain == null) {
+            cookieDomain = UtilProperties.getPropertyValue("url", "cookie.domain", "");
+        }
 
         // if trackingCode.trackableLifetime not null and is > 0 write a trackable cookie with name in the form: TKCDT_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.trackableLifetime
         Long trackableLifetime = trackingCode.getLong("trackableLifetime");
