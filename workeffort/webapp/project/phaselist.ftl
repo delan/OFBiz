@@ -106,8 +106,8 @@
                     <TD><A class='buttontext' href='<@ofbizUrl>/phasetasklist?phaseWorkEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                         ${workEffort.workEffortName}</a></TD>
                     <TD><A class='buttontext' href='<@ofbizUrl>/phasetasklist?phaseWorkEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
-                        <ofbiz:entityfield attribute="workEffort" field="description"/></a></TD>
-                    <TD><DIV class='tabletext'>${workEffort.estimatedStartDate?datetime?string.short}</DIV></TD>
+                        ${workEffort.description?if_exists}</a></TD>
+                    <TD><DIV class='tabletext'>${workEffort.estimatedStartDate.toString()}</DIV></TD>
 <#--                    <TD><DIV class='tabletext'>${workEffort.priority}</DIV></TD>-->
                     <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", workEffort.currentStatusId))>                    
                     <TD><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
