@@ -243,13 +243,14 @@ public class EntitySyncServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map runPullEntitySync(DispatchContext dctx, Map context) {
-        Debug.logInfo("Running runPullEntitySync", module);
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         
         String entitySyncId = (String) context.get("entitySyncId");
         String remotePullAndReportEntitySyncDataName = (String) context.get("remotePullAndReportEntitySyncDataName");
-        
+
+        Debug.logInfo("Running runPullEntitySync for entitySyncId=" + context.get("entitySyncId"), module);
+
         // loop until no data is returned to store
         boolean gotMoreData = true;
         
@@ -360,7 +361,8 @@ public class EntitySyncServices {
         EntitySyncContext esc = null;
         try {
             esc = new EntitySyncContext(dctx, context);
-            //Debug.logInfo("(1)Doing pullAndReportEntitySyncData split, currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
+            
+            Debug.logInfo("Doing pullAndReportEntitySyncData for entitySyncId=" + esc.entitySyncId + ", currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
             
             if ("Y".equals(esc.entitySync.get("forPushOnly"))) {
                 return ServiceUtil.returnError("Cannot do Entity Sync Pull because entitySyncId [] is set for Push Only.");
