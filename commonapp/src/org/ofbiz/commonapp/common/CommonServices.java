@@ -104,7 +104,7 @@ public class CommonServices {
         result.put("body", body);
         return result;
     }
-    
+
     /**
      * Basic JavaMail Service
      *@param ctx The DispatchContext that this service is operating in
@@ -204,7 +204,6 @@ public class CommonServices {
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
-     */
      */
     public static Map setDebugLevels(DispatchContext dctx, Map context) {
         Boolean verbose = (Boolean) context.get("verbose");
