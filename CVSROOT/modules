@@ -26,9 +26,7 @@
 # spread out over the entire source repository.
 
 root -d . setup/ofbiz 
-
-all -a root core commonapp webtools setup lib ecommerce catalog ordermgr partymgr workeffort accounting facility marketing content website
-
 base -a core commonapp webtools setup lib
 apps -a ecommerce catalog ordermgr partymgr workeffort accounting facility marketing content
-
+docs -a setup website
+all -a root base apps docs
