@@ -121,7 +121,7 @@
                         <#assign product = inventoryItemInfo.product>
                         <#assign quantity = inventoryItemInfo.quantity>
                         <#assign statusItem = inventoryItemInfo.statusItem?if_exists>
-                        <fo:table-row> <#-- TODO: set the row color -->
+                        <fo:table-row>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#if facilityLocation?has_content>
                                     <fo:block>${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</fo:block>

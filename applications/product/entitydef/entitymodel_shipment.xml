@@ -126,10 +126,15 @@
             title="Picklist Entity">
       <field name="picklistId" type="id-ne"></field>
       <field name="description" type="description"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="picklistId"/>
+      <relation type="one" fk-name="PICKLST_FLTY" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
       <relation type="one" fk-name="PICKLST_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
@@ -141,9 +146,18 @@
       <field name="picklistBinId" type="id-ne"></field>
       <field name="picklistId" type="id-ne"></field>
       <field name="binLocationNumber" type="numeric"></field>
+      <field name="primaryOrderId" type="id"></field>
+      <field name="primaryShipGroupSeqId" type="id"></field>
       <prim-key field="picklistBinId"/>
       <relation type="one" fk-name="PCKLST_BIN_PKLT" rel-entity-name="Picklist">
         <key-map field-name="picklistId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_BIN_OISG" title="Primary" rel-entity-name="OrderItemShipGroup">
+        <key-map field-name="primaryOrderId" rel-field-name="orderId"/>
+        <key-map field-name="primaryShipGroupSeqId" rel-field-name="shipGroupSeqId"/>
+      </relation>
+      <relation type="one-nofk" title="Primary" rel-entity-name="OrderHeader">
+        <key-map field-name="primaryOrderId" rel-field-name="orderId"/>
       </relation>
     </entity>
     <entity entity-name="PicklistItem"
@@ -177,6 +191,9 @@
       <relation type="one" fk-name="PCKLST_ITM_INV" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="InventoryItemAndLocation">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
       <relation type="one-nofk" rel-entity-name="OrderItemShipGrpInvRes">
       	<!-- This is a nofk so that the OrderItemShipGrpInvRes can be removed -->
         <key-map field-name="orderId"/>
@@ -206,6 +223,18 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyNameView">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_RLE_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_RLE_LMUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
     </entity>
     <entity entity-name="PicklistStatusHistory"
             package-name="org.ofbiz.shipment.picklist"
@@ -219,6 +248,9 @@
       <prim-key field="changeDate"/>
       <relation type="one" fk-name="PCKLST_STHST_PKLT" rel-entity-name="Picklist">
         <key-map field-name="picklistId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_STHST_CUL" title="Change" rel-entity-name="UserLogin">
+        <key-map field-name="changeUserLoginId" rel-field-name="userLoginId"/>
       </relation>
       <relation type="one" fk-name="PCKLST_STHST_FSI" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>

@@ -41,31 +41,30 @@
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="maxNumberOfOrders" type="Long" mode="IN" optional="true"/>
-        <attribute name="setPickStartedDate" type="String" mode="IN" optional="true"/><!-- Y or N, defaults to N -->
         <attribute name="facilityLocationInfoList" type="List" mode="OUT" optional="true"/>
         <attribute name="inventoryItemInfoList" type="List" mode="OUT" optional="true"/>
         <attribute name="orderHeaderInfoList" type="List" mode="OUT" optional="true"/>
         <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="true"/>
         <attribute name="insufficientQohList" type="List" mode="OUT" optional="true"/>
     </service>
-    <service name="clearPickStarted" engine="simple"
-            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="clearPickStarted">
-        <description>Clear PickStarted Dates according to specified parameters</description>
-        <attribute name="orderId" type="String" mode="IN" optional="true"/>
-        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
-        <attribute name="pickStartDate" type="Timestamp" mode="IN" optional="true"/>
-    </service>
     
     <!-- Persisted Picklist Services -->
     <service name="createPicklistFromOrders" engine="simple"
-            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="getPicklistData">
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="createPicklistFromOrders">
         <description>Create Picklist From Orders</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="maxNumberOfOrders" type="Long" mode="IN" optional="true"/>
         <attribute name="picklistId" type="String" mode="OUT" optional="false"/>
     </service>
+    
+    <service name="getPicklistDisplayInfo" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="getPicklistDisplayInfo">
+        <description>Create Picklist From Orders</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="picklistInfoList" type="List" mode="OUT" optional="true"/>
+    </service>
+    
     
     <!-- Picklist -->
     <service name="createPicklist" default-entity-name="Picklist" engine="simple"

@@ -40,7 +40,7 @@
          + OrderItemShipGroup.maySplit = decide to include based on whether all items available or not
          x OrderItemShipGrpInvRes.reservedDatetime = sort by, or by order date?
          + OrderItemShipGrpInvRes.quantityNotAvailable = if not null and not 0, and maySplit is N, exclude whole order
-         + OrderItemShipGrpInvRes.pickStartDate = if not null already being picked, set when creating the pick list
+         + PicklistItem = check to see if any exist, if so then already on a picklist
          + InventoryItem.facilityId = passed facilityId
          + FacilityLocation.locationTypeEnumId = FLT_PICKLOC, can be picked now
          + FacilityLocation.locationTypeEnumId = FLT_BULK, stock move needed, remove whole order from list to be picked, add to list needing stock move
@@ -118,8 +118,10 @@
                         <iterate entry-name="orderItemShipGrpInvRes" list-name="orderItemShipGrpInvResList">
                             <if-compare field-name="pickThisOrder" operator="equals" value="Y">
                                 <get-related-one value-name="orderItemShipGrpInvRes" relation-name="InventoryItem" to-value-name="inventoryItem"/>
-                                <!-- if all orderItemShipGrpInvRes.pickStartDate are set, don't include order as a pick candidate; keep a flag to see -->
-                                <if-empty field-name="orderItemShipGrpInvRes.pickStartDate">
+                                <get-related value-name="orderItemShipGrpInvRes" relation-name="PicklistItem" list-name="picklistItemList"/>
+                                
+                                <!-- if all picklistItemList are not empty, don't include order as a pick candidate; keep a flag to see -->
+                                <if-empty field-name="picklistItemList">
                                     <!-- note that this is separate because we can't really use it as a break condition, must check all of them before any useful information is to be had -->
                                     <string-to-field string="N" field-name="allPickStarted"/>
     
@@ -222,7 +224,7 @@
             Returns:
                 facilityLocationInfoList: List of Maps with facilityLocation, productInfoList, being a List of Maps with product, quantity, inventoryItemList, orderItemList
                 inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, statusItem, quantity
-                orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemShipGrpInvResList
+                orderHeaderInfoList: List of Maps with orderHeader, orderItemShipGroup and orderItemInfoList which is List of Maps with orderItem, product and orderItemShipGrpInvResList
                 wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem
                 insufficientQohList: List of Maps with inventoryItem and quantityNeeded
         -->
@@ -286,8 +288,8 @@
                     <if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItemAndShipGroupAssoc.statusId">
                         <calculate field-name="reservedQuantity" type="Double"><number value="0"/></calculate>
 
-                        <field-to-field field-name="orderItemSeqId" map-name="orderItemAndShipGroupAssoc" to-map-name="itemFilterMap"/>
-                        <filter-list-by-and to-list-name="perItemResList" map-name="itemFilterMap" list-name="orderReadyToPickInfo.orderItemShipGrpInvResList"/>
+                        <field-to-field field-name="orderItemAndShipGroupAssoc.orderItemSeqId" to-field-name="itemFilterMap.orderItemSeqId"/>
+                        <filter-list-by-and map-name="itemFilterMap" list-name="orderReadyToPickInfo.orderItemShipGrpInvResList" to-list-name="perItemResList"/>
                         <iterate entry-name="orderItemShipGrpInvRes" list-name="perItemResList">
                             <field-to-env field-name="inventoryItemId" map-name="orderItemShipGrpInvRes"/>
                             <!-- update reserved quantity per inventoryItem, keep track of orderItems this came from -->
@@ -323,19 +325,13 @@
                                     <calcop field-name="orderItemShipGrpInvRes.quantity" operator="get"/>
                                 </calcop>
                             </calculate>
-
-                            <!-- if setPickStartedDate == "Y" then set the OrderItemShipGrpInvRes.pickStartDate to now -->
-                            <if-compare field-name="parameters.setPickStartedDate" operator="equals" value="Y">
-                                <env-to-env env-name="nowTimestamp" to-env-name="orderItemShipGrpInvRes.pickStartDate"/>
-                                <store-value value-name="orderItemShipGrpInvRes"/>
-                            </if-compare>
                         </iterate>
 
                         <if-not-empty field-name="perItemResListValid">
                             <clear-field field-name="orderItemInfo"/>
                             <env-to-env env-name="orderItemAndShipGroupAssoc" to-env-name="orderItemInfo.orderItemAndShipGroupAssoc"/>
                             <env-to-env env-name="perItemResListValid" to-env-name="orderItemInfo.orderItemShipGrpInvResList"/>
-                            <get-related-one value-name="orderItemAndShipGroupAssoc" relation-name="Product" to-value-name="orderItemInfo.product"/>
+                            <get-related-one value-name="orderItemAndShipGroupAssoc" relation-name="Product" to-value-name="orderItemInfo.product" use-cache="true"/>
                             <field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
                         </if-not-empty>
                         <clear-field field-name="perItemResListValid"/>
@@ -371,7 +367,8 @@
                 <!-- keep the order info for easy handling of order pack info -->
                 <if-not-empty field-name="orderItemInfoList">
                     <env-to-env env-name="orderReadyToPickInfo.orderHeader" to-env-name="orderHeaderInfo.orderHeader"/>
-                    <env-to-field env-name="orderItemInfoList" map-name="orderHeaderInfo"/>
+                    <env-to-env env-name="orderReadyToPickInfo.orderItemShipGroup" to-env-name="orderHeaderInfo.orderItemShipGroup"/>
+                    <env-to-env env-name="orderItemInfoList" to-env-name="orderHeaderInfo.orderItemInfoList"/>
                     <field-to-list field-name="orderHeaderInfo" list-name="orderHeaderInfoList"/>
                 </if-not-empty>
 
@@ -509,20 +506,6 @@
         </iterate>
     </simple-method>
 
-    <simple-method method-name="clearPickStarted" short-description="Clear PickStarted Dates according to specified parameters">
-        <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
-        </check-permission>
-        <check-errors/>
-
-        <make-value entity-name="OrderItemShipGrpInvRes" map-name="parameters" value-name="orderItemShipGrpInvResLkupValue"/>
-        <find-by-and entity-name="OrderItemShipGrpInvRes" map-name="orderItemShipGrpInvResLkupValue" list-name="orderItemShipGrpInvResList"/>
-        <iterate entry-name="orderItemShipGrpInvRes" list-name="orderItemShipGrpInvResList">
-            <clear-field field-name="pickStartDate" map-name="orderItemShipGrpInvRes"/>
-            <store-value value-name="orderItemShipGrpInvRes"/>
-        </iterate>
-    </simple-method>
-
     <!-- ========================================================= -->
     <!-- =========== Persisted Picklist Services ================= -->
     <!-- ========================================================= -->
@@ -531,12 +514,6 @@
             <fail-message message="Security Error: to run createPicklistFromOrders you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
-        <!--
-            <attribute name="facilityId" type="String" mode="IN" optional="false"/>
-            <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
-            <attribute name="maxNumberOfOrders" type="Long" mode="IN" optional="true"/>
-            <attribute name="picklistId" type="String" mode="OUT" optional="false"/>
-        -->
 
         <now-timestamp-to-env env-name="nowTimestamp"/>
 
@@ -544,19 +521,48 @@
         <call-service service-name="findOrdersToPickMove" in-map-name="findOrdersToPickMoveMap">
             <result-to-field result-name="pickMoveByShipmentMethodInfoList"/>
         </call-service>
+        <!-- <log level="info" message="pickMoveByShipmentMethodInfoList=${pickMoveByShipmentMethodInfoList}"/> -->
 
         <!-- This creates orderHeaderInfoList, wrongQuantityReservedList, insufficientQohList and inventoryItems, inventoryItemOrderItems, inventoryItemQuantities -->
         <call-simple-method method-name="assembleOrderHeaderInfoInline"/>
+        <!-- <log level="info" message="orderHeaderInfoList=${orderHeaderInfoList}"/> -->
 
-        <!-- TODO: if the orderHeaderInfoList is not empty, create a Picklist -->
+        <!-- if the orderHeaderInfoList is not empty, create a Picklist, then populate it -->
         <if-not-empty field-name="orderHeaderInfoList">
+            <env-to-env env-name="parameters.facilityId" to-env-name="createPicklistMap.facilityId"/>
+            <env-to-env env-name="parameters.shipmentMethodTypeId" to-env-name="createPicklistMap.shipmentMethodTypeId"/>
+            <call-service service-name="createPicklist" in-map-name="createPicklistMap">
+                <result-to-field result-name="picklistId"/>
+            </call-service>
+            <field-to-result field-name="picklistId"/>
+            <log level="info" message="Created Picklist with ID ${picklistId}"/>
             
-            
-            <!-- TODO: iterate over the orderHeaderInfoList and create a PicklistBin for each order and a PicklistItem for each item -->
+            <!-- iterate over the orderHeaderInfoList and create a PicklistBin for each order and a PicklistItem for each item -->
+            <calculate field-name="binLocationNumber" type="Long"><number value="1"/></calculate>
             <iterate entry-name="orderHeaderInfo" list-name="orderHeaderInfoList">
+                <clear-field field-name="picklistBinId"/>
+                <clear-field field-name="createPicklistBinMap"/>
+                <env-to-env env-name="picklistId" to-env-name="createPicklistBinMap.picklistId"/>
+                <env-to-env env-name="binLocationNumber" to-env-name="createPicklistBinMap.binLocationNumber"/>
+                <env-to-env env-name="orderHeaderInfo.orderItemShipGroup.orderId" to-env-name="createPicklistBinMap.primaryOrderId"/>
+                <env-to-env env-name="orderHeaderInfo.orderItemShipGroup.shipGroupSeqId" to-env-name="createPicklistBinMap.primaryShipGroupSeqId"/>
+                <call-service service-name="createPicklistBin" in-map-name="createPicklistBinMap">
+                    <result-to-field result-name="picklistBinId"/>
+                </call-service>
+
+                <calculate field-name="binLocationNumber" type="Long"><calcop field-name="binLocationNumber" operator="add"/><number value="1"/></calculate>
                 
+                <iterate entry-name="orderItemInfo" list-name="orderHeaderInfo.orderItemInfoList">
+                    <iterate entry-name="orderItemShipGrpInvRes" list-name="orderItemInfo.orderItemShipGrpInvResList">
+                        <clear-field field-name="createPicklistItemMap"/>
+                        <env-to-env env-name="picklistBinId" to-env-name="createPicklistItemMap.picklistBinId"/>
+                        <set-service-fields service-name="createPicklistItem" map-name="orderItemShipGrpInvRes" to-map-name="createPicklistItemMap"/>
+                        <call-service service-name="createPicklistItem" in-map-name="createPicklistItemMap"/>
+                    </iterate>
+                </iterate>
             </iterate>
         <else>
+            <log level="info" message="Not Creating Picklist with ID, nothing to process."/>
             <!-- return error messages saying no orders ready to pick, not creating picklist -->
             <add-error><fail-message message="No orders ready to pick, not creating picklist."/></add-error>
             <check-errors/>
@@ -576,6 +582,10 @@
 
         <sequenced-id-to-env sequence-name="Picklist" env-name="newEntity.picklistId"/>
         <field-to-result field-name="newEntity.picklistId" result-name="picklistId"/>
+        
+        <if-empty field-name="newEntity.statusId">
+            <string-to-field string="PICKLIST_INPUT" field-name="newEntity.statusId"/>
+        </if-empty>
 
         <!-- set the created and lastModified info -->
         <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.createdByUserLogin"/>
@@ -749,5 +759,77 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="getPicklistDisplayInfo" short-description="Get Picklist Display Info">
+        <check-permission permission="FACILITY" action="_VIEW">
+            <fail-message message="Security Error: to run deletePicklistRole you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <entity-condition entity-name="Picklist" list-name="picklistList">
+            <condition-list combine="and">
+                <condition-expr field-name="facilityId" operator="equals" env-name="parameters.facilityId"/>
+                <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_PICKED"/>
+                <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_CANCELLED"/>
+            </condition-list>
+        </entity-condition>
+        
+        <iterate entry-name="picklist" list-name="picklistList">
+            <clear-field field-name="picklistRoleInfoList"/>
+            <get-related value-name="picklist" relation-name="PicklistRole" list-name="picklistRoleList"/>
+            <iterate entry-name="picklistRole" list-name="picklistRoleList">
+                <clear-field field-name="picklistRoleInfo"/>
+                <get-related-one value-name="picklistRole" relation-name="PartyNameView" to-value-name="picklistRoleInfo.partyNameView" use-cache="true"/>
+                <get-related-one value-name="picklistRole" relation-name="RoleType" to-value-name="picklistRoleInfo.roleType" use-cache="true"/>
+                <env-to-env env-name="picklistRole" to-env-name="picklistRoleInfo.picklistRole"/>
+                <field-to-list field-name="picklistRoleInfo" list-name="picklistRoleInfoList"/>
+            </iterate>
+
+            <clear-field field-name="picklistStatusHistoryInfoList"/>
+            <get-related value-name="picklist" relation-name="PicklistStatusHistory" list-name="picklistStatusHistoryList"/>
+            <iterate entry-name="picklistStatusHistory" list-name="picklistStatusHistoryList">
+                <clear-field field-name="picklistStatusHistoryInfo"/>
+                <get-related-one value-name="picklistStatusHistory" relation-name="StatusItem" to-value-name="picklistStatusHistoryInfo.statusItem" use-cache="true"/>
+                <get-related-one value-name="picklistStatusHistory" relation-name="StatusItemTo" to-value-name="picklistStatusHistoryInfo.statusItemTo" use-cache="true"/>
+                <env-to-env env-name="picklistStatusHistory" to-env-name="picklistStatusHistoryInfo.picklistStatusHistory"/>
+                <field-to-list field-name="picklistStatusHistoryInfo" list-name="picklistStatusHistoryInfoList"/>
+            </iterate>
+
+            <clear-field field-name="picklistBinInfoList"/>
+            <get-related value-name="picklist" relation-name="PicklistBin" list-name="picklistBinList"/>
+            <iterate entry-name="picklistBin" list-name="picklistBinList">
+                <clear-field field-name="picklistBinInfo"/>
+                <get-related-one value-name="picklistBin" relation-name="PrimaryOrderHeader" to-value-name="picklistBinInfo.primaryOrderHeader"/>
+                <get-related-one value-name="picklistBin" relation-name="PrimaryOrderItemShipGroup" to-value-name="picklistBinInfo.primaryOrderItemShipGroup"/>
+
+                <clear-field field-name="picklistItemInfoList"/>
+                <get-related value-name="picklistBin" relation-name="PicklistItem" list-name="picklistItemList" use-cache="true"/>
+                <iterate entry-name="picklistItem" list-name="picklistItemList">
+                    <clear-field field-name="picklistItemInfo"/>
+                    <get-related-one value-name="picklistItem" relation-name="OrderItem" to-value-name="picklistItemInfo.orderItem"/>
+                    <get-related-one value-name="picklistItem" relation-name="InventoryItemAndLocation" to-value-name="picklistItemInfo.inventoryItemAndLocation"/>
+                    <get-related-one value-name="picklistItem" relation-name="OrderItemShipGrpInvRes" to-value-name="picklistItemInfo.orderItemShipGrpInvRes"/>
+                    <env-to-env env-name="picklistItem" to-env-name="picklistItemInfo.picklistItem"/>
+                    <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoList"/>
+                </iterate>
+                <env-to-env env-name="picklistItemInfoList" to-env-name="picklistBinInfo.picklistItemInfoList"/>
+                
+                <env-to-env env-name="picklistBin" to-env-name="picklistBinInfo.picklistBin"/>
+                <field-to-list field-name="picklistBinInfo" list-name="picklistBinInfoList"/>
+            </iterate>
+
+            <clear-field field-name="picklistInfo"/>
+
+            <env-to-env env-name="picklist" to-env-name="picklistInfo.picklist"/>
+            <env-to-env env-name="picklistRoleInfoList" to-env-name="picklistInfo.picklistRoleInfoList"/>
+            <env-to-env env-name="picklistStatusHistoryInfoList" to-env-name="picklistInfo.picklistStatusHistoryInfoList"/>
+            <env-to-env env-name="picklistBinInfoList" to-env-name="picklistInfo.picklistBinInfoList"/>
+            <get-related-one value-name="picklist" relation-name="StatusItem" to-value-name="picklistInfo.statusItem" use-cache="true"/>
+            
+            <field-to-list field-name="picklistInfo" list-name="picklistInfoList"/>
+        </iterate>
+        
+        <field-to-result field-name="picklistInfoList"/>
     </simple-method>
 </simple-methods>
