@@ -27,6 +27,7 @@
 import java.lang.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.commonapp.accounting.payment.*;
 import org.ofbiz.commonapp.party.contact.*;
 
 delegator = request.getAttribute("delegator");
@@ -56,26 +57,10 @@ if (billingAccountRoleList != null && billingAccountRoleList.size() > 0) {
     billingAcctIter = billingAccountRoleList.iterator();
     billingAccountList = new ArrayList();
     while (billingAcctIter.hasNext()) {
-        billingAccountRole = billingAcctIter.next();
-        billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");                
-        billingAccountInvoices = delegator.findByAnd("Invoice", UtilMisc.toMap("billingAccountId", billingAccountVO.getString("billingAccountId"), "statusId", "INVOICE_SENT"));
-        accountBalance = 0.00;
-        invoiceIter = billingAccountInvoices.iterator();
-        while (invoiceIter.hasNext()) {
-            invoice = invoiceIter.next();
-            invoiceTotal = 0.00;
-            invoiceItems = invoice.getRelated("InvoiceItem");
-            itemIter = invoiceItems.iterator();
-            while (itemIter.hasNext()) {
-                item = itemIter.next();
-                quantity = item.getDouble("quantity");
-                amount = item.getDouble("amount");
-                if (quantity != null && amount != null) {
-                    invoiceTotal += quantity.doubleValue() * amount.doubleValue();
-                }
-            }
-            accountBalance += invoiceTotal;
-        }
+        billingAccountRole = billingAcctIter.next();        
+        billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");                        
+        accountBalance = PaymentWorker.getBillingAccountBalance(delegator, billingAccountRole.getString("billingAccountId"));
+        
         billingAccount = new HashMap(billingAccountVO);
         billingAccount.put("accountBalance", new Double(accountBalance));        
         billingAccountList.add(billingAccount);
