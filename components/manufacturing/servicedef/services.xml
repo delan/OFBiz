@@ -505,6 +505,17 @@
         <attribute mode="IN" name="quantity" optional="true" type="Double"/>
         <attribute mode="OUT" name="productionRunId" optional="true" type="String"/>
     </service>
+    <service name="createProductionRunFromConfiguration" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="createProductionRunFromConfiguration" auth="true">
+        <description>Creates a production run from a product configuration.</description>
+        <attribute mode="IN" name="facilityId" optional="false" type="String"/>
+        <attribute mode="IN" name="configId" optional="true" type="String"/>
+        <attribute mode="IN" name="config" optional="true" type="org.ofbiz.product.config.ProductConfigWrapper"/>
+        <attribute mode="IN" name="quantity" optional="true" type="Double"/>
+        <attribute mode="IN" name="orderId" optional="true" type="String"/>
+        <attribute mode="IN" name="orderItemSeqId" optional="true" type="String"/>
+        <attribute mode="OUT" name="productionRunId" optional="false" type="String"/>
+    </service>
     
     <service name="getNotAssembledComponents" engine="java"
                 location="org.ofbiz.manufacturing.bom.BOMServices" invoke="getNotAssembledComponents" auth="true">
