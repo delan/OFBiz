@@ -116,6 +116,34 @@
   <!-- org.ofbiz.commonapp.workeffort.definition -->
   <!-- ========================================================= -->
 	
+    <entity entity-name="WorkflowActivity" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Activity Entity">
+      <field name="activityId" type="id-ne"></field>
+      <field name="activityName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="priority" type="numeric"></field>
+      <field name="timeLimit" type="floating-point"></field>
+      <field name="startModeEnumId" type="id"></field>
+      <field name="finishModeEnumId" type="id"></field>
+      <field name="performerParticipantId" type="id"></field>
+      <field name="documentationContentId" type="id"></field>
+      <field name="iconContentId" type="id"></field>
+      <field name="cost" type="currency-amount"></field>
+      <field name="duration" type="floating-point"></field>
+      <field name="workingTime" type="floating-point"></field>
+      <field name="waitingTime" type="floating-point"></field>	
+      <prim-key field="activityId" />
+    </entity>	
+    <entity entity-name="WorkflowApplication" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Application Entity">
+      <field name="applicationId" type="id-ne"></field>
+      <field name="applicationName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="formalParamListId" type="id"></field>	
+      <prim-key field="applicationId" />
+    </entity>	
     <entity entity-name="WorkflowArrayTypeMembers" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Array Type Members Entity">
@@ -123,6 +151,18 @@
       <field name="dataTypeEnumId" type="id-ne"></field>	
       <prim-key field="arrayTypeMembers" />	
       <prim-key field="dataTypeEnumId" />
+    </entity>	
+    <entity entity-name="WorkflowDataField" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Data Field Entity">
+      <field name="dataFieldId" type="id-ne"></field>
+      <field name="dataFieldName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="dataTypeEnumId" type="id"></field>
+      <field name="initialValue" type="value"></field>
+      <field name="lengthBytes" type="numeric"></field>
+      <field name="isArray" type="indicator"></field>	
+      <prim-key field="dataFieldId" />
     </entity>	
     <entity entity-name="WorkflowFormalParam" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -132,7 +172,8 @@
       <field name="modeEnumId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="dataTypeEnumId" type="id"></field>
-      <field name="arrayTypeMembers" type="id"></field>
+      <field name="arrayTypeMembers" type="id"></field>	
+      <prim-key field="formalParamId" />
     </entity>	
     <entity entity-name="WorkflowFormalParamList" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -181,6 +222,33 @@
         <key-map field-name="externalPackageId" rel-field-name="packageId" />
       </relation>
     </entity>	
+    <entity entity-name="WorkflowParticipant" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Participant Entity">
+      <field name="participantId" type="id-ne"></field>
+      <field name="participantName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="participantTypeId" type="id"></field>	
+      <prim-key field="participantId" />
+    </entity>	
+    <entity entity-name="WorkflowParticipantList" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Participant List Entity">
+      <field name="participantListId" type="id-ne"></field>
+      <field name="participantId" type="id"></field>	
+      <prim-key field="participantListId" />	
+      <prim-key field="participantId" />
+    </entity>	
+    <entity entity-name="WorkflowParticipantType" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Participant Type Entity">
+      <field name="participantTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="typeCode" type="short-varchar"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>	
+      <prim-key field="participantTypeId" />
+    </entity>	
     <entity entity-name="WorkflowProcess" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Process Entity">
@@ -204,7 +272,8 @@
       <field name="durationUomId" type="id"></field>
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
-      <field name="waitingTime" type="floating-point"></field>
+      <field name="waitingTime" type="floating-point"></field>	
+      <prim-key field="processId" />
     </entity>	
     <entity entity-name="WorkflowSpecification" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -214,6 +283,17 @@
       <field name="description" type="description"></field>
       <field name="currentVersion" type="very-short"></field>	
       <prim-key field="specificationId" />
+    </entity>	
+    <entity entity-name="WorkflowTransition" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Transition Entity">
+      <field name="transitionId" type="id-ne"></field>
+      <field name="transitionName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="conditionExpr" type="long-varchar"></field>
+      <field name="fromActivityId" type="id"></field>
+      <field name="toActivityId" type="id"></field>	
+      <prim-key field="transitionId" />
     </entity>
 
   <!-- ========================================================= -->

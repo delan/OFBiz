@@ -640,13 +640,20 @@
   <!-- org.ofbiz.commonapp.workeffort.definition -->
   <!-- ========================================================= -->
 	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivity" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowApplication" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowArrayTypeMembers" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowDataField" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowFormalParam" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowFormalParamList" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackage" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackageExternal" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowParticipant" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowParticipantList" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowParticipantType" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowProcess" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowSpecification" />
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowSpecification" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTransition" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.scheduler -->
