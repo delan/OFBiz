@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -155,16 +155,16 @@ function lookupReturn(click) {
               <td width="50%"><div class="boxhead">Return(s) Found</div></td>
               <td width="50%">
                  <div class="boxhead" align=right>
-                  <#if 0 < returnList?size>
-                    <#if 0 < viewIndex>
+                  <#if (returnHeaderListSize > 0)>
+                    <#if (viewIndex > 1)>
                       <a href="<@ofbizUrl>/findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
                     <#else>
                       <span class="submenutextdisabled">Previous</span>
                     </#if>
-                    <#if 0 < listSize>
-                      <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
+                    <#if (returnHeaderListSize > 0)>
+                      <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${returnHeaderListSize}</span>
                     </#if>
-                    <#if highIndex < listSize>
+                    <#if (returnHeaderListSize > highIndex)>
                       <a href="<@ofbizUrl>/findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                     <#else>
                       <span class="submenutextrightdisabled">Next</span>
