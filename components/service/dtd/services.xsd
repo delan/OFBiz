@@ -1,0 +1,324 @@
+<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<!--
+  To refer to this Schema in your XML file, use the following declaration:
+-->
+
+<!--
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  Service Framework - Service Definition DTD
+ *
+ *  $Id: $
+-->
+
+ <xsd:element name='services'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='vendor' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='version' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='created' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='service' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='description'>
+  <xsd:complexType>
+   <xsd:sequence>
+   <xsd:any namespace='http://www.w3.org/namespace/'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='namespace'>
+  <xsd:complexType>
+   <xsd:sequence>
+   <xsd:any namespace='http://www.w3.org/namespace/'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='vendor' type='xsd:string'>
+ </xsd:element>
+
+ <xsd:element name='version' type='xsd:string'>
+ </xsd:element>
+
+ <xsd:element name='created' type='xsd:string'>
+ </xsd:element>
+
+ <xsd:element name='service'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='description' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='namespace' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='required-permissions' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='implements' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='auto-attributes' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='attribute' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='override' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='engine' type='xsd:string' use='required'/>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+   <xsd:attribute name='invoke' type='xsd:string' use='required'/>
+   <xsd:attribute name='auth' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='export' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='validate' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='default-entity-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='use-transaction' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='require-new-transaction' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='transaction-timout' type='xsd:string' use='optional'/>
+   <xsd:attribute name='max-retry' type='xsd:string' default='-1'/>
+   <xsd:attribute name='debug' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='required-permissions'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='check-permission' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='check-role-member' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='join-type' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='AND'/>
+      <xsd:enumeration value='OR'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='check-permission'>
+  <xsd:complexType>
+   <xsd:attribute name='permission' type='xsd:string' use='required'/>
+   <xsd:attribute name='action' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='check-role-member'>
+  <xsd:complexType>
+   <xsd:attribute name='role-type' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='implements'>
+  <xsd:complexType>
+   <xsd:attribute name='service' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='attribute'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='type-validate' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='type' type='xsd:string' use='required'/>
+   <xsd:attribute name='mode' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='IN'/>
+      <xsd:enumeration value='OUT'/>
+      <xsd:enumeration value='INOUT'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='form-label' type='xsd:string' use='optional'/>
+   <xsd:attribute name='entity-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='field-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='string-map-prefix' type='xsd:string' use='optional'/>
+   <xsd:attribute name='string-list-suffix' type='xsd:string' use='optional'/>
+   <xsd:attribute name='form-display' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='optional' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='exclude'>
+  <xsd:complexType>
+   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='auto-attributes'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='exclude' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='entity-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='include' default='all'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='pk'/>
+      <xsd:enumeration value='nonpk'/>
+      <xsd:enumeration value='all'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='mode' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='IN'/>
+      <xsd:enumeration value='OUT'/>
+      <xsd:enumeration value='INOUT'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='form-display' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='optional' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='override'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='type-validate' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='type' type='xsd:string' use='optional'/>
+   <xsd:attribute name='entity-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='field-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='mode' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='IN'/>
+      <xsd:enumeration value='OUT'/>
+      <xsd:enumeration value='INOUT'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='form-label' type='xsd:string' use='optional'/>
+   <xsd:attribute name='form-display' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='optional' use='optional'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='type-validate'>
+  <xsd:complexType>
+   <xsd:choice>
+    <xsd:element ref='fail-message'/>
+    <xsd:element ref='fail-property'/>
+   </xsd:choice>
+   <xsd:attribute name='method' type='xsd:string' use='optional'/>
+   <xsd:attribute name='class' type='xsd:string' default='org.ofbiz.base.util.UtilValidate'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='fail-message'>
+  <xsd:complexType>
+   <xsd:attribute name='message' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='fail-property'>
+  <xsd:complexType>
+   <xsd:attribute name='resource' type='xsd:string' use='required'/>
+   <xsd:attribute name='property' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+</xsd:schema>

@@ -1,0 +1,513 @@
+<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<!--
+  To refer to this Schema in your XML file, use the following declaration:
+-->
+
+<!--
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: $
+-->
+
+ <xsd:element name='menus'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='menu' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='menu'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='actions' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='menu-item' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='type' default='simple'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='simple'/>
+      <xsd:enumeration value='cascade'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='title' type='xsd:string' use='optional'/>
+   <xsd:attribute name='tooltip' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-entity-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-title-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-widget-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-tooltip-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-selected-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='orientation' default='horizontal'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='vertical'/>
+      <xsd:enumeration value='horizontal'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='extends' type='xsd:string' use='optional'/>
+   <xsd:attribute name='extends-resource' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-menu-item-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-associated-content-id' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-hide-if-selected' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='menu-width' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-cell-width' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-disabled-title-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='selected-menuitem-context-field-name' type='xsd:string' default='currentMenuItemName'/>
+   <xsd:attribute name='menu-wrapper-style' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='menu-item'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='condition' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='actions' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='img' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='link' minOccurs='0' maxOccurs='1'/>
+    <xsd:element ref='menu-item' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='title' type='xsd:string' use='optional'/>
+   <xsd:attribute name='tooltip' type='xsd:string' use='optional'/>
+   <xsd:attribute name='title-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='widget-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='tooltip-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='selected-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='position' type='xsd:string' default='1'/>
+   <xsd:attribute name='associated-content-id' type='xsd:string' use='optional'/>
+   <xsd:attribute name='hide-if-selected' type='xsd:string' use='optional'/>
+   <xsd:attribute name='cell-width' type='xsd:string' use='optional'/>
+   <xsd:attribute name='disable-if-empty' type='xsd:string' use='optional'/>
+   <xsd:attribute name='disabled-title-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='target-window' type='xsd:string' use='optional'/>
+   <xsd:attribute name='sub-menu' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='actions'>
+  <xsd:complexType>
+   <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='set'/>
+    <xsd:element ref='property-map'/>
+    <xsd:element ref='property-to-field'/>
+    <xsd:element ref='script'/>
+   </xsd:choice>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='set'>
+  <xsd:complexType>
+   <xsd:attribute name='field' type='xsd:string' use='required'/>
+   <xsd:attribute name='from-field' type='xsd:string' use='optional'/>
+   <xsd:attribute name='value' type='xsd:string' use='optional'/>
+   <xsd:attribute name='default-value' type='xsd:string' use='optional'/>
+   <xsd:attribute name='global' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='type' default='String'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='PlainString'/>
+      <xsd:enumeration value='String'/>
+      <xsd:enumeration value='Double'/>
+      <xsd:enumeration value='Float'/>
+      <xsd:enumeration value='Long'/>
+      <xsd:enumeration value='Integer'/>
+      <xsd:enumeration value='Date'/>
+      <xsd:enumeration value='Time'/>
+      <xsd:enumeration value='Timestamp'/>
+      <xsd:enumeration value='Boolean'/>
+      <xsd:enumeration value='Object'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='to-scope' default='screen'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='screen'/>
+      <xsd:enumeration value='user'/>
+      <xsd:enumeration value='application'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='from-scope' default='screen'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='screen'/>
+      <xsd:enumeration value='user'/>
+      <xsd:enumeration value='application'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='property-map'>
+  <xsd:complexType>
+   <xsd:attribute name='resource' type='xsd:string' use='required'/>
+   <xsd:attribute name='map-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='global' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='property-to-field'>
+  <xsd:complexType>
+   <xsd:attribute name='resource' type='xsd:string' use='required'/>
+   <xsd:attribute name='property' type='xsd:string' use='required'/>
+   <xsd:attribute name='field' type='xsd:string' use='required'/>
+   <xsd:attribute name='default' type='xsd:string' use='optional'/>
+   <xsd:attribute name='no-locale' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='arg-list-name' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='script'>
+  <xsd:complexType>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='image'>
+  <xsd:complexType>
+  <xsd:simpleContent>
+  <xsd:extension base='xsd:string'>
+   <xsd:attribute name='src' type='xsd:string' use='optional'/>
+   <xsd:attribute name='id' type='xsd:string' use='optional'/>
+   <xsd:attribute name='style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='width' type='xsd:string' use='optional'/>
+   <xsd:attribute name='height' type='xsd:string' use='optional'/>
+   <xsd:attribute name='border' type='xsd:string' use='optional'/>
+   <xsd:attribute name='url-mode' default='content'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='ofbiz'/>
+      <xsd:enumeration value='content'/>
+      <xsd:enumeration value='raw'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='url-mode' default='content'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='intra-app'/>
+      <xsd:enumeration value='inter-app'/>
+      <xsd:enumeration value='content'/>
+      <xsd:enumeration value='plain'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   </xsd:extension>
+   </xsd:simpleContent>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='link'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='image' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+   <xsd:attribute name='text' type='xsd:string' use='optional'/>
+   <xsd:attribute name='id' type='xsd:string' use='optional'/>
+   <xsd:attribute name='style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='target' type='xsd:string' use='optional'/>
+   <xsd:attribute name='target-window' type='xsd:string' use='optional'/>
+   <xsd:attribute name='prefix' type='xsd:string' use='optional'/>
+   <xsd:attribute name='url-mode' default='intra-app'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='intra-app'/>
+      <xsd:enumeration value='inter-app'/>
+      <xsd:enumeration value='content'/>
+      <xsd:enumeration value='plain'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='full-path' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='secure' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='encode' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+<!--
+  If a pass-style provided and the condition passes, the widget-style of
+  the parent menu-item is set with the pass-style. If no pass-style is given,
+  the widget-style is not changed.
+  If a disabled-style provided and the condition fails, the disabled-style of
+  the parent menu-item is set with the disabled-style and processing is allowed to continue. 
+  If no disabled-style is given, the widget-style is not changed and the menu-item is not rendered.
+-->
+ <xsd:element name='condition'>
+  <xsd:complexType>
+   <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+    <xsd:element ref='and'/>
+    <xsd:element ref='xor'/>
+    <xsd:element ref='or'/>
+    <xsd:element ref='not'/>
+    <xsd:element ref='if-has-permission'/>
+    <xsd:element ref='if-validate-method'/>
+    <xsd:element ref='if-compare'/>
+    <xsd:element ref='if-compare-field'/>
+    <xsd:element ref='if-regexp'/>
+    <xsd:element ref='if-empty'/>
+    <xsd:element ref='if-entity-permission'/>
+   </xsd:choice>
+   <xsd:attribute name='pass-style' type='xsd:string' use='optional'/>
+   <xsd:attribute name='disabled-style' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='and'>
+  <xsd:complexType>
+   <xsd:choice maxOccurs='unbounded'>
+    <xsd:element ref='and'/>
+    <xsd:element ref='xor'/>
+    <xsd:element ref='or'/>
+    <xsd:element ref='not'/>
+    <xsd:element ref='if-has-permission'/>
+    <xsd:element ref='if-validate-method'/>
+    <xsd:element ref='if-compare'/>
+    <xsd:element ref='if-compare-field'/>
+    <xsd:element ref='if-regexp'/>
+    <xsd:element ref='if-empty'/>
+    <xsd:element ref='if-entity-permission'/>
+   </xsd:choice>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='xor'>
+  <xsd:complexType>
+   <xsd:choice maxOccurs='unbounded'>
+    <xsd:element ref='and'/>
+    <xsd:element ref='xor'/>
+    <xsd:element ref='or'/>
+    <xsd:element ref='not'/>
+    <xsd:element ref='if-has-permission'/>
+    <xsd:element ref='if-validate-method'/>
+    <xsd:element ref='if-compare'/>
+    <xsd:element ref='if-compare-field'/>
+    <xsd:element ref='if-regexp'/>
+    <xsd:element ref='if-empty'/>
+    <xsd:element ref='if-entity-permission'/>
+   </xsd:choice>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='or'>
+  <xsd:complexType>
+   <xsd:choice maxOccurs='unbounded'>
+    <xsd:element ref='and'/>
+    <xsd:element ref='xor'/>
+    <xsd:element ref='or'/>
+    <xsd:element ref='not'/>
+    <xsd:element ref='if-has-permission'/>
+    <xsd:element ref='if-validate-method'/>
+    <xsd:element ref='if-compare'/>
+    <xsd:element ref='if-compare-field'/>
+    <xsd:element ref='if-regexp'/>
+    <xsd:element ref='if-empty'/>
+    <xsd:element ref='if-entity-permission'/>
+   </xsd:choice>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='not'>
+  <xsd:complexType>
+   <xsd:choice>
+    <xsd:element ref='and'/>
+    <xsd:element ref='xor'/>
+    <xsd:element ref='or'/>
+    <xsd:element ref='not'/>
+    <xsd:element ref='if-has-permission'/>
+    <xsd:element ref='if-validate-method'/>
+    <xsd:element ref='if-compare'/>
+    <xsd:element ref='if-compare-field'/>
+    <xsd:element ref='if-regexp'/>
+    <xsd:element ref='if-empty'/>
+    <xsd:element ref='if-entity-permission'/>
+   </xsd:choice>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='if-has-permission'>
+  <xsd:complexType>
+   <xsd:attribute name='permission' type='xsd:string' use='required'/>
+   <xsd:attribute name='action' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <!-- entity-id and target-operation can have multiple pipe separated values. Don't use spaces. -->
+ <xsd:element name='if-entity-permission'>
+  <xsd:complexType>
+   <xsd:attribute name='entity-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='entity-id' type='xsd:string' use='required'/>
+   <xsd:attribute name='target-operation' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
+ <xsd:element name='if-validate-method'>
+  <xsd:complexType>
+   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='method' type='xsd:string' use='required'/>
+   <xsd:attribute name='class' type='xsd:string' default='org.ofbiz.base.util.UtilValidate'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='if-compare'>
+  <xsd:complexType>
+   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='operator' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='less'/>
+      <xsd:enumeration value='greater'/>
+      <xsd:enumeration value='less-equals'/>
+      <xsd:enumeration value='greater-equals'/>
+      <xsd:enumeration value='equals'/>
+      <xsd:enumeration value='not-equals'/>
+      <xsd:enumeration value='contains'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='value' type='xsd:string' use='required'/>
+   <xsd:attribute name='type' default='String'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='PlainString'/>
+      <xsd:enumeration value='String'/>
+      <xsd:enumeration value='Double'/>
+      <xsd:enumeration value='Float'/>
+      <xsd:enumeration value='Long'/>
+      <xsd:enumeration value='Integer'/>
+      <xsd:enumeration value='Date'/>
+      <xsd:enumeration value='Time'/>
+      <xsd:enumeration value='Timestamp'/>
+      <xsd:enumeration value='Boolean'/>
+      <xsd:enumeration value='Object'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='format' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='if-compare-field'>
+  <xsd:complexType>
+   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='operator' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='less'/>
+      <xsd:enumeration value='greater'/>
+      <xsd:enumeration value='less-equals'/>
+      <xsd:enumeration value='greater-equals'/>
+      <xsd:enumeration value='equals'/>
+      <xsd:enumeration value='not-equals'/>
+      <xsd:enumeration value='contains'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='to-field-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='type' default='String'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='PlainString'/>
+      <xsd:enumeration value='String'/>
+      <xsd:enumeration value='Double'/>
+      <xsd:enumeration value='Float'/>
+      <xsd:enumeration value='Long'/>
+      <xsd:enumeration value='Integer'/>
+      <xsd:enumeration value='Date'/>
+      <xsd:enumeration value='Time'/>
+      <xsd:enumeration value='Timestamp'/>
+      <xsd:enumeration value='Boolean'/>
+      <xsd:enumeration value='Object'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='format' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='if-regexp'>
+  <xsd:complexType>
+   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='expr' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='if-empty'>
+  <xsd:complexType>
+   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+</xsd:schema>

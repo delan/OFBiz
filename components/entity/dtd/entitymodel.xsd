@@ -1,8 +1,6 @@
-
 <xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
 <!--
-  To refer to this DTD in your XML file, use the following declaration:
-<!DOCTYPE entitymodel PUBLIC "-//OFBiz//DTD Entity Model//EN" "http://www.ofbiz.org/dtds/entitymodel.dtd">
+  To refer to this Schema in your XML file, use the following declaration:
 -->
 
 <!--
@@ -25,9 +23,11 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-*This is the DTD for the Open For Business Generic Entity Model entity definition XML file.
-*This DTD is meant to be as simple as possible, and is modelled from the standard ejb deployment descriptor ejb-jar.xml.
+ *
+ *  This is the DTD for the Open For Business Generic Entity Model entity definition XML file.
+ *  This DTD is meant to be as simple as possible, and is modelled from the standard ejb deployment descriptor ejb-jar.xml.
+ *
+ *  $Id: $
 -->
 
 <!-- ====================== Root Element ======================= -->

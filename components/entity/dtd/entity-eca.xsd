@@ -1,0 +1,226 @@
+<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<!--
+  To refer to this Schema in your XML file, use the following declaration:
+-->
+
+<!--
+ *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  Service Framework - Service ECA Definition DTD
+ *
+ *  $Id: $
+-->
+
+ <xsd:element name='entity-eca'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='eca' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='eca'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:choice minOccurs='0' maxOccurs='unbounded'>
+     <xsd:element ref='condition'/>
+     <xsd:element ref='condition-field'/>
+    </xsd:choice>
+    <xsd:element ref='action' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='entity' type='xsd:string' use='required'/>
+   <xsd:attribute name='operation' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='create'/>
+      <xsd:enumeration value='store'/>
+      <xsd:enumeration value='remove'/>
+      <xsd:enumeration value='find'/>
+      <xsd:enumeration value='create-store'/>
+      <xsd:enumeration value='create-remove'/>
+      <xsd:enumeration value='store-remove'/>
+      <xsd:enumeration value='create-store-remove'/>
+      <xsd:enumeration value='any'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='event' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='validate'/>
+      <xsd:enumeration value='run'/>
+      <xsd:enumeration value='return'/>
+      <xsd:enumeration value='cache-check'/>
+      <xsd:enumeration value='cache-put'/>
+      <xsd:enumeration value='cache-clear'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='run-on-error' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='condition'>
+  <xsd:complexType>
+   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='operator' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='less'/>
+      <xsd:enumeration value='greater'/>
+      <xsd:enumeration value='less-equals'/>
+      <xsd:enumeration value='greater-equals'/>
+      <xsd:enumeration value='equals'/>
+      <xsd:enumeration value='not-equals'/>
+      <xsd:enumeration value='is-empty'/>
+      <xsd:enumeration value='is-not-empty'/>
+      <xsd:enumeration value='contains'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='value' type='xsd:string' use='optional'/>
+   <xsd:attribute name='type' default='String'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='PlainString'/>
+      <xsd:enumeration value='String'/>
+      <xsd:enumeration value='Double'/>
+      <xsd:enumeration value='Float'/>
+      <xsd:enumeration value='Long'/>
+      <xsd:enumeration value='Integer'/>
+      <xsd:enumeration value='Date'/>
+      <xsd:enumeration value='Time'/>
+      <xsd:enumeration value='Timestamp'/>
+      <xsd:enumeration value='Boolean'/>
+      <xsd:enumeration value='Object'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='format' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='condition-field'>
+  <xsd:complexType>
+   <xsd:attribute name='field-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='operator' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='less'/>
+      <xsd:enumeration value='greater'/>
+      <xsd:enumeration value='less-equals'/>
+      <xsd:enumeration value='greater-equals'/>
+      <xsd:enumeration value='equals'/>
+      <xsd:enumeration value='not-equals'/>
+      <xsd:enumeration value='contains'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='to-field-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='type' default='String'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='PlainString'/>
+      <xsd:enumeration value='String'/>
+      <xsd:enumeration value='Double'/>
+      <xsd:enumeration value='Float'/>
+      <xsd:enumeration value='Long'/>
+      <xsd:enumeration value='Integer'/>
+      <xsd:enumeration value='Date'/>
+      <xsd:enumeration value='Time'/>
+      <xsd:enumeration value='Timestamp'/>
+      <xsd:enumeration value='Boolean'/>
+      <xsd:enumeration value='Object'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='format' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='action'>
+  <xsd:complexType>
+   <xsd:attribute name='service' type='xsd:string' use='required'/>
+   <xsd:attribute name='mode' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='sync'/>
+      <xsd:enumeration value='async'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='result-to-value' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='abort-on-error' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='rollback-on-error' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='persist' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='run-as-user' type='xsd:string' default='admin'/>
+   <xsd:attribute name='value-attr' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+</xsd:schema>
+
+<!-- if value-attr is specified the generic value object corresponding to the entity in question will be passed
+    to the action service -->
+
+<!--
+<entity-eca>
+    <eca entity="Product" operation="create" event="return">
+      <condition field-name="foo" operator="equals" rhs="1"/>
+      <action service="testScv" mode="sync"/>
+      <action service="testScv2" mode="sync"/>
+    </eca>
+</entity-eca>
+-->

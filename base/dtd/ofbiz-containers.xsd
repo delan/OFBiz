@@ -1,0 +1,74 @@
+<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<!--
+  To refer to this Schema in your XML file, use the following declaration:
+-->
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  Dynamic OFBiz Containers Definition DTD
+ *
+ *  $Id: ofbiz-containers.dtd 2369 2004-05-25 22:45:26Z ajzeneski $
+-->
+
+ <xsd:element name='ofbiz-containers'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='container' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='container'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='property' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='class' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='property'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='property' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='property-value' minOccurs='0' maxOccurs='1'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='value' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='property-value'>
+  <xsd:complexType>
+   <xsd:sequence>
+   <xsd:any namespace='http://www.w3.org/namespace/'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+</xsd:schema>
+
+<!--
+Container properties are relative to the implementation class for details
+of which properties are available see the docs on the class defined.
+-->
+

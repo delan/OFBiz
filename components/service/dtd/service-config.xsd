@@ -1,0 +1,187 @@
+<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<!--
+  To refer to this Schema in your XML file, use the following declaration:
+-->
+
+<!--
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  This is the DTD for the Open For Business Service Engine configuration XML file.
+ *
+ *  $Id: $
+-->
+
+ <xsd:element name='service-config'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='authorization'/>
+    <xsd:element ref='thread-pool'/>
+    <xsd:element ref='engine' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='service-location' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='startup-service' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='resource-loader' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='global-services' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='service-groups' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='service-ecas' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='jms-service' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='authorization'>
+  <xsd:complexType>
+   <xsd:attribute name='service-name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='thread-pool'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='run-from-pool' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='send-to-pool' type='xsd:string' use='required'/>
+   <xsd:attribute name='purge-job-days' type='xsd:string' default='30'/>
+   <xsd:attribute name='failed-retry-min' type='xsd:string' default='30'/>
+   <xsd:attribute name='ttl' type='xsd:string' use='required'/>
+   <xsd:attribute name='wait-millis' type='xsd:string' use='required'/>
+   <xsd:attribute name='jobs' type='xsd:string' use='required'/>
+   <xsd:attribute name='min-threads' type='xsd:string' use='required'/>
+   <xsd:attribute name='max-threads' type='xsd:string' use='required'/>
+   <xsd:attribute name='poll-enabled' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='poll-db-millis' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='run-from-pool'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='engine'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='class' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='startup-service'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='runtime-data-id' type='xsd:string' use='optional'/>
+   <xsd:attribute name='runtime-delay' type='xsd:string' default='0'/>
+   <xsd:attribute name='run-in-pool' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='service-location'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='resource-loader'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='class' type='xsd:string' use='required'/>
+   <xsd:attribute name='prepend-env' type='xsd:string' use='optional'/>
+   <xsd:attribute name='prefix' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='global-services'>
+  <xsd:complexType>
+   <xsd:attribute name='loader' type='xsd:string' use='required'/>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='service-groups'>
+  <xsd:complexType>
+   <xsd:attribute name='loader' type='xsd:string' use='required'/>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='service-ecas'>
+  <xsd:complexType>
+   <xsd:attribute name='loader' type='xsd:string' use='required'/>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='jms-service'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='server' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='send-mode' default='none'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='none'/>
+      <xsd:enumeration value='all'/>
+      <xsd:enumeration value='first-available'/>
+      <xsd:enumeration value='random'/>
+      <xsd:enumeration value='round-robin'/>
+      <xsd:enumeration value='least-load'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='server'>
+  <xsd:complexType>
+   <xsd:attribute name='jndi-server-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='jndi-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='topic-queue' type='xsd:string' use='required'/>
+   <xsd:attribute name='type' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='topic'/>
+      <xsd:enumeration value='queue'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='username' type='xsd:string' use='optional'/>
+   <xsd:attribute name='password' type='xsd:string' use='optional'/>
+   <xsd:attribute name='client-id' type='xsd:string' use='optional'/>
+   <xsd:attribute name='listen' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='listener-class' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+</xsd:schema>
