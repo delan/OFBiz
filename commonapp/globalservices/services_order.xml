@@ -13,6 +13,44 @@
         <attribute name="orderStatusId" type="String" mode="INOUT" optional="false"/>
     </service>
     
+    <service name="prepareOrderEmail" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderEmail">
+        <description>Prepares the data for a order notification email</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderHeader" type="Map" mode="OUT" optional="false"/>
+        <attribute name="orderItems" type="List" mode="OUT" optional="false"/>
+        <attribute name="orderAdjustments" type="List" mode="OUT" optional="false"/>
+        <attribute name="orderHeaderAdjustments" type="List" mode="OUT" optional="false"/>
+        <attribute name="orderSubTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="headerAdjustmentsToShow" type="List" mode="OUT" optional="false"/>
+        <attribute name="orderShippingTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="orderTaxTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="orderGrandTotal" type="Double" mode="OUT" optional="false"/>
+        <attribute name="placingCustomerPerson" type="GenericValue" mode="OUT" optional="true"/>
+        <attribute name="shippingAddress" type="GenericValue" mode="OUT" optional="true"/>
+        <attribute name="billingAccount" type="GenericValue" mode="OUT" optional="true"/>
+        <attribute name="paymentMethod" type="GenericValue" mode="OUT" optional="true"/>
+        <attribute name="paymentMethodType" type="GenericValue" mode="OUT" optional="true"/>
+        <attribute name="creditCard" type="GenericValue" mode="OUT" optional="true"/>
+        <attribute name="formattedCardNumber" type="String" mode="OUT" optional="true"/>
+        <attribute name="eftAccount" type="GenericValue" mode="OUT" optional="true"/>
+        <attribute name="carrierPartyId" type="String" mode="OUT" optional="true"/>
+        <attribute name="shipmentMethodTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="shipMethDescription" type="String" mode="OUT" optional="true"/>
+        <attribute name="shippingInstructions" type="String" mode="OUT" optional="true"/>
+        <attribute name="maySplit" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="giftMessage" type="String" mode="OUT" optional="true"/>
+        <attribute name="isGift" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="trackingNumber" type="String" mode="OUT" optional="true"/>
+        <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>        
+    </service>
+    
+    <service name="sendOrderNotification" engine="java"
+            location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
+        <description>Send a order notification</description>
+        <implements service="sendNotificationInterface"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="sendEmailConfirmation" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="emailOrderConfirm">
         <description>Order confirmation email</description>

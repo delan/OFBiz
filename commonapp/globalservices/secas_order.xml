@@ -14,7 +14,10 @@
     </eca>
     <eca service="createOrderAdjustment" event="commit">        
         <action service="resetGrandTotal" mode="sync"/>
-    </eca>  
+    </eca> 
+    <eca service="sendOrderNotification" event="invoke">        
+        <action service="prepareOrderEmail" mode="sync" result-map-name="templateData"/>
+    </eca>     
 
     <!-- Return ECAs -->
     <eca service="updateReturnStatusFromReceipt" event="commit">
