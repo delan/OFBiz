@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.30 $
+ *@version    $Revision: 1.31 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -206,6 +206,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
             ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
         </b>
       </div>
+      <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
+        <#assign priceSaved = price.listPrice?double - price.price?double>
+        <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
+        <div class="tabletext">${uiLabelMap.EcommerceSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span></div>
+      </#if>
 
       <#-- Included quantities/pieces -->
       <#if product.quantityIncluded?exists && product.quantityIncluded?double != 0>
@@ -382,13 +387,16 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <tr>
     <td colspan="2">
       <div class="tableheadtext">${uiLabelMap.EcommerceCustomerReviews}:</div>
+      <#if averageRating?exists && (averageRating?double > 0) && numRatings?exists && (numRatings?double > 2)>
+          <div class="tabletext">${uiLabelMap.EcommerceAverageRating}: ${averageRating} <#if numRatings?exists>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.EcommerceRatings})</#if></div>
+      </#if>
     </td>
   </tr>
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
-  <#if requestAttributes.productReviews?has_content>
-    <#list requestAttributes.productReviews as productReview>
+  <#if productReviews?has_content>
+    <#list productReviews as productReview>
       <#assign postedUserLogin = productReview.getRelatedOne("UserLogin")>
-      <#assign postedPerson = postedUserLogin.getRelatedOne("Person")>
+      <#assign postedPerson = postedUserLogin.getRelatedOne("Person")?if_exists>
       <tr>
         <td colspan="2">
           <table border="0" width="100%" cellpadding="0" cellspacing='0'>
