@@ -343,7 +343,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // apply/unapply promotions - only for sales orders
         if (doPromotions && cart.getOrderType().equals("SALES_ORDER")) {
-            org.ofbiz.commonapp.product.promo.ProductPromoWorker.doPromotions(prodCatalogId, cart, this, oldQuantity, getDelegator(), dispatcher);
+            org.ofbiz.commonapp.product.promo.ProductPromoWorker.doPromotions(cart, this, oldQuantity, getDelegator(), dispatcher);
         }
     }
 

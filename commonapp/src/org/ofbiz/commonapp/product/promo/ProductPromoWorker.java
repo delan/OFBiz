@@ -107,7 +107,7 @@ public class ProductPromoWorker {
         return productPromos;
     }
 
-    public static void doPromotions(String productStoreId, boolean fixme, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public static void doPromotions(ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
         // this is our safety net; we should never need to loop through the rules more than a certain number of times, this is that number and may have to be changed for insanely large promo sets...
         int maxIterations = 1000;
 
@@ -122,6 +122,7 @@ public class ProductPromoWorker {
 
         if (Debug.verboseOn()) Debug.logVerbose("Doing Promotions; apply=" + apply + ", oldQuantity=" + oldQuantity + ", newQuantity=" + cartItem.getQuantity() + ", productId=" + cartItem.getProductId(), module);
 
+        String productStoreId = cart.getProductStoreId();
         GenericValue productStore = null;
 
         try {
