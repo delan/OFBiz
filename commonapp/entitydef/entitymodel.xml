@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Thu Sep 13 10:39:03 MDT 2001
+ *@created    Tue Sep 18 11:13:00 PDT 2001
  *@version    1.0
  */
 -->
@@ -7585,7 +7585,12 @@
       <field><col-name>WEIGHT_UOM_ID</col-name><type>id</type></field>
       <field><col-name>WEIGHT</col-name><type>floating-point</type></field>
       <field><col-name>TAXABLE</col-name><type>indicator</type></field>
-      <field><col-name>SHOW_IN_SEARCH</col-name><type>indicator</type></field>	
+      <field><col-name>SHOW_IN_SEARCH</col-name><type>indicator</type></field>
+      <field><col-name>DEFAULT_PRICE_UOM_ID</col-name><type>id</type></field>
+      <field><col-name>TAX_CATEGORY</col-name><type>id</type></field>
+      <field><col-name>TAX_VAT_CODE</col-name><type>short-varchar</type></field>
+      <field><col-name>TAX_DUTY_CODE</col-name><type>short-varchar</type></field>
+      <field><col-name>CHARGE_SHIPPING</col-name><type>indicator</type></field>	
       <prim-key-col>PRODUCT_ID</prim-key-col>
       <relation>
         <type>many</type>
@@ -9263,3 +9268,4 @@
       </relation>
     </entity>  
 </entitymodel>
+
