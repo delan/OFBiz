@@ -49,7 +49,7 @@
 				<entity-options entity-name="ProductType" description="${description}"/> <!-- [${productTypeId}] -->
 			</drop-down>
 		</field>
-		<field name="primaryProductCategoryId" title="Product Category" widget-style="selectBox">
+		<field name="primaryProductCategoryId" title="Primary Category" widget-style="selectBox">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="ProductCategory" key-field-name="productCategoryId" description="${description} [${productCategoryId}]"/>
 			</drop-down>
@@ -102,10 +102,10 @@
 
 		<field name="submit" title="Update Product" widget-style="standardSubmit"><submit button-type="button"/></field>
 
-		<field position="1" name="lastUpdatedByText" title="Last Modified By:" title-style="tableheadtext" widget-style="tabletext">
+		<field use-when="product!=null" position="1" name="lastUpdatedByText" title="Last Modified By:" title-style="tableheadtext" widget-style="tabletext">
 			<display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
 		</field>
-		<field position="2" name="createdByText" title="Created By:" title-style="tableheadtext" widget-style="tabletext">
+		<field use-when="product!=null" position="2" name="createdByText" title="Created By:" title-style="tableheadtext" widget-style="tabletext">
 			<display description="[${product.createdByUserLogin}] on ${product.createdDate}" also-hidden="false"/>
 		</field>
 	</form>

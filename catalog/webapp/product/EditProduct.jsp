@@ -72,6 +72,7 @@
     
     HtmlFormWrapper productFormWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProduct", request, response);
     productFormWrapper.putInContext("product", product);
+    productFormWrapper.putInContext("productId", productId);
 %>
 
 <SCRIPT language='JavaScript'>
