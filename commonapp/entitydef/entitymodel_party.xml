@@ -665,34 +665,6 @@
         <key-map field-name="contactMechPurposeTypeId" />
       </relation>
     </entity>
-    <entity entity-name="CreditCardInfo" 
-            package-name="org.ofbiz.commonapp.party.contact"
-            title="Credit Card Information Entity">
-      <field name="creditCardId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="cardType" type="short-varchar"></field>
-      <field name="cardNumber" type="credit-card-number"></field>
-      <field name="cardSecurityCode" type="very-short"></field>
-      <field name="expireDate" type="credit-card-date"></field>
-      <field name="nameOnCard" type="name"></field>
-      <field name="companyNameOnCard" type="name"></field>
-      <field name="contactMechId" type="id-ne"></field>	
-      <prim-key field="creditCardId" />
-      <relation type="one" rel-entity-name="Party">
-        <key-map field-name="partyId" />
-      </relation>
-      <relation type="one" rel-entity-name="ContactMech">
-        <key-map field-name="contactMechId" />
-      </relation>
-      <relation type="one" rel-entity-name="PostalAddress">
-        <key-map field-name="contactMechId" />
-      </relation>
-      <relation type="many" rel-entity-name="OrderPaymentPreference">
-        <key-map field-name="creditCardId" rel-field-name="paymentInfoId" />
-      </relation>
-    </entity>
     <entity entity-name="PartyContactMech" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Party Contact Mechanism Entity">
@@ -769,7 +741,7 @@
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
-      <relation type="many" rel-entity-name="CreditCardInfo">
+      <relation type="many" rel-entity-name="CreditCard">
         <key-map field-name="contactMechId" />
       </relation>
       <relation type="many" rel-entity-name="PostalAddressBoundary">
@@ -916,7 +888,7 @@
       <relation type="one" rel-entity-name="Person">
         <key-map field-name="partyId" />
       </relation>
-      <relation type="many" rel-entity-name="CreditCardInfo">
+      <relation type="many" rel-entity-name="PaymentMethod">
         <key-map field-name="partyId" />
       </relation>
       <relation type="many" rel-entity-name="PartyContactMech">

@@ -533,7 +533,7 @@
       <field name="orderPaymentPreferenceId" type="id-ne"></field>
       <field name="orderId" type="id"></field>
       <field name="paymentMethodTypeId" type="id"></field>
-      <field name="paymentInfoId" type="id"></field>
+      <field name="paymentMethodId" type="id"></field>
       <field name="maxAmount" type="currency-amount"></field>	
       <prim-key field="orderPaymentPreferenceId" />
       <relation type="one" rel-entity-name="OrderHeader">
@@ -542,8 +542,11 @@
       <relation type="one" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId" />
       </relation>
-      <relation type="one" rel-entity-name="CreditCardInfo">
-        <key-map field-name="paymentInfoId" rel-field-name="creditCardId" />
+      <relation type="one" rel-entity-name="CreditCard">
+        <key-map field-name="paymentMethodId" />
+      </relation>
+      <relation type="one" rel-entity-name="EftAccount">
+        <key-map field-name="paymentMethodId" />
       </relation>
     </entity>
     <entity entity-name="OrderRole" 

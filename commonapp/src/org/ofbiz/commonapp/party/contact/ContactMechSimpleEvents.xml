@@ -144,32 +144,4 @@
         <call-service service-name="deletePartyContactMechPurpose" in-map-name="context">
             <default-message>Contact Mechanism Purpose successfully deleted.</default-message></call-service>
     </simple-method>
-
-    <!-- CreditCardInfo events -->
-    <simple-method method-name="createCreditCardInfo" short-description="Create Credit Card Info">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
-                processor-name="createCreditCardInfo" in-map-name="parameters" out-map-name="context"/>
-        <check-errors/>
-        <call-service service-name="createCreditCardInfo" in-map-name="context">
-            <default-message>Credit Card Info successfully created.</default-message>
-            <result-to-request result-name="creditCardId"/></call-service>
-    </simple-method>
-    <simple-method method-name="updateCreditCardInfo" short-description="Update Credit Card Info">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
-                processor-name="updateCreditCardInfo" in-map-name="parameters" out-map-name="context"/>
-        <!-- before check-errors also call createCreditCardInfo, which completes the checking, etc for updateCreditCardInfo -->
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
-                processor-name="createCreditCardInfo" in-map-name="parameters" out-map-name="context"/>
-        <check-errors/>
-        <call-service service-name="updateCreditCardInfo" in-map-name="context">
-            <default-message>Credit Card Info successfully updated.</default-message>
-            <result-to-request result-name="newCreditCardId" request-name="creditCardId"/></call-service>
-    </simple-method>
-    <simple-method method-name="deleteCreditCardInfo" short-description="Delete Credit Card Info">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
-                processor-name="deleteCreditCardInfo" in-map-name="parameters" out-map-name="context"/>
-        <check-errors/>
-        <call-service service-name="deleteCreditCardInfo" in-map-name="context">
-            <default-message>Credit Card Info successfully deleted.</default-message></call-service>
-    </simple-method>
 </simple-methods>

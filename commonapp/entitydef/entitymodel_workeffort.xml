@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included 
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org)
+ *@author David E. Jones (jonesde@ofbiz.org) 
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -53,7 +53,7 @@
   <!-- org.ofbiz.commonapp.workeffort.scheduler -->
   <!-- ========================================================= -->
 
-    <entity entity-name="JobSandbox"
+    <entity entity-name="JobSandbox" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
             title="Job Scheduler Sandbox Entity">
       <field name="jobName" type="name"></field>
@@ -63,8 +63,8 @@
       <field name="runtimeDataId" type="id"></field>
       <field name="recurrenceInfoId" type="id"></field>
       <field name="startDateTime" type="date-time"></field>
-      <field name="finishDateTime" type="date-time"></field>
-      <prim-key field="jobName" />
+      <field name="finishDateTime" type="date-time"></field>	
+      <prim-key field="jobName" />	
       <prim-key field="runTime" />
       <relation type="one" rel-entity-name="RecurrenceInfo">
         <key-map field-name="recurrenceInfoId" />
@@ -73,7 +73,7 @@
         <key-map field-name="runtimeDataId" />
       </relation>
     </entity>
-    <entity entity-name="RecurrenceInfo"
+    <entity entity-name="RecurrenceInfo" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
             title="Recurrence Info Entity">
       <field name="recurrenceInfoId" type="id-ne"></field>
@@ -82,7 +82,7 @@
       <field name="recurrenceDateTimes" type="very-long"></field>
       <field name="exceptionRuleId" type="id-ne"></field>
       <field name="recurrenceRuleId" type="id-ne"></field>
-      <field name="recurrenceCount" type="numeric"></field>
+      <field name="recurrenceCount" type="numeric"></field>	
       <prim-key field="recurrenceInfoId" />
       <relation type="many" rel-entity-name="WorkEffort">
         <key-map field-name="recurrenceInfoId" />
@@ -94,7 +94,7 @@
         <key-map field-name="exceptionRuleId" rel-field-name="recurrenceRuleId" />
       </relation>
     </entity>
-    <entity entity-name="RecurrenceRule"
+    <entity entity-name="RecurrenceRule" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
             title="Recurrence Rule Entity">
       <field name="recurrenceRuleId" type="id-ne"></field>
@@ -112,7 +112,7 @@
       <field name="byMonthList" type="very-long"></field>
       <field name="bySetPosList" type="very-long"></field>
       <field name="weekStart" type="short-varchar"></field>
-      <field name="xName" type="very-long"></field>
+      <field name="xName" type="very-long"></field>	
       <prim-key field="recurrenceRuleId" />
       <relation type="many" title="Exception" rel-entity-name="RecurrenceInfo">
         <key-map field-name="recurrenceRuleId" rel-field-name="exceptionRuleId" />
@@ -121,11 +121,11 @@
         <key-map field-name="recurrenceRuleId" />
       </relation>
     </entity>
-    <entity entity-name="RuntimeData"
+    <entity entity-name="RuntimeData" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
             title="Runtime Data Entity">
       <field name="runtimeDataId" type="id-ne"></field>
-      <field name="runtimeInfo" type="very-long"></field>
+      <field name="runtimeInfo" type="very-long"></field>	
       <prim-key field="runtimeDataId" />
       <relation type="many" rel-entity-name="JobSandbox">
         <key-map field-name="runtimeDataId" />
@@ -139,26 +139,26 @@
   <!-- org.ofbiz.commonapp.workeffort.timesheet -->
   <!-- ========================================================= -->
 
-    <entity entity-name="PartyRate"
+    <entity entity-name="PartyRate" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
             title="Party Rate Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="rateTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="rate" type="currency-amount"></field>
-      <prim-key field="partyId" />
-      <prim-key field="rateTypeId" />
+      <field name="rate" type="currency-amount"></field>	
+      <prim-key field="partyId" />	
+      <prim-key field="rateTypeId" />	
       <prim-key field="fromDate" />
     </entity>
-    <entity entity-name="RateType"
+    <entity entity-name="RateType" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
             title="Rate Type Entity">
       <field name="rateTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="rateTypeId" />
     </entity>
-    <entity entity-name="TimeEntry"
+    <entity entity-name="TimeEntry" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
             title="Time Entry Entity">
       <field name="timeEntryId" type="id-ne"></field>
@@ -171,20 +171,20 @@
       <field name="workEffortId" type="id"></field>
       <field name="timesheetId" type="id"></field>
       <field name="hours" type="floating-point"></field>
-      <field name="comments" type="comment"></field>
+      <field name="comments" type="comment"></field>	
       <prim-key field="timeEntryId" />
     </entity>
-    <entity entity-name="TimeEntryBilling"
+    <entity entity-name="TimeEntryBilling" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
             title="Time Entry Billing Entity">
       <field name="timeEntryId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
-      <field name="invoiceItemSeqId" type="id-ne"></field>
-      <prim-key field="timeEntryId" />
-      <prim-key field="invoiceId" />
+      <field name="invoiceItemSeqId" type="id-ne"></field>	
+      <prim-key field="timeEntryId" />	
+      <prim-key field="invoiceId" />	
       <prim-key field="invoiceItemSeqId" />
     </entity>
-    <entity entity-name="Timesheet"
+    <entity entity-name="Timesheet" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
             title="Timesheet Entity">
       <field name="timesheetId" type="id-ne"></field>
@@ -192,20 +192,20 @@
       <field name="roleTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
+      <field name="comments" type="comment"></field>	
       <prim-key field="timesheetId" />
     </entity>
-    <entity entity-name="TimesheetRole"
+    <entity entity-name="TimesheetRole" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
             title="Timesheet Role Entity">
       <field name="timesheetId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <prim-key field="timesheetId" />
-      <prim-key field="partyId" />
+      <field name="roleTypeId" type="id-ne"></field>	
+      <prim-key field="timesheetId" />	
+      <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
     </entity>
-    <entity entity-name="WorkEffortAssignmentRate"
+    <entity entity-name="WorkEffortAssignmentRate" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
             title="Work Effort Assignment Rate Entity">
       <field name="workEffortId" type="id-ne"></field>
@@ -214,11 +214,11 @@
       <field name="roleTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="rate" type="currency-amount"></field>
-      <prim-key field="workEffortId" />
-      <prim-key field="rateTypeId" />
-      <prim-key field="partyId" />
-      <prim-key field="roleTypeId" />
+      <field name="rate" type="currency-amount"></field>	
+      <prim-key field="workEffortId" />	
+      <prim-key field="rateTypeId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
     </entity>
 
@@ -226,32 +226,32 @@
   <!-- org.ofbiz.commonapp.workeffort.workeffort -->
   <!-- ========================================================= -->
 
-    <entity entity-name="CommunicationEventWorkEff"
+    <entity entity-name="CommunicationEventWorkEff" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Communication Event Work Effort Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="communicationEventId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="workEffortId" />
+      <field name="description" type="description"></field>	
+      <prim-key field="workEffortId" />	
       <prim-key field="communicationEventId" />
     </entity>
-    <entity entity-name="Deliverable"
+    <entity entity-name="Deliverable" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Deliverable Entity">
       <field name="deliverableId" type="id-ne"></field>
       <field name="deliverableTypeId" type="id"></field>
       <field name="deliverableName" type="name"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="deliverableId" />
     </entity>
-    <entity entity-name="DeliverableType"
+    <entity entity-name="DeliverableType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Deliverable Type Entity">
       <field name="deliverableTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="deliverableTypeId" />
     </entity>
-    <entity entity-name="WorkEffort"
+    <entity entity-name="WorkEffort" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Entity">
       <field name="workEffortId" type="id-ne"></field>
@@ -291,7 +291,7 @@
       <field name="recurrenceInfoId" type="id"></field>
       <field name="runtimeDataId" type="id"></field>
       <field name="noteId" type="id"></field>
-      <field name="serviceLoaderName" type="name"></field>
+      <field name="serviceLoaderName" type="name"></field>	
       <prim-key field="workEffortId" />
       <relation type="one" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId" />
@@ -359,11 +359,11 @@
         <key-map field-name="workflowProcessId" rel-field-name="processId" />
         <key-map field-name="workflowActivityId" rel-field-name="activityId" />
       </relation>
-    </entity>
-    <view-entity entity-name="WorkEffortAndPartyAssign"
+    </entity>	
+    <view-entity entity-name="WorkEffortAndPartyAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort And Party Assignment Entity">
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />
+            title="Work Effort And Party Assignment Entity">	
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
       <member-entity entity-alias="WE" entity-name="WorkEffort" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
@@ -436,13 +436,13 @@
         <key-map field-name="roleTypeId" />
       </relation>
     </view-entity>
-    <entity entity-name="WorkEffortAssoc"
+    <entity entity-name="WorkEffortAssoc" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Association Entity">
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
-      <field name="workEffortAssocTypeId" type="id"></field>
-      <prim-key field="workEffortIdFrom" />
+      <field name="workEffortAssocTypeId" type="id"></field>	
+      <prim-key field="workEffortIdFrom" />	
       <prim-key field="workEffortIdTo" />
       <relation type="one" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId" />
@@ -461,15 +461,15 @@
         <key-map field-name="workEffortIdTo" rel-field-name="workEffortId" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortAssocAttribute"
+    <entity entity-name="WorkEffortAssocAttribute" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Association Attribute Entity">
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>
-      <prim-key field="workEffortIdFrom" />
-      <prim-key field="workEffortIdTo" />
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="workEffortIdFrom" />	
+      <prim-key field="workEffortIdTo" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffortAssoc">
         <key-map field-name="workEffortIdFrom" />
@@ -479,13 +479,13 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortAssocType"
+    <entity entity-name="WorkEffortAssocType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Association Type Entity">
       <field name="workEffortAssocTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="workEffortAssocTypeId" />
       <relation type="one" title="Parent" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="parentTypeId" rel-field-name="workEffortAssocTypeId" />
@@ -500,12 +500,12 @@
         <key-map field-name="workEffortAssocTypeId" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortAssocTypeAttr"
+    <entity entity-name="WorkEffortAssocTypeAttr" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Association Type Attribute Entity">
       <field name="workEffortAssocTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <prim-key field="workEffortAssocTypeId" />
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="workEffortAssocTypeId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId" />
@@ -517,13 +517,13 @@
         <key-map field-name="workEffortAssocTypeId" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortAttribute"
+    <entity entity-name="WorkEffortAttribute" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Attribute Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>
-      <prim-key field="workEffortId" />
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="workEffortId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId" />
@@ -532,23 +532,23 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortBilling"
+    <entity entity-name="WorkEffortBilling" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Billing Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
-      <field name="percentage" type="floating-point"></field>
-      <prim-key field="workEffortId" />
-      <prim-key field="invoiceId" />
+      <field name="percentage" type="floating-point"></field>	
+      <prim-key field="workEffortId" />	
+      <prim-key field="invoiceId" />	
       <prim-key field="invoiceItemSeqId" />
     </entity>
-    <entity entity-name="WorkEffortCategory"
+    <entity entity-name="WorkEffortCategory" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Category Entity">
       <field name="workEffortCategoryId" type="id-ne"></field>
       <field name="parentCategoryId" type="id"></field>
-      <field name="categoryName" type="name"></field>
+      <field name="categoryName" type="name"></field>	
       <prim-key field="workEffortCategoryId" />
       <relation type="one" title="Parent" rel-entity-name="WorkEffortCategory">
         <key-map field-name="parentCategoryId" rel-field-name="workEffortCategoryId" />
@@ -560,12 +560,12 @@
         <key-map field-name="workEffortCategoryId" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortCategoryMember"
+    <entity entity-name="WorkEffortCategoryMember" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Category Member Entity">
       <field name="workEffortId" type="id-ne"></field>
-      <field name="workEffortCategoryId" type="id-ne"></field>
-      <prim-key field="workEffortId" />
+      <field name="workEffortCategoryId" type="id-ne"></field>	
+      <prim-key field="workEffortId" />	
       <prim-key field="workEffortCategoryId" />
       <relation type="one" rel-entity-name="WorkEffortCategory">
         <key-map field-name="workEffortCategoryId" />
@@ -574,15 +574,15 @@
         <key-map field-name="workEffortId" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortDeliverableProd"
+    <entity entity-name="WorkEffortDeliverableProd" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Deliverable Produced Entity">
       <field name="workEffortId" type="id-ne"></field>
-      <field name="deliverableId" type="id-ne"></field>
-      <prim-key field="workEffortId" />
+      <field name="deliverableId" type="id-ne"></field>	
+      <prim-key field="workEffortId" />	
       <prim-key field="deliverableId" />
     </entity>
-    <entity entity-name="WorkEffortFixedAssetAssign"
+    <entity entity-name="WorkEffortFixedAssetAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Fixed Asset Assignment Entity">
       <field name="workEffortId" type="id-ne"></field>
@@ -591,55 +591,55 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="allocatedCost" type="currency-amount"></field>
-      <field name="comments" type="comment"></field>
-      <prim-key field="workEffortId" />
-      <prim-key field="fixedAssetId" />
+      <field name="comments" type="comment"></field>	
+      <prim-key field="workEffortId" />	
+      <prim-key field="fixedAssetId" />	
       <prim-key field="fromDate" />
     </entity>
-    <entity entity-name="WorkEffortFixedAssetStd"
+    <entity entity-name="WorkEffortFixedAssetStd" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Fixed Asset Standard Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="fixedAssetTypeId" type="id-ne"></field>
       <field name="estimatedQuantity" type="floating-point"></field>
       <field name="estimatedDuration" type="floating-point"></field>
-      <field name="estimatedCost" type="currency-amount"></field>
-      <prim-key field="workEffortId" />
+      <field name="estimatedCost" type="currency-amount"></field>	
+      <prim-key field="workEffortId" />	
       <prim-key field="fixedAssetTypeId" />
     </entity>
-    <entity entity-name="WorkEffortGoodStandard"
+    <entity entity-name="WorkEffortGoodStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Good Standard Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
       <field name="estimatedQuantity" type="floating-point"></field>
-      <field name="estimatedCost" type="currency-amount"></field>
-      <prim-key field="workEffortId" />
+      <field name="estimatedCost" type="currency-amount"></field>	
+      <prim-key field="workEffortId" />	
       <prim-key field="productId" />
     </entity>
-    <entity entity-name="WorkEffortInventoryAssign"
+    <entity entity-name="WorkEffortInventoryAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Inventory Assignment Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
-      <field name="quantity" type="floating-point"></field>
-      <prim-key field="workEffortId" />
+      <field name="quantity" type="floating-point"></field>	
+      <prim-key field="workEffortId" />	
       <prim-key field="inventoryItemId" />
     </entity>
-    <entity entity-name="WorkEffortInventoryProduced"
+    <entity entity-name="WorkEffortInventoryProduced" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Inventory Produced Entity">
       <field name="workEffortId" type="id-ne"></field>
-      <field name="inventoryItemId" type="id-ne"></field>
-      <prim-key field="workEffortId" />
+      <field name="inventoryItemId" type="id-ne"></field>	
+      <prim-key field="workEffortId" />	
       <prim-key field="inventoryItemId" />
-    </entity>
-    <view-entity entity-name="WorkEffortPartyAssignByGroup"
+    </entity>	
+    <view-entity entity-name="WorkEffortPartyAssignByGroup" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment By Group Entity">
-      <description>Also includes PartyRelationship Link so that a groupPartyId can be specified to find all PartyAssignments for all groups a party is in</description>
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />
-      <member-entity entity-alias="WE" entity-name="WorkEffort" />
+      <description>Also includes PartyRelationship Link so that a groupPartyId can be specified to find all PartyAssignments for all groups a party is in</description>	
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
+      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
       <member-entity entity-alias="PREL" entity-name="PartyRelationship" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
@@ -714,13 +714,13 @@
       <relation type="one" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId" />
       </relation>
-    </view-entity>
-    <view-entity entity-name="WorkEffortPartyAssignByRole"
+    </view-entity>	
+    <view-entity entity-name="WorkEffortPartyAssignByRole" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment By Role Entity">
-      <description>Also includes PartyRole Link so that if a partyId is specified it will find all PartyAssignments for all roles a party is in; does not link on the partyId of the PartyAssignment</description>
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />
-      <member-entity entity-alias="WE" entity-name="WorkEffort" />
+      <description>Also includes PartyRole Link so that if a partyId is specified it will find all PartyAssignments for all roles a party is in; does not link on the partyId of the PartyAssignment</description>	
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
+      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
       <member-entity entity-alias="PR" entity-name="PartyRole" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
@@ -796,7 +796,7 @@
         <key-map field-name="roleTypeId" />
       </relation>
     </view-entity>
-    <entity entity-name="WorkEffortPartyAssignment"
+    <entity entity-name="WorkEffortPartyAssignment" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Party Assignment Entity">
       <field name="workEffortId" type="id-ne"></field>
@@ -809,10 +809,10 @@
       <field name="statusDateTime" type="date-time"></field>
       <field name="comments" type="comment"></field>
       <field name="mustRsvp" type="indicator"></field>
-      <field name="expectationEnumId" type="id"></field>
-      <prim-key field="workEffortId" />
-      <prim-key field="partyId" />
-      <prim-key field="roleTypeId" />
+      <field name="expectationEnumId" type="id"></field>	
+      <prim-key field="workEffortId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId" />
@@ -840,26 +840,26 @@
         <key-map field-name="expectationEnumId" rel-field-name="enumId" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortSkillStandard"
+    <entity entity-name="WorkEffortSkillStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Skill Standard Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="skillTypeId" type="id-ne"></field>
       <field name="estimatedNumPeople" type="floating-point"></field>
       <field name="estimatedDuration" type="floating-point"></field>
-      <field name="estimatedCost" type="currency-amount"></field>
-      <prim-key field="workEffortId" />
+      <field name="estimatedCost" type="currency-amount"></field>	
+      <prim-key field="workEffortId" />	
       <prim-key field="skillTypeId" />
     </entity>
-    <entity entity-name="WorkEffortStatus"
+    <entity entity-name="WorkEffortStatus" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Status Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusDatetime" type="date-time"></field>
-      <field name="setByPartyId" type="id"></field>
-      <prim-key field="workEffortId" />
-      <prim-key field="statusId" />
+      <field name="setByPartyId" type="id"></field>	
+      <prim-key field="workEffortId" />	
+      <prim-key field="statusId" />	
       <prim-key field="statusDatetime" />
       <relation type="one" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId" />
@@ -871,26 +871,26 @@
         <key-map field-name="setByPartyId" rel-field-name="partyId" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortTransBox"
+    <entity entity-name="WorkEffortTransBox" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Transition Box Entity">
       <field name="processWorkEffortId" type="id-ne"></field>
       <field name="toActivityId" type="id-long-ne"></field>
-      <field name="transitionId" type="id-long-ne"></field>
-      <prim-key field="processWorkEffortId" />
-      <prim-key field="toActivityId" />
+      <field name="transitionId" type="id-long-ne"></field>	
+      <prim-key field="processWorkEffortId" />	
+      <prim-key field="toActivityId" />	
       <prim-key field="transitionId" />
       <relation type="one" rel-entity-name="WorkEffort">
         <key-map field-name="processWorkEffortId" rel-field-name="workEffortId" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortType"
+    <entity entity-name="WorkEffortType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Type Entity">
       <field name="workEffortTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="description" type="description"></field>	
       <prim-key field="workEffortTypeId" />
       <relation type="one" title="Parent" rel-entity-name="WorkEffortType">
         <key-map field-name="parentTypeId" rel-field-name="workEffortTypeId" />
@@ -905,12 +905,12 @@
         <key-map field-name="workEffortTypeId" />
       </relation>
     </entity>
-    <entity entity-name="WorkEffortTypeAttr"
+    <entity entity-name="WorkEffortTypeAttr" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Type Attribute Entity">
       <field name="workEffortTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <prim-key field="workEffortTypeId" />
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="workEffortTypeId" />	
       <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId" />
@@ -921,6 +921,6 @@
       <relation type="many" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortTypeId" />
       </relation>
-    </entity>
+    </entity>  
 </entitymodel>
 

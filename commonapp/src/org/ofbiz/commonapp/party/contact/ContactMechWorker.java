@@ -1,23 +1,26 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.5  2002/01/25 12:15:35  jonesde
- * A few changes to handle create postal address and purpose at the same time, small cleanups
+ * 
+ *  Copyright (c) 2001 The Open For Business Project and repected authors.
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * Revision 1.4  2002/01/24 11:53:37  jonesde
- * Moved party specific worker from party/contact to party/party
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
  *
- * Revision 1.3  2002/01/24 11:11:20  jonesde
- * Added workers for viewprofile
- *
- * Revision 1.2  2002/01/24 05:14:12  jonesde
- * Added credit card info related workers
- *
- * Revision 1.1  2002/01/23 10:22:03  jonesde
- * Major refactoring of contact mech stuff, more things working too
- *
- *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package org.ofbiz.commonapp.party.contact;
 
 import java.util.*;
@@ -28,44 +31,13 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Worker methods for Contact Mechanisms
- * <p><b>Description:</b> None
- * <p>Copyright (c) 2001 The Open For Business Project (www.ofbiz.org) and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Worker methods for Contact Mechanisms
  *
  *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@version 1.0
  *@created January 22, 2002
  */
 public class ContactMechWorker {
-    public static void getPartyCreditCardInfos(PageContext pageContext, String partyId, boolean showOld, String creditCardInfosAttr) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        try {
-            Collection creditCardInfos = delegator.findByAnd("CreditCardInfo", UtilMisc.toMap("partyId", partyId));
-            if (!showOld) creditCardInfos = EntityUtil.filterByDate(creditCardInfos);
-            if (creditCardInfos != null)
-                pageContext.setAttribute(creditCardInfosAttr, creditCardInfos);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
-    }
-    
     public static void getPartyContactMechValueMaps(PageContext pageContext, String partyId, boolean showOld, String partyContactMechValueMapsAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         Collection partyContactMechValueMaps = new LinkedList();
@@ -280,93 +252,6 @@ public class ContactMechWorker {
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
-    }
-    
-    public static void getCreditCardInfoAndRelated(PageContext pageContext, String partyId, 
-            String creditCardAttr, String creditCardIdAttr, String curContactMechIdAttr, 
-            String curPartyContactMechAttr, String curContactMechAttr, String curPostalAddressAttr, 
-            String curPartyContactMechPurposesAttr, String donePageAttr, String tryEntityAttr) {
-
-        ServletRequest request = pageContext.getRequest();
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-
-        boolean tryEntity = true;
-        if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null)
-            tryEntity = false;
-
-        String donePage = request.getParameter("DONE_PAGE");
-        if (donePage == null || donePage.length() <= 0)
-            donePage = "viewprofile";
-        pageContext.setAttribute(donePageAttr, donePage);
-
-        String creditCardId = request.getParameter("creditCardId");
-        if (request.getAttribute("creditCardId") != null)
-            creditCardId = (String)request.getAttribute("creditCardId");
-        if (creditCardId != null)
-            pageContext.setAttribute(creditCardIdAttr, creditCardId);
-
-        GenericValue creditCard = null;
-        if (UtilValidate.isNotEmpty(creditCardId)) {
-            try {
-                creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e);
-            }
-        }
-        if (creditCard != null)
-            pageContext.setAttribute(creditCardAttr, creditCard);
-        else
-            tryEntity = false;
-
-
-        String curContactMechId = UtilFormatOut.checkNull(tryEntity?creditCard.getString("contactMechId"):request.getParameter("contactMechId"));
-        if (curContactMechId != null) {
-            pageContext.setAttribute(curContactMechIdAttr, curContactMechId);
-            
-            Collection partyContactMechs = null;
-            try {
-                partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", curContactMechId)));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e);
-            }
-            GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
-
-            GenericValue curContactMech = null;
-            if (curPartyContactMech != null) {
-                pageContext.setAttribute(curPartyContactMechAttr, curPartyContactMech);
-                try {
-                    curContactMech = curPartyContactMech.getRelatedOne("ContactMech");
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
-                }
-
-                Collection curPartyContactMechPurposes = null;
-                try {
-                    curPartyContactMechPurposes = EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose"));
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
-                }
-                if (curPartyContactMechPurposes != null && curPartyContactMechPurposes.size() > 0) {
-                    pageContext.setAttribute(curPartyContactMechPurposesAttr, curPartyContactMechPurposes);
-                }
-            }
-
-            GenericValue curPostalAddress = null;
-            if (curContactMech != null) {
-                pageContext.setAttribute(curContactMechAttr, curContactMech);
-                try {
-                    curPostalAddress = curContactMech.getRelatedOne("PostalAddress");
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
-                }
-            }
-
-            if (curPostalAddress != null) {
-                pageContext.setAttribute(curPostalAddressAttr, curPostalAddress);
-            }
-        }
-
-        pageContext.setAttribute(tryEntityAttr, new Boolean(tryEntity));
     }
     
     public static void getPartyPostalAddresses(PageContext pageContext, String partyId, String curContactMechId, String postalAddressInfosAttr) {

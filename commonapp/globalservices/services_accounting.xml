@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Common Application Shared Party Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- Payment Method services -->
+    <service name="deletePaymentMethod" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="deletePaymentMethod" auth="true">
+        <description>Delete PaymentMethod</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createCreditCard" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="createCreditCard" auth="true">
+        <description>Create CreditCard</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="nameOnCard" type="String" mode="IN" optional="false"/>
+        <attribute name="companyNameOnCard" type="String" mode="IN" optional="true"/>
+        <attribute name="cardType" type="String" mode="IN" optional="false"/>
+        <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
+        <attribute name="expireDate" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="updateCreditCard" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="updateCreditCard" auth="true">
+        <description>Update CreditCard</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+        <attribute name="nameOnCard" type="String" mode="IN" optional="false"/>
+        <attribute name="companyNameOnCard" type="String" mode="IN" optional="true"/>
+        <attribute name="cardType" type="String" mode="IN" optional="false"/>
+        <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
+        <attribute name="expireDate" type="String" mode="IN" optional="false"/>
+        <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="createEftAccount" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="createEftAccount" auth="true">
+        <description>Create EftAccount</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="bankName" type="String" mode="IN" optional="false"/>
+        <attribute name="routingNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="accountType" type="String" mode="IN" optional="false"/>
+        <attribute name="accountNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="nameOnAccount" type="String" mode="IN" optional="false"/>
+        <attribute name="companyNameOnAccount" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="updateEftAccount" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="updateEftAccount" auth="true">
+        <description>Update EftAccount</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+        <attribute name="bankName" type="String" mode="IN" optional="false"/>
+        <attribute name="routingNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="accountType" type="String" mode="IN" optional="false"/>
+        <attribute name="accountNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="nameOnAccount" type="String" mode="IN" optional="false"/>
+        <attribute name="companyNameOnAccount" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
+        <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="true"/>
+    </service>
+</services>

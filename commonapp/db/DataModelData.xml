@@ -241,7 +241,7 @@
   <PaymentMethodType description="Credit Card" paymentMethodTypeId="CREDIT_CARD"/>
   <PaymentMethodType description="Gift Certificate" paymentMethodTypeId="GIFT_CERTIFICATE"/>
   <PaymentMethodType description="Cash" paymentMethodTypeId="CASH"/>
-  <PaymentMethodType description="Electronic Funds Transfer" paymentMethodTypeId="EFT"/>
+  <PaymentMethodType description="Electronic Funds Transfer" paymentMethodTypeId="EFT_ACCOUNT"/>
   <PaymentMethodType description="Personal Check" paymentMethodTypeId="PERSONAL_CHECK"/>
   <PaymentMethodType description="Certified Check" paymentMethodTypeId="CERTIFIED_CHECK"/>
   <PaymentMethodType description="Money Order" paymentMethodTypeId="MONEY_ORDER"/>

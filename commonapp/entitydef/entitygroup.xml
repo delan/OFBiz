@@ -108,8 +108,10 @@
 	
     <entity-group group="org.ofbiz.commonapp" entity="BillingAccount" />	
     <entity-group group="org.ofbiz.commonapp" entity="BillingAccountRole" />	
+    <entity-group group="org.ofbiz.commonapp" entity="CreditCard" />	
     <entity-group group="org.ofbiz.commonapp" entity="Deduction" />	
     <entity-group group="org.ofbiz.commonapp" entity="DeductionType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EftAccount" />	
     <entity-group group="org.ofbiz.commonapp" entity="FinAccount" />	
     <entity-group group="org.ofbiz.commonapp" entity="FinAccountAdjustment" />	
     <entity-group group="org.ofbiz.commonapp" entity="FinAccountAttribute" />	
@@ -125,6 +127,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="PaymentApplication" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentBudgetAllocation" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PaymentMethod" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentMethodType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PaymentTypeAttr" />	
@@ -441,7 +444,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="ContactMechType" />	
     <entity-group group="org.ofbiz.commonapp" entity="ContactMechTypeAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="ContactMechTypePurpose" />	
-    <entity-group group="org.ofbiz.commonapp" entity="CreditCardInfo" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyContactMech" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyContactMechPurpose" />	
     <entity-group group="org.ofbiz.commonapp" entity="PostalAddress" />	

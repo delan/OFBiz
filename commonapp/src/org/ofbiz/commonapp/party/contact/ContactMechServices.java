@@ -1,28 +1,24 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.7  2002/02/24 08:26:57  jonesde
- * Added roleTypeId to create/update of the various contact mech types, better than assuming CUSTOMER for all cases
- *
- * Revision 1.6  2002/01/24 05:13:03  jonesde
- * Fixed little bug with not setting the partyId on the credit card info update
- *
- * Revision 1.5  2002/01/23 11:28:12  jonesde
- * Slimmed down a little with some useful new functions in ServiceUtil
- *
- * Revision 1.4  2002/01/23 01:20:00  jonesde
- * Added postal address, telecom number and email address specific service implementations
- *
- * Revision 1.3  2002/01/22 07:47:04  jonesde
- * A bunch more stuff for contact mech services
- *
- * Revision 1.2  2002/01/21 23:47:02  jonesde
- * Finished first pass for cm purpose and cc info
- *
- * Revision 1.1  2002/01/20 06:29:55  jonesde
- * Initial, incomplete pass at refactoring of party contact stuff with services, simple events, etc
- *
  * 
+ *  Copyright (c) 2001 The Open For Business Project and repected authors.
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.commonapp.party.contact;
@@ -37,26 +33,7 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 
 /**
- * <p><b>Title:</b> Services for Contact Mechanism maintenance
- * <p><b>Description:</b> None
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Services for Contact Mechanism maintenance
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version 1.0
@@ -744,261 +721,6 @@ public class ContactMechServices {
             return ServiceUtil.returnError("Could not delete purpose from contact mechanism (write failure): " + e.getMessage());
         }
 
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        return result;
-    }
-    
-    /** Creates a CreditCardInfo entity according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
-     */
-    public static Map createCreditCardInfo(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
-        Security security = ctx.getSecurity();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
-        Timestamp now = UtilDateTime.nowTimestamp();
-
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
-        if (result.size() > 0)
-            return result;
-        
-        //do some more complicated/critical validation...
-        List messages = new LinkedList();
-        if (!UtilValidate.isCardMatch((String) context.get("cardType"), (String) context.get("cardNumber")))
-            messages.add((String) context.get("cardNumber") + UtilValidate.isCreditCardPrefixMsg + 
-                    (String) context.get("cardType") + UtilValidate.isCreditCardSuffixMsg + 
-                    " (It appears to be a " + UtilValidate.getCardType((String) context.get("cardNumber")) + " credit card number)");
-        if (!UtilValidate.isDateAfterToday((String) context.get("expireDate"))) 
-            messages.add("The expiration date " + (String) context.get("expireDate") + " is before today.");
-        if (messages.size() > 0) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE_LIST, messages);
-            return result;
-        }
-
-        Collection toBeStored = new LinkedList();
-        GenericValue newCc = delegator.makeValue("CreditCardInfo", null);
-        toBeStored.add(newCc);
-
-        Long newCcId = delegator.getNextSeqId("CreditCardInfo");
-        if(newCcId == null) {
-            return ServiceUtil.returnError("ERROR: Could not create credit card info (id generation failure)");
-        }
-        newCc.set("partyId", partyId);
-        newCc.set("nameOnCard", context.get("nameOnCard"));
-        newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
-        newCc.set("cardType", context.get("cardType"));
-        newCc.set("cardNumber", context.get("cardNumber"));
-        newCc.set("cardSecurityCode", context.get("cardSecurityCode"));
-        newCc.set("expireDate", context.get("expireDate"));
-        newCc.set("contactMechId", context.get("contactMechId"));
-
-        newCc.set("creditCardId", newCcId.toString());
-        newCc.set("fromDate", now);
-
-        GenericValue newPartyContactMechPurpose = null;
-        String contactMechId = (String) context.get("contactMechId");
-        if (contactMechId != null && contactMechId.length() > 0) {
-            //add a PartyContactMechPurpose of BILLING_LOCATION if necessary
-            String contactMechPurposeTypeId = "BILLING_LOCATION";
-
-            GenericValue tempVal = null;
-            try {
-                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
-                tempVal = EntityUtil.getFirst(allPCMPs);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                tempVal = null;
-            }
-
-            if (tempVal == null) {
-                //no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
-        }
-
-        if (newPartyContactMechPurpose != null)
-            toBeStored.add(newPartyContactMechPurpose);
-
-        try {
-            delegator.storeAll(toBeStored);
-        } catch(GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
-            return ServiceUtil.returnError("ERROR: Could not create credit card info (write failure): " + e.getMessage());
-        }
-
-        result.put("creditCardId", newCc.getString("creditCardId"));
-    
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        return result;
-    }
-    
-    /** Updates a CreditCardInfo entity according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
-     */
-    public static Map updateCreditCardInfo(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
-        Security security = ctx.getSecurity();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
-        Timestamp now = UtilDateTime.nowTimestamp();
-
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
-        if (result.size() > 0)
-            return result;
-
-        //do some more complicated/critical validation...
-        List messages = new LinkedList();
-        if (!UtilValidate.isCardMatch((String) context.get("cardType"), (String) context.get("cardNumber")))
-            messages.add((String) context.get("cardNumber") + UtilValidate.isCreditCardPrefixMsg + 
-                    (String) context.get("cardType") + UtilValidate.isCreditCardSuffixMsg + 
-                    " (It appears to be a " + UtilValidate.getCardType((String) context.get("cardNumber")) + " credit card number)");
-        if (!UtilValidate.isDateAfterToday((String) context.get("expireDate"))) 
-            messages.add("The expiration date " + (String) context.get("expireDate") + " is before today.");
-        if (messages.size() > 0) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE_LIST, messages);
-            return result;
-        }
-
-        Collection toBeStored = new LinkedList();
-        boolean isModified = false;
-
-        GenericValue creditCardInfo = null;
-        GenericValue newCc = null;
-        String creditCardId = (String) context.get("creditCardId");
-        try {
-            creditCardInfo = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
-            return ServiceUtil.returnError("ERROR: Could not get credit card info to update (read error): " + e.getMessage());
-        }
-
-        if (creditCardInfo == null) {
-            return ServiceUtil.returnError("ERROR: Could not find credit card info to update with id " + creditCardId);
-        }
-        
-        newCc = new GenericValue(creditCardInfo);
-        toBeStored.add(newCc);
-
-        Long newCcId = delegator.getNextSeqId("CreditCardInfo");
-        if(newCcId == null) {
-            return ServiceUtil.returnError("ERROR: Could not update credit card info (id generation failure)");
-        }
-        
-        newCc.set("partyId", partyId);
-        newCc.set("nameOnCard", context.get("nameOnCard"));
-        newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
-        newCc.set("cardType", context.get("cardType"));
-        newCc.set("cardNumber", context.get("cardNumber"));
-        newCc.set("cardSecurityCode", context.get("cardSecurityCode"));
-        newCc.set("expireDate", context.get("expireDate"));
-        newCc.set("contactMechId", context.get("contactMechId"));
-
-        if (!newCc.equals(creditCardInfo)) {
-            newCc.set("creditCardId", newCcId.toString());
-            newCc.set("fromDate", now);
-            isModified = true;
-        }
-
-        GenericValue newPartyContactMechPurpose = null;
-        String contactMechId = (String) context.get("contactMechId");
-        if (contactMechId != null && contactMechId.length() > 0) {
-            //add a PartyContactMechPurpose of BILLING_LOCATION if necessary
-            String contactMechPurposeTypeId = "BILLING_LOCATION";
-
-            GenericValue tempVal = null;
-            try {
-                Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
-                tempVal = EntityUtil.getFirst(allPCMPs);
-            } catch(GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                tempVal = null;
-            }
-
-            if(tempVal == null) {
-                //no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
-        }
-
-        if(isModified) {
-            //Debug.logInfo("yes, is modified");
-            if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
-
-            //set thru date on old card
-            creditCardInfo.set("thruDate", now);
-            toBeStored.add(creditCardInfo);
-
-            try {
-                delegator.storeAll(toBeStored);
-            } catch(GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                return ServiceUtil.returnError("ERROR: Could not update credit card (write failure): " + e.getMessage());
-            }
-        } else {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating credit card info");
-            return result;
-        }
-
-        result.put("newCreditCardId", newCc.getString("creditCardId"));
-    
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        return result;
-    }
-    
-    /** Deletes a CreditCardInfo entity according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal creditCardInfo partyId, or must have PARTYMGR_DELETE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
-     */
-    public static Map deleteCreditCardInfo(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
-        Security security = ctx.getSecurity();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
-        Timestamp now = UtilDateTime.nowTimestamp();
-        
-        //never delete a credit card, just put a to date on the link to the party
-        String creditCardId = (String) context.get("creditCardId");
-        GenericValue creditCardInfo = null;
-        try {
-            creditCardInfo = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
-        } catch(GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
-            creditCardInfo = null;
-        }
-
-        if(creditCardInfo == null) {
-            return ServiceUtil.returnError("ERROR: Could not find credit card info to delete (read failure)");
-        }
-
-        //<b>security check</b>: userLogin partyId must equal creditCardInfo partyId, or must have PARTYMGR_DELETE permission
-        if (creditCardInfo.get("partyId") == null || !creditCardInfo.getString("partyId").equals(userLogin.getString("partyId"))) {
-            if (!security.hasEntityPermission("PARTYMGR", "_DELETE", userLogin)) {
-                return ServiceUtil.returnError("You do not have permission to delete credit card info for this partyId");
-            }
-        }
-        
-        creditCardInfo.set("thruDate", now);
-        try {
-            creditCardInfo.store(); 
-        } catch(GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
-            return ServiceUtil.returnError("ERROR: Could not delete credit card info (write failure): " + e.getMessage());
-        }
-        
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
