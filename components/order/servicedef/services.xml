@@ -410,7 +410,7 @@
     </service>
 
     <!-- Tax Services -->
-    <service name="_calcTax" engine="java"
+    <service name="calcTax" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="simpleTaxCalc">
         <description>Simple Calc Tax Service</description>
         <attribute name="productStoreId" type="String" mode="IN"/>
@@ -457,7 +457,7 @@
         <attribute name="ruleFileLocation" type="String" mode="IN" optional="false"/>
     </service>
 
-    <service name="calcTax" engine="java"
+    <service name="_calcTax" engine="java"
             location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="flatTaxCalc">
         <description>Zip Sales Calc Tax Service - change this to calcTax to run</description>
         <attribute name="productStoreId" type="String" mode="IN"/>
