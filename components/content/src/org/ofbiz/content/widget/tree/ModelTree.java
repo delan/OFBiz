@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.5 2004/08/09 23:52:22 jonesde Exp $
+ * $Id: ModelTree.java,v 1.6 2004/08/12 18:05:15 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.1
  */
 public class ModelTree {
@@ -66,6 +66,7 @@ public class ModelTree {
     protected String name;
     protected String rootNodeName;
     protected String renderStyle;
+    protected FlexibleStringExpander defaultWrapStyleExdr;
     protected List nodeList = new ArrayList();
     protected Map nodeMap = new HashMap();
     protected GenericDelegator delegator;
@@ -80,6 +81,7 @@ public class ModelTree {
         this.name = treeElement.getAttribute("name");
         this.rootNodeName = treeElement.getAttribute("root-node-name");
         this.renderStyle = UtilFormatOut.checkEmpty(treeElement.getAttribute("render-style"), "simple");
+        this.defaultWrapStyleExdr = new FlexibleStringExpander(treeElement.getAttribute("default-wrap-style"));
         this.delegator = delegator;
         this.dispatcher = dispatcher;
 
@@ -107,6 +109,10 @@ public class ModelTree {
         return rootNodeName;
     }
 
+    public String getWrapStyle(Map context) {
+        return this.defaultWrapStyleExdr.expandString(context);
+    }
+    
 
     /**
      * Renders this tree to a String, i.e. in a text format, as defined with the
@@ -162,6 +168,7 @@ public class ModelTree {
 
         protected String screenName;
         protected String screenLocation;
+        protected String shareScope;
         protected Label label;
         protected Link link;
         protected Image image;
@@ -171,6 +178,7 @@ public class ModelTree {
         protected ModelTree modelTree;
         protected List subNodeValues = new ArrayList();
         protected String expandCollapseStyle;
+        protected FlexibleStringExpander wrapStyleExdr;
 
         public ModelNode() {}
 
@@ -179,6 +187,7 @@ public class ModelTree {
             this.modelTree = modelTree;
             this.name = nodeElement.getAttribute("name");
             this.expandCollapseStyle = nodeElement.getAttribute("expand-collapse-style");
+            this.wrapStyleExdr = new FlexibleStringExpander(nodeElement.getAttribute("wrap-style"));
     
             Element actionElement = UtilXml.firstChildElement(nodeElement, "entity-one");
             if (actionElement != null) {
@@ -190,10 +199,11 @@ public class ModelTree {
                 actions.add(new ModelTreeAction.Service(modelTree, actionElement));
             }
         
-            Element screenElement = UtilXml.firstChildElement(nodeElement, "screen");
+            Element screenElement = UtilXml.firstChildElement(nodeElement, "include-screen");
             if (screenElement != null) {
                 this.screenName =  screenElement.getAttribute("screen-name");
                 this.screenLocation =  screenElement.getAttribute("screen-location");
+                this.shareScope =  screenElement.getAttribute("share-scope");
             }
             
             Element labelElement = UtilXml.firstChildElement(nodeElement, "label");
@@ -211,9 +221,11 @@ public class ModelTree {
                 this.image = new Image(imageElement);
             }
     
+            /* there are situations in which nothing should be displayed
             if (screenElement == null && labelElement == null && linkElement == null) {
                 throw new IllegalArgumentException("Neither 'screen' nor 'label' nor 'link' found for the node definition with name: " + this.name);
             }
+            */
 
             List subNodeElements = UtilXml.childElementList(nodeElement, "sub-node");
             Iterator subNodeElementIter = subNodeElements.iterator();
@@ -231,6 +243,7 @@ public class ModelTree {
             subNodeValues = new ArrayList();
             if (Debug.infoOn()) Debug.logInfo(" renderNodeString, contentId:" + context.get("contentId"), module);
             context.put("processChildren", new Boolean(true));
+            // this action will usually obtain the "current" entity
             ModelTreeAction.runSubActions(this.actions, context);
             treeStringRenderer.renderNodeBegin( writer, context, this, depth, isLast);
                     //if (Debug.infoOn()) Debug.logInfo(" context:" + context.entrySet(), module);
@@ -257,10 +270,10 @@ public class ModelTree {
                         Object [] arr = (Object [])nodeIter.next();
                         ModelNode node = (ModelNode)arr[0];
                         GenericValue val = (GenericValue)arr[1];
-                        GenericPK pk = val.getPrimaryKey();
-                        if (Debug.infoOn()) Debug.logInfo(" pk:" + pk, module);
+                        //GenericPK pk = val.getPrimaryKey();
+                        //if (Debug.infoOn()) Debug.logInfo(" pk:" + pk, module);
                         Map newContext = ((MapStack) context).standAloneChildStack();
-                        newContext.putAll(pk);
+                        newContext.putAll(val);
                         if (Debug.infoOn()) Debug.logInfo(" newContext.contentId:" + newContext.get("contentId"), module);
                         boolean lastNode = !nodeIter.hasNext(); 
                         node.renderNodeString(writer, newContext, treeStringRenderer, depth + 1, lastNode);
@@ -292,16 +305,16 @@ public class ModelTree {
              Iterator nodeIter = subNodeList.iterator();
              while (nodeIter.hasNext()) {
                  ModelSubNode subNode = (ModelSubNode)nodeIter.next();
-                 String nodeName = subNode.getNodeName();
+                 String nodeName = subNode.getNodeName(context);
                  ModelNode node = (ModelNode)modelTree.nodeMap.get(nodeName);
                  List subNodeActions = subNode.getActions();
                  if (Debug.infoOn()) Debug.logInfo(" context.currentValue:" + context.get("currentValue"), module);
                  ModelTreeAction.runSubActions(subNodeActions, context);
                  List dataFound = (List)context.get("dataFound");
-                 if (Debug.infoOn()) Debug.logInfo(" dataFound:" + dataFound, module);
                  Iterator dataIter =  dataFound.iterator();
                  while (dataIter != null && dataIter.hasNext()) {
                      GenericValue val = (GenericValue)dataIter.next();
+                 if (Debug.infoOn()) Debug.logInfo(" hasChildren, val:" + val.getPrimaryKey(), module);
                      Object [] arr = {node,val};
                      subNodeValues.add(arr);
                      hasChildren = true;
@@ -323,12 +336,20 @@ public class ModelTree {
         public String getExpandCollapseStyle() {
             return expandCollapseStyle;
         }
+
+        public String getWrapStyle(Map context) {
+            String val = this.wrapStyleExdr.expandString(context);
+            if (UtilValidate.isEmpty(val))
+                val = this.modelTree.getWrapStyle(context);
+            return val;
+        }
+    
     
         public static class ModelSubNode {
     
             protected ModelNode rootNode;
             protected ModelNode subNode;
-            protected String nodeName;
+            protected FlexibleStringExpander nodeNameExdr;
             protected List actions = new ArrayList();
             protected List outFieldMaps;
     
@@ -337,7 +358,7 @@ public class ModelTree {
             public ModelSubNode(Element nodeElement, ModelNode modelNode) {
     
                 this.rootNode = modelNode;
-                this.nodeName = nodeElement.getAttribute("node-name");
+                this.nodeNameExdr = new FlexibleStringExpander(nodeElement.getAttribute("node-name"));
         
                 Element actionElement = UtilXml.firstChildElement(nodeElement, "entity-and");
                 if (actionElement != null) {
@@ -351,8 +372,8 @@ public class ModelTree {
         
             }
         
-            public String getNodeName() {
-                return nodeName;
+            public String getNodeName(Map context) {
+                return this.nodeNameExdr.expandString(context);
             }
     
             public List getActions() {

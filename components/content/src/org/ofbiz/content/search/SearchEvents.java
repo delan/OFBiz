@@ -1,5 +1,5 @@
 /*
- * $Id: SearchEvents.java,v 1.1 2004/08/11 17:16:39 byersa Exp $
+ * $Id: SearchEvents.java,v 1.2 2004/08/12 18:05:13 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * SearchEvents Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.1
  * 
  *  
@@ -87,7 +87,7 @@ public class SearchEvents {
         if (UtilValidate.isEmpty(errMsg)) {
             List badIndexList = (List)result.get("badIndexList");
             if (Debug.infoOn()) Debug.logInfo("badIndexList:" + badIndexList, module);
-            String badIndexMsg = StringUtil.join(badIndexList, "\n");
+            String badIndexMsg = StringUtil.join(badIndexList, "\n") + badIndexList.size() + " entities not indexed";
             Integer goodIndexCount = (Integer)result.get("goodIndexCount");
             String goodIndexMsg = goodIndexCount + " entities indexed.";
             if (Debug.infoOn()) Debug.logInfo("goodIndexCount:" + goodIndexCount, module);

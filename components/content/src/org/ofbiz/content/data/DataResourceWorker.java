@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.37 2004/07/24 20:34:35 ajzeneski Exp $
+ * $Id: DataResourceWorker.java,v 1.38 2004/08/12 18:05:13 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
@@ -48,6 +49,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.content.email.NotificationServices;
 import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
@@ -55,9 +57,19 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.content.widget.screen.ModelScreen;
+import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
+import org.ofbiz.content.widget.screen.ScreenStringRenderer;
+import org.ofbiz.content.widget.screen.ScreenFactory;
+import org.ofbiz.content.widget.html.HtmlScreenRenderer;
+import org.ofbiz.content.content.UploadContentAndImage;
+import org.ofbiz.service.ServiceUtil;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.xml.sax.SAXException;
+import javax.xml.parsers.ParserConfigurationException;
+
 //import com.clarkware.profiler.Profiler;
 
 /**
@@ -65,7 +77,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -198,57 +210,68 @@ public class DataResourceWorker {
         // This code finds the idField and the upload FileItems
         FileItem fi = null;
         FileItem imageFi = null;
+        String imageFileName = null;
+        Map passedParams = new HashMap();
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        passedParams.put("userLogin", userLogin);
+        byte[] imageBytes = null;
         for (int i = 0; i < lst.size(); i++) {
             fi = (FileItem) lst.get(i);
             //String fn = fi.getName();
             String fieldName = fi.getFieldName();
-            String fieldStr = fi.getString();
-            if (fieldName.equals(idField)) {
-                idFieldValue = fieldStr;
-            }
-            if (fieldName.equals(uploadField)) {
+            if (fi.isFormField()) {
+                String fieldStr = fi.getString();
+                passedParams.put(fieldName, fieldStr);
+            } else if (fieldName.startsWith("imageData")) {
                 imageFi = fi;
+                imageBytes = imageFi.get();
+                passedParams.put(fieldName, imageBytes);
+                imageFileName = imageFi.getName();
+                passedParams.put("drObjectInfo", imageFileName);
+        if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]imageData: " + imageBytes.length, module);
             }
         }
-        if (imageFi == null || idFieldValue == null) {
-            Map messageMap = UtilMisc.toMap("imageFi",
-                    imageFi, "idFieldValue", idFieldValue);            
-            String errMsg = UtilProperties.getMessage(DataResourceWorker.err_resource, "dataResourceWorker.image_or_field_null", messageMap, locale);                                
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            Debug.logWarning("[DataEvents.uploadImage] imageFi(" + imageFi + " or idFieldValue(" + idFieldValue + " is null", module);
-            return "error";
-        }
 
 
-        byte[] imageBytes = imageFi.get();
-
-        try {
-            GenericValue dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", idFieldValue));
-            // Use objectInfo field to store the name of the file, since there is no
-            // place in ImageDataResource for it.
-            if (dataResource != null) {
-                dataResource.set("objectInfo", imageFi.getName());
-                dataResource.store();
-            }
-
-            // See if this needs to be a create or an update procedure
-            GenericValue imageDataResource = delegator.findByPrimaryKey("ImageDataResource", UtilMisc.toMap("dataResourceId", idFieldValue));
-            if (imageDataResource == null) {
-                imageDataResource = delegator.makeValue("ImageDataResource", UtilMisc.toMap("dataResourceId", idFieldValue));
-                imageDataResource.set("imageData", imageBytes);
-                imageDataResource.create();
+        if (imageBytes != null && imageBytes.length > 0) {
+            String mimeType = getMimeTypeFromImageFileName(imageFileName);
+            if (UtilValidate.isNotEmpty(mimeType)) {
+                passedParams.put("drMimeTypeId", mimeType);
+                try {
+                    String returnMsg = UploadContentAndImage.processContentUpload(passedParams, "", request);
+                    if (returnMsg.equals("error")) {
+                        return "error";
+                    }
+                } catch(GenericServiceException e) {
+                    request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                    return "error";
+                }
             } else {
-                imageDataResource.set("imageData", imageBytes);
-                imageDataResource.store();
+                request.setAttribute("_ERROR_MESSAGE_", "mimeType is empty.");
+                return "error";
             }
-        } catch (GenericEntityException e3) {
-            request.setAttribute("_ERROR_MESSAGE_", e3.getMessage());
-            return "error";
         }
-
-        request.setAttribute("dataResourceId", idFieldValue);
-        request.setAttribute(idField, idFieldValue);
         return "success";
+    }
+
+    public static String getMimeTypeFromImageFileName(String imageFileName) {
+        String mimeType = null;
+        if (UtilValidate.isEmpty(imageFileName))
+           return mimeType;
+
+        int pos = imageFileName.lastIndexOf(".");
+        if (pos < 0)
+           return mimeType;
+
+        String suffix = imageFileName.substring(pos + 1);
+        String suffixLC = suffix.toLowerCase();
+        if (suffixLC.equals("jpg"))
+            mimeType = "image/jpeg";
+        else
+            mimeType = "image/" + suffixLC;
+
+        return mimeType;
     }
 
     /**
@@ -572,6 +595,28 @@ public class DataResourceWorker {
                 } catch (TemplateException e) {
                     throw new GeneralException("Error rendering FTL template", e);
                 }
+            } else if ("SCREEN_COMBINED".equals(dataTemplateTypeId)) {
+                try {
+                    Map context = new MapStack(templateRoot);
+                    ScreenStringRenderer screenStringRenderer = null;
+                    ScreenRenderer screenRenderer = (ScreenRenderer)context.get("screens");
+                     if (screenRenderer != null) {
+                         screenStringRenderer = screenRenderer.getScreenStringRenderer();
+                     } else {
+                         if (screenStringRenderer == null) {
+                             screenStringRenderer = new HtmlScreenRenderer();
+                         }
+                     }
+
+                    String combinedName = (String)dataResource.get("dataObject");
+                    ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(combinedName);
+                    modelScreen.renderScreenString(out, context, screenStringRenderer);
+
+                } catch (SAXException e) {
+                    throw new GeneralException("Error rendering Screen template", e);
+                } catch(ParserConfigurationException e3) {
+                    throw new GeneralException("Error rendering Screen template", e3);
+                }
             } else {
                 throw new GeneralException("The dataTemplateTypeId [" + dataTemplateTypeId + "] is not yet supported");
             }
@@ -693,8 +738,10 @@ public class DataResourceWorker {
             writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
         } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
             GenericValue electronicText = delegator.findByPrimaryKeyCache("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
-            text = electronicText.getString("textData");
-            writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
+            if (electronicText != null) {
+                text = electronicText.getString("textData");
+                writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
+            }
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
             // TODO: Is this where the image (or any binary) object URL is created? looks like it is just returning 
             //the ID, maybe is okay, but maybe should create the whole image tag so that text and images can be 

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenWidget.java,v 1.8 2004/07/30 02:11:17 jonesde Exp $
+ * $Id: ModelScreenWidget.java,v 1.9 2004/08/12 18:05:14 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.1
  */
 public abstract class ModelScreenWidget {
@@ -558,6 +558,7 @@ public abstract class ModelScreenWidget {
                 throw new IllegalArgumentException("Could not find a formStringRenderer in the context, and could not find HTTP request/response objects need to create one.");
             }
             
+                Debug.logInfo("before renderFormString, context:" + context, module);
             StringBuffer renderBuffer = new StringBuffer();
             modelForm.renderFormString(renderBuffer, context, formStringRenderer);
             try {
@@ -671,29 +672,20 @@ public abstract class ModelScreenWidget {
             super(modelScreen, subContentElement);
 
             // put the text attribute first, then the pcdata under the element, if both are there of course
-            String contentId = UtilFormatOut.checkNull(subContentElement.getAttribute("content-id"));
+            this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
 
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-            Locale locale = Locale.getDefault();
-            Boolean nullThruDatesOnly = new Boolean(false);
-            String mimeTypeId = "text/html";
-            Map map = null;
-            String expandedContentId = contentId.expandString(context);
             try {
-                ContentWorker.renderContentAsTextCache(this.modelScreen.getDelegator(context), expandedContentId, writer, map, null, locale, mimeTypeId);
-
-            } catch(GeneralException e) {
-                String errMsg = "Error rendering included content with id [" + contentId + "] : " + e.toString();
+                screenStringRenderer.renderContentBegin(writer, context, this);
+                screenStringRenderer.renderContentBody(writer, context, this);
+                screenStringRenderer.renderContentEnd(writer, context, this);
+            } catch (IOException e) {
+                String errMsg = "Error rendering content with contentId [" + getContentId(context) + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new RuntimeException(errMsg);
-            } catch(IOException e2) {
-                String errMsg = "Error rendering included content with id [" + contentId + "] : " + e2.toString();
-                Debug.logError(e2, errMsg, module);
-                throw new RuntimeException(errMsg);
             }
-
 
         }
         
@@ -712,34 +704,19 @@ public abstract class ModelScreenWidget {
             super(modelScreen, subContentElement);
 
             // put the text attribute first, then the pcdata under the element, if both are there of course
-            String contentId = UtilFormatOut.checkNull(subContentElement.getAttribute("content-id"));
-            String assocName = UtilFormatOut.checkNull(subContentElement.getAttribute("assoc-name"));
+            this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
+            this.assocName = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("assoc-name")));
 
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-            Locale locale = Locale.getDefault();
-            Boolean nullThruDatesOnly = new Boolean(false);
-            Timestamp fromDate = UtilDateTime.nowTimestamp();
-            String mimeTypeId = "text/html";
-            GenericValue userLogin = null;
-            Map map = null;
-            String expandedContentId = contentId.expandString(context);
-            String expandedAssocName = assocName.expandString(context);
-            HttpServletRequest request = (HttpServletRequest) context.get("request");
-            if (request != null) {
-                HttpSession session = request.getSession();
-                userLogin = (GenericValue)session.getAttribute("userLogin");
-            }
             try {
-                ContentWorker.renderSubContentAsTextCache(this.modelScreen.getDelegator(context), expandedContentId, writer, expandedAssocName, null, map, locale, mimeTypeId, userLogin, fromDate, nullThruDatesOnly);
-            } catch(GeneralException e) {
-                String errMsg = "Error rendering included content with id [" + contentId + "] and assoc [" + assocName + "]: " + e.toString();
+                screenStringRenderer.renderSubContentBegin(writer, context, this);
+                screenStringRenderer.renderSubContentBody(writer, context, this);
+                screenStringRenderer.renderSubContentEnd(writer, context, this);
+            } catch (IOException e) {
+                String errMsg = "Error rendering subContent with contentId [" + getContentId(context) + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
-            } catch(IOException e2) {
-                String errMsg = "Error rendering included content with id [" + contentId + "] and assoc [" + assocName + "]: " + e2.toString();
-                Debug.logError(e2, errMsg, module);
                 throw new RuntimeException(errMsg);
             }
         }

@@ -1,5 +1,5 @@
 /*
- * $Id: ContentDocument.java,v 1.7 2004/08/12 05:29:37 byersa Exp $
+ * $Id: ContentDocument.java,v 1.8 2004/08/12 18:05:13 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.util.Iterator;
  * ContentDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.1
  * 
  *  
@@ -139,14 +139,14 @@ public class ContentDocument {
 	  	Debug.logError(e, module);
                 List badIndexList = (List)context.get("badIndexList");
                 badIndexList.add(contentId + " - " + e.getMessage());
-	        Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
+	        //Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
 	  	return false;
 	    }
 	  	
             if (dataResource == null) {
                 List badIndexList = (List)context.get("badIndexList");
                 badIndexList.add(contentId + " - dataResource is null."  );
-	        Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
+	        //Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
 	  	return false;
 	    }
         
@@ -169,13 +169,13 @@ public class ContentDocument {
 	  	Debug.logError(e, module);
                 List badIndexList = (List)context.get("badIndexList");
                 badIndexList.add(contentId + " - " + e.getMessage());
-	        Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
+	        //Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
 	  	return false;
 	    } catch(IOException e2) {
 	  	Debug.logError(e2, module);
                 List badIndexList = (List)context.get("badIndexList");
                 badIndexList.add(contentId + " - " + e2.getMessage());
-	        Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
+	        //Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
 	  	return false;
 	    }
 	    //Debug.logInfo("in DataResourceDocument, text:" + text, module);

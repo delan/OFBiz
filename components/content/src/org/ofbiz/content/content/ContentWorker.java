@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.41 2004/08/12 05:29:37 byersa Exp $
+ * $Id: ContentWorker.java,v 1.42 2004/08/12 18:05:12 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  * @since 2.2
  * 
  *  
@@ -1123,10 +1123,10 @@ public class ContentWorker {
                 String s = sw.toString();
                 if (UtilValidate.isNotEmpty(s))
                     s = s.trim();
-                if (Debug.infoOn()) Debug.logInfo("renderTextAsStringCache, s:" + s, "");
+                //if (Debug.infoOn()) Debug.logInfo("renderTextAsStringCache, s:" + s, "");
                 
                 if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, dataResourceId(2):" + dataResourceId, "");
-                if (Debug.infoOn()) Debug.logInfo("renderTextAsStringCache, view(3):" + view, "");
+                //if (Debug.infoOn()) Debug.logInfo("renderTextAsStringCache, view(3):" + view, "");
                 String reqdType = null;
                 try {
                     reqdType = DataResourceWorker.getDataResourceMimeType(delegator, dataResourceId, view);

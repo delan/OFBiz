@@ -1,5 +1,5 @@
 /*
- * $Id: SearchWorker.java,v 1.12 2004/08/12 05:29:38 byersa Exp $
+ * $Id: SearchWorker.java,v 1.13 2004/08/12 18:05:14 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.content.ContentWorker;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since 3.1
  * 
  *  
@@ -107,7 +107,7 @@ public class SearchWorker {
 	
 	public static void indexContentList(GenericDelegator delegator, Map context, List idList, String path) throws Exception {
 		String indexAllPath = getIndexPath(path);
-                //if (Debug.infoOn()) Debug.logInfo("in indexContent, indexAllPath:" + indexAllPath, module);
+                if (Debug.infoOn()) Debug.logInfo("in indexContent, indexAllPath:" + indexAllPath, module);
 		GenericValue content = null;
 		
 		// Delete existing documents
