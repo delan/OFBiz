@@ -361,6 +361,39 @@ public class DataResourceWorker {
         return imageType;
     }
 
+    public static String getMimeType(GenericValue dataResource) {
+        String mimeTypeId = null;
+        if (dataResource != null) {
+            mimeTypeId = (String) dataResource.get("mimeTypeId");
+            if (UtilValidate.isEmpty(mimeTypeId)) {
+                String fileName = (String) dataResource.get("objectInfo");
+                if (fileName != null && fileName.indexOf('.') > -1) {
+                    String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+                    if (UtilValidate.isNotEmpty(fileExtension)) {
+                        GenericValue ext = null;
+                        try {
+                            ext = dataResource.getDelegator().findByPrimaryKey("FileExtension",
+                                    UtilMisc.toMap("fileExtensionId", fileExtension));
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, module);
+                        }
+                        if (ext != null) {
+                            mimeTypeId = ext.getString("mimeTypeId");
+                        }
+                    }
+                }
+
+                // check one last time
+                if (UtilValidate.isEmpty(mimeTypeId)) {
+                    // use a default mime type
+                    mimeTypeId = "application/octet-stream";
+                }
+            }
+        }
+        return mimeTypeId;
+    }
+
+    /** @deprecated */
     public static String getImageType(GenericDelegator delegator, GenericValue dataResource) {
         String imageType = null;
         if (dataResource != null) { 

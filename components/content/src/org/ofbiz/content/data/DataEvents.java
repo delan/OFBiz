@@ -29,7 +29,7 @@ import org.ofbiz.service.LocalDispatcher;
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  *
  * 
@@ -47,9 +47,10 @@ public class DataEvents {
 
     /** Streams ImageDataResource data to the output. */
     public static String serveImage(HttpServletRequest request, HttpServletResponse response) {
-
+        Debug.log("Img UserAgent - " + request.getHeader("User-Agent"), module);
+        Map parameters = UtilHttp.getParameterMap(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        String dataResourceId = request.getParameter("imgId");
+        String dataResourceId = (String) parameters.get("imgId");
         if (UtilValidate.isEmpty(dataResourceId)) {
             String errorMsg = "Error getting image record from db: " + " dataResourceId is empty";
             Debug.logError(errorMsg, module);
@@ -71,22 +72,22 @@ public class DataEvents {
         }
 
         byte[] b = null;
-        String imageType = DataResourceWorker.getImageType(delegator, dataResource);
+        String mimeType = DataResourceWorker.getMimeType(dataResource);
         //if (Debug.infoOn()) Debug.logInfo("in serveImage, imageType:" + imageType, module);
         String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
         //if (Debug.infoOn()) Debug.logInfo("in serveImage, dataResourceTypeId:" + dataResourceTypeId, module);
         if (dataResourceTypeId != null && dataResourceTypeId.equals("IMAGE_OBJECT")) {
             try {
                 b = DataResourceWorker.acquireImage(delegator, dataResource);
-                if (imageType == null || b == null || b.length == 0) {
-                    Map messageMap = UtilMisc.toMap("b", b, "imageType", imageType);
+                if (mimeType == null || b == null || b.length == 0) {
+                    Map messageMap = UtilMisc.toMap("b", b, "imageType", mimeType);
                     String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.image_or_type_null", messageMap, locale);
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
                     return "error";
                 } else {
                     try {
                         if (Debug.infoOn()) Debug.logInfo("in serveImage, byteArray.length:" + b.length, module);
-                        UtilHttp.streamContentToBrowser(response, b, imageType);
+                        UtilHttp.streamContentToBrowser(response, b, mimeType);
                         response.flushBuffer();
                     } catch (IOException e) {
                         String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.error_write_image", locale);
@@ -109,11 +110,19 @@ public class DataEvents {
             ServletContext servletContext = request.getSession().getServletContext();
             String rootDir = servletContext.getRealPath("/");
             //if (Debug.infoOn()) Debug.logInfo("in serveImage, rootDir:" + rootDir, module);
+
+            // hack for IE and mime types
+            String userAgent = request.getHeader("User-Agent");
+            if (userAgent.indexOf("MSIE") > -1) {
+                Debug.log("Found MSIE changing mime type from - " + mimeType, module);
+                mimeType = "application/octet-stream";
+            }
+
             try {
                 File contentFile = DataResourceWorker.getContentFile(dataResourceTypeId, fileName, rootDir);
                 FileInputStream fis = new FileInputStream(contentFile);
                 int fileSize = (new Long(contentFile.length())).intValue();
-                UtilHttp.streamContentToBrowser(response, fis, fileSize, imageType);
+                UtilHttp.streamContentToBrowser(response, fis, fileSize, mimeType);
             } catch (FileNotFoundException e4) {
                 String errMsg = UtilProperties.getMessage(DataEvents.err_resource, "dataEvents.error_get_image", locale);
                 String errorMsg = "Error getting image record from db: " + e4.toString();
