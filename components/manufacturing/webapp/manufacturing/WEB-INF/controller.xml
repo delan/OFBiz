@@ -361,8 +361,7 @@
     </request-map>
     <request-map uri="LookupProduct">
         <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupProduct"/>
-        <response name="success" type="view" value="GenericLookup"/>
+        <response name="success" type="view" value="LookupProduct"/>
     </request-map>
 
      <!-- MRP request mappings -->
@@ -534,6 +533,8 @@
     <view-map name="EditProductManufacturingRules" type="jpublish" page="/bom/EditProductManufacturingRules.ftl"/>
     <!-- Lookup request mappings -->
     <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
+    <view-map name="LookupProduct" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupProduct" type="screen"/>
+
     <!-- MRP view mappings -->
     <view-map name="FindProposedOrder" type="jpublish" page="/mrp/findProposedOrder.ftl"/>
     <view-map name="FindInventoryEventPlan" type="jpublish" page="/mrp/findInventoryEventPlan.ftl"/>
