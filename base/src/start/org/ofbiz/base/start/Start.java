@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.8 2003/08/25 15:20:21 ajzeneski Exp $
+ * $Id: Start.java,v 1.9 2003/09/28 16:46:01 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.8 $
+  *@version    $Revision: 1.9 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -143,6 +143,9 @@ public class Start implements Runnable {
         
         // set the shutdown hook
         setShutdownHook();
+        
+        // start the listener thread
+        serverThread.start();
         
         // stat the log directory
         boolean createdDir = false;
