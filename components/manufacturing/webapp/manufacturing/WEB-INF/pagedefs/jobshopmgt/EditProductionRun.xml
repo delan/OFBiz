@@ -4,4 +4,5 @@
     <property name="titleProperty">ManufacturingEditProductionRun</property>
     <property name="headerItem">jobshop</property>   
     <property name="tabButtonItem">edit</property>
+    <content-action name="/jobshopmgt/EditProductionRun.bsh"/>
 </page>

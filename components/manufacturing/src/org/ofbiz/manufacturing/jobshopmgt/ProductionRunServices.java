@@ -1,5 +1,5 @@
 /*
- * $Id: ProductionRunServices.java,v 1.4 2004/04/21 22:30:43 holivier Exp $
+ * $Id: ProductionRunServices.java,v 1.5 2004/05/09 21:13:58 holivier Exp $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.manufacturing.techdata.TechDataServices;
  * Services for Production Run maintenance
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ProductionRunServices {
@@ -109,13 +109,13 @@ public class ProductionRunServices {
 	    List msgResult = new LinkedList();
         Locale locale = (Locale) context.get("locale");
        	GenericValue userLogin = (GenericValue) context.get("userLogin");
-/* TODO: security management  and finishing cleaning (ex copy from PartyServices.java)
+        /* TODO: security management  and finishing cleaning (ex copy from PartyServices.java)
 		if (!security.hasEntityPermission(secEntity, secOperation, userLogin)) {
 			result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
 			result.put(ModelService.ERROR_MESSAGE, "You do not have permission to perform this operation for this party");
 			return partyId;
 		}
-*/
+        */
         String productId = (String) context.get("productId");
 		String workEffortId = (String) context.get("routingId");
 		Timestamp  startDate =  (Timestamp) context.get("startDate");
@@ -196,6 +196,7 @@ public class ProductionRunServices {
                 Timestamp endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, duringTime);
 
 				serviceContext.clear();
+                serviceContext.put("priority", routingTaskAssoc.get("sequenceNum"));
                 serviceContext.put("workEffortPurposeTypeId", routingTask.get("workEffortPurposeTypeId"));
                 serviceContext.put("workEffortName",routingTask.get("workEffortName"));
                 serviceContext.put("description",routingTask.get("description"));
@@ -262,5 +263,136 @@ public class ProductionRunServices {
 		result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunCreated",UtilMisc.toMap("productionRunId", productionRunId), locale));
         return result;
     }
+    /**
+     * Update a Production Run.
+     *  <li> update field and after recalculate the entire ProductionRun data (routingTask and productComponent)
+     *  <li> create the WorkEffortGoodStandard for link between ProductionRun and the product it will produce
+     *  <li> for each valid routingTask of the routing create a workeffort-task
+     *  <li> for the first routingTask, create for all the valid productIdTo with no associateRoutingTask  a WorkEffortGoodStandard
+     *  <li> for each valid routingTask of the routing and valid productIdTo associate with this RoutingTask create a WorkEffortGoodStandard
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters, productId, routingId, quantity, estimatedStartDate, workEffortName, description
+     * @return Map with the result of the service, the output parameters.
+     */
+    public static Map updateProductionRun(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        /* TODO: security management  and finishing cleaning (ex copy from PartyServices.java)
+        if (!security.hasEntityPermission(secEntity, secOperation, userLogin)) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to perform this operation for this party");
+            return partyId;
+        }
+        */
+        String productionRunId = (String) context.get("productionRunId");
+        if (! UtilValidate.isEmpty(productionRunId)) {
+            ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+            if (productionRun.exist()){
 
+                Double quantity = (Double) context.get("quantity");
+                if (quantity != null &&  ! quantity.equals(productionRun.getQuantity())) 
+                        productionRun.setQuantity(quantity);
+
+                Timestamp  estimatedStartDate =  (Timestamp) context.get("estimatedStartDate");
+                if (estimatedStartDate != null && ! estimatedStartDate.equals(productionRun.getEstimatedStartDate())) 
+                        productionRun.setEstimatedStartDate(estimatedStartDate);
+                
+                String  workEffortName = (String) context.get("workEffortName");
+                if (workEffortName != null) productionRun.setProductionRunName(workEffortName);
+                
+                String  description = (String) context.get("description");
+                if (description != null) productionRun.setDescription(description);
+                
+                if (productionRun.store()) return ServiceUtil.returnSuccess();
+                else {
+                    Debug.logError("productionRun.store() fail for productionRunId ="+productionRunId,module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotUpdated", locale));
+                }
+            }
+            Debug.logError("no productionRun for productionRunId ="+productionRunId,module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotUpdated", locale));
+        }       
+        Debug.logError("service updateProductionRun call with productionRunId empty",module);
+        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotUpdated", locale));
+    }
+    /**
+     * check if field for routingTask update are correct and if need recalculated data in Production Run.
+     *  Check<ul>
+     *  <li> if estimatedStartDate is not before Production Run estimatedStartDate.</ul>
+     *  <li> if there is not a another routingTask with the same priority
+     *  If priority or estimatedStartDate has changed recalculated data for routingTask after that one.
+     * <br> update the productionRun
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters, productId, routingId, priority, estimatedStartDate, estimatedSetupMillis, estimatedMilliSeconds
+     * @return Map with the result of the service, the output parameters, estimatedCompletionDate.
+     */
+    public static Map checkUpdatePrunRoutingTask(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        /* TODO: security management  and finishing cleaning (ex copy from PartyServices.java)
+        if (!security.hasEntityPermission(secEntity, secOperation, userLogin)) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to perform this operation for this party");
+            return partyId;
+        }
+        */
+        String productionRunId = (String) context.get("productionRunId");
+        String routingTaskId = (String) context.get("routingTaskId");
+        if (! UtilValidate.isEmpty(productionRunId) && ! UtilValidate.isEmpty(routingTaskId)) {
+            ProductionRun productionRun = new ProductionRun(delegator, productionRunId);
+            if (productionRun.exist()){
+
+                Timestamp estimatedStartDate = (Timestamp) context.get("estimatedStartDate");
+                Timestamp pRestimatedStartDate = productionRun.getEstimatedStartDate();
+                if (pRestimatedStartDate.after(estimatedStartDate))
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRoutingTaskStartDateBeforePRun", locale));
+
+                Long priority = (Long) context.get("priority");
+                List pRRoutingTasks = productionRun.getProductionRunRoutingTasks();
+                boolean first = true;
+                for (Iterator iter=pRRoutingTasks.iterator();iter.hasNext();){
+                    GenericValue routingTask = (GenericValue) iter.next();
+                    if (priority.equals(routingTask.get("priority")) && ! routingTaskId.equals(routingTask.get("workEffortId")))
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRoutingTaskSeqIdAlreadyExist", locale));
+                    if (routingTaskId.equals(routingTask.get("workEffortId"))){
+                        routingTask.set("estimatedSetupMillis", context.get("estimatedSetupMillis"));
+                        routingTask.set("estimatedMilliSeconds", context.get("estimatedMilliSeconds"));
+                        if (first){    // for the first routingTask the estimatedStartDate update imply estimatedStartDate productonRun update
+                            if (! estimatedStartDate.equals(pRestimatedStartDate)){
+                                productionRun.setEstimatedStartDate(estimatedStartDate);
+                            }
+                        }
+                        // the priority has been changed
+                        if (! priority.equals(routingTask.get("priority"))){
+                            routingTask.set("priority", priority);
+                            // update the routingTask List and re-read it to be able to have it sorted with the new value
+                            if ( ! productionRun.store()) {
+                                Debug.logError("productionRun.store(), in routingTask.priority update, fail for productionRunId ="+productionRunId,module);
+                                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotUpdated", locale));
+                            }
+                            productionRun.clearRoutingTasksList();
+                        }    
+                    }
+                    if (first) first = false;
+                }
+                productionRun.setEstimatedCompletionDate(productionRun.recalculateEstimatedCompletionDate(priority, estimatedStartDate));                       
+                
+                if (productionRun.store()) return ServiceUtil.returnSuccess();
+                else {
+                    Debug.logError("productionRun.store() fail for productionRunId ="+productionRunId,module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotUpdated", locale));
+                }
+            }
+            Debug.logError("no productionRun for productionRunId ="+productionRunId,module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotUpdated", locale));
+        }       
+        Debug.logError("service updateProductionRun call with productionRunId empty",module);
+        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotUpdated", locale));
+    }
 }

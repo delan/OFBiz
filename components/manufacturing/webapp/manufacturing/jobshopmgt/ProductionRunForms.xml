@@ -20,7 +20,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -41,8 +41,10 @@
              </drop-down>
         </field>
         <field name="currentStatusId_op"><hidden value="equals"/></field>
+		<field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
 		<field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><text-find/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+		<field name="estimatedStartDate" title="${uiLabelMap.ManufacturingStartDate}"><date-find/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
@@ -52,12 +54,92 @@
         list-name="entityList" paginate-target="/FindProductionRun" 
         title="" type="list">
         <field name="workEffortId" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="EditProductionRun?workEffortId=${workEffortId}" description="${workEffortId}" also-hidden="false"/>
+            <hyperlink target="EditProductionRun?productionRunId=${workEffortId}" description="${workEffortId}" also-hidden="false"/>
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><display/></field>
-        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}"><display/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
+		<field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
+        <field name="statusDescription" title="${uiLabelMap.CommonStatus}"><display/></field>
         <field name="estimatedStartDate" title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
     </form>
 
+     <form name="UpdateProductionRun" type="single" 
+            target="EditProductionRun" title="" default-map-name="productionRunData"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="actionForm"><hidden value="${actionForm}"/></field>
+        <field name="productionRunId"><hidden/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}">
+        		<display description="[${productionRunData.productId}]/${productionRunData.productName}"/></field>
+        <field name="quantity"  title="${uiLabelMap.ManufacturingQuantity}"><text size="10"/></field>
+        <field name="estimatedStartDate"  title="${uiLabelMap.ManufacturingStartDate}"><date-time/></field>
+        <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
+        <field name="productionRunName"  title="${uiLabelMap.ManufacturingProductionRunName}"><text/></field>
+        <field name="description"  title="${uiLabelMap.CommonDescription}"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    
+     <form name="ListProductionRunRoutingTasks" type="list" 
+            target="EditProductionRun" title="" list-name="productionRunRoutingTasks"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="actionForm"><hidden value="EditRoutingTask"/></field>
+        <field name="productionRunId"><hidden value="${workEffortParentId}"/></field>
+        <field name="routingTaskId"><hidden value="${workEffortId}"/></field>
+        <field name="priority" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
+        <field name="workEffortId"  title="${uiLabelMap.ManufacturingTaskName}"><display description="${workEffortName} [${workEffortId}]" /></field>
+        <field name="estimatedStartDate"  title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
+        <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
+        <field name="estimatedSetupMillis" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
+        <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSelected}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="smallSubmit">
+            <hyperlink target="RemoveRoutingTaskAssoc?workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;fromDate=${fromDate}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+ 
+   <form name="ListProductionRunComponents" type="list" 
+            target="EditProductionRun" title="" list-name="productionRunComponentsData"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="actionForm"><hidden value="UpdateProductComponent"/></field>
+        <field name="productionRunId"><hidden/></field>
+        <field name="productId" ><hidden/></field>
+        <field name="internalName" title="${uiLabelMap.ProductProductName}">
+        	<display description="${productName} [${productId}]"/></field> 
+        <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}"><display/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSelected}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="smallSubmit">
+            <hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}&amp;byProduct=${byProduct}&amp;routingTemplate=${routingTemplate}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+
+     <form name="EditProductionRunRoutingTask" type="single" 
+            target="EditProductionRun" title="" default-map-name="routingTaskData"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="actionForm"><hidden value="${actionForm}"/></field>
+        <field name="productionRunId"><hidden value="${routingTaskData.workEffortParentId}"/></field>
+        <field name="routingTaskId"><hidden value="${routingTaskData.workEffortId}"/></field>
+        <field name="priority" title="${uiLabelMap.CommonSequenceNum}"><text size="4"/></field>
+        <field name="workEffortName"  title="${uiLabelMap.ManufacturingTaskName}"><text /></field>
+        <field name="description"  title="${uiLabelMap.CommonDescription}"><text /></field>
+        <field name="estimatedStartDate"  title="${uiLabelMap.ManufacturingStartDate}"><date-time/></field>
+        <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
+        <field name="estimatedSetupMillis" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><text/></field>
+        <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><text/></field>
+        <field name="submitButton" title="${uiLabelButton}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+
+     <form name="EditProductionRunComponent" type="single" 
+            target="EditProductionRunComponent" title="" default-map-name="productComponentData"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="actionForm"><hidden value="${actionForm}"/></field>
+        <field name="productionRunId"><hidden value="${productionRunId}"/></field>
+        <field name="productId" use-when="${actionIsAdd}!=null"><lookup target-form-name="LookupProduct"/>
+        	</field>
+        <field name="internalName" title="${uiLabelMap.ProductProductName}" use-when="${actionIsAdd}==null">
+        	<display description="${productComponentData.internalName} [${productComponentData.productId}]"/></field> 
+        <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><text size="10"/></field>
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}"><text/></field>
+        <field name="submitButton" title="${uiLabelButton}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
 </forms>
