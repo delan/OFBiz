@@ -93,6 +93,8 @@
             <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortArrival"/>
         </if-not-empty>
 
+        <!-- TODO: lookup contactMechs for Facilities and set as originContactMechId, originTelecomNumberId, dest... - origin and destination facilities in the create/update Shipment services -->
+
         <create-value value-name="newEntity"/>
         
         <!-- get the ShipmentStatus history started -->
@@ -223,6 +225,8 @@
                 </if-empty>
             </then>
         </if>
+
+        <!-- TODO: lookup contactMechs for Facilities and set as originContactMechId, originTelecomNumberId, dest... - origin and destination facilities in the create/update Shipment services -->
         
         <!-- finally before setting nonpk fields, set the oldStatusId, oldPrimaryOrderId -->
         <field-to-result field-name="statusId" map-name="lookedUpValue" result-name="oldStatusId"/>
@@ -258,8 +262,6 @@
         <string-to-field string="Set Shipment Settings From Primary Order" field-name="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
         <check-errors/>
-
-        <!-- TODO: lookup contactMechId for Facility and set as originContactMechId - maybe do for origin and destination facilities in the create/update Shipment services? -->
 
         <!-- on Shipment set partyIdFrom, partyIdTo (vendorPartyId), originContactMechId, destinationContactMechId, estimatedShipCost -->
         <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="lookupShipmentPKMap"/>
@@ -344,6 +346,25 @@
                 <field-to-field field-name="contactMechId" map-name="originOrderContactMech" to-field-name="originContactMechId" to-map-name="shipment"/>
             </if-not-empty>
         </if-empty>
+
+        <!-- destinationTelecomNumberId -->
+        <if-empty field-name="destinationTelecomNumberId" map-name="shipment">
+            <string-to-field string="PHONE_SHIPPING" field-name="contactMechPurposeTypeId" map-name="destTelecomOrderContactMechMap"/>
+            <filter-list-by-and list-name="orderContactMechs" map-name="destTelecomOrderContactMechMap" to-list-name="destTelecomOrderContactMechs"/>
+            <first-from-list entry-name="destTelecomOrderContactMech" list-name="destTelecomOrderContactMechs"/>
+            <if-not-empty field-name="destTelecomOrderContactMech">
+                <field-to-field field-name="contactMechId" map-name="destTelecomOrderContactMech" to-field-name="destinationTelecomNumberId" to-map-name="shipment"/>
+            </if-not-empty>
+        </if-empty>
+        <!-- originTelecomNumberId -->
+        <if-empty field-name="originTelecomNumberId" map-name="shipment">
+            <string-to-field string="PHONE_SHIP_ORIG" field-name="contactMechPurposeTypeId" map-name="originTelecomOrderContactMechMap"/>
+            <filter-list-by-and list-name="orderContactMechs" map-name="originTelecomOrderContactMechMap" to-list-name="originTelecomOrderContactMechs"/>
+            <first-from-list entry-name="originTelecomOrderContactMech" list-name="originTelecomOrderContactMechs"/>
+            <if-not-empty field-name="originTelecomOrderContactMech">
+                <field-to-field field-name="contactMechId" map-name="originTelecomOrderContactMech" to-field-name="originTelecomNumberId" to-map-name="shipment"/>
+            </if-not-empty>
+        </if-empty>
         
         <if-empty field-name="estimatedShipCost" map-name="shipment">
             <call-bsh><![CDATA[
@@ -373,8 +394,10 @@
     
             <field-to-field field-name="originFacilityId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="originContactMechId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
+            <field-to-field field-name="originTelecomNumberId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="destFacilityId" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="destinationContactMechId" map-name="shipment" to-field-name="destContactMechId" to-map-name="shipmentRouteSegmentMap"/>
+            <field-to-field field-name="destinationTelecomNumberId" map-name="shipment" to-field-name="destTelecomNumberId" to-map-name="shipmentRouteSegmentMap"/>
     
             <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderSpPKMap"/>
             <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="lookupOrderSpPKMap"/>
