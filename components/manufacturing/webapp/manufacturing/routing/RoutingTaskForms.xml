@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Olivier.Heintz@nereide.biz
+ *@version    $Revision: 1.1 $
+ *@since      3.0
+-->
+
+<forms>
+    <form name="ListRoutingTaskAssoc" type="list" 
+            target="EditRoutingTaskAssoc" title="" list-name="allRoutingTasks"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
+            >
+        <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
+        <field name="workEffortIdFrom"><hidden/></field>
+        <field name="seqId" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
+        <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingTaskName}"><display description="${workEffortToName}" /></field>
+        <field name="workEffortAssocTypeId" ><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ><display/></field>
+        <field name="workEffortToSetup" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
+        <field name="workEffortToRun" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSelected}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="RemoveRoutingTaskAssoc?workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;seqId=${seqId}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+ 
+     <form name="UpdateRoutingTaskAssoc" type="single" 
+            target="UpdateRoutingTaskAssoc" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
+        <field name="workEffortIdFrom"><hidden/></field>
+        <field name="seqId" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
+        <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingRoutingTaskId}">
+        	<display description="${routingTask.workEffortName}"/></field>
+        <field name="workEffortAssocTypeId" ><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+
+</forms>

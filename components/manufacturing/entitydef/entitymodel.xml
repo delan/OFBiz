@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  */
 -->
 
@@ -45,6 +45,7 @@
   <!-- The modules in this file are as follows:                  -->
   <!--  - org.ofbiz.manufacturing.bom -->
   <!--  - org.ofbiz.manufacturing.techdata -->
+  <!--  - org.ofbiz.manufacturing.mrp -->
   <!-- ========================================================= -->
 
 
@@ -164,5 +165,43 @@
         <key-map field-name="calendarWeekId"/>
       </relation>
     </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.manufacturing.mrp -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="MrpInventoryEventPlanned"
+            package-name="org.ofbiz.manufacturing.mrp"
+            title="Inventory event planned"
+            author="Olivier Heintz">
+      <description>Contain all the planned IventoryEvent by ProductId to be able to check the product availability 
+      					and if necessary generate some requirements</description>
+      <field name="productId" type="id-ne"></field>
+      <field name="eventDate" type="date"></field>
+      <field name="eventQuantity" type="floating-point"></field>
+      <field name="inventoryEventTypeId" type="id-ne"></field>
+      <prim-key field="productId"/>
+      <prim-key field="eventDate"/>
+      <relation type="one" fk-name="INV_EVENT_PLAN_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="INV_EVENT_PLAN_TYPE" rel-entity-name="MrpInventoryEventType">
+        <key-map field-name="inventoryEventTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="MrpInventoryEventType"
+            package-name="org.ofbiz.manufacturing.mrp"
+            title="Inventory  event type"
+            author="Olivier Heintz">
+      <description>Used to describe the InventoryEvent and give the information if it's an in or out event</description>
+      <field name="inventoryEventTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="inOut" type="indicator"></field>
+      <prim-key field="inventoryEventTypeId"/>
+      <relation type="many"  rel-entity-name="MrpInventoryEventPlanned">
+        <key-map field-name="inventoryEventTypeId"/>
+      </relation>
+    </entity>
+
 </entitymodel>
 

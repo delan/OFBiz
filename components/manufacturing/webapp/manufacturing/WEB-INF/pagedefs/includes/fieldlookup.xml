@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>popup</template> 
+    <property name="titleProperty">PageTitleFieldLookup</property>
+    <content-action name="/includes/fieldlookup.bsh"/>
+</page>

@@ -1,3 +1,5 @@
+<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Copyright (c) 2003 The Open For Business Project - www.ofbiz.org -->
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -19,18 +21,24 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Olivier.Heintz@nereide.biz
+ *@author     Johan Isacsson
  *@version    $Revision: 1.1 $
- *@since      3.0
+ *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign unselectedClassName = "tabButton">
-<#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>${requestAttributes.uiLabelMap[page.titleProperty]}</title>
+    <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
+    <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
+    <link rel='stylesheet' href='<@ofbizContentUrl>/images/calendarstyles.css</@ofbizContentUrl>' type='text/css'>    
+</head>
 
-<div class='tabContainer'>
-        <a href="<@ofbizUrl>/FindRouting</@ofbizUrl>" class="${selectedClassMap.routing?default(unselectedClassName)}">${uiLabelMap.ManufacturingRouting}</a>
-        <a href="<@ofbizUrl>/FindRoutingTask</@ofbizUrl>" class="${selectedClassMap.routingTask?default(unselectedClassName)}">${uiLabelMap.ManufacturingRoutingTask}</a>
-        <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="${selectedClassMap.machine?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachine}</a>
-        <a href="<@ofbizUrl>/EditMachineGroup</@ofbizUrl>" class="${selectedClassMap.machineGroup?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachineGroup}</a>
-</div>
+<body>
+            ${pages.get("/includes/errormsg.ftl")}
+            ${pages.get(page.path)}
+
+
+</body>
+</html>
