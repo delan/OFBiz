@@ -63,6 +63,9 @@
     <request-map uri="task"><security https="true" auth="true"/>
     	<response name="success" type="view" value="task"/>
     </request-map>
+    <request-map uri="activity"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="activity"/>
+    </request-map>
     <request-map uri="tasklist"><security https="true" auth="true"/>
     	<response name="success" type="view" value="tasklist"/>
     </request-map>
@@ -96,6 +99,7 @@
     <view-map name="main" page="/main.jsp"/>
 
     <view-map name="task" page="/task/task.jsp"/>
+    <view-map name="activity" page="/task/activity.jsp"/>
     <view-map name="tasklist" page="/task/tasklist.jsp"/>
 
     <view-map name="event" page="/calendar/event.jsp"/>
