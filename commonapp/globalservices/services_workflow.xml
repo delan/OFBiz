@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Common Application Shared Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- Workflow services -->
+    <service name="wfLimitInvoker" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="limitInvoker">
+        <description>Required service used the workflow engine to invoke limitService</description>
+        <attribute name="serviceName" type="String" mode="IN"/>
+        <attribute name="serviceContext" type="java.util.Map" mode="IN"/>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+    </service>
+
+    <service name="wfGetActivityContext" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="getActivityContext">
+        <description>Returns the current context of the requested activity</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="activityContext" type="java.util.Map" mode="OUT"/>
+    </service>
+
+    <service name="wfAppendActivityContext" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="appendActivityContext">
+        <description>Appends the current context to the activity context</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="currentContext" type="java.util.Map" mode="IN"/>
+    </service>
+
+    <service name="wfAssignActivity" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="assignActivity">
+        <description>Assign a new party or role to a workflow activity</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="removeOldAssignments" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="wfActivateActivity" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="activateActivity">
+        <description>Attempt to initiate a workflow activity</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+    </service>
+
+    <service name="wfChangeActivityState" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="changeActivityState">
+        <description>Manually change the state of a workflow activity</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="newState" type="String" mode="IN"/>
+    </service>
+
+    <service name="wfAcceptAssignment" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptAssignment">
+        <description>Accept a workflow user assignment</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN"/>
+    </service>
+
+    <service name="wfAcceptRoleAssignment" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptRoleAssignment">
+        <description>Accept a workflow role assignment</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN"/>
+    </service>
+
+    <service name="wfCompleteAssignment" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="completeAssignment">
+        <description>Complete a workflow assignment</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN"/>
+        <attribute name="result" type="java.util.Map" mode="IN" optional="true"/>
+    </service>
+</services>
