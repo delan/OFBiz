@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.27 2004/01/28 15:17:38 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.28 2004/01/28 15:52:31 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -349,7 +349,10 @@ public class ProductUtilServices {
             GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
             Debug.logInfo("Processing virtual product with one variant with ID: " + productId + " and name: " + product.getString("internalName"), module);
             
-            List paList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
+            List paList = EntityUtil.filterByDate(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")), nowTimestamp);
+            if (paList.size() > 1) {
+                return ServiceUtil.returnError("Found more than one valid variant, not doing merge...");
+            }
             
             GenericValue productAssoc = EntityUtil.getFirst(paList);
             if (removeOld) {
@@ -418,7 +421,7 @@ public class ProductUtilServices {
             }
             
             if (test) {
-                ServiceUtil.returnError("Test mode - returning error to get a rollback");
+                return ServiceUtil.returnError("Test mode - returning error to get a rollback");
             }
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
