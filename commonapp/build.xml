@@ -53,7 +53,6 @@
     <target name="prepare" depends="clean">
         <mkdir dir="${lib.dir}" />
 		<mkdir dir="${lib.dir}/jar" />
-		<mkdir dir="${lib.dir}/jar/META-INF" />
 		<mkdir dir="${lib.dir}/ejb" />
 		<mkdir dir="${lib.dir}/ejb/META-INF" />
 		<mkdir dir="${lib.dir}/j2ee" />
@@ -73,17 +72,7 @@
                destdir="${lib.dir}/jar" />               
     </target>
 
-	<target name="jar-meta-info" depends="classes">
-		<copy file="${src.dir}/META-INF/ejb-jar.xml"
-		      tofile="${lib.dir}/jar/META-INF/ejb-jar.xml" />
-		<copy file="${src.dir}/META-INF/jboss.xml"
-		      tofile="${lib.dir}/jar/META-INF/jboss.xml" />
-		<copy file="${src.dir}/META-INF/jaws.xml"
-		      tofile="${lib.dir}/jar/META-INF/jaws.xml" />
-	</target>
-
-
-    <target name="jar" depends="jar-meta-info">
+    <target name="jar" depends="classes">
         <jar jarfile="${build.dir}/${name}.jar"
              basedir="${lib.dir}/jar" />
     </target>
@@ -104,13 +93,13 @@
     <!-- ================================================================== -->
 	
 	<target name="meta-info" depends="jar,war">
-		<copy file="${src.dir}/META-INF/ejb-jar.xml"
+		<copy file="${etc.dir}/ejb-jar.xml"
 		      tofile="${lib.dir}/ejb/META-INF/ejb-jar.xml" />
-		<copy file="${src.dir}/META-INF/jboss.xml"
+		<copy file="${etc.dir}/jboss.xml"
 		      tofile="${lib.dir}/ejb/META-INF/jboss.xml" />
-		<copy file="${src.dir}/META-INF/jaws.xml"
+		<copy file="${etc.dir}/jaws.xml"
 		      tofile="${lib.dir}/ejb/META-INF/jaws.xml" />
-		<copy file="${src.dir}/META-INF/application.xml"
+		<copy file="${etc.dir}/application.xml"
 		      tofile="${lib.dir}/j2ee/META-INF/application.xml" />			  
 	</target>
 	
@@ -144,7 +133,7 @@
         <mkdir dir="${build.dir}/${name}" />
 
         <copy todir="${build.dir}/${name}">
-            <fileset dir="." includes="${src.dir}/**" />            
+            <fileset dir="." includes="${src.dir}/**" />        
             <fileset dir="." includes="build.xml" />
         </copy>
 
