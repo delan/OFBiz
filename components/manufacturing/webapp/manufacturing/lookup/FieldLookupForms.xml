@@ -22,7 +22,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      3.0
 -->
 
@@ -92,7 +92,7 @@
         <auto-fields-entity entity-name="Product" default-field-type="hidden" />
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find default-value="equals"/></field>
         <field name="productName" title="${uiLabelMap.ProductProductName}"><text-find default-value="equals"/></field>
-        <field name="productTypeId" title="${uiLabelMap.ProductType}">
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down>
                 <option key="" description=""/>
                 <entity-options entity-name="ProductType" description="${description}">
@@ -116,6 +116,6 @@
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="internalName" title="Internal Name"><display/></field>
-        <field name="productTypeId" title="${uiLabelMap.ProductType}"><display/></field>
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display/></field>
     </form>
 </forms>

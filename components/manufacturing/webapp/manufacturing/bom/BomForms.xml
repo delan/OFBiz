@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      3.0
 -->
 
@@ -102,7 +102,7 @@
             <hidden value="equals"/>
         </field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find value="equals"/></field>
-        <field name="productTypeId" title="${uiLabelMap.ProductType}">
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down>
                 <option key="" description=""/>
                 <entity-options entity-name="ProductType" description="${description}">
@@ -114,7 +114,7 @@
             <hidden value="equals"/>
         </field>
 	<field name="productName" title="${uiLabelMap.ProductProductName}"><text-find value="equals"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonLookUp}" widget-style="standardSubmit">
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
