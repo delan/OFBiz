@@ -66,13 +66,17 @@ public class Input implements KeyboardReceiver, KeyListener {
         KeyboardAdaptor.getInstance(this, KeyboardAdaptor.KEYBOARD_DATA);
     }
 
+    public void focus() {
+        this.input.requestFocus();
+    }
+
     public void setLock(boolean lock) {
         // hide the input text
         if (lock) {
-            lastColor = this.input.getForeground();
-            input.setForeground(this.input.getBackground());
+            //lastColor = this.input.getForeground();
+            //input.setForeground(this.input.getBackground());
         } else {
-            input.setForeground(this.lastColor);
+            //input.setForeground(this.lastColor);
         }
         isLocked = lock;
     }
@@ -175,7 +179,7 @@ public class Input implements KeyboardReceiver, KeyListener {
     // KeyboardReceiver
     public synchronized void receiveData(int[] codes, char[] chars) {        
         if (chars.length > 0 && checkChars(chars))
-            this.appendString(new String(chars));
+            this.appendString(new String(chars));        
     }
 
     // KeyListener

@@ -25,26 +25,29 @@
 package org.ofbiz.pos.screen;
 
 import java.awt.Frame;
+import java.awt.Window;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import net.xoetrope.builder.NavigationHelper;
 import net.xoetrope.xui.XPage;
 import net.xoetrope.xui.XProjectManager;
 import net.xoetrope.xui.XResourceManager;
 
+import org.ofbiz.base.splash.SplashLoader;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.splash.SplashLoader;
 import org.ofbiz.content.xui.XuiContainer;
 import org.ofbiz.content.xui.XuiSession;
-import org.ofbiz.pos.component.Input;
-import org.ofbiz.pos.component.Journal;
-import org.ofbiz.pos.component.Output;
-import org.ofbiz.pos.component.PosButton;
-import org.ofbiz.pos.component.Operator;
-import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
+import org.ofbiz.pos.component.Input;
+import org.ofbiz.pos.component.Journal;
+import org.ofbiz.pos.component.Operator;
+import org.ofbiz.pos.component.Output;
+import org.ofbiz.pos.component.PosButton;
+import org.ofbiz.pos.device.DeviceLoader;
 
 /**
  * 
@@ -52,10 +55,11 @@ import org.ofbiz.pos.adaptor.KeyboardAdaptor;
  * @version    $Rev$
  * @since      3.1
  */
-public class PosScreen extends NavigationHelper implements Runnable, DialogCallback {
+public class PosScreen extends NavigationHelper implements Runnable, DialogCallback, FocusListener {
 
     public static final String module = PosScreen.class.getName();
     public static final Frame appFrame = XResourceManager.getAppFrame();
+    public static final Window appWin = XResourceManager.getAppWindow();
     public static final String BUTTON_ACTION_METHOD = "buttonPressed";
     public static final long MAX_INACTIVITY = 1800000;
     public static PosScreen currentScreen;
@@ -74,10 +78,12 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     protected PosButton buttons = null;
     protected String scrLocation = null;
     protected boolean isLocked = false;
+    protected boolean inDialog = false;
 
     public PosScreen() {
         super();
-        this.classLoader = Thread.currentThread().getContextClassLoader();        
+        this.classLoader = Thread.currentThread().getContextClassLoader();
+        this.addFocusListener(this);
     }
 
     public void pageCreated() {
@@ -111,6 +117,12 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
                 activityMonitor.start();
             }
 
+            // configure the frame/window listeners
+            KeyboardAdaptor.attachComponents(appFrame, false);
+            KeyboardAdaptor.attachComponents(appWin, false);
+            appFrame.addFocusListener(this);
+            appWin.addFocusListener(this);
+
             // close the splash screen
             SplashLoader.close();            
         }
@@ -119,7 +131,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.buttons = new PosButton(this);
 
         // make sure all components have the keyboard set
-        KeyboardAdaptor.attachComponents(this.getComponents());
+        KeyboardAdaptor.attachComponents(this);
     }
 
     public void pageActivated() {
@@ -140,14 +152,45 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         super.pageDeactivated();
 
         if (Debug.verboseOn()) {
-            Debug.log("App Frame :", module);
-            Debug.log("name    - " + appFrame.getName(), module);
-            Debug.log("title   - " + appFrame.getTitle(), module);
-            Debug.log("active  - " + appFrame.isActive(), module);
-            Debug.log("enabled - " + appFrame.isEnabled(), module);
-            Debug.log("visible - " + appFrame.isVisible(), module);
-            Debug.log("opaque  - " + appFrame.isOpaque(), module);
+            this.logInfo();
         }
+    }
+
+    public void logInfo() {
+        Debug.log("App Frame :", module);
+        Debug.log("name      - " + appFrame.getName(), module);
+        Debug.log("title     - " + appFrame.getTitle(), module);
+        Debug.log("active    - " + appFrame.isActive(), module);
+        Debug.log("enabled   - " + appFrame.isEnabled(), module);
+        Debug.log("visible   - " + appFrame.isVisible(), module);
+        Debug.log("showing   - " + appFrame.isShowing(), module);
+        Debug.log("opaque    - " + appFrame.isOpaque(), module);
+        Debug.log("focusable - " + appFrame.isFocusable(), module);
+        Debug.log("focused   - " + appFrame.isFocused(), module);
+        Debug.log("hasFocus  - " + appFrame.hasFocus(), module);
+
+        Debug.log("", module);
+        Debug.log("App Window :", module);
+        Debug.log("name      - " + appWin.getName(), module);
+        Debug.log("active    - " + appWin.isActive(), module);
+        Debug.log("enabled   - " + appWin.isEnabled(), module);
+        Debug.log("visible   - " + appWin.isVisible(), module);
+        Debug.log("showing   - " + appWin.isShowing(), module);
+        Debug.log("opaque    - " + appWin.isOpaque(), module);
+        Debug.log("focusable - " + appWin.isFocusable(), module);
+        Debug.log("focused   - " + appWin.isFocused(), module);
+        Debug.log("hasFocus  - " + appWin.hasFocus(), module);
+
+        Debug.log("", module);
+
+        Debug.log("POS Screen :", module);
+        Debug.log("name      - " + this.getName(), module);
+        Debug.log("enabled   - " + this.isEnabled(), module);
+        Debug.log("visible   - " + this.isVisible(), module);
+        Debug.log("showing   - " + this.isShowing(), module);
+        Debug.log("opaque    - " + this.isOpaque(), module);
+        Debug.log("focusable - " + this.isFocusable(), module);
+        Debug.log("focused   - " + this.hasFocus(), module);
     }
 
     public void refresh() {
@@ -159,8 +202,11 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         if (trans == null) {
             updateOutput = false;
         }
-        
-        this.requestFocus();
+
+        appWin.requestFocus();
+        this.lockScreenButton(this);
+        //this.requestFocus();
+
         if (!isLocked) {
             this.setEnabled(true);
             this.setVisible(true);
@@ -184,13 +230,14 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
                     }
                 }
             }
+            //journal.focus();
         } else {
             output.print(Output.ULOGIN);
+            //input.focus();
         }
 
-        this.lockScreenButton(this);       
-        journal.focus();
         this.repaint();
+        //this.logInfo();
     }
 
     public boolean isLocked() {
@@ -296,6 +343,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
 
     // PosDialog Callback method
     public void receiveDialogCb(PosDialog dialog) {
+        Debug.log("Dialog closed; refreshing screen", module);
         this.refresh();
     }
 
@@ -311,6 +359,20 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             } catch (InterruptedException e) {
                 Debug.logError(e, module);
             }
+        }
+    }
+
+    public void focusGained(FocusEvent event) {
+        if (Debug.verboseOn()) {
+            String from = event != null && event.getOppositeComponent() != null ? event.getOppositeComponent().getName() : "??";
+            Debug.log(event.getSource() + " focus gained from " + from, module);
+        }
+    }
+
+    public void focusLost(FocusEvent event) {
+        if (Debug.verboseOn()) {
+            String to = event != null && event.getOppositeComponent() != null ? event.getOppositeComponent().getName() : "??";
+            Debug.log(event.getSource() + " focus lost to " + to, module);
         }
     }
 

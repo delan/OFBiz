@@ -256,6 +256,7 @@ public class PosDialog {
 
         // refocus the parent window
         appWindow.setFocusable(true);
+        appWindow.requestFocus();
         parent.setFocusable(true);
         parent.requestFocus();
 
