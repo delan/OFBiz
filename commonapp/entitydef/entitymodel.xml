@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Tue Sep 11 16:59:31 PDT 2001
+ *@created    Wed Sep 12 14:36:36 MDT 2001
  *@version    1.0
  */
 -->
@@ -4002,7 +4002,8 @@
       <field><col-name>SHIPMENT_METHOD_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>CARRIER_PARTY_ID</col-name><type>id</type></field>
       <field><col-name>CARRIER_ROLE_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>SHIPPING_INSTRUCTIONS</col-name><type>long-varchar</type></field>	
+      <field><col-name>SHIPPING_INSTRUCTIONS</col-name><type>long-varchar</type></field>
+      <field><col-name>MAY_SPLIT</col-name><type>indicator</type></field>	
       <prim-key-col>ORDER_ID</prim-key-col>	
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
       <relation>
