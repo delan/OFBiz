@@ -42,8 +42,8 @@ import org.ofbiz.core.minilang.method.*;
 public class CreateObject extends MethodOperation {
 
     String className;
-    String fieldName;
-    String mapName;
+    ContextAccessor fieldAcsr;
+    ContextAccessor mapAcsr;
 
     /** A list of MethodObject objects to use as the method call parameters */
     List parameters;
@@ -51,8 +51,8 @@ public class CreateObject extends MethodOperation {
     public CreateObject(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         className = element.getAttribute("class-name");
-        fieldName = element.getAttribute("field-name");
-        mapName = element.getAttribute("map-name");
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         
         List parameterElements = UtilXml.childElementList(element, null);
         if (parameterElements.size() > 0) {
@@ -78,6 +78,7 @@ public class CreateObject extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
+        String className = methodContext.expandString(this.className);
 
         Class methodClass = null;
         try {
@@ -92,7 +93,6 @@ public class CreateObject extends MethodOperation {
         
         Object[] args = null;
         Class[] parameterTypes = null;
-
         if (parameters != null) {
             args = new Object[parameters.size()];
             parameterTypes = new Class[parameters.size()];
@@ -121,19 +121,19 @@ public class CreateObject extends MethodOperation {
             try {
                 Object newObject = constructor.newInstance(args);
                 
-                //if fieldName is empty, ignore return value
-                if (UtilValidate.isNotEmpty(fieldName)) {
-                    if (mapName != null && mapName.length() > 0) {
-                        Map retMap = (Map) methodContext.getEnv(mapName);
+                //if fieldAcsr is empty, ignore return value
+                if (!fieldAcsr.isEmpty()) {
+                    if (!mapAcsr.isEmpty()) {
+                        Map retMap = (Map) mapAcsr.get(methodContext);
 
                         if (retMap == null) {
                             retMap = new HashMap();
-                            methodContext.putEnv(mapName, retMap);
+                            mapAcsr.put(methodContext, retMap);
                         }
-                        retMap.put(fieldName, newObject);
+                        fieldAcsr.put(retMap, newObject, methodContext);
                     } else {
                         // no map name, use the env
-                        methodContext.putEnv(fieldName, newObject);
+                        fieldAcsr.put(methodContext, newObject);
                     }
                 }
             } catch (InstantiationException e) {

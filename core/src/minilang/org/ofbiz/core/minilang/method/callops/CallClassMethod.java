@@ -45,8 +45,8 @@ public class CallClassMethod extends MethodOperation {
 
     String className;
     String methodName;
-    String retFieldName;
-    String retMapName;
+    ContextAccessor retFieldAcsr;
+    ContextAccessor retMapAcsr;
 
     /** A list of MethodObject objects to use as the method call parameters */
     List parameters;
@@ -55,8 +55,8 @@ public class CallClassMethod extends MethodOperation {
         super(element, simpleMethod);
         className = element.getAttribute("class-name");
         methodName = element.getAttribute("method-name");
-        retFieldName = element.getAttribute("ret-field-name");
-        retMapName = element.getAttribute("ret-map-name");
+        retFieldAcsr = new ContextAccessor(element.getAttribute("ret-field-name"));
+        retMapAcsr = new ContextAccessor(element.getAttribute("ret-map-name"));
         
         List parameterElements = UtilXml.childElementList(element, null);
         if (parameterElements.size() > 0) {
@@ -82,6 +82,9 @@ public class CallClassMethod extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
+        String className = methodContext.expandString(this.className);
+        String methodName = methodContext.expandString(this.methodName);
+        
         Class methodClass = null;
         try {
             methodClass = ObjectType.loadClass(className, methodContext.getLoader());
@@ -93,6 +96,6 @@ public class CallClassMethod extends MethodOperation {
             return false;
         }
         
-        return CallObjectMethod.callMethod(simpleMethod, methodContext, parameters, methodClass, null, methodName, retFieldName, retMapName);
+        return CallObjectMethod.callMethod(simpleMethod, methodContext, parameters, methodClass, null, methodName, retFieldAcsr, retMapAcsr);
     }
 }

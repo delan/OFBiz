@@ -43,22 +43,22 @@ public class CallObjectMethod extends MethodOperation {
     
     public static final String module = CallClassMethod.class.getName();
 
-    String objFieldName;
-    String objMapName;
+    ContextAccessor objFieldAcsr;
+    ContextAccessor objMapAcsr;
     String methodName;
-    String retFieldName;
-    String retMapName;
+    ContextAccessor retFieldAcsr;
+    ContextAccessor retMapAcsr;
 
     /** A list of MethodObject objects to use as the method call parameters */
     List parameters;
 
     public CallObjectMethod(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        objFieldName = element.getAttribute("obj-field-name");
-        objMapName = element.getAttribute("obj-map-name");
+        objFieldAcsr = new ContextAccessor(element.getAttribute("obj-field-name"));
+        objMapAcsr = new ContextAccessor(element.getAttribute("obj-map-name"));
         methodName = element.getAttribute("method-name");
-        retFieldName = element.getAttribute("ret-field-name");
-        retMapName = element.getAttribute("ret-map-name");
+        retFieldAcsr = new ContextAccessor(element.getAttribute("ret-field-name"));
+        retMapAcsr = new ContextAccessor(element.getAttribute("ret-map-name"));
         
         List parameterElements = UtilXml.childElementList(element, null);
         if (parameterElements.size() > 0) {
@@ -84,39 +84,37 @@ public class CallObjectMethod extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
+        String methodName = methodContext.expandString(this.methodName);
 
         Object methodObject = null;
-
-        if (objMapName != null && objMapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(objMapName);
-
+        if (!objMapAcsr.isEmpty()) {
+            Map fromMap = (Map) objMapAcsr.get(methodContext);
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + objMapName + ", which should contain the object to execute a method on; not executing method, rerturning error.", module);
+                Debug.logWarning("Map not found with name " + objMapAcsr + ", which should contain the object to execute a method on; not executing method, rerturning error.", module);
                 
-                String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Map not found with name " + objMapName + ", which should contain the object to execute a method on]";
+                String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Map not found with name " + objMapAcsr + ", which should contain the object to execute a method on]";
                 methodContext.setErrorReturn(errMsg, simpleMethod);
                 return false;
             }
-
-            methodObject = fromMap.get(objFieldName);
+            methodObject = objFieldAcsr.get(fromMap, methodContext);
         } else {
             // no map name, try the env
-            methodObject = methodContext.getEnv(objFieldName);
+            methodObject = objFieldAcsr.get(methodContext);
         }
 
         if (methodObject == null) {
-            if (Debug.infoOn()) Debug.logInfo("Object not found to execute method on with name " + objFieldName + " in Map with name " + objMapName + ", not executing method, rerturning error.", module);
+            if (Debug.infoOn()) Debug.logInfo("Object not found to execute method on with name " + objFieldAcsr + " in Map with name " + objMapAcsr + ", not executing method, rerturning error.", module);
             
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Object not found to execute method on with name " + objFieldName + " in Map with name " + objMapName + "]";
+            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Object not found to execute method on with name " + objFieldAcsr + " in Map with name " + objMapAcsr + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }
 
         Class methodClass = methodObject.getClass();
-        return CallObjectMethod.callMethod(simpleMethod, methodContext, parameters, methodClass, methodObject, methodName, retFieldName, retMapName);
+        return CallObjectMethod.callMethod(simpleMethod, methodContext, parameters, methodClass, methodObject, methodName, retFieldAcsr, retMapAcsr);
     }
     
-    public static boolean callMethod(SimpleMethod simpleMethod, MethodContext methodContext, List parameters, Class methodClass, Object methodObject, String methodName, String retFieldName, String retMapName) {
+    public static boolean callMethod(SimpleMethod simpleMethod, MethodContext methodContext, List parameters, Class methodClass, Object methodObject, String methodName, ContextAccessor retFieldAcsr, ContextAccessor retMapAcsr) {
         Object[] args = null;
         Class[] parameterTypes = null;
 
@@ -148,22 +146,21 @@ public class CallObjectMethod extends MethodOperation {
             try {
                 Object retValue = method.invoke(methodObject, args);
                 
-                //if retFieldName is empty, ignore return value
-                if (UtilValidate.isNotEmpty(retFieldName)) {
-                    if (retMapName != null && retMapName.length() > 0) {
-                        Map retMap = (Map) methodContext.getEnv(retMapName);
+                //if retFieldAcsr is empty, ignore return value
+                if (!retFieldAcsr.isEmpty()) {
+                    if (!retMapAcsr.isEmpty()) {
+                        Map retMap = (Map) retMapAcsr.get(methodContext);
 
                         if (retMap == null) {
                             retMap = new HashMap();
-                            methodContext.putEnv(retMapName, retMap);
+                            retMapAcsr.put(methodContext, retMap);
                         }
-                        retMap.put(retFieldName, retValue);
+                        retFieldAcsr.put(retMap, retValue, methodContext);
                     } else {
                         // no map name, use the env
-                        methodContext.putEnv(retFieldName, retValue);
+                        retFieldAcsr.put(methodContext, retValue);
                     }
                 }
-                
             } catch (IllegalAccessException e) {
                 Debug.logError(e, "Could not access method in call method operation", module);
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Could not access method to execute named " + methodName + ": " + e.toString() + "]";

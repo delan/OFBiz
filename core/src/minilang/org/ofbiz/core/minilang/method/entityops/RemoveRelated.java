@@ -39,22 +39,24 @@ import org.ofbiz.core.entity.*;
  */
 public class RemoveRelated extends MethodOperation {
     
-    String valueName;
+    ContextAccessor valueAcsr;
     String relationName;
-    boolean doCacheClear;
+    String doCacheClearStr;
 
     public RemoveRelated(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        valueName = element.getAttribute("value-name");
+        valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
         relationName = element.getAttribute("relation-name");
-        doCacheClear = !"false".equals(element.getAttribute("do-cache-clear"));
+        doCacheClearStr = element.getAttribute("do-cache-clear");
     }
 
     public boolean exec(MethodContext methodContext) {
-        GenericValue value = (GenericValue) methodContext.getEnv(valueName);
-
+        boolean doCacheClear = !"false".equals(doCacheClearStr);
+        String relationName = methodContext.expandString(this.relationName);
+        
+        GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (value == null) {
-            String errMsg = "In remove-related a value was not found with the specified valueName: " + valueName + ", not removing related";
+            String errMsg = "In remove-related a value was not found with the specified valueAcsr: " + valueAcsr + ", not removing related";
 
             Debug.logWarning(errMsg);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -71,7 +73,7 @@ public class RemoveRelated extends MethodOperation {
             methodContext.getDelegator().removeRelated(relationName, value, doCacheClear);
         } catch (GenericEntityException e) {
             Debug.logError(e);
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the relation " + relationName + " of the value " + valueName + " value: " + e.getMessage() + "]";
+            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the relation " + relationName + " of the value " + valueAcsr + " value: " + e.getMessage() + "]";
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);

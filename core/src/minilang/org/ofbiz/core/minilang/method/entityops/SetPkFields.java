@@ -41,24 +41,24 @@ import org.ofbiz.core.entity.*;
  */
 public class SetPkFields extends MethodOperation {
     
-    String valueName;
-    String mapName;
-    boolean setIfNull = true;
+    ContextAccessor valueAcsr;
+    ContextAccessor mapAcsr;
+    String setIfNullStr;
 
     public SetPkFields(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        valueName = element.getAttribute("value-name");
-        mapName = element.getAttribute("map-name");
-
-        // if anything but false it will be true
-        setIfNull = !"false".equals(element.getAttribute("set-if-null"));
+        valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        setIfNullStr = element.getAttribute("set-if-null");
     }
 
     public boolean exec(MethodContext methodContext) {
-        GenericValue value = (GenericValue) methodContext.getEnv(valueName);
-
+        // if anything but false it will be true
+        boolean setIfNull = !"false".equals(methodContext.expandString(setIfNullStr));
+        
+        GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (value == null) {
-            String errMsg = "In set-pk-fields a value was not found with the specified valueName: " + valueName + ", not setting fields";
+            String errMsg = "In set-pk-fields a value was not found with the specified valueAcsr: " + valueAcsr + ", not setting fields";
 
             Debug.logWarning(errMsg);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -71,10 +71,9 @@ public class SetPkFields extends MethodOperation {
             return false;
         }
 
-        Map theMap = (Map) methodContext.getEnv(mapName);
-
+        Map theMap = (Map) mapAcsr.get(methodContext);
         if (theMap == null) {
-            Debug.logWarning("In set-pk-fields could not find map with name " + mapName + ", not setting any fields");
+            Debug.logWarning("In set-pk-fields could not find map with name " + mapAcsr + ", not setting any fields");
         } else {
             value.setPKFields(theMap, setIfNull);
         }

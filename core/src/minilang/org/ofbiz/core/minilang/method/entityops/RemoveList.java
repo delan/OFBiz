@@ -41,20 +41,21 @@ import org.ofbiz.core.entity.*;
  */
 public class RemoveList extends MethodOperation {
     
-    String listName;
-    boolean doCacheClear;
+    ContextAccessor listAcsr;
+    String doCacheClearStr;
 
     public RemoveList(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        listName = element.getAttribute("list-name");
-        doCacheClear = !"false".equals(element.getAttribute("do-cache-clear"));
+        listAcsr = new ContextAccessor(element.getAttribute("list-name"));
+        doCacheClearStr = element.getAttribute("do-cache-clear");
     }
 
     public boolean exec(MethodContext methodContext) {
-        List values = (List) methodContext.getEnv(listName);
-
+        boolean doCacheClear = !"false".equals(doCacheClearStr);
+        
+        List values = (List) listAcsr.get(methodContext);
         if (values == null) {
-            String errMsg = "In remove-list a value list was not found with the specified listName: " + listName + ", not removing";
+            String errMsg = "In remove-list a value list was not found with the specified listAcsr: " + listAcsr + ", not removing";
 
             Debug.logWarning(errMsg);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -71,7 +72,7 @@ public class RemoveList extends MethodOperation {
             methodContext.getDelegator().removeAll(values, doCacheClear);
         } catch (GenericEntityException e) {
             Debug.logError(e);
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + listName + " value list: " + e.getMessage() + "]";
+            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + listAcsr + " value list: " + e.getMessage() + "]";
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);

@@ -41,22 +41,23 @@ import org.ofbiz.core.minilang.method.*;
 public class ClearCacheLine extends MethodOperation {
     
     String entityName;
-    String mapName;
+    ContextAccessor mapAcsr;
 
     public ClearCacheLine(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         entityName = element.getAttribute("entity-name");
-        mapName = element.getAttribute("map-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        if (mapName == null || mapName.length() == 0) {
+        String entityName = methodContext.expandString(this.entityName);
+        
+        if (mapAcsr.isEmpty()) {
             methodContext.getDelegator().clearCacheLine(entityName, null);
         } else {
-            Map theMap = (Map) methodContext.getEnv(mapName);
-
+            Map theMap = (Map) mapAcsr.get(methodContext);
             if (theMap == null) {
-                Debug.logWarning("In clear-cache-line could not find map with name " + mapName + ", not clearing any cache lines");
+                Debug.logWarning("In clear-cache-line could not find map with name " + mapAcsr + ", not clearing any cache lines");
             } else {
                 methodContext.getDelegator().clearCacheLine(entityName, theMap);
             }

@@ -39,20 +39,21 @@ import org.ofbiz.core.entity.*;
  */
 public class RemoveValue extends MethodOperation {
     
-    String valueName;
-    boolean doCacheClear;
+    ContextAccessor valueAcsr;
+    String doCacheClearStr;
 
     public RemoveValue(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        valueName = element.getAttribute("value-name");
-        doCacheClear = !"false".equals(element.getAttribute("do-cache-clear"));
+        valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
+        doCacheClearStr = element.getAttribute("do-cache-clear");
     }
 
     public boolean exec(MethodContext methodContext) {
-        GenericValue value = (GenericValue) methodContext.getEnv(valueName);
-
+        boolean doCacheClear = !"false".equals(methodContext.expandString(doCacheClearStr));
+        
+        GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (value == null) {
-            String errMsg = "In remove-value a value was not found with the specified valueName: " + valueName + ", not removing";
+            String errMsg = "In remove-value a value was not found with the specified valueAcsr: " + valueAcsr + ", not removing";
 
             Debug.logWarning(errMsg);
             if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -69,7 +70,7 @@ public class RemoveValue extends MethodOperation {
             methodContext.getDelegator().removeValue(value, doCacheClear);
         } catch (GenericEntityException e) {
             Debug.logError(e);
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + valueName + " value: " + e.getMessage() + "]";
+            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + valueAcsr + " value: " + e.getMessage() + "]";
 
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);

@@ -39,24 +39,23 @@ import org.ofbiz.core.entity.*;
  */
 public class CloneValue extends MethodOperation {
     
-    String valueName;
-    String newValueName;
+    ContextAccessor valueAcsr;
+    ContextAccessor newValueAcsr;
 
     public CloneValue(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        valueName = element.getAttribute("value-name");
-        newValueName = element.getAttribute("new-value-name");
+        valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
+        newValueAcsr = new ContextAccessor(element.getAttribute("new-value-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        GenericValue value = (GenericValue) methodContext.getEnv(valueName);
-
+        GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (value == null) {
-            Debug.logWarning("In clone-value a value was not found with the specified valueName: " + valueName + ", not copying");
+            Debug.logWarning("In clone-value a value was not found with the specified valueAcsr: " + valueAcsr + ", not copying");
             return true;
         }
 
-        methodContext.putEnv(newValueName, new GenericValue(value));
+        newValueAcsr.put(methodContext, new GenericValue(value));
         return true;
     }
 }

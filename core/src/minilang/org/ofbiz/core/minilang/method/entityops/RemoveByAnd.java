@@ -42,19 +42,22 @@ import org.ofbiz.core.entity.*;
 public class RemoveByAnd extends MethodOperation {
     
     String entityName;
-    String mapName;
-    boolean doCacheClear;
+    ContextAccessor mapAcsr;
+    String doCacheClearStr;
 
     public RemoveByAnd(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         entityName = element.getAttribute("entity-name");
-        mapName = element.getAttribute("map-name");
-        doCacheClear = !"false".equals(element.getAttribute("do-cache-clear"));
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        doCacheClearStr = element.getAttribute("do-cache-clear");
     }
 
     public boolean exec(MethodContext methodContext) {
+        boolean doCacheClear = !"false".equals(doCacheClearStr);
+        String entityName = methodContext.expandString(this.entityName);
+        
         try {
-        methodContext.getDelegator().removeByAnd(entityName, (Map) methodContext.getEnv(mapName), doCacheClear);
+            methodContext.getDelegator().removeByAnd(entityName, (Map) mapAcsr.get(methodContext), doCacheClear);
         } catch (GenericEntityException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + entityName + " entity by and: " + e.getMessage() + "]";
