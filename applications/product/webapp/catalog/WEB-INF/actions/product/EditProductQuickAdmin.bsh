@@ -108,7 +108,7 @@ if (productId == null) productId = request.getAttribute("productId");
 if (productId != null) context.put("productId", productId);
 
 product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-ArrayList assocProducts = new ArrayList();
+List assocProducts = new ArrayList();
 HashMap featureFloz = new HashMap();
 HashMap featureMl = new HashMap();
 HashMap featureNtwt = new HashMap();
