@@ -149,6 +149,7 @@ public class TransactionUtil implements javax.transaction.Status {
                 int status = ut.getStatus();
 
                 if (status != STATUS_NO_TRANSACTION) {
+                    //Thread.dumpStack();
                     ut.rollback();
                     Debug.logInfo("[TransactionUtil.rollback] transaction rolled back", module);
                 } else {
@@ -172,7 +173,7 @@ public class TransactionUtil implements javax.transaction.Status {
                 int status = ut.getStatus();
 
                 if (status != STATUS_NO_TRANSACTION) {
-                    //Thread.currentThread().dumpStack();
+                    //Thread.dumpStack();
                     ut.setRollbackOnly();
                     Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set", module);
                 } else {
