@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      3.0
 -->
 
@@ -29,7 +29,7 @@
 <!-- //
 function lookupParty(click) {
     partyIdValue = document.lookupparty.partyId.value;
-    userLoginIdValue = document.lookupparty.userLoginId.value;
+    userLoginIdValue = document.lookupparty.userlogin_id.value;
     if (partyIdValue.length > 1 || userLoginIdValue.length > 1) {
         document.lookupparty.action = "<@ofbizUrl>/viewprofile</@ofbizUrl>";
     } else {
@@ -96,7 +96,7 @@ function refreshInfo() {
                     <tr>
                       <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyUserLogin}:</div></td>
                       <td width='5%'>&nbsp;</td>
-                      <td><input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'></td>
+                      <td><input type='text' class='inputBox' name='userlogin_id' value='${requestParameters.userLoginId?if_exists}'></td>
                     </tr>
                     <tr>
                       <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyLastName}:</div></td>
