@@ -53,6 +53,7 @@
     default-cell-width CDATA #IMPLIED
     default-disabled-title-style CDATA #IMPLIED
     selected-menuitem-context-field-name CDATA #IMPLIED
+    menu-wrapper-style CDATA #IMPLIED
 >
 
 
