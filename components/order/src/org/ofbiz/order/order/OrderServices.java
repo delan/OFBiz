@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.22 2003/11/28 18:48:46 jonesde Exp $
+ * $Id: OrderServices.java,v 1.23 2003/11/29 20:31:48 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 
@@ -1624,6 +1624,7 @@ public class OrderServices {
     
     // get the returnable quantiy for an order item
     public static Map getReturnableQuantity(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
         GenericValue orderItem = (GenericValue) context.get("orderItem");
         GenericValue product = null;
         if (orderItem.get("productId") != null) {
@@ -1653,18 +1654,19 @@ public class OrderServices {
 
         String itemStatus = orderItem.getString("statusId");
         double orderQty = orderItem.getDouble("quantity").doubleValue();
-        
-        double returnableAmount = 0.00;
+
+        // get the returnable quantity
+        double returnableQuantity = 0.00;
         if (returnable && itemStatus.equals("ITEM_COMPLETED")) {
             List returnedItems = null;
             try {
                 returnedItems = orderItem.getRelated("ReturnItem");
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError("ERROR: Unable to get return item information.");
+                return ServiceUtil.returnError("ERROR: Unable to get return item information");
             }
             if (returnedItems == null || returnedItems.size() == 0) {
-                returnableAmount = orderQty;;
+                returnableQuantity = orderQty;;
             } else {                
                 double returnedQty = 0.00;
                 Iterator ri = returnedItems.iterator();
@@ -1675,7 +1677,7 @@ public class OrderServices {
                         returnHeader = returnItem.getRelatedOne("ReturnHeader");
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
-                        return ServiceUtil.returnError("ERROR: Unable to get return header from item.");
+                        return ServiceUtil.returnError("ERROR: Unable to get return header from item");
                     }
                     String returnStatus = returnHeader.getString("statusId");
                     if (!returnStatus.equals("RETURN_CANCELLED")) {
@@ -1683,12 +1685,29 @@ public class OrderServices {
                     }
                 }
                 if (returnedQty < orderQty) {
-                    returnableAmount = orderQty - returnedQty;                    
+                    returnableQuantity = orderQty - returnedQty;
                 } 
             }                        
         }
+
+        // get the returnable price
+        double returnablePrice = 0.00;
+        if (returnableQuantity > 0) {
+            // get all order adjustments
+            List orderAdjustments = null;
+            try {
+                orderAdjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderItem.get("orderId")));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("ERROR: Unable to get order adjustments from item");
+            }
+            returnablePrice = OrderReadHelper.getOrderItemTotal(orderItem, orderAdjustments);
+            returnablePrice = (returnablePrice / orderQty);
+        }
+
         Map result = ServiceUtil.returnSuccess();
-        result.put("returnableQuantity", new Double(returnableAmount));
+        result.put("returnableQuantity", new Double(returnableQuantity));
+        result.put("returnablePrice", new Double(returnablePrice));
         return result;
     }
     
@@ -1729,7 +1748,10 @@ public class OrderServices {
                     if (serviceResult.containsKey(ModelService.ERROR_MESSAGE)) {
                         return ServiceUtil.returnError((String) serviceResult.get(ModelService.ERROR_MESSAGE));
                     } else {
-                        returnable.put(item, serviceResult.get("returnableQuantity"));
+                        Map returnInfo = new HashMap();
+                        returnInfo.put("returnableQuantity", serviceResult.get("returnableQuantity"));
+                        returnInfo.put("returnablePrice", serviceResult.get("returnablePrice"));
+                        returnable.put(item, returnInfo);
                     }
                 }
             } else {
