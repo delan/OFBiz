@@ -387,6 +387,8 @@ public class OrderServices {
         GenericValue orderHeader = null;
         try {
             orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            if (orderHeader != null)
+                result.put("orderHeader", orderHeader);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get OrderHeader (" + e.getMessage() + ").");
