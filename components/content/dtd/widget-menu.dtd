@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-menu.dtd,v 1.8 2004/08/18 16:15:49 byersa Exp $
+ *  $Id$
 -->
 
 
@@ -46,19 +46,16 @@
     extends CDATA #IMPLIED
     extends-resource CDATA #IMPLIED
     default-menu-item-name CDATA #IMPLIED
-    default-permission-operation CDATA #IMPLIED
-    default-permission-entity-action CDATA #IMPLIED
-    default-permission-status-id CDATA #IMPLIED
-    default-privilege-enum-id CDATA #IMPLIED
     default-associated-content-id CDATA #IMPLIED
     default-hide-if-selected (true | false) "false"
     menu-width CDATA #IMPLIED
     default-cell-width CDATA #IMPLIED
     default-disabled-title-style CDATA #IMPLIED
+    selected-menuitem-context-field-name CDATA #IMPLIED
 >
 
 
-<!ELEMENT menu-item (if-entity-permission?, img?, link?, target* )>
+<!ELEMENT menu-item (if-entity-permission?, img?, link?, menu-item* )>
 <!ATTLIST menu-item
     name CDATA #REQUIRED
     title CDATA #IMPLIED
@@ -67,13 +64,7 @@
     widget-style CDATA #IMPLIED
     tooltip-style CDATA #IMPLIED
     selected-style CDATA #IMPLIED
-    default-target-name CDATA #IMPLIED
-    target-type ( intra-app | inter-app | content | plain ) "intra-app"
     position CDATA "1"
-    permission-operation CDATA #IMPLIED
-    permission-status-id CDATA #IMPLIED
-    permission-entity-action CDATA #IMPLIED
-    privilege-enum-id CDATA #IMPLIED
     associated-content-id CDATA #IMPLIED
     hide-if-selected CDATA #IMPLIED
     cell-width CDATA #IMPLIED
@@ -83,38 +74,6 @@
     sub-menu CDATA #IMPLIED
 >
 
-<!--
--->
-<!ELEMENT target ( img?, param* )>
-<!ATTLIST target
-    title CDATA #IMPLIED
-    name CDATA #IMPLIED
-    request-name CDATA #REQUIRED
-    request-type CDATA #IMPLIED
-    target-type ( intra-app | inter-app | content | plain ) "intra-app"
-    link-style CDATA #IMPLIED
-    permission-operation CDATA #IMPLIED
-    permission-status-id CDATA #IMPLIED
-    permission-entity-action CDATA #IMPLIED
-    privilege-enum-id CDATA #IMPLIED
->
-
-<!ELEMENT img ( param* )>
-<!ATTLIST img
-    request-name CDATA #REQUIRED
-    target-type ( intra-app | inter-app | content | plain ) "intra-app"
-    disabled-request-name CDATA #REQUIRED
->
-
-<!--
--->
-<!ELEMENT param EMPTY>
-<!ATTLIST param
-    name CDATA #REQUIRED
-    value CDATA #IMPLIED
-    default-value CDATA #IMPLIED
-    type (name-value | map) "name-value"
->
 
 
     <!ELEMENT image (#PCDATA)>
@@ -126,6 +85,7 @@
         height CDATA #IMPLIED
         border CDATA #IMPLIED
         url-mode ( ofbiz | content | raw ) "content"
+        url-mode ( intra-app | inter-app | content | plain ) "content"
     >
 
     <!ELEMENT link (image?)>
@@ -136,7 +96,7 @@
         target CDATA #IMPLIED
         target-window CDATA #IMPLIED
         prefix CDATA #IMPLIED
-        url-mode ( ofbiz | content | raw ) "ofbiz"
+        url-mode ( intra-app | inter-app | content | plain ) "intra-app"
         full-path ( true | false ) "false"
         secure ( true | false ) "false"
         encode ( true | false ) "false"

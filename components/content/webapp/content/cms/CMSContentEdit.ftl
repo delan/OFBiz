@@ -20,16 +20,21 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
 
+<#--
 <#include "publishlib.ftl" />
+-->
 <#--
 <#import "publishlib.ftl" as publish/>
 -->
+<#--
 ${menuWrapper.renderMenuString()}
+-->
+
 <#-- Main Heading -->
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
@@ -45,7 +50,7 @@ ${menuWrapper.renderMenuString()}
 
 
 <#if currentValue?has_content>
-    <@renderTextData content=currentValue textData=textData />
+    <@renderTextData content=currentValue textData=textData?if_exists />
 </#if>
 <#--
 <#if textList?has_content>
@@ -78,9 +83,9 @@ ${menuWrapper.renderMenuString()}
               <input type="hidden" name="contentId" value="${contentId}"/>
               <table width="100%" border="0" cellpadding="1">
                     <#assign rowCount = 0 />
-                    <#assign rootForumId=page.getProperty("rootForumId") />
+                    <#assign rootForumId=rootForumId />
                     <@publishContent forumId=rootForumId contentId=contentId />
-                    <#assign rootForumId2=page.getProperty("rootForumId2") />
+                    <#assign rootForumId2=rootForumId2 />
                     <@publishContent forumId=rootForumId2 contentId=contentId />
                     <tr>
                       <td colspan="1">
@@ -281,3 +286,69 @@ ${menuWrapper.renderMenuString()}
   </TR>
 </TABLE>
 </#macro>
+
+<#macro publishContent forumId contentId formAction="/updatePublishLinksMulti"  indentIndex=0 catTrail=[]>
+
+<#local thisContentId=catTrail[indentIndex]?if_exists/>
+
+<#assign viewIdx = "" />
+<#if requestParameters.viewIndex?has_content>
+<#assign viewIdx = requestParameters.viewIndex?if_exists?number />
+</#if>
+<#assign viewSz = "" />
+<#if requestParameters.viewSize?has_content>
+<#assign viewSz = requestParameters.viewSize?if_exists?number />
+</#if>
+
+<#local indent = "">
+<#local thisCatTrailCsv = "" />
+<#local listUpper = (indentIndex - 1) />
+<#if catTrail?size < listUpper >
+    <#local listUpper = (catTrail?size - 1)>
+</#if>
+<#if 0 < listUpper >
+  <#list 0..listUpper as idx>
+      <#if thisCatTrailCsv?has_content>
+          <#local thisCatTrailCsv = thisCatTrailCsv + ","/>
+      </#if>
+      <#local thisCatTrailCsv = thisCatTrailCsv + catTrail[idx]>
+  </#list>
+</#if>
+<#if 0 < indentIndex >
+  <#list 0..(indentIndex - 1) as idx>
+      <#local indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
+  </#list>
+</#if>
+
+
+<@loopSubContentCache subContentId=forumId
+    viewIndex=viewIdx
+    viewSize=viewSz
+    contentAssocTypeId="SUBSITE"
+    returnAfterPickWhen="1==1";
+>
+    <#local isPublished = "" />
+    <#assign contentAssocViewFrom=Static["org.ofbiz.content.content.ContentWorker"].getContentAssocViewFrom(delegator, subContentId, contentId, "PUBLISH_LINK", null, null)?if_exists />
+    <#if contentAssocViewFrom?has_content>
+        <#local isPublished = "checked" />
+    </#if>
+       <tr>
+         <td >
+            ${indent}
+            <#local plusMinus="-"/>
+            ${plusMinus} ${content.contentName?if_exists}
+         </td >
+         <td  class="tabletext" >
+            <input type="checkbox" name="publish_o_${rowCount}" value="Y" ${isPublished}/>
+         </td >
+            <input type="hidden" name="contentIdTo_o_${rowCount}" value="${subContentId}" />
+            <input type="hidden" name="contentId_o_${rowCount}" value="${contentId}" />
+            <input type="hidden" name="contentAssocTypeId_o_${rowCount}" value="PUBLISH_LINK" />
+            <input type="hidden" name="statusId_o_${rowCount}" value="BLOG_SUBMITTED" />
+       </tr>
+       <#assign rowCount = rowCount + 1 />
+       <@publishContent forumId=subContentId contentId=contentId indentIndex=(indentIndex + 1)/>
+</@loopSubContentCache >
+
+</#macro>
+

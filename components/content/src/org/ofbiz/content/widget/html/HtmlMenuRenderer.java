@@ -46,8 +46,6 @@ import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
 import org.ofbiz.content.widget.menu.ModelMenuItem.Image;
 import org.ofbiz.content.widget.menu.ModelMenuItem.Link;
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuImage;
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -58,7 +56,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -174,15 +172,6 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         if (hideThisItem)
             return;
 
-        boolean bHasPermission = permissionCheck(menuItem, context);
-        if (!bHasPermission) {
-            if (!permissionErrorMessage.equalsIgnoreCase("SKIP")) {
-                //buffer.append(permissionErrorMessage);
-            }
-            permissionErrorMessage = "";
-            return;
-        }
-        //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
 
         String orientation = menuItem.getModelMenu().getOrientation();
         if (orientation.equalsIgnoreCase("vertical"))
@@ -197,57 +186,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, link(0):" + link,"");
         if (link != null) {
             renderLink(buffer, context, link);
-        } else {
-            MenuTarget target = selectMenuTarget(menuItem, context);
-            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
-                //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target,"");
-            if (target != null) {
-                String titleStyle = null;
-                boolean isSelected = isSelected(menuItem);
-                if (isSelected)
-                    titleStyle = menuItem.getSelectedStyle();
-                else
-                    titleStyle = menuItem.getTitleStyle();
-                String requestName = target.getRequestName();
-                String description = getTitle(menuItem, target, context);
-                String targetType = target.getTargetType();
-                MenuImage menuImage = target.getMenuImage();
-                //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, requestName(0):" + requestName,"");
-                //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, menuImage(0):" + menuImage,"");
-                if (isDisableIfEmpty(menuItem, context) ) 
-                        target = null;
-                //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(1):" + target,"");
-                if (menuImage == null) {
-                   //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, description(0):" + description,"");
-                    if (target != null) {
-                        List paramList = target.getParamList();
-                        WidgetWorker.makeHyperlinkString(buffer, titleStyle, targetType, requestName, description, this.request, this.response, context, paramList);
-                    } else {
-                        buffer.append("<div ");
-                        String disabledStyle = menuItem.getDisabledTitleStyle();
-                        if (UtilValidate.isNotEmpty(disabledStyle)) {
-                            buffer.append(" class=\"");
-                            buffer.append(disabledStyle);
-                            buffer.append("\"");
-                            buffer.append(">");
-                            buffer.append(description);
-                        } else {
-                            buffer.append(">");
-                            buffer.append("</div>");
-                        }
-                    }
-                } else { // is an image link
-                    // Note that target could be null is disabling is required
-                    String imgLink = buildImgLink(menuItem, menuImage, context, target);
-                    buffer.append(imgLink);
-                }
-                buffer.append("</td>");
-                if (orientation.equalsIgnoreCase("vertical"))
-                    buffer.append("</tr>");
-                this.appendWhitespace(buffer);
-            }
-        }
-        return;
+        }        return;
     }
 
     public boolean isDisableIfEmpty(ModelMenuItem menuItem, Map context) {
@@ -268,51 +207,6 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         return disabled;
     }
 
-    public MenuTarget selectMenuTarget(ModelMenuItem menuItem, Map context) {
-   
-        MenuTarget menuTarget = null;
-        String currentMenuTargetName = menuItem.getCurrentMenuTargetName();
-        Map targetMap = menuItem.getMenuTargetMap();
-        if (UtilValidate.isNotEmpty(currentMenuTargetName)) {
-            menuTarget = (MenuTarget)targetMap.get(currentMenuTargetName);
-            if (menuTarget != null) {
-                String resultMsg = doMenuTargetPermissionCheck(menuItem, menuTarget, context);
-                if (UtilValidate.isNotEmpty(resultMsg)) 
-                    menuTarget = null;
-            }
-            //if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuItemName:" + menuItem.getName() + " currentMenuTargetName:" + currentMenuTargetName + ", target(0):" + menuTarget,"");
-        }
- 
-        if (menuTarget == null) {
-            String defaultMenuTargetName = menuItem.getDefaultMenuTargetName();
-            if (UtilValidate.isNotEmpty(defaultMenuTargetName)) {
-                menuTarget = (MenuTarget)targetMap.get(defaultMenuTargetName);
-                if (menuTarget != null) {
-                    String resultMsg = doMenuTargetPermissionCheck(menuItem, menuTarget, context);
-                    if (UtilValidate.isNotEmpty(resultMsg)) 
-                        menuTarget = null;
-                }
-            }
-            //if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuItemName:" + menuItem.getName() + " defaultMenuTargetName:" + defaultMenuTargetName + ", target(1):" + menuTarget,"");
-        }
- 
-        if (menuTarget == null) {
-            List targetList = menuItem.getMenuTargetList();
-            Iterator iter = targetList.iterator();
-            while (iter.hasNext()) {
-                menuTarget = (MenuTarget)iter.next();
-                if (menuTarget != null) {
-                    String resultMsg = doMenuTargetPermissionCheck(menuItem, menuTarget, context);
-                    if (UtilValidate.isEmpty(resultMsg)) {
-                        //if (Debug.infoOn()) Debug.logInfo("in selectMenuTarget menuTarget:" + menuTarget.getMenuTargetName(),"");
-                        break;
-                    }
-                }
-            }
-        }
-
-        return menuTarget;
-    }
 
     public String buildDivStr(ModelMenuItem menuItem, Map context) {
         String divStr = "";
@@ -406,38 +300,6 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             return false;
     }
 
-    public boolean isSelected( ModelMenuItem menuItem) {
-
-        ModelMenu menu = menuItem.getModelMenu();
-        String currentMenuItemName = menu.getCurrentMenuItemName();
-        String currentItemName = menuItem.getName();
-            if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, currentMenuItemName(0):" + currentMenuItemName + " currentItemName:" + currentItemName,"");
-        if (currentMenuItemName != null && currentMenuItemName.equals(currentItemName)) 
-            return true;
-        else
-            return false;
-    }
-
-
-    public boolean permissionCheck(ModelMenuItem menuItem, Map context) {
-        // Permission is cached in each menuItem object, but it can change when the user
-        // logs in, so when a change in userLogin is dedected, recalc permissions
-        
-        Boolean hasPerm = menuItem.getHasPermission();
-        boolean bHasPermission = false;
-        if (hasPerm == null || userLoginIdHasChanged) {
-            String sHasPermission = doMenuItemPermissionCheck(menuItem, context);
-            if (UtilValidate.isEmpty(sHasPermission)) {
-                bHasPermission = true;
-            } else {
-                permissionErrorMessage += sHasPermission;
-            }
-            menuItem.setHasPermission(new Boolean(bHasPermission));
-        } else {
-            bHasPermission = hasPerm.booleanValue();
-        }
-        return bHasPermission;
-    }
 
     public boolean userLoginIdHasChanged() {
 
@@ -465,127 +327,16 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         return hasChanged;
     }
 
-    public String doMenuTargetPermissionCheck(ModelMenuItem menuItem, MenuTarget menuTarget, Map context) {
-
-        String permissionOperation = menuTarget.getPermissionOperation();
-        //Debug.logInfo("in doMenuTargetPermissionCheck, menuItem:" + menuItem.getName() + " permissionOperation:" + permissionOperation,"");
-        if (UtilValidate.isEmpty(permissionOperation)) 
-            return "";
-        String associatedContentId = menuItem.getAssociatedContentId(context);
-        String entityAction = menuTarget.getPermissionEntityAction();
-        String privilegeEnumId = menuTarget.getPrivilegeEnumId();
-        String permissionStatusId = menuTarget.getPermissionStatusId();
-        String b = doPermissionCheck(associatedContentId, permissionOperation, entityAction, privilegeEnumId, permissionStatusId);
-        if (UtilValidate.isNotEmpty(b))
-            b += b + ">>>> in doMenuTargetPermissionCheck, menuItem:" + menuItem.getName()+" <<<";
-        return b;
-    }
-
-    public String doMenuItemPermissionCheck( ModelMenuItem menuItem, Map context) {
-        String permissionOperation = menuItem.getPermissionOperation();
-        //Debug.logInfo("in doMenuItemPermissionCheck, menuItem:" + menuItem.getName() + " permissionOperation:" + permissionOperation,"");
-        if (UtilValidate.isEmpty(permissionOperation)) 
-            return "";
-        String associatedContentId = menuItem.getAssociatedContentId(context);
-        String entityAction = menuItem.getPermissionEntityAction();
-        String privilegeEnumId = menuItem.getPrivilegeEnumId();
-        String permissionStatusId = menuItem.getPermissionStatusId();
-        String b = doPermissionCheck(associatedContentId, permissionOperation, entityAction, privilegeEnumId, permissionStatusId);
-        //Debug.logInfo("in doMenuItemPermChk, menuItemName:" + menuItem.getName() + " permissionOperation:" + permissionOperation + " associatedContentId:" + associatedContentId + " entityAction:" + entityAction + " privilegeEnumId:" + privilegeEnumId + " permissionStatusId:" + permissionStatusId,"");
-        if (UtilValidate.isNotEmpty(b))
-            b += b + ">>>> in doMenuItemPermissionCheck, menuItem:" + menuItem.getName() +"<<<";
-        return b;
-    }
-
-    public String doPermissionCheck( String associatedContentId, String permissionOperation, String entityAction, String privilegeEnumId, String permissionStatusId) {
-
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-        GenericValue content = null;
-        String contentId = null;
-        try {
-            content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", associatedContentId));
-        } catch(GenericEntityException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        if (content != null)
-            contentId = content.getString("contentId");
-                //Debug.logInfo("in HtmlMenuRenderer, contentId:" + contentId,"");
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        Security security = (Security) request.getAttribute("security");
-        List targetOperations = StringUtil.split(permissionOperation, "|");
-        List passedPurposes = null;
-        List passedRoles = null;
-
-        //Debug.logInfo("in doPermissionCheck, content:" + content,"");
-        //Debug.logInfo("in doPermissionCheck, targetOperations:" + targetOperations,"");
-        Map results = ContentPermissionServices.checkPermission(content, permissionStatusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator , security, entityAction, privilegeEnumId, null );
-        String permissionStatus = (String)results.get("permissionStatus");
-                //Debug.logInfo("in doPermissionCheck, permissionStatus:" + permissionStatus,"");
-                //Debug.logInfo("in HtmlMenuRenderer, results:" + results,"");
-        String errorMessage = null;
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
-            return "";
-        } else {
-            errorMessage = ContentWorker.prepPermissionErrorMsg(results);
-                //Debug.logInfo("in doPermissionCheck, errorMessage:" + errorMessage,"");
-            return errorMessage;
-        }
-
-    }
 
     public void setUserLoginIdHasChanged(boolean b) {
         userLoginIdHasChanged = b;
     }
 
-    public String buildImgLink(ModelMenuItem menuItem, MenuImage menuImage, Map context, MenuTarget target ) {
 
-        String imgLinkStr = "";
-        String requestName = menuImage.getRequestName(context);
-        if (target == null)
-            requestName = menuImage.getDisabledRequestName(context);
-
-        // Only build link if target is not null or a disabled image is given
-        if (target != null || UtilValidate.isNotEmpty(requestName) ) {
-            String imgStr = "<img src=\"";
-            String targetRequestName = target.getRequestName();
-            if (Debug.infoOn()) Debug.logInfo("in buildImgLink, requestName:" + requestName, module);
-            String targetType = menuImage.getTargetType();
-            List paramList = menuImage.getParamList();
-            StringBuffer buf = new StringBuffer();
-            WidgetWorker.buildHyperlinkUrl(buf, requestName, targetType, this.request, this.response, context, paramList);
-            imgStr += buf.toString();
-                    //Debug.logInfo("in HtmlMenuRendererImage, imgStr:" + imgStr,"");
-            String cellWidth = menuItem.getCellWidth();
-            imgStr += "\"";
-            String widthStr = "";
-            if (UtilValidate.isNotEmpty(cellWidth)) 
-                widthStr = " width=\"" + cellWidth + "\" ";
-            
-            imgStr += widthStr;
-            imgStr += " border=\"0\" />";
-            if (Debug.infoOn()) Debug.logInfo("in buildImgLink, imgStr:" + imgStr, module);
-            buf = new StringBuffer();
-            String titleStyle = "";
-            if (target != null) {
-                List targetParamList = target.getParamList();
-                WidgetWorker.makeHyperlinkString(buf, titleStyle, targetType, targetRequestName, imgStr, this.request, this.response, context, targetParamList);
-            } else {
-                    buf.append(imgStr);
-    
-            }
-            imgLinkStr = buf.toString();
-            if (Debug.infoOn()) Debug.logInfo("in buildImgLink, imgLinkStr:" + imgLinkStr, module);
-        }
-        return imgLinkStr;
-    }
-
-    public String getTitle(ModelMenuItem menuItem, MenuTarget target, Map context) {
+    public String getTitle(ModelMenuItem menuItem, Map context) {
 
         String title = null;
         title = menuItem.getTitle(context);
-        if (UtilValidate.isEmpty(title)) {
-            title = target.getMenuTargetTitle(context);
-        }
         return title;
     }
 
@@ -598,7 +349,19 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             buffer.append(id);
             buffer.append("\"");
         }
-        String style = link.getStyle(context);
+        
+        ModelMenuItem menuItem = link.getLinkMenuItem();
+        boolean isSelected = menuItem.isSelected(context);
+        
+        String style = null;
+        if (isSelected) {
+        	style = menuItem.getSelectedStyle();
+        } else {
+            style = link.getStyle(context);
+            if (UtilValidate.isEmpty(style)) 
+                style = menuItem.getWidgetStyle();
+        }
+        
         if (UtilValidate.isNotEmpty(style)) {
             buffer.append(" class=\"");
             buffer.append(style);

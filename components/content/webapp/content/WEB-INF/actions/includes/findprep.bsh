@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
 
  * Calls performFind service to return an EntityListIterator of the
@@ -82,7 +82,7 @@ Debug.logInfo("inputFields:"+ inputFields, "");
 inMap.put("inputFields", inputFields);
 Map result    		= null;
 try {
-           result = dispatcher.runSync("performFind", inMap    );
+           result = dispatcher.runSync("performFind", inMap);
 } catch (GenericServiceException e) {
     request.setAttribute("_ERROR_MESSAGE_", "ERROR: Error in findLookup service. "  + e.getMessage() + ")");
             Debug.log(e, "findprep.bsh");

@@ -40,7 +40,6 @@ import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
 import org.ofbiz.entity.GenericValue;
 import org.xml.sax.SAXException;
 
@@ -49,7 +48,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class HtmlMenuWrapper {
@@ -257,14 +256,4 @@ public class HtmlMenuWrapper {
         context.put("parameters", paramMap);
     }
 
-    public void clearCurrentMenuTargets() {
-        this.modelMenu.clearCurrentMenuTargets();
-        this.renderer.setUserLoginIdHasChanged(true);
-    }
-
-    public MenuTarget getCurrentMenuTarget(ModelMenuItem menuItem) {
-
-        MenuTarget menuTarget = this.renderer.selectMenuTarget(menuItem, this.context);
-        return menuTarget;
-    }
 }

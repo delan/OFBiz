@@ -53,6 +53,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" paginate-target="/FindDataResource" 
+        paginate="false"
         title="" type="list">
         <auto-fields-entity entity-name="DataResource" default-field-type="display"/>
         <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
@@ -72,6 +73,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" paginate-target="/LookupDataResource" 
+        paginate="false"
         title="" type="list">
         <auto-fields-entity entity-name="DataResource" default-field-type="display"/>
         <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
@@ -80,6 +82,7 @@
     </form>
     <form name="mruLookupDataResource" default-entity-name="DataResource"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+        paginate="false"
         list-name="mruList" target="" title="" type="list">
         <field name="contentId" title="Id" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${dataResourceId}" target="javascript:set_value('${dataResourceId}')"/>
@@ -261,6 +264,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="updateDataResourceAttribute" title="" type="list">
         <auto-fields-service service-name="updateDataResourceAttribute" default-field-type="display"/>
         <field name="attrValue" widget-style="buttontext"><text/></field>
@@ -292,6 +296,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="updateDataResourceRole" title="" type="list">
         <auto-fields-service service-name="updateDataResourceRole" default-field-type="display"/>
         <field name="thruDate" widget-style="buttontext"><date-time/></field>
@@ -315,6 +320,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="" title="" type="list">
         <auto-fields-entity entity-name="ProductFeatureDataResource" default-field-type="display"/>
         <field name="dataResourceId"><hidden/></field>
@@ -349,6 +355,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" paginate-target="/LookupProductFeature" 
+        paginate="false"
         title="" type="list">
         <auto-fields-entity entity-name="ProductFeature" default-field-type="display"/>
         <field name="productFeatureId" title="&amp;nbsp;" widget-style="buttontext">
@@ -357,6 +364,7 @@
     </form>
     <form name="mruLookupProductFeature" default-entity-name="ProductFeature"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+        paginate="false"
         list-name="mruList" target="" title="" type="list">
         <field name="contentId" title="Id" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>

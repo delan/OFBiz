@@ -44,7 +44,7 @@ import org.ofbiz.content.widget.tree.TreeStringRenderer;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class HtmlTreeRenderer implements TreeStringRenderer {
@@ -139,7 +139,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             boolean encode = link.getEncode();
             HttpServletResponse res = (HttpServletResponse) context.get("response");
             HttpServletRequest req = (HttpServletRequest) context.get("request");
-            if (urlMode != null && urlMode.equalsIgnoreCase("ofbiz")) {
+            if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {
                 if (req != null && res != null) {
                     ServletContext ctx = (ServletContext) req.getAttribute("servletContext");
                     RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
@@ -218,7 +218,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             boolean encode = false;
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             HttpServletRequest request = (HttpServletRequest) context.get("request");
-            if (urlMode != null && urlMode.equalsIgnoreCase("ofbiz")) {
+            if (urlMode != null && urlMode.equalsIgnoreCase("intra-app")) {
                 if (request != null && response != null) {
                     ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                     RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");

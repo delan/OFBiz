@@ -1,5 +1,5 @@
 /*
- * $Id: WidgetWorker.java,v 1.3 2004/05/11 12:56:44 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,6 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuParam;
 
 public class WidgetWorker {
 
@@ -44,7 +43,7 @@ public class WidgetWorker {
 
     public WidgetWorker () {}
 
-    public static void buildHyperlinkUrl(StringBuffer buffer, String requestName, String targetType, HttpServletRequest request, HttpServletResponse response, Map context, List paramList) {
+    public static void buildHyperlinkUrl(StringBuffer buffer, String requestName, String targetType, HttpServletRequest request, HttpServletResponse response, Map context) {
 
         if ("intra-app".equals(targetType)) {
             appendOfbizUrl(buffer, "/" + requestName, request, response);
@@ -69,17 +68,6 @@ public class WidgetWorker {
             buffer.append(requestName);
         }
 
-        if (paramList != null && paramList.size() > 0) {
-            String paramStr = renderParams(paramList, context);
-            if (paramStr != null && paramStr.length() > 0) {
-                if (requestName.indexOf("?") >= 0) {
-                    buffer.append("&");
-                } else {
-                    buffer.append("?");
-                }
-            }
-            buffer.append(paramStr);
-        }
     
         return;
     }
@@ -96,7 +84,7 @@ public class WidgetWorker {
         buffer.append(location);
     }
 
-    public static void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description, HttpServletRequest request, HttpServletResponse response, Map context, List paramList) {
+    public static void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description, HttpServletRequest request, HttpServletResponse response, Map context) {
         buffer.append("<a");
 
         if (UtilValidate.isNotEmpty(linkStyle)) {
@@ -107,7 +95,7 @@ public class WidgetWorker {
 
         buffer.append(" href=\"");
 
-        WidgetWorker.buildHyperlinkUrl(buffer, target, targetType, request, response, context, paramList);
+        WidgetWorker.buildHyperlinkUrl(buffer, target, targetType, request, response, context);
 
         buffer.append("\"");
 
@@ -116,23 +104,4 @@ public class WidgetWorker {
         buffer.append(description);
         buffer.append("</a>");
     }
-        /**
-         */
-        public static String renderParams(List paramList, Map context) {
-      
-            Map thisParamMap = new HashMap();
-            Iterator iter = paramList.iterator();
-            while (iter.hasNext()) {
-                MenuParam param = (MenuParam)iter.next();
-                //if (Debug.infoOn()) Debug.logInfo("in renderParams, paramName:" + param.getName(), module);
-                Map map = param.getParamMap(context);
-                if (map != null) 
-                    thisParamMap.putAll(map);
-            }
-                //if (Debug.infoOn()) Debug.logInfo("in renderParams, paramMap:" + thisParamMap, module);
-            String paramStr = UtilHttp.urlEncodeArgs(thisParamMap);
-            //String questionMark = UtilValidate.isNotEmpty(paramStr) ? "?" : "";
-            //String url = "/" + this.requestName + questionMark + paramStr;
-            return paramStr;
-        }
 }

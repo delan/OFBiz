@@ -20,14 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
 <#assign security = requestAttributes.security>
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
-<#assign headerItem = page.getProperty("headerItem") />
 <#assign selectedLeftClassMap = {headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {headerItem?default("void") : "headerButtonRightSelected"}>
 
@@ -43,7 +42,11 @@
   <div class="col"><a href="<@ofbizUrl>/DataSetupMenu</@ofbizUrl>" class="${selectedLeftClassMap.DataResourceSetupMenu?default(unselectedLeftClassName)}">DataResource Setup</a></div>
 
   <div class="col"><a href="<@ofbizUrl>/LayoutMenu</@ofbizUrl>" class="${selectedLeftClassMap.Layout?default(unselectedLeftClassName)}">Template</a></div>
-  <div class="col"><a href="<@ofbizUrl>/CMSMenu</@ofbizUrl>" class="${selectedLeftClassMap.Layout?default(unselectedLeftClassName)}">CMS</a></div>
+  <#assign cmsTarget="CMSContentFind"/>
+  <#if menuContext?has_content && menuContext.cmsRequestName?has_content>
+     <#assign cmsTarget=menuContext.cms.cmsRequestName/>
+  </#if>
+  <div class="col"><a href="<@ofbizUrl>${cmsTarget}</@ofbizUrl>" class="${selectedLeftClassMap.CMS?default(unselectedLeftClassName)}">CMS</a></div>
 
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">Logout</a></div>

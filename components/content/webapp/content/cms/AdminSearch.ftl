@@ -1,4 +1,3 @@
-${menuWrapper.renderMenuString()}
 <hr/>
     <form method="POST"  action="/content/control/AdminSearch"  name="searchQuery" style="margin: 0;">
 <table border="0" cellpadding="2" cellspacing="0">
@@ -131,7 +130,6 @@ ${menuWrapper.renderMenuString()}
 
 
 <hr/>
-    ${listWrapper.renderFormString()}
 
 <#macro listSiteIds contentId indentIndex=0>
   <#assign dummy=Static["org.ofbiz.base.util.Debug"].logInfo("in listSiteIds, contentId:" + contentId,"")/>

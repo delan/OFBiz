@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -37,9 +38,12 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.util.*;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelParam;
@@ -54,7 +58,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class ModelForm {
@@ -80,6 +84,8 @@ public class ModelForm {
     protected String itemIndexSeparator;
     protected String paginateTarget;
     protected boolean separateColumns = false;
+    protected FlexibleMapAccessor listIteratorName;
+    protected boolean paginate = true;
 
     protected List altTargets = new LinkedList();
     protected List autoFieldsServices = new LinkedList();
@@ -102,6 +108,16 @@ public class ModelForm {
      * with conditions is not possible.
      */
     protected Map fieldMap = new HashMap();
+    
+    public static int DEFAULT_PAGE_SIZE = 100;
+    protected int viewIndex = 0;
+    protected int viewSize = DEFAULT_PAGE_SIZE;
+    protected int lowIndex = -1;
+    protected int highIndex = -1;
+    protected int listSize = 0;
+    protected int actualPageSize = 0;
+    
+    protected List actions;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -111,6 +127,14 @@ public class ModelForm {
     public ModelForm(Element formElement, GenericDelegator delegator, LocalDispatcher dispatcher) {
         this.delegator = delegator;
         this.dispatcher = dispatcher;
+        initForm(formElement);
+    }
+    
+    public ModelForm(Element formElement) {
+        initForm(formElement);
+    }
+    
+    public void initForm(Element formElement) {
 
         // check if there is a parent form to inherit from
         String parentResource = formElement.getAttribute("extends-resource");
@@ -198,6 +222,8 @@ public class ModelForm {
             if (sepColumns != null && sepColumns.equalsIgnoreCase("true"))
                 separateColumns = true;
         }
+        if (formElement.hasAttribute("view-size"))
+            setViewSize(formElement.getAttribute("view-size"));
 
         // alt-target
         List altTargetElements = UtilXml.childElementList(formElement, "alt-target");
@@ -207,7 +233,7 @@ public class ModelForm {
             AltTarget altTarget = new AltTarget(altTargetElement);
             this.addAltTarget(altTarget);
         }
-
+            
         // auto-fields-service
         List autoFieldsServiceElements = UtilXml.childElementList(formElement, "auto-fields-service");
         Iterator autoFieldsServiceElementIter = autoFieldsServiceElements.iterator();
@@ -274,6 +300,13 @@ public class ModelForm {
             // sortedFields all done, set fieldList
             this.fieldList = sortedFields;
         }
+
+        // read all actions under the "actions" element
+        Element actionsElement = UtilXml.firstChildElement(formElement, "actions");
+        if (actionsElement != null) {
+            this.actions = ModelFormAction.readSubActions(this, actionsElement);
+        }
+        
     }
 
     /**
@@ -425,6 +458,9 @@ public class ModelForm {
      *   use the same form definitions for many types of form UIs
      */
     public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+ 
+        ModelFormAction.runSubActions(this.actions, context);
+        
         // if this is a list form, don't useRequestParameters
         if ("list".equals(this.type) || "multi".equals(this.type)) {
             context.put("useRequestParameters", Boolean.FALSE);
@@ -751,18 +787,34 @@ public class ModelForm {
     }
 
     public void renderItemRows(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, boolean formPerItem) {
+        
         // if list is empty, do not render rows
+        String listIteratorName = (String)context.get("listIteratorName");
+        ListIterator iter = null;
+        if (UtilValidate.isNotEmpty(listIteratorName)) {
+        	iter = (ListIterator)context.get(listIteratorName);
+        }
         List items = (List) context.get(this.getListName());
-        if (items == null || items.size() == 0) {
-            // do nothing; we could show an simple box with a message here
-        } else {
+        if (iter != null) {
+            setPaginate(true);
+        } else if (items != null) {
+            iter = items.listIterator();
+            setPaginate(false);
+        } 
+        // set low and high index
+        getListLimits(context);
+        
+        if (iter != null) {
             // render item rows
-            Iterator itemIter = items.iterator();
             int itemIndex = -1;
-            while (itemIter.hasNext()) {
+            while (iter.hasNext()) {
                 itemIndex++;
+                if (itemIndex >= highIndex)
+                    break;
                 Map localContext = new HashMap(context);
-                Object item = itemIter.next();
+                Object item = iter.next();
+                if (itemIndex < lowIndex)
+                    continue;
                 if (UtilValidate.isNotEmpty(this.getListEntryName())) {
                     localContext.put(this.getListEntryName(), item);
                 } else {
@@ -874,6 +926,23 @@ public class ModelForm {
                 // render row formatting close
                 formStringRenderer.renderFormatItemRowClose(buffer, localContext, this);
             }
+            if (itemIndex < highIndex)
+                setHighIndex(itemIndex);
+            setActualPageSize(highIndex - lowIndex);
+            
+            if (iter != null) {
+                if (iter instanceof EntityListIterator) {
+                    try {
+                    	((EntityListIterator)iter).close();
+                    } catch(GenericEntityException e) {
+                    	throw new RuntimeException(e.getMessage());
+                    }
+                }
+            }
+//            if (listSize < actualPageSize) {
+//                setListSize(actualPageSize);
+//                context.put("listSize", new Integer(listSize));
+//            }
         }
     }
 
@@ -920,6 +989,17 @@ public class ModelForm {
 
     public GenericDelegator getDelegator() {
         return this.delegator;
+    }
+
+
+    public LocalDispatcher getDispatcher(Map context) {
+        LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
+        return dispatcher;
+    }
+
+    public GenericDelegator getDelegator(Map context) {
+        GenericDelegator delegator = (GenericDelegator) context.get("delegator");
+        return delegator;
     }
 
     /**
@@ -993,6 +1073,26 @@ public class ModelForm {
         return this.listName;
     }
 
+    /**
+     * @param string
+     */
+    public void setListIteratorName(String string) {
+        this.listIteratorName = new FlexibleMapAccessor(string);
+    }
+    
+   /**
+     * @return
+     */
+    public String getListIteratorName() {
+        return this.listIteratorName.getOriginalName();
+    }
+
+    public ListIterator getListIterator(Map context) {
+        if (this.listIteratorName != null)
+            return (ListIterator) this.listIteratorName.get(context);
+        else
+            return null;
+    }
     /**
      * @return
      */
@@ -1190,11 +1290,132 @@ public class ModelForm {
         return this.separateColumns;
     }
 
+    public boolean getPaginate() {
+        return this.paginate;
+    }
+    
+    public void setPaginate(boolean val) {
+        paginate = val;
+    }
+    
     /**
      * @param string
      */
     public void setPaginateTarget(String string) {
         this.paginateTarget = string;
+    }
+
+    public void setViewIndex(int val) {
+        viewIndex = val;
+    }
+
+    public void setViewSize(int val) {
+        viewSize = val;
+    }
+
+    public void setViewSize(String val) {
+        try {
+            Integer sz = new Integer(val);
+            viewSize = sz.intValue();
+        } catch(NumberFormatException e) {
+            viewSize = DEFAULT_PAGE_SIZE;   
+        }
+    }
+
+    public void setListSize(int val) {
+        listSize = val;
+    }
+
+    public void setLowndex(int val) {
+        lowIndex = val;
+    }
+
+    public void setHighIndex(int val) {
+        highIndex = val;
+    }
+    public void setActualPageSize(int val) {
+        actualPageSize = val;
+    }
+
+    public int getViewIndex() {
+        return viewIndex;
+    }
+
+    public int getViewSize() {
+        return viewSize;
+    }
+
+    public int getListSize() {
+        return listSize;
+    }
+
+    public int getLowIndex() {
+        return lowIndex;
+    }
+
+    public int getHighIndex() {
+        return highIndex;
+    }
+    
+    public int getActualPageSize() {
+        return actualPageSize;
+    }
+    
+    public void getListLimits(Map context) {
+        
+        if (paginate) {
+            try {
+                viewIndex = ((Integer) context.get("viewIndex")).intValue();
+            } catch (Exception e) {
+                viewIndex = 0;
+            }
+    
+            try {
+                viewSize = ((Integer) context.get("viewSize")).intValue();
+            } catch (Exception e) {
+                //viewSize = DEFAULT_PAGE_SIZE;
+            }
+            
+            lowIndex = viewIndex * viewSize;
+            highIndex = (viewIndex + 1) * viewSize;
+            
+            ListIterator listIt = getListIterator(context);
+            if (listIt != null && listIt instanceof EntityListIterator) {
+                try {
+                    ((EntityListIterator)listIt).last();
+                    listSize = ((EntityListIterator)listIt).currentIndex();
+                    ((EntityListIterator)listIt).first();
+                } catch(GenericEntityException e) {
+                    listSize = -1;
+                }
+                
+            }
+    
+            /*
+            try {
+                listSize = ((Integer) context.get("listSize")).intValue();
+            } catch (Exception e) {
+                listSize = 0;
+            }
+    
+            try {
+                highIndex = ((Integer) context.get("highIndex")).intValue();
+            } catch (Exception e) {
+                highIndex = 0;
+            }
+    
+            try {
+                lowIndex = ((Integer) context.get("lowIndex")).intValue();
+            } catch (Exception e) {
+                lowIndex = 0;
+            }
+            */
+        } else {
+            viewIndex = 0;
+            viewSize = DEFAULT_PAGE_SIZE;
+            lowIndex = 0;
+            highIndex = DEFAULT_PAGE_SIZE;
+        }
     }
 
     public static class AltTarget {

@@ -26,6 +26,8 @@
     <handler name="jasperreportspdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
     <handler name="service-multi" type="request" class="org.ofbiz.content.webapp.event.ServiceMultiEventHandler"/> 
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
+
     
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
@@ -1395,21 +1397,21 @@
     <view-map name="EditSurveyQuestions" page="/survey/EditSurveyQuestions.ftl" type="jpublish"/>
     <view-map name="LookupPartyAndUserLoginAndPerson" page="/content/LookupPartyAndUserLoginAndPerson.ftl" type="jpublish"/>
     <view-map name="SurveyResponse" page="/survey/SurveyResponse.ftl" type="jpublish"/>
-    <view-map name="CMSSiteFind" page="/cms/CMSSiteFind.ftl" type="jpublish"/>
-    <view-map name="CMSSiteEdit" page="/cms/CMSSiteEdit.ftl" type="jpublish"/>
-    <view-map name="CMSContentFind" page="/cms/CMSContentFind.ftl" type="jpublish"/>
-    <view-map name="CMSContentEdit" page="/cms/CMSContentEdit.ftl" type="jpublish"/>
-    <view-map name="CMSContentAdd" page="/cms/CMSContentAdd.ftl" type="jpublish"/>
-    <view-map name="CMSContentOwnedFind" page="/cms/CMSContentOwnedFind.ftl" type="jpublish"/>
-    <view-map name="UserPermissions" page="/cms/UserPermissions.ftl" type="jpublish"/>
-    <view-map name="CMSSites" page="/cms/CMSSites.ftl" type="jpublish"/>
-    <view-map name="CMSEditContentPurposeOperation" page="/cms/CMSEditContentPurposeOperation.ftl" type="jpublish"/>
+    <view-map name="CMSSiteFind" page="component://content/widget/cms/CMSScreens.xml#CMSSiteFind" type="screen"/>
+    <view-map name="CMSSiteEdit" page="component://content/widget/cms/CMSScreens.xml#CMSSiteEdit" type="screen"/>
+    <view-map name="CMSContentFind" page="component://content/widget/cms/CMSScreens.xml#CMSContentFind" type="screen"/>
+    <view-map name="CMSContentEdit" page="component://content/widget/cms/CMSScreens.xml#CMSContentEdit" type="screen"/>
+    <view-map name="CMSContentAdd" page="component://content/widget/cms/CMSScreens.xml#CMSContentAdd" type="screen"/>
+    <view-map name="CMSContentOwnedFind" page="component://content/widget/cms/CMSScreens.xml#CMSContentOwnedFind" type="screen"/>
+    <view-map name="UserPermissions" page="component://content/widget/cms/CMSScreens.xml#UserPermissions" type="screen"/>
+    <view-map name="CMSSites" page="component://content/widget/cms/CMSScreens.xml#CMSSites" type="screen"/>
+    <view-map name="CMSEditContentPurposeOperation" page="component://content/widget/cms/CMSScreens.xml#CMSEditContentPurposeOperation" type="screen"/>
+    <view-map name="addSubSite" page="component://content/widget/cms/CMSScreens.xml#addSubSite" type="screen"/>
+    <view-map name="EditAddContent" page="component://content/widget/cms/CMSScreens.xml#EditAddContent" type="screen"/>
+    <view-map name="EditAddImage" page="component://content/widget/cms/CMSScreens.xml#EditAddImage" type="screen"/>
+    <view-map name="AdminSearch" page="component://content/widget/cms/CMSScreens.xml#AdminSearch" type="screen"/>
+    <view-map name="AdminIndex" page="component://content/widget/cms/CMSScreens.xml#AdminIndex" type="screen"/>
     <view-map name="CMSMenu" page="/cms/CMSMenu.ftl" type="jpublish"/>
-    <view-map name="addSubSite" page="/cms/addSubSite.ftl" type="jpublish"/>
-    <view-map name="EditAddContent" page="/cms/EditAddContent.ftl" type="jpublish"/>
-    <view-map name="EditAddImage" page="/cms/EditAddImage.ftl" type="jpublish"/>
-    <view-map name="AdminSearch" page="/cms/AdminSearch.ftl" type="jpublish"/>
-    <view-map name="AdminIndex" page="/cms/AdminIndex.ftl" type="jpublish"/>
 
     <!-- end of view mappings -->
 </site-conf>

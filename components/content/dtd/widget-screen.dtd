@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: widget-screen.dtd,v 1.19 2004/08/18 16:15:49 byersa Exp $
+ *  $Id$
 -->
 
 <!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific | link | image">
@@ -114,6 +114,7 @@
         from-field CDATA #IMPLIED
         value CDATA #IMPLIED
         global ( true | false ) "false"
+        type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Boolean | Object ) "String"
     >
 
     <!ELEMENT property-map EMPTY>
@@ -301,7 +302,7 @@
         target CDATA #IMPLIED
         target-window CDATA #IMPLIED
         prefix CDATA #IMPLIED
-        url-mode ( ofbiz | content | raw ) "ofbiz"
+        url-mode ( intra-app | inter-app | content | plain ) "intra-app"
         full-path ( true | false ) "false"
         secure ( true | false ) "false"
         encode ( true | false ) "false"

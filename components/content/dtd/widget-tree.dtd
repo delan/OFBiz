@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-tree.dtd,v 1.7 2004/08/12 18:00:33 byersa Exp $
+ *  $Id$
 -->
 
 <!ELEMENT trees ( tree+ )>
@@ -46,8 +46,8 @@
 
     <!ELEMENT include-screen EMPTY>
     <!ATTLIST include-screen
-        screen-name CDATA #REQUIRED
-        screen-location CDATA #REQUIRED
+        name CDATA #REQUIRED
+        location CDATA #REQUIRED
         share-scope ( true | false ) "false"
     >
     
@@ -66,13 +66,25 @@
         target CDATA #IMPLIED
         target-window CDATA #IMPLIED
         prefix CDATA #IMPLIED
-        url-mode ( ofbiz | content | raw ) "ofbiz"
+        url-mode ( intra-app | inter-app | content | plain ) "intra-app"
         full-path ( true | false ) "false"
         secure ( true | false ) "false"
         encode ( true | false ) "false"
     >
+    
+    <!ELEMENT image (#PCDATA)>
+    <!ATTLIST image
+        src CDATA #IMPLIED
+        id CDATA #IMPLIED
+        style CDATA #IMPLIED
+        width CDATA #IMPLIED
+        height CDATA #IMPLIED
+        border CDATA #IMPLIED
+        url-mode ( ofbiz | content | raw ) "content"
+    >
 
-<!ELEMENT sub-node ( (entity-and |  service ), out-field-map*)>
+
+<!ELEMENT sub-node ( (entity-and |  service | entity-condition ), out-field-map*)>
 <!ATTLIST sub-node
     node-name CDATA #REQUIRED
 >
@@ -132,20 +144,32 @@
         to-field-name CDATA #IMPLIED
     >
 
-<!--
-    <!ELEMENT assoc EMPTY>
-    <!ATTLIST assoc
-        entity-name CDATA "Content"
-        content-id-to CDATA #IMPLIED
-        content-assoc-type-id CDATA #IMPLIED
-        map-key CDATA #IMPLIED
-        from-date CDATA #IMPLIED
-        content-purpose CDATA #IMPLIED
-        status-id CDATA #IMPLIED
-        privilege-enum-id CDATA #IMPLIED
-        filter-by-date ( true | false | by-name ) "by-name"
+    <!ELEMENT entity-condition ( ( condition-expr | condition-list ), having-condition-list?, select-field*, order-by*, ( limit-range | limit-view | use-iterator )? )>
+    <!ATTLIST entity-condition
+        entity-name CDATA #REQUIRED
+        use-cache ( true | false ) "false"
+        filter-by-date ( true | false | by-name ) "false"
+        distinct ( true | false ) "false"
+        delegator-name CDATA #IMPLIED
+        list-name CDATA #REQUIRED
     >
--->
+        <!ELEMENT condition-list ( ( condition-expr | condition-list )+ )>
+        <!ATTLIST condition-list
+            combine ( and | or ) "and"
+        >
+        <!ELEMENT having-condition-list ( ( condition-expr | condition-list )+ )>
+        <!ATTLIST having-condition-list
+            combine ( and | or ) "and"
+        >
+        <!ELEMENT condition-expr EMPTY>
+        <!ATTLIST condition-expr
+            field-name CDATA #REQUIRED
+            operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) #REQUIRED
+            env-name CDATA #IMPLIED
+            value CDATA #IMPLIED
+            ignore-if-null ( true | false ) "false"
+        >
+    
 
 <!-- examples
 <trees>

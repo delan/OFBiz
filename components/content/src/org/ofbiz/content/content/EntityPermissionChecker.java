@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
  * EntityPermissionChecker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -113,7 +113,8 @@ public class EntityPermissionChecker {
         if (request != null) {
             HttpSession session = request.getSession();
             userLogin = (GenericValue)session.getAttribute("userLogin");
-            userLoginId = userLogin.getString("userLoginId");
+            if (userLogin != null)
+            	userLoginId = userLogin.getString("userLoginId");
            delegator = (GenericDelegator)request.getAttribute("delegator");
         }
  
@@ -224,6 +225,9 @@ public class EntityPermissionChecker {
         if (passed)
         	return true;
         
+        if (userLogin == null)
+            return false;
+
         // Check with roles.
         iter = entityIdList.iterator();
         while (iter.hasNext()) {

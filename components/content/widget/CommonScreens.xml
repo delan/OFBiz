@@ -41,11 +41,11 @@
                 <!-- render header -->
                 <platform-specific><html><html-template location="component://common/webcommon/includes/header.ftl"/></html></platform-specific>
                 <!-- render appbar -->
-                <platform-specific><html><html-template location="component://common/webcommon/includes/appbar.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://content/webapp/content/includes/appbar.ftl"/></html></platform-specific>
                 
                 <container style="centerarea">
                     <!-- render appheader -->
-                    <platform-specific><html><html-template location="component://product/webapp/catalog/includes/appheader.ftl"/></html></platform-specific>
+                    <platform-specific><html><html-template location="component://content/webapp/content/includes/header.ftl"/></html></platform-specific>
                     
                     <container style="contentarea">
                         <!-- by default will render left-bar only if leftbarScreen value not empty -->
