@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  */
 -->
 
@@ -828,8 +828,8 @@
         <key-map field-name="productId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="ProductFacility">
-      	<key-map field-name="productId"/>
-      	<key-map field-name="facilityId"/>
+        <key-map field-name="productId"/>
+        <key-map field-name="facilityId"/>
       </relation>
       <relation type="one" fk-name="INV_ITEM_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -871,7 +871,7 @@
         <key-map field-name="inventoryItemId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderItemInventoryRes">
-      	<key-map field-name="inventoryItemId"/>
+        <key-map field-name="inventoryItemId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortInventoryProduced">
         <key-map field-name="inventoryItemId"/>
@@ -1787,6 +1787,41 @@
         <relation type="one" fk-name="PROD_REVIEW_ULH" rel-entity-name="UserLogin">
           <key-map field-name="userLoginId" rel-field-name="userLoginId"/>
         </relation>
+    </entity>
+    <entity entity-name="ProductSearchConstraint"
+            package-name="org.ofbiz.product.product"
+            never-cache="true"
+            title="Product Search Result Entity">
+      <field name="productSearchResultId" type="id-ne"></field>
+      <field name="constraintSeqId" type="id-ne"></field>
+      <field name="constraintName" type="long-varchar"></field>
+      <field name="infoString" type="long-varchar"></field>
+      <field name="includeSubCategories" type="indicator"></field>
+      <field name="isAnd" type="indicator"></field>
+      <field name="anyPrefix" type="indicator"></field>
+      <field name="anySuffix" type="indicator"></field>
+      <field name="removeStems" type="indicator"></field>
+      <field name="lowValue" type="short-varchar"></field>
+      <field name="highValue" type="short-varchar"></field>
+      <prim-key field="productSearchResultId"/>
+      <prim-key field="constraintSeqId"/>
+      <relation type="one" fk-name="PROD_SCHRSI_RES" rel-entity-name="ProductSearchResult">
+        <key-map field-name="productSearchResultId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductSearchResult"
+            package-name="org.ofbiz.product.product"
+            never-cache="true"
+            title="Product Search Result Entity">
+      <field name="productSearchResultId" type="id-ne"></field>
+      <field name="visitId" type="id"></field>
+      <field name="orderByName" type="long-varchar"></field>
+      <field name="isAscending" type="indicator"></field>
+      <field name="numResults" type="numeric"></field>
+      <prim-key field="productSearchResultId"/>
+      <relation type="one" fk-name="PROD_SCHRES_VST" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductType"
             package-name="org.ofbiz.product.product"
