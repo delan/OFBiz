@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -120,7 +120,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingFromPartyId}:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingToPartyId}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='partyIdTo' value='${(payment.partyIdTo)?if_exists}'>
@@ -128,7 +128,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingToPartyId}:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingFromPartyId}:</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <input type='text' class='inputBox' name='partyIdFrom' value='${(payment.partyIdFrom)?if_exists}'>
