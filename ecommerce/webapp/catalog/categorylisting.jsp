@@ -2,7 +2,7 @@
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <ofbiz:object name="viewIndex" property="viewIndex" type='java.lang.Integer' />
 <ofbiz:object name="viewSize" property="viewSize" type='java.lang.Integer' />

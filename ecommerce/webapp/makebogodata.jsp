@@ -5,7 +5,7 @@
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="java.util.*" %>
 
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%
   Iterator prods = UtilMisc.toIterator(delegator.findByAnd("Product", null, null));
