@@ -416,8 +416,12 @@ public class PosTransaction {
                 Journal.appendNode(paymentLine, "td", "desc", desc);
                 Journal.appendNode(paymentLine, "td", "qty", "-");
                 Journal.appendNode(paymentLine, "td", "price", UtilFormatOut.formatPrice(-1 * amount));
-            }
+            }            
+        }
+    }
 
+    public void appendChangeDataModel(XModel model) {
+        if (cart != null) {
             double changeDue = (-1 * this.getTotalDue());
             if (changeDue >= 0) {
                 XModel changeLine = Journal.appendNode(model, "tr", "", "");
