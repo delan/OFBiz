@@ -1,5 +1,5 @@
 /*
- * $Id: TrackingCodeEvents.java,v 1.2 2003/10/23 06:33:02 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.product.category.CategoryWorker;
  * Events used for maintaining TrackingCode related information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class TrackingCodeEvents {

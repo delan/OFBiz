@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServices.java,v 1.7 2004/08/17 01:17:08 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class LoginServices {

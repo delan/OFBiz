@@ -1,5 +1,5 @@
 /*
- * $Id: RequesterFactory.java,v 1.1 2004/04/22 15:41:08 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.enhydra.shark.api.client.wfmodel.WfProcessIterator;
  * OFBiz -> Shark Requester Factory
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class RequesterFactory {

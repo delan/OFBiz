@@ -1,5 +1,5 @@
 /*
- * $Id: EntityEcaException.java,v 1.1 2003/08/17 06:44:25 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import org.ofbiz.entity.GenericEntityException;
  * EntityEcaException
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class EntityEcaException extends GenericEntityException {

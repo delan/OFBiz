@@ -1,5 +1,5 @@
 /*
- * $Id: SecurityConfigurationException.java,v 1.1 2003/08/17 04:39:05 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import org.ofbiz.base.util.GeneralException;
  * <code>SecurityConfigurationException</code>
  *
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class SecurityConfigurationException extends GeneralException {

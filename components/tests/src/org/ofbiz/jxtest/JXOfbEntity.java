@@ -46,7 +46,7 @@ import org.ofbiz.entity.GenericEntityException;
  * the OFBiz framework.
  *
  * @author     <a href="mailto:bgpalmer@computer.org">Brett G. Palmer</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      1.0
  */
 public class JXOfbEntity implements JXTestStep

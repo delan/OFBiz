@@ -1,5 +1,5 @@
 /*
- * $Id: OFBizSecurity.java,v 1.6 2004/07/07 15:57:55 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class OFBizSecurity extends org.ofbiz.security.Security {

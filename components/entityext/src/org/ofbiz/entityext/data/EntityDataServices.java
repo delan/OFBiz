@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.15 2004/05/18 02:24:41 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class EntityDataServices {

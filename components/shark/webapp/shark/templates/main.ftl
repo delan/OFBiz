@@ -23,7 +23,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier.Heintz@nereide.biz (migration to UiLabelMap)
- *@version    $Revision: 1.4 $
+ *@version    $Rev:$
  *@since      2.1
 -->
 

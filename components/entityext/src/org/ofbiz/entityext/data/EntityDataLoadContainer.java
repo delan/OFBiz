@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataLoadContainer.java,v 1.3 2004/07/31 20:10:14 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class EntityDataLoadContainer implements Container {

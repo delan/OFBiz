@@ -1,5 +1,5 @@
 /*
- * $Id: ProcessVariable.java,v 1.3 2004/07/11 23:26:27 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class ProcessVariable implements ProcessVariablePersistenceInterface {

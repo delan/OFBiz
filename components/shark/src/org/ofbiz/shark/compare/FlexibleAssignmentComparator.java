@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleAssignmentComparator.java,v 1.1 2004/04/22 15:40:58 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.enhydra.shark.api.client.wfbase.BaseException;
  * Flexible WfAssignment Comparator - Sorting assignments by common fields
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class FlexibleAssignmentComparator implements Comparator {

@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEventListener.java,v 1.4 2004/07/18 10:09:43 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.content.webapp.control.LoginWorker;
  * HttpSessionListener that finalizes login information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class LoginEventListener implements HttpSessionListener {

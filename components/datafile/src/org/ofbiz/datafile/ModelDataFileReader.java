@@ -1,5 +1,5 @@
 /*
- * $Id: ModelDataFileReader.java,v 1.2 2004/04/09 21:12:31 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * Flat File definition reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 
