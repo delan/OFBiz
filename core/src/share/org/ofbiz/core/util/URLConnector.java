@@ -55,14 +55,14 @@ public class URLConnector {
                 timedOut = true;
             else
                 close(connection);
-            throw new IOException();
+            throw new IOException("Connection never established");
         }
 
         if (connection != null) {
             return connection;
         } else {
             timedOut = true;
-            throw new IOException();
+            throw new IOException("Connection timed out");
         }
     }
     
