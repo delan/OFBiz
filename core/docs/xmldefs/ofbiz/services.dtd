@@ -44,7 +44,7 @@
 	auth (true|false) "false"
 	export (true|false) "false"
 	validate (true|false) "true"
-	default-entity CDATA #IMPLIED
+	default-entity-name CDATA #IMPLIED
 	use-transaction (true|false) "true"
 	require-new-transaction (true|false) "false"
 >
@@ -69,7 +69,7 @@
 >
 <!ELEMENT auto-attributes (exclude*)>
 <!ATTLIST auto-attributes
-    entity-name CDATA #REQUIRED
+    entity-name CDATA #IMPLIED
     include (pk|nonpk|all) "all"
     mode (IN|OUT|INOUT) #REQUIRED
     form-display (true|false) "true"
