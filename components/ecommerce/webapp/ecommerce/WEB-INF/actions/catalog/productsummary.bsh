@@ -20,13 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.4 $
+ *@author     David E. Jones
+ *@version    $Revision: 1.5 $
  *@since      2.1
-*/
+ */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.service.*;
+import org.ofbiz.product.product.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 
@@ -61,10 +63,15 @@ if (product == null && productId != null) {
 }
 if (product != null) {
     request.setAttribute("product", product);
+    
     productFacility = delegator.findByPrimaryKeyCache("ProductFacility", UtilMisc.toMap("productId", product.get("productId"), "facilityId", facilityId));
     if (productFacility != null && productFacility.get("daysToShip") != null) {
         context.put("daysToShip", productFacility.get("daysToShip"));
-    }  
+    }
+    
+    // make the productContentWrapper
+    ProductContentWrapper productContentWrapper = new ProductContentWrapper(product, request);
+    request.setAttribute("productContentWrapper", productContentWrapper);
 }
 
 categoryId = null;
@@ -85,6 +92,3 @@ if (product != null) {
             
     request.setAttribute("priceMap", priceMap);
 }
-        
-    
-    
