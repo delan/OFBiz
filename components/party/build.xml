@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Party Build Script.
- *  $Id: build.xml,v 1.5 2004/01/26 06:13:45 ajzeneski Exp $
+ *  $Id: build.xml,v 1.6 2004/03/18 19:11:50 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Party Component" default="jar" basedir=".">
@@ -43,8 +43,7 @@
     <target name="classpath">		        
         <path id="local.class.path">
             <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
-            <fileset dir="../../base/lib" includes="*.jar"/>
-            <fileset dir="../../base/lib/jetty" includes="*.jar"/>
+            <fileset dir="../../base/lib" includes="*.jar"/>            
             <fileset dir="../../base/build/lib" includes="*.jar"/>
             <fileset dir="../entity/lib" includes="*.jar"/>
             <fileset dir="../entity/build/lib" includes="*.jar"/>
