@@ -108,6 +108,9 @@ public class SimpleEvent {
     List eventOperations = new LinkedList();
     String eventName;
     String shortDescription;
+    String defaultErrorCode;
+    String defaultSuccessCode;
+
     String parameterMapName;
     String requestName;
     String responseCodeName;
@@ -115,10 +118,18 @@ public class SimpleEvent {
     String eventMessageName;
     
     boolean loginRequired = true;
+    boolean useTransaction = true;
 
     public SimpleEvent(Element simpleEventElement) {
         eventName = simpleEventElement.getAttribute("event-name");
         shortDescription = simpleEventElement.getAttribute("short-description");
+
+        defaultErrorCode = simpleEventElement.getAttribute("default-error-code");
+        if(defaultErrorCode == null || defaultErrorCode.length() == 0)
+            defaultErrorCode = "error";
+        defaultSuccessCode = simpleEventElement.getAttribute("default-success-code");
+        if(defaultSuccessCode == null || defaultSuccessCode.length() == 0)
+            defaultSuccessCode = "success";
 
         parameterMapName = simpleEventElement.getAttribute("parameter-map-name");
         if(parameterMapName == null || parameterMapName.length() == 0)
@@ -141,6 +152,7 @@ public class SimpleEvent {
             eventMessageName = "_event_message_";
         
         loginRequired = !"false".equals(simpleEventElement.getAttribute("login-required"));
+        useTransaction = !"false".equals(simpleEventElement.getAttribute("use-transaction"));
         
         readOperations(simpleEventElement);
     }
@@ -158,19 +170,64 @@ public class SimpleEvent {
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
             if (userLogin == null) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "You must be logged in to complete the " + shortDescription + " process.");
-                return "error";
+                return defaultErrorCode;
             }
         }
 
+        //if using transaction, try to start here
+        boolean beganTransaction = false;
+        if (useTransaction) {
+            try {
+                beganTransaction = TransactionUtil.begin();
+            } catch (GenericTransactionException e) {
+                String errMsg = "Error trying to begin transaction, could not process event: " + e.getMessage();
+                Debug.logWarning("[SimpleEvent.exec] " + errMsg);
+                Debug.logWarning(e);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+                return defaultErrorCode;
+            }
+        }
+        
+        boolean finished = true;
         Iterator eventOpsIter = eventOperations.iterator();
         while (eventOpsIter.hasNext()) {
             EventOperation eventOperation = (EventOperation) eventOpsIter.next();
-            if (!eventOperation.exec(env, request, loader))
+            if (!eventOperation.exec(env, request, loader)) {
+                finished = false;
                 break;
+            }
         }
         
-        String errorMsg = (String) env.get(errorMessageName);
-        if (errorMsg != null && errorMsg.length() > 0) {
+        //declare errorMsg here just in case transaction ops fail
+        String errorMsg = "";
+        
+        //if beganTransaction and finished commit here
+        if (beganTransaction && finished) {
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException e) {
+                String errMsg = "Error trying to commit transaction, could not process event: " + e.getMessage();
+                errorMsg += errMsg + "<br>";
+                Debug.logWarning("[SimpleEvent.exec] " + errMsg);
+                Debug.logWarning(e);
+            }
+        }
+
+        //if beganTransaction and NOT finished rollback here
+        if (beganTransaction && !finished) {
+            try {
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericTransactionException e) {
+                String errMsg = "Error trying to rollback transaction, could not process event: " + e.getMessage();
+                errorMsg += errMsg + "<br>";
+                Debug.logWarning("[SimpleEvent.exec] " + errMsg);
+                Debug.logWarning(e);
+            }
+        }
+        
+        String tempErrorMsg = (String) env.get(errorMessageName);
+        if (tempErrorMsg != null && tempErrorMsg.length() > 0) {
+            errorMsg += tempErrorMsg;
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
         }
         
@@ -182,7 +239,7 @@ public class SimpleEvent {
         String response = (String) env.get(responseCodeName);
         if (response == null || response.length() == 0) {
             Debug.logWarning("[SimpleEvent.exec] No response code string found, assuming success");
-            response = "success";
+            response = defaultSuccessCode;
         }
         return response;
     }

@@ -34,6 +34,9 @@
     event-name CDATA #REQUIRED
     short-description CDATA #REQUIRED
     login-required ( true | false ) "true"
+    use-transaction ( true | false ) "true"
+    default-error-code CDATA "error"
+    default-success-code CDATA "success"
     parameter-map-name CDATA "parameters"
     request-name CDATA "_request_"
     response-code-name CDATA "_response_code_"
