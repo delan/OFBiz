@@ -159,7 +159,7 @@ public class EntityFinderUtil {
                 value = envNameAcsr.get(context);
             }
             // no value so far, and a string value is specified, use that
-            if (value == null && valueExdr != null && !valueExdr.isEmpty()) {
+            if (value == null && valueExdr != null) {
                 value = valueExdr.expandString(context);
             }
             // now to a type conversion for the target fieldName
