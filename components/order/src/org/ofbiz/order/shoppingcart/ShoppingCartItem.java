@@ -1105,8 +1105,9 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** Add an adjustment to the order item; don't worry about setting the orderId, orderItemSeqId or orderAdjustmentId; they will be set when the order is created */
-    public void addAdjustment(GenericValue adjustment) {
+    public int addAdjustment(GenericValue adjustment) {
         itemAdjustments.add(adjustment);
+        return itemAdjustments.indexOf(adjustment);
     }
 
     public void removeAdjustment(GenericValue adjustment) {
