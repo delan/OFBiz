@@ -100,6 +100,8 @@ public class ControlServlet extends HttpServlet {
         getDispatcher();
         // initialize the request handler
         getRequestHandler();
+        // initialize the JPublish wrapper
+        getJPublishWrapper();
 
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
@@ -306,7 +308,6 @@ public class ControlServlet extends HttpServlet {
 
     private RequestHandler getRequestHandler() {
         RequestHandler rh = (RequestHandler) getServletContext().getAttribute(SiteDefs.REQUEST_HANDLER);
-
         if (rh == null) {
             rh = new RequestHandler();
             rh.init(getServletContext());
@@ -314,10 +315,18 @@ public class ControlServlet extends HttpServlet {
         }
         return rh;
     }
+    
+    private JPublishWrapper getJPublishWrapper() {
+        JPublishWrapper jp = (JPublishWrapper) getServletContext().getAttribute("jpublishWrapper");
+        if ( jp == null) {
+            jp = new JPublishWrapper(getServletContext());
+            getServletContext().setAttribute("jpublishWrapper", jp);
+        }
+        return jp;
+    }    
 
     private LocalDispatcher getDispatcher() {
         LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
-
         if (dispatcher == null) {
             GenericDelegator delegator = getDelegator();
 
@@ -362,7 +371,6 @@ public class ControlServlet extends HttpServlet {
 
     private GenericDelegator getDelegator() {
         GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
-
         if (delegator == null) {
             String delegatorName = getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
 
@@ -381,7 +389,6 @@ public class ControlServlet extends HttpServlet {
 
     private Security getSecurity() {
         Security security = (Security) getServletContext().getAttribute("security");
-
         if (security == null) {
             GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
 

@@ -24,34 +24,16 @@
  */
 package org.ofbiz.core.view;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Iterator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.jpublish.JPublishContext;
-import org.jpublish.Page;
-import org.jpublish.Repository;
-import org.jpublish.RepositoryWrapper;
-import org.jpublish.SiteContext;
-import org.jpublish.StaticResourceManager;
-import org.jpublish.Template;
-import org.jpublish.action.ActionManager;
-import org.jpublish.component.ComponentMap;
-import org.jpublish.page.PageInstance;
-import org.jpublish.util.CharacterEncodingMap;
-import org.jpublish.util.DateUtilities;
-import org.jpublish.util.NumberUtilities;
-import org.jpublish.util.URLUtilities;
+import org.ofbiz.core.control.JPublishWrapper;
+import org.ofbiz.core.util.GeneralException;
 
 /**
  * Handles JPublish type view rendering
@@ -63,288 +45,36 @@ import org.jpublish.util.URLUtilities;
 public class JPublishViewHandler implements ViewHandler {
 
     public static final String module = JPublishViewHandler.class.getName();
-
+    
     protected ServletContext servletContext = null;
-    protected SiteContext siteContext = null;
+    protected JPublishWrapper wrapper = null;
 
     /**
      * @see org.ofbiz.core.view.ViewHandler#init(javax.servlet.ServletContext)
      */
     public void init(ServletContext context) throws ViewHandlerException {
         this.servletContext = context;
-        // find the WEB-INF root
-        String rootDir = servletContext.getRealPath("/");
-        File contextRoot = new File(rootDir);
-        File webInfPath = new File(contextRoot, "WEB-INF");
-
-        // configure the classpath for scripting support
-        configureClasspath(webInfPath);
-
-        // create the site context
-        try {
-            //siteContext = new SiteContext(contextRoot, servletConfig.getInitParameter("config"));
-            siteContext = new SiteContext(contextRoot, "WEB-INF/jpublish.xml");
-            siteContext.setWebInfPath(webInfPath);
-            context.setAttribute("jPublishSiteContext", siteContext);
-        } catch (Exception e) {
-            throw new ViewHandlerException("Cannot load SiteContext", e);
-        }
-
-        // execute startup actions
-        try {
-            ActionManager actionManager = siteContext.getActionManager();
-            actionManager.executeStartupActions();
-        } catch (Exception e) {
-            throw new ViewHandlerException("Problems executing JPublish startup actions", e);
-        }
-    }
-
-    protected void configureClasspath(File webInfPath) {
-        File webLibPath = new File(webInfPath, "lib");
-        File webClassPath = new File(webInfPath, "classes");
-
-        // add WEB-INF/classes to the classpath
-        StringBuffer classPath = new StringBuffer();
-        classPath.append(System.getProperty("java.class.path"));
-
-        if (webClassPath.exists()) {
-            classPath.append(System.getProperty("path.separator"));
-            classPath.append(webClassPath);
-        }
-
-        // add WEB-INF/lib files to the classpath
-        File[] files = webLibPath.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].getName().toLowerCase().endsWith(".jar")
-                || files[i].getName().toLowerCase().endsWith(".zip")) {
-                classPath.append(System.getProperty("path.separator"));
-                classPath.append(files[i]);
-            }
-        }
-
-        AccessController.doPrivileged(new SetClassPathAction(classPath.toString()));
-    }
-
-    protected boolean executeGlobalActions(HttpServletRequest request, HttpServletResponse response, JPublishContext context, String path) throws Exception {
-        ActionManager actionManager = siteContext.getActionManager();
-        return optionalRedirect(actionManager.executeGlobalActions(context), path, response);
-    }
-
-    protected boolean executePathActions(HttpServletRequest request, HttpServletResponse response, JPublishContext context, String path) throws Exception {
-        ActionManager actionManager = siteContext.getActionManager();
-        return optionalRedirect(actionManager.executePathActions(path, context), path, response);
-    }
-
-    protected boolean executeParameterActions(HttpServletRequest request, HttpServletResponse response, JPublishContext context, String path) throws Exception {
-        if (!siteContext.isParameterActionsEnabled()) {
-            return false;
-        }
-
-        ActionManager actionManager = siteContext.getActionManager();
-        String[] actionNames = request.getParameterValues(siteContext.getActionIdentifier());
-        if (actionNames != null) {
-            for (int i = 0; i < actionNames.length; i++) {
-                return optionalRedirect(actionManager.execute(actionNames[i], context), path, response);
-            }
-        }
-        return false;
-    }
-
-    protected boolean executePreEvaluationActions(HttpServletRequest request, HttpServletResponse response, JPublishContext context, String path) throws Exception {
-        ActionManager actionManager = siteContext.getActionManager();
-        return actionManager.executePreEvaluationActions(path, context);
-    }
-
-    protected boolean executePostEvaluationActions(HttpServletRequest request, HttpServletResponse response, JPublishContext context, String path) throws Exception {
-        ActionManager actionManager = siteContext.getActionManager();
-        actionManager.executePostEvaluationActions(path, context);
-        return false;
-    }
-
-    private boolean optionalRedirect(String redirect, String path, HttpServletResponse response) throws IOException {
-        if (redirect == null) {
-            return false;
-        }
-
-        if (redirect.endsWith("/")) {
-            response.sendRedirect(redirect);
-            return true;
-        }
-
-        if (redirect.lastIndexOf(".") == -1) {
-            response.sendRedirect(redirect + path.substring(path.lastIndexOf(".")));
-            return true;
-        } else {
-            response.sendRedirect(redirect);
-            return true;
-        }
+        this.wrapper = (JPublishWrapper) context.getAttribute("jpublishWrapper");
+        if (wrapper == null)
+            throw new ViewHandlerException("JPublishWrapper not found in ServletContext");
     }
 
     /**
      * @see org.ofbiz.core.view.ViewHandler#render(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
-    public void render(String name, String path, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
-        HttpSession session = request.getSession();
-        ActionManager actionManager = siteContext.getActionManager();
-        //String path = servletContext.getRealPath(pagePath);
-        //Debug.logError("Path:" + path);
-
-        // get the character encoding map
-        CharacterEncodingMap characterEncodingMap = siteContext.getCharacterEncodingManager().getMap(path);
-
-        // put standard servlet stuff into the context
-        JPublishContext context = new JPublishContext(this);
-        context.put("request", request);
-        context.put("response", response);
-        context.put("session", session);
-        context.put("application", servletContext);
-
-        // add the character encoding map to the context
-        context.put("characterEncodingMap", characterEncodingMap);
-
-        // add the URLUtilities to the context
-        URLUtilities urlUtilities = new URLUtilities(request, response);
-        context.put("urlUtilities", urlUtilities);
-
-        // add the DateUtilities to the context
-        context.put("dateUtilities", DateUtilities.getInstance());
-
-        // add the NumberUtilities to the context
-        context.put("numberUtilities", NumberUtilities.getInstance());
-
-        // add the messages log to the context
-        context.put("syslog", SiteContext.syslog);
-
-        // expose the SiteContext
-        context.put("site", siteContext);
-
-        if (siteContext.isProtectReservedNames()) {
-            context.enableCheckReservedNames(this);
-        }
-
-        // add the repositories to the context
-        Iterator repositories = siteContext.getRepositories().iterator();
-        while (repositories.hasNext()) {
-            Repository repository = (Repository) repositories.next();
-            context.put(repository.getName(), new RepositoryWrapper(repository, context));
-            // add the fs_repository also as the name 'pages' so we can use existing logic in pages
-            // note this is a hack and we should look at doing this a different way; but first need
-            // to investigate how to get content from different repositories
-            if (repository.getName().equals("fs_repository")) {
-                context.put("pages", new RepositoryWrapper(repository, context));
-            }
-        }
-
+    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         try {
-            if (executePreEvaluationActions(request, response, context, path))
-                return;
-
-            // if the page is static
-            StaticResourceManager staticResourceManager = siteContext.getStaticResourceManager();
-            if (staticResourceManager.resourceExists(path)) {
-                // execute the global actions
-                if (executeGlobalActions(request, response, context, path))
-                    return;
-
-                // execute path actions
-                if (executePathActions(request, response, context, path))
-                    return;
-
-                // execute parameter actions
-                if (executeParameterActions(request, response, context, path))
-                    return;
-
-                // load and return the static resource                
-                OutputStream out = response.getOutputStream();
-                staticResourceManager.load(path, out);
-                out.flush();
-                return;
-            }
-
-            // load the page          
-            PageInstance pageInstance = siteContext.getPageManager().getPage(path);
-            Page page = new Page(pageInstance);
-
-            context.disableCheckReservedNames(this);
-
-            // expose the page in the context
-            context.put("page", page);
-
-            // expose components in the context
-            context.put("components", new ComponentMap(context));
-
-            if (siteContext.isProtectReservedNames()) {
-                context.enableCheckReservedNames(this);
-            }
-
-            // execute the global actions
-            if (executeGlobalActions(request, response, context, path))
-                return;
-
-            // execute path actions
-            if (executePathActions(request, response, context, path))
-                return;
-
-            // execute parameter actions
-            if (executeParameterActions(request, response, context, path))
-                return;
-
-            // execute the page actions           
-            if (optionalRedirect(page.executeActions(context), path, response))
-                return;
-
-            // get the template
-            Template template = siteContext.getTemplateManager().getTemplate(page.getFullTemplateName());
-
-            // get the Servlet writer
-            Writer out = response.getWriter();
-
-            // merge the template           
-            template.merge(context, page, out);
-
-            out.flush();
-            out.close();
-        } catch (FileNotFoundException e) {
-            throw new ViewHandlerException("File not found", e);
-        } catch (Exception e) {
-            throw new ViewHandlerException("JPublish execution error", e);
-        } finally {
-            try {
-                executePostEvaluationActions(request, response, context, path);
-            } catch (Exception e) {
-                throw new ViewHandlerException("Error executing JPublish post evaluation actions", e);
-            }
+            // Jetty throws IllegalStateException when doing response.getOutputStream()
+            // this is only used for static content, why would we use JP for static content?
+            Writer writer = response.getWriter();           
+            wrapper.render(page, request, response, writer, null, true);
+            writer.close();
+        } catch (IOException e) {
+            throw new ViewHandlerException("Problems with the response writer/output stream", e);
+        } catch (GeneralException e) {
+            throw new ViewHandlerException("Cannot render page", e);
         }
+        
     }
-
-    /**      
-     * Privleged action for setting the class path.  This is used to get around
-     * the Java security system to set the class path so scripts have full 
-     * access to all loaded Java classes.
-     *  
-     * <p>Note: This functionality is untested.</p>
-     *   
-     *  @author Anthony Eden
-     */
-    class SetClassPathAction implements PrivilegedAction {
-        private String classPath;
-
-        /** 
-         * Construct the action to set the class path.        
-         *   @param classPath The new class path
-         */
-        public SetClassPathAction(String classPath) {
-            this.classPath = classPath;
-        }
-
-        /** 
-         * Set the "java.class.path" property.               
-         * @return Returns null
-         */
-        public Object run() {
-            System.setProperty("java.class.path", classPath);
-            return null; // nothing to return
-        }
-    }
-
 }
+
