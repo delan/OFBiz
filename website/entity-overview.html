@@ -1,11 +1,14 @@
 
-<h2 align="center">The Open For Business Project - Entity Overview</h2>
+<h2 align="center">The Open For Business Project - CommonApp Entity Overview</h2>
 
 <br>Written By: David E. Jones
 <br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br><A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A>
-<br>Last Updated: July 12, 2001
+<br>Last Updated: July 12, 2001<p>NOTE: This document parallels the <a href="entity-list.html">CommonApp
+Entity List</a> document. Please see it for a list of entities in each
+component. This document will be added to as parts of the data model progress
+and move from datamodel.xml to commonapp.xml and get used in the project.</p>
 <p><b>Status: </b>This document is an early attempt to organize the data
 corresponding to the various components of the overall system.&nbsp; Some parts
 are much more complete and thought out than others. Please send me feed back on
@@ -13,6 +16,8 @@ any omissions or errors.</p>
 <h3>Table of Contents</h3>
 
 <ul>
+  <li><a href="#Introduction"><b>Introduction</b></a>
+  <li><a href="#Extensibility Pattern"><b>Extensibility Pattern</b></a>
   <li><a href="#Common"><b>Common</b></a>
   <ul>
     <li><b><i><a href="#common.geo">common.geo</a></i></b>
@@ -24,28 +29,8 @@ any omissions or errors.</p>
     <li><b><i><a href="#common.uom">common.uom</a></i></b>
   
   </ul>
-  <li><a href="#Content"><b>Content</b></a>
-  <ul>
-    <li><b><i><a href="#content.content">content.content</a></i></b>
-  
-    <li><b><i><a href="#content.document">content.document</a></i></b>
-  
-    <li><b><i><a href="#content.preference">content.preference</a></i></b>
-  
-    <li><b><i><a href="#content.subscription">content.subscription</a></i></b>
-  
-    <li><b><i><a href="#content.visit">content.visit</a></i></b>
-  
-  </ul>
   <li><a href="#Party"><b>Party</b></a>
   <ul>
-    <li><b><i><a href="#party.agreement">party.agreement</a></i></b>
-  
-    <li><b><i><a href="#party.communication">party.communication</a></i></b>
-  
-    <li><b><i><a href="#party.contact">party.contact</a></i></b>
-  
-    <li><b><i><a href="#party.need">party.need</a></i></b>
   
     <li><b><i><a href="#party.party">party.party</a></i></b>
   
@@ -69,55 +54,6 @@ any omissions or errors.</p>
     <li><b><i><a href="#product.supplier">product.supplier</a></i></b>
   
   </ul>
-  <li><a href="#Order"><b>Order</b></a>
-  <ul>
-    <li><b><i><a href="#order.order">order.order</a></i></b>
-  
-    <li><b><i><a href="#order.quote">order.quote</a></i></b>
-  
-    <li><b><i><a href="#order.request">order.request</a></i></b>
-  
-  </ul>
-  <li><a href="#Shipment"><b>Shipment</b></a>
-  <ul>
-    <li><b><i><a href="#shipment.issuance">shipment.issuance</a></i></b>
-  
-    <li><b><i><a href="#shipment.receipt">shipment.receipt</a></i></b>
-  
-    <li><b><i><a href="#shipment.route">shipment.route</a></i></b>
-  
-    <li><b><i><a href="#shipment.shipment">shipment.shipment</a></i></b>
-  
-  </ul>
-  <li><a href="#Workeffort"><b>Workeffort</b></a>
-  <ul>
-    <li><b><i><a href="#workeffort.timesheet">workeffort.timesheet</a></i></b>
-  
-    <li><b><i><a href="#workeffort.workeffort">workeffort.workeffort</a></i></b>
-  
-  </ul>
-  <li><a href="#Accounting"><b>Accounting</b></a>
-  <ul>
-    <li><b><i><a href="#accounting.budget">accounting.budget</a></i></b>
-  
-    <li><b><i><a href="#accounting.fixedasset">accounting.fixedasset</a></i></b>
-  
-    <li><b><i><a href="#accounting.ledger">accounting.ledger</a></i></b>
-  
-    <li><b><i><a href="#accounting.invoice">accounting.invoice</a></i></b>
-  
-    <li><b><i><a href="#accounting.payment">accounting.payment</a></i></b>
-  
-  </ul>
-  <li><a href="#Humanres"><b>Humanres</b></a>
-  <ul>
-    <li><b><i><a href="#humanres.ability">humanres.ability</a></i></b>
-  
-    <li><b><i><a href="#humanres.employment">humanres.employment</a></i></b>
-  
-    <li><b><i><a href="#humanres.position">humanres.position</a></i></b>
-  
-  </ul>
   <li><a href="#Security"><b>Security</b></a>
   <ul>
     <li><b><i><a href="#security.login">security.login</a></i></b>
@@ -126,567 +62,364 @@ any omissions or errors.</p>
   
 </ul>
   </ul>
-</ul>
 
-<p>NOTE: Entries in italics are directories, and normal text entries are entities (Entity EJBs).</p>
+
+<hr>
+<H3><a name="Introduction">Introduction</a></H3>
+<hr>
+<p>The CommonApp module is where all of the Common Application Components from
+the ofbiz architecture diagram are located. The Common Application Components
+are software components that are shared by all or many of the vertical
+applications in the project. For example, Products and LoginUsers are defined in
+the CommonApp module but may be used in various vertical applications such as
+e-commerce, inventory management, accounting, sales and purchase order
+management, and so forth.</p>
+<p>The purpose of this document is to describe the Common Application Components
+and their design. A brief overview of each component will be presented which
+will include a description of the entities in the component and their relations
+to other entities.</p>
+
+
+<p>There are some files that go along with the definitions of these entities.
+These files are located in the ofbiz/commonapp/entitydef directory. The most
+important file is datamodel.xml which contains the XML definitions for all of
+the entities in the project. As components are more completely defined and
+become ready to be used in the project they are moved to the commonapp.xml file
+which represents the entities that currently exist in the CommonApp module.</p>
+
+
+<p>A third file in this directory named datamodel-data.sql is a series of SQL
+insert statements which define various entity types for entities in the data
+model. For an explanation of what these entity types are and how they are used,
+see the Extensibility Pattern section of this document.</p>
+
+
+<hr>
+<H3><a name="Extensibility Pattern">Extensibility Pattern</a></H3>
+<hr>
+<p>There is one pattern that you will see repeated often in this data model that
+warrants some explanation. This pattern is used to make the data model more
+flexible and eliminate a great many tables that might otherwise have to exist.
+It aids in the conceptualization of the use of an entity that follows this
+pattern. It also&nbsp;provides a method for run-time extensibility of the
+entities that use this pattern.</p>
+
+
+<p>For a given Entity there are 3 or 4 related entities that are used to
+implement this pattern. These are EntityClass (optional) EntityType,
+EntityAttribute, and EntityTypeAttr. Each Entity instance can have one or more
+types which are described by EntityType. If an Entity can have multiple types
+the EntityClass, or Entity Classification entity is used to implement the
+many-to-many relation between Entity and EntityType. Otherwise no EntityClass is
+necessary and Entity will have an entityTypeId field.</p>
+
+
+<p>EntityType is used to describe an Entity. A given EntityType can inherit
+features from a parent EntityType if one is specified in the parentTypeId field
+of a given EntityType instance. If a table is associated with a given EntityType
+instance that has the same name as the entityTypeId field value then the
+hasTable field should have the value 'Y', otherwise it should have the value
+'N'. A description field is provided for a short description of an EntityType
+instance.</p>
+
+
+<p>EntityAttribute is used to store instances of name-value pair attributes for
+a given Entity instance. An attribute can be used in place of a column on the
+Entity table, especially when the attribute does not apply to all types of
+Entities. Attributes can also be used ad-hoc for any name-value pair information
+that applies to a given Entity instance. If many attributes apply to a given
+EntityType it may be best to create a separate entity to hold those attributes,
+and have that entity be associated with the EntityType instance by naming it the
+same as the entityTypeId and setting the hasTable field to 'Y' on the EntityType
+instance. This will be faster than repeatedly querying a collection of
+attributes for a given Entity instance.</p>
+
+
+<p>EntityTypeAttr is used to specify which attributes should exist for an Entity
+instance that corresponds to a given entityTypeId. The entityTypeId and name
+field combinations are listed to specify this. For example, the EntityType with
+entityTypeId 'BOX' should always have attributes named 'HEIGHT', 'WIDTH',
+'DEPTH', and 'COLOR', so an instance of EntityTypeAttr will exist for each of
+these attributes.</p>
+
+
+<p>There are variations on this pattern for certain entities, but this
+description is generally applicable in this data model. Note that the default
+types for the data model are defined in ofbiz/commonapp/entitydef/datamodel-data.sql.</p>
 
 
 <hr>
 <H3><a name="Common">Common</a></H3>
 <hr>
-<ul>
-  <li><b><i><a name="common.geo">common.geo</a></i></b>
-  <ul>
-    <li>Geo
-    <li>GeoType
-    <li>GeoAssoc
-    <li>GeoAssocType
-  </ul>
-  <li><b><i><a name="common.period">common.period</a></i></b>
-  <ul>
-    <li>PeriodType
-    <li>StandardTimePeriod
-  </ul>
-  <li><b><i><a name="common.status">common.status</a></i></b>
-  <ul>
-    <li>Status
-    <li>StatusType
-  </ul>
-  <li><b><i><a name="common.uom">common.uom</a></i></b>
-  <ul>
-    <li>Uom
-    <li>UomType
-    <li>UomConversion
-  </ul>
-</ul>
-<hr>
-<H3><a name="Content">Content</a></H3>
-<hr>
-<ul>
-  <li><b><i><a name="content.content">content.content</a></i></b>
-  <ul>
-    <li>DataObject
-    <li>DataObjectType
-    <li>DataObjectAttribute
-    <li>DataObjectTypeAttr
-    <li>DataObjectPurpose
-    <li>DataObjectPurposeType
-    <li>ElectronicText
-    <li>ImageDataObject
-    <li>OtherDataObject
-    <li>ContentDataObjectUsage
-    <li>Content
-    <li>ContentType
-    <li>ContentAttribute
-    <li>ContentTypeAttr
-    <li>ContentCategory
-    <li>ContentCategoryClass
-    <li>ContentAssociation
-    <li>FunctionType
-    <li>ContentRole
-  </ul>
-  <li><b><i><a name="content.document">content.document</a></i></b>
-  <ul>
-    <li>Document
-    <li>DocumentType
-    <li>DocumentAttribute
-    <li>DocumentTypeAttr
-  </ul>
-  <li><b><i><a name="content.preference">content.preference</a></i></b>
-  <ul>
-    <li>WebUserPreference
-    <li>WebPreferenceType
-  </ul>
-  <li><b><i><a name="content.subscription">content.subscription</a></i></b>
-  <ul>
-    <li>Subscription
-    <li>SubscriptionType
-    <li>SubscriptionAttribute
-    <li>SubscriptionTypeAttr
-    <li>SubscriptionActivity
-    <li>SubscriptionFulfillmentPiece
-  </ul>
-  <li><b><i><a name="content.visit">content.visit</a></i></b>
-  <ul>
-    <li>BrowserType
-    <li>PlatformType
-    <li>ProtocolType
-    <li>UserAgent
-    <li>UserAgentType
-    <li>UserAgentMethodType
-    <li>Visit
-    <li>ServerHit
-  </ul>
-</ul>
+The Common package is meant to contain entities that are for general use and may
+be used by entities in many other packages.
+<p>
+<b><i><a name="common.geo">common.geo</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    Geo
+    GeoType
+    GeoAssoc
+    GeoAssocType&nbsp;</p>
+<p>
+  
+  <b><i><a name="common.period">common.period</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    PeriodType
+    StandardTimePeriod&nbsp;</p>
+<p>
+  
+  <b><i><a name="common.status">common.status</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    Status
+    StatusType&nbsp;</p>
+<p>
+  
+  <b><i><a name="common.uom">common.uom</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    Uom
+    UomType
+    UomConversion</p>
+  
+
 <hr>
 <H3><a name="Party">Party</a></H3>
 <hr>
-<ul>
-  <li><b><i><a name="party.agreement">party.agreement</a></i></b>
-  <ul>
-    <li>Addendum
-    <li>Agreement
-    <li>AgreementType
-    <li>AgreementAttribute
-    <li>AgreementTypeAttr
-    <li>AgreementItem
-    <li>AgreementItemType
-    <li>AgreementItemAttribute
-    <li>AgreementItemTypeAttr
-    <li>AgreementGeographicalApplicability
-    <li>AgreementOrganizationalApplicability
-    <li>AgreementProductApplicability
-    <li>AgreementRole
-    <li>AgreementTerm
-    <li>AgreementTermAttribute
-    <li>TermType
-    <li>TermTypeAttr
-  </ul>
-  <li><b><i><a name="party.communication">party.communication</a></i></b>
-  <ul>
-    <li>IssueCase
-    <li>IssueCaseRole
-    <li>CommunicationEvent
-    <li>CommunicationEventType
-    <li>CommunicationEventPurpose
-    <li>CommunicationEventPrpTyp
-    <li>CommunicationEventRole
-  </ul>
-  <li><b><i><a name="party.contact">party.contact</a></i></b>
-  <ul>
-    <li>ContactMechanism
-    <li>ContactMechanismType
-    <li>ContactMechanismAttribute
-    <li>ContactMechanismTypeAttr
-    <li>ContactMechanismLink
-    <li>PartyContactMechanism
-    <li>PartyContactMechanismPurpose
-    <li>ContactMechanismPurposeType
-    <li>PartyPostalAddress
-    <li>PostalAddress
-    <li>PostalAddressBoundary
-    <li>TelecommunicationsNumber
-    <li>ValidContactMechanismRole
-  </ul>
-  <li><b><i><a name="party.need">party.need</a></i></b>
-  <ul>
-    <li>NeedType
-    <li>PartyNeed
-  </ul>
-  <li><b><i><a name="party.party">party.party</a></i></b>
-  <ul>
-    <li>Party
-    <li>PartyClassification
-    <li>PartyClassificationType
-    <li>PartyType
-    <li>PartyAttribute
-    <li>PartyTypeAttr
-    <li>PartyRole
-    <li>RoleType
-    <li>RoleTypeAttr
-    <li>PartyRelationship
-    <li>PriorityType
-    <li>PartyRelationshipType
-    <li>Customer
-    <li>PartyDataObject
-    <li>Person
-  </ul>
-</ul>
+
+The Party package is meant to contain entities related to the Party entity.
+There are many types of parties, and a lot of data that is associated with a
+party or with parties, and that data is defined in this package. Parties include
+persons, organizations, and so forth.
+<p>
+
+  <b><i><a name="party.party">party.party</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    Party
+    PartyClassification
+    PartyClassificationType
+    PartyType
+    PartyAttribute
+    PartyTypeAttr
+    PartyRole
+    RoleType
+    RoleTypeAttr
+    PartyRelationship
+    PriorityType
+    PartyRelationshipType
+    Customer
+    PartyDataObject
+    Person</p>
+  
+
 <hr>
 <H3><a name="Product">Product</a></H3>
 <hr>
-<ul>
-  <li><b><i><a name="product.product">product.product</a></i></b>
-  <ul>
-    <li>Product
-    <li>ProductClass
-    <li>ProductType
-    <li>ProductAttribute
-    <li>ProductTypeAttr
-    <li>GoodIdentification
-    <li>GoodIdentificationType
-    <li>ProductAssoc
-    <li>ProductAssocType
-    <li>ProductDataObject
-  </ul>
-  <li><b><i><a name="product.category">product.category</a></i></b>
-  <ul>
-    <li>ProductCategory
-    <li>ProductCategoryClass
-    <li>ProductCategoryType
-    <li>ProductCategoryAttribute
-    <li>ProductCategoryTypeAttr
-    <li>ProductCategoryMember
-    <li>ProductCategoryRollup
-  </ul>
-  <li><b><i><a name="product.feature">product.feature</a></i></b>
-  <ul>
-    <li>ProductFeature
-    <li>ProductFeatureType
-    <li>ProductFeatureCategory
-    <li>ProductFeatureAppl
-    <li>ProductFeatureApplType
-    <li>ProductFeatureIactn
-    <li>ProductFeatureIactnType
-    <li>FeatureDataObject
-  </ul>
-  <li><b><i><a name="product.cost">product.cost</a></i></b>
-  <ul>
-    <li>CostComponent
-    <li>CostComponentType
-    <li>CostComponentAttribute
-    <li>CostComponentTypeAttr
-  </ul>
-  <li><b><i><a name="product.price">product.price</a></i></b>
-  <ul>
-    <li>PriceComponent
-    <li>PriceComponentType
-    <li>PriceComponentAttribute
-    <li>PriceComponentTypeAttr
-    <li>QuantityBreak
-    <li>OrderValueBreak
-    <li>SaleType
-  </ul>
-  <li><b><i><a name="product.inventory">product.inventory</a></i></b>
-  <ul>
-    <li>InventoryItem
-    <li>InventoryItemType
-    <li>InventoryItemAttribute
-    <li>InventoryItemTypeAttr
-    <li>PhysicalInventory
-    <li>InventoryItemVariance
-    <li>VarianceReason
-    <li>ItemVarianceAcctgTrans
-    <li>Lot
-  </ul>
-  <li><b><i><a name="product.storage">product.storage</a></i></b>
-  <ul>
-    <li>Container
-    <li>ContainerType
-    <li>Facility
-    <li>FacilityType
-    <li>FacilityAttribute
-    <li>FacilityTypeAttr
-    <li>FacilityContactMechanism
-    <li>PartyFacility
-    <li>FacilityRoleType
-  </ul>
-  <li><b><i><a name="product.supplier">product.supplier</a></i></b>
-  <ul>
-    <li>ReorderGuideline
-    <li>SupplierProduct
-    <li>SupplierRatingType
-    <li>SupplierPrefOrder
-    <li>MarketInterest
-  </ul>
-</ul>
-<hr>
-<H3><a name="Order">Order</a></H3>
-<hr>
-<ul>
-  <li><b><i><a name="order.order">order.order</a></i></b>
-  <ul>
-    <li>OrderHeader
-    <li>OrderType
-    <li>OrderAttribute
-    <li>OrderTypeAttr
-    <li>OrderAdjustment
-    <li>OrderAdjustmentType
-    <li>OrderAdjustmentAttribute
-    <li>OrderAdjustmentTypeAttr
-    <li>OrderContactMechanism
-    <li>OrderItem
-    <li>OrderItemType
-    <li>OrderItemAttribute
-    <li>OrderItemTypeAttr
-    <li>OrderItemAssociation
-    <li>OrderItemBilling
-    <li>OrderItemContactMechanism
-    <li>OrderItemRole
-    <li>OrderRole
-    <li>OrderShipment
-    <li>OrderStatus
-    <li>OrderTerm
-    <li>OrderTermAttribute
-    <li>Picklist
-    <li>PicklistItem
-    <li>ProductOrderItem
-    <li>PurchaseOrder
-    <li>PurchaseOrderItem
-    <li>SalesOrderItem
-    <li>WorkOrderItemFulfillment
-  </ul>
-  <li><b><i><a name="order.quote">order.quote</a></i></b>
-  <ul>
-    <li>Quote
-    <li>QuoteType
-    <li>QuoteAttribute
-    <li>QuoteTypeAttr
-    <li>QuoteItem
-    <li>QuoteRole
-    <li>QuoteTerm
-    <li>QuoteTermAttribute
-  </ul>
-  <li><b><i><a name="order.request">order.request</a></i></b>
-  <ul>
-    <li>DesiredFeature
-    <li>OrderRequirementCommitment
-    <li>CustRequest
-    <li>CustRequestType
-    <li>CustRequestAttribute
-    <li>CustRequestTypeAttr
-    <li>CustRequestItem
-    <li>CustRequestRole
-    <li>Requirement
-    <li>RequirementType
-    <li>RequirementAttribute
-    <li>RequirementTypeAttr
-    <li>RequirementBudgetAllocation
-    <li>RequirementCustRequest
-    <li>RequirementRole
-    <li>RequirementStatus
-    <li>RespondingParty
-    <li>WorkRequirement
-    <li>WorkRequirementFulfillment
-  </ul>
-</ul>
-<hr>
-<H3><a name="Shipment">Shipment</a></H3>
-<hr>
-<ul>
-  <li><b><i><a name="shipment.issuance">shipment.issuance</a></i></b>
-  <ul>
-    <li>ItemIssuance
-    <li>ItemIssuanceRole
-  </ul>
-  <li><b><i><a name="shipment.receipt">shipment.receipt</a></i></b>
-  <ul>
-    <li>ShipmentReceipt
-    <li>ShipmentReceiptRole
-  </ul>
-  <li><b><i><a name="shipment.route">shipment.route</a></i></b>
-  <ul>
-    <li>ShipmentRouteSegment
-  </ul>
-  <li><b><i><a name="shipment.shipment">shipment.shipment</a></i></b>
-  <ul>
-    <li>ShipmentStatus
-    <li>ShippingDocument
-    <li>CarrierShipmentMethod
-    <li>Shipment
-    <li>ShipmentType
-    <li>ShipmentAttribute
-    <li>ShipmentTypeAttr
-    <li>ShipmentItem
-    <li>ShipmentItemBilling
-    <li>ShipmentItemFeature
-    <li>ShipmentMethodType
-    <li>PackagingContent
-    <li>ShipmentPackage
-  </ul>
-</ul>
-<hr>
-<H3><a name="Workeffort">Workeffort</a></H3>
-<hr>
-<ul>
-  <li><b><i><a name="workeffort.timesheet">workeffort.timesheet</a></i></b>
-  <ul>
-    <li>TimeEntry
-    <li>TimeEntryBilling
-    <li>Timesheet
-    <li>TimesheetRole
-    <li>WorkEffortAssignmentRate
-    <li>PartyRate
-    <li>RateType
-  </ul>
-  <li><b><i><a name="workeffort.workeffort">workeffort.workeffort</a></i></b>
-  <ul>
-    <li>WorkEffort
-    <li>WorkEffortType
-    <li>WorkEffortAttribute
-    <li>WorkEffortTypeAttr
-    <li>WorkEffortAssoc
-    <li>WorkEffortAssocType
-    <li>WorkEffortAssocAttribute
-    <li>WorkEffortAssocTypeAttr
-    <li>WorkEffortDef
-    <li>WorkEffortDefAttribute
-    <li>WorkEffortDefAssoc
-    <li>WorkEffortDefAssocAttribute
-    <li>WorkEffortBilling
-    <li>WorkEffortDeliverableProduced
-    <li>WorkEffortFixedAssetAssignment
-    <li>WorkEffortFixedAssetStandard
-    <li>WorkEffortGoodStandard
-    <li>WorkEffortInventoryAssignment
-    <li>WorkEffortInventoryProduced
-    <li>WorkEffortPartyAssignment
-    <li>WorkEffortSkillStandard
-    <li>WorkEffortStatus
-    <li>CommunicationEventWorkEffort
-    <li>Deliverable
-    <li>DeliverableType
-  </ul>
-</ul>
-<hr>
-<H3><a name="Accounting">Accounting</a></H3>
-<hr>
-<ul>
-  <li><b><i><a name="accounting.budget">accounting.budget</a></i></b>
-  <ul>
-    <li>Budget
-    <li>BudgetType
-    <li>BudgetAttribute
-    <li>BudgetTypeAttr
-    <li>BudgetItem
-    <li>BudgetItemType
-    <li>BudgetItemAttribute
-    <li>BudgetItemTypeAttr
-    <li>BudgetReview
-    <li>BudgetReviewResultType
-    <li>BudgetRevision
-    <li>BudgetRevisionImpact
-    <li>BudgetRole
-    <li>BudgetScenario
-    <li>BudgetScenarioApplication
-    <li>BudgetScenarioRule
-    <li>BudgetStatus
-  </ul>
-  <li><b><i><a name="accounting.fixedasset">accounting.fixedasset</a></i></b>
-  <ul>
-    <li>FixedAsset
-    <li>FixedAssetType
-    <li>FixedAssetAttribute
-    <li>FixedAssetTypeAttr
-    <li>FixedAssetDepreciationMethod
-    <li>Depreciation
-    <li>DepreciationMethod
-    <li>PartyFixedAssetAssignment
-  </ul>
-  <li><b><i><a name="accounting.ledger">accounting.ledger</a></i></b>
-  <ul>
-    <li>AcctgTrans
-    <li>AcctgTransType
-    <li>AcctgTransAttribute
-    <li>AcctgTransTypeAttr
-    <li>SalesAcctgTrans
-    <li>ExternalAcctgTrans
-    <li>InternalAcctgTrans
-    <li>AcctgTransDetail
-    <li>AccoutingPeriod
-    <li>GeneralLedgerAccount
-    <li>GeneralLedgerAccountType
-    <li>GeneralLedgerBudgetXref
-    <li>OrganizationGlAccount
-  </ul>
-  <li><b><i><a name="accounting.invoice">accounting.invoice</a></i></b>
-  <ul>
-    <li>Invoice
-    <li>InvoiceType
-    <li>InvoiceAttribute
-    <li>InvoiceTypeAttr
-    <li>InvoiceItem
-    <li>InvoiceItemType
-    <li>InvoiceItemAttribute
-    <li>InvoiceItemTypeAttr
-    <li>InvoiceRole
-    <li>InvoiceStatus
-    <li>InvoiceTerm
-    <li>InvoiceTermAttribute
-  </ul>
-  <li><b><i><a name="accounting.payment">accounting.payment</a></i></b>
-  <ul>
-    <li>BillingAccount
-    <li>BillingAccountRole
-    <li>Deduction
-    <li>DeductionType
-    <li>FinancialAccount
-    <li>FinancialAccountType
-    <li>FinancialAccountAttribute
-    <li>FinancialAccountTypeAttr
-    <li>FinancialAccountAdjustment
-    <li>FinancialAccountRole
-    <li>FinancialAccountTrans
-    <li>FinancialAccountTransType
-    <li>FinancialAccountTransAttribute
-    <li>FinancialAccountTransTypeAttr
-    <li>Withdrawal
-    <li>Payment
-    <li>PaymentType
-    <li>PaymentAttribute
-    <li>PaymentTypeAttr
-    <li>PaymentAcctgTrans
-    <li>PaymentApplication
-    <li>PaymentBudgetAllocation
-    <li>PaymentMethodType
-    <li>Receipt
-  </ul>
-</ul>
-<hr>
-<H3><a name="Humanres">Humanres</a></H3>
-<hr>
-<ul>
-  <li><b><i><a name="humanres.ability">humanres.ability</a></i></b>
-  <ul>
-    <li>PersonTraining
-    <li>EmployeePerformanceReview
-    <li>PartyQual
-    <li>PartyQualType
-    <li>PartyQualAttribute
-    <li>PartyQualTypeAttr
-    <li>PartySkill
-    <li>PerfReviewItemType
-    <li>PerformanceNote
-    <li>PerformanceReviewItem
-    <li>PerfRatingType
-    <li>ResponsibilityType
-    <li>Resume
-    <li>SkillType
-    <li>TrainingClassType
-  </ul>
-  <li><b><i><a name="humanres.employment">humanres.employment</a></i></b>
-  <ul>
-    <li>RejectionReason
-    <li>SalaryStep
-    <li>PayrollPreference
-    <li>PayCheck
-    <li>PayGrade
-    <li>PayHistory
-    <li>Employment
-    <li>EmploymentApplication
-    <li>EmploymentApplicationSourceType
-    <li>BenefitType
-    <li>PartyBenefit
-    <li>TerminationReason
-    <li>TerminationType
-    <li>UnemploymentClaim
-  </ul>
-  <li><b><i><a name="humanres.position">humanres.position</a></i></b>
-  <ul>
-    <li>Position
-    <li>PositionClassType
-    <li>PositionFulfillment
-    <li>PositionReportingStructure
-    <li>PositionResponsibility
-    <li>PositionType
-    <li>PositionTypeClass
-    <li>ValidResponsibility
-  </ul>
-</ul>
+
+The Product package is meant to contain entities related to the Product entity.
+There are many types of products, and a lot of data that is associated with a
+product or with products, and that data is defined in this package. A Product
+can be a good or a service, and each may have various subtypes. Some related
+data that is fairly central to Product definitions includes features and
+categories. The Category package allows products to be organized, and the
+Feature package describes details of a product that may be used for pricing or
+in a parametric product search.
+<p>The Product package also contains information about serialized and
+non-serialized inventory items, and the storage of inventory in facilities which
+can be warehouses, stores, or whatever. There is a package for Product cost
+estimation, and another for Product price calculation. In addition there is a
+package for Product supplier related information to keep track of where a
+product might come from and to rate and put a priority on different suppliers of
+the same product.</p>
+
+  <b><i><a name="product.product">product.product</a></i></b>
+  
+&nbsp;
+<p>The Product entity contains general information about a product, whatever
+type of product it is. Product implements the Extensibility Pattern, and can
+have multiple types, using the Product,
+    ProductClass,
+    ProductType,
+    ProductAttribute, and ProductTypeAttr entities.&nbsp;</p>
+<p>When a Product is of the type GOOD (as opposed to SERVICE) then it generally
+has identifications associated with it such as a SKU, an ISBN, a SKU or catalog
+ID from manufacturer or distributor, and so forth. These are stored in the GoodIdentification
+entity and the type of good id is defined by the GoodIdentificationType entity.</p>
+<p>The ProductAssoc entity implements an association between products. The type
+of association is defined by the corresponding ProductAssocType entity.
+ProductAssoc partially implements the Extensibility Pattern by providing a type,
+but does not have attributes at the moment. ProductAssoc entities can be used to
+specify that a certain product is deprecated by another product, or can be
+substitued for another product. A Product can also be a 'dummy' product and
+simply be a collection of other products that are components of this product, or
+the product could be a special offer or marketing package used to promote and
+sell various products as a single product. Many other potential associations can
+be used between products. Marketing concepts such as up-sells and cross-sells
+can also be implemented using ProductAssoc entities.</p>
+<p>The ProductDataObject entity is used to implement the many to many join
+between a Product and a DataObject. The DataObject entity is part of the Content
+package and is used to store text or images or other general content as a
+content management package. To simplify the data model the Product entity also
+has fields for a long description and URLs to images, but these are optional and
+larger organizations will want to use the content management features to control
+this sort of content.</p>
+<p>
+  
+  <b><i><a name="product.category">product.category</a></i></b>
+  
+&nbsp;</p>
+<p>ProductCategory contains information about categories of products, and can be
+used to organize products for cataloging, marketing, analyis, and other
+purposes. ProductCategory implements the Extensibility Pattern, and can have
+multiple types, using the
+  
+    ProductCategory,
+    ProductCategoryClass,
+    ProductCategoryType,
+    ProductCategoryAttribute, and ProductCategoryTypeAttr entities.&nbsp;</p>
+<p>A ProductCategory has a many to many relation with Product meaning that a
+Product can belong to many ProductCategories and a ProductCategory can contain
+many Products. This many to many relation is joined using the ProductCategoryMember
+entity which contains a reference to a Product and a ProductCategory.</p>
+<p>A ProductCategory can be related to other product categories in a loose hierarchical
+structure. When I say loose I mean that it differs from a normal hierarchy in
+that it can have multiple parents, making it really a graph, but we still use
+terminology that comes from an hierarchical organization. This many to many
+relation is joined using the ProductCategoryRollup entity. An alternative to
+this is to implement a true hierarchy by removing or not using the
+ProductCategoryRollup entity and simply using a field in the ProductCategory
+entity to specify a reference to the ParentProductCategory. This can be done
+with the current data model by using the primaryParentCategoryId field as a
+reference to the only parent category.</p>
+<p>
+  
+  <b><i><a name="product.feature">product.feature</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    ProductFeature
+    ProductFeatureType
+    ProductFeatureCategory
+    ProductFeatureAppl
+    ProductFeatureApplType
+    ProductFeatureIactn
+    ProductFeatureIactnType
+    FeatureDataObject&nbsp;</p>
+<p>
+  
+  <b><i><a name="product.cost">product.cost</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    CostComponent
+    CostComponentType
+    CostComponentAttribute
+    CostComponentTypeAttr&nbsp;</p>
+<p>
+  
+  <b><i><a name="product.price">product.price</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    PriceComponent
+    PriceComponentType
+    PriceComponentAttribute
+    PriceComponentTypeAttr
+    QuantityBreak
+    OrderValueBreak
+    SaleType&nbsp;</p>
+<p>
+  
+  <b><i><a name="product.inventory">product.inventory</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    InventoryItem
+    InventoryItemType
+    InventoryItemAttribute
+    InventoryItemTypeAttr
+    PhysicalInventory
+    InventoryItemVariance
+    VarianceReason
+    ItemVarianceAcctgTrans
+    Lot&nbsp;</p>
+<p>
+  
+  <b><i><a name="product.storage">product.storage</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    Container
+    ContainerType
+    Facility
+    FacilityType
+    FacilityAttribute
+    FacilityTypeAttr
+    FacilityContactMechanism
+    PartyFacility
+    FacilityRoleType&nbsp;</p>
+<p>
+  
+  <b><i><a name="product.supplier">product.supplier</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    ReorderGuideline
+    SupplierProduct
+    SupplierRatingType
+    SupplierPrefOrder
+    MarketInterest</p>
+  
+
 <hr>
 <H3><a name="Security">Security</a></H3>
 <hr>
-<ul>
-  <li><b><i><a name="security.login">security.login</a></i></b>
-  <ul>
-    <li>UserLogin
-    <li>LoginAccountHistory
-  </ul>
-  <li><b><i><a name="security.securitygroup">security.securitygroup</a></i></b>
-  <ul>
-    <li>SecurityGroup
-    <li>SecurityPermission
-    <li>SecurityGroupPermission
-    <li>UserLoginSecurityGroup
-  </ul>
-</ul>
+
+The Security package contains entities related to controlling access to various
+parts of applications that use the CommonApp data model. The Login package has a
+UserLogin entity which contains the usernames and passwords of all users on the
+system and which is optionally related to a Party entity instance. The Login
+package also has an entity which keeps a history of logins into the system.
+<p>The SecurityGroup package contains entities used to map SecurityPermissions
+to UserLogins. It goes this by mapping a UserLogin to a SecurityGroup and then
+mapping the SecurityGroup to a SecurityPermission. In this manner complex
+security definitions can be shared efficiently.</p>
+<p>
+
+  <b><i><a name="security.login">security.login</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    UserLogin
+    LoginAccountHistory&nbsp;</p>
+<p>
+  
+  <b><i><a name="security.securitygroup">security.securitygroup</a></i></b>
+  
+&nbsp;</p>
+<p>
+  
+    SecurityGroup
+    SecurityPermission
+    SecurityGroupPermission
+    UserLoginSecurityGroup</p>
