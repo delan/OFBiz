@@ -841,15 +841,15 @@ public class CatalogWorker {
         if (pcategory != null) pstr = "&pcategory=" + pcategory.getString("productCategoryId");
 
         if (curcatid != null && curcatid.equals(category.getString("productCategoryId"))) {
-            out.print("<div style='text-indent: -10px;'><a href='");
+            out.print("<div class='browsecategorytext'>-&nbsp;<a href='");
             out.print(response.encodeURL(controlPath + "/category?category_id=" + category.getString("productCategoryId") + pstr));
-            out.print("' class='buttontextdisabled'>-&nbsp;");
+            out.print("' class='browsecategorybuttondisabled'>");
             out.print(category.getString("description"));
             out.println("</a></div>");
         } else {
-            out.print("<div style='text-indent: -10px;'><a href='");
+            out.print("<div class='browsecategorytext'>-&nbsp;<a href='");
             out.print(response.encodeURL(controlPath + "/category?category_id=" + category.getString("productCategoryId") + pstr));
-            out.print("' class='buttontext'>-&nbsp;");
+            out.print("' class='browsecategorybutton'>");
             out.print(category.getString("description"));
             out.println("</a></div>");
         }

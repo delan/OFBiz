@@ -210,6 +210,35 @@ text-decoration: underline;
 color: red;
 }
 
+.browsecategorytext {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: blue;
+text-indent: -10px;
+}
+
+A.browsecategorybutton {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: blue;
+}
+
+A.browsecategorybutton:hover {
+color: red;
+}
+
+.browsecategorybuttondisabled {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: #333333;
+}
+
 A.buttontext {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: x-small;
