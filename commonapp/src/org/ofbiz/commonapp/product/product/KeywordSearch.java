@@ -70,7 +70,7 @@ public class KeywordSearch {
             intraKeywordOperator = "OR";
         }
         
-        boolean removeStems = UtilProperties.propertyValueEquals("general", "remove.stems", "true");
+        boolean removeStems = UtilProperties.propertyValueEquals("prodsearch", "remove.stems", "true");
 
         ArrayList pbkList = new ArrayList(100);
 
@@ -171,12 +171,12 @@ public class KeywordSearch {
         
         String stopWordBag = null;
         if (intraKeywordOperator.equals("AND")) {
-            stopWordBag = UtilProperties.getPropertyValue("general", "stop.word.bag.and");
+            stopWordBag = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.and");
         } else {
-            stopWordBag = UtilProperties.getPropertyValue("general", "stop.word.bag.or");
+            stopWordBag = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.or");
         }
         
-        String stemBag = UtilProperties.getPropertyValue("general", "stem.bag");
+        String stemBag = UtilProperties.getPropertyValue("prodsearch", "stem.bag");
         List stemList = new ArrayList(10);
         if (UtilValidate.isNotEmpty(stemBag)) {
             String curToken;
@@ -356,38 +356,51 @@ public class KeywordSearch {
         return sql.toString();
     }
 
-    public static String separators = ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-_";
     public static void induceKeywords(GenericValue product) throws GenericEntityException {
         if (product == null) return;
         GenericDelegator delegator = product.getDelegator();
         if (delegator == null) return;
         String productId = product.getString("productId");
 
-        String stopWordBagOr = UtilProperties.getPropertyValue("general", "stop.word.bag.or");
-        String stopWordBagAnd = UtilProperties.getPropertyValue("general", "stop.word.bag.and");
+        //String separators = ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-_";
+        String separators = UtilProperties.getPropertyValue("prodsearch", "index.keyword.separators", ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-_");
+        String stopWordBagOr = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.or");
+        String stopWordBagAnd = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.and");
         
         Map keywords = new TreeMap();
-        keywords.put(product.getString("productId").toLowerCase(), new Long(1));
-
-        Collection strings = new ArrayList(40);
-        if (product.getString("productName") != null) strings.add(product.getString("productName"));
-        if (product.getString("description") != null) strings.add(product.getString("description"));
-        if (product.getString("longDescription") != null) strings.add(product.getString("longDescription"));
+        List strings = new ArrayList(50);
         
-        //get strings from attributes and features
-        Iterator productFeatureAndAppls = UtilMisc.toIterator(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId)));
-        while (productFeatureAndAppls != null && productFeatureAndAppls.hasNext()) {
-            GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndAppls.next();
-            if (productFeatureAndAppl.get("description") != null) strings.add(productFeatureAndAppl.get("description"));
-            if (productFeatureAndAppl.get("abbrev") != null) strings.add(productFeatureAndAppl.get("abbrev"));
-            if (productFeatureAndAppl.get("idCode") != null) strings.add(productFeatureAndAppl.get("idCode"));
+        int pidWeight = 1;
+        try {
+            pidWeight = Integer.parseInt(UtilProperties.getPropertyValue("prodsearch", "index.weight.Product.productId", "1"));
+        } catch (Exception e) { }
+        keywords.put(product.getString("productId").toLowerCase(), new Long(pidWeight));
+
+        addWeightedKeywordSourceString(product, "productName", strings);
+        addWeightedKeywordSourceString(product, "description", strings);
+        addWeightedKeywordSourceString(product, "longDescription", strings);
+
+        if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductFeatureAndAppl.description", "1")) ||
+                !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductFeatureAndAppl.abbrev", "1")) ||
+                !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductFeatureAndAppl.idCode", "1"))) {
+            //get strings from attributes and features
+            Iterator productFeatureAndAppls = UtilMisc.toIterator(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId)));
+            while (productFeatureAndAppls != null && productFeatureAndAppls.hasNext()) {
+                GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndAppls.next();
+                addWeightedKeywordSourceString(productFeatureAndAppl, "description", strings);
+                addWeightedKeywordSourceString(productFeatureAndAppl, "abbrev", strings);
+                addWeightedKeywordSourceString(productFeatureAndAppl, "idCode", strings);
+            }
         }
 
-        Iterator productAttributes = UtilMisc.toIterator(delegator.findByAnd("ProductAttribute", UtilMisc.toMap("productId", productId)));
-        while (productAttributes != null && productAttributes.hasNext()) {
-            GenericValue productAttribute = (GenericValue) productAttributes.next();
-            //if (productAttribute.get("attrName") != null) strings.add(productAttribute.get("attrName"));
-            if (productAttribute.get("attrValue") != null) strings.add(productAttribute.get("attrValue"));
+        if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrName", "1")) ||
+                !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrValue", "1"))) {
+            Iterator productAttributes = UtilMisc.toIterator(delegator.findByAnd("ProductAttribute", UtilMisc.toMap("productId", productId)));
+            while (productAttributes != null && productAttributes.hasNext()) {
+                GenericValue productAttribute = (GenericValue) productAttributes.next();
+                addWeightedKeywordSourceString(productAttribute, "attrName", strings);
+                addWeightedKeywordSourceString(productAttribute, "attrValue", strings);
+            }
         }
         
         Iterator strIter = strings.iterator();
@@ -422,6 +435,19 @@ public class KeywordSearch {
         if (toBeStored.size() > 0) {
             if (Debug.infoOn()) Debug.logInfo("[KeywordSearch.induceKeywords] Storing " + toBeStored.size() + " keywords for productId " + product.getString("productId"));
             delegator.storeAll(toBeStored);
+        }
+    }
+    
+    public static void addWeightedKeywordSourceString(GenericValue value, String fieldName, List strings) {
+        if (value.getString(fieldName) != null) {
+            int weight = 1;
+            try {
+                weight = Integer.parseInt(UtilProperties.getPropertyValue("prodsearch", "index.weight." + value.getEntityName() + "." + fieldName, "1"));
+            } catch (Exception e) { }
+
+            for (int i = 0; i < weight; i++) {
+                strings.add(value.getString(fieldName));
+            }
         }
     }
 }

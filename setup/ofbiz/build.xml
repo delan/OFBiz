@@ -200,6 +200,7 @@
         <delete file="${classes.dir}/debug.properties" />
         <delete file="${classes.dir}/cache.properties" />
         <delete file="${classes.dir}/general.properties" />
+        <delete file="${classes.dir}/prodsearch.properties" />
         <delete file="${classes.dir}/localdtds.properties" />
         <delete file="${classes.dir}/serviceengine.xml" />
         <delete file="${classes.dir}/tyrexdomain.xml" />
@@ -420,6 +421,7 @@
         <copy file="commonapp/etc/debug.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/cache.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/general.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/prodsearch.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/localdtds.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/url.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/cybersource.properties" toDir="${classes.dir}" />
@@ -527,6 +529,7 @@
         <copy file="commonapp/etc/debug.properties"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/cache.properties"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/general.properties"        toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/prodsearch.properties"     toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/localdtds.properties"      toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/serviceengine.xml"         toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/tyrexdomain.xml"           toDir="${ext.dir}/etc"/>

@@ -89,6 +89,7 @@
         <delete file="${conf.dir}/debug.properties" />
         <delete file="${conf.dir}/cache.properties" />
         <delete file="${conf.dir}/general.properties" />
+        <delete file="${conf.dir}/prodsearch.properties" />
         <delete file="${conf.dir}/localdtds.properties" />
         <delete file="${conf.dir}/serviceengine.xml" />
 
