@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.21 2004/02/24 02:24:26 jonesde Exp $
+ * $Id: ProductStoreWorker.java,v 1.22 2004/02/24 05:27:33 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -538,7 +538,15 @@ public class ProductStoreWorker {
             }
             return false;
 
-            // TODO: must entire quantity be available in one location?
+            /* TODO: must entire quantity be available in one location?
+             *  Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order.
+             *  When we get into splitting options it is much more complicated. There are various options like: 
+             *  - allow split between facilities
+             *  - in split order facilities by highest quantities
+             *  - in split order facilities by lowest quantities
+             *  - in split order facilities by order in database, ie sequence numbers on facility-store join table
+             *  - in split order facilities by nearest locations to customer (not an easy one there...)
+             */
 
             // loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
         }
