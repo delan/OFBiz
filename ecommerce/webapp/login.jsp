@@ -25,7 +25,7 @@
 --%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.common.*" %>
 <%String previousParams = (String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 
 <br>
@@ -53,9 +53,31 @@
         <tr>
           <td>
               <form method="POST" action="<ofbiz:url>/login<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="loginform" style='margin: 0;'>
-                <div class="tabletext" align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
-                <div class="tabletext" align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
-                <div align=center><input type="submit" value="Login"></div>
+                <table width='100%' border='0' cellpadding='0' cellspacing='2'>
+                  <tr>
+                    <td align="center"><span class="tabletext">Username:&nbsp;</span></td>
+                    <ofbiz:if name="autoUserLogin">
+                      <input type="hidden" name="USERNAME" value="<ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/>">
+                      <td>
+                        <span class="head2"><ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/></span>
+                        <span class="tabletext">
+                          (Not&nbsp;<ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/>?&nbsp;
+                          <a href="<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "autoLogout")%></ofbiz:url>" class="buttontext">click here</a>)
+                        </span>
+                      </td>
+                    </ofbiz:if>
+                    <ofbiz:unless name="autoUserLogin">
+                      <td><input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></td>
+                    </ofbiz:unless>
+                  </tr>
+                  <tr>
+                    <td align="center"><span class="tabletext">Password:&nbsp;</span>
+                    <td><input type="password" name="PASSWORD" value="" size="20"></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" align="center"><input type="submit" value="Login"></td>
+                  </tr>
+                </table>
               </form>
           </td>
         </tr>

@@ -71,7 +71,7 @@
         <field-to-field field-name="userLoginId" map-name="userLoginContext" to-map-name="newUserLogin"/>
         <field-to-field field-name="currentPassword" map-name="userLoginContext" to-map-name="newUserLogin"/>
         <field-to-field field-name="passwordHint" map-name="userLoginContext" to-map-name="newUserLogin"/>
-        
+
         <!-- Check the password, etc for validity -->
         <call-bsh><![CDATA[
             String password = (String) userLoginContext.get("currentPassword");
@@ -256,7 +256,7 @@
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="faxPhoneContext"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="mobilePhoneContext"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="emailContext"/>
-        
+
         <!-- If password encryption is enabled, encrpyt it now -->
         <call-bsh><![CDATA[
             boolean useEncryption = "true".equals(org.ofbiz.core.util.UtilProperties.getPropertyValue("security", "password.encrypt"));
@@ -335,6 +335,7 @@
         <if-compare field-name="create_allow_password" operator="equals" value="true">
             <field-to-session field-name="newUserLogin" session-name="userLogin"/>
             <call-bsh><![CDATA[ org.ofbiz.core.stats.VisitHandler.setUserLogin(request.getSession(), newUserLogin, true); ]]></call-bsh>
+            <call-bsh><![CDATA[ org.ofbiz.commonapp.security.login.LoginEvents.autoLoginSet(request, response); ]]></call-bsh>
         </if-compare>
 
         <!-- tell the control servlet that we just logged in the user... -->

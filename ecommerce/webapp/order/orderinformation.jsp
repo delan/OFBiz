@@ -79,10 +79,10 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <div class="tabletext">
-                    <%if(person!=null){%>
-                      <%=PartyHelper.getPersonName(person)%>
-                    <%}%>
-                    <%EntityField.run("userLogin", "userLoginId", " (", ") ", pageContext);%>
+                    <ofbiz:if name="userLogin">
+                      <%=PartyHelper.getPartyName(person)%>
+                      <%EntityField.run("userLogin", "userLoginId", " (", ") ", pageContext);%>
+                    </ofbiz:if>
                     </div>
                   </td>
                 </tr>

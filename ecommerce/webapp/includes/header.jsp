@@ -29,23 +29,18 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
           <ofbiz:unless name="userLogin">
-            <td class="headerButtonLeft"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
+            <td class="headerButtonLeft"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "checkLogin")%></ofbiz:url>' class='buttontext'>Login</a></td>
           </ofbiz:unless>
           <ofbiz:if name="userLogin">
             <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
           </ofbiz:if>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
 
-          <ofbiz:if name="person">
-            <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
+          <ofbiz:if name="autoName">
+            <TD width="90%" align="center" class="headerCenter">Welcome&nbsp;<ofbiz:print attribute="autoName"/>!</TD>
           </ofbiz:if>
-          <ofbiz:unless name="person">
-            <ofbiz:if name="partyGroup">
-              <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("partyGroup", "groupName", "", "", pageContext);%>!</TD>
-            </ofbiz:if>
-            <ofbiz:unless name="partyGroup">
+          <ofbiz:unless name="autoName">
               <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
-            </ofbiz:unless>
           </ofbiz:unless>
 
           <%if(CatalogWorker.getCatalogQuickaddUse(pageContext)) {%>

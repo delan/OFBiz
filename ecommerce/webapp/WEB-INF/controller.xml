@@ -15,6 +15,11 @@
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
     <handler name="http" type="view" class="org.ofbiz.core.view.HttpViewHandler"/>
 
+    <!-- First visit events run from here -->
+    <firstvisit>
+        <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="autoLoginCheck"/>
+    </firstvisit>
+
     <!-- Events to run on every request before security (chains exempt) -->
     <preprocessor>
         <!-- This event allows affilate/distributor entry on any page -->
@@ -47,6 +52,12 @@
     <request-map uri="logout">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="logout"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+
+    <request-map uri="autoLogout">
+        <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="autoLoginRemove"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>

@@ -44,7 +44,7 @@
   Iterator statusIterator = null;
   Iterator methodIterator = null;
 
-  Collection orderRoleCollection = delegator.findByAnd("OrderRole", 
+  List orderRoleCollection = delegator.findByAnd("OrderRole",
           UtilMisc.toMap("partyId", userLogin.get("partyId"), "roleTypeId", "PLACING_CUSTOMER"), null);
   Collection orderHeaderList = EntityUtil.orderBy(EntityUtil.getRelated("OrderHeader", orderRoleCollection), UtilMisc.toList("orderDate DESC"));
   pageContext.setAttribute("orderHeaderList", orderHeaderList);
