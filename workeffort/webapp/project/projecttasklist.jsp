@@ -128,14 +128,14 @@
                 <TR><TD colspan='7'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="phases">
                   <TR>
-                    <td class='tabletext'>Phase</td>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="workEffortName"/></div></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="description"/></div></TD>
-                    <TD><DIV class='tabletext'><%=UtilDateTime.toDateTimeString(workEffort.getTimestamp("estimatedStartDate"))%></DIV></TD>
+                    <td class='tabletext'><b>Phase</b></td>
+                    <TD><DIV class='tabletext'><b><ofbiz:entityfield attribute="workEffort" field="workEffortName"/></b></div></TD>
+                    <TD><DIV class='tabletext'><b><ofbiz:entityfield attribute="workEffort" field="description"/></b></div></TD>
+                    <TD><DIV class='tabletext'><b><%=UtilDateTime.toDateTimeString(workEffort.getTimestamp("estimatedStartDate"))%></b></DIV></TD>
                     <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
                     <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
                     <TD>&nbsp;</TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
+                    <TD><b><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></b></DIV></TD>
                     <TD align=right width='1%'><A class='buttontext' href='<ofbiz:url>/editphase?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>&projectWorkEffortId=<%=projectWorkEffortId%></ofbiz:url>'>
                         [Edit]</a></DIV></TD>
                   </TR>
