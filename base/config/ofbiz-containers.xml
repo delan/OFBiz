@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.23 2004/05/26 16:28:43 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.24 2004/07/04 02:57:12 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -61,6 +61,7 @@
         <!-- static configuration for tomcat -->
         <property name="use-naming" value="false"/>
         <property name="debug" value="0"/>
+        <property name="apps-context-reloadable" value="true"/>
         <property name="apps-cross-context" value="true"/>
         <property name="apps-distributable" value="true"/>
         <!-- one or more tomcat engines (servers); components map to this + host -->
@@ -75,6 +76,7 @@
             <property name="access-log-prefix" value="access_log."/>
             <property name="access-log-dir" value="logs"/>
             <property name="enable-request-dump" value="false"/>
+            <property name="enable-persistence-mgr" value="true"/>
             <!-- uncomment for cluster support
             <property name="default-server-cluster" value="cluster">
                 <property name="rep-valve-filter">

@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.12 2004/07/03 16:02:17 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.13 2004/07/04 02:57:12 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -53,6 +53,10 @@ import org.apache.catalina.Host;
 import org.apache.catalina.Context;
 import org.apache.catalina.Connector;
 import org.apache.catalina.Cluster;
+import org.apache.catalina.Manager;
+import org.apache.catalina.session.PersistentManager;
+import org.apache.catalina.session.FileStore;
+import org.apache.catalina.session.StandardManager;
 import org.apache.catalina.cluster.tcp.SimpleTcpCluster;
 import org.apache.catalina.cluster.tcp.ReplicationValve;
 import org.apache.catalina.cluster.tcp.ReplicationListener;
@@ -120,7 +124,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
@@ -135,6 +139,7 @@ public class CatalinaContainer implements Container {
     protected Map clusterConfig = new HashMap();
     protected Map engines = new HashMap();
     protected Map hosts = new HashMap();
+    protected boolean contextReloadable = false;
     protected boolean crossContext = false;
     protected boolean distribute = false;
 
@@ -160,6 +165,7 @@ public class CatalinaContainer implements Container {
         boolean useNaming = ContainerConfig.getPropertyValue(cc, "use-naming", false);
         int debug = ContainerConfig.getPropertyValue(cc, "debug", 0);
 
+        this.contextReloadable = ContainerConfig.getPropertyValue(cc, "apps-context-reloadable", false);
         this.crossContext = ContainerConfig.getPropertyValue(cc, "apps-cross-context", true);
         this.distribute = ContainerConfig.getPropertyValue(cc, "apps-distributable", true);
                 
@@ -202,6 +208,7 @@ public class CatalinaContainer implements Container {
             throw new ContainerException(e);
         }
 
+        this.logSessionInfo();
         return true;
     }
 
@@ -221,6 +228,17 @@ public class CatalinaContainer implements Container {
         StandardEngine engine = (StandardEngine) embedded.createEngine();
         engine.setName(engineName);
         engine.setDefaultHost(hostName);
+
+        // configure persistent sessions
+        boolean usePersistentManager = ContainerConfig.getPropertyValue(engineConfig, "enable-persistence-mgr", false);
+        Manager sessionMgr = null;
+        if (usePersistentManager) {
+            sessionMgr = new PersistentManager();
+            ((PersistentManager)sessionMgr).setStore(new FileStore());
+        } else {
+            sessionMgr = new StandardManager();
+        }
+        engine.setManager(sessionMgr);
 
         // set the JVM Route property (JK/JK2)
         String jvmRoute = ContainerConfig.getPropertyValue(engineConfig, "jvm-route", null);
@@ -550,6 +568,8 @@ public class CatalinaContainer implements Container {
         context.setDisplayName(appInfo.name);
         context.setDocBase(location);
 
+        context.setManager(engine.getManager());
+        context.setReloadable(contextReloadable);
         context.setDistributable(distribute);
         context.setCrossContext(crossContext);
         context.getServletContext().setAttribute("_serverId", appInfo.server);
@@ -649,6 +669,24 @@ public class CatalinaContainer implements Container {
             while (i.hasNext()) {
                 Map.Entry entry = (Map.Entry) i.next();
                 context.addMimeMapping((String)entry.getKey(), (String)entry.getValue());
+            }
+        }
+    }
+
+    protected void logSessionInfo() {
+        if (Debug.infoOn() && engines != null) {
+            Iterator i = engines.keySet().iterator();
+            while (i.hasNext()) {
+                Engine engine = (Engine) engines.get(i.next());
+                Manager mgr = engine.getManager();
+
+                String className = null;
+                if (mgr instanceof PersistentManager) {
+                    className = "PersistentManager";
+                } else {
+                    className = "StandardManager";
+                }
+                Debug.logInfo(className + " loaded : [Count]: " + mgr.getSessionCounter() + " [Active]: " + mgr.getActiveSessions() + " [Rejected]: " + mgr.getRejectedSessions(), module);
             }
         }
     }
