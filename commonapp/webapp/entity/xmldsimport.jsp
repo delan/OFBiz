@@ -32,8 +32,8 @@
 
 <%
   String filename = request.getParameter("filename");
-  String entityName = request.getParameter("entityName");
   boolean isUrl = request.getParameter("IS_URL")!=null?true:false;
+  String fulltext = request.getParameter("fulltext");
 %>
 
 <h2>XML Import to DataSource(s)</h2>
@@ -45,13 +45,18 @@
   <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
     <div>Absolute Filename or URL:</div>
     <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> Is URL?:<INPUT type=checkbox name='IS_URL' <%=isUrl?"checked":""%>>
-    <INPUT type=submit value='Import'>
+    <INPUT type=submit value='Import File'>
+  </FORM>
+  <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
+    <div>Complete XML document (root tag: entity-engine-xml):</div>
+    <TEXTAREA rows="8" cols="85" name='fulltext'><%=UtilFormatOut.checkNull(fulltext)%></TEXTAREA>
+    <BR><INPUT type=submit value='Import Text'>
   </FORM>
   <hr>
     <h3>Results:</h3>
 
 
-  <%if(filename != null && filename.length() > 0) {%>
+  <%if (filename != null && filename.length() > 0) {%>
   <%
     URL url = null;
     try { url = isUrl?new URL(filename):UtilURL.fromFilename(filename); }
@@ -71,8 +76,25 @@
     <%}else{%>
       <div>Could not get any values from the XML file.</div>
     <%}%>
-  <%}else{%>
-    <div>No filename/URL specified, doing nothing.</div>
+  <%} else if (fulltext != null && fulltext.length() > 0) {%>
+  <%
+    Collection values = null;
+    try {
+      Document document = UtilXml.readXmlDocument(fulltext);
+      values = delegator.makeValues(document);
+      delegator.storeAll(values);
+    }
+    catch(Exception e) {
+      %><div>ERROR: <%=e.toString()%></div><%
+    }
+  %>
+    <%if(values != null) {%>
+      <div>Got <%=values.size()%> entities to write to the datasource.</div>
+    <%}else{%>
+      <div>Could not get any values from the XML text.</div>
+    <%}%>
+  <%} else {%>
+    <div>No filename/URL or complete XML document specified, doing nothing.</div>
   <%}%>
 <%}else{%>
   <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
