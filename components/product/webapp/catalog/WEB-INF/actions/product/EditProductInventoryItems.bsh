@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
  */
 
@@ -81,8 +81,9 @@ while (productInventoryItemIter.hasNext()) {
 	if ("SERIALIZED_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
 		if ("INV_AVAILABLE".equals(productInventoryItem.getString("statusId"))) {
 			totalQuantityOnHand += 1;
+                        totalAvailableToPromise += 1;
 		} else if ("INV_PROMISED".equals(productInventoryItem.getString("statusId"))) {
-			totalAvailableToPromise += 1;
+			totalQuantityOnHand += 1;
 		}
 	} else if ("NON_SERIAL_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
 		if (productInventoryItem.get("availableToPromise") != null) {
