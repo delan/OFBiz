@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-menu.dtd,v 1.4 2004/04/25 05:26:38 byersa Exp $
+ *  $Id: widget-menu.dtd,v 1.5 2004/06/02 17:50:05 byersa Exp $
 -->
 
 
@@ -54,6 +54,7 @@
     default-hide-if-selected (true | false) "false"
     menu-width CDATA #IMPLIED
     default-cell-width CDATA #IMPLIED
+    default-disabled-title-style CDATA #IMPLIED
 >
 
 
@@ -76,6 +77,8 @@
     associated-content-id CDATA #IMPLIED
     hide-if-selected CDATA #IMPLIED
     cell-width CDATA #IMPLIED
+    disable-if-empty CDATA #IMPLIED
+    disabled-title-style CDATA #IMPLIED
 >
 
 <!--
@@ -98,6 +101,7 @@
 <!ATTLIST img
     request-name CDATA #REQUIRED
     target-type ( intra-app | inter-app | content | plain ) "intra-app"
+    disabled-request-name CDATA #REQUIRED
 >
 
 <!--

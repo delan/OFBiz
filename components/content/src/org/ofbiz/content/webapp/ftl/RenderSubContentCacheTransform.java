@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.15 2004/04/30 23:08:27 ajzeneski Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.16 2004/06/02 17:50:10 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -95,14 +95,15 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         final GenericValue view = val;
 
         String dataResourceId = null;
+        String subContentIdSub = null;
         if (view != null) {
             try {
                 dataResourceId = (String) view.get("drDataResourceId");
             } catch (Exception e) {
                 dataResourceId = (String) view.get("dataResourceId");
             }
+            subContentIdSub = (String) view.get("contentId");
         }
-        String subContentIdSub = (String) view.get("contentId");
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)templateCtx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -153,7 +154,10 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                  //if (Debug.infoOn()) Debug.logInfo("in Render(3), passedGlobalNodeTrail ." + passedGlobalNodeTrail , module);
                 GenericValue thisView = null;
                 if (passedGlobalNodeTrail.size() > 0) {
-                    thisView = (GenericValue)((Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1)).get("value");
+                    Map map = (Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1);
+                    if (Debug.infoOn()) Debug.logInfo("in Render(3), map ." + map , module);
+                    if (map != null)
+                        thisView = (GenericValue)map.get("value");
                 }
                 ServletContext servletContext = request.getSession().getServletContext();
                 String rootDir = servletContext.getRealPath("/");
@@ -163,6 +167,8 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 templateCtx.put("webSiteId", webSiteId);
                 templateCtx.put("https", https);
                 templateCtx.put("rootDir", rootDir);
+                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, subContentId:" + templateCtx.get("subContentId"), module);
+                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId:" + templateCtx.get("contentId"), module);
 
 
                     //Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);

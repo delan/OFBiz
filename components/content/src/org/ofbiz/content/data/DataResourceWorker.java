@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.27 2004/04/20 21:01:18 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.28 2004/06/02 17:50:08 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,8 +55,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 
-import freemarker.template.TemplateException;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 //import com.clarkware.profiler.Profiler;
 
 /**
@@ -64,7 +64,7 @@ import freemarker.template.Template;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -523,6 +523,7 @@ public class DataResourceWorker {
         }
         
         String dataTemplateTypeId = dataResource.getString("dataTemplateTypeId");
+        if (Debug.infoOn()) Debug.logInfo("in renderDataResourceAsText, dataTemplateTypeId :" + dataTemplateTypeId ,"");
         
         // if this is a template, we need to get the full template text and interpret it, otherwise we should just write a bit at a time to the writer to better support large text
         if (UtilValidate.isEmpty(dataTemplateTypeId) || "NONE".equals(dataTemplateTypeId)) {

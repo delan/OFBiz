@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.17 2004/05/11 12:56:43 jonesde Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.18 2004/06/02 17:50:10 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -31,6 +31,8 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.content.ContentServicesComplex;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
@@ -47,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -113,7 +115,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         Boolean isReturnAfterObj = (Boolean)trailNode.get("isReturnAfter");
         Boolean isPickObj = (Boolean)trailNode.get("isPick");
         Boolean isFollowObj = (Boolean)trailNode.get("isFollow");
-        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, isReturnBeforeObj" + isReturnBeforeObj + " isPickObj:" + isPickObj + " isFollowObj:" + isFollowObj + " isReturnAfterObj:" + isReturnAfterObj, module);
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, isReturnBeforeObj" + isReturnBeforeObj + " isPickObj:" + isPickObj + " isFollowObj:" + isFollowObj + " isReturnAfterObj:" + isReturnAfterObj, module);
         if ( (isReturnBeforeObj == null || !isReturnBeforeObj.booleanValue())
            && ( (isPickObj != null && isPickObj.booleanValue())
               ||  (isFollowObj != null && isFollowObj.booleanValue()))
@@ -256,7 +258,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
         try {
-            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId);
+            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId, orderBy);
         } catch(MiniLangException e2) {
             throw new RuntimeException(e2.getMessage());
         } catch(GenericEntityException e) {
@@ -266,10 +268,11 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
         String viewSizeStr = (String)templateCtx.get("viewSize");
         if (UtilValidate.isEmpty(viewSizeStr))
+            viewSizeStr = UtilProperties.getPropertyValue("content", "viewSize");
+        if (UtilValidate.isEmpty(viewSizeStr))
             viewSizeStr = "10";
         int viewSize = Integer.parseInt(viewSizeStr); 
         String viewIndexStr = (String)templateCtx.get("viewIndex");
-        //if (Debug.infoOn()) Debug.logInfo("viewIndexStr:" + viewIndexStr, "");
         if (UtilValidate.isEmpty(viewIndexStr))
             viewIndexStr = "0";
         int viewIndex = Integer.parseInt(viewIndexStr); 
@@ -278,6 +281,11 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         int highIndex = (viewIndex + 1) * viewSize;
         if (highIndex > listSize)
             highIndex = listSize;
+        if (Debug.infoOn()) Debug.logInfo("viewIndexStr(0):" + viewIndexStr + " viewIndex:" + viewIndex, "");
+        if (Debug.infoOn()) Debug.logInfo("viewSizeStr(0):" + viewSizeStr + " viewSize:" + viewSize, "");
+        if (Debug.infoOn()) Debug.logInfo("listSize(0):" + listSize , "");
+        if (Debug.infoOn()) Debug.logInfo("highIndex(0):" + highIndex , "");
+        if (Debug.infoOn()) Debug.logInfo("lowIndex(0):" + lowIndex , "");
         Iterator it = longList.iterator();
         //List entityList = longList.subList(lowIndex, highIndex);
         List entityList = longList;
@@ -312,6 +320,11 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 if (highIndex > listSize)
                     highIndex = listSize;
                 int outputIndex = 0;
+        if (Debug.infoOn()) Debug.logInfo( " viewIndex:" + viewIndex, "");
+        if (Debug.infoOn()) Debug.logInfo( " viewSize:" + viewSize, "");
+        if (Debug.infoOn()) Debug.logInfo("listSize(1):" + listSize , "");
+        if (Debug.infoOn()) Debug.logInfo("highIndex(1):" + highIndex , "");
+        if (Debug.infoOn()) Debug.logInfo("lowIndex(1):" + lowIndex , "");
                 templateCtx.put("lowIndex", new Integer(lowIndex));
                 templateCtx.put("highIndex", new Integer(highIndex));
                 templateCtx.put("outputIndex", new Integer(outputIndex));
@@ -352,6 +365,14 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             public void close() throws IOException {
 
                 FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
+                int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
+                if (Debug.infoOn()) Debug.logInfo("outputIndex(2):" + outputIndex , "");
+                int highIndex = ((Integer)templateCtx.get("highIndex")).intValue(); 
+                if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndex , "");
+                if (outputIndex < highIndex) {
+                    templateCtx.put("highIndex", new Integer(outputIndex));
+                    templateCtx.put("listSize", new Integer(outputIndex));
+                }
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
                 //if (Debug.infoOn()) Debug.logInfo("in LoopSubContent, wrappedContent:" + wrappedContent, module);
