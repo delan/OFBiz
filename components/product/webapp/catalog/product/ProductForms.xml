@@ -24,22 +24,22 @@
 -->
 
 <forms>
-    <form name="EditProductSimpleTest" type="single" 
+    <form name="EditProductSimpleTest" type="single"
             target="updateProduct" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProduct" map-name="product"/>
     </form>
-    <form name="EditProduct" type="single" 
+    <form name="EditProduct" type="single"
             target="updateProduct" title="" default-map-name="product"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        
+
         <alt-target use-when="product==null" target="createProduct"/>
-        
+
         <field use-when="product==null" name="isCreate"><hidden value="true"/></field>
-        
+
         <field use-when="product!=null" name="productId" tooltip="This cannot be changed without re-creating the product."><display/></field>
         <field use-when="product==null&amp;&amp;productId==null" name="productId"><text size="20" maxlength="20"/></field>
         <field use-when="product==null&amp;&amp;productId!=null" name="productId" tooltip="Could not find product with ID [${productId}]"><text size="20" maxlength="20"/></field>
-        
+
         <field position="1" name="isVirtual" title="Is VIRTUAL Product?" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
         </field>
@@ -60,23 +60,23 @@
                 </entity-options>
             </drop-down>
         </field>
-        
+
         <field name="productName"><text size="30" maxlength="60"/></field>
         <field name="internalName"><text size="30" maxlength="60"/></field>
         <field name="brandName"><text size="30" maxlength="60"/></field>
         <field name="description" widget-style="textAreaBox"><textarea cols="60" rows="2"/></field>
         <field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="7"/></field>
         <field name="comments"><text size="60" maxlength="250"/></field>
-        
+
         <field position="1" name="introductionDate" title="Intro Date" red-when="after-now"><date-time/></field>
         <field position="2" name="salesDiscontinuationDate" title="Sales Thru Date" red-when="before-now"><date-time/></field>
         <field position="1" name="supportDiscontinuationDate" title="Support Thru Date" red-when="before-now"><date-time/></field>
         <field position="2" name="salesDiscWhenNotAvail" title="Disc. When Inv. Not Avail?" widget-style="selectBox">
             <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
         </field>
-                
+
         <field position="1" name="manufacturerPartyId" title="OEM Party ID" red-when="before-now"><text size="20" maxlength="20"/></field>
-        
+
         <field position="1" name="requireInventory" widget-style="selectBox" tooltip="Should inventory be required to purchase this product? If not specified defaults to the Catalog setting.">
             <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
         </field>
@@ -126,7 +126,7 @@
             <display description="[${product.createdByUserLogin}] on ${product.createdDate}" also-hidden="false"/>
         </field>
     </form>
-    <form name="AddProductCategoryMember" type="single" 
+    <form name="AddProductCategoryMember" type="single"
             target="addProductToCategory" title="Add ProductCategoryMember (select Category, enter From Date):"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-service service-name="safeAddProductToCategory"/>
@@ -141,7 +141,7 @@
         <field name="comments"><ignored/></field>
         <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="UpdateProductCategoryMemeber" type="list" 
+    <form name="UpdateProductCategoryMemeber" type="list"
             target="updateProductToCategory" title="" list-name="productCategoryMemberDatas"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <!-- each entry in the list will be a Map with the entries: productCategoryMember and productCategory -->
@@ -202,11 +202,11 @@
             target="updateEmailContentForProduct" title="Update Email Content for Product"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="contentId==null" target="createEmailContentForProduct"/>
+        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field name="description" map-name="content"><text size="40"/></field>
         <field name="subject" map-name="emailData"><text size="40"/></field>
         <field name="plainBody" widget-style="textAreaBox"  map-name="emailData"><textarea cols="60" rows="7"/></field>
         <field name="htmlBody" widget-style="textAreaBox"  map-name="emailData"><textarea cols="60" rows="7"/></field>
-        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field use-when="contentId == null" name="contentId" tooltip="Optional"><text maxlength="20"/></field>
         <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
         <field name="productId"><hidden/></field>
@@ -221,8 +221,8 @@
             target="updateDownloadContentForProduct" title="Update Download Content for Product"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="contentId==null" target="createDownloadContentForProduct"/>
-        <field name="description" map-name="content"><text size="40"/></field>
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
+        <field name="description" map-name="content"><text size="40"/></field>
         <field use-when="contentId == null" name="contentId" tooltip="Optional"><text maxlength="20"/></field>
         <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
         <field name="file" map-name="downloadData"><text size="40"/></field>
@@ -236,9 +236,9 @@
             target="updateExternalContentForProduct" title="Update External Content for Product"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="contentId==null" target="createExternalContentForProduct"/>
+        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field name="description" map-name="content"><text size="40"/></field>
         <field name="serviceName" map-name="content"><text size="40"/></field>
-        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field use-when="contentId == null" name="contentId" tooltip="Optional"><text maxlength="20"/></field>
         <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
         <field name="productId"><hidden/></field>
@@ -250,9 +250,9 @@
             target="updateSimpleTextContentForProduct" title="Update Simple Text Content for Product"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="contentId==null" target="createSimpleTextContentForProduct"/>
+        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field name="description" map-name="content"><text size="40"/></field>
         <field name="localeString" map-name="content"><text size="40"/></field>
-        <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field use-when="contentId == null" name="contentId" tooltip="Optional"><text maxlength="20"/></field>
         <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
         <field name="text" map-name="textData" widget-style="textAreaBox" ><textarea cols="60" rows="7"/></field>
