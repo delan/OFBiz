@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.4 2003/12/04 02:42:52 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.5 2003/12/11 19:44:53 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -195,7 +195,7 @@ public class ZipSalesServices {
                     // non-PK fields
                     newValue.set("idCode", entry.get("idCode") != null ? entry.getString("idCode").trim() : null);
                     newValue.set("taxable", entry.get("taxable") != null ? entry.getString("taxable").trim() : null);
-                    newValue.set("condition", entry.get("condition") != null ? entry.getString("condition").trim() : null);
+                    newValue.set("shipCond", entry.get("shipCond") != null ? entry.getString("shipCond").trim() : null);
 
                     try {
                         // using storeAll as an easy way to create/update
@@ -346,7 +346,7 @@ public class ZipSalesServices {
                 GenericValue rule = (GenericValue) ruleIterator.next();
                 String idCode = rule.getString("idCode");
                 String taxable = rule.getString("taxable");
-                String condition = rule.getString("condition");
+                String condition = rule.getString("shipCond");
                 if ("T".equals(taxable))  {
                     // this record is taxable
                     continue;
