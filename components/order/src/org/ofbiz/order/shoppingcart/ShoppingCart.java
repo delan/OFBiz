@@ -132,10 +132,12 @@ public class ShoppingCart implements Serializable {
             List values = new LinkedList();
 
             // create order contact mech for shipping address
-            GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
-            orderCm.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
-            orderCm.set("contactMechId", contactMechId);
-            values.add(orderCm);
+            if (contactMechId != null) {
+                GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
+                orderCm.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
+                orderCm.set("contactMechId", contactMechId);
+                values.add(orderCm);
+            }
 
             // create the ship group
             GenericValue shipGroup = delegator.makeValue("OrderItemShipGroup", null);
@@ -152,12 +154,14 @@ public class ShoppingCart implements Serializable {
             values.add(shipGroup);
 
             // create the shipping estimate adjustments
-            GenericValue shipAdj = delegator.makeValue("OrderAdjustment", null);
-            shipAdj.set("orderAdjustmentTypeId", "SHIPPING_CHARGES");
-            shipAdj.set("amount", new Double(shipEstimate));
-            shipAdj.set("shipGroupSeqId", shipGroupSeqId);
-            Debug.log("Created Ship Group Shipping Adjustment - " + shipAdj, module);
-            values.add(shipAdj);
+            if (shipEstimate != 0) {
+                GenericValue shipAdj = delegator.makeValue("OrderAdjustment", null);
+                shipAdj.set("orderAdjustmentTypeId", "SHIPPING_CHARGES");
+                shipAdj.set("amount", new Double(shipEstimate));
+                shipAdj.set("shipGroupSeqId", shipGroupSeqId);
+                Debug.log("Created Ship Group Shipping Adjustment - " + shipAdj, module);
+                values.add(shipAdj);
+            }
 
             // create the top level tax adjustments
             Iterator ti = shipTaxAdj.iterator();
