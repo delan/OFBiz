@@ -88,6 +88,15 @@
         <field name="oneInventoryFacility" widget-style="selectBox">
             <drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
         </field>
+        <field name="requirementMethodEnumId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+                    <entity-constraint name="enumTypeId" value="PROD_REQ_METHOD"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
         <!--
         <field name="useQuickAdd" widget-style="selectBox" title="${uiLabelMap.ProductUseQuickAdd}">
             <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
