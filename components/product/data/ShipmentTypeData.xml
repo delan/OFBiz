@@ -3,6 +3,8 @@
 	<QuantityBreakType description="Shipping Weight Break" quantityBreakTypeId="SHIP_WEIGHT"/>
 	<QuantityBreakType description="Shipping Quantity Break" quantityBreakTypeId="SHIP_QUANTITY"/>
 	<QuantityBreakType description="Shipping Price Break" quantityBreakTypeId="SHIP_PRICE"/>
+    <QuantityBreakType description="Price Component Quantity Break" quantityBreakTypeId="QUANTITY"/>
+    <QuantityBreakType description="Price Component Order Value Break" quantityBreakTypeId="ORDER_VALUE"/>
 	
 	<ShipmentContactMechType description="Ship-To Address" shipmentContactMechTypeId="SHIP_TO_ADDRESS"/>
 	<ShipmentContactMechType description="Ship-From Address" shipmentContactMechTypeId="SHIP_FROM_ADDRESS"/>
