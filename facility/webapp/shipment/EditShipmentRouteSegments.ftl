@@ -227,7 +227,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             		</#if>
             	</div>
             </td>
-            <td><span class="tabletext">Track#:</span><input type="text" size="15" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
+            <td><span class="tabletext">Track#:</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
             <td><span class="tabletext">Box#:</span><input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber?if_exists}" class="inputBox"/></td>
             <td><a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}.submit();" class="buttontext">Update</a></td>
             <td><div class="tabletext"><a href="<@ofbizUrl>/deleteRouteSegmentShipmentPackage?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
@@ -248,7 +248,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </select>
             </div>
         </td>
-        <td><span class="tabletext">Track#:</span><input type="text" size="15" name="trackingCode" class="inputBox"/></td>
+        <td><span class="tabletext">Track#:</span><input type="text" size="22" name="trackingCode" class="inputBox"/></td>
         <td><span class="tabletext">Box#:</span><input type="text" size="5" name="boxNumber" class="inputBox"/></td>
         <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="buttontext">Add</a></td>
         <td><div class="tabletext">&nbsp;</div></td>
