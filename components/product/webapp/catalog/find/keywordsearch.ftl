@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
@@ -171,7 +171,7 @@
            <#if 18 < displayDesc?length>
                <#assign displayDesc = displayDesc[0..15] + "...">
            </#if>
-           <option value="${applicationType.productFeatureApplTypeId}">${displayDesc} [${productCategory.productCategoryId}]</option>
+           <option value="${applicationType.productFeatureApplTypeId}">${displayDesc}</option>
        </#list>
   </select>
   <input type="hidden" name="clearSearch" value="N">
