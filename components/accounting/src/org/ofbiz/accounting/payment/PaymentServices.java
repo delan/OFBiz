@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentServices.java,v 1.9 2004/07/03 19:54:19 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class PaymentServices {

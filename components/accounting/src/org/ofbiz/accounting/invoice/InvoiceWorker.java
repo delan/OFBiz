@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceWorker.java,v 1.1 2003/08/18 17:31:37 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * InvoiceWorker - Worker methods of invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class InvoiceWorker {

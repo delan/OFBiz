@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.5 $
+ *@version    $Rev:$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>

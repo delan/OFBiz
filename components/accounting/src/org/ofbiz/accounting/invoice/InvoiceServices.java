@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.11 2004/05/28 06:47:40 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.11 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class InvoiceServices {

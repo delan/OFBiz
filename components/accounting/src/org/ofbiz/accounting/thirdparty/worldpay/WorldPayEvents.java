@@ -1,5 +1,5 @@
 /*
- * $Id: WorldPayEvents.java,v 1.3 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import com.worldpay.util.CurrencyAmount;
  * WorldPay Select Pro Events/Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class WorldPayEvents {

@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkApi.java,v 1.7 2004/04/11 08:28:10 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -77,7 +77,7 @@ import org.ofbiz.entity.GenericValue;
  * ValueLinkApi - Implementation of ValueLink Encryption & Transport
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ValueLinkApi {

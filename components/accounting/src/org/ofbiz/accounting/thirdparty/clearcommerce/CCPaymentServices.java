@@ -1,5 +1,5 @@
 /*
- *  $Id: CCPaymentServices.java,v 1.2 2004/06/04 15:22:28 ajzeneski Exp $
+ *  $Id$
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.apache.xml.serialize.OutputFormat;
  * ClearCommerce Payment Services (CCE 5.4)
  *
  * @author     <a href="mailto:joe.eckard@redrocketcorp.com">Joe Eckard</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  */
 public class CCPaymentServices {
 

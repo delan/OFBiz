@@ -1,5 +1,5 @@
 /*
- * $Id: PayPalEvents.java,v 1.5 2004/07/01 07:57:54 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.service.LocalDispatcher;
  * PayPal Events
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class PayPalEvents {

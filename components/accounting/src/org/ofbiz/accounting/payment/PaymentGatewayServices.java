@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.40 2004/07/30 21:57:29 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.40 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class PaymentGatewayServices {

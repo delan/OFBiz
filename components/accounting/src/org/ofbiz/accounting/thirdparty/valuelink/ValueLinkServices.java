@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkServices.java,v 1.10 2004/07/21 00:41:14 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * ValueLinkServices - Integration with ValueLink Gift Cards
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ValueLinkServices {

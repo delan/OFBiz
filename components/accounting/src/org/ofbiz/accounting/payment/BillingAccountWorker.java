@@ -1,5 +1,5 @@
 /*
- * $Id: BillingAccountWorker.java,v 1.3 2003/09/04 19:23:52 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.service.ServiceUtil;
  * Worker methods for BillingAccounts
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class BillingAccountWorker {

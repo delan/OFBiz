@@ -1,5 +1,5 @@
 /*
- * $Id: PayflowPro.java,v 1.3 2004/07/01 07:57:55 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import com.Verisign.payment.PFProAPI;
  * PayflowPro - Verisign PayFlow Pro <=> OFBiz Service Module
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class PayflowPro {
