@@ -1160,7 +1160,23 @@
             location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="removeProductStoreEmail" auth="true">        
         <description>Remove a Product Store Email Setting</description>
         <auto-attributes entity-name="ProductStoreEmailSetting" include="pk" mode="IN" optional="false"/>
-    </service>           
+    </service>
+    
+    <service name="createProductStoreShipMeth" default-entity-name="ProductStoreShipmentMeth" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="createProductStoreShipMeth" auth="true">        
+        <description>Create a Product Store Email Setting</description>
+        <auto-attributes include="all" mode="IN" optional="false"/>        
+    </service>
+    <service name="updateProductStoreShipMeth" default-entity-name="ProductStoreShipmentMeth" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="updateProductStoreShipMeth" auth="true">        
+        <description>Update a Product Store Email Setting</description>
+        <auto-attributes include="all" mode="IN" optional="false"/>        
+    </service>
+    <service name="removeProductStoreShipMeth" default-entity-name="ProductStoreShipmentMeth" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="removeProductStoreShipMeth" auth="true">        
+        <description>Remove a Product Store Email Setting</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>               
             	
     <!-- Product View Services -->
     <service name="getProduct" engine="java"

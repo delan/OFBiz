@@ -56,10 +56,15 @@
                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                     <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == chosenShippingMethod?default("N@A")>checked</#if>>       
                   </td>
-                  <td valign="top">        
-                    <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOneCache("ShipmentMethodType")>
-                    <div class='tabletext'>                              
-                      <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${shipmentMethodType.description?if_exists}
+                  <td valign="top">                            
+                    <div class='tabletext'>
+                       <#if cart.getShippingContactMechId()?exists>
+                         <#assign shippingEstMap = Static["org.ofbiz.commonapp.shipment.shipment.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
+                         <#if shippingEstMap?has_content && shippingEstMap.shippingTotal?exists>
+                           <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>                                  
+                         </#if>                              
+                       </#if>                                                  
+                      <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}${shippingEstimate?if_exists}
                     </div>                           
                   </td>
                 </tr>

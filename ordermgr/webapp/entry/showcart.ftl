@@ -188,7 +188,7 @@ function addToList() {
                 <tr>
                   <td><input type='text' class='inputBox' size='20' name="add_product_id" value="${requestParameters.add_product_id?if_exists}"></td>
                   <td><input type='text' class='inputBox' size='6' name="quantity" value="${requestParameters.quantity?default("1")}"></td>
-                  <td><input type='submit' value="Add To Order"></td>
+                  <td><input type='submit' class='smallSubmit' value="Add To Order"></td>
                 </tr>
               </table>
             </form>
@@ -226,7 +226,7 @@ function addToList() {
                   <td><input type='text' class='inputBox' size='30' name="add_item_description" value="${requestParameters.add_product_id?if_exists}"></td>
                   <td><input type='text' class='inputBox' size='6' name="quantity" value="${requestParameters.quantity?default("1")}"></td>
                   <td><input type='text' class='inputBox' size='6' name="price" value="${requestParameters.price?if_exists}"></td>
-                  <td><input type='submit' value="Add To Order"></td>
+                  <td><input type='submit' class='smallSubmit' value="Add To Order"></td>
                 </tr>
               </table>               
             </form>

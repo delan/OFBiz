@@ -717,13 +717,15 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz.commonapp" entity="ProductStore" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreCatalog" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStoreEmailSetting" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStoreFacility" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStoreFacilityByOrder" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStorePaymentSetting" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStorePromoAppl" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreCatalog" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreRole" />    
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreShipmentMeth" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreShipmentMethView" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.supplier -->

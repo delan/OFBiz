@@ -2319,6 +2319,24 @@
         <key-map field-name="productStoreId"/>
       </relation>
     </entity>
+    <entity entity-name="ProductStoreCatalog"
+            package-name="org.ofbiz.commonapp.product.store"
+            title="Product Store Catalog Association Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PS_CAT_PRDSTR" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PS_CAT_CATALOG" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+    </entity>  
     <entity entity-name="ProductStoreEmailSetting"
             package-name="org.ofbiz.commonapp.product.store"
             title="Product Store Email Settings Entity">
@@ -2455,24 +2473,34 @@
         <key-map field-name="productStoreId"/>
       </relation>
     </entity>
-    <entity entity-name="ProductStoreCatalog"
+    <entity entity-name="ProductStoreShipmentMeth"
             package-name="org.ofbiz.commonapp.product.store"
-            title="Product Store Catalog Association Entity">
+            title="Product Store Carrier Shipment Method Entity">
       <field name="productStoreId" type="id-ne"></field>
-      <field name="prodCatalogId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="sequenceNum" type="numeric"></field>
-      <prim-key field="productStoreId"/>
-      <prim-key field="prodCatalogId"/>
-      <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PS_CAT_PRDSTR" rel-entity-name="ProductStore">
-        <key-map field-name="productStoreId"/>
-      </relation>
-      <relation type="one" fk-name="PS_CAT_CATALOG" rel-entity-name="ProdCatalog">
-        <key-map field-name="prodCatalogId"/>
-      </relation>
+      <field name="shipmentMethodTypeId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>      
+      <field name="sequenceNumber" type="numeric"></field> 
+      <prim-key field="productStoreId"/>    
+      <prim-key field="shipmentMethodTypeId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>    
     </entity>
+    <view-entity entity-name="ProductStoreShipmentMethView"
+            package-name="org.ofbiz.commonapp.product.store"
+            title="Product Store Carrier And Shipment Method Type View Entity">
+      <member-entity entity-alias="PSSM" entity-name="ProductStoreShipmentMeth"/>
+      <member-entity entity-alias="SM" entity-name="ShipmentMethodType"/>
+      <alias entity-alias="PSSM" name="productStoreId"/>
+      <alias entity-alias="PSSM" name="shipmentMethodTypeId"/>
+      <alias entity-alias="PSSM" name="partyId"/>
+      <alias entity-alias="PSSM" name="roleTypeId"/>
+      <alias entity-alias="PSSM" name="sequenceNumber"/>
+      <alias entity-alias="SM" name="description"/>
+      <view-link entity-alias="PSSM" rel-entity-alias="SM">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </view-link>
+    </view-entity>      
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.supplier -->

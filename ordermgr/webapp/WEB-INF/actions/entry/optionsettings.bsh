@@ -28,11 +28,13 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.order.shoppingcart.*;
 import org.ofbiz.commonapp.party.contact.*;
+import org.ofbiz.commonapp.product.store.*;
 
 delegator = request.getAttribute("delegator");
 partyId = session.getAttribute("orderPartyId");
 cart = session.getAttribute(SiteDefs.SHOPPING_CART);
 context.put("cart", cart);
+productStoreId = ProductStoreWorker.getProductStoreId(request);
 
 // nuke the event messages
 request.removeAttribute(SiteDefs.EVENT_MESSAGE);
@@ -43,7 +45,7 @@ if (partyId != null) {
     context.put("party", party);
 }
 
-context.put("carrierShipmentMethodList", delegator.findByAndCache("CarrierShipmentMethod", UtilMisc.toMap("isDisplayable", "Y"), UtilMisc.toList("sequenceNumber")));
+context.put("carrierShipmentMethodList", delegator.findByAndCache("ProductStoreShipmentMethView", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNumber")));
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
 
 if (cart.getShipmentMethodTypeId() != null && cart.getCarrierPartyId() != null)

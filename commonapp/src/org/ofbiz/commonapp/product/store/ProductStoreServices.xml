@@ -44,11 +44,14 @@
 		
 		<!-- create the ProductStoreFacility record -->
 		<now-timestamp-to-env env-name="nowTimestamp"/>
-		<make-value value-name="storeFacility" entity-name="ProductStoreFacility"/>
-		<field-to-field field-name="inventoryFacilityId" map-name="newEntity" to-field-name="facilityId" to-map-name="storeFacility"/>
-		<field-to-field field-name="productStoreId" map-name="newEntity" to-map-name="storeFacility"/>
-	    <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="storeFacility"/>
-	    <create-value value-name="storeFacility"/>
+		
+		<if-not-empty field-name="inventoryFacilityId" map-name="newEntity">
+			<make-value value-name="storeFacility" entity-name="ProductStoreFacility"/>
+			<field-to-field field-name="inventoryFacilityId" map-name="newEntity" to-field-name="facilityId" to-map-name="storeFacility"/>
+			<field-to-field field-name="productStoreId" map-name="newEntity" to-map-name="storeFacility"/>
+	    	<env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="storeFacility"/>
+	    	<create-value value-name="storeFacility"/>
+	    </if-not-empty>
 	</simple-method>
 	<simple-method method-name="updateProductStore" short-description="Update a Product Store">
 		<check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductStore you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -184,5 +187,42 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductStoreEmailSetting" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-    </simple-method>  		   
+    </simple-method>
+    
+    <!-- ProductStore Carrier Shipment Services -->
+    <simple-method method-name="createProductStoreShipMeth" short-description="Create Product Store Carrier Shipment Method">
+        <check-permission permission="CATALOG" action="_CREATE">        	
+        	<fail-message message="Security Error: to run createProductStoreShipMeth you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductStoreShipmentMeth"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>    
+    <simple-method method-name="updateProductStoreShipMeth" short-description="Update Product Store Carrier Shipment Method">
+        <check-permission permission="CATALOG" action="_UPDATE">        	
+        	<fail-message message="Security Error: to run updateProductStoreShipMeth you must have the CATALOG_UPDATE or CAtALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="ProductStoreShipmentMeth"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ProductStoreShipmentMeth" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeProductStoreShipMeth" short-description="Remove Product Store Carrier Shipment Method">
+        <check-permission permission="CATALOG" action="_DELETE">
+        	<fail-message message="Security Error: to run removeProductStoreShipMeth you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="removeProductStoreShipMeth"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="removeProductStoreShipMeth" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>    	   
 </simple-methods>

@@ -823,6 +823,24 @@
         <response name="success" type="view" value="EditProductStoreShipSetup"/>
         <response name="error" type="view" value="EditProductStoreShipSetup"/>
     </request-map>
+    <request-map uri="storeCreateShipMeth">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductStoreShipMeth"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
+        <response name="error" type="view" value="EditProductStoreShipSetup"/>
+    </request-map>
+    <request-map uri="storeUpdateShipMeth">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProductStoreShipMeth"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
+        <response name="error" type="view" value="EditProductStoreShipSetup"/>
+    </request-map>
+    <request-map uri="storeRemoveShipMeth">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeProductStoreShipMeth"/>
+        <response name="success" type="view" value="EditProductStoreShipSetup"/>
+        <response name="error" type="view" value="EditProductStoreShipSetup"/>
+    </request-map>            
     <request-map uri="createShipmentMethodType">
         <security https="true" auth="true"/>
         <event type="service" invoke="createShipmentMethodType"/>

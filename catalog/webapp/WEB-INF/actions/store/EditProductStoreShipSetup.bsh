@@ -55,7 +55,10 @@ context.put("estimates", estimates);
 geos = delegator.findAll("Geo", UtilMisc.toList("geoTypeId", "geoName"));
 context.put("geoList", geos);
 
-shipMeth = delegator.findAll("CarrierAndShipmentMethod", UtilMisc.toList("description"));
+storeShipMeth = delegator.findByAnd("ProductStoreShipmentMethView", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNumber"));
+context.put("storeShipMethods", storeShipMeth);
+
+shipMeth = delegator.findAll("CarrierAndShipmentMethod", UtilMisc.toList("sequenceNumber"));
 context.put("shipmentMethods", shipMeth);
 
 shipMethTypes = delegator.findAll("ShipmentMethodType", UtilMisc.toList("description"));

@@ -24,6 +24,44 @@
  *@since      2.2
 -->
 
+<script language="JavaScript">
+<!--
+function setAssocFields(select) {
+    var index = select.selectedIndex;
+    var opt = select.options[index];
+    var optStr = opt.value;
+    var optLen = optStr.length;
+    
+    var shipmentMethodTypeId = "";
+    var sequenceNumber = "";
+    var roleTypeId = "";
+    var partyId = "";
+    var delIdx = 1;
+    
+    for (i=0; i<optLen; i++) {        
+        if (optStr[i] == '|') {
+            delIdx++;           
+        } else {
+            if (delIdx == 1) {
+                partyId = partyId + optStr[i];              
+            } else if (delIdx == 2) {
+                roleTypeId = roleTypeId + optStr[i];
+            } else if (delIdx == 3) {
+                shipmentMethodTypeId = shipmentMethodTypeId + optStr[i];
+            } else if (delIdx == 4) {
+                sequenceNumber = sequenceNumber + optStr[i];
+            }
+        }
+    }   
+        
+    document.addscarr.roleTypeId.value = roleTypeId;
+    document.addscarr.partyId.value = partyId;
+    document.addscarr.shipmentMethodTypeId.value = shipmentMethodTypeId;
+    document.addscarr.sequenceNumber.value = sequenceNumber;
+}
+// -->
+</script>   
+
 <#if hasPermission>
   ${pages.get("/store/ProductStoreTabBar.ftl")}
   <div class="head1">Product Store Shipment Settings <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
@@ -207,7 +245,7 @@
           <td align='right'><span class="tableheadtext">Shipment Method</span></td>
           <td>
             <select name="shipMethod" class="selectBox">
-              <#list shipmentMethods as shipmentMethod>
+              <#list storeShipMethods as shipmentMethod>
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.shipmentMethodTypeId}">${shipmentMethod.description} (${shipmentMethod.partyId})</option>
               </#list>
             </select>            
@@ -362,6 +400,78 @@
   </#if> 
   
   <#if requestParameters.newShipMethod?exists>
+    <div class="head2">Store Shipment Method Associations</div>
+    <table border="1" cellpadding="2" cellspacing="0" width="100%">
+      <tr>
+        <td><span class="tableheadtext">Method Type</span></td>
+        <td><span class="tableheadtext">Party</span></td>
+        <td><span class="tableheadtext">Role</span></td>
+        <td><span class="tableheadtext">Sequence</span></td>
+        <td>&nbsp;</td>
+      </tr>
+      <#if storeShipMethods?has_content>
+        <#assign idx = 0>
+        <#list storeShipMethods as meth>
+          <#assign idx = idx + 1>
+          <form name="methUpdate${idx}" method="post" action="<@ofbizUrl>/storeUpdateShipMeth</@ofbizUrl>">
+            <input type="hidden" name="shipmentMethodTypeId" value="${meth.shipmentMethodTypeId}">
+            <input type="hidden" name="partyId" value="${meth.partyId}">
+            <input type="hidden" name="roleTypeId" value="${meth.roleTypeId}">
+            <input type="hidden" name="productStoreId" value="${meth.productStoreId}">
+            <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
+            <input type="hidden" name="newShipMethod" value="Y">
+            <tr> 
+              <td><span class="tabletext">${meth.description}</span></td>
+              <td><span class="tabletext">${meth.partyId}</span></td>
+              <td><span class="tabletext">${meth.roleTypeId}</span></td>
+              <td><input type="text" size="5" class="inputBox" name="sequenceNumber" value="${meth.sequenceNumber}"></td>
+              <td width='1' align="right">
+                <nobr>
+                  <a href="javascript:document.methUpdate${idx}.submit();" class="buttontext">[Update]</a>
+                  <a href="<@ofbizUrl>/storeRemoveShipMeth?viewProductStoreId=${productStoreId}&productStoreId=${meth.productStoreId}&shipmentMethodTypeId=${meth.shipmentMethodTypeId}&partyId=${meth.partyId}&roleTypeId=${meth.roleTypeId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+                </nobr>
+              </td>
+            </tr>
+          </form>
+        </#list>
+      </#if>
+    </table>
+    <br>           
+    <table cellspacing="2" cellpadding="2">      
+      <form name="addscarr" method="post" action="<@ofbizUrl>/storeCreateShipMeth</@ofbizUrl>">
+        <input type="hidden" name="viewProductStoreId" value="${productStoreId}">        
+        <input type="hidden" name="newShipMethod" value="Y">
+        <input type="hidden" name="productStoreId" value="${productStoreId}">
+        <input type="hidden" name="shipmentMethodTypeId">
+        <input type="hidden" name="roleTypeId">
+        <input type="hidden" name="partyId">
+        <tr>
+          <td align="right"><span class="tableheadtext">Carrier Shipment Method</span></td>
+          <td>            
+            <select class="selectBox" name="carrierShipmentString" onChange="javascript:setAssocFields(this);">
+              <option>Select One</option>
+              <#list shipmentMethods as shipmentMethod>
+                <option value="${shipmentMethod.partyId}|${shipmentMethod.roleTypeId}|${shipmentMethod.shipmentMethodTypeId}|${shipmentMethod.sequenceNumber?default(1)}">${shipmentMethod.description} (${shipmentMethod.partyId}/${shipmentMethod.roleTypeId})</option>
+              </#list>
+            </select> *                           
+          </td>
+        </tr>                                   
+        <tr>
+          <td align="right"><span class="tableheadtext">Sequence #</span></td>
+          <td>
+            <input type="text" class="inputBox" name="sequenceNumber" size="5">
+            <span class="tabletext">Used for display ordering</span>
+          </td>
+        </tr>
+        <tr>
+          <td>            
+            <input type="submit" class="smallSubmit" value="Add">
+          </td>
+        </tr>       
+      </form>
+    </table> 
+    <br>    
+    
     <div class="head2">Shipment Method Type:</div>                
     <table cellspacing="2" cellpadding="2">
       <form name="editmeth" method="post" action="<@ofbizUrl>/EditProductStoreShipSetup</@ofbizUrl>">
@@ -414,7 +524,7 @@
     
     <br>
      
-    <div class="head2">Carrier Shipment Method:</div>              
+    <div class="head2">Carrier Shipment Method:</div>          
     <table cellspacing="2" cellpadding="2">
       <form name="editcarr" method="post" action="<@ofbizUrl>/EditProductStoreShipSetup</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
@@ -448,65 +558,55 @@
         <tr>
           <td align="right"><span class="tableheadtext">Shipment Method</span></td>
           <td>
-            <select class="selectBox" name="shipmentMethodTypeId">
-              <#if carrierShipmentMethod?has_content>
-                <option value="${carrierShipmentMethod.shipmentMethodTypeId}">${carrierShipmentMethod.shipmentMethodTypeId}</option>
-                <option value="${carrierShipmentMethod.shipmentMethodTypeId}">---</option>
-              </#if>
-              <#list shipmentMethodTypes as shipmentMethodType>
-                <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.description?default(shipmentMethodType.shipmentMethodTypeId)}</option>
-              </#list>
-            </select> *
+            <#if carrierShipmentMethod?has_content>
+              <input type="hidden" name="shipmentMethodTypeId" value="${carrierShipmentMethod.shipmentMethodTypeId}">
+              <div class="tabletext">${carrierShipmentMethod.shipmentMethodTypeId}</div>
+            <#else>
+              <select class="selectBox" name="shipmentMethodTypeId">
+                <#list shipmentMethodTypes as shipmentMethodType>
+                  <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.description?default(shipmentMethodType.shipmentMethodTypeId)}</option>
+                </#list>
+              </select> *
+            </#if>
           </td>
         </tr>
         <tr>
           <td align="right"><span class="tableheadtext">RoleType ID</span></td>
           <td>
-            <select class="selectBox" name="roleTypeId">
-              <#if carrierShipmentMethod?has_content>
-                <option value="${carrierShipmentMethod.roleTypeId}">${carrierShipmentMethod.roleTypeId}</option>
-                <option value="${carrierShipmentMethod.roleTypeId}">---</option>
-              </#if>
-              <#list roleTypes as roleType>
-                <option value="${roleType.roleTypeId}" <#if roleType.roleTypeId == "CARRIER" && !carrierShipmentMethod?has_content>selected</#if>>${roleType.description?default(roleType.roleTypeId)}</option>
-              </#list>
-            </select> *
+            <#if carrierShipmentMethod?has_content>
+              <input type="hidden" name="roleTypeId" value="${carrierShipmentMethod.roleTypeId}">
+              <div class="tabletext">${carrierShipmentMethod.roleTypeId}</div>
+            <#else>
+              <select class="selectBox" name="roleTypeId">
+                <#list roleTypes as roleType>
+                  <option value="${roleType.roleTypeId}" <#if roleType.roleTypeId == "CARRIER" && !carrierShipmentMethod?has_content>selected</#if>>${roleType.description?default(roleType.roleTypeId)}</option>
+                </#list>
+              </select> *
+            </#if>
+          </td>
         </tr> 
         <tr>
           <td align="right"><span class="tableheadtext">Party ID</span></td>
-          <td><input type="text" class="inputBox" name="partyId" size="20" value="${carrierShipmentMethod.partyId?if_exists}"> *</td>
-        </tr>       
-               
+          <td>
+            <#if carrierShipmentMethod?has_content>
+              <input type="hidden" name="partyId" value="${carrierShipmentMethod.partyId}">
+              <div class="tabletext">${carrierShipmentMethod.partyId}</div>
+            <#else>
+              <input type="text" class="inputBox" name="partyId" size="20" value="${carrierShipmentMethod.partyId?if_exists}"> *
+            </#if>
+          </td>
+        </tr>                      
         <tr>
           <td align="right"><span class="tableheadtext">Carrier Service Code</span></td>
           <td><input type="text" class="inputBox" name="carrierServiceCode" size="20" value="${carrierShipmentMethod.carrierServiceCode?if_exists}"></td>
-        </tr>         
-
-        <tr>
-          <td align="right"><span class="tableheadtext">Displayable</span></td>
-          <td>
-            <select class="selectBox" name="isDisplayable">
-              <#if carrierShipmentMethod?has_content>
-                <option>${carrierShipmentMethod.isDisplayable?default("Y")}</option>
-                <option value="${carrierShipmentMethod.isDisplayable?default("Y")}">---</option>
-              </#if>
-              <option>Y</option>
-              <option>N</option>
-            </select>
-        </tr>         
+        </tr>                 
         <tr>
           <td align="right"><span class="tableheadtext">Sequence #</span></td>
           <td>
             <input type="text" class="inputBox" name="sequenceNumber" size="5" value="${carrierShipmentMethod.sequenceNumber?if_exists}">
             <span class="tabletext">Used for display ordering</span>
           </td>
-        </tr>
-        <tr>
-          <td align="right"><span class="tableheadtext">Limit to this store?</span></td>
-          <td>
-            <input type="checkbox" class="inputBox" name="productStoreId" value="${productStoreId}">            
-          </td>
-        </tr>
+        </tr>       
         <tr>
           <td>            
             <input type="submit" class="smallSubmit" value="${buttonText}">
