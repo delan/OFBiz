@@ -104,7 +104,26 @@ public class ServiceDispatcher {
         context = checkAuth(localName,context);
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
-        return engine.runSync(service, context);
+
+        // validate the context
+        if (service.validate) {
+            try {
+                service.validate(context, ModelService.IN_PARAM);
+            } catch (GenericServiceException e) {
+                throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+            }
+        }
+        Map result = engine.runSync(service, context);
+        // validate the result
+        if (service.validate) {
+            try {
+                service.validate(result, ModelService.OUT_PARAM);
+            } catch (GenericServiceException e) {
+                throw new GenericServiceException("Result (in runSync) does not match expected requirements: ", e);
+            }
+        }
+            
+        return result;
     }
     
     /** Run the service synchronously and IGNORE the result
@@ -114,6 +133,15 @@ public class ServiceDispatcher {
         context = checkAuth(localName,context);
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
+
+        // validate the context
+        if (service.validate) {
+            try {
+                service.validate(context, ModelService.IN_PARAM);
+            } catch (GenericServiceException e) {
+                throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+            }
+        }
         engine.runSyncIgnore(service, context);
     }
     
@@ -125,6 +153,15 @@ public class ServiceDispatcher {
         context = checkAuth(localName,context);
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
+
+        // validate the context
+        if (service.validate) {
+            try {
+                service.validate(context, ModelService.IN_PARAM);
+            } catch (GenericServiceException e) {
+                throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+            }
+        }
         engine.runAsync(service, context, requester);
     }
     
@@ -135,6 +172,15 @@ public class ServiceDispatcher {
         context = checkAuth(localName,context);
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
+
+        // validate the context
+        if (service.validate) {
+            try {
+                service.validate(context, ModelService.IN_PARAM);
+            } catch (GenericServiceException e) {
+                throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+            }
+        }
         engine.runAsync(service, context);
     }
     
@@ -225,5 +271,4 @@ public class ServiceDispatcher {
         
         return value;
     }
-    
 }
