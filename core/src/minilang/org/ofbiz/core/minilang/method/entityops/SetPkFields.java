@@ -44,11 +44,15 @@ import org.ofbiz.core.entity.*;
 public class SetPkFields extends MethodOperation {
     String valueName;
     String mapName;
+    boolean setIfNull = true;
 
     public SetPkFields(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         valueName = element.getAttribute("value-name");
         mapName = element.getAttribute("map-name");
+
+        //if anything but false it will be true
+        setIfNull = !"false".equals(element.getAttribute("set-if-null"));
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -71,7 +75,7 @@ public class SetPkFields extends MethodOperation {
         if (theMap == null) {
             Debug.logWarning("In set-pk-fields could not find map with name " + mapName + ", not setting any fields");
         } else {
-            value.setPKFields(theMap);
+            value.setPKFields(theMap, setIfNull);
         }
         return true;
     }

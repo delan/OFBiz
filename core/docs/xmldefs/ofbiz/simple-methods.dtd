@@ -391,11 +391,13 @@ engine and facilitate related operations.
 <!ATTLIST set-pk-fields
     value-name CDATA #REQUIRED
     map-name CDATA #IMPLIED
+    set-if-null ( true | false ) "true"
 >
 <!ELEMENT set-nonpk-fields EMPTY>
 <!ATTLIST set-nonpk-fields
     value-name CDATA #REQUIRED
     map-name CDATA #IMPLIED
+    set-if-null ( true | false ) "true"
 >
 
 <!ELEMENT store-list EMPTY>
