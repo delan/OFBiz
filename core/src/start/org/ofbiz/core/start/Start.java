@@ -217,30 +217,46 @@ public class Start implements Runnable {
         main.invoke(null, method_params);
     }
 
-    public static void main(String[] args) throws Exception {
-        if (args.length == 0 || !args[0].equals("-shutdown")) {        
-            Start start = new Start();        
-            start.loadLibs();
-            start.startServer(args);
-        } else {
-            Socket socket = new Socket(conf.adminAddr, conf.adminPort);
-            System.out.print("Shutting down server...");
+    public static void start(String[] args) throws Exception {
+        Start start = new Start();
+        start.loadLibs();
+        start.startServer(args);
+    }
+    
+    public static void shutdown() throws Exception {
+        Socket socket = new Socket(conf.adminAddr, conf.adminPort);
+        System.out.print("Shutting down server...");
                         
-            BufferedWriter writer = null;
-            BufferedReader reader = null;
+        BufferedWriter writer = null;
+        BufferedReader reader = null;
             
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));            
-            writer.write(conf.adminKey + ":" + "SHUTDOWN");
-            writer.flush();
+        writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));            
+        writer.write(conf.adminKey + ":" + "SHUTDOWN");
+        writer.flush();
             
-            //reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            //System.out.println(reader.readLine());
+        //reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        //System.out.println(reader.readLine());
             
+        System.out.println("");
+        System.out.println("");
+            
+        socket.close();        
+    }
+    
+    public static void main(String[] args) throws Exception {
+        String firstArg = args.length > 0 ? args[0] : "";
+        
+        if (firstArg.equals("-help") || firstArg.equals("-?")) {
             System.out.println("");
-            System.out.println("");
-            
-            socket.close();
-        }
+            System.out.println("Usage: java -jar ofbiz.jar [options]");
+            System.out.println("-help, -? ---> This screen");
+            System.out.println("-shutdown ---> Shutdown the server");
+            System.out.println("[no option] -> Start the server");                                   
+        } else if (firstArg.equals("-shutdown")) {
+            Start.shutdown();
+        } else {
+            Start.start(args);
+        }                
     }
 }
 
