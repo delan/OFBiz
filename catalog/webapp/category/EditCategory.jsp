@@ -216,9 +216,8 @@
     </td>
   </tr>
   <tr>
-    <td colspan='3'>
-      <input type="submit" name="Update" value="Update">
-    </td>
+    <td colspan='2'>&nbsp;</td>
+    <td><input type="submit" name="Update" value="Update"></td>
   </tr>
 </table>
 </form>

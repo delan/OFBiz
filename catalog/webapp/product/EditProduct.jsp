@@ -111,7 +111,7 @@ function insertImageName(size,ext) {
     <tr>
       <td align=right><div class="tabletext"><b>Product ID</b></div></td>
       <td>&nbsp;</td>
-      <td width="74%" colspan='5'>
+      <td width="74%" colspan='4'>
         <input type="text" name="productId" size="20" maxlength="20" value="<%=productId%>">
       </td>
     </tr>
@@ -122,7 +122,7 @@ function insertImageName(size,ext) {
     <tr>
       <td align=right><div class="tabletext"><b>Product ID</b></div></td>
       <td>&nbsp;</td>
-      <td width="74%" colspan='5'>
+      <td width="74%" colspan='4'>
         <input type="text" name="productId" size="20" maxlength="20" value="">
       </td>
     </tr>
@@ -134,7 +134,7 @@ function insertImageName(size,ext) {
   <tr>
     <td align=right><div class="tabletext"><b>Product ID</b></div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'>
+    <td width="74%" colspan='4'>
       <b><%=productId%></b> (This cannot be changed without re-creating the product.)
     </td>
   </tr>
@@ -162,7 +162,7 @@ function insertImageName(size,ext) {
   <tr>
     <td width="26%" align=right><div class="tabletext">Product Type Id</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'>
+    <td width="74%" colspan='4'>
       <select name="productTypeId" size=1>
         <%if (productType != null) {%>
           <option selected value='<%=productType.getString("productTypeId")%>'><%=productType.getString("description")%><%-- [<%=productType.getString("productTypeId")%>]--%></option>
@@ -179,7 +179,7 @@ function insertImageName(size,ext) {
   <tr>
     <td width="26%" align=right><div class="tabletext">Primary Category Id</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'>
+    <td width="74%" colspan='4'>
       <select name="primaryProductCategoryId" size=1>
         <%if(primaryProductCategory != null) {%>
           <option selected value='<%=primaryProductCategory.getString("productCategoryId")%>'><%=primaryProductCategory.getString("description")%> [<%=primaryProductCategory.getString("productCategoryId")%>]</option>
@@ -197,30 +197,30 @@ function insertImageName(size,ext) {
   <tr>
     <td width="26%" align=right><div class="tabletext">Product Name</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='productName' tryEntityAttr="tryEntity" fullattrs="true"/> size="30" maxlength="60"></td>
+    <td width="74%" colspan='4'><input type="text" <ofbiz:inputvalue entityAttr='product' field='productName' tryEntityAttr="tryEntity" fullattrs="true"/> size="30" maxlength="60"></td>
   </tr>
   <tr>
     <td width="26%" align=right><div class="tabletext">Internal Name</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='internalName' tryEntityAttr="tryEntity" fullattrs="true"/> size="30" maxlength="60"></td>
+    <td width="74%" colspan='4'><input type="text" <ofbiz:inputvalue entityAttr='product' field='internalName' tryEntityAttr="tryEntity" fullattrs="true"/> size="30" maxlength="60"></td>
   </tr>
   <tr>
     <td width="26%" align=right><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><textarea cols="60" rows="2" name="description" maxlength="250"><ofbiz:inputvalue entityAttr='product' field='description' tryEntityAttr="tryEntity"/></textarea></td>
+    <td width="74%" colspan='4'><textarea cols="60" rows="2" name="description" maxlength="250"><ofbiz:inputvalue entityAttr='product' field='description' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><textarea cols="60" rows="5" name="longDescription" maxlength="2000"><ofbiz:inputvalue entityAttr='product' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
+    <td width="74%" colspan='4'><textarea cols="60" rows="5" name="longDescription" maxlength="2000"><ofbiz:inputvalue entityAttr='product' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
 
-  <tr><td colspan="7"><hr class="sepbar"></td></tr>
+  <tr><td colspan='6'><hr class="sepbar"></td></tr>
 
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Small Image URL</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'>
+    <td width="74%" colspan='4'>
       <input type="text" <ofbiz:inputvalue entityAttr='product' field='smallImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%>
         <div>
@@ -235,7 +235,7 @@ function insertImageName(size,ext) {
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Medium Image URL</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'>
+    <td width="74%" colspan='4'>
       <input type="text" <ofbiz:inputvalue entityAttr='product' field='mediumImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%>
         <div>
@@ -250,7 +250,7 @@ function insertImageName(size,ext) {
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Large Image URL</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'>
+    <td width="74%" colspan='4'>
       <input type="text" <ofbiz:inputvalue entityAttr='product' field='largeImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%>
         <div>
@@ -265,7 +265,7 @@ function insertImageName(size,ext) {
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Detail Image URL</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'>
+    <td width="74%" colspan='4'>
       <input type="text" <ofbiz:inputvalue entityAttr='product' field='detailImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%>
         <div>
@@ -278,39 +278,39 @@ function insertImageName(size,ext) {
     </td>
   </tr>
 
-  <tr><td colspan="7"><hr class="sepbar"></td></tr>
+  <tr><td colspan='6'><hr class="sepbar"></td></tr>
 
   <tr>
     <td width="26%" align=right><div class="tabletext">Manufacturer Party Id</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='manufacturerPartyId' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20"></td>
+    <td width="74%" colspan='4'><input type="text" <ofbiz:inputvalue entityAttr='product' field='manufacturerPartyId' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20"></td>
   </tr>
 
   <tr>
     <td width="26%" align=right><div class="tabletext">Introduction Date</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='introductionDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("introductionDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
+    <td width="74%" colspan='4'><input type="text" <ofbiz:inputvalue entityAttr='product' field='introductionDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("introductionDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
   </tr>
   <tr>
     <td width="26%" align=right><div class="tabletext">Sales Discontinuation Date</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='salesDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("salesDiscontinuationDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
+    <td width="74%" colspan='4'><input type="text" <ofbiz:inputvalue entityAttr='product' field='salesDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("salesDiscontinuationDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
   </tr>
   <tr>
     <td width="26%" align=right><div class="tabletext">Support Discontinuation Date</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("supportDiscontinuationDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
+    <td width="74%" colspan='4'><input type="text" <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("supportDiscontinuationDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
   </tr>
 
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Inventory Message</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" size="30" maxlength="250" <ofbiz:inputvalue entityAttr='product' field='inventoryMessage' tryEntityAttr="tryEntity" fullattrs="true"/>></td>
+    <td width="74%" colspan='4'><input type="text" size="30" maxlength="250" <ofbiz:inputvalue entityAttr='product' field='inventoryMessage' tryEntityAttr="tryEntity" fullattrs="true"/>></td>
   </tr>
   <tr>
     <td width="26%" align=right><div class="tabletext">Require Inventory?</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'>
+    <td width="74%" colspan='4'>
         <SELECT name='requireInventory'>
             <%
                 String reqInvLabel = "Use Catalog Default";
@@ -333,10 +333,10 @@ function insertImageName(size,ext) {
   <tr>
     <td width="26%" align=right><div class="tabletext">Comment</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='comments' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255"></td>
+    <td width="74%" colspan='4'><input type="text" <ofbiz:inputvalue entityAttr='product' field='comments' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255"></td>
   </tr>
 
-  <tr><td colspan="7"><hr class="sepbar"></td></tr>
+  <tr><td colspan='6'><hr class="sepbar"></td></tr>
 
   <tr>
     <td width="26%" align=right><div class="tabletext"><b>Weight</b></div></td>
@@ -413,8 +413,11 @@ function insertImageName(size,ext) {
     </td>
   </tr>
 
+  <tr><td colspan='6'><hr class="sepbar"></td></tr>
   <tr>
-    <td colspan='7'><input type="submit" name="Update" value="Update"></td>
+    <td colspan='2'>&nbsp;</td>
+    <td><input type="submit" name="Update" value="Update"></td>
+    <td colspan='3'>&nbsp;</td>
   </tr>
 </table>
 </form>

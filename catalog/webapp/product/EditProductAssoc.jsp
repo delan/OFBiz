@@ -83,7 +83,7 @@ try {
 <br>
 
 <form action="<ofbiz:url>/UpdateProductAssoc</ofbiz:url>" method=POST style='margin: 0;'>
-<table class="boxoutside" border='0' cellpadding='2' cellspacing='0'>
+<table border='0' cellpadding='2' cellspacing='0'>
 
 <%if (productAssoc == null) {%>
   <%if (productId != null || productIdTo != null || productAssocTypeId != null || fromDate != null){%>
@@ -229,7 +229,8 @@ try {
   </tr>
 
   <tr>
-    <td colspan='3'><input type='submit' value='<%=isCreate?"Create":"Update"%>'></td>
+    <td colspan='2'>&nbsp;</td>
+    <td align=left><input type='submit' value='<%=isCreate?"Create":"Update"%>'></td>
   </tr>
 </table>
 </form>
