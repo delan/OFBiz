@@ -43,7 +43,7 @@
 <!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | call-simple-method | check-errors">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field | webapp-property-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
-<!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | property-to-field | to-string | iterate">
+<!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | property-to-field | to-string | iterate | calculate">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | set-current-user-login">
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | filter-list-by-and | filter-list-by-date">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-by-and | clear-cache-line | set-pk-fields | set-nonpk-fields">
@@ -320,6 +320,23 @@ Error messages go on the error list and are handled with the check-errors tag.
     entry-name CDATA #REQUIRED
     list-name CDATA #REQUIRED
 >
+
+<!ELEMENT calculate ( ( calcop | number )* )>
+<!ATTLIST calculate
+    map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
+    type ( Double | Float | Long | Integer ) "Double"
+>
+    <!ELEMENT calcop ( ( calcop | number )* )>
+    <!ATTLIST calcop
+        operator ( get | add | subtract | multiply | divide | negative ) #REQUIRED
+        map-name CDATA #IMPLIED
+        field-name CDATA #IMPLIED
+    >
+    <!ELEMENT number EMPTY>
+    <!ATTLIST number
+        value CDATA #REQUIRED
+    >
 
 <!--
 These operations are used to interact with a data source through the entity 

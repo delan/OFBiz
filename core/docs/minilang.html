@@ -1027,6 +1027,97 @@ for each of the entries in the list, and will make the current entry available
 in the method environment by the entry-name specified. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
+<p><b><u>calculate</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td>
+    <td>The object type to put into this field. Can be: Double | Float | Long | Integer.
+    The default is Double.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>calcop</td><td>0 to many</td>
+    <td>This tag is used to apply an operator in the calculation. It can have
+    calcop and number tags nested under it, making it also act like a
+    parenthesis. It has three attributes: operator, map-name, and field-name.
+    These are described below.</td>
+</tr>
+<tr>
+    <td>number</td><td>0 to many</td>
+    <td>This is used to put a numeric constant (a number) into the calculation.
+    It has one attribute: value. This must be a properly formatted number or an
+    error will result.</td>
+</tr>
+</table>
+<p>The calculate tag performs the specified calculation and puts the result in
+an object in the field of the specified map (see the calculate element attribute
+descriptions above). The type of the object can be specified with the
+<b>type</b> attribute, but defaults to Double.</p>
+
+<p>The calculate tag can contain <b>calcop</b> and <b>number</b> tags, and the
+<b>calcop</b> tag can also contain these two tags to enable nested
+calculations.</p>
+
+<p>Each calcop tag has three attributes: operator, map-name and field-name. Only
+the operator is required. The operator specifies the operation to perform on the
+given field and nested calcops and numbers. It must be one of the following: 
+get | add | subtract | multiply | divide | negative.</p>
+
+<p>Regardless of the operator the action is very similar. It translates to a
+formula like the following: <b><code>(V1 [operator] V2 [operator] V3)</code></b>. In other
+words a final result is calculated by applying the operator to the values in the
+order they are specified. If a field-name (and optionally map-name) is specifies
+on the calcop tag that field will be used as the first value, otherwise the
+first nested <b>calcop</b> or <b>number</b> will be the first value.</p>
+
+<p>The get operator is just an alias for add. It adds all of the values under
+it. Likewise the negative operator is almost an alias for subtract, with the
+exception that the first value is negated instead of left positive. For
+convenience the calculate tag itself acts like an add, in other words the
+calcops and numbers under it are all added together.<p>
+
+<p>Here is an example of an XML snippet the performs the calculation
+<b><code>a=b+(((c+x+2)*-d)/e)</code></b>, or in Reverse Polish Notation (a little
+bit closer to the resulting XML, and the notation used in the Rule Engine)
+<b><code>a=+(b,/(*(+(c,x,2),-d),e))</code></b>. Here is the XML:</p>
+
+<pre>
+    &lt;calculate field-name="a"&gt;
+        &lt;calcop operator="get" field-name="b"/&gt;
+        &lt;calcop operator="divide"&gt;
+            &lt;calcop operator="multiply"&gt;
+                &lt;calcop operator="add" field-name="c"&gt;
+                    &lt;calcop operator="get" field-name="x"/&gt;
+                    &lt;number value="2"/&gt;
+                &lt;/calcop&gt;
+                &lt;calcop operator="negative" field-name="d"/&gt;
+            &lt;/calcop&gt;
+            &lt;calcop operator="get" field-name="e"/&gt;
+        &lt;/calcop&gt;
+    &lt;/calculate&gt;
+</pre>
+
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
