@@ -691,4 +691,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderFormatFieldRowWidgetCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions) {
         buffer.append("</td>");
     }
+
+    public void renderFormatEmptySpace(StringBuffer buffer, Map context, ModelForm modelForm) {
+        buffer.append("&nbsp;");
+    }
 }

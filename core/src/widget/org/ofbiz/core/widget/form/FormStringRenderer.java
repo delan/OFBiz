@@ -85,4 +85,6 @@ public interface FormStringRenderer {
     public void renderFormatFieldRowSpacerCell(StringBuffer buffer, Map context, ModelFormField modelFormField);
     public void renderFormatFieldRowWidgetCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions);
     public void renderFormatFieldRowWidgetCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions);
+
+    public void renderFormatEmptySpace(StringBuffer buffer, Map context, ModelForm modelForm);
 }
