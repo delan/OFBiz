@@ -538,7 +538,7 @@ public class SimpleMapProcessor {
             }
             
             this.type = element.getAttribute("type");
-            this.replace = "true".equals(element.getAttribute("replace"));
+            this.replace = !"false".equals(element.getAttribute("replace"));
 
             this.format = element.getAttribute("format");
         }

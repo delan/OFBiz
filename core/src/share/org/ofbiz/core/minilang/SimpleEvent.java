@@ -103,12 +103,24 @@ public class SimpleEvent {
     }
     
     List eventOperations = new LinkedList();
-    String eventName = "";
-    String shortDescription = "";
+    String eventName;
+    String shortDescription;
+    String requestName;
+    String responseCodeName;
+    boolean loginRequired = true;
 
     public SimpleEvent(Element simpleEventElement) {
-        this.eventName = simpleEventElement.getAttribute("event-name");
-        this.shortDescription = simpleEventElement.getAttribute("short-description");
+        eventName = simpleEventElement.getAttribute("event-name");
+        shortDescription = simpleEventElement.getAttribute("short-description");
+        requestName = simpleEventElement.getAttribute("request-name");
+        if(requestName == null || requestName.length() == 0)
+            requestName = "_request_";
+        responseCodeName = simpleEventElement.getAttribute("response-code-name");
+        if(responseCodeName == null || responseCodeName.length() == 0)
+            responseCodeName = "_response_code_";
+        
+        this.loginRequired = !"false".equals(simpleEventElement.getAttribute("login-required"));
+        
         readOperations(simpleEventElement);
     }
 
@@ -117,10 +129,14 @@ public class SimpleEvent {
     }
 
     public void exec(HttpServletRequest request, ClassLoader loader) {
+        Map env = new HashMap();
+        env.put(requestName, request);
+        
         Iterator eventOpsIter = eventOperations.iterator();
         while (eventOpsIter.hasNext()) {
             EventOperation eventOperation = (EventOperation) eventOpsIter.next();
-            eventOperation.exec(request, loader);
+            if (!eventOperation.exec(env, request, loader))
+                break;
         }
     }
 
@@ -131,17 +147,18 @@ public class SimpleEvent {
             while (operElemIter.hasNext()) {
                 Element curOperElem = (Element) operElemIter.next();
                 String nodeName = curOperElem.getNodeName();
-                /*
-                if ("validate-method".equals(nodeName)) {
-                    eventOperations.add(new SimpleEvent.ValidateMethod(curOperElem, this));
-                } else if ("compare".equals(nodeName)) {
-                    eventOperations.add(new SimpleEvent.Compare(curOperElem, this));
-                } else if ("compare-field".equals(nodeName)) {
-                    eventOperations.add(new SimpleEvent.CompareField(curOperElem, this));
+
+                if ("parameter-map".equals(nodeName)) {
+                    eventOperations.add(new SimpleEvent.ParameterMap(curOperElem, this));
+                } else if ("simple-map-processor".equals(nodeName)) {
+                    eventOperations.add(new SimpleEvent.SimpleMapProcessor(curOperElem, this));
+                } else if ("check-errors".equals(nodeName)) {
+                    eventOperations.add(new SimpleEvent.CheckErrors(curOperElem, this));
+                } else if ("service".equals(nodeName)) {
+                    eventOperations.add(new SimpleEvent.Service(curOperElem, this));
                 } else {
                     Debug.logWarning("[SimpleEvent.StringProcess.readOperations] Operation element \"" + nodeName + "\" no recognized");
                 }
-                */
             }
         }
 
@@ -155,28 +172,115 @@ public class SimpleEvent {
             this.simpleEvent = simpleEvent;
         }
         
-        public abstract void exec(HttpServletRequest request, ClassLoader loader);
+        /** Execute the operation; if false is returned then no further operations will be executed */
+        public abstract boolean exec(Map env, HttpServletRequest request, ClassLoader loader);
     }
     
     /* ==================================================================== */
     /* All of the EventOperations...
     /* ==================================================================== */
 
-    /** A string operation that calls a validation method */
-    public static class ValidateMethod extends EventOperation {
-        String methodName;
-        String className;
+    /** An event operation that creates a local map from the request parameters */
+    public static class ParameterMap extends EventOperation {
+        String mapName;
         
-        public ValidateMethod(Element element, SimpleEvent simpleEvent) {
+        public ParameterMap(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
-            this.methodName = element.getAttribute("method");
-            this.className = element.getAttribute("class");
+            mapName = element.getAttribute("map-name");
         }
         
-        public void exec(HttpServletRequest request, ClassLoader loader) {
+        public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
+            env.put(mapName, UtilMisc.getParameterMap(request));
+            return true;
         }
     }
     
+    /** An event operation that calls a simple map processor minilang file */
+    public static class SimpleMapProcessor extends EventOperation {
+        String xmlResource;
+        String inMapName;
+        String outMapName;
+        String errorListName;
+        
+        public SimpleMapProcessor(Element element, SimpleEvent simpleEvent) {
+            super(element, simpleEvent);
+            xmlResource = element.getAttribute("xml-resource");
+            inMapName = element.getAttribute("in-map-name");
+            outMapName = element.getAttribute("out-map-name");
+            errorListName = element.getAttribute("error-list-name");
+            if (errorListName == null || errorListName.length() == 0)
+                errorListName = "_error_list_";
+        }
+        
+        public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
+            List messages = (List) env.get(errorListName);
+            if (messages == null) {
+                messages = new LinkedList();
+                env.put(errorListName, messages);
+            }
+            
+            Map inMap = (Map) env.get(inMapName);
+            if (inMap == null) {
+                inMap = new HashMap();
+                env.put(inMapName, inMap);
+            }
+            
+            Map outMap = (Map) env.get(outMapName);
+            if (outMap == null) {
+                outMap = new HashMap();
+                env.put(outMapName, outMap);
+            }
+            
+            
+            return true;
+        }
+    }
+
+    /** An event operation that checks a message list and may introduce a return code and stop the event */
+    public static class CheckErrors extends EventOperation {
+        String errorListName;
+        String responseCode;
+        
+        public CheckErrors(Element element, SimpleEvent simpleEvent) {
+            super(element, simpleEvent);
+            responseCode = element.getAttribute("response-code");
+            if (responseCode == null || responseCode.length() == 0)
+                responseCode = "error";
+            errorListName = element.getAttribute("error-list-name");
+            if (errorListName == null || errorListName.length() == 0)
+                errorListName = "_error_list_";
+        }
+        
+        public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
+            List messages = (List) env.get(errorListName);
+            if (messages != null && messages.size() > 0) {
+                //String errMsg = "<b>The following errors occured:</b><br><ul>" + ServiceUtil.makeMessageList(messages, "<li>", "</li>") + "</ul>";
+                //request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+                
+                env.put(simpleEvent.responseCodeName, responseCode);
+                return false;
+            }
+            
+            return true;
+        }
+    }
+    
+    /** An event operation that creates a local map from the request parameters */
+    public static class Service extends EventOperation {
+        String mapName;
+        
+        public Service(Element element, SimpleEvent simpleEvent) {
+            super(element, simpleEvent);
+            this.mapName = element.getAttribute("map-name");
+        }
+        
+        public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
+            env.put(mapName, UtilMisc.getParameterMap(request));
+            return true;
+        }
+    }
+    
+    /** Simple class to wrap messages that come either a straight string or a properties file */
     public static class FlexibleMessage {
         String message = null;
         String propertyResource = null;

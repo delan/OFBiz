@@ -29,27 +29,31 @@
 -->
 
 <!ELEMENT simple-events ( simple-event* )>
-<!ELEMENT simple-event ( ( parameter-map | string-processor | check-messages | service )* )>
+<!ELEMENT simple-event ( ( parameter-map | simple-map-processor | check-errors | service )* )>
 <!ATTLIST simple-event
     event-name CDATA #REQUIRED
     short-description CDATA #REQUIRED
     login-required ( true | false ) "true"
+    request-name CDATA "_request_"
+    response-code-name CDATA "_response_code_"
 >
 
 <!ELEMENT parameter-map EMPTY>
 <!ATTLIST parameter-map
     map-name CDATA #REQUIRED
 >
-<!ELEMENT string-processor EMPTY>
-<!ATTLIST string-processor
+<!ELEMENT simple-map-processor EMPTY>
+<!ATTLIST simple-map-processor
     xml-resource CDATA #REQUIRED
     in-map-name CDATA #REQUIRED
     out-map-name CDATA #REQUIRED
+    error-list-name CDATA "_error_list_"
 >
 
-<!ELEMENT check-messages ( error-prefix?, error-suffix?, message-prefix?, message-suffix? )>
-<!ATTLIST check-messages
+<!ELEMENT check-errors ( error-prefix?, error-suffix?, message-prefix?, message-suffix? )>
+<!ATTLIST check-errors
     response-code CDATA "error"
+    error-list-name CDATA "_error_list_"
 >
 
 <!ELEMENT service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message? )>
@@ -57,6 +61,7 @@
     service-name CDATA #REQUIRED
     in-map-name CDATA #REQUIRED
     include-user-login ( true | false ) "true"
+    response-code CDATA "error"
 >
 
 <!ELEMENT error-prefix (#PCDATA)>
