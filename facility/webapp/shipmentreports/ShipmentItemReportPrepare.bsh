@@ -35,11 +35,11 @@ jrParameters = new HashMap();
 jrParameters.put("shipmentId", shipmentId);
 jrParameters.put("shipment", shipment);
 request.setAttribute("jrParameters", jrParameters);
-//Debug.logInfo("jrParameters: " + jrParameters);
+//Debug.log("jrParameters: " + jrParameters);
 
 if (shipment != null) {
 	shipmentManifestViews = shipment.getRelated("ShipmentManifestView", null, UtilMisc.toList("shipmentRouteSegmentId", "shipmentPackageSeqId", "shipmentItemSeqId"));
-	//Debug.logInfo("shipmentManifestViews: " + shipmentManifestViews);
+	//Debug.log("shipmentManifestViews: " + shipmentManifestViews);
 	jrDataSource = new JRMapCollectionDataSource(shipmentManifestViews);
 	request.setAttribute("jrDataSource", jrDataSource);
 }

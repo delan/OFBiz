@@ -54,8 +54,8 @@ String entityName		= page.getProperty("entityName");
 GenericPK cachedPK = currentEntityMap.get(entityName);
 
 Map paramMap	= UtilHttp.getParameterMap(request);
-//org.ofbiz.core.util.Debug.logInfo("entityName:" + entityName);
-//org.ofbiz.core.util.Debug.logInfo("paramMap:" + paramMap);
+//org.ofbiz.core.util.Debug.log("entityName:" + entityName);
+//org.ofbiz.core.util.Debug.log("paramMap:" + paramMap);
 GenericValue v = delegator.makeValue(entityName, null);
 v.setPKFields(paramMap);
 GenericPK passedPK = v.getPrimaryKey();

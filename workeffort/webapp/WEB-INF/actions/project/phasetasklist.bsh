@@ -24,7 +24,7 @@ if (userLogin != null && userLogin.get("partyId") != null) {
                     UtilMisc.toList(new EntityExpr("workEffortIdFrom", EntityOperator.EQUALS, phaseWorkEffortId),
                         new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_BREAKDOWN")));
     } catch (GenericEntityException e) {
-        Debug.logWarning(e);
+        Debug.log(e);
     }
 }
 
@@ -44,7 +44,7 @@ if (relatedPhaseWorkEfforts != null) {
             }
         }
     } catch (GenericEntityException e) {
-        Debug.logWarning(e);
+        Debug.log(e);
     }
 }
 context.put("tasks",validPhaseWorkEfforts);

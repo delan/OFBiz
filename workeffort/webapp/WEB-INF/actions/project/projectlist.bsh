@@ -31,7 +31,7 @@ if (userLogin != null && userLogin.get("partyId") != null) {
                         UtilMisc.toList("priority"));
 		}
     } catch (GenericEntityException e) {
-        Debug.logWarning(e);
+        Debug.log(e);
     }
 }
 context.put("showAllProjects",showAllProjects);

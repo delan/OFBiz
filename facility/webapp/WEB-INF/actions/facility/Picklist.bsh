@@ -143,5 +143,5 @@ context.put("wrongQuantityReservedList", outMap.get("wrongQuantityReservedList")
 context.put("insufficientQohList", outMap.get("insufficientQohList"));
 
 if ("error".equals(outMap.get("responseMessage"))) {
-    Debug.logError("errorMessage: " + ServiceUtil.makeErrorMessage(outMap, "", "", "", ""));
+    Debug.log("errorMessage: " + ServiceUtil.makeErrorMessage(outMap, "", "", "", ""));
 }

@@ -79,8 +79,7 @@ Collection lastParties = (Collection) session.getAttribute("LAST_SEARCH_VALUES")
 
 if (lastParties != null && searchString.equals(lastSearchString)) {
     parties = lastParties;
-    context.put("parties", parties);
-    Debug.logInfo("Got parties from cache, size is " + parties.size());
+    context.put("parties", parties);    
 } else {
     
     Iterator partyIter = null;
@@ -115,7 +114,6 @@ if (lastParties != null && searchString.equals(lastSearchString)) {
         
         if (parties != null) {
             session.setAttribute("LAST_SEARCH_STRING", searchString);            
-            Debug.logInfo("Got parties from QUERY, size is " + parties.size());
             partyIter = parties.iterator();
         }
         

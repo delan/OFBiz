@@ -46,7 +46,7 @@ try {
         toDate = Timestamp.valueOf(toDateStr);
     }
 } catch (Exception e) {
-    Debug.logError(e);
+    Debug.log(e);
 }
 
 

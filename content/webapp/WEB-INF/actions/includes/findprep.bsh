@@ -87,7 +87,7 @@ try {
 
 } catch (GenericServiceException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Error in findLookup service. "  + e.getMessage() + ")");
-            Debug.logError(e, "findprep.bsh");
+            Debug.log(e, "findprep.bsh");
             return "error";
         }
 
