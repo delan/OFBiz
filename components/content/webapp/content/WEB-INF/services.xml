@@ -1,48 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN"
-                          "http://www.ofbiz.org/dtds/services.dtd">
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
 <services>
   <description>Content Application Services</description>
   <vendor>AGinc</vendor>
   <version>1.0</version>
-  <service auth="false" engine="simple"
-    invoke="determineContentPermission"
-    location="org/ofbiz/content/ContentPermissionServices.xml" name="grantContentPermission">
-    <description>General permission granting service.         1. Check
-      public permission.          2. Check for user login.  3. Check
-      entity permission.   4. Check for role-granted public permission.
-      Find global roleType assocs. Expand group assocs. Check match.
-      Find content-specific roleType assocs. Check match.   Return
-      status and user role list.  5. Check for ECA managed grants. </description>
+  <service name="grantContentPermission" auth="false" engine="simple"
+    location="org/ofbiz/content/ContentPermissionServices.xml" invoke="determineContentPermission">
+    <description>General permission granting service.
+    	1. Check public permission.
+    	2. Check for user login.
+    	3. Check entity permission.
+    	4. Check for role-granted public permission.
+           Find global roleType assocs. Expand group assocs. Check match.
+           Find content-specific roleType assocs. Check match. 
+           Return status and user role list.
+        5. Check for ECA managed grants.
+    </description>
     <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
     <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
     <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.entity.GenericValue"/>
     <attribute mode="INOUT" name="roleHistory" optional="true" type="java.util.List"/>
     <attribute mode="OUT" name="permissionStatus" optional="false" type="String"/>
   </service>
-  <service auth="false" engine="simple"
-    invoke="determineContentPermissionPublic"
-    location="org/ofbiz/content/ContentPermissionServices.xml" name="grantContentPermissionPublic">
-    <description>Check ContentPurposeOperation table for non-role
-      permissions.         </description>
-    <attribute mode="IN" name="targetOperationList" optional="false" type="java.util.List"/>
-    <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.entity.GenericValue"/>
-    <attribute mode="OUT" name="contentPurposeList" optional="true" type="java.util.List"/>
-    <attribute mode="OUT" name="contentPurposeOperationList"
-      optional="true" type="java.util.List"/>
-    <attribute mode="OUT" name="permissionStatus" optional="false" type="String"/>
+  <service name="grantContentPermissionPublic" auth="false" engine="simple"
+    location="org/ofbiz/content/ContentPermissionServices.xml" invoke="determineContentPermissionPublic">
+    <description>Check ContentPurposeOperation table for non-role permissions.</description>
+    <attribute name="targetOperationList" mode="IN" optional="false" type="java.util.List"/>
+    <attribute name="currentContent" mode="IN" optional="false" type="org.ofbiz.entity.GenericValue"/>
+    <attribute name="contentPurposeList" mode="OUT" optional="true" type="java.util.List"/>
+    <attribute name="contentPurposeOperationList" mode="OUT" optional="true" type="java.util.List"/>
+    <attribute name="permissionStatus" mode="OUT" optional="false" type="String"/>
   </service>
-  <service auth="false" engine="simple"
-    invoke="determineContentPermissionPublicByRole"
-    location="org/ofbiz/content/ContentPermissionServices.xml" name="grantContentPermissionPublic">
-    <description>Check ContentPurposeOperation table for non-role
-      permissions.         </description>
-    <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
-    <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.entity.GenericValue"/>
-    <attribute mode="INOUT" name="roleHistory" optional="true" type="java.util.List"/>
-    <attribute mode="OUT" name="contentPurposeList" optional="true" type="java.util.List"/>
-    <attribute mode="OUT" name="contentPurposeOperationList"
-      optional="true" type="java.util.List"/>
-    <attribute mode="OUT" name="permissionStatus" optional="false" type="String"/>
+  <service name="grantContentPermissionPublicByRole" auth="false" engine="simple"
+    location="org/ofbiz/content/ContentPermissionServices.xml" invoke="determineContentPermissionPublicByRole">
+    <description>Check ContentPurposeOperation table for non-role permissions.</description>
+    <attribute name="targetOperationList" mode="IN" optional="true" type="java.util.List"/>
+    <attribute name="currentContent" mode="IN" optional="false" type="org.ofbiz.entity.GenericValue"/>
+    <attribute name="roleHistory" mode="INOUT" optional="true" type="java.util.List"/>
+    <attribute name="contentPurposeList" mode="OUT" optional="true" type="java.util.List"/>
+    <attribute name="contentPurposeOperationList" mode="OUT" optional="true" type="java.util.List"/>
+    <attribute name="permissionStatus" mode="OUT" optional="false" type="String"/>
   </service>
 </services>
