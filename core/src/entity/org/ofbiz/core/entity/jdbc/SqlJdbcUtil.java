@@ -49,26 +49,155 @@ public class SqlJdbcUtil {
     public static final String module = GenericDAO.class.getName();
 
     /** Makes the FROM clause and when necessary the JOIN clause(s) as well */
-    public static String makeFromClause(ModelEntity modelEntity, String joinStyle) {
-        StringBuffer sql = new StringBuffer("");
+    public static String makeFromClause(ModelEntity modelEntity, String joinStyle) throws GenericEntityException {
+        StringBuffer sql = new StringBuffer(" FROM ");
         
         if (modelEntity instanceof ModelViewEntity) {
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
             
-            sql.append(" FROM ");
-            Iterator meIter = modelViewEntity.getMemberModelMemberEntities().entrySet().iterator();
-            while (meIter.hasNext()) {
-                Map.Entry entry = (Map.Entry) meIter.next();
-                ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());
+            if ("ansi".equals(joinStyle)) {
+                String firstMemberAlias = null;
                 
-                sql.append(fromEntity.getTableName());
-                sql.append(" ");
-                sql.append((String) entry.getKey());
-                if (meIter.hasNext())
-                    sql.append(", ");
+                //FROM clause: very simple, just use the first required member entity
+                if (modelViewEntity.getRequiredModelMemberEntities().size() == 0) {
+                    throw new GenericModelException("The " + modelViewEntity.getEntityName() + " view-entity has no required member entities but must have at least one (ie full joins not supported)");
+                } else {
+                    ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) modelViewEntity.getRequiredModelMemberEntities().get(0);
+                    ModelEntity fromEntity = modelViewEntity.getMemberModelEntity(modelMemberEntity.getEntityAlias());
+                    sql.append(fromEntity.getTableName());
+                    sql.append(" ");
+                    sql.append(modelMemberEntity.getEntityAlias());
+                    
+                    firstMemberAlias = modelMemberEntity.getEntityAlias();
+                }
+                
+                //JOIN clause(s): a bit more complex, must have join conditions, etc
+
+                //BIG NOTE on the JOIN clauses: not sure if all databases will support this syntax, may have
+                //  to build a tree of view-links and nest the JOINs appropriately...
+                
+                //first required members, except the first one (JOIN)
+                Iterator requiredIter = modelViewEntity.getRequiredModelMemberEntities().iterator();
+                //skip the first, if no first an exception will be thrown above:
+                requiredIter.next();
+                while (requiredIter.hasNext()) {
+                    ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) requiredIter.next();
+                    ModelEntity fromEntity = modelViewEntity.getMemberModelEntity(modelMemberEntity.getEntityAlias());
+                    String currentMemberAlias = modelMemberEntity.getEntityAlias();
+                    
+                    sql.append(" JOIN ");
+                    sql.append(fromEntity.getTableName());
+                    sql.append(" ");
+                    sql.append(currentMemberAlias);
+                    sql.append(" ON ");
+                    
+                    //get the view maps going from any other entity to this entity OR 
+                    //  between this member entity and the first/from member entity
+                    StringBuffer condBuffer = new StringBuffer();
+                    for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
+                        ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
+
+                        if (currentMemberAlias.equals(viewLink.getRelEntityAlias()) || 
+                                (currentMemberAlias.equals(viewLink.getEntityAlias()) && firstMemberAlias.equals(viewLink.getRelEntityAlias()))) {
+                        
+                            ModelEntity linkEntity = modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
+                            ModelEntity relLinkEntity = modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
+
+                            for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
+                                ModelKeyMap keyMap = viewLink.getKeyMap(j);
+                                ModelField linkField = linkEntity.getField(keyMap.getFieldName());
+                                ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
+
+                                if (condBuffer.length() > 0) {
+                                    condBuffer.append(" AND ");
+                                }
+                                condBuffer.append(viewLink.getEntityAlias());
+                                condBuffer.append(".");
+                                condBuffer.append(linkField.getColName());
+                                condBuffer.append("=");
+                                condBuffer.append(viewLink.getRelEntityAlias());
+                                condBuffer.append(".");
+                                condBuffer.append(relLinkField.getColName());
+                            }
+                        }
+                    }
+                    
+                    if (condBuffer.length() == 0) {
+                        throw new GenericModelException("No join conditions (view-links) found for the " + modelMemberEntity.getEntityAlias() + " aliased member-entity of the " + modelViewEntity.getEntityName() + " view-entity.");
+                    }
+                    
+                    sql.append(condBuffer.toString());
+                }
+                
+                //then optional members (LEFT JOIN)
+                Iterator optionalIter = modelViewEntity.getOptionalModelMemberEntities().iterator();
+                while (optionalIter.hasNext()) {
+                    ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) optionalIter.next();
+                    ModelEntity fromEntity = modelViewEntity.getMemberModelEntity(modelMemberEntity.getEntityAlias());
+                    String currentMemberAlias = modelMemberEntity.getEntityAlias();
+                    
+                    sql.append(" LEFT JOIN ");
+                    sql.append(fromEntity.getTableName());
+                    sql.append(" ");
+                    sql.append(currentMemberAlias);
+                    sql.append(" ON ");
+                    
+                    //get the view maps going from any other entity to this entity OR 
+                    //  between this member entity and the first/from member entity
+                    StringBuffer condBuffer = new StringBuffer();
+                    for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
+                        ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
+
+                        if (currentMemberAlias.equals(viewLink.getRelEntityAlias()) || 
+                                (currentMemberAlias.equals(viewLink.getEntityAlias()) && firstMemberAlias.equals(viewLink.getRelEntityAlias()))) {
+                        
+                            ModelEntity linkEntity = modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
+                            ModelEntity relLinkEntity = modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
+
+                            for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
+                                ModelKeyMap keyMap = viewLink.getKeyMap(j);
+                                ModelField linkField = linkEntity.getField(keyMap.getFieldName());
+                                ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
+
+                                if (condBuffer.length() > 0) {
+                                    condBuffer.append(" AND ");
+                                }
+                                condBuffer.append(viewLink.getEntityAlias());
+                                condBuffer.append(".");
+                                condBuffer.append(linkField.getColName());
+                                condBuffer.append("=");
+                                condBuffer.append(viewLink.getRelEntityAlias());
+                                condBuffer.append(".");
+                                condBuffer.append(relLinkField.getColName());
+                            }
+                        }
+                    }
+                    
+                    if (condBuffer.length() == 0) {
+                        throw new GenericModelException("No join conditions (view-links) found for the " + modelMemberEntity.getEntityAlias() + " aliased member-entity of the " + modelViewEntity.getEntityName() + " view-entity.");
+                    }
+                    
+                    sql.append(condBuffer.toString());
+                }
+                
+            } else if ("theta-oracle".equals(joinStyle) || "theta-mssql".equals(joinStyle)) {
+                //FROM clause
+                Iterator meIter = modelViewEntity.getMemberModelMemberEntities().entrySet().iterator();
+                while (meIter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) meIter.next();
+                    ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());
+
+                    sql.append(fromEntity.getTableName());
+                    sql.append(" ");
+                    sql.append((String) entry.getKey());
+                    if (meIter.hasNext()) sql.append(", ");
+                }
+                
+                //JOIN clause(s): none needed, all the work done in the where clause for theta-oracle
+            } else {
+                throw new GenericModelException("The join-style " + joinStyle + " is not yet supported");
             }
         } else {
-            sql.append(" FROM ");
             sql.append(modelEntity.getTableName());
         }
         return sql.toString();
@@ -111,7 +240,7 @@ public class SqlJdbcUtil {
         return returnString.toString();
     }
 
-    public static String makeWhereClause(ModelEntity modelEntity, List modelFields, Map fields, String operator, String joinStyle) {
+    public static String makeWhereClause(ModelEntity modelEntity, List modelFields, Map fields, String operator, String joinStyle) throws GenericEntityException {
         StringBuffer whereString = new StringBuffer("");
 
         if (modelFields != null && modelFields.size() > 0) {
@@ -137,33 +266,56 @@ public class SqlJdbcUtil {
         return "";
     }
 
-    public static String makeViewWhereClause(ModelEntity modelEntity, String joinStyle) {
+    public static String makeViewWhereClause(ModelEntity modelEntity, String joinStyle) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
             StringBuffer whereString = new StringBuffer("");
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
             
-            for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
-                ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
+            if ("ansi".equals(joinStyle)) {
+                //nothing to do here, all done in the JOIN clauses
+            } else if ("theta-oracle".equals(joinStyle) || "theta-mssql".equals(joinStyle)) {
+                boolean isOracleStyle = "theta-oracle".equals(joinStyle);
+                boolean isMssqlStyle = "theta-mssql".equals(joinStyle);
                 
-                ModelEntity linkEntity = (ModelEntity) modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
-                ModelEntity relLinkEntity = (ModelEntity) modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
-                
-                for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
-                    ModelKeyMap keyMap = viewLink.getKeyMap(j);
-                    ModelField linkField = linkEntity.getField(keyMap.getFieldName());
-                    ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
+                for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
+                    ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
+
+                    ModelEntity linkEntity = modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
+                    ModelEntity relLinkEntity = modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
+
+                    ModelViewEntity.ModelMemberEntity linkMemberEntity = modelViewEntity.getMemberModelMemberEntity(viewLink.getEntityAlias());
+                    ModelViewEntity.ModelMemberEntity relLinkMemberEntity = modelViewEntity.getMemberModelMemberEntity(viewLink.getRelEntityAlias());
                     
-                    if (whereString.length() > 0) {
-                        whereString.append(" AND ");
+                    for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
+                        ModelKeyMap keyMap = viewLink.getKeyMap(j);
+                        ModelField linkField = linkEntity.getField(keyMap.getFieldName());
+                        ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
+
+                        if (whereString.length() > 0) {
+                            whereString.append(" AND ");
+                        }
+                        whereString.append(viewLink.getEntityAlias());
+                        whereString.append(".");
+                        whereString.append(linkField.getColName());
+                        
+                        //check to see whether the left or right members are optional, if so:
+                        //  oracle: use the (+) on the optional side
+                        //  mssql: use the * on the required side
+                        
+                        //NOTE: not testing if original table is optional, ONLY if related table is optional; otherwise things get really ugly...
+                        //if (isOracleStyle && linkMemberEntity.getOptional()) whereString.append(" (+) ");
+                        if (isMssqlStyle && relLinkMemberEntity.getOptional()) whereString.append("*");
+                        whereString.append("=");
+                        //if (isMssqlStyle && linkMemberEntity.getOptional()) whereString.append("*");
+                        if (isOracleStyle && relLinkMemberEntity.getOptional()) whereString.append(" (+) ");
+                        
+                        whereString.append(viewLink.getRelEntityAlias());
+                        whereString.append(".");
+                        whereString.append(relLinkField.getColName());
                     }
-                    whereString.append(viewLink.getEntityAlias());
-                    whereString.append(".");
-                    whereString.append(linkField.getColName());
-                    whereString.append("=");
-                    whereString.append(viewLink.getRelEntityAlias());
-                    whereString.append(".");
-                    whereString.append(relLinkField.getColName());
                 }
+            } else {
+                throw new GenericModelException("The join-style " + joinStyle + " is not yet supported");
             }
             
             if (whereString.length() > 0) {

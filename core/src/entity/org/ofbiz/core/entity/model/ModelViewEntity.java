@@ -51,6 +51,8 @@ public class ModelViewEntity extends ModelEntity {
     protected List requiredModelMemberEntities = new LinkedList();
     /** A list of ModelMemberEntity entries that are <b>optional</b> for the join */
     protected List optionalModelMemberEntities = new LinkedList();
+    /** A list of all ModelMemberEntity entries; this is mainly used to preserve the original order of member entities from the XML file */
+    protected List allModelMemberEntities = new LinkedList();
     
     /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
     protected Map memberModelEntities = null;
@@ -85,11 +87,6 @@ public class ModelViewEntity extends ModelEntity {
             } else {
                 ModelMemberEntity modelMemberEntity = new ModelMemberEntity(alias, name, optional);
                 this.addMemberModelMemberEntity(modelMemberEntity);
-                if (optional) {
-                    this.optionalModelMemberEntities.add(modelMemberEntity);
-                } else {
-                    this.requiredModelMemberEntities.add(modelMemberEntity);
-                }
             }
         }
         
@@ -112,8 +109,8 @@ public class ModelViewEntity extends ModelEntity {
 
         for (int i = 0; i < viewLinkList.getLength(); i++) {
             Element viewLinkElement = (Element) viewLinkList.item(i);
-            ModelViewEntity.ModelViewLink viewLink = new ModelViewLink(viewLinkElement);
-            this.viewLinks.add(viewLink);
+            ModelViewLink viewLink = new ModelViewLink(viewLinkElement);
+            this.addViewLink(viewLink);
         }
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
@@ -133,6 +130,13 @@ public class ModelViewEntity extends ModelEntity {
     public List getOptionalModelMemberEntities() {
         return this.optionalModelMemberEntities;
     }
+    public List getAllModelMemberEntities() {
+        return this.allModelMemberEntities;
+    }
+
+    public ModelMemberEntity getMemberModelMemberEntity(String alias) {
+        return (ModelMemberEntity) this.memberModelMemberEntities.get(alias);
+    }
 
     public ModelEntity getMemberModelEntity(String alias) {
         if (this.memberModelEntities == null) {
@@ -144,10 +148,23 @@ public class ModelViewEntity extends ModelEntity {
 
     public void addMemberModelMemberEntity(ModelMemberEntity modelMemberEntity) {
         this.memberModelMemberEntities.put(modelMemberEntity.getEntityAlias(), modelMemberEntity);
+        this.allModelMemberEntities.add(modelMemberEntity);
+        if (modelMemberEntity.getOptional()) {
+            this.optionalModelMemberEntities.add(modelMemberEntity);
+        } else {
+            this.requiredModelMemberEntities.add(modelMemberEntity);
+        }
     }
 
     public void removeMemberModelMemberEntity(String alias) {
-        this.memberModelMemberEntities.remove(alias);
+        ModelMemberEntity modelMemberEntity = (ModelMemberEntity) this.memberModelMemberEntities.remove(alias);
+        if (modelMemberEntity == null) return;
+        this.allModelMemberEntities.remove(modelMemberEntity);
+        if (modelMemberEntity.getOptional()) {
+            this.optionalModelMemberEntities.remove(modelMemberEntity);
+        } else {
+            this.requiredModelMemberEntities.remove(modelMemberEntity);
+        }
     }
 
     /** List of aliases with information in addition to what is in the standard field list */
@@ -187,6 +204,10 @@ public class ModelViewEntity extends ModelEntity {
     public List getViewLinksCopy() {
         return new ArrayList(this.viewLinks);
     }
+    
+    public void addViewLink(ModelViewLink viewLink) {
+        this.viewLinks.add(viewLink);
+    }
 
     public void populateFields(Map entityCache) {
         if (this.memberModelEntities == null) {
@@ -213,6 +234,9 @@ public class ModelViewEntity extends ModelEntity {
             ModelAlias alias = (ModelAlias) aliases.get(i);
 
             ModelMemberEntity modelMemberEntity = (ModelMemberEntity) memberModelMemberEntities.get(alias.entityAlias);
+            if (modelMemberEntity == null) {
+                Debug.logError("No member entity with alias " + alias.entityAlias + " found in view-entity " + this.getEntityName() + "; this view-entity will NOT be usable...");
+            }
             String aliasedEntityName = modelMemberEntity.getEntityName();
             ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
             if (aliasedEntity == null) {
