@@ -180,10 +180,13 @@ public class CacheLineTable implements Serializable {
                 // remove this table
                 long recid = fileTable.getRecid();
                 CacheLineTable.jdbmMgr.delete(recid);
+                CacheLineTable.jdbmMgr.commit();
+                this.fileTable = null;                
 
                 // create a new table
                 this.fileTable = jdbm.htree.HTree.createInstance(CacheLineTable.jdbmMgr);
                 CacheLineTable.jdbmMgr.setNamedObject(cacheName, this.fileTable.getRecid());
+                CacheLineTable.jdbmMgr.commit();
             } catch (IOException e) {
                 Debug.logError(e, module);
             }
