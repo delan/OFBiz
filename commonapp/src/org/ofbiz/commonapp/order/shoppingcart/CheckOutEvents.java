@@ -363,6 +363,7 @@ public class CheckOutEvents {
 
         // build the server root string
         StringBuffer serverRoot = new StringBuffer();
+        /* This is disabled for now because we don't have the stuff in place to do a secure get...
         if (request.isSecure()) {
             String server = UtilProperties.getPropertyValue("url.properties", "force.https.host", request.getServerName());
             String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
@@ -373,6 +374,7 @@ public class CheckOutEvents {
                 serverRoot.append(port);
             }
         } else {
+         */
             String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
             String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
             serverRoot.append("http://");
@@ -381,7 +383,7 @@ public class CheckOutEvents {
                 serverRoot.append(":");
                 serverRoot.append(port);
             }
-        }
+        /* } */
 
         try {
             URL url = new URL(serverRoot.toString() + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
