@@ -28,7 +28,7 @@
 <project name="Open For Business Core Component" default="jar" basedir=".">
 
     <!-- ================================================================== -->
-    <!-- Initialization of all property settings                                                                                                                         -->
+    <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
     <target name="init">
@@ -75,7 +75,7 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Removes all created files and directories                                                                                                                 -->
+    <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
 
     <target name="clean" depends="clean-lib">
@@ -89,7 +89,7 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Makes sure the needed directory structure is in place                                                                                            -->
+    <!-- Makes sure the needed directory structure is in place              -->
     <!-- ================================================================== -->
 
     <target name="prepare" depends="clean-lib">
@@ -307,7 +307,7 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Compilation of the core component ejb jar                                                                                                              -->
+    <!-- Compilation of the core component ejb jar                          -->
     <!-- ================================================================== -->
 
     <target name="ejbxml" depends="prepare,ejbinit">
@@ -324,9 +324,27 @@
     <target name="ejbjar" depends="ejbclasses">
         <jar jarfile="${lib.dir}/${name}-ejb.jar" basedir="${build.dir}/ejb" />
     </target>
+    
+    <!-- ================================================================== -->
+    <!-- JOTM/XAPool Test                                                   -->
+    <!-- ================================================================== --> 
+    <target name="jotm-test" depends="classes">
+        <path id="jotm.class.path">
+            <fileset dir="${extlib.dir}/common" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/jotm" includes="*.jar"/>
+            <fileset dir="${lib.dir}" includes="*.jar"/>
+        </path>    
+        <java classname="org.ofbiz.core.util.JotmXaPoolTest" fork="true">
+            <classpath>
+                <path refid="jotm.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+            </classpath>
+        </java>
+        <delete dir="data"></delete>         
+    </target>   
 	
     <!-- ================================================================== -->
-    <!-- Build JavaDoc                                                                                                                                                           -->
+    <!-- Build JavaDoc                                                      -->
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs">
