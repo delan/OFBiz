@@ -36,6 +36,8 @@ import org.ofbiz.core.stats.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 
+import com.ibm.bsf.BSFManager;
+
 /**
  * ControlServlet.java - Master servlet for the web application.
  *
@@ -64,6 +66,10 @@ public class ControlServlet extends HttpServlet {
         //initialize the cached class loader for this application
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
+
+        //this tells BSF to use this class for handling javascript
+        String[] jsExtensions = {"js"};
+        BSFManager.registerScriptingEngine("javascript", "org.ofbiz.core.action.OfbizJsBsfEngine", jsExtensions);
         
         // initialize the delegator
         getDelegator();
