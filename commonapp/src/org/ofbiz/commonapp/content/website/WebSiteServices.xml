@@ -48,7 +48,7 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupKeyValue" entity-name="Content"/>
+        <make-value value-name="lookupKeyValue" entity-name="WebSite"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key entity-name="WebSite" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
