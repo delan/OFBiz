@@ -37,6 +37,7 @@ import org.ofbiz.core.util.*;
  */
 public class DispatchContext {
     
+    protected String name;
     protected Map modelServices;
     protected Map attributes;
     protected Collection readers;
@@ -46,7 +47,8 @@ public class DispatchContext {
      *@param readers a collection of reader URLs
      *@param loader the classloader to use for dispatched services
      */
-    public DispatchContext(Collection readers, ClassLoader loader) {
+    public DispatchContext(String name, Collection readers, ClassLoader loader) {
+        this.name = name;
         this.readers = readers;
         this.loader = loader;
         this.modelServices = new HashMap();
@@ -77,6 +79,13 @@ public class DispatchContext {
      */
     public ClassLoader getClassLoader() {
         return this.loader;
+    }
+    
+    /** Gets the name of the local dispatcher
+     *@return String name of the LocalDispatcher object
+     */
+    public String getName() {
+        return name;
     }
     
     /** Gets the GenericServiceModel instance that corresponds to given the name
