@@ -31,11 +31,12 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public interface GenericEngine {
-  /** Run the service synchronously and return the result
-   *@param context Map of name, value pairs composing the context
-   *@return Map of name, value pairs composing the result
-   */
-  public Map runSync(ModelService modelService, Map context) throws GenericServiceException;
+    
+    /** Run the service synchronously and return the result
+     *@param context Map of name, value pairs composing the context
+     *@return Map of name, value pairs composing the result
+     */
+    public Map runSync(ModelService modelService, Map context) throws GenericServiceException;
 
   /** Run the service synchronously and IGNORE the result
    *@param context Map of name, value pairs composing the context

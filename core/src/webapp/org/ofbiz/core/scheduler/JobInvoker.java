@@ -1,17 +1,12 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.2  2001/08/25 17:29:11  azeneski
- * Started migrating Debug.log to Debug.logInfo and Debug.logError
- *
- * Revision 1.1  2001/07/19 20:50:22  azeneski
- * Added the job scheduler to 'core' module.
- *
  */
 
 package org.ofbiz.core.scheduler;
 
-import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> JobInvoker.java
@@ -39,14 +34,17 @@ import org.ofbiz.core.util.Debug;
  * @version 1.0
  * Created on July 18, 2001, 2:24 PM
  */
+
 public class JobInvoker implements Runnable {
     
     private Job job;
+    private ServiceDispatcher dispatcher;
     private Thread thread;
     
     /** Creates new JobInvoker */
-    public JobInvoker(Job job) {
+    public JobInvoker(Job job, ServiceDispatcher dispatcher) {
         this.job = job;
+        this.dispatcher = dispatcher;
         long runTime = job.getRunTime();
         String threadName = (String) (new Long(runTime)).toString();
         // Start the invoker thread.
@@ -57,6 +55,8 @@ public class JobInvoker implements Runnable {
     
     public void run() {
         Debug.logInfo("JobInvoker: Thread (" + thread.getName() + ") Running...");
-        job.invoke();
-    }    
+        job.receiveNotice();
+        // invoke the service job.getString("serviceName");
+        // dispatcher.runSync(...);
+    }
 }

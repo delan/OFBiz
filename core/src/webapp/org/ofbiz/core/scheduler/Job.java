@@ -1,36 +1,14 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.5  2001/08/25 17:29:11  azeneski
- * Started migrating Debug.log to Debug.logInfo and Debug.logError
- *
- * Revision 1.4  2001/08/25 01:42:01  azeneski
- * Seperated event processing, now is found totally in EventHandler.java
- * Updated all classes which deal with events to use to new handler.
- *
- * Revision 1.3  2001/07/23 21:20:51  azeneski
- * Added support for HTTP GET/POST events in job scheduler.
- * Fixed a bug in the XML parser which caused the parser to die
- * when a empty element was found.
- *
- * Revision 1.2  2001/07/23 18:05:00  azeneski
- * Fixed runaway thread in the job scheduler.
- *
- * Revision 1.1  2001/07/19 20:50:22  azeneski
- * Added the job scheduler to 'core' module.
- *
  */
 
 package org.ofbiz.core.scheduler;
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Date;
-import java.util.Calendar;
-
-import org.ofbiz.core.event.EventHandler;
-import org.ofbiz.core.event.EventHandlerException;
-import org.ofbiz.core.util.Debug;
+import java.io.*;
+import java.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Job.java
@@ -56,55 +34,57 @@ import org.ofbiz.core.util.Debug;
  *
  * @author Andy Zeneski (jaz@zsolv.com)
  * @version 1.0
- * Created on July 17, 2001, 8:46 PM
+ * Created on July 17, 2001
  */
+
 public class Job implements Comparable, Serializable {
     
-    public static final int INTERVAL_TYPE_MINUTE = 1;
-    public static final int INTERVAL_TYPE_HOUR = 2;
-    public static final int INTERVAL_TYPE_DAY = 3;
-    public static final int INTERVAL_TYPE_MONTH = 4;
+    public static final int RUNTIME_ADJUSTMENT = 3000;  // Default adjustment is 3 seconds.
+    public static final int INTERVAL_MINUTE = 1;
+    public static final int INTERVAL_HOUR = 2;
+    public static final int INTERVAL_DAY = 3;
+    public static final int INTERVAL_MONTH = 4;
     
-    private String jobName = null;
-    private Date startDate = null;
-    private Date endDate = null;
-    private int interval = -1;
-    private int intervalType = 0;
-    private long runTime = -1;
-    private int runCount = 0;
-    private boolean isRepeated;
-    private boolean fromConfig;
-    private String eventType;
-    private String eventPath;
-    private String eventMethod;
-    private Map parameters;
-    private Map headers;
+    private GenericValue job;
+    private Map context;
+    private long runTime;
+    
+    /* Entity Fields:
+     * String jobName
+     * String serviceName
+     * Date startDate
+     * Date endDate
+     * Date lastRun
+     * int interval
+     * int intervalType
+     * int runCount
+     * boolean isRepeated
+     * boolean isPersistant
+     */
     
     /** Creates a new Job object. */
-    public Job( String jobName, Date startDate, Date endDate, int interval, int intervalType, boolean isRepeated, String eventType, String eventPath, String eventMethod, Map parameters, Map headers ) {
-        this.jobName =jobName;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.interval = interval;
-        this.intervalType = intervalType;
-        this.isRepeated = isRepeated;        
-        this.eventType = eventType;
-        this.eventPath = eventPath;
-        this.eventMethod = eventMethod;
-        this.parameters = parameters;
-        this.headers = headers;
+    public Job(GenericValue job, Map context) {
+        this.job = job;
+        this.context = context;
+        this.runTime = -1;
         updateRunTime();
-    }
-        
-    /** Updates the runTime based on the interval (minutes). */
-    public void updateRunTime() {
-        if ( startDate == null )          
-            startDate = new Date();
-        if ( interval != -1 )         
-                runTime = getNextStartTime();        
+        try {
+            job.store();
+        }
+        catch ( GenericEntityException e ) {
+            e.printStackTrace();
+        }
     }
     
-    /** Checks to see if this job is scheduled to run within the next second. */
+    /** Updates the runTime based on the interval (minutes). */
+    public void updateRunTime() {
+        if ( job.getDate("startDate") == null )
+            job.set("startDate", new Date());
+        if ( job.getInteger("interval").intValue() != -1 )
+            runTime = getNextStartTime();
+    }
+    
+    /** Checks to see if this Job is scheduled to run within the next second. */
     private boolean checkRunTime() {
         long delayTime = runTime - System.currentTimeMillis();
         if (delayTime <= 1000)
@@ -112,14 +92,29 @@ public class Job implements Comparable, Serializable {
         return true;
     }
     
-    /** Adjusts the runTime by 5 seconds. */
+    /** Adjusts the run time to not conflict with other Jobs. */
     public void adjustRunTime() {
-        runTime += 5000;
+        runTime += RUNTIME_ADJUSTMENT;
     }
     
-    /** Returns the name of this job. */
+    /** Receives notification when this Job is running. */
+    public void receiveNotice() {
+        Date stamp = new Date();
+        int runCount = job.getInteger("runCount").intValue();
+        runCount++;
+        job.set("lastRunTime",stamp);
+        job.set("runCount", new Integer(runCount));
+        try {
+            job.store();
+        }
+        catch ( GenericEntityException e ) {
+            e.printStackTrace();
+        }
+    }
+    
+    /** Returns the name of this Job. */
     public String getJobName() {
-        return jobName;
+        return job.getString("jobName");
     }
     
     /** Returns the time to run in milliseconds. */
@@ -127,80 +122,63 @@ public class Job implements Comparable, Serializable {
         return runTime;
     }
     
-    /** Returns true if this job is repeats. */
+    /** Retuns the last time the Job ran or 0 if never ran. */
+    public long lastRunTime() {
+        if ( job.getDate("lastRunTime") == null )
+            return 0;
+        else
+            return job.getDate("lastRunTime").getTime();
+    }
+    
+    /** Returns the number of times this Job has run. */
+    public int getRunCount() {
+        return job.getInteger("runCount").intValue();
+    }
+    
+    /** Returns true if this Job repeats. */
     public boolean isRepeated() {
-        if ( interval == -1 )
-            isRepeated = false;
-        return isRepeated;
+        if ( job.getInteger("interval").intValue() == -1 )
+            return false;
+        else
+            return job.getBoolean("isRepeated").booleanValue();
     }
     
-    /** Notifies the job manager this job was scheduled from the config file. */
-    public void setFromConfig(boolean fromConfig) {
-        this.fromConfig = fromConfig;
-    }
-    
-    /** Returns true if this job was scheduled from the configuration file. */
-    public boolean isFromConfig() {
-        return fromConfig;
-    }
-    
-    /** Evaluates if this job is equal to another job. */
+    /** Evaluates if this Job is equal to another Job. */
     public boolean equals(Object obj) {
-        Job job = (Job) obj;
-        if (runTime == job.runTime)
+        Job testJob = (Job) obj;
+        if (this.runTime == testJob.getRunTime())
             return true;
         return false;
     }
     
     /** Used by the comparable interface. */
     public int compareTo(Object obj) {
-        Job job = (Job) obj;
-        if (runTime < job.runTime)
+        Job testJob = (Job) obj;
+        if (this.runTime < testJob.getRunTime())
             return -1;
-        if (runTime > job.runTime)
+        if (this.runTime > testJob.getRunTime())
             return 1;
         return 0;
     }
     
-    /** Returns the number of times this job has run. */
-    public int getRunCount() {
-        return runCount;
-    }
-    
-    /** Invokes the event associated with this job. */
-    public void invoke() {
-        Debug.logInfo("Job (" + jobName + ") invoking.");
-        String eventResult = null;
-        runCount++;
-        if ( eventType != null && eventPath != null && eventMethod != null ) {
-            try {
-                EventHandler eh = new EventHandler(eventType,eventPath,eventMethod);
-                eventResult = eh.invoke(parameters,parameters);
-            }
-            catch ( EventHandlerException e ) {
-                Debug.logError(e,"Event Error - ");
-            }
-        }
-    }
-    
     private long getNextStartTime() {
-        // Build the calendar object.        
-        Calendar eventCal = Calendar.getInstance();  
-        eventCal.setTime(startDate);
+        // Build the calendar object.
+        Calendar eventCal = Calendar.getInstance();
+        eventCal.setTime(job.getDate("startDate"));
         
         // Get the current times.
-        long startTime = startDate.getTime();
+        long startTime = job.getDate("startDate").getTime();
         long currentTime = System.currentTimeMillis();
         long endTime = -1;
-        if ( endDate != null )
-            endTime = endDate.getTime();
-                
-        // If event end time has past, run no more.
+        if ( job.getDate("endDate") != null )
+            endTime = job.getDate("endDate").getTime();
+        
+        // If Job end time has past, run no more.
         if ( (endTime != -1) && (endTime < currentTime) )
             return -1;
         
-        // If job has run and does not repeat, run no more.
-        if ( !isRepeated && runCount > 0 )
+        // If Job has run and does not repeat, run no more.
+        if ( !job.getBoolean("isRepeated").booleanValue() && getRunCount() > 0 )
             return -1;
         
         // If startTime has not yet arrived use it.
@@ -209,20 +187,20 @@ public class Job implements Comparable, Serializable {
         
         // The end time has not yet arrived, get the next start time.
         long nextStartTime = startTime;
-        if ( intervalType > 0 ) {
+        if ( job.getInteger("intervalType").intValue() > 0 ) {
             while ( nextStartTime < currentTime ) {
-                switch(intervalType) {
-                    case INTERVAL_TYPE_MINUTE:
-                        eventCal.add(Calendar.MINUTE, interval);
+                switch(job.getInteger("intervalType").intValue()) {
+                    case INTERVAL_MINUTE:
+                        eventCal.add(Calendar.MINUTE, job.getInteger("interval").intValue());
                         break;
-                    case INTERVAL_TYPE_HOUR:
-                        eventCal.add(Calendar.HOUR, interval);
+                    case INTERVAL_HOUR:
+                        eventCal.add(Calendar.HOUR, job.getInteger("interval").intValue());
                         break;
-                    case INTERVAL_TYPE_DAY:
-                        eventCal.add(Calendar.DAY_OF_MONTH, interval);
+                    case INTERVAL_DAY:
+                        eventCal.add(Calendar.DAY_OF_MONTH, job.getInteger("interval").intValue());
                         break;
-                    case INTERVAL_TYPE_MONTH:
-                        eventCal.add(Calendar.MONTH, interval);
+                    case INTERVAL_MONTH:
+                        eventCal.add(Calendar.MONTH, job.getInteger("interval").intValue());
                         break;
                     default:
                         break;
@@ -234,21 +212,17 @@ public class Job implements Comparable, Serializable {
         return -1;
     }
     
-    /** Returns a string description of this job. */
+    /** Returns a string description of this Job. */
     public String toString() {
         StringBuffer sb = new StringBuffer("Job");
-        sb.append(" Name="); sb.append(jobName);
-        sb.append(" Start="); sb.append(startDate);
-        sb.append(" End="); sb.append(endDate);
+        sb.append(" Name="); sb.append(job.getString("jobName"));
+        sb.append(" Start="); sb.append(job.getDate("startDate"));
+        sb.append(" End="); sb.append(job.getDate("endDate"));
         sb.append(" Next-Run="); sb.append(new Date(runTime));
-        sb.append(" Interval="); sb.append(interval);
-        sb.append(" Interval-Type="); sb.append(intervalType);
-        sb.append(" Repeats="); sb.append(isRepeated);
-        sb.append(" Event-Type="); sb.append(eventType);
-        sb.append(" Event-Path="); sb.append(eventPath);
-        sb.append(" Event-Invoke="); sb.append(eventMethod);
-        sb.append(" Parameters="); sb.append(parameters.size());
-        sb.append(" Headers="); sb.append(headers.size());
+        sb.append(" Interval="); sb.append(job.getInteger("interval"));
+        sb.append(" Interval-Type="); sb.append(job.getInteger("intervalType"));
+        sb.append(" Repeats="); sb.append(job.getBoolean("isRepeated"));
+        sb.append(" Service="); sb.append(job.getString("serviceName"));
         return sb.toString();
     }
 }

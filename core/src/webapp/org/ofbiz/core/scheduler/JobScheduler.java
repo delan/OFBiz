@@ -1,20 +1,12 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.3  2001/08/25 17:29:11  azeneski
- * Started migrating Debug.log to Debug.logInfo and Debug.logError
- *
- * Revision 1.2  2001/07/23 18:05:00  azeneski
- * Fixed runaway thread in the job scheduler.
- *
- * Revision 1.1  2001/07/19 20:50:22  azeneski
- * Added the job scheduler to 'core' module.
- *
  */
 
 package org.ofbiz.core.scheduler;
 
-import org.ofbiz.core.util.Debug;
+import java.util.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> JobScheduler.java
@@ -46,11 +38,16 @@ public class JobScheduler implements Runnable {
     
     protected JobManager jm;
     protected Thread thread;
-    private long sleep = -1;
-    private boolean isRunning = true;
+    protected long sleep;
+    protected boolean isRunning;
+    protected SortedSet queue;
     
-    public JobScheduler( JobManager jm ) {
+    /** Creates a new <code>JobScheduler</code>. */
+    public JobScheduler( JobManager jm) {
         this.jm = jm;
+        this.queue = new TreeSet();
+        this.sleep = -1;
+        this.isRunning = true;
         
         // start the thread
         thread = new Thread(this, this.toString());
@@ -58,7 +55,42 @@ public class JobScheduler implements Runnable {
         thread.start();
     }
     
-    public synchronized void updateDelay(long sleep) {
+    /** Returns true if another job is scheduled for the same time. */
+    public synchronized boolean containsJob(Job job) {
+        return queue.contains(job);
+    }
+    
+    /** Queues a job. */
+    public synchronized void queueJob(Job job) throws JobSchedulerException {
+        if ( job.getRunTime() != -1 ) {
+            if ( !containsJob(job) ) {
+                queue.add(job);
+                updateDelay( ((Job) queue.first()).getRunTime());            
+            }
+            else {
+                throw new JobSchedulerException("Job conflicts with existing job.");
+            }                        
+        }
+    }
+
+    /** Clears the jobs from the queue. */
+    public synchronized void clearJobs() {
+        this.sleep = -1;
+        queue = new TreeSet();
+    }
+    
+    /** Remove a job from the queue. */
+    public synchronized void removeJob(Job job)  throws JobSchedulerException {       
+        if (queue.contains(job)) {
+            queue.remove(job);
+            updateDelay( ((Job) queue.first()).getRunTime());   
+        }
+        else {
+            throw new JobSchedulerException("Job not in queue.");         
+        }
+    }
+        
+    private synchronized void updateDelay(long sleep) {
         this.sleep = sleep;
         notify();
     }
@@ -76,7 +108,7 @@ public class JobScheduler implements Runnable {
                 }
                 if ( isRunning && sleep >= 0 && (sleep - System.currentTimeMillis() < 1000) ) {
                     sleep = -1;
-                    jm.invokeJob();
+                    invokeJob();
                 }
             }
             catch(InterruptedException e) {
@@ -86,11 +118,53 @@ public class JobScheduler implements Runnable {
         }
         Debug.logInfo("JobScheduler: (" + thread.getName() + ") Thread ending...");
     }
+
+    /** Spawns the invoker thread. */
+    private synchronized void invokeJob() {
+        if (queue.isEmpty())
+            return;
+        Job firstJob = (Job) queue.first();
+        queue.remove(firstJob);
+        
+        // Get a new thread and invoke the service.        
+        new JobInvoker(firstJob,jm.getDispatcher());
+        
+        // Re-schedule the job if it repeats.
+        if (firstJob.isRepeated()) {
+            firstJob.updateRunTime();
+            boolean queued = false;
+            while (!queued) {
+                try {
+                    queueJob(firstJob);
+                    queued = true;
+                }
+                catch ( JobSchedulerException e ) {
+                    firstJob.adjustRunTime();
+                }
+            }
+        }
+        
+        // If the queue is not empty, check the status of the next job.
+        if (!queue.isEmpty()) {
+            Job nextJob = (Job) queue.first();
+            long nextDelayTime = nextJob.getRunTime();
+            // invoke the next job if it is less then a second away.
+            if (nextDelayTime - System.currentTimeMillis() < 1000)
+                invokeJob();
+            else
+                updateDelay(nextDelayTime);
+        }
+    }    
     
     public synchronized void stop() {
         isRunning = false;
         Debug.logInfo("JobScheduler: Shutting down...");
         notify();
+    }
+    
+    /** Retuns an Iterator of this scheduler's job queue. */
+    public synchronized Iterator iterator() {
+        return queue.iterator();
     }
 }
 
