@@ -215,7 +215,7 @@ public class ProductEvents {
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0) {
       request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
-      Debug.logWarning("[updateProduct] Update Mode was not specified, but is required");
+      Debug.logWarning("[ProductEvents.updateProductKeyword] Update Mode was not specified, but is required");
       return "error";
     }
 
@@ -234,7 +234,12 @@ public class ProductEvents {
     }
     
     if(updateMode.equals("CREATE")) {
-      GenericValue productKeyword = helper.create("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
+      GenericValue productKeyword = helper.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
+      if(helper.findByPrimaryKey(productKeyword.getPrimaryKey()) != null) {
+        request.setAttribute("ERROR_MESSAGE", "Could not create product-keyword entry (already exists)");
+        return "error";
+      }
+      productKeyword = productKeyword.create();
       if(productKeyword == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-keyword entry (write error)");
         return "error";
@@ -242,10 +247,14 @@ public class ProductEvents {
     }
     else if(updateMode.equals("DELETE")) {
       GenericValue productKeyword = helper.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
+      if(productKeyword == null) {
+        request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (does not exist)");
+        return "error";
+      }
       try { productKeyword.remove(); }
       catch(Exception e) {
-        request.setAttribute("ERROR_MESSAGE", "Could not remove product (write error)");
-        Debug.logWarning("[ProductEvents.updateProduct] Could not remove product (write error); message: " + e.getMessage());
+        request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (write error)");
+        Debug.logWarning("[ProductEvents.updateProductKeyword] Could not remove product-keyword (write error); message: " + e.getMessage());
         return "error";
       }
     }
@@ -257,12 +266,12 @@ public class ProductEvents {
     return "success";
   }
   
-  /** Updates/adds keywords for all products
+  /** Update (create/induce or delete) all keywords for a given Product
    *@param request The HTTPRequest object for the current request
    *@param response The HTTPResponse object for the current request
    *@return String specifying the exit status of this event
    */
-  public static String updateAllKeywords(HttpServletRequest request, HttpServletResponse response) {
+  public static String updateProductKeywords(HttpServletRequest request, HttpServletResponse response) {
     String errMsg = "";
     GenericHelper helper = (GenericHelper)request.getAttribute("helper");
     Security security = (Security)request.getAttribute("security");
@@ -270,7 +279,7 @@ public class ProductEvents {
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0) {
       request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
-      Debug.logWarning("[updateProduct] Update Mode was not specified, but is required");
+      Debug.logWarning("[ProductEvents.updateProductKeywords] Update Mode was not specified, but is required");
       return "error";
     }
 
@@ -280,8 +289,56 @@ public class ProductEvents {
       return "error";
     }
 
-    Iterator iterator = UtilMisc.toIterator(helper.findAll("Product", null));
+    String productId = request.getParameter("PRODUCT_ID");
+    if(!UtilValidate.isNotEmpty(productId)) {
+      request.setAttribute("ERROR_MESSAGE", "No Product ID specified, cannot update keywords.");
+      return "error";
+    }
     
+    GenericValue product = helper.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+    if(product == null) {
+      request.setAttribute("ERROR_MESSAGE", "Product with ID \"" + productId + "\", not found; cannot update keywords.");
+      return "error";
+    }
+
+    if(updateMode.equals("CREATE")) {
+      KeywordSearch.induceKeywords(product);
+    }
+    else if(updateMode.equals("DELETE")) {
+      try { product.removeRelated("ProductKeyword"); }
+      catch(Exception e) {
+        request.setAttribute("ERROR_MESSAGE", "Could not remove product-keywords (write error)");
+        Debug.logWarning("[ProductEvents.updateProductKeywords] Could not remove product-keywords (write error); message: " + e.getMessage());
+        return "error";
+      }      
+    }
+    else {
+      request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+      return "error";
+    }
+    
+    return "success";
+  }
+
+   /** Updates/adds keywords for all products
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String updateAllKeywords(HttpServletRequest request, HttpServletResponse response) {
+    String errMsg = "";
+    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    Security security = (Security)request.getAttribute("security");
+
+    String updateMode = "CREATE";
+    //check permissions before moving on...
+    if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
+      request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+      return "error";
+    }
+
+    Iterator iterator = UtilMisc.toIterator(helper.findAll("Product", null));
+
     while(iterator != null && iterator.hasNext()) {
       GenericValue product = (GenericValue)iterator.next();
       if(product != null) {

@@ -63,17 +63,17 @@
         <success>view:EditProduct</success><error>view:EditProduct</error>
         <event-type>java</event-type><event-path>org.ofbiz.catalog.CategoryEvents</event-path><event-invoke>updateProductCategoryMember</event-invoke>
     </request-map>
-    <request-map>
-        <uri>UpdateProductKeyword</uri><secure>true</secure><auth>true</auth>
-        <success>view:EditProduct</success><error>view:EditProduct</error>
-        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProductKeyword</event-invoke>
-    </request-map>
 
     <request-map><uri>EditProductKeyword</uri><secure>true</secure><auth>true</auth><success>view:EditProductKeyword</success></request-map>
     <request-map>
         <uri>UpdateProductKeyword</uri><secure>true</secure><auth>true</auth>
         <success>view:EditProductKeyword</success><error>view:EditProductKeyword</error>
         <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProductKeyword</event-invoke>
+    </request-map>
+    <request-map>
+        <uri>UpdateProductKeywords</uri><secure>true</secure><auth>true</auth>
+        <success>view:EditProductKeyword</success><error>view:EditProductKeyword</error>
+        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProductKeywords</event-invoke>
     </request-map>
 
     <request-map><uri>UploadImage</uri><secure>true</secure><auth>true</auth><success>view:UploadImage</success></request-map>

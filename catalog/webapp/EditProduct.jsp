@@ -47,6 +47,7 @@
 <%-- <%if(product != null){%><a href="<ofbiz:url>UpdateProduct?UPDATE_MODE=DELETE&PRODUCT_ID=<%=product.getSku()%></ofbiz:url>" class="buttontext">[Delete this Product]</a><%}%> --%>
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?PRODUCT_ID=<%=productId%>" class="buttontext">[View Product Details Page]</a>
+  <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
 <%}%>
 
 <form action="<ofbiz:url>/UpdateProduct</ofbiz:url>" method=POST style='margin: 0;'>
@@ -208,6 +209,7 @@
 <%-- <%if(product != null){%><a href="<ofbiz:url>UpdateProduct?UPDATE_MODE=DELETE&PRODUCT_ID=<%=product.getSku()%></ofbiz:url>" class="buttontext">[Delete this Product]</a><%}%> --%>
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?PRODUCT_ID=<%=productId%>" class="buttontext">[View Product Details Page]</a>
+  <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
 <%}%>
 <br>
 
