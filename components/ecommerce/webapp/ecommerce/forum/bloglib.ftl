@@ -13,7 +13,7 @@
 </#if>
 
 <#assign sz=0/>
-<table width="100%" border="0" >
+<table border="0">
 <@loopSubContentCache subContentId=contentIdx 
     viewIndex=viewIdx
     viewSize=viewSz
@@ -78,7 +78,7 @@
 <@wrapSubContentCache subContentId=contentIdx wrapTemplateId=stdWrapId contentPurposeList="ARTICLE">
 </@wrapSubContentCache>
 </table>
-<table width="100%" border="0" class="summary">
+<table border="0" class="summary">
 <#assign targOp="HAS_USER_ROLE"/>
 <#assign pageTargOp=targetOperation?if_exists/>
 <#if pageTargOp?has_content>
@@ -157,7 +157,7 @@
 <#if highIdx < lowIdxShow >
   <#assign lowIdxShow = highIdx/>
 </#if>
-<table width="100%" border="0" >
+<table border="0" >
 <tr><td>
              <#if 0 < listSz?number>
                 <#if 0 < viewIdx?number>

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  *
  * Builds an edit or add single form wrapper and puts the "currentValue"
@@ -56,27 +56,22 @@ import org.ofbiz.content.data.DataResourceWorker;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-dispatcher    = (LocalDispatcher)request.getAttribute("dispatcher");
-delegator = (GenericDelegator) request.getAttribute("delegator");
-
-
-
-formDefFile		= page.getProperty("formDefFile");
-singleFormName		= page.getProperty("singleFormName");
-    //org.ofbiz.base.util.Debug.logInfo("in formprep, singleFormName:" + singleFormName, null);
-entityName		= page.getProperty("entityName");
-//String defaultMapName		= page.getProperty("defaultMapName");
-//if( defaultMapName == null) defaultMapName	= "currentValue";
-defaultMapName	= "currentValue";
+formDefFile = page.get("formDefFile");
+singleFormName = page.get("singleFormName");
+//org.ofbiz.base.util.Debug.logInfo("in formprep, singleFormName:" + singleFormName, null);
+entityName = page.get("entityName");
+//String defaultMapName = page.get("defaultMapName");
+//if( defaultMapName == null) defaultMapName    = "currentValue";
+defaultMapName = "currentValue";
 
 HtmlFormWrapper singleWrapper = new HtmlFormWrapper(formDefFile, singleFormName, request, response);
 
 // The idea here is that by setting the map name here, dependency on the 
-        // widget-form config file could be eliminated.
-ModelForm modelForm	= singleWrapper.getModelForm();
+// widget-form config file could be eliminated.
+ModelForm modelForm = singleWrapper.getModelForm();
 //modelForm.setDefaultMapName(defaultMapName);
-currentValue = (GenericValue)request.getAttribute("currentValue");
-    //org.ofbiz.base.util.Debug.logInfo("in formprep, currentValue:" + currentValue, null);
+currentValue = (GenericValue) request.getAttribute("currentValue");
+//org.ofbiz.base.util.Debug.logInfo("in formprep, currentValue:" + currentValue, null);
 singleWrapper.putInContext(defaultMapName, currentValue);
 context.put("singleWrapper", singleWrapper);
 request.setAttribute("singleWrapper", singleWrapper);
