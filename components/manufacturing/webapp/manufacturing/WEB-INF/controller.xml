@@ -338,6 +338,10 @@
         <response name="success" type="view" value="EditProductBom"/>
         <response name="error" type="view" value="EditProductBom"/>
     </request-map>
+    <request-map uri="InitLowLevelCode">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InitLowLevelCode"/>
+    </request-map>
 
     <request-map uri="EditProductManufacturingRules">
         <security https="true" auth="true"/>
@@ -459,6 +463,7 @@
     <view-map name="findParts" type="jpublish" page="/bom/findParts.ftl"/>
     <view-map name="findBom" type="jpublish" page="/bom/findBom.ftl"/>
     <view-map name="EditProductBom" type="jpublish" page="/bom/EditProductBom.ftl"/>
+    <view-map name="InitLowLevelCode" type="jpublish" page="/bom/InitLowLevelCode.ftl"/>
     <view-map name="EditProductManufacturingRules" type="jpublish" page="/bom/EditProductManufacturingRules.ftl"/>
     <!-- Lookup request mappings -->
     <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
