@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/04 19:27:51  jonesde
+ * Fixed small problem with '_' wild cards.
+ *
  * Revision 1.1  2001/09/04 19:23:51  jonesde
  * Initial checkin of keyword search class.
  *
@@ -73,8 +76,7 @@ public class KeywordSearch {
       if(resultSet.next()) {
         do {
           pbkCollection.add(resultSet.getString("PRODUCT_ID"));
-        }
-        while (resultSet.next());
+        } while (resultSet.next());
         return pbkCollection;
       }
       else {
@@ -123,21 +125,16 @@ public class KeywordSearch {
   
   protected static String getSearchSQL(List keywords, List params) {
     if(keywords == null || keywords.size() <= 0) return null;
-    
-    StringBuffer buf = new StringBuffer();
+    String sql = "";
     Iterator keywordIter = keywords.iterator();
-    
-    StringBuffer selectBuf = new StringBuffer();
-    StringBuffer joinBuf = new StringBuffer();
-    StringBuffer whereBuf = new StringBuffer();
     
     //EXAMPLE:
     //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
     //  WHERE (P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%')
     
-    selectBuf.append("SELECT DISTINCT P1.PRODUCT_ID FROM ");
-    joinBuf.append(" WHERE (");
-    whereBuf.append(" ");
+    String select = "SELECT DISTINCT P1.PRODUCT_ID FROM ";
+    String join = " WHERE (";
+    String where = " ";
     
     int i = 1;
     while(keywordIter.hasNext()) {
@@ -146,21 +143,18 @@ public class KeywordSearch {
       if(keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0) comparator = " LIKE ";
       params.add(keyword);
       if(i == 1) {
-        selectBuf.append("PRODUCT_KEYWORD P"); selectBuf.append(i);
-        whereBuf.append(" P"); whereBuf.append(i); whereBuf.append(".KEYWORD"); whereBuf.append(comparator); whereBuf.append("? ");
+        select += ("PRODUCT_KEYWORD P" + i);
+        where += (" P" + i + ".KEYWORD" + comparator + "? ");
       } else {
-        selectBuf.append(", PRODUCT_KEYWORD P"); selectBuf.append(i); selectBuf.append(" ");
-        joinBuf.append("P"); joinBuf.append((i-1)); joinBuf.append(".PRODUCT_ID=P"); joinBuf.append(i); joinBuf.append(".PRODUCT_ID AND ");
-        whereBuf.append("AND P"); whereBuf.append(i); whereBuf.append(".KEYWORD"); whereBuf.append(comparator); whereBuf.append("? ");
+        select += (", PRODUCT_KEYWORD P" + i + " ");
+        join += ("P" + (i-1) + ".PRODUCT_ID=P" + i + ".PRODUCT_ID AND ");
+        where += ("AND P" + i + ".KEYWORD" + comparator + "? ");
       }
       i++;
     }
-    buf.append(selectBuf.toString());
-    buf.append(joinBuf.toString());
-    buf.append(whereBuf.toString());
-    buf.append(")");
+    sql = select + join + where + ")";
     
-    Debug.logInfo("[KeywordSearch] sql=" + buf);
-    return buf.toString();
+    Debug.logInfo("[KeywordSearch] sql=" + sql);
+    return sql;
   }
 }
