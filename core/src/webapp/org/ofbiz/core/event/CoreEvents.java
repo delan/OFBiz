@@ -11,6 +11,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.scheduler.*;
 import org.ofbiz.core.util.*;
@@ -47,6 +48,11 @@ public class CoreEvents {
     public static String changeDelegator(HttpServletRequest request, HttpServletResponse response) {
         ServletContext application = request.getSession().getServletContext();
         String delegatorName = request.getParameter("delegator");
+        Security security = (Security)request.getAttribute("security");
+         if( !security.hasPermission("ENTITY_MAINT", request.getSession()) ) {
+             request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>You are not authorized to use this function.");
+             return "error";
+         }
         if ( delegatorName == null ) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>Required parameter 'delegator' not passed.");
             return "error";
@@ -88,6 +94,11 @@ public class CoreEvents {
     public static String changeDispatcher(HttpServletRequest request, HttpServletResponse response) {
         ServletContext application = request.getSession().getServletContext();        
         String dispatcherName = request.getParameter("dispatcher");
+        Security security = (Security)request.getAttribute("security");
+         if( !security.hasPermission("ENTITY_MAINT", request.getSession()) ) {
+             request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>You are not authorized to use this function.");
+             return "error";
+         }        
         if ( dispatcherName == null ) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>Required parameter 'dispatcher' not passed.");
             return "error";
