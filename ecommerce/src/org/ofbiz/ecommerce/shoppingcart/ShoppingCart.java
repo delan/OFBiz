@@ -241,6 +241,16 @@ public class ShoppingCart implements java.io.Serializable {
         return paymentMethodTypeIds;
     }
 
+    /** Clears the list of Payment Method Ids. */
+    public void clearPaymentMethodIds() {
+        this.paymentMethodIds.clear();
+    }
+
+    /** Clears the list of Payment Method Type Ids. */
+    public void clearPaymentMethodTypeIds() {
+        this.paymentMethodTypeIds.clear();
+    }
+
     /** Sets the billing account id string. */
     public void setBillingAccountId(String billingAccountId) {
         this.billingAccountId = billingAccountId;
