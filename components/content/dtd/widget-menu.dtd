@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-menu.dtd,v 1.6 2004/07/27 20:30:24 byersa Exp $
+ *  $Id: widget-menu.dtd,v 1.7 2004/08/12 18:00:33 byersa Exp $
 -->
 
 
@@ -58,7 +58,7 @@
 >
 
 
-<!ELEMENT menu-item (img?, target* )>
+<!ELEMENT menu-item (img?, link?, target* )>
 <!ATTLIST menu-item
     name CDATA #REQUIRED
     title CDATA #IMPLIED
@@ -80,6 +80,7 @@
     disable-if-empty CDATA #IMPLIED
     disabled-title-style CDATA #IMPLIED
     target-window CDATA #IMPLIED
+    sub-menu CDATA #IMPLIED
 >
 
 <!--
@@ -114,4 +115,30 @@
     default-value CDATA #IMPLIED
     type (name-value | map) "name-value"
 >
+
+
+    <!ELEMENT image (#PCDATA)>
+    <!ATTLIST image
+        src CDATA #IMPLIED
+        id CDATA #IMPLIED
+        style CDATA #IMPLIED
+        width CDATA #IMPLIED
+        height CDATA #IMPLIED
+        border CDATA #IMPLIED
+        url-mode ( ofbiz | content | raw ) "content"
+    >
+
+    <!ELEMENT link (image?)>
+    <!ATTLIST link
+        text CDATA #IMPLIED
+        id CDATA #IMPLIED
+        style CDATA #IMPLIED
+        target CDATA #IMPLIED
+        target-window CDATA #IMPLIED
+        prefix CDATA #IMPLIED
+        url-mode ( ofbiz | content | raw ) "ofbiz"
+        full-path ( true | false ) "false"
+        secure ( true | false ) "false"
+        encode ( true | false ) "false"
+    >
 

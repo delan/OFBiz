@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-tree.dtd,v 1.6 2004/07/28 00:02:12 byersa Exp $
+ *  $Id: widget-tree.dtd,v 1.7 2004/08/12 18:00:33 byersa Exp $
 -->
 
 <!ELEMENT trees ( tree+ )>
@@ -35,25 +35,20 @@
     name CDATA #REQUIRED
     root-node-name CDATA #REQUIRED
     render-style (simple | expand-collapse) "simple"
+    default-wrap-style CDATA #REQUIRED
 >
 
-<!ELEMENT node ( (entity-one | service ), (screen | label | link | image), sub-node* )>
+<!ELEMENT node ( (entity-one | service ), (include-screen | label | link )?, sub-node* )>
 <!ATTLIST node
     name CDATA #REQUIRED
+    wrap-style CDATA #REQUIRED
 >
 
-    <!ELEMENT expand-contract EMPTY>
-    <!ATTLIST expand-contract
-        expand-image CDATA #IMPLIED
-        contract-image CDATA #IMPLIED
-        expand-char CDATA #IMPLIED
-        contract-char CDATA #IMPLIED
-        style CDATA #IMPLIED
-    >
-    <!ELEMENT screen EMPTY>
-    <!ATTLIST screen
+    <!ELEMENT include-screen EMPTY>
+    <!ATTLIST include-screen
         screen-name CDATA #REQUIRED
         screen-location CDATA #REQUIRED
+        share-scope ( true | false ) "false"
     >
     
     <!ELEMENT label (#PCDATA)>
@@ -61,17 +56,6 @@
         text CDATA #IMPLIED
         id CDATA #IMPLIED
         style CDATA #IMPLIED
-    >
-
-    <!ELEMENT image (#PCDATA)>
-    <!ATTLIST image
-        src CDATA #IMPLIED
-        id CDATA #IMPLIED
-        style CDATA #IMPLIED
-        width CDATA #IMPLIED
-        height CDATA #IMPLIED
-        border CDATA #IMPLIED
-        url-mode ( ofbiz | content | raw ) "content"
     >
 
     <!ELEMENT link (image?)>
