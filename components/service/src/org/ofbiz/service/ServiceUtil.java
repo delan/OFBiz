@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: ServiceUtil.java,v 1.2 2003/08/26 18:00:13 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.UtilValidate;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -176,6 +176,9 @@ public class ServiceUtil {
     }
 
     public static String makeSuccessMessage(Map result, String msgPrefix, String msgSuffix, String successPrefix, String successSuffix) {
+        if (result == null) {
+            return "";
+        }
         String successMsg = (String) result.get(ModelService.SUCCESS_MESSAGE);
         List successMsgList = (List) result.get(ModelService.SUCCESS_MESSAGE_LIST);
         StringBuffer outMsg = new StringBuffer();
