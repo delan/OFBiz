@@ -225,8 +225,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             }                         
         }
         out.println(content);
-        out.flush();  
-        out.close();                                           
+        out.flush();                                                  
     }
                
     private boolean setPaymentPreferences(GenericDelegator delegator, String orderId, ServletRequest request) {
