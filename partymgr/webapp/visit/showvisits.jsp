@@ -131,7 +131,7 @@
     <td><a href="<ofbiz:url>/showvisits?sort=partyId&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">PartyId</a></td>
     <% } %>
     <td><a href="<ofbiz:url>/showvisits?sort=userLoginId&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">UserLoginId</a></td>
-    <td><a href="<ofbiz:url>/showvisits?sort=userCreated&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">New User</a></td>
+    <td><a href="<ofbiz:url>/showvisits?sort=-userCreated&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">New User</a></td>
     <td><a href="<ofbiz:url>/showvisits?sort=webappName&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">WebApp</a></td>
     <td><a href="<ofbiz:url>/showvisits?sort=clientIpAddress&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">Client IP</a></td>
     <td><a href="<ofbiz:url>/showvisits?sort=fromDate&showAll=<%=new Boolean(showAll).toString()%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%></ofbiz:url>" class="tableheadbutton">From Date</a></td>
