@@ -1,5 +1,5 @@
 /*
- * $Id: Section.java,v 1.3 2004/05/25 21:06:37 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 Sun Microsystems Inc., published in "Advanced Java Server Pages" by Prentice Hall PTR
  * Copyright (c) 2001-2002 The Open For Business Project - www.ofbiz.org
@@ -51,7 +51,7 @@ import org.ofbiz.content.webapp.view.ViewHandlerException;
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class Section extends Content {

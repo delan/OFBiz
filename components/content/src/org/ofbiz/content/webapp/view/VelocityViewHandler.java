@@ -1,5 +1,5 @@
 /*
- * $Id: VelocityViewHandler.java,v 1.3 2004/07/01 08:37:49 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.base.util.collections.FlexibleProperties;
  * VelocityViewHandler - Velocity Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class VelocityViewHandler implements ViewHandler {

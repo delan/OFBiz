@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlScreenRenderer.java,v 1.7 2004/08/16 19:37:58 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.entity.GenericValue;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class HtmlScreenRenderer implements ScreenStringRenderer {

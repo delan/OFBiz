@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormWrapper.java,v 1.6 2004/05/29 07:48:56 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class HtmlFormWrapper {

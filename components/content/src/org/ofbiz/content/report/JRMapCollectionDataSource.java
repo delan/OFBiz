@@ -1,5 +1,5 @@
 /*
- * $Id: JRMapCollectionDataSource.java,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import java.util.Map;
  * <code>JRMapCollectionDataSource</code>
  * 
  * @author <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
- * @version $Revision: 1.2 $
+ * @version $Rev:$
  */
 public class JRMapCollectionDataSource implements JRDataSource {
 

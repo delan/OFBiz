@@ -1,5 +1,5 @@
 /*
- * $Id: UrlTag.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  * UrlTag - Creates a URL string prepending the current control path.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class UrlTag extends BodyTagSupport {

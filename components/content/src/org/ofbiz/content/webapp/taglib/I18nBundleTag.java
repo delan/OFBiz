@@ -1,5 +1,5 @@
 /*
- * $Id: I18nBundleTag.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.base.util.UtilProperties;
  * @author     <a href="mailto:k3ysss@yahoo.com">Jian He</a>
  * @author     <a href="mailto:">Quake Wang</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class I18nBundleTag extends TagSupport {

@@ -1,5 +1,5 @@
 /*
- * $Id: JPublishViewHandler.java,v 1.5 2004/07/18 10:09:34 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
  * Handles JPublish type view rendering
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class JPublishViewHandler implements ViewHandler {

@@ -40,7 +40,7 @@ import org.ofbiz.service.ServiceAuthException;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.17 $
+ * @version    $Rev:$
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.

@@ -1,5 +1,5 @@
 /*
- * $Id: TreeFactory.java,v 1.1 2004/07/24 22:57:29 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Tree factory class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class TreeFactory {

@@ -1,5 +1,5 @@
 /*
- * $Id: SearchServices.java,v 1.8 2004/08/14 07:35:12 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.service.ServiceUtil;
  * SearchServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.8 $
+ * @version $Rev:$
  * @since 3.1
  * 
  *  

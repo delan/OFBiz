@@ -1,5 +1,5 @@
 /*
- * $Id: lookupprep.bsh,v 1.2 2003/12/18 15:35:46 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.0
 
  */

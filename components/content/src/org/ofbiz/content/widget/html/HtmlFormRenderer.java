@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.12 2004/07/31 12:17:40 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.12 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {

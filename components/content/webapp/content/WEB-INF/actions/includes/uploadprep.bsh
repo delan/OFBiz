@@ -1,5 +1,5 @@
 /*
- * $Id: uploadprep.bsh,v 1.1 2003/11/04 23:58:06 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.2
 
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuWrapperImage.java,v 1.4 2004/05/11 12:56:45 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class HtmlMenuWrapperImage extends HtmlMenuWrapper {

@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.20 2004/06/16 18:54:44 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.20 $
+ * @version    $Rev:$
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.

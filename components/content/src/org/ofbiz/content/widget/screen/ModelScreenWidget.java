@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public abstract class ModelScreenWidget {

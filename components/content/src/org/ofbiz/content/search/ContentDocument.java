@@ -1,5 +1,5 @@
 /*
- * $Id: ContentDocument.java,v 1.9 2004/08/14 07:35:12 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.entity.GenericValue;
  * ContentDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.9 $
+ * @version $Rev:$
  * @since 3.1
  * 
  *  

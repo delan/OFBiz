@@ -1,5 +1,5 @@
 /*
- * $Id: wrapprep.bsh,v 1.1 2003/12/05 21:51:57 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
 
  */

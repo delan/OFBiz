@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEventHandler.java,v 1.8 2004/07/10 04:56:09 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceAuthException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ServiceEventHandler implements EventHandler {

@@ -1,5 +1,5 @@
 /*
- * $Id: dataresourcepagelist.bsh,v 1.1 2003/11/04 23:58:06 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  *
  * This script is a special version of includes/pagelistprep that

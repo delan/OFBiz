@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
  * EntityPermissionChecker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.

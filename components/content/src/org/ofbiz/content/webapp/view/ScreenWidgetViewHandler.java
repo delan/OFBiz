@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenWidgetViewHandler.java,v 1.5 2004/08/03 16:33:30 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import freemarker.ext.servlet.HttpSessionHashModel;
  * Handles view rendering for the Screen Widget
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class ScreenWidgetViewHandler implements ViewHandler {

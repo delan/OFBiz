@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.4 2004/08/09 23:52:21 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class ModelTree extends ModelScreenWidget {

@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class ModelTree {

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.14 2004/08/18 16:12:34 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class ModelMenuItem {

@@ -1,5 +1,5 @@
 /*
- * $Id: editsubcontentprep.bsh,v 1.6 2004/01/17 03:49:29 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      3.0
 
  */

@@ -20,7 +20,7 @@ import org.ofbiz.service.ServiceUtil;
  * LayoutWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      3.0
  *
  * 

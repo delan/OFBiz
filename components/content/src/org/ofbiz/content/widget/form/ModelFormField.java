@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.17 2004/08/02 14:09:12 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.17 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class ModelFormField {

@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.29 2004/08/18 16:12:34 byersa Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.29 $
+ * @version $Rev:$
  * @since 2.2
  * 
  *  

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlTreeExpandCollapseRenderer.java,v 1.5 2004/08/12 18:05:14 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.content.widget.tree.ModelTree;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {

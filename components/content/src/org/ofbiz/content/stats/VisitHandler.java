@@ -1,5 +1,5 @@
 /*
- * $Id: VisitHandler.java,v 1.4 2004/07/03 19:54:20 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * Handles saving and maintaining visit information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class VisitHandler {

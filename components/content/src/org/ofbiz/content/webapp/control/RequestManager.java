@@ -1,5 +1,5 @@
 /*
- * $Id: RequestManager.java,v 1.4 2004/02/05 23:13:13 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.Debug;
  * RequestManager - Manages request, config and view mappings.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class RequestManager implements Serializable {

@@ -1,5 +1,5 @@
 /*
- * $Id: RenderContentAsText.java,v 1.2 2004/08/09 23:52:21 jonesde Exp $
+ * $Id$
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderContentAsText - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Rev:$
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).

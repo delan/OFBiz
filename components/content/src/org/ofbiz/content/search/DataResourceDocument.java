@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceDocument.java,v 1.2 2004/06/16 22:16:04 byersa Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.entity.GenericValue;
  * DataResourceDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Rev:$
  * @since 3.1
  * 
  *  

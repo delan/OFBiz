@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.12 2004/07/06 21:17:22 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class SurveyWrapper {

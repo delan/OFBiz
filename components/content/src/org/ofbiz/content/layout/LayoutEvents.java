@@ -35,7 +35,7 @@ import org.ofbiz.service.ModelService;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Rev:$
  * @since      3.0
  *
  * 

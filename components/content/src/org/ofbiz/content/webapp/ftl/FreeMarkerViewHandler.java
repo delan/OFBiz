@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewHandler.java,v 1.8 2004/07/30 21:45:17 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import freemarker.template.WrappingTemplateModel;
  * FreemarkerViewHandler - Freemarker Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class FreeMarkerViewHandler implements ViewHandler {

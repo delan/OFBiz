@@ -1,5 +1,5 @@
 /*
- * $Id: SearchWorker.java,v 1.14 2004/08/16 19:37:58 byersa Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.content.ContentWorker;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.14 $
+ * @version $Rev:$
  * @since 3.1
  * 
  *  

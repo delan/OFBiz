@@ -1,5 +1,5 @@
 /*
- * $Id: ContentUrlTag.java,v 1.4 2004/01/17 22:10:13 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.entity.GenericValue;
  * ContentUrlTag - Creates a URL string prepending the content prefix from url.properties
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ContentUrlTag extends BodyTagSupport {

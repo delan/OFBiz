@@ -42,7 +42,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.26 $
+ * @version    $Rev:$
  * @since      3.0
  *
  * 
