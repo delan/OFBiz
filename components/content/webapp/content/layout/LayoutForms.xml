@@ -54,7 +54,8 @@
             <submit button-type="button"/>
         </field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Create New"  target="AddLayout"/>
+            <hyperlink also-hidden="false" description="Create New"  
+             target="EditLayoutSubContent?mode=add&amp;contentIdTo=TEMPLATE_MASTER"/>
         </field>
     </form>
     <form name="lookupDataResourceContent" 
@@ -102,24 +103,23 @@
     <!-- LayoutEdit forms -->
     <form name="EditLayout" 
         default-title-style="tableheadtext"
-        default-entity-name="ContentDataResourceView"
+        default-entity-name="SubContentDataResourceView"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         default-map-name="currentValue"
-        target="updateLayout" title="" type="single">
-        <field name="contentId" position="1">
+        extends="LayoutSubContentMaster"
+        target="updateLayoutSubContent"
+        title="" type="single">
+        <field name="contentIdTo" >
+            <hidden value="TEMPLATE_MASTER"/>
+        </field>
+        <field name="drDataResourceTypeId" >
             <display/>
         </field>
-        <field name="contentTypeId" position="2">
+        <field name="drMimeTypeId" >
             <display/>
         </field>
-        <field name="contentName">
-            <text/>
-        </field>
-        <field name="description">
-            <text/>
-        </field>
-        <field name="drObjectInfo" title="Template File" >
-            <text/>
+        <field name="drObjectInfo" title="File Path">
+            <text />
         </field>
         <field name="createdByUserLogin" position="1">
             <display/>
@@ -132,112 +132,67 @@
         </field>
         <field name="lastModifiedDate" position="2">
             <display/>
-        </field>
-        <field name="dataResourceId" position="1">
-            <hidden/>
         </field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext" position="1">
-            <hyperlink also-hidden="false" description="Create New"  target="AddLayout"/>
+            <hyperlink also-hidden="false" description="Create New"  
+                target="EditLayoutTemplate?mode=add&amp;contentIdTo=TEMPLATE_MASTER"/>
         </field>
-        <field name="cloneLayout" title="&amp;nbsp;" widget-style="buttontext" position="2">
+        <field name="cloneLayout" title="&amp;nbsp;" widget-style="buttontext" position="2" >
             <hyperlink also-hidden="false" description="Clone Layout"  
-              target="cloneLayout?contentId=${currentValue.contentId}"/>
+                use-when="&quot;${currentValue.contentId}&quot;.length()>0"
+                target="cloneLayout?contentId=${currentValue.contentId}"/>
         </field>
     </form>
     <form name="AddLayout" 
         default-title-style="tableheadtext"
-        default-entity-name="ContentDataResourceView"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        default-map-name="currentValue"
-        target="createLayout" title="" type="single">
-        <field name="contentTypeId" >
-            <hidden value="TEMPLATE"/>
-        </field>
-        <field name="contentName">
-            <text/>
-        </field>
-        <field name="description">
-            <text/>
-        </field>
-        <field name="drObjectInfo" title="Template File" >
-            <text/>
-        </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-    <form name="EditLayoutSubContent" 
-        default-title-style="tableheadtext"
         default-entity-name="SubContentDataResourceView"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         default-map-name="currentValue"
-        target="updateLayoutSubContent" title="" type="single">
-        <field name="contentId" position="1">
-            <display/>
-        </field>
-        <field name="contentTypeId" position="2">
-            <display/>
-        </field>
-        <field name="contentName">
-            <text/>
-        </field>
-        <field name="description">
-            <text/>
-        </field>
-        <field name="createdByUserLogin" position="1">
-            <display/>
-        </field>
-        <field name="createdDate" position="2">
-            <display/>
-        </field>
-        <field name="lastModifiedByUserLogin" position="1">
-            <display/>
-        </field>
-        <field name="lastModifiedDate" position="2">
-            <display/>
-        </field>
-        <field name="dataResourceId" >
-            <hidden/>
-        </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Create New"  target="AddLayoutSubContent"/>
-        </field>
-    </form>
-    <form name="AddLayoutSubContent" 
-        default-title-style="tableheadtext"
-        default-entity-name="SubContentDataResourceView"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        default-map-name="currentValue"
-        target="createLayoutSubContent" title="" type="single">
-        <field name="contentTypeId" >
-            <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="ContentType" key-field-name="contentTypeId"/>
+        extends="LayoutSubContentMaster"
+        target="createLayoutSubContent"
+        title="" type="single">
+        <field name="drDataResourceTypeId" >
+            <drop-down no-current-selected-key="LOCAL_FILE">
+                <option key="LOCAL_FILE" description="Absolute File"/>
+                <option key="OFBIZ_FILE" description="File Rel. to OFBIZ_HOME"/>
+                <option key="CONTEXT_FILE" description="File Rel. to webapp root"/>
+                <option key="ELECTRONIC_TEXT" description="DB TEXT"/>
             </drop-down>
         </field>
-        <field name="contentName">
-            <text/>
-        </field>
-        <field name="description">
-            <text/>
+        <field name="drMimeTypeId" >
+            <drop-down no-current-selected-key="text/html">
+                <option key="text/html" description="Html Text" />
+                <option key="text/plain" description="Plain Text" />
+            </drop-down>
         </field>
         <field name="drDataResourceTypeId" >
-            <drop-down >
-                <option key="ELECTRONIC_TEXT" description="TEXT"/>
-                <option key="IMAGE_OBJECT" description="IMAGE"/>
-                <option key="URL_RESOURCE" description="URL"/>
+            <drop-down no-current-selected-key="LOCAL_FILE">
+                <option key="LOCAL_FILE" description="Absolute File"/>
+                <option key="OFBIZ_FILE" description="File Rel. to OFBIZ_HOME"/>
+                <option key="CONTEXT_FILE" description="File Rel. to webapp root"/>
+                <option key="ELECTRONIC_TEXT" description="DB TEXT"/>
             </drop-down>
+        </field>
+        <field name="drMimeTypeId" >
+            <drop-down no-current-selected-key="text/html">
+                <option key="text/html" description="Html Text" />
+                <option key="text/plain" description="Plain Text" />
+            </drop-down>
+        </field>
+        <field name="drObjectInfo" title="File Path">
+            <text />
+        </field>
+        <field name="textData" title="Text"  id-name="textData"> 
+		<textarea rows="24" cols="55" />
         </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
+
     <form name="listFindLayout" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
@@ -250,6 +205,7 @@
         <field name="description"><display/></field>
         <field name="drObjectInfo" title="Template File"><display/></field>
     </form>
+
 
     <form 
         name="listLookupDataResourceContent" 
@@ -285,8 +241,14 @@
         <field name="contentId" position="1" >
             <display/>
         </field>
-        <field name="contentTypeId"  position="2">
-            <display/>
+        <field name="contentTypeIdDisplay"  title="Content Type" position="2" map-name="dummy">
+            <display description="DOCUMENT"/>
+        </field>
+        <field name="contentIdToDisplay"  title="Parent Content" position="3" map-name="dummy">
+            <display description="${contentIdTo}"/>
+        </field>
+        <field name="contentTypeId"  >
+            <hidden value="DOCUMENT"/>
         </field>
         <field name="drDataResourceId" title="Data Resource Id" >
             <display/>
@@ -567,6 +529,92 @@
         <field name="contentName"><display/></field>
         <field name="description"><display/></field>
         <field name="drObjectInfo" title="Template File"><display/></field>
+    </form>
+
+    <form name="EditLayoutSubContent" 
+        default-title-style="tableheadtext"
+        default-entity-name="SubContentDataResourceView"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        default-map-name="currentValue"
+        extends="LayoutSubContentMaster"
+        target="updateLayoutSubContent"
+        title="" type="single">
+        <field name="drDataResourceTypeId" >
+            <display/>
+        </field>
+        <field name="drMimeTypeId" >
+            <drop-down no-current-selected-key="text/html">
+                <option key="text/html" description="Html Text" />
+                <option key="text/plain" description="Plain Text" />
+            </drop-down>
+        </field>
+        <field name="drObjectInfo" title="File Path">
+            <text />
+        </field>
+        <field name="textData" title="Text"  id-name="textData"> 
+		<textarea rows="24" cols="55" />
+        </field>
+        <field name="createdByUserLogin" position="1">
+            <display/>
+        </field>
+        <field name="createdDate" position="2">
+            <display/>
+        </field>
+        <field name="lastModifiedByUserLogin" position="1">
+            <display/>
+        </field>
+        <field name="lastModifiedDate" position="2">
+            <display/>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="AddLayoutSubContent" 
+        default-title-style="tableheadtext"
+        default-entity-name="SubContentDataResourceView"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        default-map-name="currentValue"
+        extends="LayoutSubContentMaster"
+        target="createLayoutSubContent"
+        title="" type="single">
+        <field name="drDataResourceTypeId" >
+            <drop-down no-current-selected-key="LOCAL_FILE">
+                <option key="LOCAL_FILE" description="Absolute File"/>
+                <option key="OFBIZ_FILE" description="File Rel. to OFBIZ_HOME"/>
+                <option key="CONTEXT_FILE" description="File Rel. to webapp root"/>
+                <option key="ELECTRONIC_TEXT" description="DB TEXT"/>
+            </drop-down>
+        </field>
+        <field name="drMimeTypeId" >
+            <drop-down no-current-selected-key="text/html">
+                <option key="text/html" description="Html Text" />
+                <option key="text/plain" description="Plain Text" />
+            </drop-down>
+        </field>
+        <field name="drDataResourceTypeId" >
+            <drop-down no-current-selected-key="LOCAL_FILE">
+                <option key="LOCAL_FILE" description="Absolute File"/>
+                <option key="OFBIZ_FILE" description="File Rel. to OFBIZ_HOME"/>
+                <option key="CONTEXT_FILE" description="File Rel. to webapp root"/>
+                <option key="ELECTRONIC_TEXT" description="DB TEXT"/>
+            </drop-down>
+        </field>
+        <field name="drMimeTypeId" >
+            <drop-down no-current-selected-key="text/html">
+                <option key="text/html" description="Html Text" />
+                <option key="text/plain" description="Plain Text" />
+            </drop-down>
+        </field>
+        <field name="drObjectInfo" title="File Path">
+            <text />
+        </field>
+        <field name="textData" title="Text"  id-name="textData"> 
+		<textarea rows="24" cols="55" />
+        </field>
+        <field name="submitButton" title="Create" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
     </form>
 
 </forms>
