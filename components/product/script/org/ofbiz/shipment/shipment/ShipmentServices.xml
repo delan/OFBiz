@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
 -->
 <simple-methods>
@@ -1083,7 +1083,9 @@
         <field-to-env field-name="itemShipList" map-name="parameters" env-name="itemMapList"/>
 
         <!-- issue the passed in order items -->
+        <log level="verbose" message="ShipMap List : ${itemMapList}  /  ${parameters.itemShipList}"/>
         <iterate list-name="itemMapList" entry-name="itemMap">
+            <log level="verbose" message="Item Map : ${itemMap}"/>
             <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
             <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueContext"/>
             <field-to-field field-name="orderItemSeqId" map-name="itemMap" to-map-name="issueContext"/>
