@@ -114,10 +114,11 @@
     <target depends="prepare" name="classes">
         <javac classpathref="local.class.path" debug="on" deprecation="on" destdir="${build.dir}/jar" srcdir="${src.dir}">
             <!-- exclude the payment processor packages; comment if you have libs -->
-            <exclude name="org/ofbiz/commonapp/thirdparty/cybersource/**"/> 
-            <exclude name="org/ofbiz/commonapp/thirdparty/verisign/**"/>
-            <exclude name="org/ofbiz/commonapp/thirdparty/taxware/**"/> 
-            <exclude name="org/ofbiz/commonapp/thirdparty/paymentech/**"/>           
+            <exclude name="org/ofbiz/commonapp/thirdparty/cybersource/**"/>
+            <exclude name="org/ofbiz/commonapp/thirdparty/clearcommerce/**"/>
+            <exclude name="org/ofbiz/commonapp/thirdparty/paymentech/**"/>
+            <exclude name="org/ofbiz/commonapp/thirdparty/taxware/**"/>
+            <exclude name="org/ofbiz/commonapp/thirdparty/verisign/**"/>            
         </javac>
         
         <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
