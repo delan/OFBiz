@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -42,7 +42,11 @@
     <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}&activeOnly=${activeOnly?string}</@ofbizUrl>" class="buttontext">[User Entered Only]</a>
   </#if>
   <br>
-  <br>
+  <div class="head3">Showing 
+    <#if activeOnly>Active Only<#else>Active/Inactive</#if>
+    and
+    <#if userEntered>User Entered Only<#else>User/Auto Entered</#if>
+  </div>
 
     <#if productStoreId?exists && productStore?exists>
         <#if (listSize > 0)>
