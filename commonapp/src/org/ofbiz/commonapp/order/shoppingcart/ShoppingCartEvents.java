@@ -43,6 +43,8 @@ import org.ofbiz.commonapp.product.catalog.*;
  * @since      2.0
  */
 public class ShoppingCartEvents {
+    
+    public static String module = ShoppingCartEvents.class.getName();
 
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
@@ -55,9 +57,7 @@ public class ShoppingCartEvents {
         double quantity = 0;
         HashMap attributes = null;
 
-        // Get the parameters as a MAP, remove the productId and quantity params.
-        // The rest should be product attributes.This only works w/ servlet api 2.3
-        // Map paramMap = request.getParameterMap();
+        // Get the parameters as a MAP, remove the productId and quantity params.        
         Map paramMap = UtilHttp.getParameterMap(request);
 
         if (paramMap.containsKey("ADD_PRODUCT_ID")) {
@@ -104,7 +104,7 @@ public class ShoppingCartEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
             return "success"; // don't return error because this is a non-critical error and should go back to the same page
         }
-
+        
         if (cart.viewCartOnAdd()) {
             return "viewcart";
         } else {
@@ -133,7 +133,7 @@ public class ShoppingCartEvents {
             try {
                 itemIter = UtilMisc.toIterator(delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId), null));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 itemIter = null;
             }
 
@@ -171,7 +171,7 @@ public class ShoppingCartEvents {
                     try {
                         orderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
                     } catch (GenericEntityException e) {
-                        Debug.logWarning(e.getMessage());
+                        Debug.logWarning(e.getMessage(), module);
                         errMsg += "<li>Order line \"" + orderItemSeqId + "\" not found, so not added.";
                         continue;
                     }
@@ -222,7 +222,7 @@ public class ShoppingCartEvents {
         try {
             prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", categoryId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error): " + e.getMessage());
             return "error";
         }
@@ -285,7 +285,7 @@ public class ShoppingCartEvents {
         try {
             prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", categoryId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString());
+            Debug.logWarning(e.toString(), module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error): " + e.getMessage());
             return "error";
         }
@@ -383,9 +383,9 @@ public class ShoppingCartEvents {
                     double quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
                     
                     if (quantity < 0) {
-        				request.setAttribute(SiteDefs.ERROR_MESSAGE, "Quantity must be a positive number.");
-        				return "error";
-        			}
+                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Quantity must be a positive number.");
+                        return "error";
+                    }
                     
                     if (o.toUpperCase().startsWith("UPDATE")) {
                         if (quantity == 0.0) {
@@ -414,22 +414,41 @@ public class ShoppingCartEvents {
                         deleteList.add(cart.findCartItem(index));                       
                     }
                 } catch (NumberFormatException nfe) {
-                    Debug.logWarning(nfe, "Caught number format exception on cart update.");
+                    Debug.logWarning(nfe, "Caught number format exception on cart update.", module);
                 } catch (ParseException pe) {
-                    Debug.logWarning(pe, "Caught parse exception on cart update.");
+                    Debug.logWarning(pe, "Caught parse exception on cart update.", module);
                 } catch (Exception e) {
-                    Debug.logWarning(e, "Caught exception on cart update.");
+                    Debug.logWarning(e, "Caught exception on cart update.", module);
                 }
             }// else not a parameter we need
         }
-
+        
+        // get a list of the items to delete
+        String removeSelected = request.getParameter("removeSelected");
+        String selectedItems[] = request.getParameterValues("selectedItem");
+        if (removeSelected.equals("true") && selectedItems.length > 0) {
+            for (int si = 0; si < selectedItems.length; si++) {
+                String indexStr = selectedItems[si];
+                ShoppingCartItem item = null;
+                try {
+                    int index = Integer.parseInt(indexStr);
+                    item = cart.findCartItem(index);
+                } catch (Exception e) {
+                    Debug.logWarning(e, "Problems getting the cart item by index", module);
+                }
+                if (item != null) {
+                    deleteList.add(item);
+                }
+            }
+        }
+                                    
         Iterator di = deleteList.iterator();
 
         while (di.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) di.next();
             int itemIndex = cart.getItemIndex(item);
 
-            if (Debug.infoOn()) Debug.logInfo("Removing item index: " + itemIndex);
+            if (Debug.infoOn()) Debug.logInfo("Removing item index: " + itemIndex, module);
             try {
                 cart.removeCartItem(itemIndex, dispatcher);
             } catch (CartItemModifyException e) {
@@ -437,7 +456,9 @@ public class ShoppingCartEvents {
             }
         }
 
-        if (!paramMap.containsKey("always_showcart")) {
+        if (paramMap.containsKey("always_showcart")) {
+            cart.setViewCartOnAdd(true);
+        } else {
             cart.setViewCartOnAdd(false);
         }
 
