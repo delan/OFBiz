@@ -40,7 +40,7 @@
     (see further down for the Simple Map Processor Section)
 -->
 
-<!ENTITY % CallOperations "call-map-processor | call-service | call-bsh | check-errors">
+<!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | check-errors">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field">
 <!ENTITY % EventEnvOperations "env-to-request | env-to-session | request-to-env | session-to-env">
 <!ENTITY % ServiceOperations "field-to-result | env-to-result">
@@ -104,7 +104,7 @@
     processor-name CDATA #IMPLIED
     in-map-name CDATA #REQUIRED
     out-map-name CDATA #REQUIRED
-    error-list-name CDATA "_error_list_"
+    error-list-name CDATA "error_list"
 >
 
 <!--
@@ -182,6 +182,19 @@
         service-result-name CDATA #IMPLIED
     >
 
+<!-- TODO: implement call-service-asynch -->
+<!--
+Calls a service asynchronously and ignores the result, so no return messages 
+are used; that doesn't mean no errors will result, but they would just be
+system errors like database failures, etc.
+-->
+<!ELEMENT call-service-asynch EMPTY>
+<!ATTLIST call-service-asynch
+    service-name CDATA #REQUIRED
+    in-map-name CDATA #REQUIRED
+    include-user-login ( true | false ) "true"
+>
+
 <!-- 
 Runs an external bsh script from the classpath if resource is specified and 
 then runs the inlined bsh script if any is specified.
@@ -197,13 +210,13 @@ Error messages go on the error list and are handled with the check-errors tag.
 <!ELEMENT call-bsh (#PCDATA)>
 <!ATTLIST call-bsh
     resource CDATA #IMPLIED
-    error-list-name CDATA "_error_list_"
+    error-list-name CDATA "error_list"
 >
 
 <!ELEMENT check-errors ( error-prefix?, error-suffix?, message-prefix?, message-suffix? )>
 <!ATTLIST check-errors
     error-code CDATA "error"
-    error-list-name CDATA "_error_list_"
+    error-list-name CDATA "error_list"
 >
 
 <!-- Operations to copy map fields in the current env to context specific containers -->
