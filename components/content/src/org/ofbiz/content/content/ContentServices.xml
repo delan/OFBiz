@@ -142,7 +142,7 @@
     </simple-method>
     
     <!-- Methods for ContentAssoc -->
-    <simple-method login-required="true" method-name="assocContent">
+    <simple-method login-required="true" method-name="assocContent" short-description="Associate Content" >
         <log level="always" message="assocContent, parameters:${parameters}"/>
         <log level="always" message="assocContent, context:${context}"/>
         <call-service in-map-name="parameters" service-name="checkAssocPermission">
@@ -199,7 +199,15 @@
         <make-value entity-name="ContentAssoc" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        
+        <if-empty field-name="contentIdTo" map-name="parameters">
+            <call-service service-name="createContent">
+                <result-to-field result-name="contentId" field-name="contentIdTo" map-name="newEntity"/>
+            </call-service>
+        </if-empty>
+        <if-empty field-name="fromDate" map-name="parameters">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
         <create-value value-name="newEntity"/>
         <field-to-result map-name="newEntity" field-name="contentId" result-name="contentId" />
         <field-to-result map-name="newEntity" field-name="contentIdTo" result-name="contentIdTo" />
@@ -669,5 +677,153 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
+    <!-- Util -->
+    <simple-method method-name="findAssocContent" short-description="Find associated content">
+        <field-to-field field-name="contentId" map-name="parameters" to-map-name="queryMap"/>
+        <field-to-env field-name="mapKeys" map-name="parameters"/>
+        <field-to-list field-name="mapKey" list-name="mapKeys"/>
+        <iterate entry-name="mapKey" list-name="mapKeys">
+            <field-to-field field-name="mapKey" to-map-name="queryMap"/>
+            <find-by-and list-name="resultMap" entity-name="ContentAssoc" map-name="queryMap"/>
+            <filter-list-by-date list-name="resultMap" to-list-name="validContent"/>
+            <iterate entry-name="contentAssoc" list-name="validContent">
+                <field-to-list field-name="contentAssoc" list-name="result"/>
+            </iterate>
+        </iterate>
+        <if>
+            <condition>
+                <if-empty field-name="mapKey" map-name="parameters"/>
+            </condition>
+            <then>
+                <field-to-result field-name="result" result-name="contentAssocs"/>
+            </then>
+            <else>
+                <field-to-result field-name="result" result-name="contentAssoc"/>
+            </else>
+        </if>
+    </simple-method>
+
+    <!-- Generic content services -->
+    <simple-method method-name="createEmailContent" short-description="Create Email as Content">
+        <check-permission permission="CONTENTMGR" action="_CREATE">
+            <fail-message message="Security Error: to run createContentEmail you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <!-- Create subject -->
+        <set-service-fields service-name="createContent" map-name="parameters" to-map-name="createSubjectContent"/>
+        <field-to-field map-name="parameters" field-name="subject" to-map-name="createSubjectEtext" to-field-name="textData"/>
+        <call-service service-name="createElectronicText" in-map-name="createSubjectEtext">
+            <result-to-field result-name="dataResourceId" map-name="createSubjectContent"/>
+        </call-service>
+        <call-service service-name="createContent" in-map-name="createSubjectContent">
+            <result-to-field result-name="contentId" map-name="createBodyAssoc"/>
+        </call-service>
+
+        <!-- Create plain body -->
+        <field-to-field map-name="parameters" field-name="plainBody" to-map-name="createPlainBodyEtext" to-field-name="textData"/>
+        <call-service service-name="createElectronicText" in-map-name="createPlainBodyEtext">
+            <result-to-field result-name="dataResourceId" map-name="createPlainBodyContent"/>
+        </call-service>
+        <call-service service-name="createContent" in-map-name="createPlainBodyContent">
+            <result-to-field result-name="contentId" map-name="createBodyAssoc" field-name="contentIdTo"/>
+        </call-service>
+        <!-- Create content assoc between subject and plain body -->
+        <string-to-field string="TREE_CHILD" field-name="contentAssocTypeId" map-name="createBodyAssoc"/>
+        <string-to-field string="plainBody" field-name="mapKey" map-name="createBodyAssoc"/>
+        <call-service service-name="createContentAssoc" in-map-name="createBodyAssoc"/>
+
+        <!-- Create HTML body -->
+        <field-to-field map-name="parameters"  field-name="htmlBody" to-map-name="createHtmlBodyEtext" to-field-name="textData"/>
+        <call-service service-name="createElectronicText" in-map-name="createHtmlBodyEtext">
+            <result-to-field result-name="dataResourceId" map-name="createHtmlBodyContent"/>
+        </call-service>
+        <call-service service-name="createContent" in-map-name="createHtmlBodyContent">
+            <result-to-field result-name="contentId" map-name="createBodyAssoc" field-name="contentIdTo"/>
+        </call-service>
+        <!-- Create content assoc between subject and html body -->
+        <string-to-field string="htmlBody" field-name="mapKey" map-name="createBodyAssoc"/>
+        <call-service service-name="createContentAssoc" in-map-name="createBodyAssoc"/>
+
+        <field-to-result field-name="contentId" map-name="createBodyAssoc" result-name="contentId"/>
+    </simple-method>
+    <simple-method method-name="updateEmailContent" short-description="Update Email Content">
+        <check-permission permission="CONTENTMGR" action="_UPDATE">
+            <fail-message message="Security Error: to run updateContentEmail you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <if-not-empty field-name="subjectDataResourceId" map-name="parameters">
+            <field-to-field field-name="subjectDataResourceId" map-name="parameters" to-field-name="dataResourceId" to-map-name="updateSubjectEt"/>
+            <field-to-field field-name="subject" map-name="parameters" to-field-name="textData" to-map-name="updateSubjectEt"/>
+            <call-service service-name="updateElectronicText" in-map-name="updateSubjectEt"/>
+        </if-not-empty>
+        <if-not-empty field-name="plainBodyDataResourceId" map-name="parameters">
+            <field-to-field field-name="plainBodyDataResourceId" map-name="parameters" to-field-name="dataResourceId" to-map-name="updatePlainBodyEt"/>
+            <field-to-field field-name="plainBody" map-name="parameters" to-field-name="textData" to-map-name="updatePlainBodyEt"/>
+            <call-service service-name="updateElectronicText" in-map-name="updatePlainBodyEt"/>
+        </if-not-empty>
+        <if-not-empty field-name="htmlBodyDataResourceId" map-name="parameters">
+            <field-to-field field-name="htmlBodyDataResourceId" map-name="parameters" to-field-name="dataResourceId" to-map-name="updateHtmlBodyEt"/>
+            <field-to-field field-name="htmlBody" map-name="parameters" to-field-name="textData" to-map-name="updateHtmlBodyEt"/>
+            <call-service service-name="updateElectronicText" in-map-name="updateHtmlBodyEt"/>
+        </if-not-empty>
+    </simple-method>
+
+    <simple-method method-name="createDownloadContent" short-description="Create Download as Content">
+        <check-permission permission="CONTENTMGR" action="_CREATE">
+            <fail-message message="Security Error: to run createContentEmail you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <set-service-fields service-name="createContent" map-name="parameters" to-map-name="createDownloadContent"/>
+        <field-to-field map-name="parameters" field-name="file" to-map-name="createDownload" to-field-name="dataResourceContent"/>
+        <call-service service-name="createOtherDataResource" in-map-name="createDownload">
+            <result-to-field result-name="dataResourceId" map-name="createDownloadContent"/>
+        </call-service>
+        <call-service service-name="createContent" in-map-name="createDownloadContent">
+            <result-to-result result-name="contentId"/>
+        </call-service>
+    </simple-method>
+    <simple-method method-name="updateDownloadContent" short-description="Update Download Content">
+        <check-permission permission="CONTENTMGR" action="_UPDATE">
+            <fail-message message="Security Error: to run updateContentEmail you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <if-not-empty field-name="fileDataResourceId" map-name="parameters">
+            <field-to-field field-name="fileDataResourceId" map-name="parameters" to-field-name="dataResourceId" to-map-name="updateFile"/>
+            <field-to-field field-name="file" map-name="parameters" to-field-name="dataResourceContent" to-map-name="updateFile"/>
+            <call-service service-name="updateOtherDataResource" in-map-name="updateFile"/>
+        </if-not-empty>
+    </simple-method>
+
+    <simple-method method-name="createSimpleTextContent" short-description="Create Simple Text Content">
+        <check-permission permission="CONTENTMGR" action="_CREATE">
+            <fail-message message="Security Error: to run createContentEmail you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <set-service-fields service-name="createContent" map-name="parameters" to-map-name="createSimpleTextContent"/>
+        <field-to-field map-name="parameters" field-name="text" to-map-name="createSimpleText" to-field-name="textData"/>
+        <call-service service-name="createElectronicText" in-map-name="createSimpleText">
+            <result-to-field result-name="dataResourceId" map-name="createSimpleTextContent"/>
+        </call-service>
+        <call-service service-name="createContent" in-map-name="createSimpleTextContent">
+            <result-to-result result-name="contentId"/>
+        </call-service>
+    </simple-method>
+    <simple-method method-name="updateSimpleTextContent" short-description="Update Simple Text Content">
+        <check-permission permission="CONTENTMGR" action="_UPDATE">
+            <fail-message message="Security Error: to run updateContentEmail you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <if-not-empty field-name="textDataResourceId" map-name="parameters">
+            <field-to-field field-name="textDataResourceId" map-name="parameters" to-field-name="dataResourceId" to-map-name="updateSimpleText"/>
+            <field-to-field field-name="text" map-name="parameters" to-field-name="textData" to-map-name="updateSimpleText"/>
+            <call-service service-name="updateElectronicText" in-map-name="updateSimpleText"/>
+        </if-not-empty>
+    </simple-method>
 
 </simple-methods>
