@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.1 2003/08/18 18:32:07 ajzeneski Exp $
+ *  $Id: ofbiz-component.xml,v 1.2 2003/08/20 19:39:53 ajzeneski Exp $
 -->
 
 <ofbiz-component name="example">	
@@ -30,7 +30,8 @@
     	    title="Images" 
     	    server="default-server" 
     	    location="webapp/images" 
-    	    mount-point="/images"/>
+    	    mount-point="/images"
+    	    app-bar-display="false"/>
     	    
 </ofbiz-component>
 
