@@ -1,5 +1,5 @@
 /*
- * $Id: BOMEvents.java,v 1.5 2004/04/17 07:44:14 jacopo Exp $
+ * $Id: BOMEvents.java,v 1.6 2004/04/19 17:50:46 jacopo Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -80,11 +80,15 @@ public class BOMEvents {
         String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
         String fromDateStr = request.getParameter("FROM_DATE");
         Timestamp fromDate = null;
-
+        
+        GenericValue productIdValue = null;
+        GenericValue productIdToValue = null;
         try {
-            if (delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)) == null)
+            productIdValue = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+            productIdToValue = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productIdTo));
+            if (productIdValue == null)
                 errMsg += "<li>Product with id " + productId + " not found.";
-            if (delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productIdTo)) == null)
+            if (productIdToValue == null)
                 errMsg += "<li>Product To with id " + productIdTo + " not found.";
         } catch (GenericEntityException e) {
             // if there is an exception for either, the other probably wont work
@@ -256,6 +260,18 @@ public class BOMEvents {
             return "error";
         }
 
+        // The low level code for the product productIdTo is updated in the Product entity.
+        try {
+            int llc = BOMHelper.getMaxDepth(productIdTo, productAssocTypeId, null, delegator); // This is the llc
+            productIdToValue.set("billOfMaterialLevel", new Integer(llc));
+            productIdToValue.store();
+            // FIXME: also all the variants llc should be updated?
+        } catch (GenericEntityException e) {
+            request.setAttribute("_ERROR_MESSAGE_", "Could not update product's low level code");
+            Debug.logWarning("[BOMEvents.updateProductBom] Could not update product's low level code; message: " + e.getMessage(), module);
+            return "error";
+        }
+        
         return "success";
     }
 }
