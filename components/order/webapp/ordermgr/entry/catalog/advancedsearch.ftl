@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
-<div class="head1">Advanced Search in Category</div>
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<div class="head1">${uiLabelMap.ProductAdvancedSearchinCategory}</div>
 <br>
 <form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="VIEW_SIZE" value="10">
@@ -45,13 +46,13 @@
     </#if>
     <tr>
       <td align="right" valign="middle">
-        <div class="tabletext">Keywords:</div>
+        <div class="tabletext">${uiLabelMap.ProductKeywords}:</div>
       </td>
       <td valign="middle">
         <div class="tabletext">
           <input type="text" class="inputBox" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING?if_exists}">&nbsp;
-          Any<input type="RADIO" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked</#if>>
-          All<input type="RADIO" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked</#if>>
+          ${uiLabelMap.CommonAny}<input type="RADIO" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked</#if>>
+          ${uiLabelMap.CommonAll}<input type="RADIO" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked</#if>>
         </div>
       </td>
     </tr>
@@ -66,7 +67,7 @@
         <td valign="middle">
           <div class="tabletext">
             <select class="selectBox" name="pft_${productFeatureTypeId}">
-              <option value="">- Any -</option>
+              <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default(productFeature.productFeatureId)}</option>
               </#list>
@@ -108,7 +109,7 @@
     <tr>
       <td>
         <div class="tabletext">
-          <a href="javascript:document.advtokeywordsearchform.submit()" class="buttontext">Find</a>
+          <a href="javascript:document.advtokeywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
         </div>
       </td>
     </tr>

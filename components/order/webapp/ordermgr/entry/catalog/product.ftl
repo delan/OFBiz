@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if requestAttributes.product?has_content>
   ${pages.get(requestAttributes.detailTemplate)}
 <#else>
   <#assign productId = requestAttributes.productId?if_exists>
-  <center><div class='head2'>Product not found for Product ID ${productId?if_exists}!</div></center>
+  <center><div class='head2'>${uiLabelMap.ProductProductNotFound} ${productId?if_exists}!</div></center>
 </#if>
