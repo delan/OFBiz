@@ -42,7 +42,7 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
  * @version    $Rev$
  * @since      3.2
  */
-public class ScannerKybService extends BaseKybService implements jpos.services.ScannerService18, KeyboardReceiver {
+public class ScannerKybService extends BaseKybService implements jpos.services.ScannerService17, KeyboardReceiver {
 
     public static final String module = ScannerKybService.class.getName();
     private static final int TYPELOC_PREFIX = 50;
@@ -77,44 +77,6 @@ public class ScannerKybService extends BaseKybService implements jpos.services.S
                 this.codeLocation = TYPELOC_NONE;
             }
         }
-    }
-
-    // ScannerService18
-    public boolean getCapStatisticsReporting() throws JposException {
-        return false;
-    }
-
-    public boolean getCapUpdateStatistics() throws JposException {
-        return false;
-    }
-
-    public void resetStatistics(String s) throws JposException {
-        // not used
-    }
-
-    public void retrieveStatistics(String[] strings) throws JposException {
-        // not used
-    }
-
-    public void updateStatistics(String s) throws JposException {
-        // not used
-    }
-
-    // ScannerService13
-    public int getCapPowerReporting() throws JposException {
-        return 0; // not used
-    }
-
-    public int getPowerNotify() throws JposException {
-        return 0; // not used
-    }
-
-    public void setPowerNotify(int i) throws JposException {
-        // not used
-    }
-
-    public int getPowerState() throws JposException {
-        return this.powerState;
     }
 
     // ScannerService12
@@ -158,6 +120,22 @@ public class ScannerKybService extends BaseKybService implements jpos.services.S
         this.scannedData = new byte[0];
         this.codeId = new String();
     }
+
+    // ScannerService13
+    public int getCapPowerReporting() throws JposException {
+        return 0;
+    }
+
+    public int getPowerNotify() throws JposException {
+        return 0;
+    }
+
+    public void setPowerNotify(int i) throws JposException {
+    }
+
+    public int getPowerState() throws JposException {
+        return 0;
+    }    
 
     // KeyboardReceiver
     public void receiveData(int[] codes, char[] chars) {

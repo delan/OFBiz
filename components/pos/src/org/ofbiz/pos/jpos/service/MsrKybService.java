@@ -39,7 +39,7 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
  * @version    $Rev$
  * @since      3.2
  */
-public class MsrKybService extends BaseKybService implements jpos.services.MSRService18, KeyboardReceiver {
+public class MsrKybService extends BaseKybService implements jpos.services.MSRService17, KeyboardReceiver {
 
     public static final String module = MsrKybService.class.getName();
     public static final int JPOS_MSR_ACCT_ERR = 100;
@@ -59,6 +59,7 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
     protected byte[] track2DiscretionaryData = new byte[0];
     protected byte[] track1Data = new byte[0];
     protected byte[] track2Data = new byte[0];
+    protected byte[] track3Data = new byte[0];
     protected int[] sentinels = new int[0];
     protected int[] lrc = new int[0];
 
@@ -67,7 +68,7 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
     protected boolean autoDisable = false;
     protected boolean sendSentinels = true;
 
-    protected int tracksToRead = MSRConst.MSR_TR_1_2;
+    protected int tracksToRead = MSRConst.MSR_TR_1_2_3;
     protected int errorType = MSRConst.MSR_ERT_CARD;
 
     public MsrKybService() {
@@ -158,7 +159,7 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
     }
 
     public byte[] getTrack1Data() throws JposException {
-        return track1Data;
+        return this.track1Data;
     }
 
     public byte[] getTrack1DiscretionaryData() throws JposException {
@@ -166,7 +167,7 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
     }
 
     public byte[] getTrack2Data() throws JposException {
-        return track2Data;
+        return this.track2Data;
     }
 
     public byte[] getTrack2DiscretionaryData() throws JposException {
@@ -174,7 +175,7 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
     }
 
     public byte[] getTrack3Data() throws JposException {
-        return new byte[0];  // not implemented
+        return this.track3Data;
     }
 
     public int getTracksToRead() throws JposException {
@@ -196,6 +197,7 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
         this.expireDate = new String[0];
         this.track1Data = new byte[0];
         this.track2Data = new byte[0];
+        this.track3Data = new byte[0];
         this.track1DiscretionaryData = new byte[0];
         this.track2DiscretionaryData = new byte[0];
     }
@@ -232,27 +234,6 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
 
     public void setTransmitSentinels(boolean b) throws JposException {
         this.sendSentinels = b;
-    }
-
-    // MSRService18
-    public boolean getCapStatisticsReporting() throws JposException {
-        return true;
-    }
-
-    public boolean getCapUpdateStatistics() throws JposException {
-        return false;
-    }
-
-    public void resetStatistics(String s) throws JposException {
-        // not used
-    }
-
-    public void retrieveStatistics(String[] strings) throws JposException {
-        // not used
-    }
-
-    public void updateStatistics(String s) throws JposException {
-        // not used
     }
 
     public void receiveData(int[] codes, char[] chars) {

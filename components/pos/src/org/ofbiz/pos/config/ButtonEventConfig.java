@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import net.xoetrope.swing.XButton;
 
@@ -38,6 +39,7 @@ import org.ofbiz.base.config.ResourceLoader;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.screen.PosScreen;
 
 import org.w3c.dom.Element;
@@ -57,6 +59,7 @@ public class ButtonEventConfig {
     protected String buttonName = null;
     protected String className = null;
     protected String method = null;
+    protected int keyCode = -1;
     protected boolean disableLock = false;
 
     public static void loadButtonConfig() throws GenericConfigException {
@@ -80,12 +83,34 @@ public class ButtonEventConfig {
         return bef.isLockable();
     }
 
+    public static void invokeButtonEvents(List buttonNames, PosScreen pos) throws ButtonEventNotFound, ButtonEventException {
+        if (buttonNames != null) {
+            Iterator i = buttonNames.iterator();
+            while (i.hasNext()) {
+                invokeButtonEvent(((String) i.next()), pos);
+            }
+        }
+    }
+
     public static void invokeButtonEvent(String buttonName, PosScreen pos) throws ButtonEventNotFound, ButtonEventException {
         ButtonEventConfig bef = (ButtonEventConfig) buttonConfig.get(buttonName);
         if (bef == null) {
             throw new ButtonEventNotFound("No button definition found for button - " + buttonName);
         }
         bef.invoke(pos);
+    }
+
+    public static List findButtonKeyAssign(int keyCode) {
+        List buttonAssignments = new ArrayList();
+        Iterator i = buttonConfig.values().iterator();
+        while (i.hasNext()) {
+            ButtonEventConfig bef = (ButtonEventConfig) i.next();
+            if (bef.getKeyCode() == keyCode) {
+                buttonAssignments.add(bef.getName());
+            }
+        }
+
+        return buttonAssignments;
     }
 
     public static String getButtonName(PosScreen pos) {
@@ -105,11 +130,23 @@ public class ButtonEventConfig {
         this.buttonName = element.getAttribute("button-name");
         this.className = element.getAttribute("class-name");
         this.method = element.getAttribute("method-name");
+        String keyCodeStr = element.getAttribute("key-code");
+        if (UtilValidate.isNotEmpty(keyCodeStr)) {
+            try {
+                this.keyCode = Integer.parseInt(keyCodeStr);
+            } catch (Throwable t) {
+                Debug.logWarning("Key code definition for button [" + buttonName + "] is not a valid Integer", module);
+            }
+        }
         this.disableLock = "true".equals(element.getAttribute("disable-lock"));
     }
 
     public String getName() {
         return this.buttonName;
+    }
+
+    public int getKeyCode() {
+        return this.keyCode;
     }
 
     public boolean isLockable() {

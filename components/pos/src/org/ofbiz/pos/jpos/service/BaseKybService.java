@@ -65,7 +65,7 @@ public class BaseKybService implements BaseService, JposServiceInstance {
     protected String physicalDesc = null;
     protected String serviceDesc = null;
 
-    protected int serviceVer = 1008000;
+    protected int serviceVer = 1007000;
     protected int state = JposConst.JPOS_S_CLOSED;
 
     private EventCallbacks ecb = null;
@@ -181,7 +181,7 @@ public class BaseKybService implements BaseService, JposServiceInstance {
     }
 
     protected void fireEvent(Object ev) {
-        if (this.eventsEnabled) {
+        if (this.eventsEnabled && this.ecb != null) {
             if (ev instanceof DataEvent) {
                 this.ecb.fireDataEvent((DataEvent) ev);
             } else if (ev instanceof DirectIOEvent) {

@@ -47,11 +47,11 @@
         <property name="devices">
             <property name="CashDrawer.1" value="[DISABLED]"/>
             <property name="Receipt" value="[DISABLED]"/>
+            <property name="Keyboard" value="GenericKeyboard"/>
             <property name="Scanner" value="GenericScanner"/>
             <property name="Msr" value="GenericMsr"/>
             <property name="PinPad" value="[NOT IMPLEMENTED]"/>
             <property name="Journal" value="[NOT IMPLEMENTED]"/>
-            <property name="Keyboard" value="[NOT IMPLEMENTED]"/>
             <property name="LineDisplay" value="[NOT IMPLEMENTED]"/>
             <property name="CheckScanner" value="[NOT IMPLEMENTED]"/>
             <property name="SignatureCapture" value="[NOT IMPLEMENTED]"/>
