@@ -74,7 +74,7 @@
     </service>
 
     <service name="createNote" engine="java"
-            location="org.ofbiz.commonapp.common.CommonServices invoke="createNote">
+            location="org.ofbiz.commonapp.common.CommonServices" invoke="createNote">
         <description>Create a new note record</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="noteName" type="String" mode="IN" optional="true"/>
