@@ -604,7 +604,7 @@ public class ServiceDispatcher {
         return localContext.containsKey(name);
     }
     
-    public void shutdown() throws GenericServiceException {
+    protected void shutdown() throws GenericServiceException {
         Debug.logInfo("Shutting down the service engine...", module);
         // shutdown JMS listeners
         jlf.closeListeners();
