@@ -30,9 +30,7 @@ import java.util.Map;
 
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
-import org.ofbiz.core.entity.GenericTransactionException;
 import org.ofbiz.core.entity.GenericValue;
-import org.ofbiz.core.entity.TransactionUtil;
 import org.ofbiz.core.security.Security;
 import org.ofbiz.core.service.DispatchContext;
 import org.ofbiz.core.service.GenericServiceException;
@@ -69,7 +67,6 @@ public class OrderDeliveryServices {
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Security security = ctx.getSecurity();
         Locale locale = (Locale) context.get("locale");
-        boolean beganTrans = false;
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         // check security
@@ -81,13 +78,6 @@ public class OrderDeliveryServices {
 
         try
         {
-            //Initialize the transaction
-            try {
-                beganTrans = TransactionUtil.begin();
-            } catch (GenericTransactionException gte) {
-                throw new GenericServiceException("Cannot start the transaction.", gte.getNested());
-            }
-
             // get the order type
             String orderTypeId = (String) context.get("orderTypeId");
             
@@ -147,37 +137,14 @@ public class OrderDeliveryServices {
                 //Finally, update the schedule in the repository
                 delegator.store(schedule);
              }
-
-            try {
-                //Commit the transaction
-                TransactionUtil.commit(beganTrans);
-                result = ServiceUtil.returnSuccess();
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not commit transaction", module);     
-                throw new GenericServiceException("Commit transaction failed");
-            }  
         } catch (GenericServiceException e) {
             Debug.logError(e, "Could not create the WorkEffort associated with the delivery schedule", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Could not create the WorkEffort associated with the delivery schedule");
-
-            try {
-                //Rollback the transaction
-                TransactionUtil.rollback(beganTrans);
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot rollback transaction", module);
-            }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot create OrderDeliverySchedule entity; problems with insert", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Transaction error: " + e.getMessage());
-
-            try {
-                //Rollback the transaction
-                TransactionUtil.rollback(beganTrans);
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot rollback transaction", module);
-            }
         }
 
         return result;
