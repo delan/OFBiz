@@ -255,6 +255,7 @@
   <ProductPriceType description="Usage Charge" productPriceTypeId="USAGE_CHARGE"/>
 
   <ProductPriceActionType description="Percent Of List Price" productPriceActionTypeId="PRICE_POL"/>
+  <ProductPriceActionType description="Percent Of Default Price" productPriceActionTypeId="PRICE_POD"/>
   <ProductPriceActionType description="Percent Of Average Cost" productPriceActionTypeId="PRICE_POAC"/>
   <ProductPriceActionType description="Percent Of Margin" productPriceActionTypeId="PRICE_POM"/>
   <ProductPriceActionType description="Flat Amount Modify" productPriceActionTypeId="PRICE_FOL"/>
