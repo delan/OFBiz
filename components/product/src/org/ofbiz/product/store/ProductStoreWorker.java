@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.1 2003/08/17 18:04:24 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.2 2003/08/18 03:51:39 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,6 +36,8 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.shoppingcart.ShoppingCart;
+import org.ofbiz.product.shoppingcart.ShoppingCartItem;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -44,7 +46,7 @@ import org.ofbiz.service.ModelService;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ProductStoreWorker {
