@@ -417,12 +417,14 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Complete this workflow
     private void finishProcess() throws WfException {
         changeState("closed.completed");
-        WfEventAudit audit = WfFactory.getWfEventAudit(this,null);     // this will need to be updated
-        try {
-            requester.receiveEvent(audit);
-        }
-        catch ( InvalidPerformer e ) {
-            throw new WfException(e.getMessage(),e);
+        if ( requester != null ) {
+            WfEventAudit audit = WfFactory.getWfEventAudit(this,null);     // this will need to be updated
+            try {
+                requester.receiveEvent(audit);
+            }
+            catch ( InvalidPerformer e ) {
+                throw new WfException(e.getMessage(),e);
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ public class WfResourceImpl implements WfResource {
     protected String resourceName;
     protected String description;
     protected String partyId;
-    protected String roleTypeId;
+    protected String roleTypeId;    
     protected String type;
     
     
@@ -53,6 +53,7 @@ public class WfResourceImpl implements WfResource {
      * @param resourceName The name of the resource
      * @param partyId The partyID of this resource
      * @param roleTypeId The roleTypeId of this resource
+     * @param fromDate The fromDate of this resource
      */
     public WfResourceImpl(GenericDelegator delegator, String resourceKey, String resourceName, String partyId, String roleTypeId) {
         this.delegator = delegator;
@@ -60,7 +61,7 @@ public class WfResourceImpl implements WfResource {
         this.resourceName = resourceName;
         this.description = null;
         this.partyId = partyId;
-        this.roleTypeId = roleTypeId;
+        this.roleTypeId = roleTypeId;        
         this.type = "HUMAN";
     }
     
@@ -74,7 +75,9 @@ public class WfResourceImpl implements WfResource {
         this.description = valueObject.getString("description");
         this.partyId = valueObject.getString("partyId");
         this.roleTypeId = valueObject.getString("roleTypeId");
-        this.type = valueObject.getString("participantTypeId");
+        this.type = valueObject.getString("participantTypeId");   
+        if ( partyId == null ) partyId = "_NA_";
+        if ( roleTypeId == null ) roleTypeId = "_NA_";
     }
     
     /** Gets the number of work items

@@ -5,7 +5,9 @@
 package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
+import java.sql.Timestamp;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -32,55 +34,62 @@ import org.ofbiz.core.workflow.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    November 15, 2001
- *@version    1.0
+ *@created    December 19, 2001
+ *@version    1.2
  */
 public class WfAssignmentImpl implements WfAssignment {
     
     protected WfActivity activity;
     protected WfResource resource;
-    protected GenericValue valueObject;    
-    
+    protected Timestamp fromDate;
+                
     /** Creates new WfAssignment
      *@param activity Sets the activity object for this assignment
      *@param resource The WfResource object this is assigned to
      *@throws WfException
      */
-    public WfAssignmentImpl(WfActivity activity, WfResource resource) throws WfException {
+    public WfAssignmentImpl(WfActivity activity, WfResource resource, Timestamp fromDate) throws WfException {
         this.activity = activity;
-        this.resource = resource;      
-        this.valueObject = makeAssignment();     
+        this.resource = resource;              
+        this.fromDate = fromDate;
+        checkAssignment();
     }
-        
+                           
     // makes the assignment entity    
-    private GenericValue makeAssignment() throws WfException {
-        String workEffort = activity.runtimeKey();
-        String party = resource.resourcePartyId();
-        String role = resource.resourceRoleId();
-        
-        if ( workEffort == null )
+    private void checkAssignment() throws WfException {                                       
+        String workEffortId = activity.runtimeKey();
+        String partyId = resource.resourcePartyId();
+        String roleTypeId = resource.resourceRoleId();
+       
+        if ( workEffortId == null )
             throw new WfException("WorkEffort could not be found for assignement");
-        if ( party == null && role == null )
+        if ( partyId == null && roleTypeId == null )
             throw new WfException("Both party and role type IDs cannot be null");
-        role = role == null ? "_NA_" : role;
+        if ( fromDate == null )
+            throw new WfException("From date cannot be null");
+                                
         GenericValue value = null;
-        try {
-            Map fields = new HashMap();
-            fields.put("workEffortId",activity.runtimeKey());
-            fields.put("partyId",party);
-            fields.put("roleTypeId",role);
-            fields.put("statusId","CAL_SENT");
-            fields.put("fromDate",new java.sql.Timestamp((new Date()).getTime()));          
+        Map fields = new HashMap();
+        fields.put("workEffortId",workEffortId);
+        fields.put("partyId",partyId);
+        fields.put("roleTypeId",roleTypeId);
+        fields.put("fromDate",fromDate);
+        fields.put("statusId","CAL_SENT");        
+                        
+        // check if one exists
+        if ( valueObject() != null )
+            return;
+                
+        // none exist; create a new one
+        try {                                                           
             GenericValue v = activity.getDelegator().makeValue("WorkEffortPartyAssignment",fields);
-            value = activity.getDelegator().create(v);
-            
+            value = activity.getDelegator().create(v);            
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
         }        
         if ( value == null )
-            throw new WfException("Could not create the assignement!");
-        return value;
+            throw new WfException("Could not create the assignement!");        
     }
     
     /** Mark this assignment as accepted
@@ -114,6 +123,7 @@ public class WfAssignmentImpl implements WfAssignment {
      * @throws WfException
      */
     public void changeStatus(String status) throws WfException {
+        GenericValue valueObject = valueObject();
         try {
             valueObject.set("statusId",status);
             valueObject.store();
@@ -128,7 +138,7 @@ public class WfAssignmentImpl implements WfAssignment {
      * @throws WfException
      */
     public WfActivity activity() throws WfException {
-        return this.activity;
+        return activity;
     }
     
     /** Gets the assignee (resource) of this assignment
@@ -136,7 +146,7 @@ public class WfAssignmentImpl implements WfAssignment {
      * @throws WfException
      */
     public WfResource assignee() throws WfException {                   
-        return this.resource;
+        return resource;
     }
     
     /** Sets the assignee of this assignment
@@ -145,14 +155,10 @@ public class WfAssignmentImpl implements WfAssignment {
      * @throws InvalidResource
      */
     public void setAssignee(WfResource newValue) throws WfException, InvalidResource {        
-        try {
-            valueObject.remove();
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException("Cannot remove old resource",e);
-        }        
-        this.resource = newValue;
-        this.valueObject = makeAssignment();        
+        remove();
+        this.resource = newValue;      
+        this.fromDate = new Timestamp(new Date().getTime());
+        checkAssignment();
     }
     
     /** Removes the stored data for this object
@@ -160,7 +166,7 @@ public class WfAssignmentImpl implements WfAssignment {
      */
     public void remove() throws WfException {
         try {
-            valueObject.remove();
+            valueObject().remove();
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
@@ -172,6 +178,22 @@ public class WfAssignmentImpl implements WfAssignment {
      * @throws WfException
      */
     public String status() throws WfException {
-        return valueObject.getString("statusId");
+        return valueObject().getString("statusId");
     }
+    
+    private GenericValue valueObject() throws WfException {
+        GenericValue value = null;
+        Map fields = new HashMap();
+        fields.put("workEffortId",activity.runtimeKey());
+        fields.put("partyId",resource.resourcePartyId());
+        fields.put("roleTypeId",resource.resourceRoleId());
+        fields.put("fromDate",fromDate);        
+        try {
+            value = activity.getDelegator().findByPrimaryKey("WorkEffortPartyAssignment",fields);
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        return value;
+    }                
 }

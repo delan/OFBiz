@@ -42,8 +42,7 @@ import org.ofbiz.core.workflow.*;
 
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
     
-    protected String process;
-    protected List assignments;
+    protected String process;    
      
     /**
      * Create a new WfActivityImpl
@@ -65,11 +64,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      */
     public WfActivityImpl(GenericDelegator delegator, String workEffortId) throws WfException {
         super(delegator,workEffortId);
-        init();
+        this.process = getRuntimeObject().getString("workEffortParentId");
     }
             
-    private void init() throws WfException {
-        this.assignments = new ArrayList();
+    private void init() throws WfException {        
         GenericValue valueObject = getDefinitionObject();
         GenericValue performer = null;
         if ( valueObject.get("performerParticipantId") != null ) {
@@ -155,6 +153,31 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
     }
     
+    private List getAssignments() throws WfException {
+        List assignments = new ArrayList();
+        Collection c = null;                
+        try {
+            c = getDelegator().findByAnd("WorkEffortPartyAssignment",UtilMisc.toMap("workEffortId",runtimeKey()));
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        if ( c == null )
+            return assignments;
+        
+        Iterator i = c.iterator();
+        while ( i.hasNext() ) {
+            GenericValue value = (GenericValue) i.next();
+            String party = value.getString("partyId");
+            String role = value.getString("roleTypeId");
+            String status = value.getString("statusId");
+            java.sql.Timestamp from = value.getTimestamp("fromDate");
+            if ( status.equals("CAL_SENT") || status.equals("CAL_ACCEPTED") || status.equals("CAL_TENTATIVE") )
+                assignments.add(WfFactory.getWfAssignment(getDelegator(),runtimeKey(),party,role,from));
+        }            
+        return assignments;
+    }
+    
     /**
      * Activates this activity.
      * @throws WfException
@@ -195,12 +218,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             while ( ai.hasNext() ) {
                 WfAssignment a = (WfAssignment) ai.next();
                 a.remove();
-            }
-            assignments = new ArrayList();
+            }            
         }
         
-        WfAssignment assign = WfFactory.getWfAssignment(this,resource);
-        assignments.add(assign);
+        WfAssignment assign = WfFactory.getWfAssignment(this,resource,null);        
     }
     
     /**
@@ -239,7 +260,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      */
     public boolean isMemberOfAssignment(WfAssignment member) throws
     WfException {
-        return assignments.contains(member);
+        return getAssignments().contains(member);
     }
     
     /**
@@ -269,7 +290,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @return Amount of current assignments.
      */
     public int howManyAssignment() throws WfException {
-        return assignments.size();
+        return getAssignments().size();
     }
     
     /**
@@ -303,8 +324,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      */
     public List getSequenceAssignment(int maxNumber) throws WfException {
         if ( maxNumber > 0 )
-            return assignments.subList(0,(maxNumber-1));
-        return assignments;
+            return getAssignments().subList(0,(maxNumber-1));
+        return getAssignments();
     }
     
     /**
@@ -313,7 +334,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @return Assignment Iterator.
      */
     public Iterator getIteratorAssignment() throws WfException {
-        return assignments.iterator();
+        return getAssignments().iterator();
     }
     
     public String executionObjectType() {
@@ -350,7 +371,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         
         if ( type == 2 && completeAll ) {
             Debug.logInfo("[WfActivity.checkAssignStatus] : Checking completeAll");
-            Iterator i = assignments.iterator();
+            Iterator i = getIteratorAssignment();
             while ( i.hasNext() ) {
                 WfAssignment a = (WfAssignment) i.next();
                 if ( !a.status().equals("CAL_COMPLETE") )
@@ -360,7 +381,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         
         if ( type == 1 && acceptAll ) {
             Debug.logInfo("[WfActivity.checkAssignStatus] : Checking acceptAll");
-            Iterator i = assignments.iterator();
+            Iterator i = getIteratorAssignment();
             while ( i.hasNext() ) {
                 WfAssignment a = (WfAssignment) i.next();
                 if ( !a.status().equals("CAL_ACCEPTED") )
