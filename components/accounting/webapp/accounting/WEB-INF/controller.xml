@@ -309,19 +309,19 @@
     </request-map>
     <request-map uri="addFixedAssetProduct">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="addFixedAssetProduct"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="addFixedAssetProduct"/>
         <response name="success" type="view" value="ListFixedAssetProducts"/>
         <response name="error" type="view" value="ListFixedAssetProducts"/>
     </request-map>
     <request-map uri="updateFixedAssetProduct">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateFixedAssetProduct"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="updateFixedAssetProduct"/>
         <response name="success" type="view" value="ListFixedAssetProducts"/>
         <response name="error" type="view" value="ListFixedAssetProducts"/>
     </request-map>
     <request-map uri="removeFixedAssetProduct">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="removeFixedAssetProduct"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="removeFixedAssetProduct"/>
         <response name="success" type="view" value="ListFixedAssetProducts"/>
         <response name="error" type="view" value="ListFixedAssetProducts"/>
     </request-map>
@@ -396,10 +396,9 @@
         <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupProduct"/>
         <response name="success" type="view" value="GenericLookup"/>
     </request-map>
-    <request-map uri="LookupParty">
+    <request-map uri="LookupPerson">
         <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupParty"/>
-        <response name="success" type="view" value="GenericLookup"/>
+        <response name="success" type="view" value="LookupPerson"/>
     </request-map>
     <request-map uri="LookupFixedAsset">
         <security auth="true" https="true"/>
@@ -455,6 +454,7 @@
 
     <!-- Lookup request mappings -->
     <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
+    <view-map name="LookupPerson" page="component://content/widget/content/ContentScreens.xml#LookupPerson" type="screen"/>
         
     <!-- end of view mappings -->
 </site-conf>

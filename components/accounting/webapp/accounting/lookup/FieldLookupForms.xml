@@ -59,5 +59,36 @@
         </field>
         <field name="internalName" title="Internal Name"><display/></field>
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display/></field>
+    </form>    
+		
+	<form name="lookupFixedAsset" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupFixedAsset" title="" type="single">
+        <auto-fields-entity entity-name="FixedAsset" default-field-type="hidden" />
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text-find default-value="equals"/></field>
+        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text-find default-value="equals"/></field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}">
+            <drop-down>
+                <option key="" description=""/>
+                <entity-options entity-name="FixedAssetType" description="${description}">
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="listLookupFixedAsset" 
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="/GenericLookup" 
+	    title="" type="list">
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
+        </field>
+        <field name="fixedAssetName" title="${uiLabelMap.CommonDescription}"><display/></field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}">
+            <display-entity entity-name="FixedAssetType"/>
+        </field>
     </form>
 </forms>

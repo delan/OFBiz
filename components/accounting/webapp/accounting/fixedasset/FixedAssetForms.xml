@@ -28,16 +28,16 @@
     <form name="ListFixedAssets" type="list"  list-name="fixedAssets" 
          default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 
-        <field name="fixedAssetID" title="Fixed Asset ID" widget-style="buttontext">
+        <field name="fixedAssetID" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset?fixedAssetId=${fixedAssetId}"/>
         </field>
-        <field name="fixedAssetName" title="The name of the Fixed Asset">
+        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}">
             <display/>   
         </field>
-        <field name="fixedAssetTypeId" title="The type of the Fixed Asset">
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedTypeId}">
             <display-entity entity-name="FixedAssetType"/>
         </field>
-        <field name="parentFixedAssetId" title="The parent of the Fixed Asset">
+        <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParentId}">
             <display-entity entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}"/>
         </field>
     </form>
@@ -46,16 +46,18 @@
     <form name="EditFixedAsset" type="single" 
             target="updateFixedAsset" title="" default-map-name="fixedAsset"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        
+        <actions>
+			<set field="partyId1" from-field="partyId"></set>
+	        </actions>
         <alt-target use-when="fixedAsset==null" target="createFixedAsset"/>
 
          <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
  
-        <field use-when="fixedAsset!=null" name="fixedAssetId" title="Fixed Asset ID:"  tooltip="This cannot be changed without re-creating the Fixed Asset"><display/></field>
-        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId" title="Fixed Asset ID:"><text size="20" maxlength="20"/></field>
-        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" title="Fixed Asset ID:" tooltip="Could not find fixedAsset with ID [${fixedAssetId}]"><text size="20" maxlength="20"/></field>
+        <field use-when="fixedAsset!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text size="20" maxlength="20"/></field>
+        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" tooltip="${uiLabelMap.CommonCannotBeFound}:[${fixedAssetId}]"><text size="20" maxlength="20"/></field>
 
-        <field name="fixedAssetTypeId" title="Fixed Asset Type" widget-style="selectBox">
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <entity-options entity-name="FixedAssetType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -63,9 +65,9 @@
             </drop-down>
         </field>
 
-<!--        <field name="partyId" title="Party Id" ><lookup target-form-name="LookupParty"/></field> -->
-        
-        <field name="roleTypeId" title="Party Role Type" widget-style="selectBox">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}" ><lookup target-form-name="LookupPerson"/></field>
+
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -73,7 +75,7 @@
             </drop-down>
         </field>
         
-        <field name="uomId" title="Unit of Measure" widget-style="selectBox">
+        <field name="uomId" title="${uiLabelMap.CommonUom}" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" description="[${uomId}] ${description}">
                     <entity-order-by field-name="uomTypeId"/>
@@ -81,16 +83,8 @@
             </drop-down>
         </field>
 
-        <field name="parentFixedAssetId" title="Fixed Asset Group" widget-style="selectBox">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}">
-                    <entity-constraint name="fixedAssetTypeId" operator="equals" value="GROUP_EQUIPMENT" />
-                    <entity-order-by field-name="fixedAssetId"/>
-                </entity-options> 
-            </drop-down>
-        </field>
     
-<!--        <field name="parentFixedAssetId" title="Parent Asset Id" ><lookup target-form-name="LookupFixedAsset"/></field> -->
+        <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParent}" ><lookup target-form-name="LookupFixedAsset"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
@@ -99,7 +93,7 @@
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 
         <field name="productId" title="${uiLabelMap.AccountingProduct}" widget-style="tabletext"><display-entity entity-name="Product" description="${description}[${productId}]"/></field>
-           <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}" widget-style="tabletext"><display-entity entity-name="FixedAssetProductType"/></field>
+        <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}" widget-style="tabletext"><display-entity entity-name="FixedAssetProductType"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"> <date-time/></field>
         <field name="fixedAssetId"> <hidden/> </field>
@@ -118,8 +112,8 @@
          <auto-fields-service service-name="addFixedAssetProduct" map-name="fixedAssetProduct"/>
 
          <field name="fixedAssetId"><hidden/></field>
-        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
-        <field name="fixedAssetProductTypeId" widget-style="selectBox">
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
+        <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductTypeId}" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FixedAssetProductType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -127,7 +121,7 @@
             </drop-down>
         </field>
         
-        <field name="quantityUomId" title="Quantity Unit of Measure" widget-style="selectBox">
+        <field name="quantityUomId" title="${uiLabelMap.CommonQuantity}" widget-style="selectBox">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" key-field-name="uomId" description="[${uomId}] ${description}">
                     <entity-order-by field-name="uomTypeId"/>
