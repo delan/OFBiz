@@ -106,17 +106,17 @@
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
 
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
-    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943-B3"
-    productIdTo="WG-9943" quantity="1.0" reason=""/>
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+    productIdTo="WG-9943-B3" quantity="1.0" reason=""/>
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
-    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943-B4"
-    productIdTo="WG-9943" quantity="1.0" reason=""/>
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+    productIdTo="WG-9943-B4" quantity="1.0" reason=""/>
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
-    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943-S3"
-    productIdTo="WG-9943" quantity="1.0" reason=""/>
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+    productIdTo="WG-9943-S3" quantity="1.0" reason=""/>
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
-    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943-S4"
-    productIdTo="WG-9943" quantity="1.0" reason=""/>
+    productAssocTypeId="PRODUCT_VARIANT" productId="WG-9943"
+    productIdTo="WG-9943-S4" quantity="1.0" reason=""/>
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
     productAssocTypeId="PRODUCT_UPGRADE" productId="WG-5569"
     productIdTo="WG-9943" quantity="1.0" reason="A little bit more expensive, but worth every penny!"/>
