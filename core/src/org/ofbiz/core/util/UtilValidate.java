@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/03 21:16:39  jonesde
+ * Fixed little index problem with month number lookup.
+ *
  * Revision 1.5  2001/09/02 09:28:38  jonesde
  * Small message updates.
  *
@@ -267,22 +270,20 @@ public class UtilValidate
    *  This could be tricky due to different character
    *  sets and orderings for various languages and platforms. */
   public static boolean isLetter(char c)
-  {   
-    return charInString(c, letters);
-    //return(((c >= "a") &&(c <= "z")) ||((c >= "A") &&(c <= "Z")) )
+  {
+    return Character.isLetter(c);
   }
 
   /** Returns true if character c is a digit (0 .. 9). */
   public static boolean isDigit(char c)
   {   
-    return charInString(c, digits);
-    //return((c >= "0") &&(c <= "9"))
+    return Character.isDigit(c);
   }
 
   /** Returns true if character c is a letter or digit. */
   public static boolean isLetterOrDigit(char c)
   {   
-    return(isLetter(c) || isDigit(c));
+    return Character.isLetterOrDigit(c);
   }
 
   /** Returns true if all characters in string s are numbers.
@@ -491,11 +492,10 @@ public class UtilValidate
     catch(Exception e) { return false; }
   }
 
-  /** Returns true if string s is English letters (A .. Z, a..z) only.
+  /** Returns true if string s is letters only.
    *
-   *  NOTE: Need i18n version to support European characters.
-   *  This could be tricky due to different character
-   *  sets and orderings for various languages and platforms.
+   *  NOTE: This should handle i18n version to support European characters, etc.
+   *  since it now uses Character.isLetter()
    */
   public static boolean isAlphabetic(String s)
   {   
