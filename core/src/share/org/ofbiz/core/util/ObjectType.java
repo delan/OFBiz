@@ -47,6 +47,9 @@ public class ObjectType {
     
     static {
         //setup some commonly used classes...
+        classNameClassMap.put("Object", java.lang.Object.class);
+        classNameClassMap.put("java.lang.Object", java.lang.Object.class);
+
         classNameClassMap.put("String", java.lang.String.class);
         classNameClassMap.put("java.lang.String", java.lang.String.class);
 
@@ -290,6 +293,9 @@ public class ObjectType {
 
         if ("PlainString".equals(type)) {
             return obj.toString();
+        }
+        if ("Object".equals(type)) {
+            return obj;
         }
 
         String fromType = null;

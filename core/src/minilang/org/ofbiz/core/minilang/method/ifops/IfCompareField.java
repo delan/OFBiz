@@ -112,10 +112,22 @@ public class IfCompareField extends MethodOperation {
         Boolean resultBool = BaseCompare.doRealCompare(fieldVal1, fieldVal2, this.operator, this.type, this.format, messages, null, methodContext.getLoader());
 
         if (messages.size() > 0) {
-            Iterator miter = messages.iterator();
-            while (miter.hasNext()) {
-                Debug.logWarning("Error with comparison: " + miter.next());
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                StringBuffer fullString = new StringBuffer();
+                fullString.append("Error with comparison: ");
+                Iterator miter = messages.iterator();
+                while (miter.hasNext()) {
+                    fullString.append((String) miter.next());
+                }
+                Debug.logWarning(fullString.toString());
+
+                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), fullString.toString());
+                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceErrorMessageListName(), messages);
+                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
             }
+            return false;
         }
         
         if (resultBool != null && resultBool.booleanValue()) {

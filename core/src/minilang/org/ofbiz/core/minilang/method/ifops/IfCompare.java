@@ -93,17 +93,30 @@ public class IfCompare extends MethodOperation {
         }
         
         //always use an empty string by default
-        if (fieldVal == null)
+        if (fieldVal == null) {
             fieldVal = "";
+        }
         
         List messages = new LinkedList();
         Boolean resultBool = BaseCompare.doRealCompare(fieldVal, value, this.operator, this.type, this.format, messages, null, methodContext.getLoader());
 
         if (messages.size() > 0) {
-            Iterator miter = messages.iterator();
-            while (miter.hasNext()) {
-                Debug.logWarning("Error with comparison: " + miter.next());
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                StringBuffer fullString = new StringBuffer();
+                fullString.append("Error with comparison: ");
+                Iterator miter = messages.iterator();
+                while (miter.hasNext()) {
+                    fullString.append((String) miter.next());
+                }
+                Debug.logWarning(fullString.toString());
+
+                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), fullString.toString());
+                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceErrorMessageListName(), messages);
+                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
             }
+            return false;
         }
         
         if (resultBool != null && resultBool.booleanValue()) {

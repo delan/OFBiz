@@ -75,16 +75,19 @@ public class ServiceEventHandler implements EventHandler {
     public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        if (dispatcher == null)
+        if (dispatcher == null) {
             throw new EventHandlerException("The local service dispatcher is null");
+        }
 
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         DispatchContext dctx = dispatcher.getDispatchContext();
-        if (dctx == null)
+        if (dctx == null) {
             throw new EventHandlerException("Dispatch context cannot be found");
+        }
 
-        if (serviceName == null)
+        if (serviceName == null) {
             throw new EventHandlerException("Service name (eventMethod) cannot be null");
+        }
 
         // get the service model to generate context
         ModelService model = null;
@@ -94,8 +97,9 @@ public class ServiceEventHandler implements EventHandler {
             throw new EventHandlerException("Problems getting the service model",e);
         }
 
-        if (model == null)
+        if (model == null) {
             throw new EventHandlerException("Problems getting the service model");
+        }
 
         if (Debug.verboseOn()) Debug.logVerbose("[Processing]: SERVICE Event", module);
         if (Debug.verboseOn()) Debug.logVerbose("[Using delegator]: " + dispatcher.getDelegator().getDelegatorName(), module);
@@ -105,6 +109,8 @@ public class ServiceEventHandler implements EventHandler {
         Iterator ci = model.getInParamNames().iterator();
         while (ci.hasNext()) {
             String name = (String) ci.next();
+            //don't include userLogin, that's taken care of below
+            if ("userLogin".equals(name)) continue;
             String paramStr = request.getParameter(name);
             //interpreting empty fields as null values for each in back end handling...
             if (paramStr != null && paramStr.length() == 0) {
@@ -125,16 +131,16 @@ public class ServiceEventHandler implements EventHandler {
 
         // get only the parameters for this service
         serviceContext = model.makeValid(serviceContext,ModelService.IN_PARAM);
-        if (userLogin != null)
+        if (userLogin != null) {
             serviceContext.put("userLogin", userLogin);
+        }
 
         // invoke the service
         Map result = null;
         try {
             if (ASYNC.equalsIgnoreCase(mode)) {
               dispatcher.runAsync(serviceName,serviceContext);
-            }
-            else {
+            } else {
               result = dispatcher.runSync(serviceName,serviceContext);
             }
         } catch (GenericServiceException e) {
@@ -144,8 +150,7 @@ public class ServiceEventHandler implements EventHandler {
         String responseString = null;
         if (result == null) {
             responseString = ModelService.RESPOND_SUCCESS;
-        }
-        else {
+        } else {
 
             if (!result.containsKey(ModelService.RESPONSE_MESSAGE))
                 responseString = ModelService.RESPOND_SUCCESS;

@@ -152,6 +152,12 @@ public abstract class BaseCompare extends SimpleMapOperation {
             java.sql.Timestamp value1Timestamp = (java.sql.Timestamp) convertedValue1;
             java.sql.Timestamp value2Timestamp = (java.sql.Timestamp) convertedValue2;
             result = value1Timestamp.compareTo(value2Timestamp);
+        } else if ("Object".equals(type)) {
+            if (convertedValue1.equals(convertedValue2)) {
+                result = 0;
+            } else {
+                result = 1;
+            }
         } else {
             messages.add("Type \"" + type + "\" specified for compare not supported.");
             return null;

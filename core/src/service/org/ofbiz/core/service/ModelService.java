@@ -313,8 +313,8 @@ public class ModelService {
                     try {
                         value = ObjectType.simpleTypeConvert(value, param.type, null, null);
                     } catch (GeneralException e) {
-                            Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " + 
-                                    key + " failed: " + e.toString(), module);
+                        Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " + 
+                                key + " failed: " + e.toString(), module);
                         // let this go. service invokation will catch it
                     }
                     target.put(key, value);

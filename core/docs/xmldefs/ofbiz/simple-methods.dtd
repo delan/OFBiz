@@ -474,7 +474,7 @@ simple-map-processor process operations that validate incoming data
     field-name CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     value CDATA #REQUIRED
-    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Object ) "String"
     format CDATA #IMPLIED
 >
 
@@ -485,7 +485,7 @@ simple-map-processor process operations that validate incoming data
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     to-map-name CDATA #IMPLIED
     to-field-name CDATA #IMPLIED
-    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Object ) "String"
     format CDATA #IMPLIED
 >
 
@@ -572,7 +572,7 @@ simple-map-processor process operations that validate incoming data
 <!ATTLIST compare
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     value CDATA #REQUIRED
-    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Object ) "String"
     format CDATA #IMPLIED
 >
 
@@ -580,7 +580,7 @@ simple-map-processor process operations that validate incoming data
 <!ATTLIST compare-field
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     field CDATA #REQUIRED
-    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Object ) "String"
     format CDATA #IMPLIED
 >
 
