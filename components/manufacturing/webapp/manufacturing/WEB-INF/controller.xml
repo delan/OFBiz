@@ -356,11 +356,33 @@
         <response name="error" type="view" value="EditProductManufacturingRules"/>
     </request-map>
  
-     <!-- MRP request mappings -->
-    <request-map uri="FindProposedOrder">
+     <!-- Requirement request mappings -->
+    <request-map uri="FindRequirements">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindRequirements"/>
     </request-map>
+    <request-map uri="EditRequirement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditRequirement"/>
+    </request-map>
+    <request-map uri="approveRequirements">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="approveRequirement"/>
+        <response name="success" type="view" value="FindRequirements"/>
+        <response name="error" type="view" value="FindRequirements"/>
+    </request-map>
+    <request-map uri="createRequirement">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createRequirement"/>
+        <response name="success" type="view" value="EditRequirement"/>
+    </request-map>
+    <request-map uri="updateRequirement">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateRequirement"/>
+        <response name="success" type="view" value="EditRequirement"/>
+    </request-map>
+
+     <!-- MRP request mappings -->
     <request-map uri="FindInventoryEventPlan">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindMrpPlannedEvents"/>
@@ -462,12 +484,6 @@
         <response name="success" type="view" value="ProductionRunDeclaration"/>
         <response name="error" type="view" value="ProductionRunDeclaration"/>
     </request-map>
-    <request-map uri="approveRequirements">
-        <security https="true" auth="true"/>
-        <event type="service-multi" invoke="approveRequirement"/>
-        <response name="success" type="view" value="FindRequirements"/>
-        <response name="error" type="view" value="FindRequirements"/>
-    </request-map>
     <request-map uri="createProductionRunsForOrder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.manufacturing.bom.BOMHelper" invoke="createProductionRunsForOrders"/>
@@ -532,7 +548,10 @@
     <view-map name="BomSimulation" page="component://manufacturing/widget/manufacturing/BomScreens.xml#BomSimulation" type="screen"/>
     
     <!-- MRP view mappings -->
-    <view-map name="FindRequirements" page="component://manufacturing/widget/manufacturing/MrpScreens.xml#FindRequirements" type="screen"/>
+    <view-map name="FindRequirements" page="component://manufacturing/widget/manufacturing/RequirementScreens.xml#FindRequirements" type="screen"/>
+    <view-map name="EditRequirement" page="component://manufacturing/widget/manufacturing/RequirementScreens.xml#EditRequirement" type="screen"/>
+    
+    <!-- MRP view mappings -->
     <view-map name="FindMrpPlannedEvents" page="component://manufacturing/widget/manufacturing/MrpScreens.xml#FindMrpPlannedEvents" type="screen"/>
     <view-map name="MrpExecution" page="component://manufacturing/widget/manufacturing/MrpScreens.xml#MrpExecution" type="screen"/>
     

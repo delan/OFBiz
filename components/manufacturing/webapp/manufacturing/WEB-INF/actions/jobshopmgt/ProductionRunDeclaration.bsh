@@ -125,39 +125,6 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             actionForm = "beforeActionProductionRun";
         }
         context.put("actionForm",actionForm);
-/*
-        String quantity, estimatedStartDate, estimatedCompletionDate, productionRunName, description;
-        if (actionForm.equals("updateProductionRun")){
-            quantity = request.getParameter("quantity");
-            estimatedStartDate = request.getParameter("estimatedStartDate");
-            productionRunName = request.getParameter("productionRunName");
-            description = request.getParameter("description");
-        }
-        if (quantity != null) {
-            productionRunData.put("quantity", quantity);
-        } else {
-            productionRunData.put("quantity", productionRun.getQuantity());
-        }
-	
-        if (estimatedStartDate != null) {
-            productionRunData.put("estimatedStartDate",estimatedStartDate);
-        } else {
-            productionRunData.put("estimatedStartDate",productionRun.getEstimatedStartDate());
-        }
-        productionRunData.put("estimatedCompletionDate",productionRun.getEstimatedCompletionDate());
-
-        if (productionRunName != null) {
-            productionRunData.put("productionRunName",productionRunName);
-        } else {
-            productionRunData.put("productionRunName",productionRun.getProductionRunName());
-        }
-
-        if (description != null) {
-            productionRunData.put("description",description);
-        } else {
-            productionRunData.put("description",productionRun.getDescription());
-        }
-*/
         //---------------
         // Routing tasks
         //---------------
@@ -173,8 +140,6 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             editPrRoutingTaskWrapper.putInContext("routingTaskData", routingTaskData);
             editPrRoutingTaskWrapper.putInContext("actionForm", "UpdateRoutingTask");
             routingTaskData.put("partyId", userLogin.getString("partyId"));
-            //editPrRoutingTaskWrapper.putInContext("partyId", userLogin.getString("partyId"));
-            editPrRoutingTaskWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
             context.put("editPrRoutingTaskWrapper",editPrRoutingTaskWrapper);
             context.put("routingTaskId",routingTaskId);
         }
