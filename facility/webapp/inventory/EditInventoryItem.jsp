@@ -232,7 +232,7 @@
             &nbsp;<a href="<ofbiz:url>/FindFacilityLocations?facilityId=<%=facilityId%>&inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Find Location]</a>
           </ofbiz:if>
           <ofbiz:unless name="inventoryItem">
-            <input type="text" size="20" maxsize="20" name="locationSeqId" value="<%=locationSeqId%>" class="inputBox">
+            <input type="text" size="20" maxsize="20" name="locationSeqId" value="<%=UtilFormatOut.checkNull(locationSeqId)%>" class="inputBox">
           </ofbiz:unless>          
         </td>
       </tr>
