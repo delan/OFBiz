@@ -42,14 +42,16 @@ import org.ofbiz.core.service.*;
  *@created    May 29, 2002
  */
 public class CatalogWorker {
+
+    /** check inventory availability for the given catalog, product, quantity, etc */
     public static boolean isCatalogInventoryAvailable(String prodCatalogId, String productId, double quantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
         GenericValue prodCatalog = null;
         try {
             prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId);
         }
-
+        
         if (prodCatalog == null) {
             Debug.logWarning("No catalog found with id " + prodCatalogId + ", returning false for inventory available check");
             return false;
@@ -71,10 +73,10 @@ public class CatalogWorker {
             
             Double availableToPromise = null;
             try {
-                Map result = dispatcher.runSync("getInventoryAvailableByFacility", 
-                        UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId));
+                Map result = dispatcher.runSync("getInventoryAvailableByFacility",
+                UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId));
                 availableToPromise = (Double) result.get("availableToPromise");
-
+                
                 if (availableToPromise == null) {
                     Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
                     return false;
@@ -96,7 +98,7 @@ public class CatalogWorker {
         } else {
             Debug.logWarning("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, return false for inventory check");
             return false;
-
+            
             //TODO: check multiple inventory locations
             
             //must entire quantity be available in one location?
@@ -104,18 +106,17 @@ public class CatalogWorker {
             //loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
         }
     }
-
+    
     /** tries to reserve the specified quantity, if fails returns quantity that it could not reserve or zero if there was an error, otherwise returns null */
     public static Double reserveCatalogInventory(String prodCatalogId, String productId, Double quantity,
             String orderId, String orderItemSeqId, GenericValue userLogin, GenericDelegator delegator, LocalDispatcher dispatcher) {
-                
+        
         GenericValue prodCatalog = null;
         try {
             prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId);
         }
-
         if (prodCatalog == null) {
             Debug.logWarning("No catalog found with id " + prodCatalogId + ", not reserving inventory");
             return new Double(0.0);
@@ -138,10 +139,10 @@ public class CatalogWorker {
             Double quantityNotReserved = null;
             try {
                 Map result = dispatcher.runSync("reserveProductInventoryByFacility", UtilMisc.toMap(
-                        "productId", productId, "facilityId", inventoryFacilityId,
-                        "orderId", orderId, "orderItemSeqId", orderItemSeqId, "quantity", quantity, "userLogin", userLogin));
+                "productId", productId, "facilityId", inventoryFacilityId,
+                "orderId", orderId, "orderItemSeqId", orderItemSeqId, "quantity", quantity, "userLogin", userLogin));
                 quantityNotReserved = (Double) result.get("quantityNotReserved");
-
+                
                 if (quantityNotReserved == null) {
                     Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
                     return new Double(0.0);
@@ -163,7 +164,7 @@ public class CatalogWorker {
         } else {
             Debug.logWarning("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, not reserving inventory");
             return new Double(0.0);
-
+            
             //TODO: check multiple inventory locations
             
             //must entire quantity be available in one location?
