@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/09/05 13:29:57  jonesde
+ * Moved the CURRENT_VIEW attribute from the session to the request, since it doesn't make sense in the session.
+ *
  * Revision 1.9  2001/08/25 17:29:11  azeneski
  * Started migrating Debug.log to Debug.logInfo and Debug.logError
  *
@@ -168,7 +171,7 @@ public class RequestHandler implements Serializable {
         Debug.logInfo("Next View after eventReturn: " + nextView);
         
         /** Check for a chain request. */
-        if ( nextView != null && nextView.indexOf(':') != -1 ) {
+        if ( nextView != null && nextView.length() > 0 && nextView.indexOf(':') != -1 ) {
             String type = nextView.substring(0,nextView.indexOf(':'));
             String view = nextView.substring(nextView.indexOf(':') + 1);
             nextView = view;
@@ -178,7 +181,7 @@ public class RequestHandler implements Serializable {
         /** Get the next view. */
         if ( !chainRequest ) {
             String tempView = nextView;
-            if(tempView != null && tempView.charAt(0) == '/') tempView = tempView.substring(1);
+            if(tempView != null && tempView.length() > 0 && tempView.charAt(0) == '/') tempView = tempView.substring(1);
             Debug.logInfo("Getting View Map: " + tempView);
             
             /* Before mapping the view, set a session attribute so we know where we are */
