@@ -9,7 +9,6 @@
 
 <p><br>
   Written By: David E. Jones and Andy Zeneski<br>
-  Updated By: Andy Zeneski<br>
   Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a> or <a href="mailto:jaz@zsolv.com">jaz@zsolv.com</a> 
   <br>
   Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a> 
@@ -34,20 +33,20 @@
 <h3><a name="Quick &amp; Easy Setup">Quick &amp; Easy Setup</a></h3>
 
 <p>You can get up and running quickly by downloading the OFBiz &amp;
-Tomcat4/PoolMan distribution and following some simple instructions. For more
+Tomcat4/PoolMan/HSql distribution and following some simple instructions. For more
 options and explanations, see the rest of this document.</p>
 <ol>
-  <li>Download the OFBiz &amp; Tomcat4/PoolMan archive and unzip it in <b>/ofbiz/work</b>.
-    This should create two directories under <b>/ofbiz/work</b>: <b>ofbiz</b>
-    &amp; <b>catalina</b> (note that &quot;catalina&quot; is the code name, and
+  <li>Download the OFBiz &amp; Tomcat4/PoolMan/HSql (complete) archive and unzip it in <b>/ofbiz/work</b>.
+    This should create three directories under <b>/ofbiz/work</b>: <b>ofbiz</b>,
+    <b>data</b>, &amp; <b>catalina</b> (note that &quot;catalina&quot; is the code name, and
     semi-official name, for Jakarta Tomcat 4.0)</li>
-  <li>If MySQL is not setup on the target computer, download and install it as
-    instructed below. Don't worry about the JDBC driver, it is already in place
-    in the OFBiz &amp; Tomcat4 archive. For this simple setup, just make sure
-    there is a MySQL database on <b>localhost</b> called &quot;<b>ofbiz</b>&quot;,
-    and make sure it is accessible through the username &quot;<b>mysqldb</b>&quot;
-    and the password &quot;<b>mysqldb</b>&quot;.</li>
-  <li>Follow the instructions in the <a href="#Running">Running</a> section.</li>
+  <li>Start Catalina by running <b>&quot;/ofbiz/work/catalina/bin/startup.bat&quot;</b> for Windows,
+    or <b>&quot;/ofbiz/work/catalina/bin/startup.sh&quot;</b> for Linux/Unix.</li>
+  <li>Open a browser and go to <b><a href='http://127.0.0.1:8080/ecommerce'>http://127.0.0.1:8080/ecommerce</a></b> for the ecommerce application or
+      <b><a href='http://127.0.0.1:8080/commonapp'>http://127.0.0.1:8080/commonapp</a></b> for the Common Application Components (commonapp) application or
+      <b><a href='http://127.0.0.1:8080/catalog'>http://127.0.0.1:8080/catalog</a></b> for the Catalog Manager application.</li>
+  <li>Have fun with it! You are running on a Java database, which isn't the best for development or deployment, but it's great for a demo...</li>
+  <li>For more detailed options and configuration information, read on!</li>
 </ol>
 
 <h3><a name="MySQL Setup">MySQL Setup</a></h3>
@@ -117,7 +116,7 @@ this.</p>
 <p>You can download JBoss-Tomcat from <a href="http://sf.net/projects/jboss" target="_blank">sf.net/projects/jboss</a>,
 you will generally want the most recent version. Tomcat without JBoss can be downloaded at <a href="http://jakarta.apache.org/site/binindex.html">jakarta.apache.org/site/binindex.html</a>,
 and there again you will generally want the latest version of the Tomcat 4
-series. The latest version of ofbiz has been tested on Tomcat 4.0. If
+series. The latest version of ofbiz has been tested on Tomcat 4.0.1. If
 you download an OFBiz package with these included, you of course don't need to
 download them again, and you don't have to worry about copying the configuration
 files later on. It should pretty much run in place.</p>
@@ -129,11 +128,11 @@ are really only two files: <b>jndi.properties</b> &amp; <b>poolman.xml</b>, and
 they need to be on the global classpath (ie in <b>catalina/classes</b>), they
 are in <b>ofbiz/commonapp/etc</b>. The default <b>ofbiz/build.xml</b> ant script
 will do this, of course the CATALINA_HOME environment variable must be set.
-There are also two jar files from the PoolMan distribution that need to be moved
+There is also a jar file from the PoolMan distribution that needs to be moved
 from poolman/lib to tomcat/lib, or placed on the classpath in some other way.
-These two files are <b>poolman.jar</b> and <b>xerces.jar</b>. Hopefully in the
-future PoolMan will use the standard JAXP libraries and no longer need
-xerces.jar, but for now, oh well.</p>
+These two files are <b>poolman.jar</b>. Catalina (Tomcat 4) uses Xerces for
+its XML parser, so no additional JAR file will be needed for that with Tomcat 4.
+Otherwise, xerces.jar would be needed.</p>
 <p>Things will be much simpler if you have Ant installed, which can also be
 downloaded from the jakarta.apache.org site listed above where Tomcat is
 also available. Instructions are available on the Ant site for installing the
