@@ -100,7 +100,7 @@
                     <set field="titleProperty" value="PageTitleEditContent"/>
             <set field="currentMenuItemName" value="EditContent" to-scope="user" />
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
-            <set field="contentId" from-field="parameters.contentId" to-scope="session" default-value="${defaultContentId}"/>
+            <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
             <set field="contentId" from-field="contentId" to-scope="user" />
 			<entity-one entity-name="Content" value-name="currentValue">
 				<field-map field-name="contentId" env-name="contentId"/>
@@ -149,19 +149,19 @@
             <set field="currentMenuItemName" value="contentassoc" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
-            <set field="contentId" from-field="parameters.contentId" to-scope="session" default-value="${defaultContentId}"/>
+            <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
             <set field="contentId" from-field="contentId" to-scope="user" />
             
             <set field="defaultContentIdTo" from-field="contentIdTo" from-scope="user" />
-            <set field="contentIdTo" from-field="parameters.contentIdTo" to-scope="session" default-value="${defaultContentId}"/>
+            <set field="contentIdTo" from-field="parameters.contentIdTo" to-scope="screen" default-value="${defaultContentId}"/>
             <set field="contentIdTo" from-field="contentIdTo" to-scope="user" />
             
             <set field="defaultContentAssocTypeId" from-field="contentAssocTypeId" from-scope="user" />
-            <set field="contentAssocTypeId" from-field="parameters.contentAssocTypeId" to-scope="session" default-value="${defaultContentAssocTypeId}"/>
+            <set field="contentAssocTypeId" from-field="parameters.contentAssocTypeId" to-scope="screen" default-value="${defaultContentAssocTypeId}"/>
             <set field="contentAssocTypeId" from-field="contentAssocTypeId" to-scope="user" />
             
             <set field="defaultFromDate" from-field="fromDate" from-scope="user" />
-            <set field="fromDate" from-field="parameters.fromDate" to-scope="session" default-value="${defaultFromDate}"/>
+            <set field="fromDate" from-field="parameters.fromDate" to-scope="screen" default-value="${defaultFromDate}"/>
             <set field="fromDate" from-field="fromDate" to-scope="user" />
             
 		</actions>
@@ -214,7 +214,7 @@
             <set field="currentMenuItemName" value="role" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
-            <set field="contentId" from-field="parameters.contentId" to-scope="session" default-value="${defaultContentId}"/>
+            <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
             <set field="contentId" from-field="contentId" to-scope="user" />
             
 		</actions>
@@ -241,7 +241,7 @@
             <set field="currentMenuItemName" value="purpose" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
-            <set field="contentId" from-field="parameters.contentId" to-scope="session" default-value="${defaultContentId}"/>
+            <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
             <set field="contentId" from-field="contentId" to-scope="user" />
             
 		</actions>
@@ -268,7 +268,7 @@
             <set field="currentMenuItemName" value="attribute" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
-            <set field="contentId" from-field="parameters.contentId" to-scope="session" default-value="${defaultContentId}"/>
+            <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
             <set field="contentId" from-field="contentId" to-scope="user" />
             
 		</actions>
@@ -296,7 +296,7 @@
             <set field="currentMenuItemName" value="metadata" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
-            <set field="contentId" from-field="parameters.contentId" to-scope="session" default-value="${defaultContentId}"/>
+            <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
             <set field="contentId" from-field="contentId" to-scope="user" />
             
 		</actions>
