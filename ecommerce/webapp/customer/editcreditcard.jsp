@@ -162,10 +162,14 @@
           [Create New Address]</a>&nbsp;&nbsp;
         --%>
         <table width="100%" border="0" cellpadding="1">
-        <%String curContactMechId = UtilFormatOut.checkNull(useValues?creditCard.getString("contactMechId"):request.getParameter("CC_CONTACT_MECH_ID"));%>
-        <%GenericValue curPartyContactMech = delegator.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", curContactMechId));%>
-        <%GenericValue curContactMech = curPartyContactMech!=null?curPartyContactMech.getRelatedOne("ContactMech"):null;%>
-        <%GenericValue curPostalAddress = curContactMech!=null?curContactMech.getRelatedOne("PostalAddress"):null;%>
+        <%
+          String curContactMechId = UtilFormatOut.checkNull(useValues?creditCard.getString("contactMechId"):request.getParameter("CC_CONTACT_MECH_ID"));
+          Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", curContactMechId), null));
+          GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
+
+          GenericValue curContactMech = curPartyContactMech!=null?curPartyContactMech.getRelatedOne("ContactMech"):null;
+          GenericValue curPostalAddress = curContactMech!=null?curContactMech.getRelatedOne("PostalAddress"):null;
+        %>
         <%if(curPostalAddress != null){%>
           <%Iterator curPartyContactMechPurposesIter = UtilMisc.toIterator(EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose")));%>
           <tr>

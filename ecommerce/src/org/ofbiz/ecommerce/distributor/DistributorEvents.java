@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/27 15:53:31  epabst
+ * refactored code to use getRelatedByAnd, filterByDate
+ *
  * Revision 1.2  2001/09/26 18:41:44  epabst
  * renamed getActive to filterByDate()
  * renamed getContactMech to getContactMechByPurpose/ByType

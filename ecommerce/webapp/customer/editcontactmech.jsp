@@ -31,7 +31,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 
-<% pageContext.setAttribute("PageName", "viewprofile"); %>
+<% pageContext.setAttribute("PageName", "Edit Contact Mechanism"); %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%
@@ -45,7 +45,10 @@
   String contactMechId = request.getParameter("CONTACT_MECH_ID");
   if(contactMechId == null || request.getParameter("UPDATE_MODE") != null) contactMechId = (String)request.getAttribute("CONTACT_MECH_ID");
 
-  GenericValue partyContactMech = delegator.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId));
+  //try to find a PartyContactMech with a valid date range
+  Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId), null));
+  GenericValue partyContactMech = EntityUtil.getFirst(partyContactMechs);
+
   GenericValue contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
   String contactMechTypeId = null;
   if(contactMech != null) contactMechTypeId = contactMech.getString("contactMechTypeId");
@@ -121,7 +124,7 @@
                           (Since:<%=UtilDateTime.toDateString(partyContactMechPurpose.getTimestamp("fromDate"))%>)
                           <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate")), "(Expires:", ")")%>
                         &nbsp;</div></td>
-                      <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + partyContactMechPurpose.getString("contactMechPurposeTypeId") + "&DONE_PAGE=" + donePage%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                      <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + partyContactMechPurpose.getString("contactMechPurposeTypeId") + "&FROM_DATE=" + UtilFormatOut.encodeQueryValue(partyContactMechPurpose.getTimestamp("fromDate").toString()) + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
                     </tr>
                 <%}%>
               <%}%>

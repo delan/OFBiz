@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.25  2001/09/27 15:53:31  epabst
+ * refactored code to use getRelatedByAnd, filterByDate
+ *
  * Revision 1.24  2001/09/26 05:09:06  jonesde
  * Fixed keyword stuff to work minimally with group name
  *

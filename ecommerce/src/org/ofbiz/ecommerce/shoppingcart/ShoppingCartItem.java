@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/05 00:56:24  jonesde
+ * Added getName to cart item, and uses it in the minicart because description is too long; should use in real cart too.
+ *
  * Revision 1.4  2001/08/29 13:08:49  azeneski
  * Update the cart line item object.
  *

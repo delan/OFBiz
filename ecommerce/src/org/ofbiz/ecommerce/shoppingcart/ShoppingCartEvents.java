@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/09/25 23:05:22  jonesde
+ * Added cross sell, up sell, and obsolete product association support.
+ *
  * Revision 1.8  2001/09/19 08:42:08  jonesde
  * Initial checkin of refactored entity engine.
  *
