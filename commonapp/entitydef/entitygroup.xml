@@ -555,6 +555,7 @@
   <!-- org.ofbiz.commonapp.product.catalog -->
   <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz.commonapp" entity="PartyCatalog" />
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalog" />
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategory" />
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategoryType" />
