@@ -343,13 +343,16 @@
         <find-by-and entity-name="OrderItemInventoryRes" map-name="orderListLookupMap" list-name="oiirList" use-cache="false"/>
         <iterate entry-name="orderItemInventoryRes" list-name="oiirList">
             <if-compare value="OIIR_RESERVED" operator="equals" field-name="statusId" map-name="orderItemInventoryRes">
+            	<log level="verbose" message="Found a inventory item to reverse."/>
                 <field-to-field field-name="inventoryItemId" map-name="orderItemInventoryRes" to-map-name="invItemLookupMap"/>
                 <find-by-primary-key entity-name="InventoryItem" map-name="invItemLookupMap" value-name="inventoryItem"/>
         
                 <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+                	<log level="verbose" message="Serialized inventory re-enabled."/>
                     <string-to-field string="INV_AVAILABLE" field-name="statusId" map-name="inventoryItem"/>
                 </if-compare>
                 <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+                	<log level="verbose" message="Non-Serialized inventory item incrementing availableToPromise."/>
                     <calculate field-name="availableToPromise" map-name="inventoryItem">
                         <calcop operator="add" field-name="availableToPromise" map-name="inventoryItem">
                             <calcop operator="get" field-name="quantity" map-name="orderItemInventoryRes"/>
