@@ -9,6 +9,7 @@
     <classpathentry kind="src" path="src/extentity"/>
     <classpathentry kind="src" path="src/minilang"/>
     <classpathentry kind="src" path="src/rules"/>
+    <classpathentry kind="src" path="src/widget"/>
     <classpathentry kind="src" path="src/webapp"/>
     <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
     <classpathentry kind="src" path="/lib"/>
