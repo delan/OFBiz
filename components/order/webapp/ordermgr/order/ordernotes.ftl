@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign delegator = requestAttributes.delegator>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
@@ -51,7 +52,7 @@
               <#list orderNotes as note>
                 <tr>
                   <td align="left" valign="top" width="35%">
-                    <div class="tabletext">&nbsp;<b>By: </b>${note.firstName?if_exists}&nbsp;${note.lastName?if_exists}</div>
+                    <div class="tabletext">&nbsp;<b>By: </b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</div>
                     <div class="tabletext">&nbsp;<b>At: </b>${note.noteDateTime?string?if_exists}</div>
                   </td>
                   <td align="left" valign="top" width="65%">

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  */
 -->
 
@@ -573,8 +573,7 @@
     <view-entity entity-name="OrderHeaderNoteView"
             package-name="org.ofbiz.order.order"
             never-cache="true"
-            title="Order Header Note View Entity">
-      <member-entity entity-alias="PR" entity-name="Person"/>
+            title="Order Header Note View Entity">      
       <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
       <alias entity-alias="OD" name="orderId"/>
@@ -582,14 +581,9 @@
       <alias entity-alias="ND" name="noteName"/>
       <alias entity-alias="ND" name="noteInfo"/>
       <alias entity-alias="ND" name="noteDateTime"/>
-      <alias entity-alias="PR" name="partyId"/>
-      <alias entity-alias="PR" name="firstName"/>
-      <alias entity-alias="PR" name="lastName"/>
+      <alias entity-alias="ND" name="noteParty"/>
       <view-link entity-alias="OD" rel-entity-alias="ND">
         <key-map field-name="noteId"/>
-      </view-link>
-      <view-link entity-alias="ND" rel-entity-alias="PR">
-        <key-map field-name="noteParty" rel-field-name="partyId"/>
       </view-link>
     </view-entity>
     <entity entity-name="OrderItem"
