@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.2 2003/08/26 18:02:01 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -106,7 +106,7 @@ public class CheckOutEvents {
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -128,16 +128,17 @@ public class CheckOutEvents {
         callResult = checkOutHelper.createOrder(userLogin, distributorId, affiliateId, trackingCodeOrders, areOrderItemsExploded, 
             visitId, webSiteId);
         
-        ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
+        if (callResult != null) {
+            ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
         
-        if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS)) {
-            // set the orderId for use by chained events
-            String orderId = cart.getOrderId();
-            request.setAttribute("order_id", orderId);
-            request.setAttribute("orderId", orderId);
-            request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
+            if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS)) {
+                // set the orderId for use by chained events
+                String orderId = cart.getOrderId();
+                request.setAttribute("order_id", orderId);
+                request.setAttribute("orderId", orderId);
+                request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
+            }
         }
-        
         
         return cart.getOrderType().toLowerCase();
     }
@@ -164,7 +165,8 @@ public class CheckOutEvents {
         checkOutHelper.calcAndAddTax();
     }
 
-    public static boolean explodeOrderItems(GenericDelegator delegator, ShoppingCart cart) {                                  
+    public static boolean explodeOrderItems(GenericDelegator delegator, ShoppingCart cart) {
+        if (cart == null) return false;                                  
         GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);        
         if (productStore == null || productStore.get("explodeOrderItems") == null) {
         	return false;

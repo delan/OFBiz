@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.2 2003/08/26 18:02:01 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -171,8 +171,11 @@ public class CheckOutHelper {
     }
 
     // Create order event - uses createOrder service for processing
-    public Map createOrder(GenericValue userLogin, String distributorId, String affiliateId, 
+    public Map createOrder(GenericValue userLogin, String distributorId, String affiliateId,
             List trackingCodeOrders, boolean areOrderItemsExploded, String visitId, String webSiteId) {
+        if (this.cart == null) {
+            return null; 
+        }
         String orderId = this.cart.getOrderId();
         Map result;
         
