@@ -49,7 +49,7 @@
     <field-type-def type="id-long" sql-type="VARCHAR(60)" java-type="String"></field-type-def>
     <field-type-def type="id-vlong" sql-type="VARCHAR(255)" java-type="String"></field-type-def>
     
-    <field-type-def type="indicator" sql-type="BPCHAR(1)" java-type="String"></field-type-def>
+    <field-type-def type="indicator" sql-type="BPCHAR" java-type="String"></field-type-def>
     <field-type-def type="very-short" sql-type="VARCHAR(10)" java-type="String"></field-type-def>
     <field-type-def type="short-varchar" sql-type="VARCHAR(60)" java-type="String"></field-type-def>
     <field-type-def type="long-varchar" sql-type="VARCHAR(255)" java-type="String"></field-type-def>
