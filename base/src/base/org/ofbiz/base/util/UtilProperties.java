@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: UtilProperties.java,v 1.2 2003/08/20 17:29:31 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import java.util.ResourceBundle;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      1.0
  */
 public class UtilProperties {
@@ -415,12 +415,13 @@ public class UtilProperties {
         if (resource == null || resource.length() <= 0) return null;
         if (locale == null) locale = Locale.getDefault();
 
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
         String resourceCacheKey = resource + "_" + locale.toString();        
         ResourceBundle bundle = (ResourceBundle) bundleLocaleCache.get(resourceCacheKey);
 
         if (bundle == null) {
             try {
-                bundle = ResourceBundle.getBundle(resource, locale);
+                bundle = ResourceBundle.getBundle(resource, locale, loader);
                 bundleLocaleCache.put(resourceCacheKey, bundle);
             } catch (MissingResourceException e) {
                 Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString(), module);
