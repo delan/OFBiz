@@ -300,16 +300,16 @@
           </td>
         </tr>
       </table>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
-          <td width="5%" align="left"><div class="head3">OrderID</div></td>
-          <td width="20%" align="left"><div class="head3">Name</div></td>
-          <td width="5%" align="right"><div class="head3">Total Items</div></td>
-          <td width="10%" align="right"><div class="head3">Order Total</div></td>
-          <td width="5%" align="left"><div class="head3">&nbsp;</div></td>
-          <td width="20%" align="left"><div class="head3">Status</div></td>
-          <td width="20%" align="left"><div class="head3">Order Date</div></td>
-          <td width="5%" align="left"><div class="head3">PartyID</div></td>
+          <td width="5%" align="left"><div class="tableheadtext">OrderID</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">Name</div></td>
+          <td width="5%" align="right"><div class="tableheadtext">Total Items</div></td>
+          <td width="10%" align="right"><div class="tableheadtext">Order Total</div></td>
+          <td width="5%" align="left"><div class="tableheadtext">&nbsp;</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">Status</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">Order Date</div></td>
+          <td width="5%" align="left"><div class="tableheadtext">PartyID</div></td>
           <td width="10%">&nbsp;</td>
         </tr>
         <tr>
