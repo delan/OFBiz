@@ -4,6 +4,8 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
+<ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart" />  
+
 <BR>
 <TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
   <TR>
@@ -14,8 +16,14 @@
             <div class="boxhead">&nbsp;Quick Add</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
-            <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
+            <div class='lightbuttontextdisabled'>
+              <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
+              <%if(microCart != null && microCart.size() > 0){%>
+                <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
+              <%}else{%>
+                [Checkout]
+              <%}%>
+            </div>
           </td>
         </tr>
       </table>
@@ -54,9 +62,15 @@
             <div class="boxhead">&nbsp;Shopping Cart</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
-            <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
-            <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
+            <div class='lightbuttontextdisabled'>
+              <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
+              <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
+              <%if(microCart != null && microCart.size() > 0){%>
+                <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
+              <%}else{%>
+                [Checkout]
+              <%}%>
+            </div>
           </td>
         </tr>
       </table>
@@ -68,7 +82,6 @@
         <tr>
           <td>
 <ofbiz:if name="_SHOPPING_CART_">
-  <ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart">  
     <FORM METHOD="POST" ACTION="<ofbiz:url>/modifycart</ofbiz:url>" name='cartform' style='margin: 0;'>
       <table width='100%' CELLSPACING="0" CELLPADDING="4" BORDER="0">
         <TR> 
@@ -116,7 +129,6 @@
         <input type="submit" value="Update Cart">
       </CENTER>
 --%>
-  </ofbiz:object>
 </ofbiz:if>
 <ofbiz:unless name="_SHOPPING_CART_">
   <div class='head2'>Your shopping cart is empty.</div>
@@ -137,9 +149,15 @@
             &nbsp;
           </td>
           <td valign="middle" align="right">
-            <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
-            <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
-            <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
+            <div class='lightbuttontextdisabled'>
+              <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
+              <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
+              <%if(microCart != null && microCart.size() > 0){%>
+                <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
+              <%}else{%>
+                [Checkout]
+              <%}%>
+            </div>
           </td>
         </tr>
       </table>

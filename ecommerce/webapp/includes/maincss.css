@@ -12,8 +12,10 @@
   .button	{border-style: outset; border-color: #9999CC; border-width: 2px; background-color: #dddddd; padding-right: 5px; padding-left: 5px;}
   A.buttontext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: blue; }
   A.buttontext:hover {color: red;}
+  .buttontextdisabled {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: #333333; }
   A.lightbuttontext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: yellow;}
   A.lightbuttontext:hover {color: red;}
+  .lightbuttontextdisabled {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: #CCCCCC;}
   A.buttontextbig {font-family: Helvetica,sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: blue; }
   A.buttontextbig:hover {color: red;}
 
