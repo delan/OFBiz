@@ -29,6 +29,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.commonapp.accounting.payment.*;
 import org.ofbiz.commonapp.party.contact.*;
+import org.ofbiz.commonapp.product.store.*;
 
 delegator = request.getAttribute("delegator");
 cart = session.getAttribute(SiteDefs.SHOPPING_CART);
@@ -46,6 +47,7 @@ if (cart != null) {
 
 context.put("shoppingCart", cart);
 context.put("userLogin", userLogin);
+context.put("productStoreId", ProductStoreWorker.getProductStoreId(request));
 context.put("checkOutPaymentId", checkOutPaymentId);
 context.put("carrierShipmentMethodList", delegator.findByAndCache("CarrierShipmentMethod", UtilMisc.toMap("isDisplayable", "Y"), UtilMisc.toList("sequenceNumber")));
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));   

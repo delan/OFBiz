@@ -88,7 +88,8 @@ function submitForm(form, mode, value) {
                 <tr>
                   <td>
                     <table width='100%' cellpadding='1' border='0' cellpadding='0' cellspacing='0'>
-                      <#list context.carrierShipmentMethodList as carrierShipmentMethod>                    
+                      <#list context.carrierShipmentMethodList as carrierShipmentMethod>
+                        <#if !carrierShipmentMethod.productStoreId?exists || carrierShipmentMethod.productStoreId == productStoreId>
                         <tr>
                           <td width='1%' valign="top" >
                             <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
@@ -101,6 +102,7 @@ function submitForm(form, mode, value) {
                             </div>                           
                           </td>
                         </tr>
+                        </#if>
                       </#list>
                       <#if !carrierShipmentMethodList?exists || carrierShipmentMethodList?size == 0>                     
                         <tr>
