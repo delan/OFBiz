@@ -53,13 +53,13 @@
 <%if(security.hasPermission("WORKFLOW_MAINT", session)) {%>
 
 <!-- list all running processes -->
-<br>
 <ofbiz:unless name="workflow">
   <ofbiz:unless name="runningProcesses">
      <div class="head1">No running processes</div>
   </ofbiz:unless>
   <ofbiz:if name="runningProcesses"> 
-    <span class="tabletext">This page is used to view the status of running workflows.</span>  
+    <div>&nbsp;</div>
+    <div class="tabletext">This page is used to view the status of running workflows.</div>  
     <table cellpadding="2" cellspacing="0" border="1" width="100%">
       <tr>
         <td><div class="tabletext"><b>Package/Version</b></div></td>
@@ -86,12 +86,13 @@
 </ofbiz:unless>
 
 <!-- list all steps in the process -->
-<br>
 <ofbiz:if name="workflow">
   <ofbiz:unless name="activities">
     <div class="head1">No steps found for running workflow process: <%=workflow%></div>
   </ofbiz:unless>
   <ofbiz:if name="activities">
+    <div><a href="<ofbiz:url>/workflowMonitor</ofbiz:url>" class="buttontext">[Workflows]</a></div>
+    <div>&nbsp;</div>
     <span class="head1">Activity list for:&nbsp;</span><span class="head2"><%=workflowDef.getString("workflowPackageId") + " / " + workflowDef.getString("workflowProcessId")%> 
     <table cellpadding="2" cellspacing="0" border="1" width="100%">
       <tr>
@@ -116,6 +117,7 @@
           <td><div class="tabletext"><%=UtilFormatOut.checkNull(step.getString("actualStartDate"), "N/A")%></div></td>
           <td><div class="tabletext"><%=UtilFormatOut.checkNull(step.getString("actualCompletionDate"),"N/A")%></div></td>
           <td nobr>
+            <% if (!assignmentIterator.hasNext()) { %><span class="tabletext">N/A</span><%}%>
             <% while (assignmentIterator.hasNext()) { GenericValue assignment = (GenericValue) assignmentIterator.next(); %>
             <a href="/partymgr/control/viewprofile?party_id=<%=assignment.getString("partyId")%>" target="partymgr" class="buttontext"><%=assignment.getString("partyId")%></a>
             <% if (assignmentIterator.hasNext()) { %>,&nbsp;<%}%>
