@@ -205,9 +205,8 @@
         <response name="success" type="view" value="newcustomer"/>
     </request-map>
 
-    <request-map uri="createcustomer">
-        <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke="createCustomer"/>
+    <request-map uri="createcustomer"><security https="true" auth="false"/>
+        <event type="simple" path="org/ofbiz/ecommerce/customer/CustomerEvents.xml" invoke="createCustomer"/>
         <response name="success" type="request" value="updatedistributor"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ * <p><b>Title:</b> PartySimpleEvents
+ * <p><b>Description:</b> Events to handle form input and other data changes
+ * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author    <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version   1.0
+ * Created    February 23, 2002
+ -->
+ 
+<simple-methods>
+    <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
+        <!--
+            Note: this implementation ignores the create.allow.password and 
+            default.customer.password properties in /WEB-INF/ecommerce.properties.
+            The trick is getting that resource out of the servlet application context...
+            
+            To use that feature, just set the follow string to false.
+        -->
+        <string-to-field string="true" field-name="create_allow_password"/>
+        <string-to-field string="ungssblepsswd" field-name="default_customer_password"/>
+
+        <now-timestamp-to-env env-name="now"/>
+        <string-to-field string="CUSTOMER" field-name="roleTypeId" map-name="parameters"/>
+
+        <if-compare field-name="create_allow_password" operator="not-equals" value="true">
+            <env-to-field env-name="default_customer_password" field-name="PASSWORD" map-name="parameters"/>
+            <env-to-field env-name="default_customer_password" field-name="CONFIRM_PASSWORD" map-name="parameters"/>
+            <string-to-field string="No hint set, accout not yet enabled" field-name="PASSWORD_HINT" map-name="parameters"/>
+        </if-compare>
+            
+        <!-- Create the UserLogin Record -->
+        <call-map-processor in-map-name="parameters" out-map-name="userLoginContext">
+            <simple-map-processor name="newUserLogin">
+                <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-message message="Username is missing"/></not-empty></process>
+                <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-message message="Password is missing"/></not-empty></process>
+                <process field="CONFIRM_PASSWORD">
+                    <compare-field operator="equals" field="PASSWORD"><fail-message message="Your passwords do not match"/></compare-field>
+                    <not-empty><fail-message message="You must enter your password twice"/></not-empty>
+                    <copy to-field="currentPasswordVerify"/>
+                </process>
+                <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
+                <process field="USERNAME"><copy to-field="partyId"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <if-not-empty field-name="userLoginId" map-name="userLoginContext">
+            <field-to-field field-name="userLoginId" map-name="userLoginContext" to-map-name="userLoginExistsMap"/>
+            <find-by-primary-key entity-name="UserLogin" map-name="userLoginExistsMap" value-name="existingUserLogin"/>
+            <if-not-empty field-name="existingUserLogin">
+                <string-to-field string="Username in use, please choose another." field-name="tempErrorMessage"/>
+                <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
+            </if-not-empty>
+        </if-not-empty>
+        
+        <!-- make a map for use in creating a UserLogin value object -->
+        <field-to-field field-name="userLoginId" map-name="userLoginContext" to-map-name="newUserLoginMap"/>
+        <field-to-field field-name="currentPassword" map-name="userLoginContext" to-map-name="newUserLoginMap"/>
+        <field-to-field field-name="passwordHint" map-name="userLoginContext" to-map-name="newUserLoginMap"/>
+        <field-to-field field-name="partyId" map-name="userLoginContext" to-map-name="newUserLoginMap"/>
+        <make-value entity-name="UserLogin" map-name="newUserLoginMap" value-name="newUserLogin"/>
+
+        <!-- Check the password, etc for validity -->
+        <call-bsh><![CDATA[
+            String password = (String) userLoginContext.get("currentPassword");
+            String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
+            String passwordHint = (String) userLoginContext.get("passwordHint");
+            org.ofbiz.commonapp.security.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, (List) error_list);
+        ]]></call-bsh>
+                
+        <!-- Create the Person -->
+        <call-map-processor in-map-name="parameters" out-map-name="personContext">
+            <simple-map-processor name="newPerson">
+                <process field="USERNAME"><copy to-field="partyId"/></process>
+                <process field="USER_FIRST_NAME"><copy to-field="firstName"/><not-empty><fail-message message="First Name is missing"/></not-empty></process>
+                <process field="USER_MIDDLE_NAME"><copy to-field="middleName"/></process>
+                <process field="USER_LAST_NAME"><copy to-field="lastName"/><not-empty><fail-message message="Last Name is missing"/></not-empty></process>
+                <process field="USER_TITLE"><copy to-field="personalTitle"/></process>
+                <process field="USER_SUFFIX"><copy to-field="suffix"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+
+        <!-- Create the PartyGroup -->
+        <call-map-processor in-map-name="parameters" out-map-name="partyGroupContext">
+            <simple-map-processor name="newPartyGroup">
+                <process field="USERNAME"><copy to-field="partyId"/></process>
+                <process field="roleTypeId"><copy/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        
+        <!-- Create the Postal Address -->
+        <call-map-processor in-map-name="parameters" out-map-name="addressContext">
+            <simple-map-processor name="newPerson">
+                <make-in-string field="fullName">
+                    <in-field field="USER_FIRST_NAME"/><constant> </constant>
+                    <in-field field="USER_MIDDLE_NAME"/><constant> </constant>
+                    <in-field field="USER_LAST_NAME"/>
+                </make-in-string>
+                <process field="USERNAME"><copy to-field="partyId"/></process>
+                <process field="roleTypeId"><copy/></process>
+                <process field="fullName"><copy to-field="toName"/></process>
+                <process field="CUSTOMER_ADDRESS1"><copy to-field="address1"/><not-empty><fail-message message="Address Line 1 is missing"/></not-empty></process>
+                <process field="CUSTOMER_ADDRESS2"><copy to-field="address2"/></process>
+                <process field="CUSTOMER_CITY"><copy to-field="city"/><not-empty><fail-message message="City is missing"/></not-empty></process>
+                <process field="CUSTOMER_STATE"><copy to-field="stateProvinceGeoId"/></process>
+                <process field="CUSTOMER_POSTAL_CODE"><copy to-field="postalCode"/><not-empty><fail-message message="Postal Code is missing"/></not-empty></process>
+                <process field="CUSTOMER_COUNTRY"><copy to-field="countryGeoId"/><not-empty><fail-message message="Country is missing"/></not-empty></process>
+                <process field="CUSTOMER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <if-compare value="USA" operator="equals" field-name="CUSTOMER_COUNTRY" map-name="parameters">
+            <if-empty field-name="CUSTOMER_STATE" map-name="parameters">
+                <string-to-field string="State is missing, and is required for an address in the United States." field-name="tempErrorMessage"/>
+                <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
+            </if-empty>
+        </if-compare>
+        <if-compare value="CAN" operator="equals" field-name="CUSTOMER_COUNTRY" map-name="parameters">
+            <if-empty field-name="CUSTOMER_STATE" map-name="parameters">
+                <string-to-field string="State is missing, and is required for an address in Canada." field-name="tempErrorMessage"/>
+                <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
+            </if-empty>
+        </if-compare>
+
+        <!-- Create the Home Phone -->
+        <if-not-empty field-name="CUSTOMER_HOME_CONTACT" map-name="parameters">
+            <call-map-processor in-map-name="parameters" out-map-name="homePhoneContext">
+                <simple-map-processor name="newTelecomNumber">
+                    <process field="USERNAME"><copy to-field="partyId"/></process>
+                    <process field="roleTypeId"><copy/></process>
+                    <process field="CUSTOMER_HOME_COUNTRY"><copy to-field="countryCode"/></process>
+                    <process field="CUSTOMER_HOME_AREA"><copy to-field="areaCode"/></process>
+                    <process field="CUSTOMER_HOME_CONTACT"><copy to-field="contactNumber"/></process>
+                    <process field="CUSTOMER_HOME_EXT"><copy to-field="extension"/></process>
+                    <process field="CUSTOMER_HOME_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+                </simple-map-processor>
+            </call-map-processor>
+        </if-not-empty>
+
+        <!-- Create the Work Phone -->
+        <if-not-empty field-name="CUSTOMER_WORK_CONTACT" map-name="parameters">
+            <call-map-processor in-map-name="parameters" out-map-name="workPhoneContext">
+                <simple-map-processor name="newTelecomNumber">
+                    <process field="USERNAME"><copy to-field="partyId"/></process>
+                    <process field="roleTypeId"><copy/></process>
+                    <process field="CUSTOMER_WORK_COUNTRY"><copy to-field="countryCode"/></process>
+                    <process field="CUSTOMER_WORK_AREA"><copy to-field="areaCode"/></process>
+                    <process field="CUSTOMER_WORK_CONTACT"><copy to-field="contactNumber"/></process>
+                    <process field="CUSTOMER_WORK_EXT"><copy to-field="extension"/></process>
+                    <process field="CUSTOMER_WORK_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+                </simple-map-processor>
+            </call-map-processor>
+        </if-not-empty>
+
+        <!-- Create the Fax Phone -->
+        <if-not-empty field-name="CUSTOMER_FAX_CONTACT" map-name="parameters">
+            <call-map-processor in-map-name="parameters" out-map-name="faxPhoneContext">
+                <simple-map-processor name="newTelecomNumber">
+                    <process field="USERNAME"><copy to-field="partyId"/></process>
+                    <process field="roleTypeId"><copy/></process>
+                    <process field="CUSTOMER_FAX_COUNTRY"><copy to-field="countryCode"/></process>
+                    <process field="CUSTOMER_FAX_AREA"><copy to-field="areaCode"/></process>
+                    <process field="CUSTOMER_FAX_CONTACT"><copy to-field="contactNumber"/></process>
+                    <process field="CUSTOMER_FAX_EXT"><copy to-field="extension"/></process>
+                    <process field="CUSTOMER_FAX_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+                </simple-map-processor>
+            </call-map-processor>
+        </if-not-empty>
+
+        <!-- Create the Mobile Phone -->
+        <if-not-empty field-name="CUSTOMER_MOBILE_CONTACT" map-name="parameters">
+            <call-map-processor in-map-name="parameters" out-map-name="mobilePhoneContext">
+                <simple-map-processor name="newTelecomNumber">
+                    <process field="USERNAME"><copy to-field="partyId"/></process>
+                    <process field="roleTypeId"><copy/></process>
+                    <process field="CUSTOMER_MOBILE_COUNTRY"><copy to-field="countryCode"/></process>
+                    <process field="CUSTOMER_MOBILE_AREA"><copy to-field="areaCode"/></process>
+                    <process field="CUSTOMER_MOBILE_CONTACT"><copy to-field="contactNumber"/></process>
+                    <process field="CUSTOMER_MOBILE_EXT"><copy to-field="extension"/></process>
+                    <process field="CUSTOMER_MOBILE_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+                </simple-map-processor>
+            </call-map-processor>
+        </if-not-empty>
+
+        <!-- Create the email address -->
+        <call-map-processor in-map-name="parameters" out-map-name="emailContext">
+            <simple-map-processor name="newEmail">
+                <process field="USERNAME"><copy to-field="partyId"/></process>
+                <process field="roleTypeId"><copy/></process>
+                <process field="CUSTOMER_EMAIL">
+                    <not-empty><fail-message message="Email is missing"/></not-empty>
+                    <validate-method method="isEmail"><fail-message message="Email address not formatted correctly, must be like: name@domain"/></validate-method>
+                    <copy to-field="email"/>
+                </process>
+                <process field="CUSTOMER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+            </simple-map-processor>
+        </call-map-processor>
+
+        <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
+        <check-errors/>
+        <call-service service-name="createUserLogin" in-map-name="userLoginContext"/>
+        <call-service service-name="createPerson" in-map-name="personContext"/>
+        <call-service service-name="createPartyGroup" in-map-name="partyGroupContext"/>
+
+        <!-- shipping address -->
+        <call-service service-name="createPostalAddress" in-map-name="addressContext">
+            <result-to-field result-name="contactMechId" map-name="addressPurposeContext"/>
+        </call-service>
+        <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="addressPurposeContext"/>
+        <string-to-field string="SHIPPING_LOCATION" field-name="contactMechPurposeTypeId" map-name="addressPurposeContext"/>
+        <call-service service-name="createPartyContactMechPurpose" in-map-name="addressPurposeContext"/>
+
+        <!-- home phone -->
+        <if-not-empty field-name="CUSTOMER_HOME_CONTACT" map-name="parameters">
+            <call-service service-name="createTelecomNumber" in-map-name="homePhoneContext">
+                <result-to-field result-name="contactMechId" map-name="homePhonePurposeContext"/>
+            </call-service> 
+            <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="homePhonePurposeContext"/>
+            <string-to-field string="PHONE_HOME" field-name="contactMechPurposeTypeId" map-name="homePhonePurposeContext"/>
+            <call-service service-name="createPartyContactMechPurpose" in-map-name="homePhonePurposeContext"/>
+        </if-not-empty>
+
+        <!-- work phone -->
+        <if-not-empty field-name="CUSTOMER_WORK_CONTACT" map-name="parameters">
+            <call-service service-name="createTelecomNumber" in-map-name="workPhoneContext">
+                <result-to-field result-name="contactMechId" map-name="workPhonePurposeContext"/>
+            </call-service> 
+            <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="workPhonePurposeContext"/>
+            <string-to-field string="PHONE_WORK" field-name="contactMechPurposeTypeId" map-name="workPhonePurposeContext"/>
+            <call-service service-name="createPartyContactMechPurpose" in-map-name="workPhonePurposeContext"/>
+        </if-not-empty>
+
+        <!-- fax phone -->
+        <if-not-empty field-name="CUSTOMER_FAX_CONTACT" map-name="parameters">
+            <call-service service-name="createTelecomNumber" in-map-name="faxPhoneContext">
+                <result-to-field result-name="contactMechId" map-name="faxPhonePurposeContext"/>
+            </call-service> 
+            <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="faxPhonePurposeContext"/>
+            <string-to-field string="FAX_NUMBER" field-name="contactMechPurposeTypeId" map-name="faxPhonePurposeContext"/>
+            <call-service service-name="createPartyContactMechPurpose" in-map-name="faxPhonePurposeContext"/>
+        </if-not-empty>
+
+        <!-- mobile phone -->
+        <if-not-empty field-name="CUSTOMER_MOBILE_CONTACT" map-name="parameters">
+            <call-service service-name="createTelecomNumber" in-map-name="mobilePhoneContext">
+                <result-to-field result-name="contactMechId" map-name="mobilePhonePurposeContext"/>
+            </call-service> 
+            <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="mobilePhonePurposeContext"/>
+            <string-to-field string="PHONE_MOBILE" field-name="contactMechPurposeTypeId" map-name="mobilePhonePurposeContext"/>
+            <call-service service-name="createPartyContactMechPurpose" in-map-name="mobilePhonePurposeContext"/>
+        </if-not-empty>
+
+        <!-- email address -->
+        <call-service service-name="createEmailAddress" in-map-name="emailContext">
+            <result-to-field result-name="contactMechId" map-name="emailPurposeContext"/>
+        </call-service> 
+        <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="emailPurposeContext"/>
+        <string-to-field string="PRIMARY_EMAIL" field-name="contactMechPurposeTypeId" map-name="emailPurposeContext"/>
+        <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
+
+        <!-- now finished, log in the user... -->
+        <if-compare field-name="create_allow_password" operator="equals" value="true">
+            <field-to-session field-name="newUserLogin" session-name="_USER_LOGIN_"/>
+        </if-compare>
+    </simple-method>   
+</simple-methods>
