@@ -720,7 +720,7 @@
         <antcall target="docs" />
         
         <property name="docstemp.dir" value="../docstemp" />
-        <property name="docsdest.dir" value="${docstemp.dir}/ofbiz/website" />
+        <property name="docsdest.dir" value="${docstemp.dir}/ofbiz/site" />
         <delete dir="${docstemp.dir}" />
         
         <mkdir dir="${docsdest.dir}" />
