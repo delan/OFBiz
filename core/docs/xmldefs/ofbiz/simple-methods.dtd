@@ -104,6 +104,7 @@
     service-error-message-map-name CDATA "errorMessageMap"
     service-success-message-name CDATA "successMessage"
     service-success-message-list-name CDATA "successMessageList"
+    locale-name CDATA "locale"
     delegator-name CDATA "delegator"
     security-name CDATA "security"
     dispatcher-name CDATA "dispatcher"

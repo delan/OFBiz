@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.minilang.method.callops;
-
 
 import java.net.*;
 import java.text.*;
@@ -38,13 +36,13 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
-
 /**
  * Calls a service using the given parameters
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    December 29, 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class CallServiceAsynch extends MethodOperation {
     
@@ -74,13 +72,21 @@ public class CallServiceAsynch extends MethodOperation {
             }
         }
 
-        // invoke the service
+        // add UserLogin to context if expected
         if (includeUserLogin) {
             GenericValue userLogin = methodContext.getUserLogin();
 
             if (userLogin != null)
                 inMap.put("userLogin", userLogin);
         }
+        
+        // always add Locale to context unless null
+        Locale locale = methodContext.getLocale();
+        if (locale != null) {
+            inMap.put("locale", locale);
+        }
+        
+        // invoke the service
         try {
             methodContext.getDispatcher().runAsync(serviceName, inMap);
         } catch (GenericServiceException e) {

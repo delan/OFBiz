@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.minilang.method;
-
 
 import java.net.*;
 import java.text.*;
@@ -37,16 +35,16 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * A single operation, does the specified operation on the given field
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    February 15, 2002
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class MethodContext {
+    
     public static final int EVENT = 1;
     public static final int SERVICE = 2;
 
@@ -54,6 +52,7 @@ public class MethodContext {
 
     Map env = new HashMap();
     Map parameters;
+    Locale locale;
     ClassLoader loader;
     LocalDispatcher dispatcher;
     GenericDelegator delegator;
@@ -72,6 +71,7 @@ public class MethodContext {
         this.loader = loader;
         this.request = request;
         this.response = response;
+        this.locale = UtilMisc.getLocale(request);
         this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         this.delegator = (GenericDelegator) request.getAttribute("delegator");
         this.security = (Security) request.getAttribute("security");
@@ -85,6 +85,7 @@ public class MethodContext {
         this.methodType = MethodContext.SERVICE;
         this.parameters = context;
         this.loader = loader;
+        this.locale = (Locale) this.getParameter("locale");
         this.dispatcher = ctx.getDispatcher();
         this.delegator = ctx.getDelegator();
         this.security = ctx.getSecurity();
@@ -143,6 +144,10 @@ public class MethodContext {
 
     public ClassLoader getLoader() {
         return this.loader;
+    }
+    
+    public Locale getLocale() {
+        return this.locale;
     }
 
     public LocalDispatcher getDispatcher() {

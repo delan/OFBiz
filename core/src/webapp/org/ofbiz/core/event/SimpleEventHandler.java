@@ -43,7 +43,8 @@ public class SimpleEventHandler implements EventHandler {
 
     public static final String module = SimpleEventHandler.class.getName();
 
-    /** Invoke the web event
+    /** 
+     * Invoke the web event
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke
      *@param request The servlet request object

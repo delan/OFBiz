@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.minilang;
-
 
 import java.net.*;
 import java.text.*;
@@ -38,16 +36,17 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.minilang.operation.*;
 
-
 /**
  * SimpleMethod Mini Language Core Object
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    December 29, 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class SimpleMethod {
+    
+    public static final String module = SimpleMethod.class.getName();
 
     protected static UtilCache simpleMethodsResourceCache = new UtilCache("minilang.SimpleMethodsResource", 0, 0);
     protected static UtilCache simpleMethodsURLCache = new UtilCache("minilang.SimpleMethodsURL", 0, 0);
@@ -214,6 +213,7 @@ public class SimpleMethod {
     boolean loginRequired = true;
     boolean useTransaction = true;
 
+    String localeName;
     String delegatorName;
     String securityName;
     String dispatcherName;
@@ -273,6 +273,10 @@ public class SimpleMethod {
         loginRequired = !"false".equals(simpleMethodElement.getAttribute("login-required"));
         useTransaction = !"false".equals(simpleMethodElement.getAttribute("use-transaction"));
 
+        localeName = simpleMethodElement.getAttribute("locale-name");
+        if (localeName == null || localeName.length() == 0) {
+            localeName = "locale";
+        }
         delegatorName = simpleMethodElement.getAttribute("delegator-name");
         if (delegatorName == null || delegatorName.length() == 0) {
             delegatorName = "delegator";
@@ -376,7 +380,7 @@ public class SimpleMethod {
         methodContext.putEnv(delegatorName, methodContext.getDelegator());
         methodContext.putEnv(securityName, methodContext.getSecurity());
         methodContext.putEnv(dispatcherName, methodContext.getDispatcher());
-
+        methodContext.putEnv(localeName, methodContext.getLocale());
         methodContext.putEnv(parameterMapName, methodContext.getParameters());
 
         if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -413,8 +417,8 @@ public class SimpleMethod {
             } catch (GenericTransactionException e) {
                 String errMsg = "Error trying to begin transaction, could not process method: " + e.getMessage();
 
-                Debug.logWarning(errMsg);
-                Debug.logWarning(e);
+                Debug.logWarning(errMsg, module);
+                Debug.logWarning(e, module);
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
                     methodContext.getRequest().setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                     return defaultErrorCode;
@@ -439,8 +443,8 @@ public class SimpleMethod {
                 String errMsg = "Error trying to commit transaction, could not process method: " + e.getMessage();
 
                 errorMsg += errMsg + "<br>";
-                Debug.logWarning(errMsg);
-                Debug.logWarning(e);
+                Debug.logWarning(errMsg, module);
+                Debug.logWarning(e, module);
             }
         } else {
             // if NOT finished rollback here passing beganTransaction to either rollback, or set rollback only
@@ -450,8 +454,8 @@ public class SimpleMethod {
                 String errMsg = "Error trying to rollback transaction, could not process method: " + e.getMessage();
 
                 errorMsg += errMsg + "<br>";
-                Debug.logWarning(errMsg);
-                Debug.logWarning(e);
+                Debug.logWarning(errMsg, module);
+                Debug.logWarning(e, module);
             }
         }
 
@@ -474,10 +478,10 @@ public class SimpleMethod {
             if (response == null || response.length() == 0) {
                 if (forceError) {
                     //override response code, always use error code
-                    Debug.logInfo("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]");
+                    Debug.logInfo("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]", module);
                     response = defaultErrorCode;
                 } else {
-                    Debug.logInfo("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]");
+                    Debug.logInfo("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]", module);
                     response = defaultSuccessCode;
                 }
             }
@@ -518,10 +522,10 @@ public class SimpleMethod {
             if (response == null || response.length() == 0) {
                 if (forceError) {
                     //override response code, always use error code
-                    Debug.logInfo("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]");
+                    Debug.logInfo("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]", module);
                     response = defaultErrorCode;
                 } else {
-                    Debug.logInfo("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]");
+                    Debug.logInfo("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]", module);
                     response = defaultSuccessCode;
                 }
             }
@@ -678,7 +682,7 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.otherops.Log(curOperElem, simpleMethod));
                     
                 } else {
-                    Debug.logWarning("Operation element \"" + nodeName + "\" no recognized");
+                    Debug.logWarning("Operation element \"" + nodeName + "\" no recognized", module);
                 }
             }
         }

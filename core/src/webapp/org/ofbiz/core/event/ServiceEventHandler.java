@@ -76,8 +76,10 @@ public class ServiceEventHandler implements EventHandler {
         }
 
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        Locale locale = UtilMisc.getLocale(request);
+        
         DispatchContext dctx = dispatcher.getDispatchContext();
-
+                
         if (dctx == null) {
             throw new EventHandlerException("Dispatch context cannot be found");
         }
@@ -138,9 +140,14 @@ public class ServiceEventHandler implements EventHandler {
 
         // get only the parameters for this service
         serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM);
-        if (userLogin != null) {
-            serviceContext.put("userLogin", userLogin);
-        }
+        
+        // include the UserLogin value object
+        if (userLogin != null) 
+            serviceContext.put("userLogin", userLogin);        
+        
+        // include the Locale object
+        if (locale != null)
+            serviceContext.put("locale", locale);
 
         // invoke the service
         Map result = null;
