@@ -21,14 +21,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.0
 --%>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.service.*, org.ofbiz.service.calendar.*" %>
+<%@ page import="org.ofbiz.service.*, org.ofbiz.service.config.*, org.ofbiz.service.calendar.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -40,7 +40,7 @@
 
 <%
 	String serviceName = request.getParameter("SERVICE_NAME");
-	String loaderName = dispatcher.getName();
+	String poolName = ServiceConfigUtil.getSendPool();
 %>
 
 <% if (serviceName == null) { %>
@@ -55,8 +55,8 @@
         <td><input type="text" class="inputBox" size="20" name="SERVICE_NAME"></td>
       </tr>      
       <tr>
-        <td align="right"><div class="tabletext">Loader Name:</div></td>
-        <td><input type="text" class="inputBox" size="20" name="LOADER_NAME" value="<%=loaderName%>"></td>
+        <td align="right"><div class="tabletext">Pool Name:</div></td>
+        <td><input type="text" class="inputBox" size="20" name="POOL_NAME" value="<%=poolName%>"></td>
       </tr>      
       <tr>
         <td align="right"><div class="tabletext">Start Date/Time:</div></td>
