@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -149,14 +149,14 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     <tr>                      
                       <td>                        
                         <input type='text' size='25' class='inputBox' name='minDate' value='${requestParameters.minDate?if_exists}'>
-                        <a href="javascript:call_cal(document.lookuporder.minDate, '${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                        <a href="javascript:call_cal(document.PicklistOptions.minDate, '${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                         <span class='tabletext'>From</span>
                       </td>
                     </tr>
                     <tr>                  
                       <td>                       
                         <input type='text' size='25' class='inputBox' name='maxDate' value='${requestParameters.maxDate?if_exists}'>
-                        <a href="javascript:call_cal(document.lookuporder.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>                   
+                        <a href="javascript:call_cal(document.PicklistOptions.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                         <span class='tabletext'>Thru</span>
                       </td>
                     </tr>
