@@ -45,6 +45,20 @@ public class ContentUrlTag extends BodyTagSupport {
 
     public static final String module = UrlTag.class.getName();
 
+    public static void appendContentPrefix(HttpServletRequest request, StringBuffer urlBuffer) {
+        if (request.isSecure()) {
+            String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.secure");
+            if (prefix != null) {
+                urlBuffer.append(prefix.trim());
+            }
+        } else {
+            String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
+            if (prefix != null) {
+                urlBuffer.append(prefix.trim());
+            }
+        }
+    }
+    
     public int doEndTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
@@ -52,18 +66,7 @@ public class ContentUrlTag extends BodyTagSupport {
         String bodyString = body.getString();
 
         StringBuffer newURL = new StringBuffer();
-        if (request.isSecure()) {
-            String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.secure");
-            if (prefix != null) {
-                newURL.append(prefix.trim());
-            }
-        } else {
-            String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
-            if (prefix != null) {
-                newURL.append(prefix.trim());
-            }
-        }
-        
+        appendContentPrefix(request, newURL);
         newURL.append(bodyString);
         body.clearBody();
 
