@@ -523,6 +523,9 @@
   <WorkEffortExpectation description="Involvement Required" expectationId="REQUIRE"/>
   <WorkEffortExpectation description="Involvement Requested" expectationId="REQUEST"/>
   <WorkEffortExpectation description="Immediate Response Requested" expectationId="IMMEDIATE"/>
+  <WorkEffortScope description="General, public access" workEffortScopeId="PUBLIC"/>
+  <WorkEffortScope description="Restricted, private access" workEffortScopeId="PRIVATE"/>
+  <WorkEffortScope description="Very restricted, confidential access" workEffortScopeId="CONFIDENTIAL"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PROGRAM"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PHASE"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PROJECT"/>
