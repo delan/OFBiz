@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>Open For Business Service Engine Configuration Guide</title>
+</head>
+
+<body>
+
+<h2 align="center">The Open For Business Project: Service Engine Configuration Guide</h2>
+
+<br>Written By: Andy Zeneski
+<br>Email: <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a>
+<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>
+<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
+<br>
+Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
+Last Updated: January 8, 2003<br>
+$Id$ <br>
+<hr>
+<br>
+<h3>Table of Contents</h3>
+
+<ul>
+  <li><a href="#Related_Documents">Related Documents</a>
+  <li><a href="#Introduction">Introduction</a>
+  <li><a href="#Resource">Resource Loaders</a>
+</ul>
+
+<hr>
+
+<h3><a name="Related_Documents">Related Documents:</a></h3>
+<hr>
+<ul>
+  <li><a href="services.html">Service Engine Guide</a></li>
+  <li><a href="coreconfig.html">Core Configuration Guide</a></li>
+  <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
+</ul>
+
+<hr>
+<h3><a name="Introduction">Introduction</a></h3>
+<hr>
+
+<p>This document describes the configuration of the Service Engine. It starts
+with an introduction to general ideas and then goes through each part of the
+serviceengine.xml file and explains the available elements and their 
+usage. The serviceengine.xml file used for the OFBiz applications has
+examples of a number of different options and is located in <b><code>ofbiz/commonapp/etc/serviceengine.xml</code></b>.</p>
+
+<p>The configuration of the Service Engine is done through a simple XML
+file called <b><code>serviceengine.xml</code></b> that must exist somewhere on the classpath.</p>
+
+<hr>
+<h3><a name="Resource">Resource Loaders</a></h3>
+<hr>
+<p>The <b><code>resource-loader</code></b> tag is used to configure a named resource loader
+that can be used elsewhere to load XML and other resources. It has the following
+attributes.</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the resource loader. Used in other tags in the 'loader' attribute.</td>
+</tr>
+<tr>
+    <td>class</td><td>Y</td>
+    <td>The class to use that extends the abstract class org.ofbiz.core.service.config.ResourceLoader.
+    Available classes include FileLoader, UrlLoader, and ClasspathLoader, all in the
+    same package as the ResourceLoader class.</td>
+</tr>
+<tr>
+    <td>prepend-env</td><td>N</td>
+    <td>The name of a Java environment property to put at the very beginning of 
+    the full location, before the prefix. This is optional.</td>
+</tr>
+<tr>
+    <td>prefix</td><td>N</td>
+    <td>A string to put before the location when making the full location. This is optional.
+    If used will go after the prepended environment property and before the location
+    specified for each resource.</td>
+</tr>
+</table>
+
+<!-- 
+  - Just commenting this out for now, this is now in an XML file and is much
+  - more complex, so a separate document should probably be used to describe that 
+
+<hr>
+<h3><a name="servicesengine">servicesengine.properties</a></h3>
+<hr>
+<p>The servicesengine.properties file contains some global settings for 
+the Service Engine.</p>
+
+<p>The Service Engine allows services to be attached to different contexts where
+each context has its own class loader. In addition to these local contexts there
+is a single global context that also has its own class loader and the service
+definition files for the global context are specified using the 
+<b><code>global.paths</code></b> property. The value of this property should be
+a semicolon separated list of full path and filenames for the service
+definition XML files.</p>
+
+<p>The Service Engine also allows either a username/password combination or a 
+UserLogin GenericValue object to be passed in for authentication. When a 
+UserLogin GenericValue object is passed in the user is assumed to be authenticated,
+but when a username/password is specified the user will be authenticated and a 
+UserLogin GenericValue object will be created and place in the context for the
+service to be called. To specify the name of the service which will be called
+to authenticate users when a username/password is specified use the 
+<b><code>auth.service</code></b> property where the value is simply the name
+of the desired service.</p>
+
+<p>One of the more important uses of this properties file is to specify the class
+names for the engine wrappers for various type of services. The format of these
+properties is <b><code>{engine-name}.engine={class-name}</code></b> where engine-name
+is the value of the 'engine' attribute of the 'service' tag in a service definition 
+XML file and class-name is the fully-qualified class name for a class that 
+implements the <b><code>org.ofbiz.core.service.GenericEngine</code></b> interface.
+Valid engine-names include: <b><code>java</code></b>, <b><code>workflow</code></b>,
+<b><code>bsh</code></b>, and <b><code>soap</code></b>.</p>
+-->
+
+
+</body>
+</html>
