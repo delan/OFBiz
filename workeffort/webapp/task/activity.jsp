@@ -34,7 +34,7 @@
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
-<%WorkEffortWorker.getActivityStatusItems(pageContext, "activityStatusItems");%>
+<%WorkEffortWorker.getTaskStatusItems(pageContext, "taskStatusItems");%>
 
 <%pageContext.setAttribute("PageName", "Activity Editor Page");%>
 
@@ -93,16 +93,9 @@
                   <td width='26%' align=right><div class='tabletext'>Activity Status</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='CURRENT_STATUS_ID'>
-                      <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
-                      <OPTION value=''>--</OPTION>
-                      <ofbiz:iterator name="statusItem" property="activityStatusItems">
-                        <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
-                      </ofbiz:iterator>
-                    </SELECT>
-                    <ofbiz:if name="workEffort">
-                      <span class='tabletext'>Last Updated <ofbiz:entityfield field="lastStatusUpdate" attribute="workEffort"/></span>
-                    </ofbiz:if>
+                    <input type='hidden' name='CURRENT_STATUS_ID' value='<ofbiz:entityfield field="currentStatusId" attribute="workEffort"/>'>
+                    <span class='tabletext'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></span>
+                    <span class='tabletext'> - Last Updated: <ofbiz:entityfield field="lastStatusUpdate" attribute="workEffort"/></span>
                   </td>
                 </tr>
 
@@ -178,6 +171,118 @@
   </TR>
 </TABLE>
 
+<%-- ===================================================================== --%>
+      <field name="comments" type="comment"></field>
+      <field name="mustRsvp" type="indicator"></field>
+      <field name="expectationEnumId" type="id"></field>	
+<ofbiz:if name="partyAssigns" size="0">
+    <BR>
+    <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+      <TR>
+        <TD width='100%'>
+          <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+            <tr>
+              <TD align=left width='40%' >
+                <div class='boxhead'>&nbsp;Party Assignments Detail</div>
+              </TD>
+              <TD align=right width='60%'>
+                <%-- <A href='<ofbiz:url>/tasklist</ofbiz:url>' class='lightbuttontext'>[Task&nbsp;List]</A> --%>
+              </TD>
+            </tr>
+          </table>
+        </TD>
+      </TR>
+      <TR>
+        <TD width='100%'>
+          <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+            <tr>
+              <td>
+                <ofbiz:iterator name="workEffortPartyAssignment" property="partyAssigns">
+                  <form action="<ofbiz:url>/updateactivityassign</ofbiz:url>" method=POST style='margin: 0;'>
+                  <table border='0' cellpadding='2' cellspacing='0'>
+                    <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
+                    <input type='hidden' name='WORK_EFFORT_ID' value='<ofbiz:print attribute="workEffortId"/>'>
+                    <input type='hidden' name='PARTY_ID' value='<ofbiz:entityfield field="partyId" attribute="workEffortPartyAssignment"/>'>
+                    <input type='hidden' name='ROLE_TYPE_ID' value='<ofbiz:entityfield field="roleTypeId" attribute="workEffortPartyAssignment"/>'>
+                    <input type='hidden' name='FROM_DATE' value='<ofbiz:entityfield field="fromDate" attribute="workEffortPartyAssignment"/>'>
+    
+                    <tr>
+                      <td width='26%' align=right><div class='tabletext'>Party ID</div></td>
+                      <td>&nbsp;</td>
+                      <td width='74%'><span class='tabletext'><ofbiz:entityfield field="partyId" attribute="workEffortPartyAssignment"/></span></td>
+                    </tr>
+                    <tr>
+                      <td width='26%' align=right><div class='tabletext'>Role Type ID</div></td>
+                      <td>&nbsp;</td>
+                      <td width='74%'><span class='tabletext'><ofbiz:entityfield field="roleTypeId" attribute="workEffortPartyAssignment"/></span></td>
+                    </tr>
+                    <tr>
+                      <td width='26%' align=right><div class='tabletext'>From Date</div></td>
+                      <td>&nbsp;</td>
+                      <td width='74%'><span class='tabletext'><ofbiz:entityfield field="fromDate" attribute="workEffortPartyAssignment"/></span></td>
+                    </tr>
+                    <tr>
+                      <td width='26%' align=right><div class='tabletext'>Thru Date</div></td>
+                      <td>&nbsp;</td>
+                      <td width='74%'><input type='text' size='30' maxlength='30' name='thruDate' value='<ofbiz:inputvalue field="thruDate" param="thruDate" entityAttr="workEffortPartyAssignment" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                    </tr>
+                    <tr>
+                      <td width='26%' align=right><div class='tabletext'>Party Assignment Status</div></td>
+                      <td>&nbsp;</td>
+                      <td width='74%'>
+                        <SELECT name='statusId'>
+                          <OPTION value='<ofbiz:entityfield field="statusId" attribute="workEffortPartyAssignment" default="CAL_NEEDS_ACTION"/>'><ofbiz:entityfield field="statusId" attribute="workEffortPartyAssignment"/></OPTION>
+                          <OPTION value=''>--</OPTION>
+                          <ofbiz:iterator name="statusItem" property="taskStatusItems">
+                            <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
+                          </ofbiz:iterator>
+                        </SELECT>
+                        <ofbiz:if name="workEffort">
+                          <span class='tabletext'> - Last Updated: <ofbiz:entityfield field="statusDateTime" attribute="workEffortPartyAssignment"/></span>
+                        </ofbiz:if>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width='26%' align=right><div class='tabletext'>Comments</div></td>
+                      <td>&nbsp;</td>
+                      <td width='74%'><input type='text' size='60' maxlength='255' name='comments' value='<ofbiz:inputvalue field="comments" param="comments" entityAttr="workEffortPartyAssignment" tryEntityAttr="tryEntity"/>'></td>
+                    </tr>
+                    <tr>
+                      <td width='26%' align=right><div class='tabletext'>Must RSVP?</div></td>
+                      <td>&nbsp;</td>
+                      <td width='74%'>
+                        <SELECT name='mustRsvp'>
+                          <OPTION><ofbiz:inputvalue field="mustRsvp" param="mustRsvp" entityAttr="workEffortPartyAssignment" tryEntityAttr="tryEntity"/></OPTION>
+                          <OPTION value=''>--</OPTION>
+                          <OPTION>Y</OPTION> <OPTION>N</OPTION>
+                        </SELECT>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width='26%' align=right><div class='tabletext'>Expectation</div></td>
+                      <td>&nbsp;</td>
+                      <td width='74%'><span class='tabletext'><ofbiz:entityfield field="expectationEnumId" attribute="workEffortPartyAssignment"/></span></td>
+                    </tr>
+                    
+                    <tr>
+                      <td width='26%' align=right>
+                        <input type="submit" name="Update" value="Update">
+                      </td>
+                      <td>&nbsp;</td>
+                      <td width='74%'><div class='tabletext'>&nbsp;</div></td>
+                    </tr>
+                  </table>
+                  </form>
+                  <ofbiz:iteratorHasNext><HR></ofbiz:iteratorHasNext>
+                </ofbiz:iterator>
+              </td>
+            </tr>
+          </table>
+        </TD>
+      </TR>
+    </TABLE>
+</ofbiz:if>
+    
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
 

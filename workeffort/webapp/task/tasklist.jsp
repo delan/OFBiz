@@ -70,8 +70,9 @@
                   <TD><DIV class='tabletext'><b>Activity Status</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>My Status</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Activity Name</b></DIV></TD>
+                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
                 </TR>
-                <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
+                <TR><TD colspan='6'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="activities">
                   <TR>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
@@ -81,6 +82,8 @@
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="statusId"/></DIV></TD>
                     <TD><A class='buttontext' href='<ofbiz:url>/activity?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
+                    <TD align=right><A class='buttontext' href='<ofbiz:url>/activity?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                        Edit&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
                   </TR>
                 </ofbiz:iterator>
               </TABLE>
@@ -101,8 +104,9 @@
                   <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Task Name</b></DIV></TD>
+                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
                 </TR>
-                <TR><TD colspan='4'><HR class='sepbar'></TD></TR>
+                <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="tasks">
                   <TR>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
@@ -110,6 +114,8 @@
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="currentStatusId"/></DIV></TD>
                     <TD><A class='buttontext' href='<ofbiz:url>/task?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
+                    <TD align=right width='1%'><A class='buttontext' href='<ofbiz:url>/activity?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                        Edit&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
                   </TR>
                 </ofbiz:iterator>
               </TABLE>

@@ -97,22 +97,26 @@
                     </SELECT>
                   </td>
                 </tr>
-                <tr>
-                  <td width='26%' align=right><div class='tabletext'>Task Status</div></td>
-                  <td>&nbsp;</td>
-                  <td width='74%'>
-                    <SELECT name='CURRENT_STATUS_ID'>
-                      <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_NEEDS_ACTION"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
-                      <OPTION value=''>--</OPTION>
-                      <ofbiz:iterator name="statusItem" property="taskStatusItems">
-                        <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
-                      </ofbiz:iterator>
-                    </SELECT>
-                    <ofbiz:if name="workEffort">
-                      <span class='tabletext'>Last Updated <ofbiz:entityfield field="lastStatusUpdate" attribute="workEffort"/></span>
-                    </ofbiz:if>
-                  </td>
-                </tr>
+                <ofbiz:if name="workEffort">
+                    <input type='hidden' name='CURRENT_STATUS_ID' value='UPDATE'>
+                    <input type='hidden' name='WORK_EFFORT_ID' value='<ofbiz:print attribute="workEffortId"/>'>
+                    <tr>
+                      <td width='26%' align=right><div class='tabletext'>Task Status</div></td>
+                      <td>&nbsp;</td>
+                      <td width='74%'>
+                        <SELECT name='CURRENT_STATUS_ID'>
+                          <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_NEEDS_ACTION"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
+                          <OPTION value=''>--</OPTION>
+                          <ofbiz:iterator name="statusItem" property="taskStatusItems">
+                            <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
+                          </ofbiz:iterator>
+                        </SELECT>
+                        <ofbiz:if name="workEffort">
+                          <span class='tabletext'>Last Updated <ofbiz:entityfield field="lastStatusUpdate" attribute="workEffort"/></span>
+                        </ofbiz:if>
+                      </td>
+                    </tr>
+                </ofbiz:if>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>
