@@ -323,7 +323,7 @@ public class GenericDelegator {
   
   /** Finds all Generic entities
    *@param entityName The Name of the Entity as defined in the entity XML file
-   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
    *@return    Collection containing all Generic entities
    */
   public Collection findAll(String entityName, List orderBy) throws GenericEntityException {
@@ -332,7 +332,7 @@ public class GenericDelegator {
   
   /** Finds all Generic entities, looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
    *@param entityName The Name of the Entity as defined in the entity XML file
-   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
    *@return    Collection containing all Generic entities
    */
   public Collection findAllCache(String entityName, List orderBy) throws GenericEntityException {
@@ -348,7 +348,7 @@ public class GenericDelegator {
    * @param entityName The Name of the Entity as defined in the entity XML file
    * @param fields The fields of the named entity to query by with their corresponging values
    * @param order The fields of the named entity to order the query by;
-   *      optionall add a " ASC" for ascending or " DESC" for descending
+   *      optionally add a " ASC" for ascending or " DESC" for descending
    * @return Collection of GenericValue instances that match the query
    */
   public Collection findByAnd(String entityName, Map fields, List orderBy) throws GenericEntityException {
@@ -364,7 +364,7 @@ public class GenericDelegator {
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND), looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
-   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
    *@return Collection of GenericValue instances that match the query
    */
   public Collection findByAndCache(String entityName, Map fields, List orderBy) throws GenericEntityException {
@@ -397,19 +397,60 @@ public class GenericDelegator {
    * @return Collection of GenericValue instances as specified in the relation definition
    */
   public Collection getRelated(String relationName, GenericValue value) throws GenericEntityException {
+    return getRelated(relationName, null, null, value);
+  }
+  
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   * @param relationName String containing the relation name which is the
+   *      combination of relation.title and relation.rel-entity-name as
+   *      specified in the entity XML definition file
+   * @param byAndFields the fields that must equal in order to keep; may be null
+   * @param value GenericValue instance containing the entity
+   * @return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelatedByAnd(String relationName, Map byAndFields, GenericValue value) throws GenericEntityException {
+    return this.getRelated(relationName, byAndFields, null, value);
+  }
+
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   * @param relationName String containing the relation name which is the
+   *      combination of relation.title and relation.rel-entity-name as
+   *      specified in the entity XML definition file
+   * @param order The fields of the named entity to order the query by; may be null;
+   *      optionally add a " ASC" for ascending or " DESC" for descending
+   * @param value GenericValue instance containing the entity
+   * @return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelatedOrderBy(String relationName, List orderBy, GenericValue value) throws GenericEntityException {
+    return this.getRelated(relationName, null, orderBy, value);
+  }
+
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   * @param relationName String containing the relation name which is the
+   *      combination of relation.title and relation.rel-entity-name as
+   *      specified in the entity XML definition file
+   * @param byAndFields the fields that must equal in order to keep; may be null
+   * @param order The fields of the named entity to order the query by; may be null;
+   *      optionally add a " ASC" for ascending or " DESC" for descending
+   * @param value GenericValue instance containing the entity
+   * @return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelated(String relationName, Map byAndFields, List orderBy, GenericValue value) throws GenericEntityException {
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = modelEntity.getRelation(relationName);
     if(relation == null) throw new IllegalArgumentException("[GenericDelegator.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
     ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
 
-    Map fields = new HashMap();
+    //put the byAndFields (if not null) into the hash map first,
+    //they will be overridden by value's fields if over-specified this is important for security and cleanliness
+    Map fields = byAndFields == null ? new HashMap() : new HashMap(byAndFields);
     for(int i=0; i<relation.keyMaps.size(); i++)
     {
       ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
       fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
     }
 
-    return this.findByAnd(relatedEntity.entityName, fields, null);
+    return this.findByAnd(relatedEntity.entityName, fields, orderBy);
   }
 
   /** Get the named Related Entity for the GenericValue from the persistent store, checking first in the cache to see if the desired value is there
@@ -475,31 +516,6 @@ public class GenericDelegator {
     return this.findByPrimaryKeyCache(relatedEntity.entityName, fields);
   }
   
-  /** Get the named Related Entity for the GenericValue from the persistent store
-   * @param relationName String containing the relation name which is the
-   *      combination of relation.title and relation.rel-entity-name as
-   *      specified in the entity XML definition file
-   * @param value GenericValue instance containing the entity
-   * @return Collection of GenericValue instances as specified in the relation definition
-   */
-  public Collection getRelatedByAnd(String relationName, Map fields, GenericValue value) throws GenericEntityException {
-    ModelEntity modelEntity = value.getModelEntity();
-    ModelRelation relation = modelEntity.getRelation(relationName);
-    if(relation == null) throw new IllegalArgumentException("[GenericDelegator.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
-    ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
-
-    //put the fields into the hash map first, 
-    //they will be overridden by value's fields if over-specified this is important for security and cleanliness
-    Map filterFields = new HashMap(fields);
-    for(int i=0; i<relation.keyMaps.size(); i++)
-    {
-      ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
-      filterFields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
-    }
-
-    return this.findByAnd(relatedEntity.entityName, filterFields, null);
-  }
-
   /** Remove the named Related Entity for the GenericValue from the persistent store
    * @param relationName String containing the relation name which is the
    *      combination of relation.title and relation.rel-entity-name as

@@ -65,7 +65,7 @@ public class GenericBean extends GenericEntity implements EntityBean
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
-   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@param order The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
    *@return Collection of GenericValue instances that match the query
    */
   public Collection ejbFindByAnd(String entityName, Map fields, List orderBy) throws FinderException

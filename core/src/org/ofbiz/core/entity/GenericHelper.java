@@ -68,7 +68,7 @@ public interface GenericHelper
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
    *@param order The fields of the named entity to order the query by; 
-   *       optionall add a " ASC" for ascending or " DESC" for descending
+   *       optionally add a " ASC" for ascending or " DESC" for descending
    *@return Collection of GenericValue instances that match the query
    */
   public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
