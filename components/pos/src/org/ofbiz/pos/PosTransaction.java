@@ -577,8 +577,7 @@ public class PosTransaction implements Serializable {
         // print the receipt
         DeviceLoader.receipt.printReceipt(this, true);
 
-        // clear the tx
-        cart.clear();
+        // clear the tx        
         currentTx = null;
 
         return change;
