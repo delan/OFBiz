@@ -36,15 +36,19 @@
 <%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
+<%@ page import="org.ofbiz.ecommerce.distributor.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <td width='50%' valign=top align=left>
 
+  <%GenericValue localOrderHeader = null;%>
+  <%OrderReadHelper localOrder = null;%>
   <ofbiz:if name="orderHeader">
-    <%GenericValue localOrderHeader = (GenericValue) pageContext.getAttribute("orderHeader");%>
-    <%OrderReadHelper localOrder = new OrderReadHelper(localOrderHeader);%>
+    <%localOrderHeader = (GenericValue) pageContext.getAttribute("orderHeader");%>
+    <%localOrder = new OrderReadHelper(localOrderHeader);%>
+  </ofbiz:if>
 
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
@@ -52,7 +56,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Order #<%=localOrderHeader.getString("orderId")%> Information</div>
+            <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%=localOrderHeader.getString("orderId")%> </ofbiz:if>Information</div>
           </td>
         </tr>
       </table>
@@ -89,9 +93,15 @@
       </td>
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
+        <ofbiz:if name="orderHeader">
           <div class="tabletext"><%=localOrder.getStatusString()%></div>
+        </ofbiz:if>
+        <ofbiz:unless name="orderHeader">
+          <div class="tabletext"><b>Not Yet Ordered</b></div>
+        </ofbiz:unless>
       </td>
     </tr>
+  <ofbiz:if name="orderHeader">
     <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
     <tr>
       <td align="right" valign="top" width="15%">
@@ -104,6 +114,22 @@
           </div>
       </td>
     </tr>
+  </ofbiz:if>
+  <%-- XXX use distributorId from order if an order is available --%>
+  <%String distributorId = DistributorEvents.getDistributorId(request);%>
+  <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
+  <ofbiz:if name="distributorId">
+    <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
+    <tr>
+      <td align="right" valign="top" width="15%">
+        <div class="tabletext">&nbsp;<b>Distributor</b></div>
+      </td>
+      <td width="5">&nbsp;</td>
+      <td align="left" valign="top" width="80%">
+          <div class="tabletext"><%=distributorId%></div><%-- XXX use name if available --%>
+      </td>
+    </tr>
+  </ofbiz:if>
   </table>
           </td>
         </tr>
@@ -113,7 +139,6 @@
 </TABLE>
 
     <br>
-  </ofbiz:if>
 
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
