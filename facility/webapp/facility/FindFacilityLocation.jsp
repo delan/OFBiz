@@ -68,6 +68,7 @@
 <%}%>
 
 <div class="head1">Find Locations <span class='head2'>for&nbsp;<%=UtilFormatOut.ifNotEmpty(facility==null?null:facility.getString("facilityName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityId)%>]</span></div>
+<a href="<ofbiz:url>/EditFacility</ofbiz:url>" class="buttontext">[New Facility]</a>
 <a href="<ofbiz:url>/EditFacilityLocation?facilityId=<%=facilityId%></ofbiz:url>" class="buttontext">[New Facility Location]</a>
 
 
