@@ -42,7 +42,7 @@ import javax.transaction.xa.XAException;
  * @version    $Rev$
  * @since      2.0
  */
-public class ServiceEcaAction {
+public class ServiceEcaAction implements java.io.Serializable {
 
     protected String eventName = null;
     protected String serviceName = null;

@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  * @version    $Rev$
  * @since      2.1
  */
-public class EntityEcaAction {
+public class EntityEcaAction implements java.io.Serializable {
     public static final String module = EntityEcaAction.class.getName();
 
     protected String serviceName = null;

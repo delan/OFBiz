@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  * @version    $Rev$
  * @since      2.0
  */
-public class ServiceEcaRule {
+public class ServiceEcaRule implements java.io.Serializable {
 
     public static final String module = ServiceEcaRule.class.getName();
     

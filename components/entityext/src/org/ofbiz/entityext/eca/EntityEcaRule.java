@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
  * @version    $Rev$
  * @since      2.1
  */
-public class EntityEcaRule {
+public class EntityEcaRule implements java.io.Serializable {
 
     public static final String module = EntityEcaRule.class.getName();
     
