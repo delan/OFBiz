@@ -34,7 +34,17 @@
         <attribute name="isGift" type="Boolean" mode="IN"/>
         <attribute name="paymentMethods" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="paymentMethodTypeIds" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderContactMechs" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderItemPriceInfo" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="OUT"/>
+    </service>
+
+    <service name="updateTrackingNumber" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="updateTrackingNumber">
+        <description>Sets the tracking number on a shipment preference</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="trackingNumber" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="changeOrderStatus" engine="java"
