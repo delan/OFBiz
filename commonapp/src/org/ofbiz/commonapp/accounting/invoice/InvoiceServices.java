@@ -23,14 +23,27 @@
  */
 package org.ofbiz.commonapp.accounting.invoice;
 
-import java.util.*;
-
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.commonapp.accounting.payment.PaymentWorker;
 import org.ofbiz.commonapp.order.order.OrderReadHelper;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ServiceUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilDateTime;
+import org.ofbiz.core.util.UtilMisc;
 
 /**
  * InvoiceServices - Services for creating invoices
@@ -46,6 +59,9 @@ public class InvoiceServices {
     /* Service to create an invoice for an order */
     public static Map createInvoiceForOrder(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
         String orderId = (String) context.get("orderId");
         List billItems = (List) context.get("billItems");
         
@@ -366,6 +382,54 @@ public class InvoiceServices {
         GenericValue invStatus = delegator.makeValue("InvoiceStatus", 
             UtilMisc.toMap("invoiceId", invoiceId, "statusId", "INVOICE_IN_PROCESS", "statusDate", UtilDateTime.nowTimestamp()));
         toStore.add(invStatus);
+        
+        // check for previous order payments        
+        List orderPaymentPrefs = null;
+        try {
+            orderPaymentPrefs = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting order payment preference records", module);
+            return ServiceUtil.returnError("Problem getting order payment preference records");
+        }
+        if (orderPaymentPrefs != null) {
+            List currentPayments = new ArrayList();
+            Iterator opi = orderPaymentPrefs.iterator();
+            while (opi.hasNext()) {
+                GenericValue paymentPref = (GenericValue) opi.next();
+                try {                
+                    List payments = paymentPref.getRelated("Payment");
+                    currentPayments.addAll(payments);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problem getting payments from preference", module);
+                    return ServiceUtil.returnError("Problem getting payments from preference");
+                }
+            }
+            if (currentPayments.size() > 0) {
+                // apply these payments to the invoice; only if they haven't already been applied
+                Iterator cpi = currentPayments.iterator();
+                while (cpi.hasNext()) {
+                    GenericValue payment = (GenericValue) cpi.next();
+                    List currentApplications = null;
+                    try {
+                        currentApplications = payment.getRelated("PaymentApplication");                        
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Problem getting application(s) for payment", module);
+                        return ServiceUtil.returnError("Problem getting application(s) for payment");
+                    }
+                    if (currentApplications == null || currentApplications.size() == 0) {
+                        // no applications; okay to apply
+                        String applId = delegator.getNextSeqId("PaymentApplication").toString();
+                        GenericValue appl = delegator.makeValue("PaymentApplication", UtilMisc.toMap("paymentApplicationId", applId));
+                        appl.set("paymentId", payment.get("paymentId"));
+                        appl.set("invoiceId", invoice.get("invoiceId"));
+                        appl.set("invoiceItemSeqId", "_NA_");
+                        appl.set("billingAccountId", invoice.get("billingAccountId"));
+                        appl.set("amountApplied", payment.get("amount"));
+                        toStore.add(appl);
+                    }
+                }                
+            }
+        }
                        
         // store value objects
         try {
@@ -373,6 +437,15 @@ public class InvoiceServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems storing invoice items", module);
             return ServiceUtil.returnError("Cannot create invoice; problem storing items");
+        }
+        
+        // check to see if we are all paid up
+        Map checkResp = null;
+        try {
+            checkResp = dispatcher.runSync("checkInvoicePaymentApplications", UtilMisc.toMap("invoiceId", invoice.get("invoiceId"), "userLogin", userLogin));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problem checking payment applications", module);
+            return ServiceUtil.returnError("Problem checking payment applications");
         }
 
         Map resp = ServiceUtil.returnSuccess();
