@@ -100,7 +100,7 @@ public class RecurrenceInfo {
 
     /** Returns the next recurrence from now. */
     public long next() throws RecurrenceRuleException {
-        return next(now());
+        return next(RecurrenceUtil.now());
     }
     
     /** Returns the next recurrence from the specified time. */

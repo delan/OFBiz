@@ -46,5 +46,10 @@ public class RecurrenceUtil {
             splitList.add(st.nextToken());
         return splitList;
     }    
+    
+    /** Returns the time as of now. */
+    public static long now() {
+        return (new Date()).getTime();
+    }
 }
     
