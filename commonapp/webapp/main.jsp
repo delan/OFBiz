@@ -71,7 +71,7 @@ definitions, checking them with the current database, and generating text based 
     <li><div class='tabletext'>Entity Engine Utilities</div>
     <ul>
       <li><a href="<ofbiz:url>/entitymaint</ofbiz:url>" class='buttontext'>Entity Data Maintenance</A>
-      <li><a href="<ofbiz:url>/view/entityref</ofbiz:url>" class='buttontext' target='_blank'>Entity Reference & Editing Tools</A>
+      <li><a href="<ofbiz:url>/view/entityref</ofbiz:url>" class='buttontext' target='_blank'>Entity Reference &amp; Editing Tools</A>
       <ul>
         <li><a href="<ofbiz:url>/view/checkdb</ofbiz:url>" class='buttontext'>Check/Update Database</A>
         <li><a href="<ofbiz:url>/view/ModelWriter</ofbiz:url>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
@@ -79,6 +79,7 @@ definitions, checking them with the current database, and generating text based 
         <li><a href="<ofbiz:url>/view/ModelGroupWriter</ofbiz:url>" target='_blank' class='buttontext'>Generate Entity Group XML</A><BR>
         <li><a href="<ofbiz:url>/view/ModelGroupWriter?savetofile=true</ofbiz:url>" target='_blank' class='buttontext'>Save Entity Group XML to File</A><BR>
         <li><a href="<ofbiz:url>/view/EditEntity</ofbiz:url>" class='buttontext' target='_blank'>Edit Entity Definitions</A>
+        <li><a href="<ofbiz:url>/view/ModelInduceFromDb</ofbiz:url>" target='_blank' class='buttontext'>Induce Model XML from Database</A><BR>
       </ul>
       <li><a href="<ofbiz:url>/view/xmldsdump</ofbiz:url>" class='buttontext'>XML Data Export</A>
       <li><a href="<ofbiz:url>/view/xmldsimport</ofbiz:url>" class='buttontext'>XML Data Import</A>
