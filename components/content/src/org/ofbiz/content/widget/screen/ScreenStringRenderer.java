@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenStringRenderer.java,v 1.4 2004/07/15 22:25:00 jonesde Exp $
+ * $Id: ScreenStringRenderer.java,v 1.5 2004/07/16 05:33:47 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,11 +26,12 @@ package org.ofbiz.content.widget.screen;
 import java.io.Writer;
 import java.util.Map;
 
+
 /**
  * Widget Library - Form String Renderer interface
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public interface ScreenStringRenderer {
@@ -40,5 +41,7 @@ public interface ScreenStringRenderer {
     public void renderContainerEnd(Writer writer, Map context, ModelScreenWidget.Container container);
 
     public void renderLabel(Writer writer, Map context, ModelScreenWidget.Label label);
+    public void renderNodeOpen(Writer writer, Map context,  ModelTree.ModelNode node);
+    public void renderNodeClose(Writer writer, Map context,  ModelTree.ModelNode node);
 }
 
