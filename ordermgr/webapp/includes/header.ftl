@@ -42,13 +42,13 @@
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
   <div class="col"><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="${selectedLeftClassMap.orderentry?default(unselectedLeftClassName)}">Order&nbsp;Entry</a></div>  
-  </#if>
-  <div class="col"><a href="<@ofbizUrl>/orderreportlist</@ofbizUrl>" class="${selectedLeftClassMap.reports?default(unselectedLeftClassName)}">Order&nbsp;Reports</a></div>                 
+  </#if>               
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>
   <#else>
     <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
   </#if>
   <div class="col-right"><a href='<@ofbizUrl>/shipsetup</@ofbizUrl>' class="${selectedRightClassMap.setup?default(unselectedRightClassName)}">Setup</a></div>
+  <div class="col-right"><a href='<@ofbizUrl>/orderreportlist</@ofbizUrl>' class="${selectedRightClassMap.reports?default(unselectedRightClassName)}">Reports</a></div>
   <div class="col-fill">&nbsp;</div>
 </div>
