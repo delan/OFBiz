@@ -1,5 +1,5 @@
 /*
- * $Id: BeanShellContainer.java,v 1.1 2004/03/13 17:49:46 ajzeneski Exp $
+ * $Id: BeanShellContainer.java,v 1.2 2004/03/18 18:57:52 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -33,12 +33,12 @@ import org.ofbiz.base.util.Debug;
  * BeanShellContainer - Container implementation for BeanShell
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
-  *@version    $Revision: 1.1 $
+  *@version    $Revision: 1.2 $
  * @since      3.0
  */
 public class BeanShellContainer implements Container {
 
-    public static final String module = JettyContainer.class.getName();
+    public static final String module = BeanShellContainer.class.getName();
 
     protected Interpreter bsh = null;
     protected String name;
