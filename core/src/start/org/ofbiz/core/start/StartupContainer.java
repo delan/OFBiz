@@ -36,7 +36,7 @@ import java.io.File;
 public interface StartupContainer {
     
     /**
-     * Start the server thread(s)
+     * Start the container
      * 
      * @param configFileLocation Location of master OFBiz configuration file
      * @return true if server started
@@ -44,4 +44,10 @@ public interface StartupContainer {
      */
     public boolean start(String configFileLocation) throws StartupException;
 
+    /**
+     * Stop the container
+     *     
+     * @throws StartupException
+     */
+    public void stop() throws StartupException;
 }

@@ -43,5 +43,13 @@ public class ComponentContainer implements StartupContainer {
     public boolean start(String configFileLocation) throws StartupException {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    /**
+     * @see org.ofbiz.core.start.StartupContainer#stop()
+     */
+    public void stop() throws StartupException {
+        // TODO Auto-generated method stub
+        
     }    
 }

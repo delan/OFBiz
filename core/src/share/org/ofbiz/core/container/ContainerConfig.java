@@ -50,13 +50,13 @@ public class ContainerConfig {
     
     public static final String module = ContainerConfig.class.getName();
     
-    protected static List componentContainers = null;
-    protected static List webContainers = null;  
+    protected static ComponentContainer componentContainer = null;
+    protected static WebContainer webContainer = null;  
     
-    public static List getComponentContainers(String configFile) throws ContainerException {
-        if (componentContainers == null) {            
+    public static ComponentContainer getComponentContainer(String configFile) throws ContainerException {
+        if (componentContainer == null) {            
             synchronized (ContainerConfig.class) {
-                if (componentContainers == null) {
+                if (componentContainer == null) {
                     if (configFile == null) {
                         throw new ContainerException("Container config file cannot be null");
                     }
@@ -65,13 +65,13 @@ public class ContainerConfig {
                 
             }            
         }
-        return componentContainers;
+        return componentContainer;
     }
     
-    public static List getWebContainers(String configFile) throws ContainerException {
-        if (webContainers == null) {            
+    public static WebContainer getWebContainer(String configFile) throws ContainerException {
+        if (webContainer == null) {            
             synchronized (ContainerConfig.class) {
-                if (webContainers == null) {
+                if (webContainer == null) {
                     if (configFile == null) {
                         throw new ContainerException("Container config file cannot be null");
                     }
@@ -80,17 +80,17 @@ public class ContainerConfig {
                 
             }            
         }
-        return webContainers;
+        return webContainer;
     }     
     
     protected ContainerConfig() {}
     
     protected ContainerConfig(String configFileLocation) throws ContainerException {
-        if (componentContainers != null) {
+        if (componentContainer != null) {
             throw new ContainerException("Containers already loaded");
         }
         
-        if (webContainers != null) {
+        if (webContainer != null) {
             throw new ContainerException("Containers already loaded");
         }
         
@@ -117,22 +117,12 @@ public class ContainerConfig {
         Iterator elementIter = null;
           
         // components
-        componentContainers = new LinkedList();
-        elementIter = UtilXml.childElementList(containers, "component-container").iterator();
-        while (elementIter.hasNext()) {
-            Element curElement = (Element) elementIter.next();
-            ComponentContainer container = new ComponentContainer(curElement);
-            ContainerConfig.componentContainers.add(container);
-        }
+        Element componentElement = UtilXml.firstChildElement(containers, "component-container");
+        componentContainer = new ComponentContainer(componentElement);
         
         // servers
-        webContainers = new LinkedList();
-        elementIter = UtilXml.childElementList(containers, "web-container").iterator();
-        while (elementIter.hasNext()) {
-            Element curElement = (Element) elementIter.next();
-            WebContainer container = new WebContainer(curElement);
-            ContainerConfig.webContainers.add(container);
-        }                            
+        Element webElement = UtilXml.firstChildElement(containers, "web-container");        
+        webContainer = new WebContainer(webElement);                  
     }
         
     public static class ComponentContainer {

@@ -461,3 +461,34 @@ class Configuration {
         propsStream.close();            
     }               
 }
+
+
+/* to add
+
+        try {
+            Method shutdownHook = java.lang.Runtime.class.getMethod("addShutdownHook",new Class[] {java.lang.Thread.class});
+            Thread hook = new Thread() {
+                public void run() {                
+                    setName("OFBiz_Shutdown_Hook");
+                    Debug.log("OFBiz Shutdown Hook Executing...");
+                    try {
+                        server.stop();
+                    } catch (Exception e) {
+                        Debug.logError(e, module);
+                    }
+                     
+                    // Try to avoid JVM crash
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                        Debug.logWarning(e, module);
+                    }
+                }
+            };
+            
+            shutdownHook.invoke(Runtime.getRuntime(), new Object[]{hook});
+        } catch(Exception e) {                            
+            Debug.log("VM Does not support shutdown hook", module);
+        }        
+        
+*/      
