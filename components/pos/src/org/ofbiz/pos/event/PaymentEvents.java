@@ -244,20 +244,17 @@ public class PaymentEvents {
 
     public static void processSale(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        PosScreen.currentScreen.getOutput().print("Processing sale...");
+
         if (trans.getTotalDue() > 0) {
             pos.showDialog("main/dialog/error/notenoughfunds");
         } else {
             // manual locks (not secured; will be unlocked on clear)
             pos.getInput().setLock(true);
             pos.getButtons().setLock(true);
-            pos.getOutput().print("Processing sale...");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();  // TODO: check me!
-            }
+            pos.refresh(false);
 
-            // process the order
+            // process the sale
             try {
                 trans.processSale(pos.getOutput());
                 pos.getInput().setFunction("PAID");
