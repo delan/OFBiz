@@ -117,14 +117,14 @@ public class Record implements Serializable {
     if(fieldType.equals("CustomTimestamp")) {
       //this custom type will take a string a parse according to date formatting 
       // string then put the result in a java.sql.Timestamp
-      //a common timestamp format for flat files is with no separators: YYYYMMddHHmmss
+      //a common timestamp format for flat files is with no separators: yyyyMMddHHmmss
       SimpleDateFormat sdf = new SimpleDateFormat(field.format);
       java.util.Date tempDate = sdf.parse(value);
       java.sql.Timestamp timestamp = new java.sql.Timestamp(tempDate.getTime());
       set(name, timestamp);
     }
     else if(fieldType.equals("CustomDate")) {
-      //a common date only format for flat files is with no separators: YYYYMMdd or MMddYYYY
+      //a common date only format for flat files is with no separators: yyyyMMdd or MMddyyyy
       SimpleDateFormat sdf = new SimpleDateFormat(field.format);
       java.util.Date tempDate = sdf.parse(value);
       java.sql.Date date = new java.sql.Date(tempDate.getTime());

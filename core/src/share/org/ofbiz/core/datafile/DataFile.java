@@ -45,6 +45,7 @@ public class DataFile {
   public static DataFile readFile(URL fileUrl, URL definitionUrl, String dataFileName) throws DataFileException {
     ModelDataFileReader reader = ModelDataFileReader.getModelDataFileReader(definitionUrl);
     ModelDataFile modelDataFile = reader.getModelDataFile(dataFileName);
+    if(modelDataFile == null) throw new IllegalArgumentException("Could not find file definition for data file named \"" + dataFileName + "\"");
     DataFile dataFile = new DataFile(modelDataFile, fileUrl);
     dataFile.loadDataFile();
     return dataFile;
@@ -68,19 +69,23 @@ public class DataFile {
       if(ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
         BufferedReader br = new BufferedReader(new InputStreamReader(urlStream));
         boolean isFixedRecord = ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle);
-
+        Debug.logInfo("[DataFile.loadDataFile] separatorStyle is " + modelDataFile.separatorStyle + ", isFixedRecord: " + isFixedRecord);
+        
         int lineNum = 1;
         String line = null;
         if(isFixedRecord) {
           if(modelDataFile.recordLength <= 0) throw new DataFileException("Cannot read a fixed record length file if no record length is specified");
 
           try {
-            char[] charData = new char[modelDataFile.recordLength];
-            if(br.read(charData, (lineNum-1)*modelDataFile.recordLength, modelDataFile.recordLength) == -1) {
+            char[] charData = new char[modelDataFile.recordLength + 1];
+            //Debug.logInfo("[DataFile.loadDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength);
+            if(br.read(charData, 0, modelDataFile.recordLength) == -1) {
               line = null;
+              //Debug.logInfo("[DataFile.loadDataFile] found end of file, got -1");
             }
             else {
               line = new String(charData);
+              //Debug.logInfo("[DataFile.loadDataFile] read line " + lineNum + " line is: \"" + line + "\"");
             }
           }
           catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum-1)*modelDataFile.recordLength + " length " + modelDataFile.recordLength + ") from URL: " + fileUrl.toString(), e); }
@@ -92,7 +97,7 @@ public class DataFile {
 
         while(line != null) {
           //first check to see if the file type has a line size, and if so if this line complies
-          if(modelDataFile.recordLength > 0 && line.length() != modelDataFile.recordLength) {
+          if(!isFixedRecord && modelDataFile.recordLength > 0 && line.length() != modelDataFile.recordLength) {
             throw new DataFileException("Line number " + lineNum + " was not the expected length; expected: " + modelDataFile.recordLength + ", got: " + line.length());
           }
 
@@ -136,11 +141,14 @@ public class DataFile {
           if(isFixedRecord) {
             try {
               char[] charData = new char[modelDataFile.recordLength];
-              if(br.read(charData, (lineNum-1)*modelDataFile.recordLength, modelDataFile.recordLength) == -1) {
+              //Debug.logInfo("[DataFile.loadDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength);
+              if(br.read(charData, 0, modelDataFile.recordLength) == -1) {
                 line = null;
+                //Debug.logInfo("[DataFile.loadDataFile] found end of file, got -1");
               }
               else {
                 line = new String(charData);
+                //Debug.logInfo("[DataFile.loadDataFile] read line " + lineNum + " line is: \"" + line + "\"");
               }
             }
             catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum-1)*modelDataFile.recordLength + " length " + modelDataFile.recordLength + ") from URL: " + fileUrl.toString(), e); }
@@ -165,11 +173,12 @@ public class DataFile {
   }
   
   protected ModelRecord findModelForLine(String line, int lineNum, ModelDataFile modelDataFile) throws DataFileException {
+    //Debug.logInfo("[DataFile.findModelForLine] line: " + line);
     ModelRecord modelRecord = null;
     for(int i=0; i<modelDataFile.records.size(); i++) {
       ModelRecord curModelRecord = (ModelRecord)modelDataFile.records.get(i);
-      String typeCode = line.substring(modelRecord.tcPosition, modelRecord.tcPosition + modelRecord.tcLength);
-      if(typeCode != null && typeCode.equals(modelRecord.typeCode)) {
+      String typeCode = line.substring(curModelRecord.tcPosition, curModelRecord.tcPosition + curModelRecord.tcLength);
+      if(typeCode != null && typeCode.equals(curModelRecord.typeCode)) {
         modelRecord = curModelRecord;
       }
     }
@@ -183,7 +192,7 @@ public class DataFile {
       ModelField modelField = (ModelField)modelRecord.fields.get(i);
       String strVal = line.substring(modelField.position, modelField.position + modelField.length);
       try { record.setString(modelField.name, strVal); }
-      catch(java.text.ParseException e) { throw new DataFileException("Could not parse field " + modelField.name + " with value " + strVal + " on line " + lineNum, e); }
+      catch(java.text.ParseException e) { throw new DataFileException("Could not parse field " + modelField.name + ", format string \"" + modelField.format + "\" with value " + strVal + " on line " + lineNum, e); }
     }
     return record;
   }
