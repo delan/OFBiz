@@ -40,7 +40,10 @@
           </td> 
           <td nowrap align="right">
             <div class="tabletext">
-              <a href="<@ofbizUrl>/setCustomer</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonRefresh}</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a><a href="javascript:document.custsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
+              <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a>
+
+              <a href="<@ofbizUrl>/setCustomer</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonRefresh}</a>
+              <a href="javascript:document.checkoutsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
             </div>
           </td>         
         </tr>
@@ -50,7 +53,7 @@
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <form name="custsetupform" method="post" action="<@ofbizUrl>/createCustomer</@ofbizUrl>">
+        <form name="checkoutsetupform" method="post" action="<@ofbizUrl>/createCustomer</@ofbizUrl>">
         <input type="hidden" name="finalizeMode" value="cust">
         <tr>
           <td>

@@ -36,7 +36,6 @@
     <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
 
     <!-- view handlers -->
-    <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>    
     <handler name="screen" type="view" class="org.ofbiz.widget.screen.ScreenWidgetViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
@@ -330,6 +329,10 @@
         <response name="success" type="view" value="keywordsearch"/>
         <response name="none" type="none" value=""/>
     </request-map>
+    <request-map uri="choosecatalog">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="orderentry"/>
+    </request-map>
 
     <request-map uri="addtocartbulk">
         <security https="true" auth="true"/>
@@ -403,6 +406,11 @@
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="custsetting"/>
     </request-map>
+    <request-map uri="confirmOrder">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="confirm"/>
+    </request-map>
+
     <request-map uri="setShipping">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="shipsetting"/>
@@ -732,10 +740,6 @@
     <request-map uri="LookupVariantProduct">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupVariantProduct"/>
-    </request-map>
-    <request-map uri="choosecatalog">
-        <security https="true" auth="true"/>
-        <response name="success" type="request" value="orderentry"/>
     </request-map>
 
     <!-- end of request mappings -->

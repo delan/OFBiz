@@ -33,28 +33,12 @@
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td align='left'>
-            <div class='boxhead'>&nbsp;${uiLabelMap.OrderOrderEntryShipToSettings}</div>
-          </td> 
-          <td nowrap align="right">
-            <div class="tabletext">
-              <a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonRefresh}</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a><a href="javascript:document.shipsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
-            </div>
-          </td>         
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <#if shippingContactMechListF?has_content>
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
-              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="shipsetupform">
+              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="finalizeMode" value="ship">
 
                 <tr><td colspan="3"><hr class='sepbar'></td></tr>
@@ -96,7 +80,7 @@
                   <a href="<@ofbizUrl>/setShipping?createNew=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCreateNew}]</a>
                 </td>
               </tr>
-              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="shipsetupform"> 
+              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform"> 
                 <input type="hidden" name="finalizeMode" value="ship">
                                 
                 <tr><td colspan="3"><hr class='sepbar'></td></tr>
@@ -130,10 +114,10 @@
             </table>  
             <#else>
               <#if postalAddress?has_content>            
-              <form method="post" action="<@ofbizUrl>/updatePostalAddress</@ofbizUrl>" name="shipsetupform">
+              <form method="post" action="<@ofbizUrl>/updatePostalAddress</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="contactMechId" value="${shipContactMechId?if_exists}">
               <#else>
-              <form method="post" action="<@ofbizUrl>/createPostalAddress</@ofbizUrl>" name="shipsetupform">
+              <form method="post" action="<@ofbizUrl>/createPostalAddress</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
                 <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION">
               </#if>

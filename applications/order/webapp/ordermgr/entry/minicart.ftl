@@ -26,7 +26,7 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
 <#assign currencyUomId = shoppingCart.getCurrency()>
