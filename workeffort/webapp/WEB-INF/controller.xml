@@ -286,7 +286,11 @@
     	<response name="success" type="view" value="editproject"/>
         <response name="error" type="view" value="editproject"/>
     </request-map>
-    
+
+    <request-map uri="projecttasklist"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="projecttasklist"/>
+    </request-map>
+        
     <request-map uri="phaselist"><security https="true" auth="true"/>
     	<response name="success" type="view" value="phaselist"/>
     </request-map>
@@ -366,6 +370,7 @@
     <!-- project management views -->
     <view-map name="projectlist" type="region"/>
     <view-map name="editproject" type="region"/>
+    <view-map name="projecttasklist" type="region"/>
     <view-map name="phaselist" type="region"/>
     <view-map name="editphase" type="region"/>
     <view-map name="phasetasklist" type="region"/>
