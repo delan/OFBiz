@@ -1,5 +1,5 @@
 /* 
- * $Id: ModelServiceReader.java,v 1.7 2003/12/15 19:30:14 ajzeneski Exp $
+ * $Id: ModelServiceReader.java,v 1.8 2004/02/11 16:49:36 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 
@@ -319,6 +319,7 @@ public class ModelServiceReader {
         service.nameSpace = getCDATADef(serviceElement, "namespace");  
               
         service.contextInfo = new HashMap();
+        this.createPermGroups(serviceElement, service);
         this.createImplDefs(serviceElement, service);
         this.createAutoAttrDefs(serviceElement, service);
         this.createAttrDefs(serviceElement, service);
@@ -344,7 +345,52 @@ public class ModelServiceReader {
         }
         return value;
     }
-    
+
+    protected void createPermGroups(Element baseElement, ModelService model) {
+        List permGroups = UtilXml.childElementList(baseElement, "required-permissions");
+        Iterator permIter = permGroups.iterator();
+
+        while (permIter.hasNext()) {
+            Element element = (Element) permIter.next();
+            ModelPermGroup group = new ModelPermGroup();
+            group.joinType = element.getAttribute("join-type");
+            createPermissions(element, group, model);
+            model.permissionGroups.add(group);
+        }
+    }
+
+    protected void createPermissions(Element baseElement, ModelPermGroup group, ModelService service) {
+        List permElements = UtilXml.childElementList(baseElement, "check-permission");
+        List rolePermElements = UtilXml.childElementList(baseElement, "check-role-member");
+
+        // create the simple permissions
+        Iterator si = permElements.iterator();
+        while (si.hasNext()) {
+            Element element = (Element) si.next();
+            ModelPermission perm = new ModelPermission();
+            perm.nameOrRole = element.getAttribute("permission");
+            perm.action = element.getAttribute("action");
+            if (perm.action != null && perm.action.length() > 0) {
+                perm.permissionType = ModelPermission.ENTITY_PERMISSION;
+            } else {
+                perm.permissionType = ModelPermission.PERMISSION;
+            }
+            perm.serviceModel = service;
+            group.permissions.add(perm);
+        }
+
+        // create the role member permissions
+        Iterator ri = rolePermElements.iterator();
+        while (ri.hasNext()) {
+            Element element = (Element) ri.next();
+            ModelPermission perm = new ModelPermission();
+            perm.permissionType = ModelPermission.ROLE_MEMBER;
+            perm.nameOrRole = element.getAttribute("role-type");
+            perm.serviceModel = service;
+            group.permissions.add(perm);
+        }
+    }
+
     protected void createImplDefs(Element baseElement, ModelService service) {
         List implElements = UtilXml.childElementList(baseElement, "implements");
         Iterator implIter = implElements.iterator();

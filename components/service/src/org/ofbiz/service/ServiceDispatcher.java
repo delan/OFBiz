@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.12 2003/12/06 19:50:32 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.13 2004/02/11 16:49:36 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -603,6 +603,14 @@ public class ServiceDispatcher {
                 }
             }
         }
+
+        // evaluate permissions for the service or throw exception if fail.
+        DispatchContext dctx = this.getLocalContext(localName);
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (!origService.evalPermissions(dctx.getSecurity(), userLogin)) {
+            throw new GenericServiceException("You do not have permission to invoke this service");
+        }
+
         return context;
     }
 

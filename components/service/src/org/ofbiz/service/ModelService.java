@@ -1,5 +1,5 @@
 /*
- * $Id: ModelService.java,v 1.5 2003/12/13 17:11:38 ajzeneski Exp $
+ * $Id: ModelService.java,v 1.6 2004/02/11 16:49:36 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,13 +41,15 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.OrderedSet;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.security.Security;
 
 /**
  * Generic Service Model Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ModelService {
@@ -112,7 +114,10 @@ public class ModelService {
     public Set implServices = new OrderedSet();  
     
     /** Set of override parameters */
-    public Set overrideParameters = new OrderedSet();  
+    public Set overrideParameters = new OrderedSet();
+
+    /** List of permission groups for service invocation */
+    public List permissionGroups = new LinkedList();
 
     /** Context Information, a list of parameters used by the service, contains ModelParam objects */
     protected Map contextInfo = new HashMap();
@@ -572,6 +577,34 @@ public class ModelService {
             }
         }
         return paramList;
+    }
+
+    public boolean containsPermissions() {
+        if (this.permissionGroups != null && this.permissionGroups.size() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Evaluates permissions for a service.
+     * @param security The security object to use for permission checking
+     * @param userLogin The logged in user's value object
+     * @return true if all permissions evaluate true.
+     */
+    public boolean evalPermissions(Security security, GenericValue userLogin) {
+        if (this.containsPermissions()) {
+            Iterator i = this.permissionGroups.iterator();
+            while (i.hasNext()) {
+                ModelPermGroup group = (ModelPermGroup) i.next();
+                if (!group.evalPermissions(security, userLogin)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return true;
+        }
     }
 
     /**
