@@ -679,9 +679,9 @@ public class OrderServices {
         String orderId = (String) context.get("orderId");
         String partyId = (String) context.get("partyId");
         String roleTypeId = (String) context.get("roleTypeId");
-        String removeOld = (String) context.get("removeOld");
+        Boolean removeOld = (Boolean) context.get("removeOld");
 
-        if (removeOld != null && removeOld.equalsIgnoreCase("true")) {
+        if (removeOld != null && removeOld.booleanValue()) {
             try {
                 delegator.removeByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", roleTypeId));
             } catch (GenericEntityException e) {
