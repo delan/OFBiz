@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.42 2004/02/11 12:06:10 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.43 2004/02/12 07:06:45 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.42 $
+ * @version    $Revision: 1.43 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -902,6 +902,12 @@ public class ProductPromoWorker {
                 actionResultInfo.ranAction = false;
             } else {
                 GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productPromoAction.get("productId")));
+                if (product == null) {
+                    String errMsg = "GWP Product not found with ID [" + productPromoAction.get("productId") + "] for ProductPromoAction [" + productPromoAction.get("productPromoId") + ":" + productPromoAction.get("productPromoRuleId") + ":" + productPromoAction.get("productPromoActionSeqId") + "]";
+                    Debug.logError(errMsg, module);
+                    throw new CartItemModifyException(errMsg);
+                }
+                
                 double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
                 
                 // pass null for cartLocation to add to end of cart, pass false for doPromotions to avoid infinite recursion
