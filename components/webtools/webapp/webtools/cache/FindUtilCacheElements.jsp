@@ -67,7 +67,7 @@
               <%UtilCache.CacheLine line = (UtilCache.CacheLine) utilCache.cacheLineTable.get(key);%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
               <tr class="<%=rowColor%>">
-                <TD><%=key.toString()%></TD>
+                <TD><%=key%></TD>
                 <%--
                 <TD>
                   <%if(createTime!=null){%>
