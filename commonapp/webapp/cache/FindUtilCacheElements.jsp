@@ -99,6 +99,7 @@
       <%} else {%>
           <%Iterator iter = utilCache.valueTable.entrySet().iterator();%>
           <%if(iter!=null && iter.hasNext()){%>
+            <%int keyNum = 0;%>
             <%while(iter.hasNext()){%>
               <%Map.Entry entry = (Map.Entry)iter.next();%>
               <%Object key = entry.getKey();%>
@@ -115,10 +116,11 @@
                 </TD>
                 <TD>
                   <%if(hasUtilCacheEdit){%>
-                    <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=" + cacheName + "&UTIL_CACHE_ELEMENT_NUMBER=" + utilCache.keyLRUList.indexOf(key))%>" class="buttontext">Remove</a>
+                    <a href='<%=response.encodeURL(controlPath + "/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=" + cacheName + "&UTIL_CACHE_ELEMENT_NUMBER=" + keyNum)%>' class="buttontext">Remove</a>
                   <%}%>
                 </TD>
               </TR>
+              <%keyNum++;%>
             <%}%>
           <%}else{%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
