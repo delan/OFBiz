@@ -167,8 +167,8 @@ if (shipmentPlans != null) {
         // Select the production runs, if available
         productionRuns = delegator.findByAnd("WorkOrderItemFulfillment", UtilMisc.toMap("orderId", shipmentPlan.getString("orderId"), "orderItemSeqId", shipmentPlan.getString("orderItemSeqId")), UtilMisc.toList("workEffortId")); // TODO: add shipmentId
         if (productionRuns != null && productionRuns.size() > 0) {
-                productionRunsIt = productionRuns.iterator();
-                productionRunsId = "";
+            productionRunsIt = productionRuns.iterator();
+            productionRunsId = "";
             while (productionRunsIt.hasNext()) {
                 productionRun = productionRunsIt.next();
                 productionRunsId = productionRun.getString("workEffortId") + " " + productionRunsId;

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#-- copy from content component /content/LookupContent.ftl  1.1
