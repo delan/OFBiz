@@ -10,6 +10,7 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
 <h3>Table of Contents</h3>
 <ul>
+  <li><a href="#Release 1.0 Beta 1">Release 1.0 Beta 1</a> 
   <li><a href="#Release 2001.09.29">Release 2001.09.29</a> 
   <li><a href="#Release 2001.07.20">Release 2001.07.20</a>
   <li><a href="#Release 2001.06.30">Release 2001.06.30</a>
@@ -17,6 +18,81 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
   <li><a href="#Release 2001.06.01">Release 2001.06.01</a>
   <li><a href="#Release 2001.05.28">Release 2001.05.28</a>
   <li><a href="#Release 2001.05.24">Release 2001.05.24</a>
+</ul>
+
+<hr>
+<h3><a name="Release 1.0 Beta 1">Release 1.0 Beta 1</a></h3>
+<hr>
+<h4>Major Cleanups and Feature Enhancements</h4>
+<p>This release includes a number of clean ups and refactorings in addition to
+many new features in the eCommerce application, the Catalog Manager application, 
+and the many tools included to make development, maintenance, and administration
+faster and easier.</p>
+<h4>Version 1.0 Beta 1</h4>
+<p>We are calling this release 1.0 Beta 1 and it is being released in preparation
+for the final version 1.0 release of Open For Business. Version 1.0 will include
+the eCommerce application, the Catalog Manager, and the many tools and components 
+in the framework such as the Entity Engine, the Control Servlet, and the Data Model.
+It will also contain a "sneak peak" at the upcoming Generic Services Framework, the
+Workflow Engine and the Rules Engine which will be the primary elements of the 
+version 2.0 release.</p>
+<h4>Complete Download - Quick Setup Package</h4>
+<p>The complete download is now configured to use the Hypersonic SQL Java database
+so that a complete installation is included in the release. This means that installation
+for a demonstration or playing with it is as easy as 1) download it, 2) put it 
+/ofbiz/work and 3) run it! This includes a sample database which is prebuilt
+so you can run the various applications immediately.</p>
+<p>Of course, all of the configuration
+options are available still, including using various other databases. Starting from
+nothing with a new database is easy because the Entity Engine can create all of its
+own tables and check them, and initial data is included in XML and SQL files.</p>
+<h4>Tasks Completed</h4>
+<p>A number of tasks have been planned and completed for this release, in addition
+to the many smaller refinements and changes that have been done. These tasks include:</p>
+<ul>
+<li><b>eCommerce Subproject</b>
+  <ul>
+  <li>39628 - Associated Products
+  <li>39630 - Support Multiple "Catalogs"
+  <li>39635 - ecommerce.properties from URL
+  <li>39655 - Shipping Calculation
+  <li>39681 - Order History based Quick Reorder
+  <li>40613 - Quick add products from special category
+  <li>40896 - Make ecommerce.properties visual settings more flexible
+  <li>41070 - Only show associated products within date range
+  </ul>
+<li><b>Catalog Subproject</b>
+  <ul>
+  <li>39631 - Support keyword groups
+  <li>39632 - Category & Product: Browse & Search
+  <li>39633 - Associated Products Editor
+  <li>39634 - Visually organize prod & cat pages
+  <li>40588 - Support multiple top level categories
+  </ul>
+<li><b>CommonApp Subproject</b>
+  <ul>
+  <li>40342 - Reserved word checker in entityref_main.jsp
+  <li>40343 - Fix reserved word warnings
+  <li>40475 - Change .sql data init files to XML files
+  <li>40495 - Add ISO Country and Currency Codes
+  <li>40496 - Another Round of Reserved Word Resolutions
+  <li>40529 - Entity from Database tool JSP
+  <li>40553 - When writing entity model, also write entity group file
+  <li>40816 - Tighten security in commonapp entity pages
+  <li>40975 - Make entity ref fast by making warning checking optional
+  </ul>
+<li><b>Core Subproject</b>
+  <ul>
+  <li>39440 - Updates to the RequestHandler
+  <li>39441 - Update ConfigXMLReader and all scheduler/request XML files
+  <li>39593 - New JSP Tag - Tag for GenericValue attributes
+  <li>39636 - Change FlexibleProperties to use Factory pattern
+  <li>39710 - Multiple Entity Definition XML Files
+  <li>39713 - findAllByPrimaryKeys
+  <li>39962 - Add column type warnings to DAO database checker
+  <li>40012 - XML import/export functions in value objects
+  <li>40341 - Add storeAll method to delegator
+  </ul>
 </ul>
 
 <hr>
