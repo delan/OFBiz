@@ -90,7 +90,7 @@ public abstract class WfActivityAbstractImplementation {
     }
 
     protected void setResult(Map result) {
-        this.resultContext = result;
+        this.resultContext.putAll(result);
     }
 
     protected WfActivityImpl getActivity() throws WfException {

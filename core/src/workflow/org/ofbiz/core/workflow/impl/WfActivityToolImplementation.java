@@ -145,7 +145,7 @@ public class WfActivityToolImplementation extends WfActivityAbstractImplementati
                 }
             }
         }
-        
+        if (Debug.verboseOn()) Debug.logVerbose("Setting result in context: " + newResult, module);
         this.setResult(newResult);
     }
 }
