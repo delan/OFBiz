@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAbstractDispatcher.java,v 1.3 2003/12/05 21:02:46 ajzeneski Exp $
+ * $Id: GenericAbstractDispatcher.java,v 1.4 2003/12/06 23:10:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public abstract class GenericAbstractDispatcher implements LocalDispatcher {
@@ -51,51 +51,7 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     protected String name = null;
 
     public GenericAbstractDispatcher() {}
-    
-    // abstract methods
-       
-    /**
-     * @see org.ofbiz.service.LocalDispatcher#runSync(java.lang.String, java.util.Map)
-     */
-    public abstract Map runSync(String serviceName, Map context) throws GenericServiceException;
-    
-    /**
-     * @see org.ofbiz.service.LocalDispatcher#runSyncIgnore(java.lang.String, java.util.Map)
-     */
-    public abstract void runSyncIgnore(String serviceName, Map context) throws GenericServiceException;
 
-    /**
-     * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map, org.ofbiz.service.GenericRequester, boolean)
-     */
-    public abstract void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist) throws GenericServiceException;
-   
-    /**
-     * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map, org.ofbiz.service.GenericRequester)
-     */
-    public abstract void runAsync(String serviceName, Map context, GenericRequester requester) throws GenericServiceException;
-    
-    /**
-     * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map, boolean)
-     */
-    public abstract void runAsync(String serviceName, Map context, boolean persist) throws GenericServiceException;
-   
-    /**
-     * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map)
-     */
-    public abstract void runAsync(String serviceName, Map context) throws GenericServiceException;
-  
-    /**
-     * @see org.ofbiz.service.LocalDispatcher#runAsyncWait(java.lang.String, java.util.Map, boolean)
-     */
-    public abstract GenericResultWaiter runAsyncWait(String serviceName, Map context, boolean persist) throws GenericServiceException;
- 
-    /**
-     * @see org.ofbiz.service.LocalDispatcher#runAsyncWait(java.lang.String, java.util.Map)
-     */
-    public abstract GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException;
-  
-    // generic methods
-    
     /**
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.lang.String, java.util.Map, long, int, int, int, long)
      */

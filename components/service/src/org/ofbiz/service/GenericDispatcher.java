@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDispatcher.java,v 1.3 2003/12/02 16:13:39 ajzeneski Exp $
+ * $Id: GenericDispatcher.java,v 1.4 2003/12/06 23:10:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class GenericDispatcher extends GenericAbstractDispatcher {
@@ -109,7 +109,19 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
         ModelService service = ctx.getModelService(serviceName);
         return dispatcher.runSync(this.name, service, context);
     }
-    
+
+    /**
+     * @see org.ofbiz.service.LocalDispatcher#runSync(java.lang.String, java.util.Map, int, boolean)
+     */
+    public Map runSync(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException {
+        ModelService service = ctx.getModelService(serviceName);
+        // clone the model service for updates
+        ModelService cloned = new ModelService(service);
+        cloned.requireNewTransaction = requireNewTransaction;
+        cloned.transactionTimeout = transactionTimeout;
+        return dispatcher.runSync(this.name, cloned, context);
+    }
+
     /**
      * @see org.ofbiz.service.LocalDispatcher#runSyncIgnore(java.lang.String, java.util.Map)
      */
@@ -117,7 +129,31 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
         ModelService service = ctx.getModelService(serviceName);
         dispatcher.runSyncIgnore(this.name, service, context);
     }
-    
+
+    /**
+     * @see org.ofbiz.service.LocalDispatcher#runSyncIgnore(java.lang.String, java.util.Map)
+     */
+    public void runSyncIgnore(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException {
+        ModelService service = ctx.getModelService(serviceName);
+        // clone the model service for updates
+        ModelService cloned = new ModelService(service);
+        cloned.requireNewTransaction = requireNewTransaction;
+        cloned.transactionTimeout = transactionTimeout;
+        dispatcher.runSyncIgnore(this.name, cloned, context);
+    }
+
+    /**
+     * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map, org.ofbiz.service.GenericRequester, boolean, int, boolean)
+     */
+    public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException {
+        ModelService service = ctx.getModelService(serviceName);
+        // clone the model service for updates
+        ModelService cloned = new ModelService(service);
+        cloned.requireNewTransaction = requireNewTransaction;
+        cloned.transactionTimeout = transactionTimeout;
+        dispatcher.runAsync(this.name, cloned, context, requester, persist);
+    }
+
     /**
      * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map, org.ofbiz.service.GenericRequester, boolean)
      */
