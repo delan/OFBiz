@@ -28,10 +28,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.core.entity.EntityExpr;
 import org.ofbiz.core.entity.EntityOperator;
@@ -265,8 +267,20 @@ public class WorkEffortServices {
                 entityExprList.add(new EntityExpr("facilityId", EntityOperator.EQUALS, facilityId));
             }
             
-            validWorkEfforts = new ArrayList(delegator.findByAnd("WorkEffortAndPartyAssign",
-                    entityExprList, UtilMisc.toList("estimatedStartDate")));
+            List tempWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign", entityExprList, UtilMisc.toList("estimatedStartDate"));
+            Set tempWeKeys = new HashSet();
+            Iterator tempWorkEffortIter = tempWorkEfforts.iterator();
+            while (tempWorkEffortIter.hasNext()) {
+                GenericValue tempWorkEffort = (GenericValue) tempWorkEffortIter.next();
+                String tempWorkEffortId = tempWorkEffort.getString("workEffortId");
+                if (tempWeKeys.contains(tempWorkEffortId)) {
+                    tempWorkEffortIter.remove();
+                } else {
+                    tempWeKeys.add(tempWorkEffortId);
+                }
+            }
+            
+            validWorkEfforts = new ArrayList(tempWorkEfforts);
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
