@@ -433,7 +433,13 @@ public class ModelServiceReader {
             // set the entity name to the default if not specified
             if (param.entityName.length() == 0) {
                 param.entityName = service.defaultEntityName;
-            }            
+            }   
+            
+            // set the field-name to the name if entity name is specified but no field-name
+            if (param.fieldName.length() == 0 && param.entityName.length() > 0) {
+                param.fieldName = param.name;         
+            }
+            
             service.addParam(param);
         }
 
