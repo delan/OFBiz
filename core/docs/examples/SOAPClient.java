@@ -14,7 +14,7 @@ public class SOAPClient {
         Call call = (Call) service.createCall();
 
         call.setTargetEndpointAddress( new java.net.URL(endpoint) );
-        call.setOperationName( "testScv" );
+        call.setOperationName( "testSoap" );
         call.addParameter("message", XMLType.XSD_STRING, Call.PARAM_MODE_IN);
         
         String ret = (String) call.invoke( new Object[] { "Hello!" } );
