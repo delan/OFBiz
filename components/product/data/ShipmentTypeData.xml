@@ -12,14 +12,7 @@
 	<ShipmentContactMechType description="Ship-From Telecom Number" shipmentContactMechTypeId="SHIP_FROM_TELECOM"/>
 	<ShipmentContactMechType description="Ship-To E-Mail" shipmentContactMechTypeId="SHIP_TO_EMAIL"/>
 	<ShipmentContactMechType description="Ship-From E-Mail" shipmentContactMechTypeId="SHIP_TO_EMAIL"/>
-	
-	<ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
-	<ShipmentMethodType description="Express" shipmentMethodTypeId="EXPRESS"/>
-	<ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
-	<ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
-	<ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
-	<ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
-	
+
 	<ShipmentType description="Incoming" hasTable="N" parentTypeId="" shipmentTypeId="INCOMING_SHIPMENT"/>
 	<ShipmentType description="Outgoing" hasTable="N" parentTypeId="" shipmentTypeId="OUTGOING_SHIPMENT"/>
 	<ShipmentType description="Sales Return" hasTable="N" parentTypeId="INCOMING_SHIPMENT" shipmentTypeId="SALES_RETURN"/>
