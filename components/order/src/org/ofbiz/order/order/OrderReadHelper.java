@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.8 2003/11/17 03:17:11 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.9 2003/11/17 06:21:27 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -423,6 +423,9 @@ public class OrderReadHelper {
                 if (item.get("productId") != null) {
                     try {
                         featureAppls = item.getDelegator().findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", item.getString("productId")));
+                        List filterExprs = UtilMisc.toList(new EntityExpr("productFeatureApplTypeId", EntityOperator.EQUALS, "STANDARD_FEATURE"));
+                        filterExprs.add(new EntityExpr("productFeatureApplTypeId", EntityOperator.EQUALS, "REQUIRED_FEATURE"));
+                        featureAppls = EntityUtil.filterByOr(featureAppls, filterExprs);
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Unable to get ProductFeatureAppl for item : " + item, module);
                     }
@@ -439,8 +442,32 @@ public class OrderReadHelper {
                         }
                     }
                 }
+
+                // get the ADDITIONAL_FEATURE adjustments
+                List additionalFeatures = null;
+                try {
+                    additionalFeatures = item.getRelatedByAnd("OrderAdjustment", UtilMisc.toMap("orderAdjustmentTypeId", "ADDITIONAL_FEATURE"));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to get OrderAdjustment from item : " + item, module);
+                }
+                if (additionalFeatures != null) {
+                    Iterator afi = additionalFeatures.iterator();
+                    while (afi.hasNext()) {
+                        GenericValue adj = (GenericValue) afi.next();
+                        String featureId = adj.getString("productFeatureId");
+                        if (featureId != null) {
+                            Double lastQuantity = (Double) featureMap.get(featureId);
+                            if (lastQuantity == null) {
+                                lastQuantity = new Double(0);
+                            }
+                            Double newQuantity = new Double(lastQuantity.doubleValue() + item.getDouble("quantity").doubleValue());
+                            featureMap.put(featureId, newQuantity);
+                        }
+                    }
+                }
             }
         }
+
         return featureMap;
     }
 
