@@ -8,7 +8,7 @@
     <dbname>Postgres</dbname>
     <jndiName>java:/PostgresDataSource</jndiName>
     <driver>org.postgresql.Driver</driver>
-    <url>jdbc:postgresql://localhost/ofbiz</url>
+    <url>jdbc:postgresql://127.0.0.1/ofbiz</url>
     <username>ofbiz</username>
     <password>ofbiz</password>
     <minimumSize>2</minimumSize>
@@ -23,7 +23,7 @@
     <dbname>MySql</dbname>
     <jndiName>java:/MySqlDataSource</jndiName>
     <driver>org.gjt.mm.mysql.Driver</driver>
-    <url>jdbc:mysql://localhost/ofbiz</url>
+    <url>jdbc:mysql://127.0.0.1/ofbiz</url>
     <username>mysqldb</username>
     <password>mysqldb</password>
     <minimumSize>2</minimumSize>
