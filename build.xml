@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.32 2004/03/31 02:41:13 ajzeneski Exp $
+ *  $Id: build.xml,v 1.33 2004/03/31 16:23:37 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -123,12 +123,6 @@
 
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========= Cleaning appservers component ========="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/appservers" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
         <echo message="[clean] ========== Cleaning datafile component =========="/>
         <echo message="[clean] ================================================="/>
         <ant dir="components/datafile" target="clean" inheritAll="false"/>
@@ -162,6 +156,12 @@
         <echo message="[clean] ========== Cleaning content component =========="/>
         <echo message="[clean] ================================================"/>
         <ant dir="components/content" target="clean" inheritAll="false"/>
+
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========= Cleaning appservers component ========="/>
+        <echo message="[clean] ================================================="/>
+        <ant dir="components/appservers" target="clean" inheritAll="false"/>
 
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
@@ -290,12 +290,6 @@
         <echo message="[build] ==============================================="/>
         <ant dir="components/entityext" inheritAll="false"/>
 
-        <echo message="[build]"/>
-        <echo message="[build] ==============================================="/>
-        <echo message="[build] ========= Building appservers component ======="/>
-        <echo message="[build] ==============================================="/>
-        <ant dir="components/appservers" inheritAll="false"/>
-
         <echo message="[build]" />
         <echo message="[build] ================================================="/>
         <echo message="[build] ========== Building minilang component =========="/>
@@ -331,6 +325,12 @@
         <echo message="[build] ========== Building content component =========="/>
         <echo message="[build] ================================================"/>
         <ant dir="components/content" inheritAll="false"/>
+
+        <echo message="[build]"/>
+        <echo message="[build] ==============================================="/>
+        <echo message="[build] ========= Building appservers component ======="/>
+        <echo message="[build] ==============================================="/>
+        <ant dir="components/appservers" inheritAll="false"/>
 
         <echo message="[build]" />
         <echo message="[build] =============================================="/>
@@ -451,12 +451,6 @@
         <ant dir="components/entityext" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ================================================"/>
-        <echo message="[docs] ======== Building appservers component ========="/>
-        <echo message="[docs] ================================================"/>
-        <ant dir="components/appservers" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
         <echo message="[docs] ================================================="/>
         <echo message="[docs] ========== Building minilang component =========="/>
         <echo message="[docs] ================================================="/>
@@ -491,6 +485,12 @@
         <echo message="[docs] ========== Building content component =========="/>
         <echo message="[docs] ================================================"/>
         <ant dir="components/content" target="docs" inheritAll="false"/>
+
+        <echo message="[docs]"/>
+        <echo message="[docs] ================================================"/>
+        <echo message="[docs] ======== Building appservers component ========="/>
+        <echo message="[docs] ================================================"/>
+        <ant dir="components/appservers" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
         <echo message="[docs] =============================================="/>
