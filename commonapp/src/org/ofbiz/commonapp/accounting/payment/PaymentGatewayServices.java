@@ -233,7 +233,7 @@ public class PaymentGatewayServices {
             paymentPreference.set("statusId", "PAYMENT_ERROR");
         }
         // set the avs/fraud result
-        paymentPreference.set("avsCode", result.get("scoreCode"));
+        paymentPreference.set("avsCode", result.get("avsCode"));
         paymentPreference.set("scoreCode", result.get("scoreCode"));
         // set the auth info
         paymentPreference.set("authRefNum", result.get("authRefNum"));
