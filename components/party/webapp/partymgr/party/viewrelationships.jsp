@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Andy Zeneski
- *@version    $Revision: 1.6 $
+ *@version    $Rev:$
  *@since      1.0
 --%>
 
