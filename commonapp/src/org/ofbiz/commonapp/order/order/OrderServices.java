@@ -342,4 +342,77 @@ public class OrderServices {
         return result;
     }
 
+    /** Service to get basic order information. */
+    public static Map getOrderInformation(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        try {
+            GenericValue orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            Collection orderItems = orderHeader.getRelatedCache("OrderItem");
+            OrderReadHelper orh = new OrderReadHelper(orderHeader);
+            String statusString = orh.getStatusString();
+            Double totalItems = new Double(orh.getOrderItemsTotal());
+            Double totalPrice = new Double(orh.getTotalPrice());
+            GenericValue shipAddress = orh.getShippingAddress();
+            GenericValue billAddress = orh.getBillingAddress();
+            GenericValue billTo = orh.getBillToPerson();
+            String affilId = orh.getAffiliateId();
+            String distId = orh.getDistributorId();
+            result.put("orderId", orderId);
+            result.put("orderHeader", orderHeader);
+            result.put("orderItems", orderItems);
+            result.put("totalItems", totalItems);
+            result.put("totalPrice", totalPrice);
+            result.put("shippingAddress", shipAddress);
+            result.put("billingAddress", billAddress);
+            result.put("billToPerson", billTo);
+            result.put("affiliateId", affilId);
+            result.put("distributorId", distId);
+        } catch (GenericEntityException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + e.getMessage() + ").");
+        }
+        return result;
+    }
+
+    /** Service to get an order contact mech. */
+    public static Map getOrderAddress(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        GenericValue v = null;
+        String purpose[] = { "BILLING_LOCATION", "SHIPPING_LOCATION" };
+        String outKey[] = { "billingAddress", "shippingAddress" };
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKeyCache("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get OrderHeader (" + e.getMessage() + ").");
+            return result;
+        }
+        if (orderHeader == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could get the OrderHeader.");
+            return result;
+        }
+        for (int i = 0; i < purpose.length; i++) {
+            try {
+                GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech",
+                        UtilMisc.toMap("contactMechPurposeTypeId", purpose[i])));
+                GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
+                if (contactMech != null) {
+                    result.put(outKey[i], contactMech.getRelatedOne("PostalAddress"));
+                }
+            } catch (GenericEntityException e) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Problems getting contact mech (" + e.getMessage() + ").");
+                return result;
+            }
+        }
+
+        result.put("orderId", orderId);
+        return result;
+    }
 }
