@@ -383,7 +383,7 @@ public class GenericDAO
 
   public Collection selectByAnd(String entityName, Map fields, List orderBy)
   {
-    if(entityName == null || fields == null) return null;
+    if(entityName == null) return null;
     Collection collection = new LinkedList();
     ModelEntity modelEntity = modelReader.getModelEntity(entityName);
     if(modelEntity == null) 
@@ -401,7 +401,7 @@ public class GenericDAO
     //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
     Vector whereFields = new Vector();
     Vector selectFields = new Vector();
-    if(fields != null || fields.size() > 0)
+    if(fields != null && fields.size() > 0)
     {
       Set keys = fields.keySet();
       for(int fi=0; fi<modelEntity.fields.size(); fi++)
@@ -414,7 +414,7 @@ public class GenericDAO
     else { selectFields = modelEntity.fields; }
     
     String sql = "SELECT " + modelEntity.colNameString(selectFields, ", ", "") + " FROM " + modelEntity.tableName;
-    if(fields != null || fields.size() > 0) sql = sql + " WHERE " + modelEntity.colNameString(whereFields, "=? AND ", "=?");
+    if(fields != null && fields.size() > 0) sql = sql + " WHERE " + modelEntity.colNameString(whereFields, "=? AND ", "=?");
 
     if(orderBy != null && orderBy.size() > 0)
     {
@@ -451,7 +451,7 @@ public class GenericDAO
       ps = connection.prepareStatement(sql);
       
       GenericValue dummyValue;
-      if(fields != null || fields.size() > 0)
+      if(fields != null && fields.size() > 0)
       {
         dummyValue = new GenericValue(modelReader.getModelEntity(entityName), fields);
         for(int i=0;i<whereFields.size();i++)
