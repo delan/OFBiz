@@ -41,11 +41,10 @@
     <!-- Request Mappings -->
     <request-map uri="httpService">
         <event type="java" path="org.ofbiz.core.service.engine.HttpEngine" invoke="httpEngine"/>
-        <respnose name="success" type="none"/>
+        <response name="success" type="none"/>
         <response name="error" type="view" value="error"/>
-    </response>
-    
     </request-map>
+        
     <request-map uri="ServiceSchedule">
         <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="scheduleService"/>
         <response name="success" type="view" value="error"/>
