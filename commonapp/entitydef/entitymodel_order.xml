@@ -247,18 +247,23 @@
         <key-map field-name="orderId" />
       </relation>
       <relation type="many" rel-entity-name="OrderHeaderNote">
+	    <key-map field-name="orderId" />
+		<key-map field-name="noteId" />
       </relation>
     </entity>
     <entity entity-name="OrderHeaderNote" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Header Note Entity">
+            title="Order Header Note Entity"
+			copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
       <field name="orderId" type="id-ne"></field>
       <field name="noteId" type="id-ne"></field>	
       <prim-key field="orderId" />	
       <prim-key field="noteId" />
       <relation type="many" rel-entity-name="OrderHeader">
+	    <key-map field-name="orderId" />
       </relation>
       <relation type="many" rel-entity-name="NoteData">
+	    <key-map field-name="noteId" />
       </relation>
     </entity>
     <entity entity-name="OrderItem" 
