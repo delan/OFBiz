@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
  *@author     Arukala (arukala100@gmx.de)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
  */
 
@@ -54,7 +54,7 @@ contextRoot = request.getAttribute("_CONTEXT_ROOT_");
 serverRoot = request.getAttribute("_SERVER_ROOT_URL_");
 
 /* reading of the localization information */
-availableLocales = Arrays.asList(Locale.getAvailableLocales());
+availableLocales = UtilMisc.availableLocales();
 request.setAttribute("availableLocales",availableLocales);
 
 locale = UtilHttp.getLocale(request);

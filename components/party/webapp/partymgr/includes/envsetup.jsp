@@ -28,7 +28,7 @@
     String serverRoot = (String) request.getAttribute("_SERVER_ROOT_URL_");
 
     /* reading of the localization information */
-    List availableLocales = Arrays.asList(Locale.getAvailableLocales());
+    List availableLocales = UtilMisc.availableLocales();
     request.setAttribute("availableLocales",availableLocales);
 
     Locale locale = UtilHttp.getLocale(request);
