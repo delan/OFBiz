@@ -1,5 +1,5 @@
 /*
- * $Id: permprep.bsh,v 1.4 2004/02/11 06:04:20 jonesde Exp $
+ * $Id: permprep.bsh,v 1.5 2004/06/08 12:39:45 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
 
  * Does either a "simple" (does entity perm check) or complex
@@ -79,8 +79,13 @@ if (permissionType.equals("complex")) {
 
     if (currentValue == null || !currentValue.getEntityName().equals("Content")) {
         currentEntityMap = session.getAttribute("currentEntityMap");
+        if (currentEntityMap == null) {
+            currentEntityMap = new HashMap();
+            session.setAttribute("currentEntityMap", currentEntityMap);
+        }
         cachedPK = currentEntityMap.get("Content");
-        currentValue = delegator.findByPrimaryKey(cachedPK);
+        if (cachedPK != null)
+            currentValue = delegator.findByPrimaryKey(cachedPK);
     }
     if (currentValue != null && currentValue.getEntityName().equals("Content")) {
         mapIn.put("currentContent", currentValue);

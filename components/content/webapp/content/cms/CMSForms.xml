@@ -44,7 +44,7 @@
 
     <form name="listFindContent" type="list" target="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" paginate-target="/CMSContentFind">
         <field name="editContent" title="">
-            <hyperlink also-hidden="false" description="Edit" target="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/> 
+            <hyperlink also-hidden="false" description="Edit" target="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}&amp;contentIdTo=${contentIdTo}"/> 
 <!--
             <hyperlink also-hidden="false" description="Edit" target="EditContent?caContentIdTo=${caContentIdTo}&amp;caFromDate=${caFromDate}&amp;contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}&amp;caContentId=${contentId}&amp;contentIdStart=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}"/> 
 -->
