@@ -193,6 +193,7 @@ public class PayPalEvents {
             Debug.logInfo("Got verification from PayPal, processing..", module);
         } else {
             Debug.logError("###### PayPal did not verify this request, need investigation!", module);
+            Debug.logError(" --- " + confirmResp, module);
             Set keySet = parametersMap.keySet();
             Iterator i = keySet.iterator();
             while (i.hasNext()) {
