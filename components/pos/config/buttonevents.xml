@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+$Id$
+-->
+
 <button-events>
     <!-- numeric button events -->
     <event button-name="numOne" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerOne" disable-lock="true"/>

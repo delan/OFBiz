@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE JposEntries PUBLIC "-//JavaPOS//DTD//EN" "jpos/res/jcl.dtd">
+<!--
+$Id$
+-->
 
 <JposEntries>
-    <JposEntry logicalName="KeyboardScanner">
+    <!-- Generic Keyboard Wedge Scanner Device (included w/ OFBiz) -->
+    <JposEntry logicalName="GenericScanner">
         <creation factoryClass="org.ofbiz.pos.jpos.factory.KybServiceInstanceFactory" serviceClass="org.ofbiz.pos.jpos.service.ScannerKybService"/>
         <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
         <jpos category="Scanner" version="1.8"/>
         <product description="Generic Keyboard Wedge Scanner" name="KybScanner" url="www.ofbiz.org"/>
+
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
         <prop name="BarcodeTypePosition" type="String" value="Prefix"/>
         <prop name="CodeType:CODE11" type="String" value="M"/>
@@ -23,11 +28,54 @@
         <prop name="CodeType:EAN8" type="String" value="D"/>
     </JposEntry>
 
-        <JposEntry logicalName="KeyboardMsr">
+    <!-- Generic Keyboard Wedge MSR Device (included w/ OFBiz) -->
+    <JposEntry logicalName="GenericMsr">
         <creation factoryClass="org.ofbiz.pos.jpos.factory.KybServiceInstanceFactory" serviceClass="org.ofbiz.pos.jpos.service.MsrKybService"/>
         <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
         <jpos category="MSR" version="1.8"/>
         <product description="Generic Keyboard Wedge Msr" name="KybMsr" url="www.ofbiz.org"/>
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+
     </JposEntry>
+
+    <!-- Star TSP600 POSPrinter (requires starjavapos.jar) -->
+    <JposEntry logicalName="StarTSP600">
+        <creation factoryClass="com.starmicronics.javapos.StarJposServiceInstanceFactory" serviceClass="com.starmicronics.javapos.StarJPOSPOSPrinter"/>
+        <vendor name="Star Micronics Co., Ltd." url="http://www.star-micronics.co.jp"/>
+        <jpos category="POSPrinter" version="1.4a"/>
+        <product description="Thermal receipt printer" name="TSP600" url="http://www.star-micronics.co.jp"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+        <prop name="portName" type="String" value="COM1"/>
+        <prop name="errorResponseTimeout" type="Long" value="5000"/>
+        <prop name="capLogoStore" type="Boolean" value="false"/>
+        <prop name="statusTimeout" type="Long" value="500"/>
+        <prop name="timeout" type="Long" value="10000"/>
+        <prop name="starModel" type="String" value="TSP600"/>
+        <prop name="capRecRaster" type="Boolean" value="true"/>
+        <prop name="deviceClassName" type="String" value="com.starmicronics.javapos.DeviceTSP613"/>
+        <prop name="portSettings" type="String" value="9600,none,8,1,hdwr"/>
+        <prop name="statusTimeDelay" type="Long" value="500"/>
+    </JposEntry>
+
+    <!-- Star TSP600 Connected CashDrawer (requires startjavapos.jar) -->
+    <JposEntry logicalName="StarTSP600CashDrawer">
+        <creation factoryClass="com.starmicronics.javapos.StarJposServiceInstanceFactory" serviceClass="com.starmicronics.javapos.StarJPOSCashDrawer"/>
+        <vendor name="Star Micronics Co., Ltd." url="http://www.star-micronics.co.jp"/>
+        <jpos category="CashDrawer" version="1.4a"/>
+        <product description="Printer controlled Cash Drawer" name="TSP600" url="http://www.star-micronics.co.jp"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+        <prop name="portName" type="String" value="COM1"/>
+        <prop name="errorResponseTimeout" type="Long" value="5000"/>
+        <prop name="statusTimeout" type="Long" value="500"/>
+        <prop name="timeout" type="Long" value="10000"/>
+        <prop name="starModel" type="String" value="TSP600"/>
+        <prop name="deviceClassName" type="String" value="com.starmicronics.javapos.DeviceTSP613"/>
+        <prop name="portSettings" type="String" value="9600,none,8,1,hdwr"/>
+        <prop name="statusTimeDelay" type="Long" value="500"/>
+        <prop name="cashDrawer1" type="Boolean" value="true"/>
+        <prop name="drawerClosedOnSignalLow" type="Boolean" value="false"/>
+    </JposEntry>
+
 </JposEntries>

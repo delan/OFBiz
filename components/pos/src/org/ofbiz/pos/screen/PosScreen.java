@@ -48,7 +48,7 @@ import org.ofbiz.pos.PosTransaction;
  * @version    $Rev$
  * @since      3.1
  */
-public class PosScreen extends NavigationHelper implements Runnable {
+public class PosScreen extends NavigationHelper implements Runnable, DialogCallback {
 
     public static final String module = PosScreen.class.getName();
     public static final Frame appFrame = XResourceManager.getAppFrame();
@@ -223,15 +223,18 @@ public class PosScreen extends NavigationHelper implements Runnable {
     }
 
     public PosDialog showDialog(String pageName) {
+        return showDialog(pageName, this);
+    }
+
+    public PosDialog showDialog(String pageName, DialogCallback cb) {
         XPage dialogPage = XProjectManager.getPageManager().loadPage(pageName);        
         PosDialog dialog = PosDialog.getInstance(dialogPage);
-        dialog.showDialog(this, "dialogCb");
+        dialog.showDialog(this, cb);
         return dialog;
     }
 
     // PosDialog Callback method
-    public void dialogCb(PosDialog dialog) {
-        Debug.log("PosDialog Completed CB - " + dialog.getName(), module);
+    public void receiveDialogCb(PosDialog dialog) {        
         this.refresh();
     }
 

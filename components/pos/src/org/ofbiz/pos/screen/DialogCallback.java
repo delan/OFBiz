@@ -22,48 +22,15 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.pos.device;
-
-import jpos.JposException;
-
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.pos.screen.PosScreen;
+package org.ofbiz.pos.screen;
 
 /**
- *
+ * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev$
+ * @version    $Rev:%
  * @since      3.2
  */
-public class CashDrawer extends GenericDevice {
+public interface DialogCallback {
 
-    public static final String module = CashDrawer.class.getName();
-
-    public CashDrawer(String deviceName, int timeout) {
-        super(deviceName, timeout);
-        this.control = new jpos.CashDrawer();
-    }
-
-    protected void initialize() throws JposException {
-    }
-
-    public void openDrawer() {
-        try {
-            ((jpos.CashDrawer) control).openDrawer();
-        } catch (JposException e) {
-            Debug.logError(e, module);
-            PosScreen.currentScreen.showDialog("main/dialog/error/drawererror");
-        }
-    }
-
-    public boolean isDrawerOpen() {
-        try {
-            return ((jpos.CashDrawer) control).getDrawerOpened();
-        } catch (JposException e) {
-            Debug.logError(e, module);
-            PosScreen.currentScreen.showDialog("main/dialog/error/drawererror");
-        }
-        return false;
-    }
+    public void receiveDialogCb(PosDialog dialog);
 }
-
