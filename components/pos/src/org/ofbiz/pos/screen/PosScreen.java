@@ -1,5 +1,5 @@
 /*
- * $Id: PosScreen.java,v 1.1 2004/07/27 18:37:39 ajzeneski Exp $
+ * $Id: PosScreen.java,v 1.2 2004/08/06 20:55:13 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,12 +32,13 @@ import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.component.PosButton;
+import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.base.util.Debug;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class PosScreen extends NavigationHelper implements Runnable {
@@ -63,6 +64,11 @@ public class PosScreen extends NavigationHelper implements Runnable {
         this.journal = new Journal(this);
         this.buttons = new PosButton(this);
         this.lastActivity = System.currentTimeMillis();
+        try {
+            DeviceLoader.load(this);
+        } catch (Exception e) {
+            Debug.logError(e, module);
+        }
 
         // create the monitor thread
         this.activityMonitor = new Thread(this);
@@ -80,7 +86,7 @@ public class PosScreen extends NavigationHelper implements Runnable {
             }
         }
         this.repaint();
-        this.input.focus();
+        this.journal.focus();
     }
 
     public boolean isLocked() {
@@ -124,7 +130,7 @@ public class PosScreen extends NavigationHelper implements Runnable {
     public void buttonPressed() {
         this.setLastActivity(System.currentTimeMillis());
         this.buttons.buttonPressed(this);
-        this.input.focus();
+        this.journal.focus();
     }
 
     // run method for auto-locking POS on inactivity

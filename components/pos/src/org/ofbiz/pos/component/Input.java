@@ -1,5 +1,5 @@
 /*
- * $Id: Input.java,v 1.1 2004/07/27 18:37:36 ajzeneski Exp $
+ * $Id: Input.java,v 1.2 2004/08/06 20:55:09 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,9 +26,6 @@ package org.ofbiz.pos.component;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.EmptyStackException;
 import java.util.Iterator;
 
@@ -38,42 +35,40 @@ import net.xoetrope.xui.XPage;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.LifoSet;
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.pos.adaptor.KeyboardAdaptor;
+import org.ofbiz.pos.adaptor.KeyboardReceiver;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
-public class Input implements KeyListener {
+public class Input implements KeyboardReceiver {
 
     public static final String module = Input.class.getName();
     private static final String[] validFunc = { "LOGIN", "UNLOCK", "MGRLOGIN", "PLU", "TOTAL", "CREDIT", "CREDITINFO", "CHECK", "CHECKINFO", "QTY" };
 
     protected LifoSet functionStack = new LifoSet();
+    protected Component[] pageComs = null;
     protected PosScreen pos = null;
     protected Color lastColor = null;
     protected XEdit input = null;
     protected boolean isLocked = false;
 
     public Input(XPage page) {
+        this.pageComs = page.getComponents();
         this.pos = (PosScreen) page;
         this.input = (XEdit) page.findComponent("pos_input");
-        this.focus();
+        this.input.setFocusable(false);
 
-        // attache this to all components as a key listener
-        Component[] pageComs = page.getComponents();
-        configureComponentListener(pageComs);
+        // initialize the KeyboardAdaptor
+        KeyboardAdaptor.setInput(this);
+        KeyboardAdaptor.getInstance(this, KeyboardAdaptor.KEYBOARD_DATA);
     }
 
-    private void configureComponentListener(Component[] coms) {
-        for (int i = 0; i < coms.length; i++) {
-            coms[i].addKeyListener(this);
-            if (coms[i] instanceof Container) {
-                Component[] nextComs = ((Container) coms[i]).getComponents();
-                configureComponentListener(nextComs);
-            }
-        }
+    public Component[] getComponents() {
+        return pageComs;
     }
 
     public void setLock(boolean lock) {
@@ -84,14 +79,7 @@ public class Input implements KeyListener {
         } else {
             input.setForeground(this.lastColor);
         }
-        input.setFocusable(!lock);
         isLocked = lock;
-    }
-
-    public void focus() {
-        if (!this.isLocked) {
-            input.requestFocus();
-        }
     }
 
     public void setFunction(String function, String value) throws IllegalArgumentException {
@@ -104,7 +92,7 @@ public class Input implements KeyListener {
     }
 
     public void setFunction(String function) throws IllegalArgumentException {
-        setFunction(function, input.getText());    
+        setFunction(function, input.getText());
     }
 
     private boolean isValidFunction(String function) {
@@ -120,7 +108,7 @@ public class Input implements KeyListener {
         String[] f = null;
         try {
             f = (String[]) this.functionStack.peek();
-        } catch (EmptyStackException e) {            
+        } catch (EmptyStackException e) {
         }
         return f;
     }
@@ -190,17 +178,31 @@ public class Input implements KeyListener {
         input.setText(this.input.getText() + str);
     }
 
-    public void keyPressed(KeyEvent event) {
-        pos.setLastActivity(System.currentTimeMillis());
-        if (!this.input.hasFocus()) {
-            this.focus();
-            this.appendChar(event.getKeyChar());
+    public void receiveData(int[] codes, char[] chars) {
+        // convert the stringable array
+        Debug.log("First Char : " + chars[0], module);
+        Debug.log("Last Code  : " + codes[codes.length-1], module);
+
+        // create the string
+        String charStr = new String(chars);
+        Debug.log("Char String : " + charStr, module);
+
+        // test
+        if (charStr.startsWith("%")) {
+            Debug.log("Starts with Percent!", module);
+        }
+
+        // if only pass in non-auto line feeds + some debugging for testing
+        if (charStr.endsWith("\r\n")) {
+            Debug.log("Ends w/ \\r\\n", module);
+        } else if (charStr.endsWith("\n")) {
+            Debug.log("Ends w/ \\n", module);
+        } else if (charStr.endsWith("\r")) {
+            Debug.log("Ends w/ \\r", module);
+        } else {
+            Debug.log("appending string", module);
+            this.appendString(charStr);
         }
     }
 
-    public void keyTyped(KeyEvent event) {
-    }
-
-    public void keyReleased(KeyEvent event) {
-    }
 }
