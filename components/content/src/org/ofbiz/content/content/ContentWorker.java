@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.6 2003/12/21 06:11:27 jonesde Exp $
+ * $Id: ContentWorker.java,v 1.7 2003/12/21 09:22:11 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -52,7 +52,7 @@ import freemarker.template.SimpleHash;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 2.2
  * 
  *  
@@ -72,7 +72,7 @@ public class ContentWorker {
 
         List alternateViews = null;
         try {
-            alternateViews = view.getRelated("ContentAssocDataResourceViewFrom", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"));
+            alternateViews = view.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"));
         } catch (GenericEntityException e) {
             throw new IOException(e.getMessage());
         }
