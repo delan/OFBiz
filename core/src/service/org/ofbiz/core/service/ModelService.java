@@ -133,13 +133,14 @@ public class ModelService {
     public void validate(Map test, String mode) throws ServiceValidationException {
         Map requiredInfo = new HashMap();
         Map optionalInfo = new HashMap();
-
-        if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : Validating context - " + test, module);
+        boolean verboseOn = Debug.verboseOn();
+        
+        if (verboseOn) Debug.logVerbose("[ModelService.validate] : Validating context - " + test, module);
 
         // do not validate results with errors
         if (mode.equals(OUT_PARAM) && test != null && test.containsKey(RESPONSE_MESSAGE) &&
                 test.get(RESPONSE_MESSAGE).equals(RESPOND_ERROR)) {
-            Debug.logVerbose("[ModelService.validate] : response was an error, not validating.", module);
+            if (verboseOn) Debug.logVerbose("[ModelService.validate] : response was an error, not validating.", module);
             return;
         }
 
@@ -176,7 +177,7 @@ public class ModelService {
             }
         }
 
-        if (Debug.verboseOn()) {
+        if (verboseOn) {
             Debug.logVerbose("[ModelService.validate] : (" + mode + ") Required - " +
                     requiredTest.size() + " / " + requiredInfo.size(), module);
             Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +

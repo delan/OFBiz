@@ -215,14 +215,16 @@ public class IteratorTag extends BodyTagSupport {
     private boolean defineElement() {
         element = null;
         pageContext.removeAttribute(name);
+        boolean verboseOn = Debug.verboseOn();
+        
         if (this.iterator.hasNext()) {
             element = this.iterator.next();
-            if (Debug.verboseOn()) Debug.logVerbose("iterator has another object: " + element, module);
+            if (verboseOn) Debug.logVerbose("iterator has another object: " + element, module);
         } else {
-            if (Debug.verboseOn()) Debug.logVerbose("iterator has no more objects", module);
+            if (verboseOn) Debug.logVerbose("iterator has no more objects", module);
         }
         if (element != null) {
-            if (Debug.verboseOn()) Debug.logVerbose("set attribute " + name + " to be " + element + " as next value from iterator", module);
+            if (verboseOn) Debug.logVerbose("set attribute " + name + " to be " + element + " as next value from iterator", module);
             pageContext.setAttribute(name, element);
 
             //expand a map element here if requested
@@ -239,7 +241,7 @@ public class IteratorTag extends BodyTagSupport {
 
             return true;
         }
-        if (Debug.verboseOn()) Debug.logVerbose("no more iterations; element = " + element, module);
+        if (verboseOn) Debug.logVerbose("no more iterations; element = " + element, module);
         return false;
     }
 }
