@@ -72,7 +72,10 @@ public class ControlServlet extends HttpServlet {
         // initialize security
         getSecurity();
         // initialize the services dispatcher
-        getDispatcher();        
+        getDispatcher();  
+        
+        // this will speed up the initial sessionId generation
+        new java.security.SecureRandom().nextLong();
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
