@@ -202,6 +202,7 @@
         <attribute name="productIdFor" type="String" mode="IN" optional="true"/>
         <attribute name="productIdInSubst" type="String" mode="IN" optional="true"/>
         <attribute name="productFeature" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="ruleOperator" type="String" mode="IN" optional="true"/>
     </service>
 
@@ -214,6 +215,7 @@
         <attribute name="productIdFor" type="String" mode="IN" optional="true"/>
         <attribute name="productIdInSubst" type="String" mode="IN" optional="true"/>
         <attribute name="productFeature" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="ruleOperator" type="String" mode="IN" optional="true"/>
     </service>
 

@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -39,6 +39,7 @@
         <field name="productIdIn"><display/></field>
         <field name="productIdInSubst"><display/></field>
         <field name="productFeature"><display/></field>
+        <field name="quantity"><display/></field>
         <field name="ruleOperator"><display/></field>
         <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="EditProductManufacturingRules?ruleId=${ruleId}" description="[${uiLabelMap.CommonSelected}]" />
