@@ -26,10 +26,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Mon Aug 27 16:13:20 PDT 2001
+ *@created    Mon Aug 27 23:48:55 MDT 2001
  *@version    1.0
  */
 -->
+
 
 <entitymodel>
   <!-- ========================================================= -->
@@ -556,6 +557,11 @@
         <rel-table-name>INVOICE_ATTRIBUTE</rel-table-name>
         <key-map><col-name>INVOICE_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_BILLING</rel-table-name>
+        <key-map><col-name>INVOICE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Invoice Attribute Entity</title>
@@ -607,6 +613,12 @@
       <relation>
         <type>many</type>
         <rel-table-name>INVOICE_ITEM_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>INVOICE_ID</col-name></key-map>
+        <key-map><col-name>INVOICE_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_BILLING</rel-table-name>
         <key-map><col-name>INVOICE_ID</col-name></key-map>
         <key-map><col-name>INVOICE_ITEM_SEQ_ID</col-name></key-map>
       </relation>
@@ -1612,6 +1624,11 @@
         <type>one</type>
         <rel-table-name>STATUS_TYPE</rel-table-name>
         <key-map><col-name>STATUS_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_STATUS</rel-table-name>
+        <key-map><col-name>STATUS_ID</col-name></key-map>
       </relation>
     </entity>	
     <entity>
@@ -3269,6 +3286,17 @@
         <rel-table-name>ORDER_ADJUSTMENT_ATTRIBUTE</rel-table-name>
         <key-map><col-name>ORDER_ADJUSTMENT_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Adjustment Attribute Entity</title>
@@ -3374,6 +3402,21 @@
       <prim-key-col>CONTACT_MECH_ID</prim-key-col>	
       <prim-key-col>CONTACT_MECH_PURPOSE_TYPE_ID</prim-key-col>	
       <prim-key-col>ORDER_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH_PURPOSE_TYPE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Header Entity</title>
@@ -3400,6 +3443,76 @@
         <rel-table-name>ORDER_ATTRIBUTE</rel-table-name>
         <key-map><col-name>ORDER_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ADJUSTMENT</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Sales</title>
+        <rel-table-name>ORDER_ITEM_ASSOCIATION</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name><rel-col-name>SALES_ORDER_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Purchase</title>
+        <rel-table-name>ORDER_ITEM_ASSOCIATION</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name><rel-col-name>PURCHASE_ORDER_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_BILLING</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_ROLE</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ROLE</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_SHIPMENT</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_STATUS</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_TERM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>WORK_ORDER_ITEM_FULFILLMENT</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PRODUCT_ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Item Entity</title>
@@ -3421,7 +3534,8 @@
       <field><col-name>ESTIMATED_DELIVERY_DATE</col-name><type>date-time</type></field>
       <field><col-name>SHIPPING_INSTRUCTIONS</col-name><type>long-varchar</type></field>
       <field><col-name>ITEM_DESCRIPTION</col-name><type>description</type></field>
-      <field><col-name>COMMENT</col-name><type>comment</type></field>	
+      <field><col-name>COMMENT</col-name><type>comment</type></field>
+      <field><col-name>CORRESPONDING_PO_ID</col-name><type>id</type></field>	
       <prim-key-col>ORDER_ID</prim-key-col>	
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
       <relation>
@@ -3440,6 +3554,77 @@
         <key-map><col-name>ORDER_ID</col-name></key-map>
         <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ADJUSTMENT</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Sales</title>
+        <rel-table-name>ORDER_ITEM_ASSOCIATION</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name><rel-col-name>SALES_ORDER_ID</rel-col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name><rel-col-name>SO_ITEM_SEQ_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Purchase</title>
+        <rel-table-name>ORDER_ITEM_ASSOCIATION</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name><rel-col-name>PURCHASE_ORDER_ID</rel-col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name><rel-col-name>PO_ITEM_SEQ_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_BILLING</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_ROLE</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_SHIPMENT</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_STATUS</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_TERM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>WORK_ORDER_ITEM_FULFILLMENT</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PRODUCT_ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Item Association Entity</title>
@@ -3453,6 +3638,28 @@
       <prim-key-col>SO_ITEM_SEQ_ID</prim-key-col>	
       <prim-key-col>PURCHASE_ORDER_ID</prim-key-col>	
       <prim-key-col>PO_ITEM_SEQ_ID</prim-key-col>
+      <relation>
+        <type>one</type><title>Sales</title>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>SALES_ORDER_ID</col-name><rel-col-name>ORDER_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>Sales</title>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>SALES_ORDER_ID</col-name><rel-col-name>ORDER_ID</rel-col-name></key-map>
+        <key-map><col-name>SO_ITEM_SEQ_ID</col-name><rel-col-name>ORDER_ITEM_SEQ_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>Purchase</title>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>PURCHASE_ORDER_ID</col-name><rel-col-name>ORDER_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>Purchase</title>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>PURCHASE_ORDER_ID</col-name><rel-col-name>ORDER_ID</rel-col-name></key-map>
+        <key-map><col-name>PO_ITEM_SEQ_ID</col-name><rel-col-name>ORDER_ITEM_SEQ_ID</rel-col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Item Attribute Entity</title>
@@ -3491,6 +3698,28 @@
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>	
       <prim-key-col>INVOICE_ID</prim-key-col>	
       <prim-key-col>INVOICE_ITEM_SEQ_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>INVOICE</rel-table-name>
+        <key-map><col-name>INVOICE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>INVOICE_ITEM</rel-table-name>
+        <key-map><col-name>INVOICE_ID</col-name></key-map>
+        <key-map><col-name>INVOICE_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Item Contact Mechanism Entity</title>
@@ -3504,6 +3733,27 @@
       <prim-key-col>CONTACT_MECH_PURPOSE_TYPE_ID</prim-key-col>	
       <prim-key-col>ORDER_ID</prim-key-col>	
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH_PURPOSE_TYPE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Item Role Entity</title>
@@ -3517,6 +3767,33 @@
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>	
       <prim-key-col>PARTY_ID</prim-key-col>	
       <prim-key-col>ROLE_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ROLE_TYPE</rel-table-name>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY_ROLE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Item Type Entity</title>
@@ -3582,6 +3859,22 @@
       <prim-key-col>ORDER_ID</prim-key-col>	
       <prim-key-col>PARTY_ID</prim-key-col>	
       <prim-key-col>ROLE_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PARTY_ROLE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Shipment Entity</title>
@@ -3596,6 +3889,28 @@
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>	
       <prim-key-col>SHIPMENT_ID</prim-key-col>	
       <prim-key-col>SHIPMENT_ITEM_SEQ_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>SHIPMENT</rel-table-name>
+        <key-map><col-name>SHIPMENT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>SHIPMENT_ITEM</rel-table-name>
+        <key-map><col-name>SHIPMENT_ID</col-name></key-map>
+        <key-map><col-name>SHIPMENT_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Status Entity</title>
@@ -3607,6 +3922,22 @@
       <field><col-name>ORDER_ITEM_SEQ_ID</col-name><type>id</type></field>
       <field><col-name>STATUS_DATETIME</col-name><type>date-time</type></field>	
       <prim-key-col>ORDER_STATUS_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>STATUS</rel-table-name>
+        <key-map><col-name>STATUS_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Term Entity</title>
@@ -3618,6 +3949,22 @@
       <field><col-name>ORDER_ITEM_SEQ_ID</col-name><type>id</type></field>
       <field><col-name>TERM_VALUE</col-name><type>numeric</type></field>	
       <prim-key-col>ORDER_TERM_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>TERM_TYPE</rel-table-name>
+        <key-map><col-name>TERM_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Term Attribute Entity</title>
@@ -3700,6 +4047,11 @@
       <field><col-name>PICKLIST_ID</col-name><type>id-ne</type></field>
       <field><col-name>DATE_CREATED</col-name><type>date-time</type></field>	
       <prim-key-col>PICKLIST_ID</prim-key-col>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PICKLIST_ITEM</rel-table-name>
+        <key-map><col-name>PICKLIST_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Picklist Item Entity</title>
@@ -3710,6 +4062,16 @@
       <field><col-name>QUANTITY</col-name><type>floating-point</type></field>	
       <prim-key-col>PICKLIST_ID</prim-key-col>	
       <prim-key-col>INVENTORY_ITEM_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PICKLIST</rel-table-name>
+        <key-map><col-name>PICKLIST_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>INVENTORY_ITEM</rel-table-name>
+        <key-map><col-name>INVENTORY_ITEM_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Product Order Item Entity</title>
@@ -3724,35 +4086,22 @@
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>	
       <prim-key-col>ENGAGEMENT_ID</prim-key-col>	
       <prim-key-col>ENGAGEMENT_ITEM_SEQ_ID</prim-key-col>
-    </entity>	
-    <entity>
-      <title>Purchase Order Entity</title>
-      <package-name>org.ofbiz.commonapp.order.order</package-name>
-      <table-name>PURCHASE_ORDER</table-name>
-      <field><col-name>PURCHASE_ORDER_ID</col-name><type>id-ne</type></field>
-      <field><col-name>ORDER_ID</col-name><type>id-ne</type></field>	
-      <prim-key-col>PURCHASE_ORDER_ID</prim-key-col>	
-      <prim-key-col>ORDER_ID</prim-key-col>
-    </entity>	
-    <entity>
-      <title>Purchase Order Item Entity</title>
-      <package-name>org.ofbiz.commonapp.order.order</package-name>
-      <table-name>PURCHASE_ORDER_ITEM</table-name>
-      <field><col-name>ORDER_ID</col-name><type>id-ne</type></field>
-      <field><col-name>ORDER_ITEM_SEQ_ID</col-name><type>id-ne</type></field>
-      <field><col-name>PRODUCT_ID</col-name><type>id</type></field>	
-      <prim-key-col>ORDER_ID</prim-key-col>	
-      <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
-    </entity>	
-    <entity>
-      <title>Sales Order Item Entity</title>
-      <package-name>org.ofbiz.commonapp.order.order</package-name>
-      <table-name>SALES_ORDER_ITEM</table-name>
-      <field><col-name>ORDER_ID</col-name><type>id-ne</type></field>
-      <field><col-name>ORDER_ITEM_SEQ_ID</col-name><type>id-ne</type></field>
-      <field><col-name>CORRESPONDING_PO_ID</col-name><type>id</type></field>	
-      <prim-key-col>ORDER_ID</prim-key-col>	
-      <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PRODUCT</rel-table-name>
+        <key-map><col-name>PRODUCT_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Work Order Item Fulfillment Entity</title>
@@ -3764,6 +4113,22 @@
       <prim-key-col>WORK_EFFORT_ID</prim-key-col>	
       <prim-key-col>ORDER_ID</prim-key-col>	
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>WORK_EFFORT</rel-table-name>
+        <key-map><col-name>WORK_EFFORT_ID</col-name></key-map>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -4945,6 +5310,16 @@
         <rel-table-name>TELECOMMUNICATIONS_NUMBER</rel-table-name>
         <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Contact Mechanism Attribute Entity</title>
@@ -4995,6 +5370,16 @@
       <relation>
         <type>many</type>
         <rel-table-name>PARTY_CONTACT_MECH_PURPOSE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_CONTACT_MECH</rel-table-name>
         <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
       </relation>
     </entity>	
@@ -5381,6 +5766,16 @@
         <rel-table-name>SUPPLIER_PRODUCT</rel-table-name>
         <key-map><col-name>PARTY_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_ROLE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ROLE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Party Attribute Entity</title>
@@ -5621,6 +6016,18 @@
       <relation>
         <type>many</type>
         <rel-table-name>PARTY_CONTACT_MECH</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ITEM_ROLE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_ROLE</rel-table-name>
         <key-map><col-name>PARTY_ID</col-name></key-map>
         <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
       </relation>
@@ -6449,6 +6856,11 @@
         <rel-table-name>INVENTORY_ITEM_VARIANCE</rel-table-name>
         <key-map><col-name>INVENTORY_ITEM_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PICKLIST_ITEM</rel-table-name>
+        <key-map><col-name>INVENTORY_ITEM_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Inventory Item Attribute Entity</title>
@@ -7010,6 +7422,11 @@
         <type>one</type><title>Weight</title>
         <rel-table-name>UOM</rel-table-name>
         <key-map><col-name>WEIGHT_UOM_ID</col-name><rel-col-name>UOM_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>PRODUCT_ORDER_ITEM</rel-table-name>
+        <key-map><col-name>PRODUCT_ID</col-name></key-map>
       </relation>
     </entity>	
     <entity>
@@ -7824,6 +8241,11 @@
         <rel-table-name>SHIPMENT_ATTRIBUTE</rel-table-name>
         <key-map><col-name>SHIPMENT_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_SHIPMENT</rel-table-name>
+        <key-map><col-name>SHIPMENT_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Shipment Attribute Entity</title>
@@ -7856,6 +8278,12 @@
       <field><col-name>SHIPMENT_CONTENT_DESCRIPTION</col-name><type>description</type></field>	
       <prim-key-col>SHIPMENT_ID</prim-key-col>	
       <prim-key-col>SHIPMENT_ITEM_SEQ_ID</prim-key-col>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_SHIPMENT</rel-table-name>
+        <key-map><col-name>SHIPMENT_ID</col-name></key-map>
+        <key-map><col-name>SHIPMENT_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Shipment Item Billing Entity</title>
@@ -8131,6 +8559,11 @@
       <relation>
         <type>many</type>
         <rel-table-name>WORK_EFFORT_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>WORK_EFFORT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>WORK_ORDER_ITEM_FULFILLMENT</rel-table-name>
         <key-map><col-name>WORK_EFFORT_ID</col-name></key-map>
       </relation>
     </entity>	
@@ -8553,5 +8986,3 @@
       </relation>
     </entity>  
 </entitymodel>
-
-
