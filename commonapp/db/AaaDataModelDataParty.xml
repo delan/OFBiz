@@ -61,6 +61,8 @@
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_WORK_SEC" contactMechTypeId="TELECOM_NUMBER"/>
 
   <RoleType description="Not Applicable" hasTable="N" parentTypeId="" roleTypeId="_NA_"/>
+  <RoleType description="Administrator" hasTable="N" parentTypeId="" roleTypeId="ADMIN"/>
+  <RoleType description="Limited Administrator" hasTable="N" parentTypeId="" roleTypeId="LTD_ADMIN"/>
   <RoleType description="Contact" hasTable="N" parentTypeId="" roleTypeId="CONTACT"/>
   <RoleType description="Prospect" hasTable="N" parentTypeId="" roleTypeId="PROSPECT"/>
   <RoleType description="Shareholder" hasTable="N" parentTypeId="" roleTypeId="SHAREHOLDER"/>

@@ -2,16 +2,23 @@
 <entity-engine-xml>
   <Party partyId="_NA_" partyTypeId="PERSON"/>
   <Person partyId="_NA_"/>
+  
   <Party partyId="admin" partyTypeId="PERSON"/>
   <Person firstName="THE" lastName="ADMINISTRATOR" middleName="PRIVILEGED" partyId="admin" personalTitle="Mr."/>    
   <PartyRole partyId="admin" roleTypeId="ORDER_CLERK"/>
 
+  <Party partyId="ltdadmin" partyTypeId="PERSON"/>
+  <Person firstName="Limited" lastName="Administrator" middleName="" partyId="ltdadmin" personalTitle="Mr."/>    
+  <PartyRole partyId="ltdadmin" roleTypeId="ORDER_CLERK"/>
+  <PartyRole partyId="ltdadmin" roleTypeId="LTD_ADMIN"/>
+  
   <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
   <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
   <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
   <SecurityGroup description="Admin group for restricted order processing." groupId="ORDERPROC"/>
   <SecurityGroup description="Order Entry Admin group; permissions for creating orders." groupId="ORDERENTRY"/>
   <SecurityGroup description="Catalog Admin group, has all catalog permissions." groupId="CATALOGADMIN"/>
+  <SecurityGroup description="Limited Catalog Admin group, has limited catalog permissions." groupId="CATALOGADMIN_LTD"/>
   <SecurityGroup description="Order Admin group, has all order permissions." groupId="ORDERADMIN"/>
   <SecurityGroup description="Party Admin group, has all party permissions." groupId="PARTYADMIN"/>
 
@@ -43,21 +50,24 @@
   <SecurityPermission description="Update operations on the Catalog." permissionId="CATALOG_UPDATE"/>
   <SecurityPermission description="Delete operations on the Catalog." permissionId="CATALOG_DELETE"/>
   <SecurityPermission description="ALL operations on the Catalog." permissionId="CATALOG_ADMIN"/>
+  <SecurityPermission description="Limited Create operations on the Catalog." permissionId="CATALOG_CREATE_ROLE"/>
+  <SecurityPermission description="Limited Update operations on the Catalog." permissionId="CATALOG_UPDATE_ROLE"/>
+  <SecurityPermission description="Limited Delete operations on the Catalog." permissionId="CATALOG_DELETE_ROLE"/>
 
   <SecurityPermission description="View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
-  <SecurityPermission description="Create new party notes." permissionId="PARTYMGR_NOTE"/>
   <SecurityPermission description="Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
   <SecurityPermission description="Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
   <SecurityPermission description="Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
   <SecurityPermission description="ALL operations in the Party Manager." permissionId="PARTYMGR_ADMIN"/>
+  <SecurityPermission description="Create new party notes." permissionId="PARTYMGR_NOTE"/>
 
   <SecurityPermission description="View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
-  <SecurityPermission description="Limited view operations in the Order Manager." permissionId="ORDERMGR_VIEW_ROLE"/>
-  <SecurityPermission description="Create new order notes." permissionId="ORDERMGR_NOTE"/>
   <SecurityPermission description="Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
   <SecurityPermission description="Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
   <SecurityPermission description="Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
   <SecurityPermission description="ALL operations in the Order Manager." permissionId="ORDERMGR_ADMIN"/>
+  <SecurityPermission description="Limited view operations in the Order Manager." permissionId="ORDERMGR_VIEW_ROLE"/>
+  <SecurityPermission description="Create new order notes." permissionId="ORDERMGR_NOTE"/>
 
   <SecurityPermission description="View operations in the Shipping Rate Editor." permissionId="SHIPRATE_VIEW"/>
   <SecurityPermission description="Create operations in the Shipping Rate Editor." permissionId="SHIPRATE_CREATE"/>
@@ -99,20 +109,20 @@
   <SecurityPermission description="ALL operations in the Accounting Manager." permissionId="ACCOUNTING_ADMIN"/>
 
   <SecurityPermission description="View operations in the Facility Manager." permissionId="FACILITY_VIEW"/>
-  <SecurityPermission description="Limited view operations in the Facility Manager." permissionId="FACILITY_VIEW_ROLE"/>
   <SecurityPermission description="Create operations in the Facility Manager." permissionId="FACILITY_CREATE"/>
   <SecurityPermission description="Update operations in the Facility Manager." permissionId="FACILITY_UPDATE"/>
-  <SecurityPermission description="Limited update operations in the Facility Manager." permissionId="FACILITY_UPDATE_ROLE"/>
   <SecurityPermission description="Delete operations in the Facility Manager." permissionId="FACILITY_DELETE"/>
   <SecurityPermission description="ALL operations in the Facility Manager." permissionId="FACILITY_ADMIN"/>
+  <SecurityPermission description="Limited view operations in the Facility Manager." permissionId="FACILITY_VIEW_ROLE"/>
+  <SecurityPermission description="Limited update operations in the Facility Manager." permissionId="FACILITY_UPDATE_ROLE"/>
 
   <SecurityPermission description="View operations in the Marketing Manager." permissionId="MARKETING_VIEW"/>
-  <SecurityPermission description="Limited view operations in the Marketing Manager." permissionId="MARKETING_VIEW_ROLE"/>
   <SecurityPermission description="Create operations in the Marketing Manager." permissionId="MARKETING_CREATE"/>
   <SecurityPermission description="Update operations in the Marketing Manager." permissionId="MARKETING_UPDATE"/>
-  <SecurityPermission description="Limited update operations in the Marketing Manager." permissionId="MARKETING_UPDATE_ROLE"/>
   <SecurityPermission description="Delete operations in the Marketing Manager." permissionId="MARKETING_DELETE"/>
   <SecurityPermission description="ALL operations in the Marketing Manager." permissionId="MARKETING_ADMIN"/>
+  <SecurityPermission description="Limited view operations in the Marketing Manager." permissionId="MARKETING_VIEW_ROLE"/>
+  <SecurityPermission description="Limited update operations in the Marketing Manager." permissionId="MARKETING_UPDATE_ROLE"/>
 
   <SecurityPermission description="View operations in the Content Manager." permissionId="CONTENTMGR_VIEW"/>
   <SecurityPermission description="Create operations in the Content Manager." permissionId="CONTENTMGR_CREATE"/>
@@ -161,6 +171,11 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN"/>
+
+  <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_VIEW"/>
+  <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_CREATE_ROLE"/>
+  <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_UPDATE_ROLE"/>
+  <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_DELETE_ROLE"/>
 
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_DELETE"/>
@@ -283,7 +298,12 @@
   <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
   <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
 
+  <UserLogin userLoginId="ltdadmin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
+
   <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
   <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
   <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="demoadmin" fromDate="2001-01-01 12:00:00.0"/>
+  
+  <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
+  <UserLoginSecurityGroup groupId="CATALOGADMIN_LTD" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
 </entity-engine-xml>

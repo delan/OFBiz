@@ -90,6 +90,7 @@
   <ProdCatalogCategoryType description="Purchase Allow (One)" prodCatalogCategoryTypeId="PCCT_PURCH_ALLW"/>
   <ProdCatalogCategoryType description="Admin Allow (One)" prodCatalogCategoryTypeId="PCCT_ADMIN_ALLW"/>
 
+  <ProductAssocType description="Also Bought" hasTable="N" parentTypeId="" productAssocTypeId="ALSO_BOUGHT"/>
   <ProductAssocType description="Upgrade or Up-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_UPGRADE"/>
   <ProductAssocType description="Complementary or Cross-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPLEMENT"/>
   <ProductAssocType description="Incompatable" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_INCOMPATABLE"/>
@@ -107,6 +108,7 @@
   <ProductCategoryType description="Search" hasTable="N" parentTypeId="" productCategoryTypeId="SEARCH_CATEGORY"/>
   <ProductCategoryType description="Usage" hasTable="N" parentTypeId="" productCategoryTypeId="USAGE_CATEGORY"/>
   <ProductCategoryType description="Mix and Match" hasTable="N" parentTypeId="" productCategoryTypeId="MIXMATCH_CATEGORY"/>
+  <ProductCategoryType description="Cross Sell" hasTable="N" parentTypeId="" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
 
   <ProductFeatureApplType description="Optional" hasTable="N" parentTypeId="" productFeatureApplTypeId="OPTIONAL_FEATURE"/>
   <ProductFeatureApplType description="Required" hasTable="N" parentTypeId="" productFeatureApplTypeId="REQUIRED_FEATURE"/>
