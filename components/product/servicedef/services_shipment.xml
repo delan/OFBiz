@@ -146,7 +146,7 @@
         <description>Create ShipmentPackageContent</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="shipmentPackageSeqId" mode="INOUT" optional="false"/>        
+        <override name="shipmentPackageSeqId" mode="INOUT" optional="false"/>
     </service>
     <service name="updateShipmentPackageContent" default-entity-name="ShipmentPackageContent" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentPackageContent" auth="true">
@@ -164,8 +164,8 @@
         <description>Add Shipment Content To Package</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="quantity" mode="IN" optional="false"/>        
-        <override name="shipmentPackageSeqId" mode="INOUT" optional="false"/>        
+        <override name="quantity" mode="IN" optional="false"/>
+        <override name="shipmentPackageSeqId" mode="INOUT" optional="false"/>
     </service>
 
     <!-- ShipmentPackageRouteSeg Services -->

@@ -761,9 +761,12 @@
         <make-value value-name="newEntity" entity-name="ShipmentPackageContent"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <find-by-primary-key value-name="shipmentPackageContent" map-name="newEntity"/>
+        <log level="verbose" message="In addShipmentContentToPackage trying values: ${newEntity}"/>
         <if-empty field-name="shipmentPackageContent">
             <set-service-fields service-name="createShipmentPackageContent" map-name="parameters" to-map-name="createSPCMap"/>
-            <call-service service-name="createShipmentPackageContent" in-map-name="createSPCMap"/>
+            <call-service service-name="createShipmentPackageContent" in-map-name="createSPCMap">
+                <result-to-field result-name="shipmentPackageSeqId" field-name="newEntity.shipmentPackageSeqId"/>
+            </call-service>
         <else>
             <!-- add the quantities and store it -->
             <calculate field-name="shipmentPackageContent.quantity" type="Double">
@@ -773,7 +776,7 @@
             <call-service service-name="updateShipmentPackageContent" in-map-name="updateSPCMap"/>
         </else>
         </if-empty>
-        <field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
+        <field-to-result field-name="newEntity.shipmentPackageSeqId" result-name="shipmentPackageSeqId"/>
     </simple-method>
 
     <!-- ShipmentPackageRouteSeg services -->
@@ -1122,14 +1125,16 @@
                     <field-to-field field-name="shipGroupSeqId" map-name="orderItemShipGroup" to-map-name="issueLookupMap"/>
                     <find-by-and entity-name="ItemIssuance" map-name="issueLookupMap" list-name="itemIssuances"/>
                     
-                    <string-to-field string="New" field-name="packageSeqMap.packageId"/>
+                    <string-to-field string="New" field-name="shipmentPackageSeqId"/>
                     <iterate list-name="itemIssuances" entry-name="itemIssuance">
+                        <log level="verbose" message="In quick ship adding item to package: ${shipmentPackageSeqId}"/>
+                        <clear-field field-name="shipItemContext"/>
                         <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
                         <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
                         <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
-                        <field-to-field field-name="packageSeqMap.packageId" to-field-name="shipItemContext.shipmentPackageSeqId"/>
+                        <field-to-field field-name="shipmentPackageSeqId" to-field-name="shipItemContext.shipmentPackageSeqId"/>
                         <call-service service-name="addShipmentContentToPackage" in-map-name="shipItemContext">
-                            <result-to-field result-name="shipmentPackageSeqId" field-name="packageSeqMap.packageId"/>
+                            <result-to-field result-name="shipmentPackageSeqId" field-name="shipmentPackageSeqId"/>
                         </call-service>
                     </iterate>
                     <!-- update the shipment status to packed -->
@@ -1246,7 +1251,7 @@
             <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <call-service service-name="addShipmentContentToPackage" in-map-name="shipItemContext">
-                <result-to-field result-name="shipmentPackageSeqId" field-name="${itemMap.trackingNum}" map-name="packageMap"/>
+                <result-to-field result-name="shipmentPackageSeqId" field-name="packageMap.${itemMap.trackingNum}"/>
                 <result-to-field result-name="shipmentPackageSeqId" map-name="routeSegLookup"/>
             </call-service>
 
