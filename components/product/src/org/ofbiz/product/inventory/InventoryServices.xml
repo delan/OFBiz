@@ -77,28 +77,34 @@
         	<alt-permission permission="FACILITY" action="_CREATE"/>
         	<fail-message message="Security Error: to run createInventoryItemVariance you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
         </check-permission>
+        
+        <!-- add changes to availableToPromise and quantityOnHand -->
+        <make-value value-name="inventoryItemLookup" entity-name="InventoryItem"/>
+        <set-pk-fields map-name="parameters" value-name="inventoryItemLookup"/>
+        <find-by-primary-key map-name="inventoryItemLookup" value-name="inventoryItem"/>
+
+		<if-compare field-name="inventoryItemTypeId" map-name="inventoryItem" operator="not-equals" value="NON_SERIAL_INV_ITEM">
+			<string-to-list string="Can only create an InventoryItemVariance for a Non-Serialized Inventory Item" list-name="error_list"/>
+		</if-compare>
         <check-errors/>
+
+        <calculate field-name="availableToPromise" map-name="inventoryItem">
+        	<calcop field-name="availableToPromise" map-name="inventoryItem" operator="add">
+        		<calcop field-name="availableToPromise" map-name="parameters" operator="get"/>
+        	</calcop>
+        </calculate>
+        <calculate field-name="quantityOnHand" map-name="inventoryItem">
+        	<calcop field-name="quantityOnHand" map-name="inventoryItem" operator="add">
+        		<calcop field-name="quantityOnHand" map-name="parameters" operator="get"/>
+        	</calcop>
+        </calculate>
+        <store-value value-name="inventoryItem"/>
 
         <make-value value-name="newEntity" entity-name="InventoryItemVariance"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateInventoryItemVariance" short-description="Update an InventoryItemVariance">
-        <check-permission permission="CATALOG" action="_UPDATE">
-        	<alt-permission permission="FACILITY" action="_UPDATE"/>
-        	<fail-message message="Security Error: to run updateInventoryItemVariance you must have the CATALOG_UPDATE, CATALOG_ADMIN, FACILITY_UPDATE, or FACILITY_ADMIN permission"/>
-        </check-permission>
-        <check-errors/>
-
-        <make-value entity-name="InventoryItemVariance" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        <store-value value-name="lookedUpValue"/>
-    </simple-method>
-
     <simple-method method-name="createPhysicalInventory" short-description="Create a PhysicalInventory">
         <check-permission permission="CATALOG" action="_CREATE">
         	<alt-permission permission="FACILITY" action="_CREATE"/>
@@ -108,6 +114,13 @@
 
         <make-value value-name="newEntity" entity-name="PhysicalInventory"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="newEntity.physicalInventoryDate">
+        	<now-timestamp-to-env env-name="newEntity.physicalInventoryDate"/>
+        </if-empty>
+        <if-empty field-name="newEntity.partyId">
+        	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="newEntity"/>
+        </if-empty>
 
         <sequenced-id-to-env sequence-name="PhysicalInventory" env-name="physicalInventoryId"/>
         <to-string field-name="physicalInventoryId"/>
@@ -116,33 +129,14 @@
 
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updatePhysicalInventory" short-description="Update a PhysicalInventory">
-        <check-permission permission="CATALOG" action="_UPDATE">
-        	<alt-permission permission="FACILITY" action="_UPDATE"/>
-        	<fail-message message="Security Error: to run updatePhysicalInventory you must have the CATALOG_UPDATE, CATALOG_ADMIN, FACILITY_UPDATE, or FACILITY_ADMIN permission"/>
-        </check-permission>
-        <check-errors/>
-
-        <make-value entity-name="PhysicalInventory" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        <store-value value-name="lookedUpValue"/>
-    </simple-method>
-
     <simple-method method-name="createPhysicalInventoryAndVariance" short-description="Create a PhysicalInventory and an InventoryItemVariance">
     	<set-service-fields service-name="createPhysicalInventory" map-name="parameters" to-map-name="createPhysicalInventoryMap"/>
     	<call-service service-name="createPhysicalInventory" in-map-name="createPhysicalInventoryMap">
     		<result-to-field result-name="physicalInventoryId" field-name="physicalInventoryId" map-name="parameters"/>
+    		<result-to-result result-name="physicalInventoryId" service-result-name="physicalInventoryId"/>
     	</call-service>
     	<set-service-fields service-name="createInventoryItemVariance" map-name="parameters" to-map-name="createInventoryItemVarianceMap"/>
     	<call-service service-name="createInventoryItemVariance" in-map-name="createInventoryItemVarianceMap"/>
-    </simple-method>
-    <simple-method method-name="updatePhysicalInventoryAndVariance" short-description="Update a PhysicalInventory and an InventoryItemVariance">
-    	<set-service-fields service-name="updatePhysicalInventory" map-name="parameters" to-map-name="updatePhysicalInventoryMap"/>
-    	<call-service service-name="updatePhysicalInventory" in-map-name="updatePhysicalInventoryMap"/>
-    	<set-service-fields service-name="updateInventoryItemVariance" map-name="parameters" to-map-name="updateInventoryItemVarianceMap"/>
-    	<call-service service-name="updateInventoryItemVariance" in-map-name="updateInventoryItemVarianceMap"/>
     </simple-method>
 
     <!-- ProductFacility methods -->
