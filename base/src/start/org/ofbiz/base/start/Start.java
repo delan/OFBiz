@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.7 2003/08/20 06:02:15 ajzeneski Exp $
+ * $Id: Start.java,v 1.8 2003/08/25 15:20:21 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.7 $
+  *@version    $Revision: 1.8 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -273,6 +273,7 @@ public class Start implements Runnable {
         public String baseConfig;
         public String logDir;
         public List loaders;
+        public String awtHeadless;
         
         public Config() {
             try {
@@ -369,6 +370,14 @@ public class Start implements Runnable {
             // set the log4j configuration property so we don't pick up one inside jars by mistake
             System.setProperty("log4j.configuration", log4jConfig);
         
+            awtHeadless = System.getProperty("java.awt.headless");
+            if (awtHeadless == null) {
+                awtHeadless = props.getProperty("java.awt.headless");
+            }
+            if (awtHeadless != null) {
+                System.setProperty("java.awt.headless", awtHeadless);
+            }
+            
             // set the property to tell Jetty to use 2.4 SessionListeners
             System.setProperty("org.mortbay.jetty.servlet.AbstractSessionManager.24SessionDestroyed", "true");
             
