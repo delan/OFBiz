@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentCacheTransform.java,v 1.4 2004/03/16 17:27:16 byersa Exp $
+ * $Id: EditRenderSubContentCacheTransform.java,v 1.5 2004/03/16 17:48:08 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,14 +50,14 @@ import org.ofbiz.minilang.MiniLangException;
 import freemarker.template.Environment;
 import freemarker.template.TemplateTransformModel;
 
-import com.clarkware.profiler.Profiler;
+//import com.clarkware.profiler.Profiler;
 /**
  * EditRenderSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since 3.0
  */
 public class EditRenderSubContentCacheTransform implements TemplateTransformModel {

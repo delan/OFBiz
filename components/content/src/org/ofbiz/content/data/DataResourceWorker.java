@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.18 2004/03/16 17:27:14 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.19 2004/03/16 17:48:08 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,14 +57,14 @@ import org.ofbiz.service.LocalDispatcher;
 
 import freemarker.template.TemplateException;
 import freemarker.template.Template;
-import com.clarkware.profiler.Profiler;
+//import com.clarkware.profiler.Profiler;
 
 /**
  * DataResourceWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @since 3.0
  */
 public class DataResourceWorker {
