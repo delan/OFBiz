@@ -57,14 +57,15 @@
   <Enumeration description="Confirmation" enumCode="ODR_CONFIRM" enumId="PRDS_ODR_CONFIRM" enumTypeId="PRDS_EMAIL" sequenceId="02"/>
   <Enumeration description="Complete" enumCode="ODR_COMPLETE" enumId="PRDS_ODR_COMPLETE" enumTypeId="PRDS_EMAIL" sequenceId="03"/>
   <Enumeration description="Back-Order" enumCode="ODR_BACKORDER" enumId="PRDS_ODR_BACKORDER" enumTypeId="PRDS_EMAIL" sequenceId="04"/>
-  <Enumeration description="Other Change" enumCode="ODR_CHANGE" enumId="PRDS_ODR_CHANGE" enumTypeId="PRDS_EMAIL" sequenceId="05"/>
-  <Enumeration description="Return Accepted" enumCode="RTN_ACCEPT" enumId="PRDS_RTN_ACCEPT" enumTypeId="PRDS_EMAIL" sequenceId="06"/>
-  <Enumeration description="Return Completed" enumCode="RTN_COMPLETE" enumId="PRDS_RTN_COMPLETE" enumTypeId="PRDS_EMAIL" sequenceId="07"/>
-  <Enumeration description="Return Cancelled" enumCode="RTN_CANCEL" enumId="PRDS_RTN_CANCEL" enumTypeId="PRDS_EMAIL" sequenceId="08"/>
-  <Enumeration description="Retrieve Password" enumCode="PWD_RETRIEVE" enumId="PRDS_PWD_RETRIEVE" enumTypeId="PRDS_EMAIL" sequenceId="09"/>
-  <Enumeration description="Tell-A-Friend" enumCode="TELL_FRIEND" enumId="PRDS_TELL_FRIEND" enumTypeId="PRDS_EMAIL" sequenceId="10"/>
-  <Enumeration description="Gift-Card Purchase" enumCode="GC_PURCHASE" enumId="PRDS_GC_PURCHASE" enumTypeId="PRDS_EMAIL" sequenceId="11"/>
-  <Enumeration description="Gift-Card Reload" enumCode="GC_RELOAD" enumId="PRDS_GC_RELOAD" enumTypeId="PRDS_EMAIL" sequenceId="12"/>
+  <Enumeration description="Order Change" enumCode="ODR_CHANGE" enumId="PRDS_ODR_CHANGE" enumTypeId="PRDS_EMAIL" sequenceId="05"/>
+  <Enumeration description="Payment Retry" enumCode="ODR_PAYRETRY" enumId="PRDS_ODR_PAYRETRY" enumTypeId="PRDS_EMAIL" sequenceId="06"/>
+  <Enumeration description="Return Accepted" enumCode="RTN_ACCEPT" enumId="PRDS_RTN_ACCEPT" enumTypeId="PRDS_EMAIL" sequenceId="07"/>
+  <Enumeration description="Return Completed" enumCode="RTN_COMPLETE" enumId="PRDS_RTN_COMPLETE" enumTypeId="PRDS_EMAIL" sequenceId="08"/>
+  <Enumeration description="Return Cancelled" enumCode="RTN_CANCEL" enumId="PRDS_RTN_CANCEL" enumTypeId="PRDS_EMAIL" sequenceId="09"/>
+  <Enumeration description="Retrieve Password" enumCode="PWD_RETRIEVE" enumId="PRDS_PWD_RETRIEVE" enumTypeId="PRDS_EMAIL" sequenceId="10"/>
+  <Enumeration description="Tell-A-Friend" enumCode="TELL_FRIEND" enumId="PRDS_TELL_FRIEND" enumTypeId="PRDS_EMAIL" sequenceId="11"/>
+  <Enumeration description="Gift-Card Purchase" enumCode="GC_PURCHASE" enumId="PRDS_GC_PURCHASE" enumTypeId="PRDS_EMAIL" sequenceId="12"/>
+  <Enumeration description="Gift-Card Reload" enumCode="GC_RELOAD" enumId="PRDS_GC_RELOAD" enumTypeId="PRDS_EMAIL" sequenceId="13"/>
 
   <EnumerationType description="Facility Location Type" enumTypeId="FACLOC_TYPE" hasTable="N" parentTypeId=""/>
   <Enumeration description="Pick/Primary" enumCode="PICKLOC" enumId="FLT_PICKLOC" enumTypeId="FACLOC_TYPE" sequenceId="01"/>
