@@ -31,5 +31,23 @@ import org.ofbiz.core.util.*;
 delegator = request.getAttribute("delegator");
 
 shipmentId = request.getParameter("shipmentId");
+shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+
+shipmentPackages = shipment.getRelated("ShipmentPackage", null, UtilMisc.toList("shipmentPackageSeqId"));
+shipmentPackageDatas = new LinkedList();
+if (shipmentPackages != null && shipmentPackages.size() > 0) {
+	shipmentPackageIter = shipmentPackages.iterator();
+	while (shipmentPackageIter.hasNext()) {
+	    shipmentPackage = shipmentPackageIter.next();
+	    shipmentPackageData = new HashMap();
+	    shipmentPackageData.put("shipmentPackage", shipmentPackage);
+	    shipmentPackageData.put("shipmentPackageContents", shipmentPackage.getRelated("ShipmentPackageContent"));
+	    shipmentPackageData.put("product", shipmentPackage.getRelatedOne("Product"));
+	    shipmentPackageDatas.add(shipmentPackageData);
+	}
+}
+
 context.put("shipmentId", shipmentId);
+context.put("shipment", shipment);
+context.put("shipmentPackageDatas", shipmentPackageDatas);
 

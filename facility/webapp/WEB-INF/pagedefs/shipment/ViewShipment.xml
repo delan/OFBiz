@@ -5,4 +5,7 @@
     <property name="headerItem">shipment</property>
     <property name="tabButtonItem">ViewShipment</property>
     <page-action name="/shipment/ViewShipment.bsh"/> 
+    <page-action name="/shipment/EditShipmentItems.bsh"/> 
+    <page-action name="/shipment/EditShipmentPackages.bsh"/> 
+    <page-action name="/shipment/EditShipmentRouteSegments.bsh"/> 
 </page>

@@ -31,14 +31,8 @@ import org.ofbiz.core.util.*;
 delegator = request.getAttribute("delegator");
 
 shipmentId = request.getParameter("shipmentId");
-context.put("shipmentId", shipmentId);
 orderId = request.getParameter("orderId");
-context.put("orderId", orderId);
-
-shipment = null;
-if (UtilValidate.isNotEmpty(shipmentId)) {
-	shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
-}
+shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 
 if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
     orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -72,3 +66,7 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
     }
     context.put("orderItemDatas", orderItemDatas);
 }
+
+context.put("shipmentId", shipmentId);
+context.put("shipment", shipment);
+context.put("orderId", orderId);

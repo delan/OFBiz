@@ -31,7 +31,18 @@ import org.ofbiz.core.util.*;
 delegator = request.getAttribute("delegator");
 
 shipmentId = request.getParameter("shipmentId");
+shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+
 context.put("shipmentId", shipmentId);
+context.put("shipment", shipment);
 
-
+context.put("originFacility", shipment.getRelatedOne("OriginFacility"));
+context.put("destinationFacility", shipment.getRelatedOne("DestinationFacility"));
+context.put("shipmentType", shipment.getRelatedOne("ShipmentType"));
+context.put("statusItem", shipment.getRelatedOne("StatusItem"));
+context.put("primaryOrderHeader", shipment.getRelatedOne("PrimaryOrderHeader"));
+context.put("toPerson", shipment.getRelatedOne("ToPerson"));
+context.put("toPartyGroup", shipment.getRelatedOne("ToPartyGroup"));
+context.put("fromPerson", shipment.getRelatedOne("FromPerson"));
+context.put("fromPartyGroup", shipment.getRelatedOne("FromPartyGroup"));
 
