@@ -23,29 +23,19 @@
  *@version    1.0
  */
 
+importPackage(Packages.java.lang);
+//importPackage(Packages.java.util);
 importClass(Packages.org.ofbiz.core.util.SiteDefs);
-importClass(Packages.org.ofbiz.core.util.UtilHttp);
+importClass(Packages.org.ofbiz.commonapp.common.CommonWorkers);
 
-var userLogin = session.getAttribute("userLogin");
-var person = null;
-if (userLogin != null) {
-    person = userLogin.getRelatedOne("Person");
+context.put("autoUserLogin", session.getAttribute("autoUserLogin"));
+context.put("autoLogoutUrl", CommonWorkers.makeLoginUrl(request, "autoLogout")); 
+
+var previousParams = session.getAttribute(SiteDefs.PREVIOUS_PARAMS);
+if (previousParams != null && previousParams.length() > 0) {
+    previousParams = "?" + previousParams;
+} else {
+    previousParams = "";
 }
-
-var tryEntity = true;
-var errorMessage = request.getAttribute(SiteDefs.ERROR_MESSAGE);
-if (errorMessage != null && errorMessage.length() > 0) {
-    tryEntity = false;    
-}
-var personData = person;
-if (!tryEntity) {
-    personData = UtilHttp.getParameterMap(request);
-}
-
-var donePage = request.getParameter("DONE_PAGE");
-if (donePage == null || donePage.length() == 0) { donePage = "viewprofile" }
-
-context.put("person", person);
-context.put("personData", personData);
-context.put("donePage", donePage);
+context.put("previousParams", previousParams);
 

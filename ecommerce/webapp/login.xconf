@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>/templates/main.ftl</template>
+    <generator name="ofbiz-freemarker"/>
+    <property name="title">Login</property>
+    <page-action>login.js</page-action>
+    <pageEditor>OfbizOrderEditor</pageEditor>
+</page>
+

@@ -523,7 +523,7 @@
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="wsp" page="/main.ftl"/>
-    <view-map name="login" type="region"/>
+    <view-map name="login" type="wsp" page="/login.ftl"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
     <view-map name="showcart" type="wsp" page="/cart/showcart.ftl"/>  
