@@ -29,7 +29,7 @@ import java.sql.SQLException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.transaction.JotmConnectionFactory;
+//import org.ofbiz.entity.transaction.JotmConnectionFactory;
 import org.ofbiz.entity.transaction.MinervaConnectionFactory;
 import org.ofbiz.entity.transaction.TransactionFactory;
 import org.w3c.dom.Element;

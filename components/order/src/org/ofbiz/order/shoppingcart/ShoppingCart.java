@@ -38,6 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.map.LinkedMap;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -50,12 +51,9 @@ import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
-import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
-
-import org.apache.commons.collections.map.LinkedMap;
-import org.ofbiz.product.product.ProductContentWrapper;
 
 /**
  * Shopping Cart Object
