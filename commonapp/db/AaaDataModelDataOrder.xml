@@ -54,7 +54,9 @@
   <!-- order item inventory res status -->
   <StatusType description="Order Item Inventory Res" hasTable="N" parentTypeId="" statusTypeId="ORDITM_INVRES_STTS"/>
   <StatusItem description="Reserved" sequenceId="01" statusCode="RESERVED" statusId="OIIR_RESERVED" statusTypeId="ORDITM_INVRES_STTS"/>
-  <StatusItem description="Cancelled" sequenceId="02" statusCode="CANCELLED" statusId="OIIR_CANCELLED" statusTypeId="ORDITM_INVRES_STTS"/>
+  <StatusItem description="Picked" sequenceId="02" statusCode="PICKED" statusId="OIIR_PICKED" statusTypeId="ORDITM_INVRES_STTS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="OIIR_CANCELLED" statusTypeId="ORDITM_INVRES_STTS"/>
+  <StatusValidChange condition="" statusId="OIIR_RESERVED" statusIdTo="OIIR_PICKED" transitionName="Pick Inventory"/>
   <StatusValidChange condition="" statusId="OIIR_RESERVED" statusIdTo="OIIR_CANCELLED" transitionName="Cancel Reservation"/>
   
   <!-- order and order item status -->
