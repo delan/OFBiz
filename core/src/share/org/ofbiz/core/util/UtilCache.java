@@ -360,7 +360,6 @@ public class UtilCache {
      * @return True is the element corresponding to the specified key has expired, otherwise false
      */
     public boolean hasExpired(Object key) {
-        if (expireTime <= 0) return false;
         if (key == null) return false;
         
         UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
@@ -368,11 +367,12 @@ public class UtilCache {
     }
 
     protected boolean hasExpired(UtilCache.CacheLine line) {
-        if (expireTime <= 0) return false;
         if (line == null) return false;
+        //check this BEFORE checking too see if expireTime <= 0, ie if time expiration is enabled
+        if (line.getValue() == null) return true;
+        if (expireTime <= 0) return false;
         
         if (line.loadTime <= 0) return true;
-        if (line.getValue() == null) return true;
         if ((line.loadTime + expireTime) < System.currentTimeMillis()) {
             return true;
         } else {
