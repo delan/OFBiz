@@ -35,18 +35,16 @@ shipmentId = request.getParameter("shipmentId");
 if (UtilValidate.isEmpty(shipmentId)) shipmentId = request.getAttribute("shipmentId");
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 
-if (shipment != null) {
-    currentStatus = shipment.getRelatedOne("StatusItem");
-    
-    HtmlFormWrapper editShipmentWrapper = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "EditShipment", request, response);
-    editShipmentWrapper.putInContext("shipmentId", shipmentId);
-    editShipmentWrapper.putInContext("shipment", shipment);
-    editShipmentWrapper.putInContext("currentStatus", currentStatus);
-    
-    
-    context.put("shipment", shipment);
-    context.put("currentStatus", currentStatus);
-    context.put("editShipmentWrapper", editShipmentWrapper);
-}
+HtmlFormWrapper editShipmentWrapper = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "EditShipment", request, response);
+editShipmentWrapper.putInContext("shipmentId", shipmentId);
+editShipmentWrapper.putInContext("shipment", shipment);
 
 context.put("shipmentId", shipmentId);
+context.put("shipment", shipment);
+context.put("editShipmentWrapper", editShipmentWrapper);
+
+if (shipment != null) {
+    currentStatus = shipment.getRelatedOne("StatusItem");
+    editShipmentWrapper.putInContext("currentStatus", currentStatus);
+    context.put("currentStatus", currentStatus);
+}
