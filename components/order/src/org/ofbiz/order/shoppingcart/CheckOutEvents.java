@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.13 2003/10/26 05:44:02 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.14 2003/10/26 18:37:23 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -216,10 +216,9 @@ public class CheckOutEvents {
         }
 
         // update the selected payment methods amount with valid numbers
-        List paymentMethodIds = cart.getPaymentMethodIds();
-        if (paymentMethodIds != null) {
+        if (paymentMethods != null) {
             List nullPaymentIds = new ArrayList();
-            Iterator i = paymentMethodIds.iterator();
+            Iterator i = paymentMethods.iterator();
             while (i.hasNext()) {
                 String paymentMethodId = (String) i.next();
                 Double paymentAmount = cart.getPaymentMethodAmount(paymentMethodId);
@@ -242,7 +241,7 @@ public class CheckOutEvents {
         // verify the selected payment method amounts will cover the total
         double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
         double selectedPaymentTotal = cart.getSelectedPaymentMethodsTotal();
-        if (requiredAmount > selectedPaymentTotal) {
+        if (paymentMethods != null && paymentMethods.size() > 0 && requiredAmount > selectedPaymentTotal) {
             Debug.logError("Required Amount : " + requiredAmount + " / Selected Amount : " + selectedPaymentTotal, module);
             request.setAttribute("_ERROR_MESSAGE_", "<li>Selected payment methods will not cover this order.");
             return "error";
