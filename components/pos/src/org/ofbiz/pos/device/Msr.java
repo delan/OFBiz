@@ -144,7 +144,9 @@ public class Msr extends GenericDevice {
 
         // make sure we are on the POS pay screen
         if (!"main/paypanel".equals(PosScreen.currentScreen.getName())) {
-            PosScreen.currentScreen.showPage("main/paypanel");
+            PosScreen pos = PosScreen.currentScreen.showPage("main/paypanel");
+            pos.getInput().setFunction("TOTAL", "");
+            Debug.log("Switched to paypanel.xml; triggered TOTAL function", module);
         }
 
         // all implemented types

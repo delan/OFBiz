@@ -122,7 +122,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             this.setLock(true);
         } else {
             this.setLock(isLocked);
-            if (!monitorRunning) {
+            if (!monitorRunning && activityMonitor != null) {
                 monitorRunning = true;
                 activityMonitor.start();
             }
