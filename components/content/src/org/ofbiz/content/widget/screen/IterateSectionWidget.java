@@ -35,13 +35,20 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
+import org.ofbiz.content.ContentManagementWorker;
+import org.ofbiz.content.webapp.control.RequestHandler;
 import org.w3c.dom.Element;
 
 import freemarker.template.TemplateException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
+
 
 /**
  * Widget Library - Screen model HTML class
@@ -58,7 +65,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
     protected FlexibleStringExpander listNameExdr;
     protected FlexibleStringExpander entryNameExdr;
     protected FlexibleStringExpander keyNameExdr;
-    protected String paginateTarget;
+    protected FlexibleStringExpander paginateTarget;
     protected boolean paginate = true;
     
     public static int DEFAULT_PAGE_SIZE = 100;
@@ -76,9 +83,9 @@ public class IterateSectionWidget extends ModelScreenWidget {
         entryNameExdr = new FlexibleStringExpander(iterateSectionElement.getAttribute("entry-name"));
         keyNameExdr = new FlexibleStringExpander(iterateSectionElement.getAttribute("key-name"));
         if (this.paginateTarget == null || iterateSectionElement.hasAttribute("paginate-target"))
-            this.paginateTarget = iterateSectionElement.getAttribute("paginate-target");
+            this.paginateTarget = new FlexibleStringExpander(iterateSectionElement.getAttribute("paginate-target"));
          
-        paginate = "true".equals(iterateSectionElement.getAttribute("true"));
+        paginate = "true".equals(iterateSectionElement.getAttribute("paginate"));
         if (iterateSectionElement.hasAttribute("view-size"))
             setViewSize(iterateSectionElement.getAttribute("view-size"));
         sectionList = new ArrayList();
@@ -150,18 +157,26 @@ public class IterateSectionWidget extends ModelScreenWidget {
                 section.renderWidgetString(writer, contextMs, screenStringRenderer);
             }
         }
-        if (itemIndex < highIndex) {
-            setHighIndex(itemIndex);
+        if ((itemIndex + 1) < highIndex) {
+            setHighIndex(itemIndex + 1);
         }
         setActualPageSize(highIndex - lowIndex);
+        if (paginate) {
+            try {
+            renderNextPrev(writer, context);   
+            } catch(IOException e) {
+                Debug.logError(e, module);   
+                throw new RuntimeException(e.getMessage());
+            }
+        }
         contextMs.pop();
 
     }
     /*
      * @return
      */
-    public String getPaginateTarget() {
-        return this.paginateTarget;
+    public String getPaginateTarget(Map context) {
+        return this.paginateTarget.expandString(context);
     }
     
     public boolean getPaginate() {
@@ -172,13 +187,6 @@ public class IterateSectionWidget extends ModelScreenWidget {
         paginate = val;
     }
     
-    /**
-     * @param string
-     */
-    public void setPaginateTarget(String string) {
-        this.paginateTarget = string;
-    }
-
     public void setViewIndex(int val) {
         viewIndex = val;
     }
@@ -262,6 +270,109 @@ public class IterateSectionWidget extends ModelScreenWidget {
         }
     }
     
+
+    public void renderNextPrev(Writer writer, Map context) throws IOException {
+        String targetService = this.getPaginateTarget(context);
+        if (targetService == null) {
+            targetService = "${targetService}";
+        }
+        
+        if (UtilValidate.isEmpty(targetService)) {
+            Debug.logWarning("TargetService is empty.", module);   
+            return; 
+        }
+
+        int viewIndex = -1;
+        try {
+            viewIndex = ((Integer) context.get("viewIndex")).intValue();
+        } catch (Exception e) {
+            viewIndex = 0;
+        }
+
+        int viewSize = -1;
+        try {
+            viewSize = ((Integer) context.get("viewSize")).intValue();
+        } catch (Exception e) {
+            viewSize = this.getViewSize();
+        }
+
+        int listSize = -1;
+        try {
+            listSize = this.getListSize();
+        } catch (Exception e) {
+            listSize = -1;
+        }
+
+/*
+        int highIndex = -1;
+        try {
+            highIndex = modelForm.getHighIndex();
+        } catch (Exception e) {
+            highIndex = 0;
+        }
+
+        int lowIndex = -1;
+        try {
+            lowIndex = modelForm.getLowIndex();
+        } catch (Exception e) {
+            lowIndex = 0;
+        }
+*/        
+        
+        int lowIndex = viewIndex * viewSize;
+        int highIndex = (viewIndex + 1) * viewSize;
+        int actualPageSize = this.getActualPageSize();
+        // if this is all there seems to be (if listSize < 0, then size is unknown)
+        if (actualPageSize >= listSize && listSize > 0) {
+            return;
+        }
+
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+        HttpServletResponse response = (HttpServletResponse) context.get("response");
+
+        String str = (String) context.get("queryString");
+        String queryString = ContentManagementWorker.stripViewParamsFromQueryString(str);
+        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+
+        writer.write("<table border=\"0\" width=\"100%\" cellpadding=\"2\">\n");
+        writer.write("  <tr>\n");
+        writer.write("    <td align=right>\n");
+        writer.write("      <b>\n");
+        if (viewIndex > 0) {
+            writer.write(" <a href=\"");
+            String linkText = targetService;
+            if (linkText.indexOf("?") < 0)  linkText += "?";
+            else linkText += "&amp;";
+            //if (queryString != null && !queryString.equals("null")) linkText += queryString + "&";
+            linkText += "VIEW_SIZE=" + viewSize + "&amp;VIEW_INDEX=" + (viewIndex - 1) + "\"";
+
+            // make the link
+            writer.write(rh.makeLink(request, response, linkText, false, false, false));
+            writer.write(" class=\"buttontext\">[Previous]</a>\n");
+
+        }
+        if (listSize > 0) {
+            writer.write("          <span class=\"tabletext\">" + (lowIndex + 1) + " - " + (lowIndex + actualPageSize) + " of " + listSize + "</span> \n");
+        }
+        if (highIndex < listSize) {
+            writer.write(" <a href=\"");
+            String linkText = targetService;
+            if (linkText.indexOf("?") < 0)  linkText += "?";
+            else linkText += "&amp;";
+            linkText +=  "VIEW_SIZE=" + viewSize + "&amp;VIEW_INDEX=" + (viewIndex + 1) + "\"";
+
+            // make the link
+            writer.write(rh.makeLink(request, response, linkText, false, false, false));
+            writer.write(" class=\"buttontext\">[Next]</a>\n");
+
+        }
+        writer.write("      </b>\n");
+        writer.write("    </td>\n");
+        writer.write("  </tr>\n");
+        writer.write("</table>\n");
+
+    }
 
 
 }

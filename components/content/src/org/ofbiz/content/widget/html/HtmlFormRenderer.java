@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 import org.ofbiz.content.widget.WidgetWorker;
@@ -55,6 +56,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
     HttpServletRequest request;
     HttpServletResponse response;
+    public static final String module = HtmlFormRenderer.class.getName();
 
     protected HtmlFormRenderer() {}
 
@@ -1468,10 +1470,15 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     public void renderNextPrev(StringBuffer buffer, Map context, ModelForm modelForm) {
-        String targetService = modelForm.getPaginateTarget();
+        String targetService = modelForm.getPaginateTarget(context);
         if (targetService == null) {
             targetService = "${targetService}";
         }
+        if (UtilValidate.isEmpty(targetService)) {
+            Debug.logWarning("TargetService is empty.", module);   
+            return; 
+        }
+
 
         int viewIndex = -1;
         try {
@@ -1529,10 +1536,12 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("      <b>\n");
         if (viewIndex > 0) {
             buffer.append(" <a href=\"");
-            String linkText = targetService + "?";
+            String linkText = targetService;
+            if (linkText.indexOf("?") < 0)  linkText += "?";
+            else linkText += "&amp;";
             if (queryString != null && !queryString.equals("null"))
-                linkText += queryString + "&";
-            linkText += "VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex - 1) + "\"";
+                linkText += queryString + "&amp;";
+            linkText += "VIEW_SIZE=" + viewSize + "&amp;VIEW_INDEX=" + (viewIndex - 1) + "\"";
 
             // make the link
             buffer.append(rh.makeLink(request, response, linkText, false, false, false));
@@ -1540,11 +1549,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         }
         if (listSize > 0) {
-            buffer.append("          <span class=\"tabletext\">" + (lowIndex + 1) + " - " + (lowIndex + actualPageSize + 1) + " of " + listSize + "</span> \n");
+            buffer.append("          <span class=\"tabletext\">" + (lowIndex + 1) + " - " + (lowIndex + actualPageSize ) + " of " + listSize + "</span> \n");
         }
         if (highIndex < listSize) {
             buffer.append(" <a href=\"");
-            String linkText = "" + targetService + "?" + queryString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex + 1) + "\"";
+            String linkText = "" + targetService;
+            if (linkText.indexOf("?") < 0)  linkText += "?";
+            else linkText += "&amp;";
+            linkText += queryString + "&amp;VIEW_SIZE=" + viewSize + "&amp;VIEW_INDEX=" + (viewIndex + 1) + "\"";
 
             // make the link
             buffer.append(rh.makeLink(request, response, linkText, false, false, false));
