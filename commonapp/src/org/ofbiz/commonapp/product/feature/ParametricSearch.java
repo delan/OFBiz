@@ -103,6 +103,28 @@ public class ParametricSearch {
         return featureByType;
     }
     
+    public static String makeFeatureByTypeString(Map featureByType) {
+        if (featureByType == null || featureByType.size() == 0) {
+            return "";
+        }
+        
+        StringBuffer outSb = new StringBuffer();
+        Iterator fbtIter = featureByType.entrySet().iterator();
+        while (fbtIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) fbtIter.next();
+            String productFeatureTypeId = (String) entry.getKey();
+            GenericValue productFeature = (GenericValue) entry.getValue();
+            outSb.append(productFeatureTypeId);
+            outSb.append('=');
+            outSb.append(productFeature.getString("productFeatureId"));
+            if (fbtIter.hasNext()) {
+                outSb.append('&');
+            }
+        }
+        
+        return outSb.toString();
+    }
+    
     public static void filterProductIdListByFeatures(List productIds, Map featureByType, GenericDelegator delegator) {
         if (productIds == null || productIds.size() == 0) return;
         //filter search results by features
@@ -112,24 +134,33 @@ public class ParametricSearch {
         while (productIdsIter.hasNext()) {
             String productId = (String) productIdsIter.next();
             
-            // for now only constraining by productId, so any appl type will be included... 
-            List productFeatureAppl = null;
-            try {
-                productFeatureAppl = delegator.findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", productId));
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Error getting features associated with the product with ID: " + productId + ", removing product from search match list.");
-                productIdsIter.remove();
-                continue;
+            boolean doRemove = false;
+            Iterator requiredFeaturesIter = featureByType.values().iterator();
+            while (!doRemove && requiredFeaturesIter.hasNext()) {
+                GenericValue requiredFeature = (GenericValue) requiredFeaturesIter.next();
+                List productFeatureAppl = null;
+                try {
+                    // for now only constraining by productId and productFeatureId, so any appl type will be included...
+                    productFeatureAppl = delegator.findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", productId, "productFeatureId", requiredFeature.get("productFeatureId")));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Error getting feature appls associated with the productId: [" + productId + "] and the productFeatureId [" + requiredFeature.getString("productFeatureId") + "], removing product from search match list.");
+                    doRemove = true;
+                    continue;
+                }
+            
+                productFeatureAppl = EntityUtil.filterByDate(productFeatureAppl, true);
+                if (productFeatureAppl == null || productFeatureAppl.size() == 0) {
+                    doRemove = true;
+                }
             }
             
-            productFeatureAppl = EntityUtil.filterByDate(productFeatureAppl, true);
-            if (productFeatureAppl == null || productFeatureAppl.size() == 0) {
+            if (doRemove) {
                 productIdsIter.remove();
-            }
+            } 
         }
     }
     
-    public static List parametricKeywordSearch(Map featureByType, String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
+    public static ArrayList parametricKeywordSearch(Map featureByType, String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         ArrayList productIds = KeywordSearch.productsByKeywords(keywordsString, delegator, categoryId, visitId, anyPrefix, anySuffix, intraKeywordOperator);
         filterProductIdListByFeatures(productIds, featureByType, delegator);
         return productIds;

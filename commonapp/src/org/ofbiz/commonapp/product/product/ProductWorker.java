@@ -32,6 +32,8 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.stats.*;
 
+import org.ofbiz.commonapp.product.feature.*;
+
 /**
  * Product Worker class to reduce code in JSPs.
  *
@@ -153,7 +155,11 @@ public class ProductWorker {
 
         if (categoryId == null) categoryId = "";
         String keywordString = (String) requestParameters.get("SEARCH_STRING");
-        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId + "::" + anyPrefix + "::" + anySuffix + "::" + intraKeywordOperator;
+
+        Map featureByType = ParametricSearch.makeFeatureByTypeMap(request);
+        String featureByTypeString = ParametricSearch.makeFeatureByTypeString(featureByType);
+
+        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId + "::" + anyPrefix + "::" + anySuffix + "::" + intraKeywordOperator + "::" + featureByTypeString;
 
         ArrayList productIds = (ArrayList) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
@@ -163,7 +169,12 @@ public class ProductWorker {
             if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
             // productIds will be pre-sorted
-            productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
+            if (featureByType.size() > 0) {
+                productIds = ParametricSearch.parametricKeywordSearch(featureByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
+            } else {
+                productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
+            }
+            
 
             if (productIds != null) {
                 httpRequest.getSession().setAttribute("CACHE_SEARCH_RESULTS", productIds);
