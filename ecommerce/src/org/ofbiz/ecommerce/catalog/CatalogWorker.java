@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/10/23 20:06:51  jonesde
+ * Added quick add functionality
+ *
  * Revision 1.2  2001/10/20 00:26:40  jonesde
  * Finished first pass at multi catalog stuff setup through ecommerce.properties
  *
@@ -269,6 +272,8 @@ public class CatalogWorker {
         ShoppingCartItem item = (ShoppingCartItem)cartiter.next();
         //Collection upgradeProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_UPGRADE"), null);
         Collection complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
+        //since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
+        complementProducts = EntityUtil.filterByDate(complementProducts);
 
         //if(upgradeProducts != null && upgradeProducts.size() > 0) pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);
         if(complementProducts != null && complementProducts.size() > 0) {
