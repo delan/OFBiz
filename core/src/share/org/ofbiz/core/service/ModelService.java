@@ -167,7 +167,8 @@ public class ModelService {
         
         // * Validate types next
         // Warning - the class types MUST be accessible to this classloader
-        String DEFAULT_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
+        String LANG_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
+        String SQL_PACKAGE = "java.sql."; // We will test both the raw value and this + raw value
         Iterator i = testSet.iterator();
         while ( i.hasNext() ) {
             Object key = i.next();
@@ -176,26 +177,28 @@ public class ModelService {
             Class infoClass = null;
             try {
                 infoClass = ObjectType.loadClass(infoType);
-            }
-            catch ( SecurityException se ) {
-                throw new RuntimeException("Problems with classloader");
-            }
-            catch ( ClassNotFoundException cnf ) {
+            } catch (SecurityException se1) {
+                throw new RuntimeException("Problems with classloader: sercurity exception");
+            } catch (ClassNotFoundException e1) {
                 try {
-                    infoClass = ObjectType.loadClass(DEFAULT_PACKAGE + infoType);
-                }
-                catch ( SecurityException se2 ) {
-                    throw new RuntimeException("Problems with classloader");
-                }
-                catch ( ClassNotFoundException e ) {
-                    throw new RuntimeException("Cannot load the type class of: " + infoType);
+                    infoClass = ObjectType.loadClass(LANG_PACKAGE + infoType);
+                } catch (SecurityException se2) {
+                    throw new RuntimeException("Problems with classloader: sercurity exception");
+                } catch (ClassNotFoundException e2) {
+                    try {
+                        infoClass = ObjectType.loadClass(SQL_PACKAGE + infoType);
+                    } catch (SecurityException se3) {
+                        throw new RuntimeException("Problems with classloader: sercurity exception");
+                    } catch (ClassNotFoundException e3) {
+                        throw new RuntimeException("Cannot find and load the class of type: " + infoType + " or of type: " + LANG_PACKAGE + infoType + " or of type: " + SQL_PACKAGE + infoType);
+                    }
                 }
             }
             
-            if ( infoClass == null )
+            if (infoClass == null)
                 throw new RuntimeException("Illegal type found in info map");
             
-            if ( !ObjectType.instanceOf(testObject,infoClass) )
+            if (!ObjectType.instanceOf(testObject,infoClass))
                 return false;
         }
         
@@ -204,7 +207,7 @@ public class ModelService {
     
     /**
      * Gets the parameter names of the specified mode (IN/OUT/INOUT)
-     * Note: IN and OUT will also contains INOUT parameters     
+     * Note: IN and OUT will also contains INOUT parameters
      * @param mode The mode (IN/OUT/INOUT)
      * @return List of parameter names
      */
@@ -225,7 +228,7 @@ public class ModelService {
         }
         return names;
     }
-        
+    
     /**
      * Creates a new Map based from an existing map with just valid parameters
      * @param source The source map
@@ -247,7 +250,7 @@ public class ModelService {
             if ( source.containsKey(key) )
                 target.put(key, source.get(key));
         }
-        return target;        
+        return target;
     }
     
 }
