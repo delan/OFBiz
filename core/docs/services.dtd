@@ -24,7 +24,7 @@
  *  $Id$
 -->
 
-<!ELEMENT services (description, vendor, version, created, service+)>
+<!ELEMENT services (description?, vendor?, version?, created?, service+)>
 <!ELEMENT description ANY>
 <!ELEMENT vendor (#PCDATA)>
 <!ELEMENT created (#PCDATA)>
