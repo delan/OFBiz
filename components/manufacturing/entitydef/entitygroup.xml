@@ -52,7 +52,6 @@
     <entity-group group="org.ofbiz" entity="WorkEffortAndGoods" />
     <entity-group group="org.ofbiz" entity="WorkEffortAndInventoryAssign" />
     <entity-group group="org.ofbiz" entity="WorkEffortAndInventoryProduced" />
-    <entity-group group="org.ofbiz" entity="OrderHeaderAndItems2" />
   <!-- ========================================================= -->
   <!-- org.ofbiz.manufacturing.mrp -->
   <!-- ========================================================= -->
