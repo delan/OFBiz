@@ -110,6 +110,9 @@
       <relation type="many" rel-entity-name="WebSiteCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
+      <relation type="many" rel-entity-name="PartyCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
       <relation type="many" rel-entity-name="InventoryItemTempRes">
         <key-map field-name="prodCatalogId"/>
       </relation>

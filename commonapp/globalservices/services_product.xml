@@ -260,6 +260,32 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
+    <service name="addProdCatalogToParty" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="addProdCatalogToParty" auth="true">
+        <description>Add ProdCatalog To Party</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProdCatalogToParty" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalogToParty" auth="true">
+        <description>Add ProdCatalog To Party</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProdCatalogFromParty" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="removeProdCatalogFromParty" auth="true">
+        <description>Remove ProdCatalog From Party</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+
     <!-- Product Category Services -->
     <service name="createProductCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="createProductCategory" auth="true">
