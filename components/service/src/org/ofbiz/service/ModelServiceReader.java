@@ -1,5 +1,5 @@
 /* 
- * $Id: ModelServiceReader.java,v 1.3 2003/08/18 03:15:10 ajzeneski Exp $
+ * $Id: ModelServiceReader.java,v 1.4 2003/09/02 04:30:32 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 
@@ -228,7 +228,15 @@ public class ModelServiceReader {
                         Debug.logImportant("Loaded " + i + " Service definitions from " + readerURL, module);
                     } else {
                         utilTimer.timerString("Finished document in " + handler + " - Total Services: " + i + " FINISHED");
-                        Debug.logImportant("Loaded " + i + " Service definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName(), module);
+						if (Debug.importantOn()) {
+							String resourceLocation = handler.getLocation();
+							try {
+								resourceLocation = handler.getURL().toExternalForm();
+							} catch (GenericConfigException e) {
+								Debug.logError(e, "Could not get resource URL", module);
+							}
+	                        Debug.logImportant("Loaded " + i + " Service definitions from " + resourceLocation, module);
+						}
                     }
                 }
             }
