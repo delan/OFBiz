@@ -19,7 +19,6 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Olivier.Heintz@nereide.biz
  *@version    $Rev$
  *@since      3.0
 -->
@@ -30,7 +29,8 @@
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
+<#if requirement?exists>
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/RunningMrp</@ofbizUrl>" class="${selectedClassMap.RunningMrp?default(unselectedClassName)}">${uiLabelMap.ManufacturingRunningMrp}</a>
-    <a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedClassMap.findInventoryEventPlan?default(unselectedClassName)}">${uiLabelMap.ManufacturingInventoryEventPlanned}</a>
+    <a href="<@ofbizUrl>/EditRequirement?requirementId=${requirement.requirementId}</@ofbizUrl>" class="${selectedClassMap.EditRequirement?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRequirement}</a>
 </div>
+</#if>

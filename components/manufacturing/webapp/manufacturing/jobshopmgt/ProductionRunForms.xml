@@ -34,7 +34,6 @@
         </actions>
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingProductionRunId}"><text-find/></field>
-        <field name="workEffortTypeId"><hidden value="PROD_ORDER_HEADER"/></field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
             <drop-down>
                 <option key="" description=""/>
@@ -43,7 +42,7 @@
                 </entity-options>
              </drop-down>
         </field>
-        <field name="currentStatusId_op"><hidden value="equals"/></field>
+<!--        <field name="currentStatusId_op"><hidden value="equals"/></field>-->
         <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><text-find/></field>
         <field name="estimatedStartDate" title="${uiLabelMap.ManufacturingStartDate}"><date-find/></field>
@@ -62,10 +61,15 @@
 
     <form name="listFindProductionRun"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
-            list-name="entityList" paginate-target="/FindProductionRun" 
+            list-iterator-name="listIt" paginate-target="/FindProductionRun" 
             title="" type="list">
         <actions>
             <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+            <set field="entityName" value="WorkEffortAndGoods"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
         </actions>
         <field name="workEffortId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="ShowProductionRun?productionRunId=${workEffortId}" description="${workEffortId}" also-hidden="false"/>
@@ -73,7 +77,10 @@
         <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><display/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
-        <field name="statusDescription" title="${uiLabelMap.CommonStatus}"><display /></field>
+        <field name="currentStatusId">
+            <display-entity entity-name="StatusItem" key-field-name="statusId"/>
+        </field>
+        
         <field name="estimatedStartDate" title="${uiLabelMap.ManufacturingStartDate}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="facilityId" title="${uiLabelMap.ProductFacilityId}"><display/></field>
