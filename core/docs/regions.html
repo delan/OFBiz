@@ -23,6 +23,8 @@ $Id$ <br>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a></li>
   <li><a href="#Introduction">Introduction</a> </li>
+  <li><a href="#Defining">Defining Regions</a> </li>
+  <li><a href="#Templates">Creating Region Templates</a> </li>
 </ul>
 <hr>
 <h3><a name="#Related_Documents">Related Documents</a></h3>
@@ -32,9 +34,47 @@ $Id$ <br>
   <li><a href="control.html">Control Servlet Guide</a></li>
   <li><a href="taglib.html">JSP Tag Library Guide</a></li>
 </ul>
+
 <hr>
 <h3><a name="Introduction">Introduction</a> </h3>
 <hr>
-<p></p>
+
+<p>The Regions Tool, or Framework, is an implementation of the Composite View
+pattern as described in various works on Enterprise Architecture Patterns and is 
+based on the implementation presented in the book Advanced Java Server Pages by 
+David Geary. You can get more information about this book on the Docs & Books
+page on the <a href="http://www.ofbiz.org">www.ofbiz.org</a> website.</p>
+
+<p>Regions are large content areas made up of named Sections that are inserted
+into a template for the regions. Regions and sections are configured in the 
+<b>WEB-INF/regions.xml</b> file in each webapp. Regions can be incorporated into
+an OFBiz Control Servlet based web application using a view with the type
+<b>region</b>.</p>
+
+<p>Regions can also be declared in JSP files, and included in JSP files, using
+the regions taglib described in the regions.tld tag library descriptor file.
+These tags are also used in the Region templates to include named Sections in
+specific locations in the template.</p>
+
+
+<hr>
+<h3><a name="Defining">Defining Regions</a> </h3>
+<hr>
+
+<P><B>A Basic Region Definition</B></P>
+
+
+<P><B>An Inheritance Region</B></P>
+
+<P><B>Different Types of Sections</B></P>
+
+<hr>
+<h3><a name="Templates">Creating Region Templates</a> </h3>
+<hr>
+
+<P><B>Introduction</B></P>
+
+<P><B>The Tags</B></P>
+
 </body>
 </html>
