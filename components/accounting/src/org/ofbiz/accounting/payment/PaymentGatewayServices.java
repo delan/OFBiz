@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.28 2004/04/05 14:03:39 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.29 2004/05/14 18:23:08 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.base.util.Debug;
@@ -40,6 +41,8 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.OrderedSet;
+import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -49,6 +52,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -57,13 +61,14 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.GenericResultWaiter;
 import org.ofbiz.security.Security;
 
 /**
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -132,6 +137,19 @@ public class PaymentGatewayServices {
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
+            Long procAttempt = paymentPref.getLong("processAttempt");
+            if (procAttempt == null) {
+                procAttempt = new Long(0);
+            }
+            // update the process attempt cout
+            paymentPref.set("processAttempt", new Long(procAttempt.longValue() + 1));
+            try {
+                paymentPref.store();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("Unable to update OrderPaymentPreference record!");
+            }
+
             boolean reAuth = false;
 
             // if we are already authorized, then this is a re-auth request
@@ -1266,8 +1284,104 @@ public class PaymentGatewayServices {
         }
     }
 
+    public static Map retryFailedOrderAuth(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String orderId = (String) context.get("orderId");
+
+        // get the order header
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // make sure we have a valid order record
+        if (orderHeader == null || orderHeader.get("statusId") == null) {
+            return ServiceUtil.returnError("Invalid OrderHeader record for ID: " + orderId);
+        }
+
+        // check the current order status
+        if (!"ORDER_CREATED".equals(orderHeader.getString("statusId"))) {
+            // if we are out of the created status; then we were either cancelled, rejected or approved
+            return ServiceUtil.returnSuccess();
+        }
+
+        // run the auth service and check for failure(s)
+        Map serviceResult = null;
+        try {
+            serviceResult = dispatcher.runSync("authOrderPayments", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        if (ServiceUtil.isError(serviceResult)) {
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+        }
+
+        // check to see if there was a processor failure
+        String authResp = (String) serviceResult.get("processResult");
+        if (authResp == null || "ERROR".equals(authResp)) {
+            Debug.logWarning("The payment processor had a failure in processing, will not modify any status", module);
+        } else {
+            if ("FAILED".equals(authResp)) {
+                // declined; update the order status
+
+            } else if ("APPROVED".equals(authResp)) {
+                // approved; update the order status
+            }
+
+            // service completed; we either were approved or declined
+            // send off a notification to inform the customer of the result
+            // TODO add notification code
+        }
+
+        // retry complete; return success
+        return ServiceUtil.returnSuccess();
+    }
+
     public static Map retryFailedAuths(DispatchContext dctx, Map context) {
-        return ServiceUtil.returnError("Service not yet implemented");
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+
+        // get a list of all payment prefs still pending
+        List exprs = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.EQUALS, "PAYMENT_NOT_RECEIVED"),
+                new EntityExpr("processAttempt", EntityOperator.GREATER_THAN, new Long(0)));
+
+        EntityListIterator eli = null;
+        try {
+            eli = delegator.findListIteratorByCondition("OrderPaymentPreference",
+                    new EntityConditionList(exprs, EntityOperator.AND), null, UtilMisc.toList("orderId"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        List processList = new ArrayList();
+        if (eli != null) {
+            Debug.logInfo("Processing failed order re-auth(s)", module);
+            GenericValue value;
+            while (((value = (GenericValue) eli.next()) != null)) {
+                String orderId = value.getString("orderId");
+                if (!processList.contains(orderId)) { // just try each order once
+                    try {
+                        // each re-try is independent of each other; if one fails it should not effect the others
+                        dispatcher.runAsync("retryFailedOrderAuth", UtilMisc.toMap("orderId", orderId));
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, module);
+                    }
+                }
+            }
+
+            try {
+                eli.close();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        }
+
+        return ServiceUtil.returnSuccess();
     }
 
     public static GenericValue getAuthTransaction(GenericValue orderPaymentPreference) {
