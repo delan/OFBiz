@@ -16,14 +16,22 @@ server.home=<your_jboss3_home_directory>
 Now execute ant:
 
 ant -f xbuild.xml install - to install required files
-ant -f xbuild.xml deploy  - to deploy all required files, jars and ear.
+ant -f xbuild.xml build - to compile and archive all required files, jars
+ant -f xbuild.xml deploy  - to deploy all required files and jars.
 
 Make sure the entityengine.xml file in jboss/server/ofbiz/conf is configured
 as you want it, that is where this configuration will look for it. Make sure
 it is getting the JTA UserTransaction object and the JDBC connection from JNDI.
 (Default values already set).
 
-Adjust the datasource-name value for your database setup:
+By default the entity engine will use the data source mapped to java:/DefaultDS so a 
+default installation of JBoss 3 should work "out of the box" without any additional
+configuration required.
+
+If you do want to change the data source, follow these directions:
+
+
+Adjust the datasource-name value for your database setup in entityengine.xml:
 
 <!-- Adjust the datasource-name to your database setup: This example makes use of Postgres72 -->  
   <delegator name="default" entity-model-reader="main" entity-group-reader="main">

@@ -59,6 +59,7 @@ echo Make sure that JAVA_HOME points to a JDK and not a JRE.
 rem Include the JDK javac compiler for JSP pages. The default is for a Sun JDK
 rem compatible distribution to which JAVA_HOME points
 
+set OFBIZ_HOME=..\..\ofbiz
 set JAVAC_JAR=%JAVA_HOME%\lib\tools.jar
 set JBOSS_CLASSPATH=%JBOSS_CLASSPATH%;%JAVAC_JAR%;%RUNJAR%
 

@@ -25,7 +25,7 @@
  *  $Id$
 -->
 
-<project name="Open For Business Main Build" default="install" basedir=".">
+<project name="Open For Business Main Build" default="install" basedir="../..">
 
   <!-- Give user a chance to override without editing this file
        (and without typing -D each time they invoke a target) -->
@@ -33,7 +33,7 @@
   <!-- Allow any user specific values to override the defaults -->
   <property file="${user.home}/build.properties" />
   <!-- Allow user defaults for this build -->
-  <property file="build.properties" />
+  <property file="setup/jboss3/build.properties" />
   <!-- Set default values for the project -->
   <property file="project.properties" />
 
@@ -290,20 +290,20 @@
     <!-- Deploy the app                                                     -->
     <!-- ================================================================== -->
 
-    <target name="deploy" depends="build">
+    <target name="deploy">
         <antcall target="ofbiz:deploy-${server}"/>
     </target>
     
-    <target name="deploy-ext" depends="build, war">
+    <target name="deploy-ext" depends="war">
         <antcall target="ofbiz:init-${server}"/>
         <antcall target="ofbiz:deploy-ext-${server}"/>
     </target>
     
-    <target name="ofbiz-deploy" depends="build, ofbiz-prepare, ofbiz-init">
+    <target name="ofbiz-deploy" depends="ofbiz-prepare, ofbiz-init">
         <antcall target="ofbiz:int-deploy-${server}"/>
     </target>
 
-    <target name="ofbiz-deploy-ext" depends="build, ofbiz-prepare, ofbiz-init, war">
+    <target name="ofbiz-deploy-ext" depends="ofbiz-prepare, ofbiz-init, war">
         <antcall target="ofbiz:int-deploy-${server}"/>
         <antcall target="int-deploy-ext" />
     </target>
@@ -360,13 +360,13 @@
 
         <copy file="lib/common/castor-0.9.3.9.jar"           toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/hsqldb.jar"                   toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/postgresql.jar"              toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/postgresql.jar"               toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/log4j.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/mm.mysql-2.0.8-bin.jar"       toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/ots-jts_1.0.jar"              toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/tyrex-1.0.jar"            toDir="${ext.dir}/lib/ext"/>
+	<copy file="lib/common/tyrex-1.0.jar"                toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/axis.jar"                      toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/scripting/bsh.jar"                 toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/scripting/bsh.jar"                   toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/clutil.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/wsdl4j.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/jakarta-oro-2.0.6.jar"         toDir="${ext.dir}/lib/ext"/>
@@ -381,13 +381,11 @@
         <copy file="core/lib/ofbcore-entity.jar"             toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-service.jar"            toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-extutil.jar"            toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-extentity.jar"          toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-workflow.jar"           toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-rules.jar"              toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-datafile.jar"           toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-minilang.jar"           toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-widget.jar"             toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-webapp.jar"             toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-webapp.jar"           toDir="${ext.dir}/lib"/>
         <copy file="commonapp/lib/commonapp.jar"             toDir="${ext.dir}/lib"/>
 
         <copy file="webtools/lib/webtools.war"               toDir="${ext.dir}/webapps"/>
@@ -435,6 +433,7 @@
     <target name="ear" depends="war">
         <property name="eartemp.dir" value="eartemp" />
         <mkdir dir="${eartemp.dir}/META-INF" />
+	<mkdir dir="${eartemp.dir}/conf" />
         <copy file="commonapp/earetc/application.xml"
             toFile="${eartemp.dir}/META-INF/application.xml" />
 
@@ -453,8 +452,69 @@
         <copy file="marketing/lib/marketing.war" toFile="${eartemp.dir}/marketing.war" />
         <copy file="content/lib/content.war" toFile="${eartemp.dir}/content.war" />
 
-        <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" />
+	<!-- Copy the configuration files to the classpath directory -->
+	<antcall target="include-classpath"/>
+
+        <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" manifest="setup/jboss3/META-INF/MANIFEST.MF"/>
         <delete dir="${eartemp.dir}" />
     </target>
 
+    <target name="include-classpath">
+        <property name="eartemp.dir" value="eartemp" />
+	<mkdir dir="${eartemp.dir}/commonapp/globalservices"/>
+        <mkdir dir="${eartemp.dir}/commonapp/entitydef"/>
+        <mkdir dir="${eartemp.dir}/commonapp/db"/>
+        <mkdir dir="${eartemp.dir}/lib/ext"/>
+        <mkdir dir="${eartemp.dir}/service"/>
+        <mkdir dir="${eartemp.dir}/entity"/>
+        <mkdir dir="${eartemp.dir}/etc"/>
+
+	<!-- Copy over the external libraries -->
+	<copy file="lib/common/postgresql.jar"               toDir="${eartemp.dir}/lib/ext"/>
+        <copy file="lib/common/mm.mysql-2.0.14-bin.jar"      toDir="${eartemp.dir}/lib/ext"/>
+        <copy file="lib/common/ots-jts_1.0.jar"              toDir="${eartemp.dir}/lib/ext"/>
+	<copy file="lib/common/log4j.jar"                    toDir="${eartemp.dir}/lib/ext"/>
+	<copy file="lib/scripting/bsh.jar"                   toDir="${eartemp.dir}/lib/ext"/>
+        <copy file="lib/share/clutil.jar"                    toDir="${eartemp.dir}/lib/ext"/>
+        <copy file="lib/share/jakarta-oro-2.0.6.jar"         toDir="${eartemp.dir}/lib/ext"/>
+        <copy file="lib/compile/xerces.jar"                  toDir="${eartemp.dir}/lib/ext"/>
+
+	<!-- Copy over the ofbiz libraries -->
+	<copy file="core/lib/ofbcore-share.jar"              toDir="${eartemp.dir}/lib"/>
+        <copy file="core/lib/ofbcore-entity.jar"             toDir="${eartemp.dir}/lib"/>
+        <copy file="core/lib/ofbcore-service.jar"            toDir="${eartemp.dir}/lib"/>
+        <copy file="core/lib/ofbcore-extutil.jar"            toDir="${eartemp.dir}/lib"/>
+        <copy file="core/lib/ofbcore-workflow.jar"           toDir="${eartemp.dir}/lib"/>
+        <copy file="core/lib/ofbcore-rules.jar"              toDir="${eartemp.dir}/lib"/>
+        <copy file="core/lib/ofbcore-datafile.jar"           toDir="${eartemp.dir}/lib"/>
+        <copy file="core/lib/ofbcore-minilang.jar"           toDir="${eartemp.dir}/lib"/>
+        <copy file="core/lib/ofbcore-webapp.jar"           toDir="${eartemp.dir}/lib"/>
+        <copy file="commonapp/lib/commonapp.jar"             toDir="${eartemp.dir}/lib"/>
+
+	<!-- Copy over the ofbiz configuration files -->
+        <copy file="commonapp/etc/serverstats.properties"    toDir="${eartemp.dir}/etc"/>
+        <copy file="commonapp/etc/entityengine.xml"          toDir="${eartemp.dir}/etc"/>
+        <copy file="commonapp/etc/security.properties"       toDir="${eartemp.dir}/etc"/>
+	<copy file="commonapp/etc/security.xml"              toDir="${eartemp.dir}/etc"/>
+        <copy file="commonapp/etc/debug.properties"          toDir="${eartemp.dir}/etc"/>
+        <copy file="commonapp/etc/jsse.properties"           toDir="${eartemp.dir}/etc"/>
+        <copy file="commonapp/etc/cache.properties"          toDir="${eartemp.dir}/etc"/>
+        <copy file="commonapp/etc/general.properties"        toDir="${eartemp.dir}/etc"/>
+        <copy file="commonapp/etc/prodsearch.properties"     toDir="${eartemp.dir}/etc"/>
+        <copy file="commonapp/etc/localdtds.properties"      toDir="${eartemp.dir}/etc"/>
+        <copy file="commonapp/etc/serviceengine.xml"         toDir="${eartemp.dir}/etc"/>
+	<copy file="commonapp/etc/tyrexdomain.xml"           toDir="${eartemp.dir}/etc"/>
+
+	<copy toDir="${eartemp.dir}/commonapp/entitydef">
+          <fileset dir="commonapp/entitydef"/>
+        </copy>
+
+        <copy toDir="${eartemp.dir}/commonapp/globalservices">
+          <fileset dir="commonapp/globalservices"/>
+        </copy>
+
+        <copy toDir="${eartemp.dir}/commonapp/db">
+          <fileset dir="commonapp/db"/>
+        </copy>
+    </target>
 </project>

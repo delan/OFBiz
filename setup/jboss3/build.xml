@@ -32,14 +32,17 @@
     <!-- ================================================================== -->
 
     <target name="ofbiz:install">
+        <echo message="[install] ===== installing OFBiz for JBoss3 =====" />
         <property environment="env" />
         <property name="jboss3.dir" value="${server.home}" />
         <property name="conf.dir"     value="${jboss3.dir}/server/ofbiz/conf" />
         <property name="j2eedeploy.dir"  value="${jboss3.dir}/server/ofbiz/deploy" />
+        <property name="j2eelib.dir"  value="${jboss3.dir}/server/ofbiz/lib" />
 
         <mkdir dir="${jboss3.dir}/server/ofbiz"/>
         <mkdir dir="${jboss3.dir}/server/ofbiz/deploy"/>
         <mkdir dir="${jboss3.dir}/server/ofbiz/conf"/>
+	<mkdir dir="${j2eelib.dir}"/>
 
 
         <copy todir="${conf.dir}">
@@ -50,18 +53,84 @@
             <fileset dir="${jboss3.dir}/server/default/deploy"/>
         </copy>
 
+        <copy todir="${j2eelib.dir}">
+            <fileset dir="${jboss3.dir}/server/default/lib" includes="*.jar"/>
+        </copy>
+
         <copy file="setup/jboss3/bin/ofbiz.sh" toDir="${jboss3.dir}/bin" />
+        <copy file="setup/jboss3/bin/debug-ofbiz.bat" toDir="${jboss3.dir}/bin" />
         <copy file="setup/jboss3/bin/ofbiz.bat" toDir="${jboss3.dir}/bin" /> 
 
-        <copy file="commonapp/etc/debug.properties" toDir="${conf.dir}" />
-        <copy file="commonapp/etc/entityengine.xml" toDir="${j2eedeploy.dir}" />
+	<copy todir="${conf.dir}">
+		<fileset dir="setup/jboss3/server/ofbiz/conf"/>
+	</copy>
 
-        <copy file="lib/common/postgresql.jar" toDir="${j2eedeploy.dir}"/>
-        <copy file="lib/common/mm.mysql-2.0.8-bin.jar" toDir="${j2eedeploy.dir}"/>
-        <copy file="lib/common/ots-jts_1.0.jar" toDir="${j2eedeploy.dir}"/>
-        <copy file="lib/scripting/bsh.jar" toDir="${j2eedeploy.dir}"/>
-        <copy file="lib/share/clutil.jar" toDir="${j2eedeploy.dir}"/>
-        <copy file="lib/share/jakarta-oro-2.0.6.jar" toDir="${j2eedeploy.dir}"/>
+	<!--copy file="setup/jboss3/server/ofbiz/deploy/postgres-service.xml" toDir="${j2eedeploy.dir}" />
+	<copy file="setup/jboss3/server/ofbiz/deploy/hsqldb-service.xml" toDir="${j2eedeploy.dir}" /-->
+        
+
+	<!-- copy all the required libraries -->
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/axis.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/batik.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/scripting/bsf.jar"/>
+
+	<!-- For JBoss 3.2.x, need to replace default bsh library with ofbiz custom one -->
+	<delete failonerror="false" file="${j2eelib.dir}/bsh-core-1.2b7.jar"/>
+	<copy toDir="${j2eelib.dir}" file="lib/scripting/bsh.jar"/>
+
+	
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/cactus.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/clutil.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/commons-beanutils.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/commons-collections.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/commons-digester.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/commons-discovery.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/commons-fileupload.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/commons-httpclient.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/commons-logging.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/commons-vfs.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/commons-vfs-providers.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/sapdbc.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/ots-jts_1.0.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/postgresql.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/log4j.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/common/mm.mysql-2.0.14-bin.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/cvslib.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/datavision/DataVision.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/dom4j.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/EdenLib.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/enhydra-jdbc.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/commons-cli.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/jotm.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/jotm_iiop_stubs.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/jotm_jrmp_stubs.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/monolog.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/objectweb-datasource.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/carol.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/jonas_timer.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/fop.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/freemarker.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jasperreports/itext-0.92.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jasperreports/jasperreports.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jasperreports/jasperreports-applet.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/scripting/jacl.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/jakarta-oro-2.0.6.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/jakarta-poi-1.5.1-final.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/jaxrpc.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/datavision/jcalendar.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/JPublish.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/scripting/js.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/junit.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/scripting/jython.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/lucene-1.2.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/datavision/MinML.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/weka/remoteExperimentServer.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/saaj.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/velocity-dep-1.3.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/weka/weka.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/wsdl4j.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/share/xalan.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/compile/xerces.jar"/>
 
     </target>
 
@@ -101,12 +170,10 @@
         <delete file="${j2eedeploy.dir}/ofbcore-entity.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-service.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-extutil.jar" />
-        <delete file="${j2eedeploy.dir}/ofbcore-extentity.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-workflow.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-rules.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-datafile.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-minilang.jar" />
-        <delete file="${j2eedeploy.dir}/ofbcore-widget.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-webapp.jar" />
 
         <delete file="${j2eedeploy.dir}/commonapp.jar" />
@@ -129,33 +196,72 @@
 
 
     <target name="ofbiz:int-deploy">
+        <property name="j2eelib.dir"  value="${jboss3.dir}/server/ofbiz/lib" />
+        <!--ant dir="." target="ear" inheritAll="false" /-->
+	<!-- Need to have exploded WARS for ofbiz 2.1.X -->
+	<delete dir="${j2eedeploy.dir}/webtools.war"/>
+	<copy todir="${j2eedeploy.dir}/webtools.war">
+		<fileset dir="webtools/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/commonapp.war"/>
+	<copy todir="${j2eedeploy.dir}/commonapp.war">
+		<fileset dir="commonapp/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/ecommerce.war"/>
+	<copy todir="${j2eedeploy.dir}/ecommerce.war">
+		<fileset dir="ecommerce/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/images.war"/>
+	<copy todir="${j2eedeploy.dir}/images.war">
+		<fileset dir="ecommerce/images"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/catalog.war"/>
+	<copy todir="${j2eedeploy.dir}/catalog.war">
+		<fileset dir="catalog/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/partymgr.war"/>
+	<copy todir="${j2eedeploy.dir}/partymgr.war">
+		<fileset dir="partymgr/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/ordermgr.war"/>
+	<copy todir="${j2eedeploy.dir}/ordermgr.war">
+		<fileset dir="ordermgr/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/workeffort.war"/>
+	<copy todir="${j2eedeploy.dir}/workeffort.war">
+		<fileset dir="workeffort/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/facility.war"/>
+	<copy todir="${j2eedeploy.dir}/facility.war">
+		<fileset dir="facility/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/marketing.war"/>
+	<copy todir="${j2eedeploy.dir}/marketing.war">
+		<fileset dir="marketing/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/accounting.war"/>
+	<copy todir="${j2eedeploy.dir}/accounting.war">
+		<fileset dir="accounting/webapp"/>
+	</copy>
+	<delete dir="${j2eedeploy.dir}/content.war"/>
+	<copy todir="${j2eedeploy.dir}/content.war">
+		<fileset dir="content/webapp"/>
+	</copy>
 
-        <ant dir="." target="ear" inheritAll="false" />
+        <copy file="core/lib/ofbcore-share.jar" toFile="${j2eelib.dir}/ofbcore-share.jar" />
+        <copy file="core/lib/ofbcore-entity.jar" toFile="${j2eelib.dir}/ofbcore-entity.jar" />
+        <copy file="core/lib/ofbcore-service.jar" toFile="${j2eelib.dir}/ofbcore-service.jar" />
+        <copy file="core/lib/ofbcore-extutil.jar" toFile="${j2eelib.dir}/ofbcore-extutil.jar" />
+        <copy file="core/lib/ofbcore-workflow.jar" toFile="${j2eelib.dir}/ofbcore-workflow.jar" />
+        <copy file="core/lib/ofbcore-rules.jar" toFile="${j2eelib.dir}/ofbcore-rules.jar" />
+        <copy file="core/lib/ofbcore-datafile.jar" toFile="${j2eelib.dir}/ofbcore-datafile.jar" />
+        <copy file="core/lib/ofbcore-minilang.jar" toFile="${j2eelib.dir}/ofbcore-minilang.jar" />
+	<copy file="core/lib/ofbcore-webapp.jar" toFile="${j2eelib.dir}/ofbcore-webapp.jar" />
 
-        <copy file="commonapp/etc/serverstats.properties" toFile="${conf.dir}/serverstats.properties" />
-        <copy file="commonapp/etc/entityengine.xml" toFile="${conf.dir}/entityengine.xml" />
-        <copy file="commonapp/etc/security.properties" toFile="${conf.dir}/security.properties" />
-        <copy file="commonapp/etc/security.xml" toFile="${conf.dir}/security.xml" />
-        <copy file="commonapp/etc/cache.properties" toFile="${conf.dir}/cache.properties" />
-        <copy file="commonapp/etc/localdtds.properties" toFile="${conf.dir}/localdtds.properties" />
-        <copy file="commonapp/etc/serviceengine.xml" toFile="${conf.dir}/serviceengine.xml" />
-        <copy file="commonapp/etc/tyrexdomain.xml" toFile="${conf.dir}/tyrexdomain.xml" />
+        <copy file="commonapp/lib/commonapp.jar" toFile="${j2eelib.dir}/commonapp.jar" />
 
-        <copy file="core/lib/ofbcore-share.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-entity.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-service.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-extutil.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-extentity.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-workflow.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-rules.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-datafile.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-minilang.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-widget.jar" toDir="${j2eedeploy.dir}" />
-        <copy file="core/lib/ofbcore-webapp.jar" toDir="${j2eedeploy.dir}" />
 
-        <copy file="commonapp/lib/commonapp.jar" toFile="${j2eedeploy.dir}/commonapp.jar" />
-
-        <copy file="ofbiz.ear" toFile="${j2eedeploy.dir}/ofbiz.ear" />
+        <!--copy file="ofbiz.ear" toFile="${j2eedeploy.dir}/ofbiz.ear" /-->
     </target>
 
 </project>
