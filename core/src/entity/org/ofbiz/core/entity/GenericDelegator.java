@@ -70,6 +70,8 @@ public class GenericDelegator {
     //keeps a list of field key sets used in the by and cache, a Set (of Sets of fieldNames) for each entityName
     protected static Map andCacheFieldSets = new HashMap();
 
+    protected DistributedCacheClear distributedCacheClear = null;
+    
     SequenceUtil sequencer = null;
 
     public static GenericDelegator getGenericDelegator(String delegatorName) {
@@ -141,6 +143,31 @@ public class GenericDelegator {
                         Debug.logWarning(e.getMessage(), module);
                     }
                 }
+            }
+        }
+
+        //TODO: change to true for testing, or read from entityengine.xml file
+        //  along with the class-name for distributed-cache-clear; default to false
+        boolean useDistributedCacheClear = false;
+        
+        //if useDistributedCacheClear is false do nothing since the 
+        //  distributedCacheClear member field with a null value will cause the
+        //  dcc code to do nothing
+        if (useDistributedCacheClear) {
+            //initialize the distributedCacheClear mechanism
+            String distributedCacheClearClassName = "org.ofbiz.commonapp.common.EntityCacheServices";
+            try {
+                Class dccClass = Class.forName(distributedCacheClearClassName);
+                this.distributedCacheClear = (DistributedCacheClear) dccClass.newInstance();
+                this.distributedCacheClear.setDelegator(this);
+            } catch (ClassNotFoundException e) {
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " was not found, distributed cache clearing will be disabled");
+            } catch (InstantiationException e) {
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " could not be instantiated, distributed cache clearing will be disabled");
+            } catch (IllegalAccessException e) {
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " could not be accessed (illegal), distributed cache clearing will be disabled");
+            } catch (ClassCastException e) {
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " does not implement the DistributedCacheClear interface, distributed cache clearing will be disabled");
             }
         }
     }
@@ -1238,6 +1265,10 @@ public class GenericDelegator {
      *@param dummyPK The dummy primary key to clear by.
      */
     public void clearCacheLineFlexible(GenericEntity dummyPK) {
+        this.clearCacheLineFlexible(dummyPK, true);
+    }
+    
+    public void clearCacheLineFlexible(GenericEntity dummyPK, boolean distribute) {
         if (dummyPK != null) {
             //always auto clear the all cache too, since we know it's messed up in any case
             if (allCache != null) {
@@ -1259,6 +1290,10 @@ public class GenericDelegator {
                 }
             }
         }
+        
+        if (distribute && this.distributedCacheClear != null) {
+            this.distributedCacheClear.distributedClearCacheLineFlexible(dummyPK);
+        }
     }
 
     /** Remove a CACHED Generic Entity from the cache by its primary key, does NOT
@@ -1267,6 +1302,10 @@ public class GenericDelegator {
      *@param primaryKey The primary key to clear by.
      */
     public void clearCacheLine(GenericPK primaryKey) {
+        this.clearCacheLine(primaryKey, true);
+    }
+    
+    public void clearCacheLine(GenericPK primaryKey, boolean distribute) {
         if (primaryKey == null) return;
         
         //always auto clear the all cache too, since we know it's messed up in any case
@@ -1277,6 +1316,10 @@ public class GenericDelegator {
         if (primaryKeyCache != null) {
             primaryKeyCache.remove(primaryKey);
         }
+        
+        if (distribute && this.distributedCacheClear != null) {
+            this.distributedCacheClear.distributedClearCacheLine(primaryKey);
+        }
     }
 
     /** Remove a CACHED GenericValue from as many caches as it can. Automatically
@@ -1286,6 +1329,10 @@ public class GenericDelegator {
      *@param primaryKey The primary key to clear by.
      */
     public void clearCacheLine(GenericValue value) {
+        this.clearCacheLine(value, true);
+    }
+    
+    public void clearCacheLine(GenericValue value, boolean distribute) {
         if (value == null) return;
         
         //always auto clear the all cache too, since we know it's messed up in any case
@@ -1351,7 +1398,10 @@ public class GenericDelegator {
                     andCache.remove(dummyPKOriginal);
                 }
             }
-            
+        }
+        
+        if (distribute && this.distributedCacheClear != null) {
+            this.distributedCacheClear.distributedClearCacheLine(value);
         }
     }
 
@@ -1387,7 +1437,7 @@ public class GenericDelegator {
             this.clearCacheLine(value);
         }
     }
-
+    
     public GenericValue getFromPrimaryKeyCache(GenericPK primaryKey) {
         if (primaryKey == null) return null;
         return (GenericValue) primaryKeyCache.get(primaryKey);
