@@ -600,8 +600,10 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Returns the total from the cart, including tax/shipping. */
-    public double getGrandTotal() {
-        return (getSubTotal() + getOrderOtherAdjustmentTotal() + getTotalShipping() + getTotalSalesTax());
+    public double getGrandTotal() {    
+        List orderAdjustments = this.makeAllAdjustments();
+        List orderItems = this.makeOrderItems();   
+        return OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);         
     }
 
     /** Returns the SHIPPABLE item-total in the cart. */
