@@ -95,12 +95,15 @@
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransType" />
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccount" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlAccountClass" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccountRole" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccountType" />
     <entity-group group="org.ofbiz.commonapp" entity="GlBudgetXref" />
     <entity-group group="org.ofbiz.commonapp" entity="GlJournal" />
     <entity-group group="org.ofbiz.commonapp" entity="GlReconciliation" />
     <entity-group group="org.ofbiz.commonapp" entity="GlReconciliationEntry" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlResourceType" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlXbrlClass" />
     <entity-group group="org.ofbiz.commonapp" entity="SettlementTerm" />
 
   <!-- ========================================================= -->

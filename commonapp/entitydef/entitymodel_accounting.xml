@@ -1053,6 +1053,7 @@
       <field name="taxId" type="id"></field>
       <field name="reconcileStatusId" type="id"></field>
       <field name="settlementTermId" type="id"></field>
+      <field name="isSummary" type="indicator"></field>
       <prim-key field="acctgTransId"/>
       <prim-key field="acctgTransEntrySeqId"/>
       <relation type="one" fk-name="ACCTTXENT_ATET" rel-entity-name="AcctgTransEntryType">
@@ -1142,14 +1143,26 @@
             title="General Ledger Account Entity">
       <field name="glAccountId" type="id-ne"></field>
       <field name="glAccountTypeId" type="id"></field>
+      <field name="glAccountClassId" type="id"></field>
+      <field name="glResourceTypeId" type="id"></field>
+      <field name="glXbrlClassId" type="id"></field>
       <field name="parentGlAccountId" type="id"></field>
+      <field name="accountCode" type="name"></field>
       <field name="accountName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="productId" type="id"></field>
-      <field name="xbrlType" type="short-varchar"></field>
       <prim-key field="glAccountId"/>
       <relation type="one" fk-name="GLACCT_TYPE" rel-entity-name="GlAccountType">
         <key-map field-name="glAccountTypeId"/>
+      </relation>
+      <relation type="one" fk-name="GLACCT_CLSS" rel-entity-name="GlAccountClass">
+        <key-map field-name="glAccountClassId"/>
+      </relation>
+      <relation type="one" fk-name="GLACCT_REC" rel-entity-name="GlResourceType">
+        <key-map field-name="glResourceTypeId"/>
+      </relation>
+      <relation type="one" fk-name="GLACCT_XBRLCLS" rel-entity-name="GlXbrlClass">
+        <key-map field-name="glXbrlClassId"/>
       </relation>
       <relation type="one" fk-name="GLACCT_PAR" title="Parent" rel-entity-name="GlAccount">
         <key-map field-name="parentGlAccountId" rel-field-name="glAccountId"/>
@@ -1165,6 +1178,24 @@
       </relation>
       <relation type="many" rel-entity-name="GlAccountRole">
         <key-map field-name="glAccountId"/>
+      </relation>
+    </entity>
+    <entity entity-name="GlAccountClass"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="General Ledger Account Class Entity">
+      <field name="glAccountClassId" type="id-ne"></field>
+      <field name="parentClassId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="isAssetClass" type="indicator"></field>
+      <prim-key field="glAccountClassId"/>
+      <relation type="one" fk-name="GLACTCLS_PAR" title="Parent" rel-entity-name="GlAccountClass">
+        <key-map field-name="parentClassId" rel-field-name="glAccountClassId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="GlAccountClass">
+        <key-map field-name="glAccountClassId" rel-field-name="parentClassId"/>
+      </relation>
+      <relation type="many" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountClassId"/>
       </relation>
     </entity>
     <entity entity-name="GlAccountRole"
@@ -1274,6 +1305,26 @@
       </relation>
       <relation type="one-nofk" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId"/>
+      </relation>
+    </entity>
+    <entity entity-name="GlResourceType"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="General Ledger Resource Entity">
+      <field name="glResourceTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="glResourceTypeId"/>
+      <relation type="many" rel-entity-name="GlAccount">
+        <key-map field-name="glResourceTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="GlXbrlClass"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="General Ledger XBRL Class Entity">
+      <field name="glXbrlClassId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="glXbrlClassId"/>
+      <relation type="many" rel-entity-name="GlAccount">
+        <key-map field-name="glXbrlClassId"/>
       </relation>
     </entity>
     <entity entity-name="SettlementTerm"

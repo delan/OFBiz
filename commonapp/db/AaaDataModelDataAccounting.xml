@@ -39,6 +39,13 @@
   <FixedAssetType description="Vehicle" fixedAssetTypeId="VEHICLE" hasTable="N" parentTypeId=""/>
   <FixedAssetType description="Real Estate" fixedAssetTypeId="REAL_ESTATE" hasTable="N" parentTypeId=""/>
 
+  <GlAccountClass description="Resource" glAccountClassId="RESOURCE" parentClassId=""/>
+  <GlAccountClass description="Asset" glAccountClassId="ASSET" parentClassId=""/>
+  <GlAccountClass description="Liability" glAccountClassId="LIABILITY" parentClassId=""/>
+  <GlAccountClass description="Equity" glAccountClassId="EQUITY" parentClassId=""/>
+  <GlAccountClass description="Income" glAccountClassId="INCOME" parentClassId=""/>
+  <GlAccountClass description="Expense" glAccountClassId="EXPENSE" parentClassId=""/>
+
   <GlAccountType description="Balance" glAccountTypeId="BALANCE_ACCOUNT" hasTable="N" parentTypeId=""/>
   <GlAccountType description="Bank Settlement" glAccountTypeId="BANK_STLMNT_ACCOUNT" hasTable="N" parentTypeId=""/>
   <GlAccountType description="Customer" glAccountTypeId="CUSTOMER_ACCOUNT" hasTable="N" parentTypeId=""/>
@@ -49,6 +56,16 @@
   <GlAccountType description="Sales" glAccountTypeId="SALES_ACCOUNT" hasTable="N" parentTypeId=""/>
   <GlAccountType description="Purchase" glAccountTypeId="PURCHASE_ACCOUNT" hasTable="N" parentTypeId=""/>
   <GlAccountType description="Inventory Change" glAccountTypeId="INV_CHANGE_ACCOUNT" hasTable="N" parentTypeId=""/>
+
+  <GlResourceType description="Money" glResourceTypeId="MONEY"/>
+  <GlResourceType description="Raw Materials" glResourceTypeId="RAW_MATERIALS"/>
+  <GlResourceType description="Labor" glResourceTypeId="LABOR"/>
+  <GlResourceType description="Services" glResourceTypeId="SERVICES"/>
+  <GlResourceType description="Finished Goods" glResourceTypeId="FINISHED_GOODS"/>
+  <GlResourceType description="Delivered Goods" glResourceTypeId="DELIVERED_GOODS"/>
+
+  <GlXbrlClass description="US GAAP" glXbrlClassId="US_GAAP"/>
+  <GlXbrlClass description="IAS" glXbrlClassId="IAS"/>
 
   <InvoiceItemType description="Purchase" hasTable="N" invoiceItemTypeId="PURCHASE_INVOICE_ITE" parentTypeId=""/>
   <InvoiceItemType description="Sales" hasTable="N" invoiceItemTypeId="SALES_INVOICE_ITEM" parentTypeId=""/>
