@@ -170,8 +170,8 @@ public interface GenericHelper {
 
     /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
      *@param modelEntities Map of entityName names and ModelEntity values
-     *@param messages Collection to put any result messages in
+     *@param messages List to put any result messages in
      *@param addMissing Flag indicating whether or not to add missing entities and fields on the server
      */
-    public void checkDataSource(Map modelEntities, Collection messages, boolean addMissing) throws GenericEntityException;
+    public void checkDataSource(Map modelEntities, List messages, boolean addMissing) throws GenericEntityException;
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericHelperDAO.java,v 1.3 2003/11/14 22:17:48 jonesde Exp $
+ * $Id: GenericHelperDAO.java,v 1.4 2004/02/03 08:14:41 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class GenericHelperDAO implements GenericHelper {
@@ -249,10 +249,10 @@ public class GenericHelperDAO implements GenericHelper {
 
     /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
      *@param modelEntities Map of entityName names and ModelEntity values
-     *@param messages Collection to put any result messages in
+     *@param messages List to put any result messages in
      *@param addMissing Flag indicating whether or not to add missing entities and fields on the server
      */
-    public void checkDataSource(Map modelEntities, Collection messages, boolean addMissing) throws GenericEntityException {
+    public void checkDataSource(Map modelEntities, List messages, boolean addMissing) throws GenericEntityException {
         genericDAO.checkDb(modelEntities, messages, addMissing);
     }
 }
