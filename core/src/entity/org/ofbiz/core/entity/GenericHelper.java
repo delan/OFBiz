@@ -62,10 +62,10 @@ public interface GenericHelper {
     public GenericValue findByPrimaryKeyPartial(GenericPK primaryKey, Set keys) throws GenericEntityException;
     
     /** Find a number of Generic Value objects by their Primary Keys, all at once
-     *@param primaryKeys A Collection of primary keys to find by.
-     *@return Collection of GenericValue objects corresponding to the passed primaryKey objects
+     *@param primaryKeys A List of primary keys to find by.
+     *@return List of GenericValue objects corresponding to the passed primaryKey objects
      */
-    public Collection findAllByPrimaryKeys(Collection primaryKeys) throws GenericEntityException;
+    public List findAllByPrimaryKeys(List primaryKeys) throws GenericEntityException;
     
     /** Remove a Generic Entity corresponding to the primaryKey
      *@param  primaryKey  The primary key of the entity to remove.
@@ -78,38 +78,38 @@ public interface GenericHelper {
      *@param fields The fields of the named entity to query by with their corresponging values
      *@param orderBy The fields of the named entity to order the query by;
      *       optionally add a " ASC" for ascending or " DESC" for descending
-     *@return Collection of GenericValue instances that match the query
+     *@return List of GenericValue instances that match the query
      */
-    public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
+    public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
     
-    public Collection findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException;
+    public List findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException;
     
-    public Collection findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
+    public List findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
     
-    public Collection findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException;
+    public List findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException;
     
     /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
      *@param orderBy The fields of the named entity to order the query by;
      *       optionally add a " ASC" for ascending or " DESC" for descending
-     *@return Collection of GenericValue instances that match the query
+     *@return List of GenericValue instances that match the query
      */
-    public Collection findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
+    public List findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
     
-    public Collection findByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException;
+    public List findByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException;
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param entityCondition The EntityCondition object that specifies how to constrain this query
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return Collection of GenericValue objects representing the result
+     *@return List of GenericValue objects representing the result
      */
-    public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
+    public List findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
             Collection fieldsToSelect, List orderBy) throws GenericEntityException;
 
-    public Collection findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
+    public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
             ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException ;
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
@@ -139,30 +139,30 @@ public interface GenericHelper {
      */
     public int store(GenericValue value) throws GenericEntityException;
     
-    /** Store the Entities from the Collection GenericValue instances to the persistent store.
+    /** Store the Entities from the List GenericValue instances to the persistent store.
      *  This is different than the normal store method in that the store method only does
      *  an update, while the storeAll method checks to see if each entity exists, then
      *  either does an insert or an update as appropriate.
      *  These updates all happen in one transaction, so they will either all succeed or all fail,
      *  if the data source supports transactions. This is just like to othersToStore feature
      *  of the GenericEntity on a create or store.
-     *@param values Collection of GenericValue instances containing the entities to store
+     *@param values List of GenericValue instances containing the entities to store
      *@return int representing number of rows effected by this operation
      */
-    public int storeAll(Collection values) throws GenericEntityException;
+    public int storeAll(List values) throws GenericEntityException;
     
-    /** Remove the Entities from the Collection from the persistent store.
-     *  <br>The Collection contains GenericEntity objects, can be either GenericPK or GenericValue.
+    /** Remove the Entities from the List from the persistent store.
+     *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
      *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
      *  to that primary key will be removed, this is like a removeByPrimary Key.
      *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
      *  if will behave like the removeByAnd method.
      *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
      *  if the data source supports transactions.
-     *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+     *@param dummyPKs List of GenericEntity instances containing the entities or by and fields to remove
      *@return int representing number of rows effected by this operation
      */
-    public int removeAll(Collection dummyPKs) throws GenericEntityException;
+    public int removeAll(List dummyPKs) throws GenericEntityException;
     
     /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
      *@param modelEntities Map of entityName names and ModelEntity values

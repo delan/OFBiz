@@ -70,18 +70,18 @@
       <div>Got <%=numberRead%> entities to write to the datasource.</div>
 <%-- The OLD way:
   <%
-    Collection values = null;
+    List toBeStored = null;
     try {
-      values = delegator.readXmlDocument(url);
-      delegator.storeAll(values);
+      toBeStored = delegator.readXmlDocument(url);
+      delegator.storeAll(toBeStored);
     } catch(Exception e) {
       %><div>ERROR: <%=e.toString()%></div><%
     }
   %>
-    <%if(values != null) {%>
-      <div>Got <%=values.size()%> entities to write to the datasource.</div>
+    <%if(toBeStored != null) {%>
+      <div>Got <%=toBeStored.size()%> entities to write to the datasource.</div>
     <%}else{%>
-      <div>Could not get any values from the XML file.</div>
+      <div>Could not get any toBeStored from the XML file.</div>
     <%}%>
 --%>
   <%} else if (fulltext != null && fulltext.length() > 0) {%>
@@ -92,20 +92,20 @@
       <div>Got <%=numberRead%> entities to write to the datasource.</div>
 <%-- The OLD way:
   <%
-    Collection values = null;
+    List toBeStored = null;
     try {
       Document document = UtilXml.readXmlDocument(fulltext);
-      values = delegator.makeValues(document);
-      delegator.storeAll(values);
+      toBeStored = delegator.makeValues(document);
+      delegator.storeAll(toBeStored);
     }
     catch(Exception e) {
       %><div>ERROR: <%=e.toString()%></div><%
     }
   %>
-    <%if(values != null) {%>
-      <div>Got <%=values.size()%> entities to write to the datasource.</div>
+    <%if(toBeStored != null) {%>
+      <div>Got <%=toBeStored.size()%> entities to write to the datasource.</div>
     <%}else{%>
-      <div>Could not get any values from the XML text.</div>
+      <div>Could not get any toBeStored from the XML text.</div>
     <%}%>
 --%>
   <%} else {%>

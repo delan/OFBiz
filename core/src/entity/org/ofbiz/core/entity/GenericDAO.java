@@ -248,7 +248,7 @@ public class GenericDAO {
         return singleUpdate(entity, modelEntity, partialFields, connection);
     }
     
-    public int storeAll(Collection entities) throws GenericEntityException {
+    public int storeAll(List entities) throws GenericEntityException {
         if (entities == null || entities.size() <= 0) {
             return 0;
         }
@@ -346,7 +346,7 @@ public class GenericDAO {
             }
 
             // Look what there already is in the database
-            Collection meResult = null;
+            List meResult = null;
             try {
                 meResult = delegator.findByAnd(meName, findByMap);
             } catch (GenericEntityException e) {
@@ -537,7 +537,7 @@ public class GenericDAO {
         }
     }
     
-    public Collection selectByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+    public List selectByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         if (modelEntity == null) {
             return null;
         }
@@ -550,7 +550,7 @@ public class GenericDAO {
         EntityListIterator entityListIterator = null;
         try {
             entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
-            return entityListIterator.getCompleteCollection();
+            return entityListIterator.getCompleteList();
         } finally {
             if (entityListIterator != null) {
                 entityListIterator.close();
@@ -558,7 +558,7 @@ public class GenericDAO {
         }
     }
     
-    public Collection selectByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+    public List selectByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         if (modelEntity == null) {
             return null;
         }
@@ -571,7 +571,7 @@ public class GenericDAO {
         EntityListIterator entityListIterator = null;
         try {
             entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
-            return entityListIterator.getCompleteCollection();
+            return entityListIterator.getCompleteList();
         } finally {
             if (entityListIterator != null) {
                 entityListIterator.close();
@@ -579,7 +579,7 @@ public class GenericDAO {
         }
     }
     
-    public Collection selectByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
+    public List selectByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
         if (modelEntity == null) {
             return null;
         }
@@ -591,7 +591,7 @@ public class GenericDAO {
         EntityListIterator entityListIterator = null;
         try {
             entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
-            return entityListIterator.getCompleteCollection();
+            return entityListIterator.getCompleteList();
         } finally {
             if (entityListIterator != null) {
                 entityListIterator.close();
@@ -599,7 +599,7 @@ public class GenericDAO {
         }
     }
     
-    public Collection selectByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
+    public List selectByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
         if (modelEntity == null) {
             return null;
         }
@@ -611,7 +611,7 @@ public class GenericDAO {
         EntityListIterator entityListIterator = null;
         try {
             entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
-            return entityListIterator.getCompleteCollection();
+            return entityListIterator.getCompleteList();
         } finally {
             if (entityListIterator != null) {
                 entityListIterator.close();
@@ -619,14 +619,14 @@ public class GenericDAO {
         }
     }
     
-    public Collection selectByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+    public List selectByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
             return null;
         if (modelEntity instanceof ModelViewEntity) {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation selectByLike not supported yet for view entities");
         }
         
-        Collection collection = new LinkedList();
+        List list = new LinkedList();
         
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
         List whereFields = new ArrayList();
@@ -681,16 +681,16 @@ public class GenericDAO {
                     SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
                 }
                 value.modified = false;
-                collection.add(value);
+                list.add(value);
             }
         } finally {
             sqlP.close();
         }
         
-        return collection;
+        return list;
     }
     
-    public Collection selectByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
+    public List selectByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
             return null;
         if (modelEntity instanceof ModelViewEntity) {
@@ -703,7 +703,7 @@ public class GenericDAO {
         if (entityClauses == null)
             return null;
         
-        Collection collection = new LinkedList();
+        List list = new LinkedList();
         ModelEntity firstModelEntity = null;
         ModelEntity secondModelEntity = null;
         
@@ -919,13 +919,13 @@ public class GenericDAO {
                 }
                 
                 value.modified = false;
-                collection.add(value);
+                list.add(value);
             }
         } finally {
             sqlP.close();
         }
         
-        return collection;
+        return list;
     }
     
     /* ====================================================================== */
@@ -937,13 +937,13 @@ public class GenericDAO {
      *@param entityCondition The EntityCondition object that specifies how to constrain this query
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return Collection of GenericValue objects representing the result
+     *@return List of GenericValue objects representing the result
      */
-    public Collection selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
+    public List selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         EntityListIterator entityListIterator = null;
         try {
             entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, fieldsToSelect, orderBy, null);
-            return entityListIterator.getCompleteCollection();
+            return entityListIterator.getCompleteList();
         } finally {
             if (entityListIterator != null) {
                 entityListIterator.close();
@@ -1093,7 +1093,7 @@ public class GenericDAO {
         return new EntityListIterator(sqlP, modelEntity, selectFields, modelFieldTypeReader);
     }
 
-    public Collection selectByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
+    public List selectByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
             ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException {
         SQLProcessor sqlP = new SQLProcessor(helperName);
 
@@ -1287,7 +1287,7 @@ public class GenericDAO {
     }
     
     /** Called dummyPKs because they can be invalid PKs, doing a deleteByAnd instead of a normal delete */
-    public int deleteAll(Collection dummyPKs) throws GenericEntityException {
+    public int deleteAll(List dummyPKs) throws GenericEntityException {
         if (dummyPKs == null || dummyPKs.size() == 0) {
             return 0;
         }

@@ -122,7 +122,7 @@ public abstract class GenericAsyncEngine implements GenericEngine {
 
             // Build the value object(s).
             try {
-                Collection toBeStored = new LinkedList();
+                List toBeStored = new LinkedList();
 
                 // Create the runtime data
                 String dataId = dispatcher.getDelegator().getNextSeqId("RuntimeData").toString();

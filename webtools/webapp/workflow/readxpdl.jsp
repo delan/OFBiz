@@ -44,14 +44,14 @@
     catch (java.net.MalformedURLException e) { messages.add(e.getMessage()); messages.add(e.toString()); Debug.logWarning(e); }
     if (xpdlUrl == null) messages.add("Could not find file/URL: " + xpdlLoc);
     
-    List values = null;
-    try { if (xpdlUrl != null) values = XpdlReader.readXpdl(xpdlUrl, delegator); }
+    List toBeStored = null;
+    try { if (xpdlUrl != null) toBeStored = XpdlReader.readXpdl(xpdlUrl, delegator); }
     catch (Exception e) { messages.add(e.getMessage()); messages.add(e.toString()); Debug.logWarning(e); }
 
-    if (values != null && xpdlImport) {
+    if (toBeStored != null && xpdlImport) {
         try {
-            delegator.storeAll(values);
-            messages.add("Wrote/Updated " + values.size() + " values objects to the data source.");
+            delegator.storeAll(toBeStored);
+            messages.add("Wrote/Updated " + toBeStored.size() + " toBeStored objects to the data source.");
         } catch (GenericEntityException e) {
             messages.add(e.getMessage()); messages.add(e.toString()); Debug.logWarning(e);
         }
@@ -79,15 +79,15 @@
     <HR>
   <%}%>
 
-    <%Iterator viter = UtilMisc.toIterator(values);%>
+    <%Iterator viter = UtilMisc.toIterator(toBeStored);%>
     <%while (viter != null && viter.hasNext()) {%>
         <PRE><%=viter.next().toString()%></PRE>
     <%}%>
 
-    <%if (values != null) {%>
-        <div>Read and printed <%=values.size()%> entities.</div>
+    <%if (toBeStored != null) {%>
+        <div>Read and printed <%=toBeStored.size()%> entities.</div>
     <%} else {%>
-        <div>No values read.</div>
+        <div>No toBeStored read.</div>
     <%}%>
     
     

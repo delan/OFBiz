@@ -178,6 +178,8 @@ public class ControlServlet extends HttpServlet {
 
         // Store some first hit client info for later.
         if (session.getAttribute("visit") == null) {
+            //NOTE: inside this block we know that it is the first control servlet hit in this visit
+            
             StringBuffer fullRequestUrl = UtilMisc.getFullRequestUrl(request);
             String initialLocale = request.getLocale() != null ? request.getLocale().toString() : "";
             String initialRequest = fullRequestUrl.toString();
@@ -189,6 +191,8 @@ public class ControlServlet extends HttpServlet {
             session.setAttribute(SiteDefs.CLIENT_REFERER, initialUserAgent);
             
             VisitHandler.setInitials(request, session, initialLocale, initialRequest, initialReferrer, initialUserAgent, webappName);
+            
+            //check to see if the auto-login cookie is present, and if so set the autoUserLoginId session attribute
         }
 
         //setup chararcter encoding and content type, do before so that view can override

@@ -120,7 +120,7 @@ public class PaymentServices {
             return ServiceUtil.returnError(messages);
         }
 
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         GenericValue newPm = delegator.makeValue("PaymentMethod", null);
         toBeStored.add(newPm);
         GenericValue newCc = delegator.makeValue("CreditCard", null);
@@ -213,7 +213,7 @@ public class PaymentServices {
             return ServiceUtil.returnError(messages);
         }
 
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -330,7 +330,7 @@ public class PaymentServices {
         if (result.size() > 0)
             return result;
         
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         GenericValue newPm = delegator.makeValue("PaymentMethod", null);
         toBeStored.add(newPm);
         GenericValue newEa = delegator.makeValue("EftAccount", null);
@@ -410,7 +410,7 @@ public class PaymentServices {
         if (result.size() > 0)
             return result;
 
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;

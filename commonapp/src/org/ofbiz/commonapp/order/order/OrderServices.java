@@ -51,7 +51,7 @@ public class OrderServices {
         GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Security security = ctx.getSecurity();
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         //check security
@@ -383,10 +383,10 @@ public class OrderServices {
             fields.put("orderId", orderId);
             fields.put("statusDatetime", UtilDateTime.nowTimestamp());
             GenericValue orderStatus = delegator.makeValue("OrderStatus", fields);
-            Collection c = new ArrayList();
-            c.add(orderHeader);
-            c.add(orderStatus);
-            delegator.storeAll(c);
+            List toBeStored = new ArrayList();
+            toBeStored.add(orderHeader);
+            toBeStored.add(orderStatus);
+            delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status (" + e.getMessage() + ").");

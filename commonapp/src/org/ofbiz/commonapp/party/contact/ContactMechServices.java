@@ -52,7 +52,7 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
         if (result.size() > 0)
@@ -103,7 +103,7 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         boolean isModified = false;
         
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
@@ -260,7 +260,7 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
         if (result.size() > 0)
@@ -317,7 +317,7 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         boolean isModified = false;
         
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
@@ -445,7 +445,7 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
         if (result.size() > 0)
@@ -491,7 +491,7 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         boolean isModified = false;
         
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");

@@ -173,9 +173,9 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
 
       try {
       /* The OLD way
-        Collection values = delegator.readXmlDocument(url);
-        delegator.storeAll(values);
-        rowsChanged += values.size();
+        List toBeStored = delegator.readXmlDocument(url);
+        delegator.storeAll(toBeStored);
+        rowsChanged += toBeStored.size();
        */
         EntitySaxReader reader = new EntitySaxReader(delegator);
         rowsChanged += reader.parse(url);
@@ -258,11 +258,10 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
 
       if(baseName != null) {
           try {
-            List toStore = new LinkedList();
-            toStore.add(delegator.makeValue("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_ADMIN", "description", "Permission to Administer a " + entity.getEntityName() + " entity.")));
-            toStore.add(delegator.makeValue("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", baseName + "_ADMIN")));
-            delegator.storeAll(toStore);
-            rowsChanged += 2;
+            List toBeStored = new LinkedList();
+            toBeStored.add(delegator.makeValue("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_ADMIN", "description", "Permission to Administer a " + entity.getEntityName() + " entity.")));
+            toBeStored.add(delegator.makeValue("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", baseName + "_ADMIN")));
+            rowsChanged += delegator.storeAll(toBeStored);
           } catch (GenericEntityException e) {
             errorMessages.add("[install.generateData] ERROR: Failed Security Generation for entity \"" + baseName + "\"");
           }

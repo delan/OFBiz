@@ -238,19 +238,19 @@ public class EntityListIterator implements ListIterator {
         }
     }
     
-    public Collection getCompleteCollection() throws GenericEntityException {
+    public List getCompleteList() throws GenericEntityException {
         try {
             //if the resultSet has been moved forward at all, move back to the beginning
             if (haveMadeValue && !resultSet.isBeforeFirst()) {
                 //do a quick check to see if the ResultSet is empty
                 resultSet.beforeFirst();
             }
-            Collection collection = new LinkedList();
+            List list = new LinkedList();
             Object nextValue = null;
             while ((nextValue = this.next()) != null) {
-                collection.add(nextValue);
+                list.add(nextValue);
             }
-            return collection;
+            return list;
         } catch (SQLException e) {
             throw new GeneralRuntimeException("Error getting results", e);
         } catch (GeneralRuntimeException e) {
@@ -258,26 +258,26 @@ public class EntityListIterator implements ListIterator {
         }
     }
 
-    /** Gets a partial collection of results starting at start and containing at most number elements. 
+    /** Gets a partial list of results starting at start and containing at most number elements. 
      * Start is a one based value, ie 1 is the first element. 
      */
-    public Collection getPartialCollection(int start, int number) throws GenericEntityException {
+    public List getPartialList(int start, int number) throws GenericEntityException {
         try {
             resultSet.absolute(start);
-            Collection collection = new LinkedList();
-            if (number == 0) return collection;
+            List list = new ArrayList(number);
+            if (number == 0) return list;
             
             //get the first as the current one
-            collection.add(this.currentGenericValue());
+            list.add(this.currentGenericValue());
             
             Object nextValue = null;
             //init numRetreived to one since we have already grabbed the initial one
             int numRetreived = 1;
             while ((nextValue = this.next()) != null && number > numRetreived) {
-                collection.add(nextValue);
+                list.add(nextValue);
                 numRetreived++;
             }
-            return collection;
+            return list;
         } catch (SQLException e) {
             throw new GeneralRuntimeException("Error getting results", e);
         } catch (GeneralRuntimeException e) {

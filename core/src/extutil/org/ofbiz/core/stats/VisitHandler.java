@@ -92,7 +92,8 @@ public class VisitHandler {
     
     /** Get the visit from the session, or create if missing */
     public static GenericValue getVisit(HttpSession session) {
-        if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist.visit", "true")) {
+        //this defaults to true: ie if anything but "false" it will be true
+        if (!UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist.visit", "false")) {
             GenericValue visit = (GenericValue) session.getAttribute("visit");
             if (visit == null) {
                 GenericDelegator delegator = null;

@@ -106,12 +106,12 @@ public class GenericHelperDAO implements GenericHelper {
     /** Find a number of Generic Value objects by their Primary Keys, all at once
      * This is done here for the DAO GenericHelper; for a client-server helper it
      * would be done on the server side to reduce network round trips.
-     *@param primaryKeys A Collection of primary keys to find by.
-     *@return Collection of GenericValue objects corresponding to the passed primaryKey objects
+     *@param primaryKeys A List of primary keys to find by.
+     *@return List of GenericValue objects corresponding to the passed primaryKey objects
      */
-    public Collection findAllByPrimaryKeys(Collection primaryKeys) throws GenericEntityException {
+    public List findAllByPrimaryKeys(List primaryKeys) throws GenericEntityException {
         if (primaryKeys == null) return null;
-        Collection results = new LinkedList();
+        List results = new LinkedList();
         
         Iterator pkiter = primaryKeys.iterator();
         while (pkiter.hasNext()) {
@@ -136,18 +136,18 @@ public class GenericHelperDAO implements GenericHelper {
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return Collection of GenericValue instances that match the query
+     *@return List of GenericValue instances that match the query
      */
-    public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+    public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByAnd(modelEntity, fields, orderBy);
     }
-    public Collection findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
+    public List findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
         return genericDAO.selectByAnd(modelEntity, expressions, orderBy);
     }
-    public Collection findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+    public List findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByLike(modelEntity, fields, orderBy);
     }
-    public Collection findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
+    public List findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByClause(modelEntity, entityClauses, fields, orderBy);
     }
     
@@ -155,12 +155,12 @@ public class GenericHelperDAO implements GenericHelper {
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return Collection of GenericValue instances that match the query
+     *@return List of GenericValue instances that match the query
      */
-    public Collection findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+    public List findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByOr(modelEntity, fields, orderBy);
     }
-    public Collection findByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
+    public List findByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
         return genericDAO.selectByOr(modelEntity, expressions, orderBy);
     }
     
@@ -169,9 +169,9 @@ public class GenericHelperDAO implements GenericHelper {
      *@param entityCondition The EntityCondition object that specifies how to constrain this query
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return Collection of GenericValue objects representing the result
+     *@return List of GenericValue objects representing the result
      */
-    public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
+    public List findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
             Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         return genericDAO.selectByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
     }
@@ -193,7 +193,7 @@ public class GenericHelperDAO implements GenericHelper {
                 orderBy, findOptions);
     }
 
-    public Collection findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
+    public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
             ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException {
         return genericDAO.selectByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo);
     }
@@ -222,32 +222,32 @@ public class GenericHelperDAO implements GenericHelper {
         return genericDAO.update(value);
     }
     
-    /** Store the Entities from the Collection GenericValue instances to the persistent store.
+    /** Store the Entities from the List GenericValue instances to the persistent store.
      *  This is different than the normal store method in that the store method only does
      *  an update, while the storeAll method checks to see if each entity exists, then
      *  either does an insert or an update as appropriate.
      *  These updates all happen in one transaction, so they will either all succeed or all fail,
      *  if the data source supports transactions. This is just like to othersToStore feature
      *  of the GenericEntity on a create or store.
-     *@param values Collection of GenericValue instances containing the entities to store
+     *@param values List of GenericValue instances containing the entities to store
      *@return int representing number of rows effected by this operation
      */
-    public int storeAll(Collection values) throws GenericEntityException {
+    public int storeAll(List values) throws GenericEntityException {
         return genericDAO.storeAll(values);
     }
     
-    /** Remove the Entities from the Collection from the persistent store.
-     *  <br>The Collection contains GenericEntity objects, can be either GenericPK or GenericValue.
+    /** Remove the Entities from the List from the persistent store.
+     *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
      *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
      *  to that primary key will be removed, this is like a removeByPrimary Key.
      *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
      *  if will behave like the removeByAnd method.
      *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
      *  if the data source supports transactions.
-     *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+     *@param dummyPKs List of GenericEntity instances containing the entities or by and fields to remove
      *@return int representing number of rows effected by this operation
      */
-    public int removeAll(Collection dummyPKs) throws GenericEntityException {
+    public int removeAll(List dummyPKs) throws GenericEntityException {
         return genericDAO.deleteAll(dummyPKs);
     }
     

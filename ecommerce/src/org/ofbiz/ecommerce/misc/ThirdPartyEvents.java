@@ -105,7 +105,7 @@ public class ThirdPartyEvents {
             if ( UtilValidate.isEmpty(currentDistributorId) ) {
                 String distributorId = (String) request.getSession().getAttribute(DISTRIBUTOR_ID);
                 if ( UtilValidate.isNotEmpty(distributorId) ) {
-                    Collection toBeStored = new LinkedList();
+                    List toBeStored = new LinkedList();
                     
                     //create distributor Party ?? why?
                     //create distributor PartyRole ?? why?

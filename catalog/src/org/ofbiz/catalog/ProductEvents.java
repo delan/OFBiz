@@ -453,7 +453,7 @@ public class ProductEvents {
             return "error";
         }
 
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         GenericValue attribute = delegator.makeValue("ProductAttribute", null);
         toBeStored.add(attribute);
         attribute.set("productId", productId);

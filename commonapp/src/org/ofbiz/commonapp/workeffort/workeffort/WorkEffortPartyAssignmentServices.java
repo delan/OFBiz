@@ -60,7 +60,7 @@ public class WorkEffortPartyAssignmentServices {
 
         GenericValue newWorkEffortPartyAssignment = null;
         newWorkEffortPartyAssignment = delegator.makeValue("WorkEffortPartyAssignment", null);
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         toBeStored.add(newWorkEffortPartyAssignment);
 
         newWorkEffortPartyAssignment.set("workEffortId", context.get("workEffortId"));
@@ -139,7 +139,7 @@ public class WorkEffortPartyAssignmentServices {
 
         GenericValue newWorkEffortPartyAssignment = null;
         newWorkEffortPartyAssignment = (GenericValue) workEffortPartyAssignment.clone();
-        Collection toBeStored = new LinkedList();
+        List toBeStored = new LinkedList();
         toBeStored.add(newWorkEffortPartyAssignment);
         Timestamp nowStamp = UtilDateTime.nowTimestamp();
 
