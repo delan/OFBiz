@@ -127,7 +127,7 @@ public class ProductPromoWorker {
                             try {
                                 performAction(apply, productPromoAction, cart, cartItem, oldQuantity, prodCatalogId, delegator, dispatcher);
                             } catch (CartItemModifyException e) {
-                                Debug.logError(e, "Error modifying the cart in perform promotion action");
+                                Debug.logWarning("Possible error modifying the cart in perform promotion action: " + e.toString());
                             }
                         }
                     }
@@ -218,6 +218,10 @@ public class ProductPromoWorker {
                 Integer itemLoc = findPromoItem(productPromoAction, cart);
                 if (itemLoc != null) {
                     //gwp was setup by this promo/rule, so go ahead and clear it
+
+                    //before clearing it, set it to a non-promo so that the setQuantity won't throw an exception
+                    ShoppingCartItem cartItemToRemove = cart.findCartItem(itemLoc.intValue());
+                    cartItemToRemove.setIsPromo(false);
                     cart.removeCartItem(itemLoc.intValue(), dispatcher);
                 }
             }
