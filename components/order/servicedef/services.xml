@@ -246,6 +246,7 @@
         <description>Change the status of an existing order</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="statusId" type="String" mode="IN"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
         <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
         <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
         <attribute name="grandTotal" type="Double" mode="OUT" optional="true"/>

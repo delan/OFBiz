@@ -1264,11 +1264,15 @@ public class OrderServices {
             if (orderHeader == null) {
                 return ServiceUtil.returnError("ERROR: Could not change order status; order cannot be found.");
             }
+            // first save off the old status
+            successResult.put("oldStatusId", orderHeader.get("statusId"));
+
             if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"), module);
             if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId, module);
 
             if (orderHeader.getString("statusId").equals(statusId)) {
-                return ServiceUtil.returnSuccess();
+                Debug.logWarning("Tried to setOrderStatus with the same statusId [" + statusId + "] for order with ID [" + orderId + "]", module);
+                return successResult;
             }
             try {
                 Map statusFields = UtilMisc.toMap("statusId", orderHeader.getString("statusId"), "statusIdTo", statusId);
@@ -1284,19 +1288,18 @@ public class OrderServices {
             orderHeader.set("statusId", statusId);
 
             // now create a status change
-            Map fields = new HashMap();
-            fields.put("orderStatusId", delegator.getNextSeqId("OrderStatus").toString());
-            fields.put("statusId", statusId);
-            fields.put("orderId", orderId);
-            fields.put("statusDatetime", UtilDateTime.nowTimestamp());
-            GenericValue orderStatus = delegator.makeValue("OrderStatus", fields);
-            List toBeStored = new ArrayList();
-            toBeStored.add(orderHeader);
-            toBeStored.add(orderStatus);
-            delegator.storeAll(toBeStored);
+            GenericValue orderStatus = delegator.makeValue("OrderStatus", null);
+            orderStatus.put("orderStatusId", delegator.getNextSeqId("OrderStatus"));
+            orderStatus.put("statusId", statusId);
+            orderStatus.put("orderId", orderId);
+            orderStatus.put("statusDatetime", UtilDateTime.nowTimestamp());
+
+            orderHeader.store();
+            orderStatus.create();
 
             successResult.put("needsInventoryIssuance", orderHeader.get("needsInventoryIssuance"));
             successResult.put("grandTotal", orderHeader.get("grandTotal"));
+            //Debug.logInfo("For setOrderStatus orderHeader is " + orderHeader, module);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("ERROR: Could not change order status (" + e.getMessage() + ").");
         }
@@ -1312,6 +1315,7 @@ public class OrderServices {
         }
 
         successResult.put("orderStatusId", statusId);
+        //Debug.logInfo("For setOrderStatus successResult is " + successResult, module);
         return successResult;
     }
 
