@@ -15,12 +15,10 @@
     <handler name="bsf" type="request" class="org.ofbiz.content.webapp.event.BsfEventHandler"/>
 
     <!-- view handlers -->
-    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
-    <handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/>    
+    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>        
     <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
-    <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
     <handler name="fop" type="view" class="org.ofbiz.content.webapp.view.FopPdfViewHandler"/>
     <handler name="screenfop" type="view" class="org.ofbiz.content.webapp.view.ScreenFopPdfViewHandler"/>
