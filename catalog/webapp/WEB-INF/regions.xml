@@ -64,6 +64,10 @@
         <put section='title'>Edit Product Page</put>
         <put section='content' content='/product/EditProduct.jsp'/>
     </define>
+    <define id='EditProductPrices' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product Prices Page</put>
+        <put section='content' content='/product/EditProductPrices.jsp'/>
+    </define>
     <define id='EditProductCategories' region='LEFT_ONLY_REGION'>
         <put section='title'>Edit Product Categories Page</put>
         <put section='content' content='/product/EditProductCategories.jsp'/>

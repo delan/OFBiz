@@ -40,39 +40,38 @@
     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
     if (product == null) useValues = false;
     Collection productCategoryMembers = product.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productCategoryId"));
-    if (productCategoryMembers != null)
-        pageContext.setAttribute("productCategoryMembers", productCategoryMembers);
+    if (productCategoryMembers != null) pageContext.setAttribute("productCategoryMembers", productCategoryMembers);
 
     Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
-    if (categoryCol != null)
-        pageContext.setAttribute("categoryCol", categoryCol);
+    if (categoryCol != null) pageContext.setAttribute("categoryCol", categoryCol);
 
     if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 %>
-<br>
 
-<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
+<br>
 <%if(productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="buttontext">[Product]</a>
+  <a href="<ofbiz:url>/EditProductPrices?productId=<%=productId%></ofbiz:url>" class="buttontext">[Prices]</a>
   <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Categories]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Associations]</a>
   <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Attributes]</a>
   <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontext">[Features]</a>
   <a href="<ofbiz:url>/EditProductInventoryItems?productId=<%=productId%></ofbiz:url>" class="buttontext">[InventoryItems]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Category Members for Product 
-  <%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> 
-  with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
+<div class="head1">Category Members <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productId)%>]</span></div>
 
+<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
+<%if(productId != null && productId.length() > 0){%>
+  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
+<%}%>
 <br>
 <br>
-<%-- Edit 'ProductCategoryMember's --%>
+
 <%if(productId!=null && product!=null){%>
-<p class="head2">Product-Category Member Maintenance</p>
-
 <script language='JavaScript'>
     function setLineThruDate(line) { eval('document.lineForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
 </script>

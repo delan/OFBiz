@@ -57,21 +57,27 @@ try {
 %>
 
 <br>
-<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
 <%if(productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="buttontext">[Product]</a>
+  <a href="<ofbiz:url>/EditProductPrices?productId=<%=productId%></ofbiz:url>" class="buttontext">[Prices]</a>
   <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="buttontext">[Categories]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Associations]</a>
   <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Attributes]</a>
   <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontext">[Features]</a>
   <a href="<ofbiz:url>/EditProductInventoryItems?productId=<%=productId%></ofbiz:url>" class="buttontext">[InventoryItems]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Associations for Product 
-  <%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> 
-  with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
+<div class="head1">Associations <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productId)%>]</span></div>
+
+<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
+<%if(productId != null && productId.length() > 0){%>
+  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
+<%}%>
+<br>
+<br>
 
 <form action="<ofbiz:url>/UpdateProductAssoc</ofbiz:url>" method=POST style='margin: 0;'>
 <table border='0' cellpadding='2' cellspacing='0'>
@@ -203,13 +209,13 @@ try {
     <%fieldName = "reason";%><%paramName = "REASON";%>    
     <td width="26%" align=right><div class="tabletext">Reason</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productAssoc.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
+    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productAssoc.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="255"></td>
   </tr>
   <tr>
     <%fieldName = "instruction";%><%paramName = "INSTRUCTION";%>    
     <td width="26%" align=right><div class="tabletext">Instruction</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productAssoc.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
+    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productAssoc.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="255"></td>
   </tr>
 
   <tr>

@@ -79,19 +79,27 @@ function insertImageName(size,ext) {
 <table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 
 <br>
-<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
 <%if(productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Product]</a>
+  <a href="<ofbiz:url>/EditProductPrices?productId=<%=productId%></ofbiz:url>" class="buttontext">[Prices]</a>
   <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="buttontext">[Categories]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Associations]</a>
   <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Attributes]</a>
   <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontext">[Features]</a>
   <a href="<ofbiz:url>/EditProductInventoryItems?productId=<%=productId%></ofbiz:url>" class="buttontext">[InventoryItems]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
+<div class="head1">Product <span class='head2'><%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productId)%>]</span></div>
+
+<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
+<%if(productId != null && productId.length() > 0){%>
+  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
+<%}%>
+<br>
+<br>
 
 <%if(product == null){%>
   <%if(productId != null){%>

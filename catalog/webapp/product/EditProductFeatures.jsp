@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -23,8 +22,7 @@
  *@author     David E. Jones
  *@created    April 4, 2002
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -52,31 +50,36 @@
     Collection productFeatureTypes = delegator.findAll("ProductFeatureType", UtilMisc.toList("description"));
     if (productFeatureTypes != null) pageContext.setAttribute("productFeatureTypes", productFeatureTypes);
 %>
-<br>
 
-<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
+<br>
 <%if (productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
+  <hr class='sepbar'>
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="buttontext">[Product]</a>
+  <a href="<ofbiz:url>/EditProductPrices?productId=<%=productId%></ofbiz:url>" class="buttontext">[Prices]</a>
   <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="buttontext">[Categories]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Associations]</a>
   <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Attributes]</a>
   <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Features]</a>
   <a href="<ofbiz:url>/EditProductInventoryItems?productId=<%=productId%></ofbiz:url>" class="buttontext">[InventoryItems]</a>
+  <hr class='sepbar'>
 <%}%>
 
-<div class="head1">Features for Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
+<div class="head1">Features <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productId)%>]</span></div>
 
+<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
+<%if(productId != null && productId.length() > 0){%>
+  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
+<%}%>
 <br>
 <br>
+
 <%if (productId != null){%>
     <%if (product != null && "Y".equals(product.getString("isVirtual"))) {%>
         <a href="<ofbiz:url>/QuickAddVariants?productId=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Quick Add Variants]</a>
         <br>
     <%}%>
 
-<p class="head2">Product Feature Application Maintenance</p>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Description</b></div></td>
