@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.17 2004/07/31 20:10:13 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.18 2004/07/31 20:40:42 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -124,7 +124,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
@@ -200,6 +200,12 @@ public class CatalinaContainer implements Container {
         while (ci.hasNext()) {
             ContainerConfig.Container.Property connectorProp = (ContainerConfig.Container.Property) ci.next();
             createConnector(connectorProp);
+        }
+
+        try {
+            embedded.initialize();
+        } catch (LifecycleException e) {
+            throw new ContainerException(e);
         }
     }
 
