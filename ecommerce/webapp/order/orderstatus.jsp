@@ -65,47 +65,47 @@
 <%if (orderHeader != null) pageContext.setAttribute("orderHeader", orderHeader);%>
 <ofbiz:if name="orderHeader">
 <%
-  OrderReadHelper order = new OrderReadHelper(orderHeader);
+    OrderReadHelper orderReadHelper = new OrderReadHelper(orderHeader);
+    List orderItems = orderReadHelper.getOrderItems();
+    List orderAdjustments = orderReadHelper.getAdjustments();
+    List orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
+    double orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
 
-  Collection orderItemList = order.getOrderItems();
+    GenericValue shippingAddress = orderReadHelper.getShippingAddress();
+    //GenericValue billingAddress = orderReadHelper.getBillingAddress();
+    GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
 
-  GenericValue shippingAddress = order.getShippingAddress();
-  //GenericValue billingAddress = order.getBillingAddress();
-  GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
+    GenericValue paymentMethod = null;
+    Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
+    if(orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
+        GenericValue orderPaymentPreference = (GenericValue)orderPaymentPreferences.next();
+        paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");
+    }
 
-  GenericValue paymentMethod = null;
-  Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
-  if(orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
-    GenericValue orderPaymentPreference = (GenericValue)orderPaymentPreferences.next();
-    paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");
-  }
+    GenericValue shipmentPreference = null;
+    String carrierPartyId = null;
+    String shipmentMethodTypeId = null;
+    String shippingInstructions = null;
+    Boolean maySplit = null;
+    String giftMessage = null;
+    Boolean isGift = null;
 
-  GenericValue shipmentPreference = null;
-  String carrierPartyId = null;
-  String shipmentMethodTypeId = null;
-  String shippingInstructions = null;
-  Boolean maySplit = null;
-  String giftMessage = null;
-  Boolean isGift = null;
+    Iterator orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
+    if(orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
+        shipmentPreference = (GenericValue)orderShipmentPreferences.next();
+        carrierPartyId = shipmentPreference.getString("carrierPartyId");
+        shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
+        shippingInstructions = shipmentPreference.getString("shippingInstructions");
+        maySplit = shipmentPreference.getBoolean("maySplit");
+        giftMessage = shipmentPreference.getString("giftMessage");
+        isGift = shipmentPreference.getBoolean("isGift");
+    }
 
-  Iterator orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
-  if(orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
-    shipmentPreference = (GenericValue)orderShipmentPreferences.next();
-    carrierPartyId = shipmentPreference.getString("carrierPartyId");
-    shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
-    shippingInstructions = shipmentPreference.getString("shippingInstructions");
-    maySplit = shipmentPreference.getBoolean("maySplit");
-    giftMessage = shipmentPreference.getString("giftMessage");
-    isGift = shipmentPreference.getBoolean("isGift");
-  }
-
-  String customerPoNumber = null;
-  Iterator orderItemPOIter = UtilMisc.toIterator(orderItemList);
-  if(orderItemPOIter != null && orderItemPOIter.hasNext()) {
-    customerPoNumber = ((GenericValue)orderItemPOIter.next()).getString("correspondingPoId");
-  }
-
-  Collection orderAdjustments = order.getOrderAdjustmentCollection();
+    String customerPoNumber = null;
+    Iterator orderItemPOIter = UtilMisc.toIterator(orderItems);
+    if(orderItemPOIter != null && orderItemPOIter.hasNext()) {
+        customerPoNumber = ((GenericValue)orderItemPOIter.next()).getString("correspondingPoId");
+    }
 %>
 
 <%@ include file="orderinformation.jsp" %>

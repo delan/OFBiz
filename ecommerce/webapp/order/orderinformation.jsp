@@ -32,12 +32,12 @@
 %>
 
     <%GenericValue localOrderHeader = null;%>
-    <%OrderReadHelper localOrder = null;%>
+    <%OrderReadHelper localOrderReadHelper = null;%>
     <ofbiz:if name="orderHeader">
         <%localOrderHeader = (GenericValue) pageContext.getAttribute("orderHeader");%>
-        <%localOrder = new OrderReadHelper(localOrderHeader);%>
+        <%localOrderReadHelper = new OrderReadHelper(localOrderHeader);%>
     </ofbiz:if>
-    <%String distributorId = localOrder != null ? localOrder.getDistributorId() : (String) session.getAttribute(ThirdPartyEvents.DISTRIBUTOR_ID);%>
+    <%String distributorId = localOrderReadHelper != null ? localOrderReadHelper.getDistributorId() : (String) session.getAttribute(ThirdPartyEvents.DISTRIBUTOR_ID);%>
     <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
     <%if (paymentMethod != null) pageContext.setAttribute("paymentMethod", paymentMethod);%>
     <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
@@ -95,7 +95,7 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <ofbiz:if name="orderHeader">
-                      <div class="tabletext"><%=localOrder.getStatusString()%></div>
+                      <div class="tabletext"><%=localOrderReadHelper.getStatusString()%></div>
                     </ofbiz:if>
                     <ofbiz:unless name="orderHeader">
                       <div class="tabletext"><b>Not Yet Ordered</b></div>
@@ -327,16 +327,18 @@
                       </div>
                   </td>
                 </tr>
-                <tr><td colspan="7"><hr class='sepbar'></td></tr>
-                <tr>
-                  <td align="right" valign="top" width="15%">
-                    <div class="tabletext">&nbsp;<b>Instructions</b></div>
-                  </td>
-                  <td width="5">&nbsp;</td>
-                  <td align="left" valign="top" width="80%">
-                      <div class="tabletext"><%=UtilFormatOut.checkNull(shippingInstructions)%></div>
-                   </td>
-                </tr>
+                <%if (UtilValidate.isNotEmpty(shippingInstructions)) {%>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Instructions</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                          <div class="tabletext"><%=UtilFormatOut.checkNull(shippingInstructions)%></div>
+                       </td>
+                    </tr>
+                <%}%>
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>
                   <td align="right" valign="top" width="15%">
@@ -350,16 +352,18 @@
                       </div>
                   </td>
                 </tr>
-                <tr><td colspan="7"><hr class='sepbar'></td></tr>
-                <tr>
-                  <td align="right" valign="top" width="15%">
-                    <div class="tabletext">&nbsp;<b>Gift Message</b></div>
-                  </td>
-                  <td width="5">&nbsp;</td>
-                  <td align="left" valign="top" width="80%">
-                      <div class="tabletext"><%=UtilFormatOut.checkNull(giftMessage)%></div>
-                   </td>
-                </tr>
+                <%if (UtilValidate.isNotEmpty(giftMessage)) {%>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Gift Message</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                          <div class="tabletext"><%=UtilFormatOut.checkNull(giftMessage)%></div>
+                       </td>
+                    </tr>
+                <%}%>
               </table>
           </td>
         </tr>

@@ -100,7 +100,12 @@ public class ShoppingCartItem implements java.io.Serializable {
             cart.addItem(cartLocation.intValue(), newItem);
         }
         
-        newItem.setQuantity(quantity, dispatcher, cart, doPromotions);
+        try {
+            newItem.setQuantity(quantity, dispatcher, cart, doPromotions);
+        } catch (CartItemModifyException e) {
+            cart.removeEmptyCartItems();
+            throw e;
+        }
         return newItem;
     }
     

@@ -60,11 +60,12 @@
                 <tr align=left valign=bottom>
                   <th width="65%" align="left">Product</th>
                   <th width="5%" align="right">Quantity</th>
-                  <th width="15%" align="right">Unit Price</th>
-                  <th width="15%" align="right">Line Price</th>
+                  <th width="10%" align="right">Unit Price</th>
+                  <th width="10%" align="right">Adjustments</th>
+                  <th width="10%" align="right">Total</th>
                 </tr>
-             <%if (orderItemList != null) pageContext.setAttribute("orderItemList", orderItemList);%>
-             <ofbiz:iterator name="orderItem" property="orderItemList">
+             <%if (orderItems != null) pageContext.setAttribute("orderItems", orderItems);%>
+             <ofbiz:iterator name="orderItem" property="orderItems">
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
 
                 <tr>
@@ -87,10 +88,11 @@
                     <td align="right" valign="top">
                         <div class="tabletext" nowrap><%EntityField.run("orderItem", "unitPrice", pageContext);%></div>
                     </td>
+                    <td align="right" valign="top">
+                        <div class="tabletext" nowrap><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemAdjustments(orderItem, orderAdjustments, true, false, false))%></div>
+                    </td>
                     <td align="right" valign="top" nowrap>
-                      <%double lineTotal = orderItem.getDouble("quantity").doubleValue()*orderItem.getDouble("unitPrice").doubleValue();%>
-                      <%total += lineTotal;%>
-                      <div class="tabletext"><%=UtilFormatOut.formatPrice(lineTotal)%></div>
+                      <div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemSubTotal(orderItem, orderAdjustments))%></div>
                     </td>
                   <ofbiz:if name="maySelectItems">
                     <td>
@@ -100,36 +102,30 @@
                   </ofbiz:unless>
                 </tr>
               </ofbiz:iterator>
-              <ofbiz:unless name="orderItemList" size="0">
+              <ofbiz:unless name="orderItems" size="0">
               <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
               </ofbiz:unless>
 
-                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr><td colspan="8"><hr class='sepbar'></td></tr>
 
                 <tr>
-                    <td align="right" colspan="3"><div class="tabletext"><b>Subtotal</b></div></td>
-                    <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(total)%></div></td>
+                    <td align="right" colspan="4"><div class="tabletext"><b>Subtotal</b></div></td>
+                    <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments))%></div></td>
                 </tr>
 
-                <% if (orderAdjustments != null) pageContext.setAttribute("orderAdjustments", orderAdjustments); %>
-                <ofbiz:iterator name="orderAdjustment" property="orderAdjustments">
-
-                <%
-                   GenericValue adjustmentType = orderAdjustment.getRelatedOne("OrderAdjustmentType");
-                   double currentTotal = OrderReadHelper.calcOrderAdjustment(orderAdjustment, total);
-                   total += currentTotal;
-                %>
-
-                <tr>
-                    <td align="right" colspan="3"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b></div></td>
-                    <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(currentTotal)%></div></td>
-                </tr>
+                <%if (orderHeaderAdjustments != null) pageContext.setAttribute("orderHeaderAdjustments", orderHeaderAdjustments);%>
+                <ofbiz:iterator name="orderHeaderAdjustment" property="orderHeaderAdjustments">
+                    <%GenericValue adjustmentType = orderHeaderAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
+                    <tr>
+                        <td align="right" colspan="4"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b></div></td>
+                        <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal))%></div></td>
+                    </tr>
                 </ofbiz:iterator>
-                <tr><td colspan=2></td><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr><td colspan=2></td><td colspan="8"><hr class='sepbar'></td></tr>
                 <tr>
-                    <td align="right" colspan="3"><div class="tabletext"><b>Total Due</b></div></td>
-                   <td align="right" nowrap>
-                  <div class="tabletext"><%= UtilFormatOut.formatPrice(total)%></div>
+                    <td align="right" colspan="4"><div class="tabletext"><b>Total Due</b></div></td>
+                    <td align="right" nowrap>
+                        <div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.getTotalPrice(orderItems, orderAdjustments))%></div>
                     </td>
                 </tr>
             <%-- } else { %>

@@ -127,12 +127,25 @@ public class ShoppingCart implements java.io.Serializable {
     public ShoppingCartItem findCartItem(String productId, HashMap features, HashMap attributes, String prodCatalogId) {
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
-            ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
-            if (sci.equals(productId, features, attributes, prodCatalogId)) {
-                return sci;
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
+            if (cartItem.equals(productId, features, attributes, prodCatalogId)) {
+                return cartItem;
             }
         }
         return null;
+    }
+
+    /** Remove quantity 0 ShoppingCartItems from the cart object. */
+    public void removeEmptyCartItems() {
+        // Check for existing cart item.
+        for (int i = 0; i < this.cartLines.size(); ) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
+            if (cartItem.getQuantity() == 0.0) {
+                cartLines.remove(i);
+            } else {
+                i++;
+            }
+        }
     }
 
     /** Returns this item's index. */
@@ -497,9 +510,9 @@ public class ShoppingCart implements java.io.Serializable {
     // =======================================================================
     
     /** Returns an collection of order items. */
-    public Collection makeOrderItems(GenericDelegator delegator) {
+    public List makeOrderItems(GenericDelegator delegator) {
         synchronized (cartLines) {
-            Collection result = new LinkedList();
+            List result = new LinkedList();
             Iterator itemIter = cartLines.iterator();
             long cartLineSize = cartLines.size();
             long seqId = 1;

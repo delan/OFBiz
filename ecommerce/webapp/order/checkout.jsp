@@ -51,6 +51,11 @@
 <%pageContext.setAttribute("cart", cart);%>
 <ofbiz:if name="cart" size="0">
 <%
+    List orderItems = cart.makeOrderItems(delegator);
+    List orderAdjustments = cart.makeAllAdjustments(delegator);
+    List orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
+    double orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments);
+
     GenericValue shippingAddress = cart.getShippingAddress(delegator);
     List paymentMethods = cart.getPaymentMethods(delegator);
     GenericValue paymentMethod = null;
@@ -74,9 +79,6 @@
     String giftMessage = cart.getGiftMessage();
     Boolean isGift = cart.getIsGift();
     //  if (creditCardInfo == null) {
-
-    Collection orderItemList = cart.makeOrderItems(delegator);
-    Collection orderAdjustments = cart.getAdjustments();
 %>
 
 <%@ include file="orderinformation.jsp" %>
