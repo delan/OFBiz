@@ -259,6 +259,8 @@ public class RequestHandler implements Serializable {
     }
 
     public static String getRequestUri(String path) {
+        if (path.indexOf('?') > -1)
+            path = path.substring(0, path.indexOf('?'));
         if (path.indexOf('/') == -1)
             return path;
         if (path.lastIndexOf('/') == 0)
