@@ -381,7 +381,7 @@
                 <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>User Name</b></div></td>
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="70%"><div class="tabletext"><%entityField.run("userUserLogin", "userLoginId");%></div></td> 
-                <td align="right" valign="top" width="20%"><a href="<ofbiz:url>/changepassword?userlogin_id=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[Change Password]</a>&nbsp;&nbsp;
+                <td align="right" valign="top" width="20%"><a href="<ofbiz:url>/editlogin?userlogin_id=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[Edit]</a>&nbsp;&nbsp;
               </tr>
               </ofbiz:iterator>
             </table>
