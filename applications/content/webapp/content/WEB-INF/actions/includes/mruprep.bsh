@@ -59,7 +59,7 @@ import javax.servlet.http.*;
 
 GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 entityName = page.getProperty("entityName");
-lookupCaches = (Map)session.getAttribute("lookupCaches");
+lookupCaches = (Map) session.getAttribute("lookupCaches");
 org.ofbiz.base.util.Debug.logInfo("entityName:" + entityName, "");
 org.ofbiz.base.util.Debug.logInfo("in mruprep.bsh, lookupCaches:" + lookupCaches, "");
 if(lookupCaches == null){
@@ -81,38 +81,31 @@ if (UtilValidate.isNotEmpty(entityName) && entityName.indexOf("DataResource") >=
         }
     }
 }
-Debug.logInfo("cacheEntityName:" + cacheEntityName, "");
-lifoSet = (LifoSet)lookupCaches.get(cacheEntityName);
-org.ofbiz.base.util.Debug.logInfo("lifoSet:" + lifoSet, "");
-    if(lifoSet == null){
-        lifoSet	= new LifoSet(10);
-        lookupCaches.put(cacheEntityName, lifoSet);
-    }    
+
+Debug.logInfo("cacheEntityName:" + cacheEntityName, "mruprep");
+lifoSet = (LifoSet) lookupCaches.get(cacheEntityName);
+Debug.logInfo("lifoSet:" + lifoSet, "mruprep");
+
+if (lifoSet == null) {
+    lifoSet	= new LifoSet(10);
+    lookupCaches.put(cacheEntityName, lifoSet);
+}    
 
 LinkedList mruList = new LinkedList();
-int sz = lifoSet.keyLRUList.size();
+int sz = lifoSet.size();
 GenericValue gv	= null;
 GenericPK pk	= null;
 GenericPK pk2	= null;
-Object contentIdKey = null;
 
-for(int i=(sz-1); i >= 0; i--){
-    contentIdKey = lifoSet.keyLRUList.get(i);
+lsIter = lifoSet.iterator();
+while (lsIter.hasNext()) {
+    pk = lsIter.next();
+    gv = delegator.findByPrimaryKey(pk);
+    if (gv != null) mruList.add(gv);
+}
 
-Debug.logInfo("contentIdKey:" + contentIdKey, "");
-    if (contentIdKey != null && contentIdKey.length() > 0) {
-        pk = (GenericEntity)lifoSet.cacheLineTable.get(contentIdKey).getValue();
-        gv = delegator.findByPrimaryKey(pk);
-        if (gv != null)
-            mruList.add(gv);
-    }
-}
-iter = lifoSet.iterator();
-while (iter.hasNext()) {
-    pk0 = iter.next();
-}
-String formDefFile		= page.getProperty("formDefFile");
-String mruFormName		= page.getProperty("mruFormName");
+String formDefFile = page.getProperty("formDefFile");
+String mruFormName = page.getProperty("mruFormName");
 HtmlFormWrapper mruWrapper = new HtmlFormWrapper(formDefFile, mruFormName, request, response);
 mruWrapper.putInContext("mruList", mruList);
 Debug.logInfo("mruList:" + mruList, "");
