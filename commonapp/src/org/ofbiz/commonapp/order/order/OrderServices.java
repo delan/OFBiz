@@ -107,7 +107,7 @@ public class OrderServices {
             }
         }
 
-		Iterator normalizedIter = normalizedItemQuantities.keySet().iterator();   
+        Iterator normalizedIter = normalizedItemQuantities.keySet().iterator();   
         while (normalizedIter.hasNext()) {
             // if the item is out of stock, return an error to that effect
             String currentProductId = (String) normalizedIter.next();
@@ -799,8 +799,7 @@ public class OrderServices {
             templateContext.put("orderHeaderAdjustments", orderHeaderAdjustments);
             templateContext.put("orderSubTotal", new Double(orderSubTotal));
             templateContext.put("headerAdjustmentsToShow", headerAdjustmentsToShow);
-            
-            
+                        
             double shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
             shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
             templateContext.put("orderShippingTotal", new Double(shippingAmount));
@@ -868,20 +867,34 @@ public class OrderServices {
         templateContext.put("ofbizUrl", new OfbizUrlTransform());
            
         // open the reader and read the template    
+        URL templateURL = null;
         Reader reader = null;        
         try {     
-            URL templateURL = new URL(templateUrl);   
+            templateURL = new URL(templateUrl);   
             reader = new InputStreamReader(templateURL.openStream());
         } catch (IOException e) {
             Debug.logError(e, "Problems reading the template url", module);
             ServiceUtil.returnError("Problems opening url, see error log");            
         }
         
+        File rootPath = null;
+        if (templateURL.getProtocol().equals("file")) {
+            Debug.logError("Setting rootPath to: " + templateURL.getPath(), module);
+            File tmpFile = new File(templateURL.getPath());
+            Debug.logError("getting parent: " + tmpFile.getParent(), module);
+            rootPath = new File(tmpFile.getParent());
+        }        
+        
         // process the template
-        Configuration config = Configuration.getDefaultConfiguration();     
-        config.setObjectWrapper(BeansWrapper.getDefaultInstance());
-        config.setLocale(localLocale);             
-        TemplateHashModel staticModels = wrapper.getStaticModels();      
+        Configuration config = Configuration.getDefaultConfiguration();            
+        config.setObjectWrapper(BeansWrapper.getDefaultInstance());        
+        config.setLocale(localLocale);    
+        TemplateHashModel staticModels = wrapper.getStaticModels();           
+        try {
+            config.setDirectoryForTemplateLoading(rootPath);
+        } catch (IOException e) {   
+            Debug.logError(e, "", module);         
+        }            
         
         templateContext.put("Static", staticModels);
         try {                  
