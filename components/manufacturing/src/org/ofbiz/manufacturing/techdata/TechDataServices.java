@@ -1,5 +1,5 @@
 /*
- * $Id: TechDataServices.java,v 1.5 2004/03/28 21:35:46 holivier Exp $
+ * $Id: TechDataServices.java,v 1.6 2004/04/07 08:53:46 holivier Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * TechDataServices - TechData related Services
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class TechDataServices {
@@ -206,8 +206,51 @@ public class TechDataServices {
 					else return false;
 				else return true;
 		}
+    /**
+     * Used to get the techDataCalendar for a routingTask, if there is a entity exception 
+     * or routingTask associated with no MachineGroup the DEFAULT TechDataCalendar is return.
+     * 
+     * @param routingTask    the routingTask for which we are looking for  
+     * @return the techDataCalendar associated
+     */
+        public static GenericValue getTechDataCalendar(GenericValue routingTask) {
+            GenericValue machineGroup = null, techDataCalendar = null;
+            try{
+                machineGroup = routingTask.getRelatedOneCache("FixedAsset");
+            } catch (GenericEntityException e) {
+                Debug.logError("Pb reading FixedAsset associated with routingTask"+e.getMessage(), module);
+            }
+            if (machineGroup != null) { 
+                if (machineGroup.getString("calendarId") != null){
+                    try{
+                        techDataCalendar = machineGroup.getRelatedOneCache("TechDataCalendar");
+                    } catch (GenericEntityException e) {
+                        Debug.logError("Pb reading TechDataCalendar associated with machineGroup"+e.getMessage(), module);
+                    }
+                }else {
+                    try{
+                        List  machines = machineGroup.getRelatedCache("ChildFixedAsset");
+                        if (machines != null && machines.size()>0) {
+                            GenericValue machine = EntityUtil.getFirst(machines);
+                            techDataCalendar = machine.getRelatedOneCache("TechDataCalendar");
+                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logError("Pb reading machine child from machineGroup"+e.getMessage(), module);
+                    }
+                }
+            }
+            if (techDataCalendar == null) { 
+               try {
+                   GenericDelegator delegator = routingTask.getDelegator();
+                    techDataCalendar = delegator.findByPrimaryKey("TechDataCalendar",UtilMisc.toMap("calendarId","DEFAULT"));
+               } catch (GenericEntityException e) {
+                   Debug.logError("Pb reading TechDataCalendar DEFAULT"+e.getMessage(), module);
+               }
+            }
+        return techDataCalendar;
+        }
+        
     /** Used to find the fisrt day in the TechDataCalendarWeek where capacity != 0, beginning at dayStart, dayStart included.
-     * This method update the fromDate and retrun the capacity.
      * 
      * @param techDataCalendarWeek        The TechDataCalendarWeek cover  
      * @param dayStart                        
@@ -253,12 +296,44 @@ public class TechDataServices {
                     moveDay +=1;
                     dayStart = (dayStart==7) ? 1 : dayStart +1;
                 }    
-                Debug.logInfo("capacity loop: " + capacity+ " moveDay=" +moveDay, module);
+//                Debug.logInfo("capacity loop: " + capacity+ " moveDay=" +moveDay, module);
             }
             result.put("capacity",capacity);
             result.put("startTime",startTime);
             result.put("moveDay",new Integer(moveDay));
             return result;
+        }
+    /** Used to to request the remain capacity available for dateFrom in a TechDataCalenda, 
+     * If the dateFrom (param in) is not  in an available TechDataCalendar period, the return value is zero.
+     * 
+     * @param techDataCalendar        The TechDataCalendar cover  
+     * @param dateFrom                        the date
+     * @return  long capacityRemaining
+     */
+        public static long capacityRemaining(GenericValue techDataCalendar,  Timestamp  dateFrom) {
+            GenericValue techDataCalendarWeek = null;
+            // TODO read TechDataCalendarExcWeek to manage execption week (maybe it's needed to refactor the entity definition
+            try{
+                techDataCalendarWeek = techDataCalendar.getRelatedOneCache("TechDataCalendarWeek");
+            } catch (GenericEntityException e) {
+                Debug.logError("Pb reading Calendar Week associated with calendar"+e.getMessage(), module);
+//                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "PbReadingTechDataCalendarWeekAssociated", locale));
+               return 0;
+            }
+            // TODO read TechDataCalendarExcDay to manage execption day
+            Calendar cDateTrav =  Calendar.getInstance();
+            cDateTrav.setTime((Date) dateFrom);
+            Map position = dayStartCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
+            int moveDay = ((Integer) position.get("moveDay")).intValue();
+            if (moveDay != 0) return 0;
+            Time startTime = (Time) position.get("startTime");
+            Double capacity = (Double) position.get("capacity");
+// TODO after test (01:00:00).getTime() = 0 and not 3600000 so currently we add this value to be correct but it's needed to find why (maybe GMT pb)
+            Timestamp startAvailablePeriod = new Timestamp(UtilDateTime.getDayStart(dateFrom).getTime() + startTime.getTime() + 3600000);
+            if (dateFrom.before(startAvailablePeriod) ) return 0;
+            Timestamp endAvailablePeriod = new Timestamp(startAvailablePeriod.getTime()+capacity.longValue());
+            if (dateFrom.after(endAvailablePeriod)) return 0;
+            return  endAvailablePeriod.getTime() - dateFrom.getTime();
         }
 	/** Used to move in a TechDataCalenda, produce the Timestamp for the begining of the next day available and its associated capacity.
 	 * If the dateFrom (param in) is not  in an available TechDataCalendar period, the return value is the next day available
@@ -324,9 +399,24 @@ public class TechDataServices {
      * @param amount                           the amount of millisecond to move forward
      * @return the dateTo
      */
-        public static Timestamp addForward(GenericValue techDataCalendar,  Timestamp  dateFrom, int amount) {
-            Timestamp dateTo = null;
-    
+        public static Timestamp addForward(GenericValue techDataCalendar,  Timestamp  dateFrom, long amount) {
+            Timestamp dateTo = (Timestamp) dateFrom.clone();
+            long nextCapacity = capacityRemaining(techDataCalendar, dateFrom);
+            if (amount <= nextCapacity){
+                dateTo.setTime(dateTo.getTime()+amount);
+                amount = 0;
+            }else amount -= nextCapacity;
+
+            Map result = new HashMap();
+            while (amount > 0)  {
+                result = startNextDay(techDataCalendar, dateTo);
+                dateTo = (Timestamp) result.get("dateTo");
+                nextCapacity = ((Double) result.get("nextCapacity")).longValue();
+                if (amount <= nextCapacity){
+                    dateTo.setTime(dateTo.getTime()+amount);
+                    amount = 0;
+                }else amount -= nextCapacity;
+            }
             return dateTo;
         }
     /** Used to move backward in a TechDataCalenda, start from the dateFrom and move backward only on available period.
