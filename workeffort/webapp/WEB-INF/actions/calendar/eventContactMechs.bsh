@@ -1,0 +1,39 @@
+import java.util.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.pseudotag.*;
+import org.ofbiz.commonapp.workeffort.workeffort.*;
+import org.ofbiz.commonapp.common.status.*;
+import org.ofbiz.commonapp.party.contact.*;
+
+delegator = request.getAttribute("delegator");
+dispatcher = request.getAttribute("dispatcher");
+
+String workEffortId = request.getParameter("workEffortId");
+if(workEffortId == null) workEffortId = request.getAttribute("workEffortId");
+ 
+Map serviceCtx = UtilMisc.toMap(
+    "userLogin",context.getSession().getAttribute("userLogin"),
+    "workEffortId",workEffortId);
+Map result = dispatcher.runSync("getWorkEffort",serviceCtx);
+
+List workEffortContactMechValueMaps = ContactMechWorker.getWorkEffortContactMechValueMaps(delegator, workEffortId);
+context.put("contactMeches", workEffortContactMechValueMaps);
+
+List roles = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId));
+if (roles != null && roles.size() > 0) context.put("roles", roles);
+
+Collection contactMechTypes = delegator.findAllCache("ContactMechType", null);
+
+if (contactMechTypes != null)
+    context.put("contactMechTypes", contactMechTypes);
+       
+context.put("workEffort",result.get("workEffort"));
+context.put("workEffortId",result.get("workEffortId"));
+context.put("partyAssigns",result.get("partyAssigns"));
+context.put("canView",result.get("canView"));
+context.put("tryEntity",result.get("tryEntity"));
+context.put("currentStatusItem",result.get("currentStatusItem"));
+
+
