@@ -36,15 +36,37 @@
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<%String listStatusId = request.getParameter("listStatusId");%>
-<%if (listStatusId == null || listStatusId.length() == 0) listStatusId = "ORDERED";%>
-<%Collection statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_STATUS"), UtilMisc.toList("sequenceId"));%>
-<%if (statusItems != null) pageContext.setAttribute("statusItems", statusItems);%>
+
 <%
-  Collection orderHeaderList = delegator.findByAnd("OrderHeader", UtilMisc.toMap("statusId", listStatusId), UtilMisc.toList("orderDate DESC"));
+  Collection orderHeaderList = null;
+  String listStatusId = request.getParameter("listStatusId");
+  if (listStatusId == null || listStatusId.length() == 0) listStatusId = "ORDERED";
+  String partyId = request.getParameter("partyId");
+  if (partyId != null) {
+      Debug.logInfo("Getting order by party.");
+      pageContext.setAttribute("PARTY_MODE", "YES");
+      Collection orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "END_USER_CUSTOMER"));
+      Debug.logInfo("OrderRoles: " + orderRoles);
+      List exprs = new ArrayList();
+      if (orderRoles != null && orderRoles.size() > 0) {
+          Iterator i = orderRoles.iterator();
+          while (i.hasNext() ) {
+              GenericValue v = (GenericValue) i.next();
+              exprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, v.getString("orderId")));
+          }
+          Debug.logInfo("Expressions: " + exprs);
+          orderHeaderList = delegator.findByOr("OrderHeader", exprs, UtilMisc.toList("orderDate DESC"));
+          Debug.logInfo("OrderHeaderList: " + orderHeaderList);
+      }
+  } else {
+      Debug.logInfo("Getting order by status.");
+      Collection statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_STATUS"), UtilMisc.toList("sequenceId"));
+      if (statusItems != null) pageContext.setAttribute("statusItems", statusItems);
+      orderHeaderList = delegator.findByAnd("OrderHeader", UtilMisc.toMap("statusId", listStatusId), UtilMisc.toList("orderDate DESC"));
+  }
   if (orderHeaderList != null) pageContext.setAttribute("orderHeaderList", orderHeaderList);
 %>
-        
+
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -55,6 +77,7 @@
             <div class='boxhead'>&nbsp;Order List Page</div>
           </TD>
           <TD align=right width='35%'>
+            <ofbiz:unless name="PARTY_MODE">
               <FORM name="liststatus" action="<ofbiz:url>/orderlist</ofbiz:url>" method="POST">
                 <select name="listStatusId">
                   <option><%=listStatusId%></option>
@@ -63,8 +86,12 @@
                   <ofbiz:iterator name="statusItem" property="statusItems">
                     <option><%=statusItem.getString("statusId")%></option>               
                   </ofbiz:iterator>
-                </select>&nbsp;<a href="javascript:document.liststatus.submit();" class="lightbuttontext">[Use&nbsp;Status]</a>            
+                </select>&nbsp;<a href="javascript:document.liststatus.submit();" class="lightbuttontext">[Use&nbsp;Status]</a>
               </FORM>
+            </ofbiz:unless>
+            <ofbiz:if name="PARTY_MODE">
+              &nbsp;
+            </ofbiz:if>
           </TD>
           <TD align=right width='25%'>
               <FORM name="lookup" action="<ofbiz:url>/orderview</ofbiz:url>" method="POST">
