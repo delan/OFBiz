@@ -70,6 +70,8 @@ public class LocalDispatcher {
     }
 
     private void init(String name, GenericDelegator delegator, DispatchContext ctx) {
+        if (name == null && name.length() == 0)
+            throw new IllegalArgumentException("The name of a LocalDispatcher cannot be a null or empty String");
         this.name = name;
         this.ctx = ctx;
         ctx.setDispatcher(this);
