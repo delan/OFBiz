@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.34 2004/01/14 06:10:18 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.35 2004/01/14 06:20:06 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.34 $
+ * @version    $Revision: 1.35 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -235,7 +235,7 @@ public class ProductPromoWorker {
         String partyId = cart.getPartyId();
 
         // this is our safety net; we should never need to loop through the rules more than a certain number of times, this is that number and may have to be changed for insanely large promo sets...
-        long maxIterations = 2 * Math.round(cart.getTotalQuantity());
+        long maxIterations = 1000;
         // part of the safety net to avoid infinite iteration
         long numberOfIterations = 0;
         
