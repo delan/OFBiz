@@ -1,5 +1,5 @@
 /*
- * $Id: contentprep.bsh,v 1.4 2004/07/02 15:48:28 byersa Exp $
+ * $Id: contentprep.bsh,v 1.5 2004/07/10 16:24:10 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
 
  */
@@ -73,6 +73,7 @@ if (UtilValidate.isEmpty(contentId))
     contentId = (String)ContentManagementWorker.getFromSomewhere("contentId", paramMap, request, context);
 if (UtilValidate.isEmpty(contentId)) 
     contentId = (String)ContentManagementWorker.getFromSomewhere("contentIdTo", paramMap, request, context);
+Debug.logInfo("in contentprep, contentId:" + contentId, "");
 
 ancestorList = new ArrayList();
 ContentWorker.getContentAncestry(delegator, contentId, "PUBLISH_LINK", "to", ancestorList);
@@ -87,7 +88,6 @@ if (ancestorList.size() > 0) {
         rootPubPt = (String) ancestorList.get(0);
     }
 }
-Debug.logInfo("in contentprep, rootPubPt:" + rootPubPt, "");
 //Debug.logInfo("in contentprep, contentId(1):" + contentId, "");
 if (currentValue == null) {
     currentValue = (GenericValue)request.getAttribute("currentValue");
@@ -154,6 +154,7 @@ if (currentValue != null) {
                 map = new HashMap();
                 map.put("entity", contentAssocDataResourceView);
                 map.put("text", childText);
+                map.put("id", contentAssocDataResourceView.get("contentId"));
                 textList.add(map);
             }
             context.put("textList", textList);

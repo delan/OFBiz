@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.22 2004/07/10 16:24:09 byersa Exp $
+ * $Id: RenderContentAsText.java,v 1.1 2004/07/10 16:24:09 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -46,17 +46,17 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateTransformModel;
 //import com.clarkware.profiler.Profiler;
 /**
- * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
+ * RenderContentAsText - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.1 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
  */
-public class RenderSubContentCacheTransform implements TemplateTransformModel {
+public class RenderContentAsText implements TemplateTransformModel {
 
-    public static final String module = RenderSubContentCacheTransform.class.getName();
+    public static final String module = RenderContentAsText.class.getName();
     public static final String [] upSaveKeyNames = {"globalNodeTrail"};
     public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
 
@@ -122,8 +122,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         templateRoot.put( "subContentId", subContentIdSub);
         templateRoot.put( "subDataResourceTypeId", subDataResourceTypeId);
 
-        //final Map savedValues = new HashMap();
-        //FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
+        final Map savedValues = new HashMap();
 
         return new Writer(out) {
 
@@ -139,7 +138,6 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 if (Debug.infoOn()) Debug.logInfo("Render close, globalNodeTrail(2a):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
                 try {
                     renderSubContent();
-                FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp, env);
                  //if (Debug.infoOn()) Debug.logInfo("in Render(2), globalNodeTrail ." + getWrapped(env, "globalNodeTrail") , module);
                 } catch (IOException e) {
                     throw new IOException(e.getMessage());
@@ -177,6 +175,9 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                     openEditWrap(out, editStyle);
                 }
 
+                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId(2):" + templateRoot.get( "contentId"), module);
+                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, subContentId(2):" + templateRoot.get( "subContentId"), module);
+                FreeMarkerWorker.saveContextValues(templateRoot, saveKeyNames, savedValues);
                 if (thisView != null) {
                     try {
                         ContentWorker.renderContentAsTextCache(delegator, null, out, templateRoot, thisView, locale, mimeTypeId);
@@ -186,6 +187,8 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                         throw new IOException("Error rendering thisView:" + thisView + " msg:" + e.toString());
                     }
                 }
+                FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp, env);
+                FreeMarkerWorker.reloadValues(templateRoot, savedValues, env);
                 if (UtilValidate.isNotEmpty(editRequestName)) {
                     closeEditWrap(out, editRequestName);
                 }
@@ -202,72 +205,18 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
 
             public void closeEditWrap(Writer out, String editRequestName) throws IOException {
             
-                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId(1):" + templateRoot.get( "contentId"), module);
-                if (Debug.infoOn()) Debug.logInfo("in Render(0), templateRoot ." + templateRoot , module);
+                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId(3):" + templateRoot.get( "contentId"), module);
+                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, subContentId(3):" + templateRoot.get( "subContentId"), module);
                 StringBuffer sb = new StringBuffer();
                 String fullRequest = editRequestName;
                 String contentId = null;
-                String contentIdTo = null;
-                String contentAssocTypeId = null;
-                String mapKey = null;
-                String fromDate = null;
-             
-                if (!directAssocMode) {
-                    contentIdTo = (String)templateRoot.get("contentId");
-                    contentAssocTypeId = (String)templateRoot.get("contentAssocTypeId");
-                    mapKey = (String)templateRoot.get("mapKey");
-                    fromDate = (String)templateRoot.get("fromDate");
-                    if (Debug.infoOn()) Debug.logInfo("in Render(0), view ." + view , module);
-                    if (view != null) {
-                        ModelEntity modelEntity = view.getModelEntity();
-                        if (UtilValidate.isEmpty(contentId) && modelEntity.getField("caContentId") != null )
-                            contentId = view.getString("caContentId");
-                        if (UtilValidate.isEmpty(contentId) && modelEntity.getField("contentId") != null )
-                            contentId = view.getString("contentId");
-                        if (UtilValidate.isEmpty(contentIdTo) && modelEntity.getField("caContentIdTo") != null )
-                            contentIdTo = view.getString("caContentIdTo");
-                        if (UtilValidate.isEmpty(contentIdTo) && modelEntity.getField("contentIdTo") != null )
-                            contentIdTo = view.getString("contentIdTo");
-                        if (UtilValidate.isEmpty(contentAssocTypeId) && modelEntity.getField("caContentAssocTypeId") != null )
-                            contentAssocTypeId = view.getString("caContentAssocTypeId");
-                        if (UtilValidate.isEmpty(contentAssocTypeId) && modelEntity.getField("contentAssocTypeId") != null )
-                            contentAssocTypeId = view.getString("contentAssocTypeId");
-                        if (UtilValidate.isEmpty(mapKey) && modelEntity.getField("caMapKey") != null )
-                            mapKey = view.getString("caMapKey");
-                        if (UtilValidate.isEmpty(mapKey) && modelEntity.getField("mapKey") != null )
-                            mapKey = view.getString("mapKey");
-                        if (UtilValidate.isEmpty(fromDate) && modelEntity.getField("caFromDate") != null )
-                            fromDate = view.getString("caFromDate");
-                        if (UtilValidate.isEmpty(fromDate) && modelEntity.getField("fromDate") != null )
-                            fromDate = view.getString("fromDate");
-                    }
-                } else {
-                    contentId = (String)templateRoot.get("subContentId");
-                }
-                if (Debug.infoOn()) Debug.logInfo("in Render(0), contentIdTo ." + contentIdTo , module);
+                contentId = (String)templateRoot.get("subContentId");
                 String delim = "?";
                 if (UtilValidate.isNotEmpty(contentId)) {
                     fullRequest += delim + "contentId=" + contentId;
                     delim = "&";
                 }
-                if (UtilValidate.isNotEmpty(contentIdTo)) {
-                    fullRequest += delim + "contentIdTo=" + contentIdTo;
-                    delim = "&";
-                }
-                if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
-                    fullRequest += delim + "contentAssocTypeId=" + contentAssocTypeId;
-                    delim = "&";
-                }
-                if (UtilValidate.isNotEmpty(mapKey)) {
-                    fullRequest += delim + "mapKey=" + mapKey;
-                    delim = "&";
-                }
-                if (UtilValidate.isNotEmpty(fromDate)) {
-                    fullRequest += delim + "fromDate=" + fromDate;
-                    delim = "&";
-                }
               
-                if (Debug.infoOn()) Debug.logInfo("in Render(2), contentIdTo ." + contentIdTo , module);
                 WidgetWorker.appendOfbizUrl(sb, fullRequest, request, response);
                 String url = sb.toString();
                 String link = "<a href=\"" + url + "\">Edit</a>";

@@ -32,12 +32,13 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.security.Security;
+import org.ofbiz.base.util.collections.LifoSet;
 
 /**
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      3.0
  *
  * 
@@ -50,19 +51,15 @@ public class ContentManagementWorker {
 
     public static void mruAdd(HttpServletRequest request, GenericEntity pk, String suffix ) {
         HttpSession session = request.getSession();
-        mruAdd(session, pk, suffix );
+        mruAdd(session, pk);
     }
 
     public static void mruAdd(HttpServletRequest request, GenericEntity pk ) {
         HttpSession session = request.getSession();
-        mruAdd(session, pk, null );
+        mruAdd(session, pk);
     }
 
-    public static void mruAdd(HttpSession session, GenericEntity pk ) {
-        mruAdd(session, pk, null );
-    }
-
-    public static void mruAdd(HttpSession session, GenericEntity pk, String suffix ) {
+    public static void mruAdd(HttpSession session, GenericEntity pk) {
 
         if (pk == null) return;
 
@@ -72,39 +69,8 @@ public class ContentManagementWorker {
             session.setAttribute("lookupCaches", lookupCaches);
         }    
         String entityName = pk.getEntityName();
-        if (entityName.indexOf("DataResource") >= 0) {
-            GenericDelegator delegator = pk.getDelegator();
-      
-            // Force all view variations to DataResource
-            GenericValue p = delegator.makeValue("DataResourceContentView", null);
-            String s = null;
-            try {
-                s = (String)pk.get("dataResourceId");
-                if (UtilValidate.isEmpty(s))  {
-                    s = (String)pk.get("drDataResourceId");
-                }
-                p.set("dataResourceId", s);
-                s = (String)pk.get("contentId");
-                if (UtilValidate.isEmpty(s))  {
-                    s = (String)pk.get("coContentId");
-                }
-                p.set("coContentId", s);
-            } catch(IllegalArgumentException e) { 
-                // ignore 
-            }
-            if (UtilValidate.isNotEmpty(s))  {
-                mruAddByEntityName( "DataResourceContentView", null, p, lookupCaches);
-                if (suffix != null && suffix.length() > 0) {
-                    mruAddByEntityName( "DataResourceContentView", suffix, p, lookupCaches);
-                }
-            }
 
-        } else {
-            mruAddByEntityName( entityName, null, pk, lookupCaches);
-            if (suffix != null && suffix.length() > 0) {
-                mruAddByEntityName( entityName, suffix, pk, lookupCaches);
-            }
-        }
+        mruAddByEntityName( entityName, pk, lookupCaches);
         return;
     }
 
@@ -116,24 +82,30 @@ public class ContentManagementWorker {
     * @param suffix 
     * @param pk either a GenericValue or GenericPK - populated
     */
-    public static void mruAddByEntityName(String entityName, String suffix, 
-                                          GenericEntity pk, Map lookupCaches) {
+    public static void mruAddByEntityName(String entityName, GenericEntity pk, Map lookupCaches) {
 
         String cacheEntityName = entityName;
-        if (UtilValidate.isNotEmpty(suffix)) {
-            cacheEntityName = entityName + suffix;
-        }
-        UtilCache lkupCache = (UtilCache)lookupCaches.get(cacheEntityName);
+        LifoSet lkupCache = (LifoSet)lookupCaches.get(cacheEntityName);
         if(lkupCache == null){
-            lkupCache	= new UtilCache(cacheEntityName,10,0);
+            lkupCache	= new LifoSet();
             lookupCaches.put(cacheEntityName, lkupCache);
         }    
         
-        String idSig = buildPKSig(pk, null);
-        GenericPK p = pk.getPrimaryKey();
-        lkupCache.put(idSig,p);
-        //if (Debug.infoOn()) Debug.logInfo("in mruAddByEntityName, p:" + p, module);
+        lkupCache.add(pk.getPrimaryKey());
         return;
+    }
+
+    public static Iterator mostRecentlyViewedIterator(String entityName, Map lookupCaches) {
+
+        String cacheEntityName = entityName;
+        LifoSet lkupCache = (LifoSet)lookupCaches.get(cacheEntityName);
+        if(lkupCache == null){
+            lkupCache	= new LifoSet();
+            lookupCaches.put(cacheEntityName, lkupCache);
+        }    
+        
+        Iterator mrvIterator = lkupCache.iterator();
+        return mrvIterator;
     }
 
 

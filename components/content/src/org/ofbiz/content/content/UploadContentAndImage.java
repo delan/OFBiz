@@ -42,7 +42,7 @@ import org.ofbiz.minilang.MiniLangException;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -366,6 +366,7 @@ public class UploadContentAndImage {
                     imageFi = fi;
                     imageBytes = imageFi.get();
                     passedParams.put(fieldName, imageBytes);
+            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]imageData: " + imageBytes.length, module);
                 }
             }
             if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]passedParams: " + passedParams, module);
@@ -441,15 +442,19 @@ public class UploadContentAndImage {
                 Object obj = passedParams.get(keyName + suffix);
                 ftlContext2.put(keyName, obj);
             }
+            if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]ftlContext2:" + ftlContext2, module);
             List errorMessages = new ArrayList();
             Locale loc = Locale.getDefault();
             try {
                 SimpleMapProcessor.runSimpleMapProcessor( "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentIn", ftlContext2, ftlContext3, errorMessages, loc);
-                SimpleMapProcessor.runSimpleMapProcessor( "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn", ftlContext2, ftlContext3, errorMessages, loc);
-                SimpleMapProcessor.runSimpleMapProcessor( "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn", ftlContext2, ftlContext3, errorMessages, loc);
-
                 SimpleMapProcessor.runSimpleMapProcessor( "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentOut", ftlContext3, ftlContext, errorMessages, loc);
+
+                ftlContext3 = new HashMap();
+                SimpleMapProcessor.runSimpleMapProcessor( "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn", ftlContext2, ftlContext3, errorMessages, loc);
                 SimpleMapProcessor.runSimpleMapProcessor( "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", ftlContext3, ftlContext, errorMessages, loc);
+
+                ftlContext3 = new HashMap();
+                SimpleMapProcessor.runSimpleMapProcessor( "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn", ftlContext2, ftlContext3, errorMessages, loc);
                 SimpleMapProcessor.runSimpleMapProcessor( "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocOut", ftlContext3, ftlContext, errorMessages, loc);
             } catch(MiniLangException e) {
                 throw new GenericServiceException(e.getMessage());
@@ -457,32 +462,21 @@ public class UploadContentAndImage {
 
 
             ftlContext.put("textData", passedParams.get("textData" + suffix));
+            byte[] bytes = (byte[])passedParams.get("imageData" + suffix);
+            ByteWrapper byteWrapper = new ByteWrapper(bytes);
+            ftlContext.put("imageData", byteWrapper);
             //contentAssocDataResourceViewFrom.setAllFields(ftlContext2, true, null, null);
             //ftlContext.putAll(ftlContext2);             
             if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]ftlContext:" + ftlContext, module);
-            // Create or update FTL template
-//            ftlContext.put("contentId", passedParams.get("ftlContentId" + suffix));
-//            ftlContext.put("ownerContentId", passedParams.get("ownerContentId" + suffix));
-//            String contentTypeId = (String)passedParams.get("contentTypeId" + suffix);
-//            ftlContext.put("contentTypeId", contentTypeId + suffix);
-//            ftlContext.put("statusId", passedParams.get("statusId" + suffix));
-//            ftlContext.put("contentName", passedParams.get("contentName" + suffix));
-//            ftlContext.put("dataTemplateTypeId", passedParams.get("dataTemplateTypeId" + suffix));
-//            ftlContext.put("description", passedParams.get("description" + suffix));
-//            ftlContext.put("privilegeEnumId", passedParams.get("privilegeEnumId" + suffix));
-//            String drid = (String)passedParams.get("dataResourceId" + suffix);
-//            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]drid:" + drid, module);
-//            ftlContext.put("dataResourceId", drid);
-//            ftlContext.put("dataResourceTypeId", passedParams.get("dataResourceTypeId" + suffix)); 
-//            String contentIdTo = (String)passedParams.get("contentIdTo" + suffix);
-//            ftlContext.put("contentIdTo", contentIdTo);
-//            ftlContext.put("contentAssocTypeId", passedParams.get("contentAssocTypeId" + suffix)); 
             Map ftlResults = dispatcher.runSync("persistContentAndAssoc", ftlContext);
             boolean isError = ModelService.RESPOND_ERROR.equals(ftlResults.get(ModelService.RESPONSE_MESSAGE));
             if (isError) {
                 request.setAttribute("_ERROR_MESSAGE_", ftlResults.get(ModelService.ERROR_MESSAGE));
                 return "error";
             }
+            String returnedContentId = (String)ftlResults.get("contentId");
+            if (Debug.infoOn()) Debug.logInfo("returnedContentId:" + returnedContentId, module);
+            request.setAttribute("contentId", returnedContentId);
             return "success";
     }
 

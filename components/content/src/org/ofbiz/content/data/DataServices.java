@@ -1,5 +1,5 @@
 /*
- * $Id: DataServices.java,v 1.15 2004/06/02 17:50:08 byersa Exp $
+ * $Id: DataServices.java,v 1.16 2004/07/10 16:24:08 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * DataServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @since 3.0
  * 
  *  
@@ -622,6 +622,7 @@ public class DataServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
         String permissionStatus = (String)permResults.get("permissionStatus");
+        if (Debug.infoOn()) Debug.logInfo("in createBinaryFileMethod, permissionStatus:" + permissionStatus, module);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue dataResource = (GenericValue) context.get("dataResource");
             //String dataResourceId = (String) dataResource.get("dataResourceId");
@@ -631,6 +632,9 @@ public class DataServices {
             String rootDir = (String)context.get("rootDir");
             String prefix = "";
             File file = null;
+            if (Debug.infoOn()) Debug.logInfo("in createBinaryFileMethod, dataResourceTypeId:" + dataResourceTypeId, module);
+            if (Debug.infoOn()) Debug.logInfo("in createBinaryFileMethod, objectInfo:" + objectInfo, module);
+            if (Debug.infoOn()) Debug.logInfo("in createBinaryFileMethod, rootDir:" + rootDir, module);
             try {
                 file = DataResourceWorker.getContentFile(dataResourceTypeId, objectInfo, rootDir);
             } catch (FileNotFoundException e) {
@@ -640,10 +644,13 @@ public class DataServices {
                     Debug.logWarning(e2, module);
                     throw new GenericServiceException(e2.getMessage());
             }
+        if (Debug.infoOn()) Debug.logInfo("in createBinaryFileMethod, file:" + file, module);
+        if (Debug.infoOn()) Debug.logInfo("in createBinaryFileMethod, imageData:" + imageData.length, module);
             if (imageData != null && imageData.length > 0) {
                 try {
                     FileOutputStream out = new FileOutputStream(file);
                     out.write(imageData);
+                    if (Debug.infoOn()) Debug.logInfo("in createBinaryFileMethod, length:" + file.length(), module);
                     out.close();
                 } catch (IOException e) {
                     Debug.logWarning(e, module);
@@ -658,4 +665,71 @@ public class DataServices {
         return result;
     }
 
+
+    /**
+     * A service wrapper for the createBinaryFileMethod method. Forces permissions to be checked.
+     */
+    public static Map updateBinaryFile(DispatchContext dctx, Map context) {
+        context.put("entityOperation", "_UPDATE");
+        List targetOperations = new ArrayList();
+        targetOperations.add("CONTENT_UPDATE");
+        context.put("targetOperationList", targetOperations);
+        context.put("skipPermissionCheck", null);
+        Map result = null;
+        try {
+            result = updateBinaryFileMethod(dctx, context);
+        } catch (GenericServiceException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return result;
+    }
+
+    public static Map updateBinaryFileMethod(DispatchContext dctx, Map context) throws GenericServiceException {
+        HashMap result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+        String permissionStatus = (String)permResults.get("permissionStatus");
+        if (Debug.infoOn()) Debug.logInfo("in updateBinaryFileMethod, permissionStatus:" + permissionStatus, module);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            GenericValue dataResource = (GenericValue) context.get("dataResource");
+            //String dataResourceId = (String) dataResource.get("dataResourceId");
+            String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
+            String objectInfo = (String) dataResource.get("objectInfo");
+            byte [] imageData = (byte []) context.get("imageData");
+            String rootDir = (String)context.get("rootDir");
+            String prefix = "";
+            File file = null;
+            if (Debug.infoOn()) Debug.logInfo("in updateBinaryFileMethod, dataResourceTypeId:" + dataResourceTypeId, module);
+            if (Debug.infoOn()) Debug.logInfo("in updateBinaryFileMethod, objectInfo:" + objectInfo, module);
+            if (Debug.infoOn()) Debug.logInfo("in updateBinaryFileMethod, rootDir:" + rootDir, module);
+            try {
+                file = DataResourceWorker.getContentFile(dataResourceTypeId, objectInfo, rootDir);
+            } catch (FileNotFoundException e) {
+                    Debug.logWarning(e, module);
+                    throw new GenericServiceException(e.getMessage());
+            } catch (GeneralException e2) {
+                    Debug.logWarning(e2, module);
+                    throw new GenericServiceException(e2.getMessage());
+            }
+        if (Debug.infoOn()) Debug.logInfo("in updateBinaryFileMethod, file:" + file, module);
+        if (Debug.infoOn()) Debug.logInfo("in updateBinaryFileMethod, imageData:" + imageData, module);
+            if (imageData != null && imageData.length > 0) {
+                try {
+                    FileOutputStream out = new FileOutputStream(file);
+                    out.write(imageData);
+                    if (Debug.infoOn()) Debug.logInfo("in updateBinaryFileMethod, length:" + file.length(), module);
+                    out.close();
+                } catch (IOException e) {
+                    Debug.logWarning(e, module);
+                    throw new GenericServiceException(e.getMessage());
+                }
+            }
+        } else {
+            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
+            return ServiceUtil.returnError(errorMsg);
+        }
+
+        return result;
+    }
 }
