@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.37 2004/01/17 17:05:44 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.38 2004/01/18 08:27:45 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.37 $
+ * @version    $Revision: 1.38 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -550,12 +550,17 @@ public class ProductPromoWorker {
         int compare = 0;
 
         if ("PPIP_PRODUCT_AMOUNT".equals(inputParamEnumId)) {
+            // for this type of promo force the operatorEnumId = PPC_EQ, effectively ignore that setting because the comparison is implied in the code
+            operatorEnumId = "PPC_EQ";
+            
             // this type of condition requires items involved to not be involved in any other quantity consuming cond/action, and does not pro-rate the price, just uses the base price
             double amountNeeded = 0.0;
             if (UtilValidate.isNotEmpty(condValue)) {
                 amountNeeded = Double.parseDouble(condValue);
             }
 
+            // Debug.logInfo("Doing Amount Cond with Value: " + amountNeeded, module);
+            
             Set productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
 
             List lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
@@ -580,6 +585,8 @@ public class ProductPromoWorker {
                 }
             }
 
+            // Debug.logInfo("Doing Amount Cond with Value after finding applicable cart lines: " + amountNeeded, module);
+            
             // if amountNeeded > 0 then the promo condition failed, so remove candidate promo uses and increment the promoQuantityUsed to restore it
             if (amountNeeded > 0) {
                 // failed, reset the entire rule, ie including all other conditions that might have been done before
@@ -590,18 +597,18 @@ public class ProductPromoWorker {
                 compare = 0;
                 // NOTE: don't confirm promo rule use here, wait until actions are complete for the rule to do that
             }
-        } else if ("PPIP_PRODUCT_AMTNC".equals(inputParamEnumId)) {
+        } else if ("PPIP_PRODUCT_TOTAL".equals(inputParamEnumId)) {
             // this type of condition allows items involved to be involved in other quantity consuming cond/action, and does pro-rate the price
-            double amountNeeded = 0.0;
-            if (UtilValidate.isNotEmpty(condValue)) {
-                amountNeeded = Double.parseDouble(condValue);
-            }
+            Double amountNeeded = Double.valueOf(condValue);
+            double amountAvailable = 0;
 
+            // Debug.logInfo("Doing Amount Not Counted Cond with Value: " + amountNeeded, module);
+            
             Set productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
 
             List lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
             Iterator lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
-            while (amountNeeded > 0 && lineOrderedByBasePriceIter.hasNext()) {
+            while (lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
                 GenericValue product = cartItem.getProduct();
@@ -611,18 +618,17 @@ public class ProductPromoWorker {
                         (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                     
                     // just count the entire sub-total of the item
-                    amountNeeded -= cartItem.getItemSubTotal();
+                    amountAvailable += cartItem.getItemSubTotal();
                 }
             }
 
-            if (amountNeeded > 0) {
-                // no counting of quantities used, so nothing to reset here, just fail
-                compare = -1;
-            } else {
-                // we got it, the conditions are in place...
-                compare = 0;
-            }
+            // Debug.logInfo("Doing Amount Not Counted Cond with Value after finding applicable cart lines: " + amountNeeded, module);
+            
+            compare = new Double(amountAvailable).compareTo(amountNeeded);
         } else if ("PPIP_PRODUCT_QUANT".equals(inputParamEnumId)) {
+            // for this type of promo force the operatorEnumId = PPC_EQ, effectively ignore that setting because the comparison is implied in the code
+            operatorEnumId = "PPC_EQ";
+            
             double quantityNeeded = 1.0;
             if (UtilValidate.isNotEmpty(condValue)) {
                 quantityNeeded = Double.parseDouble(condValue);
