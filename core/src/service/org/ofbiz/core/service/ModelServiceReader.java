@@ -352,6 +352,7 @@ public class ModelServiceReader {
         // get the include type 'pk|nonpk|all'
         String includeType = UtilXml.checkEmpty(autoElement.getAttribute("include"));
         boolean includePk = "pk".equals(includeType) || "all".equals(includeType);
+        boolean includeNonPk = "nonpk".equals(includeType) || "all".equals(includeType);
         
         // need a delegator for this
         GenericDelegator delegator = dctx.getDelegator();
@@ -367,7 +368,7 @@ public class ModelServiceReader {
                 if (fieldsIter != null) {            
                     while (fieldsIter.hasNext()) {
                         ModelField field = (ModelField) fieldsIter.next();
-                        if ((field.getIsPk() && includePk) || (!field.getIsPk() && !includePk)) {                        
+                        if ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk)) {                        
                             ModelFieldType fieldType = delegator.getEntityFieldType(entity, field.getType());
                             
                             ModelParam param = new ModelParam();
@@ -396,7 +397,8 @@ public class ModelServiceReader {
                     Set keySet = modelParamMap.keySet();
                     Iterator setIter = keySet.iterator();
                     while (setIter.hasNext()) {
-                        ModelParam thisParam = (ModelParam) modelParamMap.get(setIter.next());                        
+                        ModelParam thisParam = (ModelParam) modelParamMap.get(setIter.next()); 
+                        //Debug.logInfo("Adding Param to " + service.name + ": " + thisParam.name + "[" + thisParam.mode + "]" + " " + thisParam.type + " (" + thisParam.optional + ")", module);                       
                         service.addParam(thisParam);
                     }                    
                 }
