@@ -77,14 +77,10 @@ public class PartyServices {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
         Collection toBeStored = new LinkedList();
 
         String partyId = (String) context.get("partyId");
-        if (partyId == null || partyId.length() == 0) {
-                partyId = userLogin.getString("partyId");
-        }
 
         //if specified partyId starts with a number, return an error
         if (partyId != null && Character.isDigit(partyId.charAt(0))) {

@@ -40,6 +40,12 @@
 	    <response name="error" type="none"/>
 	    <response name="success" type="none"/>
 	</request-map>
+
+	<request-map uri="testBeanShell">
+	   <event type="service" invoke="testBsh"/>
+           <response name="error" type="view" value="error"/>
+           <response name="success" type="view" value="error"/>
+        </request-map>
 	
 	<request-map uri="TestService">
 	    <event type="service" invoke="testScv" />

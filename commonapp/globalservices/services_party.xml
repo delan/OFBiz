@@ -86,7 +86,7 @@
     </service>
 
     <service name="createSurveyResponse" engine="java"
-            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createSurveyResponse" auth="true">
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createSurveyResp" auth="true">
         <description>Create a Survey Response record</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="surveyId" type="String" mode="IN"/>
