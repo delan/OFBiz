@@ -143,32 +143,33 @@ public class OrderServices {
                     "orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
         }
 
-        // ------- TODO Make this so if we pass credit card info a new ID is created -------
         // set the order status
         toBeStored.add(delegator.makeValue("OrderStatus",
                 UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
                         "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
 
-        // TODO fix payment method type
+        // set the order payment preference
+        GenericValue paymentMethod = (GenericValue) context.get("paymentMethod");
         String paymentMethodId = (String) context.get("paymentMethodId");
-        if (paymentMethodId != null && !paymentMethodId.equals("_OFFLINE_")) {
-            toBeStored.add(delegator.makeValue("OrderPaymentPreference",
-                    UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                            "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentMethodId", paymentMethodId)));
-            toBeStored.add(delegator.makeValue("OrderStatus",
-                   UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
-                           "statusId", "PAID", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
-            order.set("statusId", "PAID");
-        }
-        if (paymentMethodId != null && paymentMethodId.equals("_OFFLINE_")) {
-            toBeStored.add(delegator.makeValue("OrderPaymentPreference",
-                    UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                            "orderId", orderId, "paymentMethodTypeId", "OFFLINE")));
+
+        if (paymentMethod != null) {
+            if (paymentMethodId != null) {
+                toBeStored.add(delegator.makeValue("OrderPaymentPreference",
+                        UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
+                                "orderId", orderId, "paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"),
+                                "paymentMethodId", paymentMethodId)));
+            } else {
+                toBeStored.add(delegator.makeValue("OrderPaymentPreference",
+                        UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
+                                "orderId", orderId, "paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"),
+                                "paymentMethodId", paymentMethod.get("paymentMethodId"))));
+            }
         } else {
-            //XXX CASH should not be assumed!!
-            toBeStored.add(delegator.makeValue("OrderPaymentPreference",
-                    UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                            "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentMethodId", paymentMethodId)));
+            if (paymentMethodId != null && paymentMethodId.equals("_OFFLINE_")) {
+                toBeStored.add(delegator.makeValue("OrderPaymentPreference",
+                        UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
+                                "orderId", orderId, "paymentMethodTypeId", "OFFLINE")));
+            }
         }
 
         try {
