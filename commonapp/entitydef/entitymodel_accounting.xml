@@ -402,6 +402,9 @@
       <relation type="many" rel-entity-name="FixedAssetAttribute">
         <key-map field-name="fixedAssetId" />
       </relation>
+      <relation type="many" rel-entity-name="WorkEffort">
+        <key-map field-name="fixedAssetId" />
+      </relation>
     </entity>	
     <entity entity-name="FixedAssetAttribute" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"

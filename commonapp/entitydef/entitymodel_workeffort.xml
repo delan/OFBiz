@@ -134,6 +134,27 @@
       <field name="workingTime" type="floating-point"></field>
       <field name="waitingTime" type="floating-point"></field>	
       <prim-key field="activityId" />
+      <relation type="one" title="StartMode" rel-entity-name="Enumeration">
+        <key-map field-name="startModeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="one" title="FinishMode" rel-entity-name="Enumeration">
+        <key-map field-name="finishModeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="one" title="Documentation" rel-entity-name="Content">
+        <key-map field-name="documentationContentId" rel-field-name="contentId" />
+      </relation>
+      <relation type="one" title="Icon" rel-entity-name="Content">
+        <key-map field-name="iconContentId" rel-field-name="contentId" />
+      </relation>
+      <relation type="one" title="Performer" rel-entity-name="WorkflowParticipant">
+        <key-map field-name="performerParticipantId" rel-field-name="participantId" />
+      </relation>
+      <relation type="many" title="From" rel-entity-name="WorkflowTransition">
+        <key-map field-name="activityId" rel-field-name="fromActivityId" />
+      </relation>
+      <relation type="many" title="To" rel-entity-name="WorkflowTransition">
+        <key-map field-name="activityId" rel-field-name="toActivityId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowApplication" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -143,14 +164,26 @@
       <field name="description" type="description"></field>
       <field name="formalParamListId" type="id"></field>	
       <prim-key field="applicationId" />
+      <relation type="many" rel-entity-name="WorkflowFormalParamList">
+        <key-map field-name="formalParamListId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowArrayTypeMembers" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Array Type Members Entity">
-      <field name="arrayTypeMembers" type="id-ne"></field>
+      <field name="arrayTypeMembersId" type="id-ne"></field>
       <field name="dataTypeEnumId" type="id-ne"></field>	
-      <prim-key field="arrayTypeMembers" />	
+      <prim-key field="arrayTypeMembersId" />	
       <prim-key field="dataTypeEnumId" />
+      <relation type="many" rel-entity-name="WorkflowFormalParam">
+        <key-map field-name="arrayTypeMembersId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowDataField">
+        <key-map field-name="arrayTypeMembersId" />
+      </relation>
+      <relation type="one" title="DataType" rel-entity-name="Enumeration">
+        <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowDataField" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -161,27 +194,55 @@
       <field name="dataTypeEnumId" type="id"></field>
       <field name="initialValue" type="value"></field>
       <field name="lengthBytes" type="numeric"></field>
+      <field name="arrayTypeMembersId" type="id"></field>
       <field name="isArray" type="indicator"></field>	
       <prim-key field="dataFieldId" />
+      <relation type="one" title="DataType" rel-entity-name="Enumeration">
+        <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowArrayTypeMembers">
+        <key-map field-name="arrayTypeMembersId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowFormalParam" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Formal Parameter Entity">
       <field name="formalParamId" type="id-ne"></field>
-      <field name="formalParamIndex" type="id"></field>
       <field name="modeEnumId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="dataTypeEnumId" type="id"></field>
-      <field name="arrayTypeMembers" type="id"></field>	
+      <field name="arrayTypeMembersId" type="id"></field>	
       <prim-key field="formalParamId" />
+      <relation type="many" rel-entity-name="WorkflowFormalParamList">
+        <key-map field-name="formalParamId" />
+      </relation>
+      <relation type="one" title="Mode" rel-entity-name="Enumeration">
+        <key-map field-name="modeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="one" title="DataType" rel-entity-name="Enumeration">
+        <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowArrayTypeMembers">
+        <key-map field-name="arrayTypeMembersId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowFormalParamList" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Formal Parameter List Entity">
       <field name="formalParamListId" type="id-ne"></field>
-      <field name="formalParamId" type="id-ne"></field>	
+      <field name="formalParamId" type="id-ne"></field>
+      <field name="formalParamIndex" type="very-short"></field>	
       <prim-key field="formalParamListId" />	
       <prim-key field="formalParamId" />
+      <relation type="many" rel-entity-name="WorkflowProcess">
+        <key-map field-name="formalParamListId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowFormalParam">
+        <key-map field-name="formalParamId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowApplication">
+        <key-map field-name="formalParamListId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowPackage" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -206,6 +267,39 @@
       <field name="iconContentId" type="id"></field>
       <field name="importedFromUrl" type="url"></field>	
       <prim-key field="packageId" />
+      <relation type="many" rel-entity-name="WorkflowPackageExternal">
+        <key-map field-name="packageId" />
+      </relation>
+      <relation type="many" title="External" rel-entity-name="WorkflowPackageExternal">
+        <key-map field-name="packageId" rel-field-name="externalPackageId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowSpecification">
+        <key-map field-name="specificationId" />
+      </relation>
+      <relation type="one" title="Country" rel-entity-name="Geo">
+        <key-map field-name="countryGeoId" rel-field-name="geoId" />
+      </relation>
+      <relation type="one" title="Publication" rel-entity-name="StatusItem">
+        <key-map field-name="publicationStatusId" rel-field-name="statusId" />
+      </relation>
+      <relation type="one" title="GraphConformance" rel-entity-name="Enumeration">
+        <key-map field-name="graphConformanceEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="one" title="Priority" rel-entity-name="Uom">
+        <key-map field-name="priorityUomId" rel-field-name="uomId" />
+      </relation>
+      <relation type="one" title="Cost" rel-entity-name="Uom">
+        <key-map field-name="costUomId" rel-field-name="uomId" />
+      </relation>
+      <relation type="one" title="Responsible" rel-entity-name="WorkflowParticipant">
+        <key-map field-name="responsibleParticipantId" rel-field-name="participantId" />
+      </relation>
+      <relation type="one" title="Documentation" rel-entity-name="Content">
+        <key-map field-name="documentationContentId" rel-field-name="contentId" />
+      </relation>
+      <relation type="one" title="Icon" rel-entity-name="Content">
+        <key-map field-name="iconContentId" rel-field-name="contentId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowPackageExternal" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -221,6 +315,9 @@
       <relation type="one" title="External" rel-entity-name="WorkflowPackage">
         <key-map field-name="externalPackageId" rel-field-name="packageId" />
       </relation>
+      <relation type="one" rel-entity-name="WorkflowPackage">
+        <key-map field-name="packageId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowParticipant" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -230,6 +327,21 @@
       <field name="description" type="description"></field>
       <field name="participantTypeId" type="id"></field>	
       <prim-key field="participantId" />
+      <relation type="many" title="Performer" rel-entity-name="WorkflowActivity">
+        <key-map field-name="participantId" rel-field-name="performerParticipantId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowParticipantType">
+        <key-map field-name="participantTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowParticipantList">
+        <key-map field-name="participantId" />
+      </relation>
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowPackage">
+        <key-map field-name="participantId" rel-field-name="responsibleParticipantId" />
+      </relation>
+      <relation type="many" title="Responsible" rel-entity-name="WorkflowProcess">
+        <key-map field-name="participantId" rel-field-name="responsibleParticipantId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowParticipantList" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -238,6 +350,9 @@
       <field name="participantId" type="id"></field>	
       <prim-key field="participantListId" />	
       <prim-key field="participantId" />
+      <relation type="one" rel-entity-name="WorkflowParticipant">
+        <key-map field-name="participantId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowParticipantType" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -248,6 +363,9 @@
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>	
       <prim-key field="participantTypeId" />
+      <relation type="many" rel-entity-name="WorkflowParticipant">
+        <key-map field-name="participantTypeId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowProcess" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -274,6 +392,27 @@
       <field name="workingTime" type="floating-point"></field>
       <field name="waitingTime" type="floating-point"></field>	
       <prim-key field="processId" />
+      <relation type="one" title="Country" rel-entity-name="Geo">
+        <key-map field-name="countryGeoId" rel-field-name="geoId" />
+      </relation>
+      <relation type="one" title="Publication" rel-entity-name="StatusItem">
+        <key-map field-name="publicationStatusId" rel-field-name="statusId" />
+      </relation>
+      <relation type="one" title="Responsible" rel-entity-name="WorkflowParticipant">
+        <key-map field-name="responsibleParticipantId" rel-field-name="participantId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowFormalParamList">
+        <key-map field-name="formalParamListId" />
+      </relation>
+      <relation type="one" title="Documentation" rel-entity-name="Content">
+        <key-map field-name="documentationContentId" rel-field-name="contentId" />
+      </relation>
+      <relation type="one" title="Icon" rel-entity-name="Content">
+        <key-map field-name="iconContentId" rel-field-name="contentId" />
+      </relation>
+      <relation type="one" title="Duration" rel-entity-name="Uom">
+        <key-map field-name="durationUomId" rel-field-name="uomId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowSpecification" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -283,6 +422,9 @@
       <field name="description" type="description"></field>
       <field name="currentVersion" type="very-short"></field>	
       <prim-key field="specificationId" />
+      <relation type="many" rel-entity-name="WorkflowPackage">
+        <key-map field-name="specificationId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkflowTransition" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
@@ -294,6 +436,12 @@
       <field name="fromActivityId" type="id"></field>
       <field name="toActivityId" type="id"></field>	
       <prim-key field="transitionId" />
+      <relation type="one" title="From" rel-entity-name="WorkflowActivity">
+        <key-map field-name="fromActivityId" rel-field-name="activityId" />
+      </relation>
+      <relation type="one" title="To" rel-entity-name="WorkflowActivity">
+        <key-map field-name="toActivityId" rel-field-name="activityId" />
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -328,6 +476,9 @@
       <field name="recurrenceDateTimes" type="very-long"></field>
       <field name="recurrenceRule" type="long-varchar"></field>	
       <prim-key field="recurrenceInfoId" />
+      <relation type="many" rel-entity-name="WorkEffort">
+        <key-map field-name="recurrenceInfoId" />
+      </relation>
     </entity>	
     <entity entity-name="RuntimeData" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
@@ -335,6 +486,12 @@
       <field name="runtimeDataId" type="id-ne"></field>
       <field name="runtimeInfo" type="very-long"></field>	
       <prim-key field="runtimeDataId" />
+      <relation type="many" title="Context" rel-entity-name="WorkEffort">
+        <key-map field-name="runtimeDataId" rel-field-name="contextDataId" />
+      </relation>
+      <relation type="many" title="Result" rel-entity-name="WorkEffort">
+        <key-map field-name="runtimeDataId" rel-field-name="resultDataId" />
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -501,6 +658,48 @@
       <relation type="many" rel-entity-name="WorkOrderItemFulfillment">
         <key-map field-name="workEffortId" />
       </relation>
+      <relation type="one" title="Current" rel-entity-name="StatusItem">
+        <key-map field-name="currentStatusId" rel-field-name="statusId" />
+      </relation>
+      <relation type="one" title="Scope" rel-entity-name="Enumeration">
+        <key-map field-name="scopeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="one" rel-entity-name="FixedAsset">
+        <key-map field-name="fixedAssetId" />
+      </relation>
+      <relation type="one" rel-entity-name="Facility">
+        <key-map field-name="facilityId" />
+      </relation>
+      <relation type="one" title="Money" rel-entity-name="Uom">
+        <key-map field-name="moneyUomId" rel-field-name="uomId" />
+      </relation>
+      <relation type="one" rel-entity-name="RecurrenceInfo">
+        <key-map field-name="recurrenceInfoId" />
+      </relation>
+      <relation type="one" title="Context" rel-entity-name="RuntimeData">
+        <key-map field-name="contextDataId" rel-field-name="runtimeDataId" />
+      </relation>
+      <relation type="one" title="Result" rel-entity-name="RuntimeData">
+        <key-map field-name="resultDataId" rel-field-name="runtimeDataId" />
+      </relation>
+      <relation type="one" rel-entity-name="NoteData">
+        <key-map field-name="noteId" />
+      </relation>
+      <relation type="many" title="From" rel-entity-name="WorkEffortAssoc">
+        <key-map field-name="workEffortId" rel-field-name="workEffortIdFrom" />
+      </relation>
+      <relation type="many" title="To" rel-entity-name="WorkEffortAssoc">
+        <key-map field-name="workEffortId" rel-field-name="workEffortIdTo" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortCategoryMember">
+        <key-map field-name="workEffortId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="workEffortId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortStatus">
+        <key-map field-name="workEffortId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkEffortAssoc" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -519,6 +718,12 @@
       <relation type="many" rel-entity-name="WorkEffortAssocAttribute">
         <key-map field-name="workEffortIdFrom" />
         <key-map field-name="workEffortIdTo" />
+      </relation>
+      <relation type="one" title="From" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortIdFrom" rel-field-name="workEffortId" />
+      </relation>
+      <relation type="one" title="To" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortIdTo" rel-field-name="workEffortId" />
       </relation>
     </entity>	
     <entity entity-name="WorkEffortAssocAttribute" 
@@ -610,6 +815,15 @@
       <field name="parentCategoryId" type="id"></field>
       <field name="categoryName" type="name"></field>	
       <prim-key field="workEffortCategoryId" />
+      <relation type="one" title="Parent" rel-entity-name="WorkEffortCategory">
+        <key-map field-name="parentCategoryId" rel-field-name="workEffortCategoryId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="WorkEffortCategory">
+        <key-map field-name="workEffortCategoryId" rel-field-name="parentCategoryId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortCategoryMember">
+        <key-map field-name="workEffortCategoryId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkEffortCategoryMember" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -618,6 +832,12 @@
       <field name="workEffortCategoryId" type="id-ne"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="workEffortCategoryId" />
+      <relation type="one" rel-entity-name="WorkEffortCategory">
+        <key-map field-name="workEffortCategoryId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkEffortDeliverableProd" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -696,6 +916,31 @@
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
+      <relation type="one" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="Person">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyRole">
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="Facility">
+        <key-map field-name="facilityId" />
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId" />
+      </relation>
+      <relation type="one" title="Expectation" rel-entity-name="Enumeration">
+        <key-map field-name="expectationEnumId" rel-field-name="enumId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkEffortSkillStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -717,6 +962,12 @@
       <prim-key field="workEffortId" />	
       <prim-key field="statusId" />	
       <prim-key field="statusDatetime" />
+      <relation type="one" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId" />
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId" />
+      </relation>
     </entity>	
     <entity entity-name="WorkEffortType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"

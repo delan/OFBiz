@@ -1222,6 +1222,12 @@
       <relation type="many" rel-entity-name="PartyFacility">
         <key-map field-name="facilityId" />
       </relation>
+      <relation type="many" rel-entity-name="WorkEffort">
+        <key-map field-name="facilityId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="facilityId" />
+      </relation>
     </entity>	
     <entity entity-name="FacilityAttribute" 
             package-name="org.ofbiz.commonapp.product.storage"
