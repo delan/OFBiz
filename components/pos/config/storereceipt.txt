@@ -24,5 +24,6 @@ ${CENTER}X____________________________________________
 
 
 
+${CENTER}${DOUBLE_HEIGHT}${BOLD}STORE COPY
 
 [ORDER BARCODE]
