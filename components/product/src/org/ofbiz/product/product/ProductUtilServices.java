@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.13 2004/01/27 17:23:57 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.14 2004/01/27 17:48:02 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -404,6 +404,7 @@ public class ProductUtilServices {
      */
     public static Map setAllProductImageNames(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         String pattern = (String) context.get("pattern");
         
         try {
@@ -417,10 +418,27 @@ public class ProductUtilServices {
                 Map largeMap = UtilMisc.toMap("sizeStr", "large", "productId", productId);
                 Map detailMap = UtilMisc.toMap("sizeStr", "detail", "productId", productId);
                 
-                product.set("smallImageUrl", FlexibleStringExpander.expandString(pattern, smallMap));
-                product.set("mediumImageUrl", FlexibleStringExpander.expandString(pattern, mediumMap));
-                product.set("largeImageUrl", FlexibleStringExpander.expandString(pattern, largeMap));
-                product.set("detailImageUrl", FlexibleStringExpander.expandString(pattern, detailMap));
+                if ("Y".equals(product.getString("isVirtual"))) {
+                    // find the first variant, use it's ID for the names...
+                    List productAssocList = EntityUtil.filterByDate(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")), nowTimestamp);
+                    if (productAssocList.size() > 0) {
+                        GenericValue productAssoc = EntityUtil.getFirst(productAssocList);
+                        smallMap.put("productId", productAssoc.get("productIdTo"));
+                        mediumMap.put("productId", productAssoc.get("productIdTo"));
+                        product.set("smallImageUrl", FlexibleStringExpander.expandString(pattern, smallMap));
+                        product.set("mediumImageUrl", FlexibleStringExpander.expandString(pattern, mediumMap));
+                    } else {
+                        product.set("smallImageUrl", null);
+                        product.set("mediumImageUrl", null);
+                    }
+                    product.set("largeImageUrl", null);
+                    product.set("detailImageUrl", null);
+                } else {
+                    product.set("smallImageUrl", FlexibleStringExpander.expandString(pattern, smallMap));
+                    product.set("mediumImageUrl", FlexibleStringExpander.expandString(pattern, mediumMap));
+                    product.set("largeImageUrl", FlexibleStringExpander.expandString(pattern, largeMap));
+                    product.set("detailImageUrl", FlexibleStringExpander.expandString(pattern, detailMap));
+                }
                 
                 product.store();
                 numSoFar++;
