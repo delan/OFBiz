@@ -519,6 +519,7 @@
       <field name="lotId" type="id"></field>
       <field name="uomId" type="id"></field>
       <field name="quantityOnHand" type="floating-point"></field>
+      <field name="availableToPromise" type="floating-point"></field>
       <field name="serialNumber" type="value"></field>
       <prim-key field="inventoryItemId"/>
       <relation type="one" rel-entity-name="InventoryItemType">
