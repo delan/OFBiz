@@ -42,15 +42,8 @@ import org.ofbiz.base.util.Debug;
 GenericDelegator delegator = request.getAttribute("delegator");
 LocalDispatcher dispatcher = request.getAttribute("dispatcher");
 
-inventory = new HashMap();
-
 //get the inventory (inventoryEventPlanned)
 productId = request.getParameter("productId");
-
-if (productId != null && ! productId.equals("")){
-    Debug.logInfo("productId =  " + productId, "truc");
-    inventory = delegator.findByAnd("InventoryEventPlanned", UtilMisc.toMap("productId", productId));
-}
 
 // create the eventDate for calendar
 UtilDateTime fromDate = new UtilDateTime();
@@ -80,7 +73,6 @@ if (lookupFlag != null) {
     mainCond = null;
 
     // now do the filtering
-    productId = request.getParameter("productId");
     eventDate = request.getParameter("eventDate");
     paramList = paramList + "&productId=" + productId;
     
@@ -89,6 +81,7 @@ if (lookupFlag != null) {
 	eventDate = eventDate.trim();
 	if (eventDate.length() < 14) eventDate = eventDate + " " + "00:00:00.000";
 	paramList = paramList + "&eventDate=" + eventDate;
+        andExprs.add(new EntityExpr("eventDate", EntityOperator.GREATER_THAN, eventDate));
     }
     
     if (productId != null) {
