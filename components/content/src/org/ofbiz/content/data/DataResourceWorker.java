@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.25 2004/04/11 02:54:40 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.26 2004/04/13 04:56:13 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.Template;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -806,14 +806,10 @@ public class DataResourceWorker {
                 Debug.logError(" in renderDataResourceAsHtml(CONTEXT_FILE), got exception:" + e.getMessage(), module);
             }
             if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(CONTEXT_FILE), after FileReader:", module);
-            int count=0;
             while ((c = in.read()) != -1) {
                 out.write(c);
-                count++;
             }
             //out.flush();
-                if (Debug.infoOn()) Debug.logInfo("in serveImage, count:" + count, module);
-
         }
         return;
     }

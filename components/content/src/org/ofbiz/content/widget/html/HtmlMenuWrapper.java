@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuWrapper.java,v 1.4 2004/04/11 02:54:42 byersa Exp $
+ * $Id: HtmlMenuWrapper.java,v 1.5 2004/04/13 04:56:15 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,6 +41,8 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
+import org.ofbiz.content.widget.menu.ModelMenuItem;
+import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
 import org.xml.sax.SAXException;
 import org.ofbiz.entity.*;
 
@@ -49,7 +51,7 @@ import org.ofbiz.entity.*;
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class HtmlMenuWrapper {
@@ -259,5 +261,12 @@ public class HtmlMenuWrapper {
 
     public void clearCurrentMenuTargets() {
         this.modelMenu.clearCurrentMenuTargets();
+        this.renderer.setUserLoginIdHasChanged(true);
+    }
+
+    public MenuTarget getCurrentMenuTarget(ModelMenuItem menuItem) {
+
+        MenuTarget menuTarget = this.renderer.selectMenuTarget(menuItem, this.context);
+        return menuTarget;
     }
 }

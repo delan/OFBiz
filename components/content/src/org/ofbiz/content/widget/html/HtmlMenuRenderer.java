@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.6 2004/04/11 08:28:17 jonesde Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.7 2004/04/13 04:56:14 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -188,7 +188,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         
         buffer.append("<td " + widthStr + ">");
         MenuTarget target = selectMenuTarget(menuItem, context);
-        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target,"");
+        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
         if (target != null) {
             String divStr = buildDivStr(menuItem, context);
             String url = target.renderAsUrl( context);
@@ -456,5 +456,8 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     }
 
+    public void setUserLoginIdHasChanged(boolean b) {
+        userLoginIdHasChanged = b;
+    }
 }
 
