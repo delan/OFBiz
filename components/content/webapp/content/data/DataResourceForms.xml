@@ -109,13 +109,14 @@
         <field name="createContent" title="&amp;nbsp;" widget-style="buttontext" position="2">
             <hyperlink also-hidden="false" description="Create New Content" target="AddContent?dataResourceId=${currentValue.dataResourceId}"/>
         </field>
+        <field name="mode" ><hidden value="UPDATE"/></field>
     </form>
     <form name="DataResourceMaster" target="createDataResource" title="" type="single"
         default-map-name="currentValue"
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="DataResource" default-field-type="edit"/>
-        <field name="dataResourceId"><display/></field>
+        <field name="dataResourceId"></field>
         <field name="dataResourceTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="DataResourceType" key-field-name="dataResourceTypeId"/>
@@ -163,15 +164,17 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         extends="DataResourceMaster">
+        <field name="dataResourceId"><text/></field>
         <field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="objectInfo" title="URL"/>
+        <field name="mode" ><hidden value="CREATE"/></field>
     </form>
     <form 
         name="AddDataResourceText" target="createDataResourceAndText" title="" type="single"
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         extends="DataResourceMaster">
-        <field name="dataResourceId"><display/></field>
+        <field name="dataResourceId"><text/></field>
         <field name="dataResourceTypeId"><hidden value="ELECTRONIC_TEXT"/></field>
         <field name="dataResourceTypeIdDisplay" title="Type Id" field-name="dataResourceTypeId">
             <display description="ELECTRONIC_TEXT" also-hidden="false"/>
@@ -183,7 +186,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         extends="DataResourceMaster">
-        <field name="dataResourceId"><display/></field>
+        <field name="dataResourceId"><text/></field>
         <field name="objectInfo" title="URL"><text/></field>
         <field name="dataResourceTypeId"><hidden value="URL_RESOURCE"/></field>
         <field name="dataResourceTypeIdDisplay" title="Type Id" field-name="dataResourceTypeId">
