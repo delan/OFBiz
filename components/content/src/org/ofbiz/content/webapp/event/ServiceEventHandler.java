@@ -144,13 +144,16 @@ public class ServiceEventHandler implements EventHandler {
                 Iterator i = uploadedItems.iterator();
                 while (i.hasNext()) {
                     FileItem item = (FileItem) i.next();
-                    Object obj = null;
+                    String fieldName = item.getFieldName();
+
                     if (item.isFormField()) {
-                        obj = item.getString();
+                        multiPartMap.put(fieldName, item.getString());
                     } else {
-                        obj = new ByteWrapper(item.get());
+                        multiPartMap.put(fieldName, new ByteWrapper(item.get()));
+                        multiPartMap.put("_" + fieldName + "_size", new Long(item.getSize()));
+                        multiPartMap.put("_" + fieldName + "_fileName", item.getName());
+                        multiPartMap.put("_" + fieldName + "_contentType", item.getContentType());                        
                     }
-                    multiPartMap.put(item.getFieldName(), obj);
                 }
             }
         }
