@@ -197,7 +197,7 @@ public class Calculate extends MethodOperation {
                 } else if ("number".equals(calcopElement.getNodeName())) {
                     calcops[i] = new Calculate.NumberOp(calcopElement);
                 } else {
-                    Debug.logError("Error: calculate operation with type " + nodeName, module);
+                    Debug.logError("Error: calculate operation unknown with type " + nodeName, module);
                 }
                 // Debug.logInfo("Added operation type " + nodeName + " in position " + i);
                 i++;
