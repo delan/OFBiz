@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.49 2004/07/10 07:55:34 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.50 2004/07/13 22:12:43 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.49 $
+ * @version    $Revision: 1.50 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -241,6 +241,9 @@ public class ShoppingCart implements Serializable {
     }
     public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
         return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, dispatcher);
+    }
+    public int addOrIncreaseItem(String productId, double quantity, LocalDispatcher dispatcher) throws CartItemModifyException {
+        return addOrIncreaseItem(productId, quantity, null, null, null, dispatcher);
     }
 
     /** Add a non-product item to the shopping cart.
