@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedServiceJob.java,v 1.1 2003/08/17 05:12:38 ajzeneski Exp $
+ * $Id: PersistedServiceJob.java,v 1.2 2003/08/28 17:37:19 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * Entity Service Job - Store => Schedule => Run
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PersistedServiceJob extends GenericServiceJob {
@@ -72,6 +72,15 @@ public class PersistedServiceJob extends GenericServiceJob {
         this.dctx = dctx;
         this.storedDate = jobValue.getTimestamp("runTime");
         this.runtime = storedDate.getTime();
+        
+        // set the start time to now
+        jobValue.set("startDateTime", UtilDateTime.nowTimestamp());
+        try {
+            jobValue.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to set the startDateTime on the current job; not running!");
+            runtime = -1;            
+        }        
     }
 
     /**
@@ -83,8 +92,8 @@ public class PersistedServiceJob extends GenericServiceJob {
 
         try {
             GenericValue newJob = new GenericValue(job);
-            job.set("startDateTime", UtilDateTime.nowTimestamp());
-            job.store();
+            
+            
             if (recurrence != null) {
                 recurrence.incrementCurrentCount();
                 long next = recurrence.next();

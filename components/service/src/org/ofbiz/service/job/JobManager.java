@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.2 2003/08/28 16:25:55 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.3 2003/08/28 17:37:19 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.calendar.RecurrenceInfoException;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class JobManager {
@@ -97,7 +97,7 @@ public class JobManager {
         // we will loop until we have no more to do        
         boolean pollDone = false;
         
-        while (!pollDone) {
+        while (!pollDone) {            
             boolean beganTransaction;
             try {
                 beganTransaction = TransactionUtil.begin();
@@ -131,7 +131,6 @@ public class JobManager {
                         continue;
                     }
                     Job job = new PersistedServiceJob(dctx, v, null); // todo fix the requester
-
                     poll.add(job);
                 }
             } else {
