@@ -656,10 +656,50 @@ public class CheckOutHelper {
             throw new GeneralException("Problems getting payment preferences", e);
         }
 
-        Map paymentFields = UtilMisc.toMap("statusId", "PAYMENT_NOT_AUTH");
-        List paymentPreferences = EntityUtil.filterByAnd(allPaymentPreferences, paymentFields);
+        // check for online payment methods or in-hand payment types with verbal or external refs
+        List exprs = UtilMisc.toList(new EntityExpr("manualRefNum", EntityOperator.NOT_EQUAL, null));
+        List manualRefPaymentPrefs = EntityUtil.filterByAnd(allPaymentPreferences, exprs);
+        if (manualRefPaymentPrefs != null && manualRefPaymentPrefs.size() > 0) {
+            Iterator i = manualRefPaymentPrefs.iterator();
+            while (i.hasNext()) {
+                GenericValue opp = (GenericValue) i.next();
+                Map authCtx = new HashMap();
+                authCtx.put("orderPaymentPreference", opp);
+                if (opp.get("paymentMethodId") == null) {
+                    authCtx.put("serviceTypeEnum", "PRDS_PAY_EXTERNAL");
+                }
+                authCtx.put("processAmount", opp.getDouble("maxAmount"));
+                authCtx.put("authRefNum", opp.getString("manualRefNum"));
 
-        if (paymentPreferences != null && paymentPreferences.size() > 0) {
+                Map authResp = dispatcher.runSync("processAuthResult", authCtx);
+                if (authResp != null && ServiceUtil.isError(authResp)) {
+                    throw new GeneralException(ServiceUtil.getErrorMessage(authResp));
+                }
+
+                if (productStore.get("manualAuthIsCapture") != null &&
+                        "Y".equalsIgnoreCase(productStore.getString("manualAuthIsCapture"))) {
+                    Map captCtx = new HashMap();
+                    captCtx.put("orderPaymentPreference", opp);
+                    if (opp.get("paymentMethodId") == null) {
+                        captCtx.put("serviceTypeEnum", "PRDS_PAY_EXTERNAL");
+                    }
+                    captCtx.put("isFromAuth", new Boolean(false));
+                    captCtx.put("captureAmount", opp.getDouble("maxAmount"));
+                    captCtx.put("captureRefNum", opp.getString("manualRefNum"));
+
+                    Map capResp = dispatcher.runSync("processCaptureResult", captCtx);
+                    if (capResp != null && ServiceUtil.isError(capResp)) {
+                        throw new GeneralException(ServiceUtil.getErrorMessage(capResp));
+                    }
+                }
+            }
+        }
+
+        // check for online payment methods needing authorization
+        Map paymentFields = UtilMisc.toMap("statusId", "PAYMENT_NOT_AUTH");
+        List onlinePaymentPrefs = EntityUtil.filterByAnd(allPaymentPreferences, paymentFields);
+
+        if (onlinePaymentPrefs != null && onlinePaymentPrefs.size() > 0) {
             requireAuth = true;
         }
 

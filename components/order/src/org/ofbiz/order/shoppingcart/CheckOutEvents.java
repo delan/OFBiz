@@ -274,6 +274,7 @@ public class CheckOutEvents {
                 String paymentMethodId = (String) i.next();
                 Double paymentAmount = cart.getPaymentAmount(paymentMethodId);
                 if (paymentAmount == null || paymentAmount.doubleValue() == 0) {
+                    Debug.log("Found null paymentMethodId - " + paymentMethodId, module);
                     nullPaymentIds.add(paymentMethodId);
                 }
             }
@@ -284,6 +285,7 @@ public class CheckOutEvents {
                 double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
                 double nullAmount = requiredAmount - selectedPaymentTotal;
                 if (nullAmount > 0) {
+                    Debug.log("Reset null paymentMethodId - " + paymentMethodId + " / " + nullAmount, module);
                     cart.addPaymentAmount(paymentMethodId, nullAmount);
                 }
             }

@@ -45,7 +45,6 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
@@ -69,10 +68,7 @@ public class ShoppingCart implements Serializable {
 
     public static final String module = ShoppingCart.class.getName();
 
-    private Map paymentMethodTypeAmounts = new OrderedMap();
-    private Map paymentMethodAmounts = new OrderedMap();
-    private List singleUsePaymentIds = new LinkedList();
-
+    private List paymentInfo = new LinkedList();
     private String orderType = "SALES_ORDER"; // default orderType
     private String poNumber = null;
     private String orderId = null;
@@ -100,8 +96,8 @@ public class ShoppingCart implements Serializable {
     private Map additionalPartyRole = new HashMap();
 
     public static class ProductPromoUseInfo implements Serializable {
-        public String productPromoId;
-        public String productPromoCodeId;
+        public String productPromoId = null;
+        public String productPromoCodeId = null;
         public double totalDiscountAmount = 0;
         public double quantityLeftInActions = 0;
 
@@ -116,6 +112,109 @@ public class ShoppingCart implements Serializable {
         public String getProductPromoCodeId() { return this.productPromoCodeId; }
         public double getTotalDiscountAmount() { return this.totalDiscountAmount; }
         public double getQuantityLeftInActions() { return this.quantityLeftInActions; }
+    }
+
+    public static class CartPaymentInfo implements Serializable, Comparable {
+        public String paymentMethodTypeId = null;
+        public String paymentMethodId = null;
+        public String refNum = null;
+        public Double amount = null;
+        public boolean singleUse = false;
+
+        public GenericValue getValueObject(GenericDelegator delegator) {
+            String entityName = null;
+            Map lookupFields = null;
+            if (paymentMethodId != null) {
+                lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
+                entityName = "PaymentMethod";
+            } else if (paymentMethodTypeId != null) {
+                lookupFields = UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId);
+                entityName = "PaymentMethodType";
+            }
+
+            try {
+                return delegator.findByPrimaryKeyCache(entityName, lookupFields);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+
+            return null;
+        }
+
+        public GenericValue makeOrderPaymentPreference(GenericDelegator delegator) {
+            GenericValue valueObj = this.getValueObject(delegator);
+            GenericValue p = null;
+            if (valueObj != null) {
+                p = delegator.makeValue("OrderPaymentPreference", new HashMap());
+                p.set("paymentMethodTypeId", valueObj.getString("paymentMethodTypeId"));
+                p.set("paymentMethodId", paymentMethodId);
+                p.set("manualRefNum", refNum);
+                p.set("maxAmount", amount);
+                if (paymentMethodId != null) {
+                    p.set("statusId", "PAYMENT_NOT_AUTH");
+                } else if (paymentMethodTypeId != null) {
+                    // external payment method types require notification when received
+                    // internal payment method types are assumed to be in-hand
+                    if (paymentMethodTypeId.startsWith("EXT_")) {
+                        p.set("statusId", "PAYMENT_NOT_RECEIVED");
+                    } else {
+                        p.set("statusId", "PAYMENT_RECEIVED");
+                    }
+                }
+            }
+            return p;
+        }
+
+        public int compareTo(Object o) {
+            CartPaymentInfo that = (CartPaymentInfo) o;
+            if (this.paymentMethodId != null) {
+                if (that.paymentMethodId == null) {
+                    return 1;
+                } else {
+                    int pmCmp = this.paymentMethodId.compareTo(that.paymentMethodId);
+                    if (pmCmp == 0) {
+                        if (this.refNum != null) {
+                            if (that.refNum != null) {
+                                return this.refNum.compareTo(that.refNum);
+                            } else {
+                                return 1;
+                            }
+                        } else {
+                            if (that.refNum != null) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    } else {
+                        return pmCmp;
+                    }
+                }
+            } else {
+                if (that.paymentMethodId != null) {
+                    return -1;
+                } else {
+                    int pmtCmp = this.paymentMethodTypeId.compareTo(that.paymentMethodTypeId);
+                    if (pmtCmp == 0) {
+                        if (this.refNum != null) {
+                            if (that.refNum != null) {
+                                return this.refNum.compareTo(that.refNum);
+                            } else {
+                                return 1;
+                            }
+                        } else {
+                            if (that.refNum != null) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    } else {
+                        return pmtCmp;
+                    }
+                }
+            }
+        }
     }
 
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
@@ -634,17 +733,97 @@ public class ShoppingCart implements Serializable {
     // Payment Method
     // =======================================================================
 
+    /** Creates a CartPaymentInfo object */
+    public CartPaymentInfo makePaymentInfo(String id, String refNum, Double amount) {
+        CartPaymentInfo inf = new CartPaymentInfo();
+        inf.refNum = refNum;
+        inf.amount = amount;
+
+        if (!isPaymentMethodType(id)) {
+            inf.paymentMethodId = id;
+        } else {
+            inf.paymentMethodTypeId = id;
+        }
+        return inf;
+    }
+
+    /** Locates the index of an existing CartPaymentInfo object or -1 if none found */
+    public int getPaymentInfoIndex(String id, String refNum) {
+        CartPaymentInfo thisInf = this.makePaymentInfo(id, refNum, null);
+        for (int i = 0; i < paymentInfo.size(); i++) {
+            CartPaymentInfo inf = (CartPaymentInfo) paymentInfo.get(i);
+            if (inf.compareTo(thisInf) == 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /** Returns the CartPaymentInfo objects which have matching fields */
+    public List getPaymentInfos(boolean isPaymentMethod, boolean isPaymentMethodType, boolean hasRefNum) {
+        List foundRecords = new LinkedList();
+        Iterator i = paymentInfo.iterator();
+        while (i.hasNext()) {
+            CartPaymentInfo inf = (CartPaymentInfo) i.next();
+            if (isPaymentMethod && inf.paymentMethodId != null) {
+                if (hasRefNum && inf.refNum != null) {
+                    foundRecords.add(inf);
+                } else if (!hasRefNum && inf.refNum == null) {
+                    foundRecords.add(inf);
+                }
+            } else if (isPaymentMethodType && inf.paymentMethodTypeId != null) {
+                if (hasRefNum && inf.refNum != null) {
+                    foundRecords.add(inf);
+                } else if (!hasRefNum && inf.refNum == null) {
+                    foundRecords.add(inf);
+                }
+            }
+        }
+        return foundRecords;
+    }
+
+    /** Locates an existing CartPaymentInfo object by index */
+    public CartPaymentInfo getPaymentInfo(int index) {
+        return (CartPaymentInfo) paymentInfo.get(index);
+    }
+
+    /** Locates an existing (or creates a new) CartPaymentInfo object */
+    public CartPaymentInfo getPaymentInfo(String id, String refNum, Double amount) {
+        CartPaymentInfo thisInf = this.makePaymentInfo(id, refNum, amount);
+        Iterator i = paymentInfo.iterator();
+        while (i.hasNext()) {
+            CartPaymentInfo inf = (CartPaymentInfo) i.next();
+            if (inf.compareTo(thisInf) == 0) {
+                // update the info
+                inf.refNum = refNum;
+                inf.amount = amount;
+                return inf;
+            }
+        }
+
+        Debug.log("Returning new payment info", module);
+        return thisInf;
+    }
+
+    /** Locates an existing (or creates a new) CartPaymentInfo object */
+    public CartPaymentInfo getPaymentInfo(String id) {
+        return this.getPaymentInfo(id, null, null);
+    }
+
+    /** adds a payment method/payment method type */
+    public void addPaymentAmount(String id, Double amount, String refNum, boolean isSingleUse, boolean replace) {
+        CartPaymentInfo inf = this.getPaymentInfo(id, refNum, amount);
+        inf.singleUse = isSingleUse;
+        if (replace) {
+            paymentInfo.remove(inf);
+        }
+        paymentInfo.add(inf);
+        Debug.log("Added Payment Method : Pm: " + inf.paymentMethodId + " / PmType: " + inf.paymentMethodTypeId + " / Amt: " + inf.amount + " / Ref: " + inf.refNum, module);
+    }
+
     /** adds a payment method/payment method type */
     public void addPaymentAmount(String id, Double amount, boolean isSingleUse) {
-        if (!isPaymentMethodType(id)) {
-            paymentMethodAmounts.put(id, amount);
-            if (isSingleUse) {
-                singleUsePaymentIds.add(id);
-            }
-        } else {
-            paymentMethodTypeAmounts.put(id, amount);
-            // ignore single use; only applies to payment methods
-        }
+        this.addPaymentAmount(id, amount, null, isSingleUse, true);
     }
 
     /** adds a payment method/payment method type */
@@ -669,79 +848,64 @@ public class ShoppingCart implements Serializable {
 
     /** returns the payment method/payment method type amount */
     public Double getPaymentAmount(String id) {
-        if (!isPaymentMethodType(id)) {
-            return (Double) paymentMethodAmounts.get(id);
-        } else {
-            return (Double) paymentMethodTypeAmounts.get(id);
-        }
+        return this.getPaymentInfo(id).amount;
+    }
+
+    public void addPaymentRef(String id, String ref) {
+        this.getPaymentInfo(id).refNum = ref;
+    }
+
+    public String getPaymentRef(String id) {
+        return this.getPaymentInfo(id).refNum;
     }
 
     /** returns the total payment amounts */
     public double getPaymentTotal() {
         double total = 0.00;
-        if (paymentMethodAmounts != null && paymentMethodAmounts.size() > 0) {
-            Iterator pmi = paymentMethodAmounts.keySet().iterator();
-            while (pmi.hasNext()) {
-                Double amt = this.getPaymentAmount((String) pmi.next());
-                if (amt != null) {
-                    total += amt.doubleValue();
-                }
-            }
-        }
-        if (paymentMethodTypeAmounts != null && paymentMethodTypeAmounts.size() > 0) {
-            Iterator pti = paymentMethodTypeAmounts.keySet().iterator();
-            while (pti.hasNext()) {
-                Double amt = this.getPaymentAmount((String) pti.next());
-                if (amt != null) {
-                    total += amt.doubleValue();
-                }
+        Iterator i = paymentInfo.iterator();
+        while (i.hasNext()) {
+            CartPaymentInfo inf = (CartPaymentInfo) i.next();
+            if (inf.amount != null) {
+                total += inf.amount.doubleValue();
             }
         }
         return total;
     }
 
     public int selectedPayments() {
-        int payments = 0;
-        payments += paymentMethodTypeAmounts.size();
-        payments += paymentMethodAmounts.size();
-        return payments;
+        return paymentInfo.size();
     }
 
     public boolean isPaymentSelected(String id) {
-        if (Character.isDigit(id.charAt(0))) {
-            return paymentMethodAmounts.containsKey(id);
-        } else {
-            return paymentMethodTypeAmounts.containsKey(id);
-        }
+        CartPaymentInfo inf = this.getPaymentInfo(id);
+        return paymentInfo.contains(inf);
     }
 
     /** removes a specific payment method/payment method type */
     public void clearPayment(String id) {
-        if (Character.isDigit(id.charAt(0))) {
-            paymentMethodAmounts.remove(id);
-        } else {
-            paymentMethodTypeAmounts.remove(id);
-        }
+        CartPaymentInfo inf = this.getPaymentInfo(id);
+        paymentInfo.remove(inf);
     }
 
     /** clears all payment method/payment method types */
     public void clearPayments() {
-        paymentMethodTypeAmounts.clear();
-        paymentMethodAmounts.clear();
         this.expireSingleUsePayments();
+        paymentInfo.clear();
     }
 
     private void expireSingleUsePayments() {
-        Iterator i = singleUsePaymentIds.iterator();
         Timestamp now = UtilDateTime.nowTimestamp();
+        Iterator i = paymentInfo.iterator();
         while (i.hasNext()) {
+            CartPaymentInfo inf = (CartPaymentInfo) i.next();
+            if (inf.paymentMethodId == null || !inf.singleUse) {
+                continue;
+            }
             String paymentMethodId = (String) i.next();
             GenericValue paymentMethod = null;
-            boolean done = true;
             try {
                 paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
             } catch (GenericEntityException e) {
-                done = false;
                 Debug.logError(e, "ERROR: Unable to get payment method record to expire : " + paymentMethodId, module);
             }
             if (paymentMethod != null) {
@@ -749,33 +913,44 @@ public class ShoppingCart implements Serializable {
                 try {
                     paymentMethod.store();
                 } catch (GenericEntityException e) {
-                    done = false;
                     Debug.logError(e, "Unable to store single use PaymentMethod record : " + paymentMethod, module);
                 }
             } else {
-                done = false;
                 Debug.logError("ERROR: Received back a null payment method record for expired ID : " + paymentMethodId, module);
-            }
-            if (done) {
-                i.remove();
             }
         }
     }
 
     /** Returns the Payment Method Ids */
     public List getPaymentMethodIds() {
-        return ((OrderedMap) paymentMethodAmounts).getOrderedKeys();
+        List pmi = new LinkedList();
+        Iterator i = paymentInfo.iterator();
+        while (i.hasNext()) {
+            CartPaymentInfo inf = (CartPaymentInfo) i.next();
+            if (inf.paymentMethodId != null) {
+                pmi.add(inf.paymentMethodId);
+            }
+        }
+        return pmi;
     }
 
     /** Returns the Payment Method Ids */
     public List getPaymentMethodTypeIds() {
-        return ((OrderedMap) paymentMethodTypeAmounts).getOrderedKeys();
+       List pmt = new LinkedList();
+        Iterator i = paymentInfo.iterator();
+        while (i.hasNext()) {
+            CartPaymentInfo inf = (CartPaymentInfo) i.next();
+            if (inf.paymentMethodTypeId != null) {
+                pmt.add(inf.paymentMethodTypeId);
+            }
+        }
+        return pmt;
     }
 
     /** Returns a list of PaymentMethod value objects selected in the cart */
     public List getPaymentMethods() {
         List methods = new LinkedList();
-        if (paymentMethodAmounts != null && paymentMethodAmounts.size() > 0) {
+        if (paymentInfo != null && paymentInfo.size() > 0) {
             Iterator i = getPaymentMethodIds().iterator();
             while (i.hasNext()) {
                 String id = (String) i.next();
@@ -793,7 +968,7 @@ public class ShoppingCart implements Serializable {
     /** Returns a list of PaymentMethodType value objects selected in the cart */
     public List getPaymentMethodTypes() {
         List types = new LinkedList();
-        if (paymentMethodTypeAmounts != null && paymentMethodTypeAmounts.size() > 0) {
+        if (paymentInfo != null && paymentInfo.size() > 0) {
             Iterator i = getPaymentMethodTypeIds().iterator();
             while (i.hasNext()) {
                 String id = (String) i.next();
@@ -1722,39 +1897,13 @@ public class ShoppingCart implements Serializable {
     /** make a list of all OrderPaymentPreferences including all payment methods and types */
     public List makeAllOrderPaymentPreferences() {
         List allOpPrefs = new LinkedList();
+        Iterator i = paymentInfo.iterator();
+        while (i.hasNext()) {
+            CartPaymentInfo inf = (CartPaymentInfo) i.next();
+            allOpPrefs.add(inf.makeOrderPaymentPreference(this.getDelegator()));
 
-        // first create the payment methods (online payments?)
-        List paymentMethods = this.getPaymentMethods();
-        Iterator pmi = paymentMethods.iterator();
-        while (pmi.hasNext()) {
-            GenericValue paymentMethod = (GenericValue) pmi.next();
-            GenericValue p = delegator.makeValue("OrderPaymentPreference", new HashMap());
-            p.set("paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"));
-            p.set("paymentMethodId", paymentMethod.get("paymentMethodId"));
-            p.set("statusId", "PAYMENT_NOT_AUTH");
-            if (this.paymentMethodAmounts.get(paymentMethod.getString("paymentMethodId")) != null) {
-                p.set("maxAmount", this.paymentMethodAmounts.get(paymentMethod.getString("paymentMethodId")));
-            }
-            allOpPrefs.add(p);
         }
-
-        // next create the payment types (offline payments?)
-        Iterator pti = this.getPaymentMethodTypeIds().iterator();
-        while (pti.hasNext()) {
-            String paymentMethodTypeId = (String) pti.next();
-            GenericValue p = delegator.makeValue("OrderPaymentPreference", new HashMap());
-            p.set("paymentMethodTypeId", paymentMethodTypeId);
-            if ("CASH".equals(paymentMethodTypeId)) {
-                p.set("statusId", "PAYMENT_RECEIVED");
-            } else {
-                p.set("statusId", "PAYMENT_NOT_RECEIVED");
-            }
-            if (this.paymentMethodTypeAmounts.get(paymentMethodTypeId) != null) {
-                p.set("maxAmount", this.paymentMethodTypeAmounts.get(paymentMethodTypeId));
-            }
-            allOpPrefs.add(p);
-        }
-
+        
         return allOpPrefs;
     }
 
