@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.11 2004/07/31 00:23:57 ajzeneski Exp $
+ *  $Id$
 -->
 
 <ofbiz-component name="common">
@@ -31,14 +31,14 @@
     <classpath type="dir" location="script"/>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/CommonTypeData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/CountryCodeData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/CurrencyData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/GeoData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/GeoData_BR.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/LanguageData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/UnitData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/PeriodData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/CommonTypeData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/CountryCodeData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/CurrencyData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/GeoData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/GeoData_BR.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/LanguageData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/UnitData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/PeriodData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_test.xml"/>
     <service-resource type="group" loader="main" location="servicedef/groups_test.xml"/>

@@ -33,10 +33,10 @@
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel_shipment.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
     <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/ProductScheduledServices.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/ProductTypeData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/ShipmentTypeData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/ProductSecurityData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ProductScheduledServices.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ProductTypeData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ShipmentTypeData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ProductSecurityData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_facility.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_feature.xml"/>

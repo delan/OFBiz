@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.8 2004/07/31 00:24:11 ajzeneski Exp $
+ *  $Id$
 -->
 
 <ofbiz-component name="workeffort">
@@ -31,8 +31,8 @@
     <classpath type="dir" location="script"/>
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/WorkEffortTypeData.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/WorkEffortSecurityData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/WorkEffortTypeData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/WorkEffortSecurityData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_project.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
