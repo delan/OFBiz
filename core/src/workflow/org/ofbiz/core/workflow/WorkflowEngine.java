@@ -214,6 +214,7 @@ class WorkflowRunner extends AbstractJob {
     WorkflowRunner(WfProcess process, GenericRequester requester) {
         super(process.toString());
         this.process = process;
+        this.requester = requester;
         runtime = new Date().getTime();
     }
 
