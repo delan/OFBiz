@@ -559,26 +559,15 @@
     </service>
 
   <!-- Requirement Services -->
-    <service name="interfaceRequirement" engine="simple"
-            location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="createRequirement">
+    <service name="requirementInterface" engine="interface" location="" invoke="">
         <description>Requirement Interface</description>
-        <attribute name="requirementTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
-        <attribute name="deliverableId" type="String" mode="IN" optional="true"/>
-        <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="false"/>
-        <attribute name="requirementStartDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="requiredByDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="estimatedBudget" type="Double" mode="IN" optional="true"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
-        <attribute name="story" type="String" mode="IN" optional="true"/>
-        <attribute name="reason" type="String" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" entity-name="Requirement" include="nonpk" optional="true"/>
     </service>
     <service name="createRequirement" engine="simple"
             location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="createRequirement">
         <description>Create a new requirement</description>
-        <implements service="interfaceRequirement"/>
+        <implements service="requirementInterface"/>
+        <attribute name="requirementTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestId" type="String" mode="IN" optional="true"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="requirementId" type="String" mode="INOUT" optional="true"/>
@@ -586,7 +575,7 @@
     <service name="updateRequirement" engine="simple"
             location="org/ofbiz/order/requirement/RequirementServices.xml" invoke="updateRequirement">
         <description>Update an existing requirement</description>
-        <implements service="interfaceRequirement"/>
+        <implements service="requirementInterface"/>
         <attribute name="requirementId" type="String" mode="IN" optional="false"/>
     </service>
 

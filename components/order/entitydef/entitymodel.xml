@@ -1653,6 +1653,7 @@
       <field name="deliverableId" type="id"></field>
       <field name="fixedAssetId" type="id"></field>
       <field name="productId" type="id"></field>
+      <field name="statusId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="requirementStartDate" type="date-time"></field>
       <field name="requiredByDate" type="date-time"></field>
@@ -1682,6 +1683,9 @@
       </relation>
       <relation type="one" fk-name="REQ_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="REQ_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="RequirementAttribute"
