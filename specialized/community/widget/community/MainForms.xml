@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+
+
+    <form name="login" target="login" title="" type="single"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="USERNAME" title="${uiLabelMap.CommonUsername}" entry-name="userLoginId" map-name="autoUserLogin">
+            <text size="20"/>
+        </field>
+        <field name="notUser" title=" " use-when="0 &lt; &quot;${autoUserLogin.userLoginId}&quot;.length() ">
+          <hyperlink also-hidden="false" description="${uiLabelMap.CommonNot}&amp;nbsp;${autoUserLogin.userLoginId}" target="${autoLogoutUrl}" target-type="intra-app"/>
+        </field>
+        <field name="PASSWORD" title="${uiLabelMap.CommonPassword}" >
+            <password size="20"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLogin}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <!--
+        <field name="forgotpassword" title="Forgot Password?">
+            <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target=""/>
+        </field>
+            -->
+        <field name="previousParams" >
+            <hidden />
+        </field>
+    </form>
+    <form name="forgotpassword" target="/ecommerce/control/forgotpassword${previousParams}" 
+        target-type="inter-app"
+        title="" type="single"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="USERNAME" title="${uiLabelMap.CommonUsername}" entry-name="userName" >
+            <text size="20"/>
+        </field>
+        <field name="GET_PASSWORD_HINT" title="${uiLabelMap.CommonGetPasswordHint}" widget-style="smallSubmit" position="1" >
+            <submit button-type="button"/>
+        </field>
+        <field name="GET_EMAIL_PASSWORD" title="${uiLabelMap.CommonEmailPassword}" widget-style="smallSubmit" position="2" >
+            <submit button-type="button"/>
+        </field>
+    </form>
+</forms>

@@ -1,0 +1,10 @@
+<entity-engine-xml>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_ADMIN" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_" />
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_UPDATE" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_" />
+
+
+    <DataResource dataResourceId="BLOG_TPL_TOPLEFT" dataResourceTypeId="CONTEXT_FILE" dataTemplateTypeId="SCREEN_COMBINED" dataResourceName="Float left" mimeTypeId="text/html" createdDate="2004-01-16 01:24:06.522" createdByUserLogin="admin" lastModifiedDate="2004-01-16 19:20:58.891" lastModifiedByUserLogin="admin" objectInfo="component://community/widget/community/blog/BlogTemplates.xml#FloatLeft" />
+
+    <DataResource dataResourceId="BLOG_TPL_TOPCENTER" dataResourceTypeId="CONTEXT_FILE" dataTemplateTypeId="SCREEN_COMBINED" dataResourceName="Top centered" mimeTypeId="text/html" createdDate="2004-01-16 01:24:06.522" createdByUserLogin="admin" lastModifiedDate="2004-01-16 19:20:58.891" lastModifiedByUserLogin="admin" objectInfo="component://community/widget/community/blog/BlogTemplates.xml#TopCenter" />
+
+</entity-engine-xml>

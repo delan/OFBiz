@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+
+    <form name="AddForumResponse" target="persistForumResponse" title="" type="single"
+        default-title-style="treeHeader"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <sort-order>
+            <sort-field name="contentName"/>
+            <sort-field name="description"/>
+            <sort-field name="textData"/>
+            <sort-field name="statusId"/>
+            <sort-field name="submitButton"/>
+        </sort-order>
+      <auto-fields-entity entity-name="ContentAssocDataResourceViewFrom" default-field-type="hidden"  />
+        <field name="contentName" title="Short title" entry-name="contentName" map-name="rsp">
+          <text size="40"/>
+        </field>
+        <field name="description" title="Slightly longer title (250 chars max)">
+          <textarea cols="40" rows="6"/>
+        </field>
+        <field name="contentId" entry-name="contentId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="threadContentId" entry-name="threadContentId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="forumId" entry-name="forumId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="ownerContentId" entry-name="ownerContentId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="caContentIdTo" entry-name="caContentIdTo" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="contentContentId" entry-name="caContentIdTo" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="contentTypeId" entry-name="contentTypeId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="drDataResourceTypeId" entry-name="drDataResourceTypeId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="caContentAssocTypeId" entry-name="caContentAssocTypeId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="textData" title="Response" >
+            <textarea cols="60" rows="12"/>
+        </field>
+        <field name="statusId" >
+           <radio no-current-selected-key="BLOG_DRAFT">
+             <option key="BLOG_PUBLISHED" description="POST"/>
+             <option key="BLOG_DRAFT" description="PREVIEW"/>
+           </radio> 
+        </field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+       <field name="deactivateExisting" >
+                <hidden value="false"/>
+        </field>
+    </form>
+    <form name="EditForumResponse" target="persistForumResponse" title="" type="single"
+        default-title-style="treeHeader"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <sort-order>
+            <sort-field name="contentId"/>
+            <sort-field name="contentName"/>
+            <sort-field name="description"/>
+            <sort-field name="textData"/>
+            <sort-field name="statusId"/>
+            <sort-field name="submitButton"/>
+        </sort-order>
+      <auto-fields-entity entity-name="Content" default-field-type="hidden"  map-name="content" />
+      <auto-fields-entity entity-name="DataResource" default-field-type="hidden"  map-name="dataResource" />
+        <field name="contentName" title="Short title" entry-name="contentName" map-name="rsp">
+          <text size="40"/>
+        </field>
+        <field name="description" title="Slightly longer title (250 chars max)">
+          <textarea cols="40" rows="6"/>
+        </field>
+        <field name="contentId" entry-name="contentId" map-name="content">
+          <display/>
+        </field>
+        <field name="articleContentId" entry-name="articleContentId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="textData" title="Response" map-name="electronicText">
+            <textarea cols="60" rows="12"/>
+        </field>
+        <field name="statusId" >
+           <radio no-current-selected-key="BLOG_DRAFT">
+             <option key="BLOG_PUBLISHED" description="POST"/>
+             <option key="BLOG_DRAFT" description="PREVIEW"/>
+           </radio> 
+        </field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+       <field name="deactivateExisting" >
+                <hidden value="false"/>
+        </field>
+    </form>
+</forms>

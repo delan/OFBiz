@@ -1,0 +1,15 @@
+$Id: README 5 2005-02-21 00:00:00Z byersa $
+
+This app is primarily designed to showcase widget and permission techniques.
+Hopefully, someone will come along and add RSS and email connectivity.
+I do not have any immediate plans to do so.
+
+Take a look at the seed data to see what users are set up.
+Access is completely controlled via the widgets.
+There is a "guest" user that can only view blogs and add responses.
+There are two authors (ie. david and andy) that can add and edit their own articles,
+but not each others.
+There is an editor (and admin) that can edit both.
+The authors should not be able to edit their articles after the status is set to "BLOG_PUBLISHED".
+
+-Al

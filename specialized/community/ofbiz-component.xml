@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ *  Copyright (c) 2004 Undersun Consulting LLC
+ *  All rights reserved.
+ *  $Id: ofbiz-component.xml,v 1.2 2004/04/08 15:42:36 jonesde Exp $
+-->
+
+<ofbiz-component name="community"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-component.xsd">
+    <!-- define resource loaders; most common is to use the component resource loader -->
+    <resource-loader name="main" type="component"/>
+    
+    <!-- load single or multiple external libraries -->
+    <classpath type="jar" location="build/lib/*"/>
+    
+    <!-- place the config directory on the classpath to access configuration files -->
+    <classpath type="dir" location="config"/>
+
+    <classpath type="dir" location="script"/>
+
+    <!-- entity resources: model(s), eca(s) and group definitions -->
+    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
+    <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
+    <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
+
+    <entity-resource type="data" reader-name="ext" loader="main" location="data/PubPtData.xml"/>
+    <entity-resource type="data" reader-name="ext" loader="main" location="data/UsersData.xml"/>
+    <entity-resource type="data" reader-name="ext" loader="main" location="data/MiscData.xml"/>
+
+    <!-- service resources: model(s) [definitions], eca(s) and group definitions -->
+    <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+
+    <!-- web applications; will be mounted when using the embedded Jetty container -->
+    <webapp name="community"
+    	    title="Blog" 
+    	    server="default-server" 
+    	    location="webapp/community" 
+    	    mount-point="/community"/>
+    	    
+</ofbiz-component>
+

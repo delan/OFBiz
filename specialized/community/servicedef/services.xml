@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/services.xsd">
+    <description>OFBizDoc Component Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <service name="persistBlogAll" engine="java" location="org.ofbiz.community.CommunityServices" invoke="persistBlogAll"
+         auth="true"  transaction-timout="72000">
+        <implements service="persistContentAndAssoc"/>
+        <attribute type="String" mode="IN" name="summaryData" optional="true"/>
+        <attribute type="String" mode="IN" name="drMimeTypeId_TEXT" optional="true"/>
+        <attribute type="String" mode="IN" name="drMimeTypeId_IMAGE" optional="true"/>
+        <attribute type="String" mode="IN" name="templateId" optional="true"/>
+        <attribute type="String" mode="INOUT" name="textContentId" optional="true"/>
+        <attribute type="String" mode="INOUT" name="imageContentId" optional="true"/>
+        <attribute type="String" mode="INOUT" name="textDataResourceId" optional="true"/>
+        <attribute type="String" mode="INOUT" name="imageDataResourceId" optional="true"/>
+    </service>
+</services>

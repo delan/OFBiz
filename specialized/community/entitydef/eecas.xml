@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entity-eca.xsd">
+<!-- causes endless nested calls
+    <eca entity="Content" operation="create" event="run">
+        <action service="initContentChildCounts" mode="sync" value-attr="content"/>
+    </eca>
+-->
+
+</entity-eca>
