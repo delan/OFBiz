@@ -162,7 +162,7 @@ public class WfAssignmentImpl implements WfAssignment {
         try {
             activity.complete();
         } catch (CannotComplete e) {
-            throw new WfException(e.getMessage(), e);
+            Debug.logWarning("Activity not complete : " + e.getMessage(), module);            
         }
     }
 

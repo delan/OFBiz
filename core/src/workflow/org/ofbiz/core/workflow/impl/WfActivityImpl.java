@@ -347,7 +347,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         try {
             container().receiveResults(this, result());
         } catch (InvalidData e) {
-            throw new CannotComplete("Invalid result data was passed", e);
+            throw new WfException("Invalid result data was passed", e);
         }
         try {
             changeState("closed.completed");
@@ -355,11 +355,11 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             activityWe.set("actualCompletionDate", UtilDateTime.nowTimestamp());
             activityWe.store();                       
         } catch (InvalidState is) {
-            throw new CannotComplete(is.getMessage(), is);
+            throw new WfException(is.getMessage(), is);
         } catch (TransitionNotAllowed tna) {
-            throw new CannotComplete(tna.getMessage(), tna);
+            throw new WfException(tna.getMessage(), tna);
         } catch (GenericEntityException gee) {
-            throw new CannotComplete(gee.getMessage(), gee);
+            throw new WfException(gee.getMessage(), gee);
         }
 
         container().activityComplete(this);
