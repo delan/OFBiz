@@ -44,7 +44,8 @@ import org.ofbiz.core.util.*;
  */
 public class CommonServices {
 
-    /** Generic Test Service
+    /**
+     * Generic Test Service
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -70,7 +71,8 @@ public class CommonServices {
         return response;
     }
 
-    /** JavaMail Service that gets body content from a URL
+    /**
+     * JavaMail Service that gets body content from a URL
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -103,7 +105,8 @@ public class CommonServices {
         return result;
     }
     
-    /** Basic JavaMail Service
+    /**
+     * Basic JavaMail Service
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -154,7 +157,8 @@ public class CommonServices {
         return ServiceUtil.returnSuccess();
     }
 
-    /** Create Note Record
+    /**
+     * Create Note Record
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -193,6 +197,38 @@ public class CommonServices {
         Map result = ServiceUtil.returnSuccess();
         result.put("noteId", noteId);
         return result;
+    }
+
+    /**
+     * Service for setting debugging levels.
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+     */
+    public static Map setDebugLevels(DispatchContext dctx, Map context) {
+        Boolean verbose = (Boolean) context.get("verbose");
+        Boolean timing = (Boolean) context.get("timing");
+        Boolean info = (Boolean) context.get("info");
+        Boolean important = (Boolean) context.get("important");
+        Boolean warning = (Boolean) context.get("warning");
+        Boolean error = (Boolean) context.get("error");
+        Boolean fatal = (Boolean) context.get("fatal");
+        if (verbose != null)
+            Debug.set(Debug.VERBOSE, verbose.booleanValue());
+        if (timing != null)
+            Debug.set(Debug.TIMING, timing.booleanValue());
+        if (info != null)
+            Debug.set(Debug.INFO, info.booleanValue());
+        if (important != null)
+            Debug.set(Debug.IMPORTANT, important.booleanValue());
+        if (warning != null)
+            Debug.set(Debug.WARNING, warning.booleanValue());
+        if (error != null)
+            Debug.set(Debug.ERROR, error.booleanValue());
+        if (fatal != null)
+            Debug.set(Debug.FATAL, fatal.booleanValue());
+        return ServiceUtil.returnSuccess();
     }
 }
 
