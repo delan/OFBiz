@@ -178,7 +178,11 @@
           <Description>Assigns a participant to approve the order.</Description>
           <Limit>30</Limit>
 		  <Implementation>
-		    <Tool Id="testScv" Type="PROCEDURE"/>
+		    <Tool Id="testScv" Type="PROCEDURE">
+              <ActualParameters>
+                <ActualParameter>orderId</ActualParameter>
+              </ActualParameters>
+            </Tool>
 		  </Implementation>
           <Performer>admin</Performer>
 		  <StartMode>
