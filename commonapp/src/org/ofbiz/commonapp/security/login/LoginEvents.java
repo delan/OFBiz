@@ -204,13 +204,19 @@ public class LoginEvents {
             security.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
         }
         
+        HttpSession session = request.getSession();
+        
         //this is a setting we don't want to lose, although it would be good to have a more general solution here...
-        String currCatalog = (String) request.getSession().getAttribute("CURRENT_CATALOG_ID");
-        request.getSession().invalidate();
-        request.getSession(true);
-        if(currCatalog != null) {
-            request.getSession().setAttribute("CURRENT_CATALOG_ID", currCatalog);
-        }
+        String currCatalog = (String) session.getAttribute("CURRENT_CATALOG_ID");
+        //also make sure the delegatorName is preserved, especially so that a new Visit can be created
+        String delegatorName = (String) session.getAttribute("delegatorName");
+        
+        session.invalidate();
+        session = request.getSession(true);
+        
+        if(currCatalog != null) session.setAttribute("CURRENT_CATALOG_ID", currCatalog);
+        if(delegatorName != null) session.setAttribute("delegatorName", delegatorName);
+        
         if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
             return autoLoginCheck(request, response);
         }
