@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,13 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
-<div class='tabContainer'>
+<div class="tabContainer">
+  <a href="<@ofbizUrl>/EditFeatureTypes</@ofbizUrl>" class="${selectedClassMap.FeatureType?default(unselectedClassName)}">Feature Types</a>
   <a href="<@ofbizUrl>/EditFeatureCategories</@ofbizUrl>" class="${selectedClassMap.FeatureCategory?default(unselectedClassName)}">Feature Categories</a>
   <a href="<@ofbizUrl>/EditFeatureGroups</@ofbizUrl>" class="${selectedClassMap.FeatureGroup?default(unselectedClassName)}">Feature Groups</a>
 </div>
