@@ -46,7 +46,7 @@
           <td class="headerButtonRight"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="buttontext">Features</a></td>
           <td class="headerButtonRight"><a href="<ofbiz:url>/FindFacility</ofbiz:url>" class="buttontext">Facilities</a></td>
           <td class="headerButtonRight"><a href="<ofbiz:url>/FindProductPromo</ofbiz:url>" class="buttontext">Promos</a></td>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/EditProductPriceRules</ofbiz:url>" class="buttontext">Prices</a></td>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="buttontext">Prices</a></td>
         </TR>
       </TABLE>
     </TD>

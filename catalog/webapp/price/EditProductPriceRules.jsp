@@ -1,6 +1,6 @@
 <%
 /**
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -36,8 +36,13 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-    Collection productPriceRules = delegator.findAll("ProductPriceRule");
-    if (productPriceRules != null && productPriceRules.size() > 0) pageContext.setAttribute("productPriceRules", productPriceRules);
+    String priceRuleId = request.getParameter("productPriceRuleId");
+    GenericValue productPriceRule = null;
+    if (priceRuleId != null) {
+        productPriceRule = delegator.findByPrimaryKey("ProductPriceRule", UtilMisc.toMap("productPriceRuleId", priceRuleId));
+        if (productPriceRule != null)
+            pageContext.setAttribute("productPriceRule", productPriceRule);
+    }
 
     Collection inputParamEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PRICE_IN_PARAM"), UtilMisc.toList("sequenceId"));
     if (inputParamEnums != null) pageContext.setAttribute("inputParamEnums", inputParamEnums);
@@ -62,7 +67,7 @@
     <td width='10%'><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 
-<ofbiz:iterator name="productPriceRule" property="productPriceRules">
+<ofbiz:if name="productPriceRule">
   <%Collection productPriceConds = productPriceRule.getRelated("ProductPriceCond");%>
   <%if (productPriceConds != null) pageContext.setAttribute("productPriceConds", productPriceConds);%>
   <%Collection productPriceActions = productPriceRule.getRelated("ProductPriceAction");%>
@@ -227,7 +232,7 @@
         </table>
     </td>
   </tr>
-</ofbiz:iterator>
+</ofbiz:if>
 </table>
 
 <br>

@@ -550,6 +550,11 @@
     </request-map>
 
     <!-- ================ ProductPrice Rules Requests ================= -->
+    <request-map uri="FindProductPriceRules">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPriceRules"/>
+    </request-map>
+
     <request-map uri="EditProductPriceRules">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductPriceRules"/>
@@ -660,6 +665,7 @@
     <view-map name="EditProductPromoRules" type="region"/>
     <view-map name="EditProductPromoCatalogs" type="region"/>
 
+    <view-map name="FindPriceRules" type="region"/>
     <view-map name="EditProductPriceRules" type="region"/>
     <!-- end of view mappings -->
 </site-conf>
