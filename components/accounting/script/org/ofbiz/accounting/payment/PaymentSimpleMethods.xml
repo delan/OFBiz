@@ -26,7 +26,7 @@
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Olivier Heintz (olivier.heintz@nereide.biz)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
 -->
 
@@ -281,12 +281,13 @@
         <to-string field-name="paymentId"/>
         <env-to-field env-name="paymentId" map-name="payment"/>
         
+        <set-nonpk-fields map-name="parameters" value-name="payment"/>
+
         <if-empty field-name="effectiveDate" map-name="parameters">
             <now-timestamp-to-env env-name="timestamp"/>
             <env-to-field env-name="timestamp" field-name="effectiveDate" map-name="payment"/>
         </if-empty>
         
-        <set-nonpk-fields map-name="parameters" value-name="payment"/>
         <create-value value-name="payment"/>
         <field-to-result field-name="paymentId" map-name="payment" result-name="paymentId"/>
     </simple-method>
@@ -317,8 +318,11 @@
           </then>
         </if>
         <check-errors/>
-        
         <set-nonpk-fields map-name="parameters" value-name="payment"/>
+        <if-empty field-name="effectiveDate" map-name="parameters">
+            <now-timestamp-to-env env-name="timestamp"/>
+            <env-to-field env-name="timestamp" field-name="effectiveDate" map-name="payment"/>
+        </if-empty>
         <store-value value-name="payment"/>
     </simple-method>
     
@@ -329,15 +333,16 @@
                 <check-errors/>
             </if-empty>
         </if-empty>
-        
-        <field-to-field field-name="invoiceId" map-name="parameters" to-map-name="invoiceLookup"/>
-        <find-by-primary-key entity-name="Invoice" map-name="invoiceLookup" value-name="invoice"/>
-        
+
         <make-value entity-name="PaymentApplication" value-name="paymentAppl"/>
         <set-nonpk-fields map-name="parameters" value-name="paymentAppl"/>
         
-        <if-not-empty field-name="billingAccountId" map-name="invoice">
-            <field-to-field field-name="billingAccountId" map-name="invoice" to-map-name="paymentAppl"/>
+        <if-not-empty field-name="invoiceId" map-name="parameters">
+            <field-to-field field-name="invoiceId" map-name="parameters" to-map-name="invoiceLookup"/>
+            <find-by-primary-key entity-name="Invoice" map-name="invoiceLookup" value-name="invoice"/>
+            <if-not-empty field-name="billingAccountId" map-name="invoice">
+                <field-to-field field-name="billingAccountId" map-name="invoice" to-map-name="paymentAppl"/>
+            </if-not-empty>
         </if-not-empty>
         
         <sequenced-id-to-env sequence-name="PaymentApplication" env-name="paymentApplicationId"/>

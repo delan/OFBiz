@@ -192,6 +192,11 @@
         <event type="service" invoke="updatePayment"/>
         <response name="success" type="view" value="editPayment"/>
     </request-map>
+    <request-map uri="createPaymentApplication">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentApplication"/>
+        <response name="success" type="view" value="editPayment"/>
+    </request-map>
 
     <request-map uri="manualETx">
         <security https="true" auth="true"/>

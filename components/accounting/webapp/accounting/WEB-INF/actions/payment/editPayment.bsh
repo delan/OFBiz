@@ -20,12 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.content.widget.html.HtmlFormWrapper;
 
 delegator = request.getAttribute("delegator");
 paymentId = request.getParameter("paymentId");
@@ -39,6 +40,7 @@ context.put("payment", payment);
 currentType = null;
 currentStatus = null;
 currentMethod = null;
+paymentApplications = null;
 if (payment != null) {
     // get the current type
     currentType = payment.getRelatedOne("PaymentType");
@@ -46,10 +48,22 @@ if (payment != null) {
     currentStatus = payment.getRelatedOne("StatusItem");
     // get the current method
     currentMethod = payment.getRelatedOne("PaymentMethodType");
+    // get the payment's applications
+    paymentApplications = payment.getRelated("PaymentApplication");
+    HtmlFormWrapper paymentApplicationsWrapper = new HtmlFormWrapper("/payment/PaymentForms.xml", "PaymentApplicationsList", request, response);
+    paymentApplicationsWrapper.putInContext("entityList", paymentApplications);
+    paymentApplicationsWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+    context.put("paymentApplicationsWrapper", paymentApplicationsWrapper);
+    HtmlFormWrapper editPaymentApplicationWrapper = new HtmlFormWrapper("/payment/PaymentForms.xml", "EditPaymentApplication", request, response);
+    editPaymentApplicationWrapper.putInContext("paymentApplication", null);
+    editPaymentApplicationWrapper.putInContext("paymentId", paymentId);
+    editPaymentApplicationWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+    context.put("editPaymentApplicationWrapper", editPaymentApplicationWrapper);
 }
 context.put("currentType", currentType);
 context.put("currentStatus", currentStatus);
 context.put("currentMethod", currentMethod);
+context.put("paymentApplications", paymentApplications);
 
 // get the payment types
 paymentTypes = delegator.findAll("PaymentType", UtilMisc.toList("description"));

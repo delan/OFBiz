@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -192,3 +192,8 @@
   </#if>
   </table>
 </form>
+<#if payment?has_content>
+${paymentApplicationsWrapper.renderFormString()}
+${editPaymentApplicationWrapper.renderFormString()}
+</#if>
+
