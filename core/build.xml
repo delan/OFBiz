@@ -1,5 +1,30 @@
 <?xml version="1.0"?>
 
+<!--
+ *  Copyright (c) 2001 The Open For Business Project and respected authors.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  This is the  Open for Business CORE component build script.
+ *  $Id$
+-->
+
 <project name="Open For Business Core Component" default="deploy" basedir=".">
 
 
@@ -7,28 +32,28 @@
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-        <target name="init">
-	<property environment="env"                                 />
+    <target name="init">
+        <property environment="env"                                 />
         <property name="name"           value="core"                />
         <property name="src.dir"        value="src"                 />
         <property name="etc.dir"        value="etc"                 />
         <property name="lib.dir"        value="lib"                 />
-	<property name="doc.dir"        value="docs"                />
+        <property name="doc.dir"        value="docs"                />
         <property name="build.dir"      value="build"               />
         <property name="build.compiler" value="classic"             /> 
         <property name="pkg-dist.name"  value="${name}-pkg"         />
         <property name="deploy.dir"     value="../jbossdeploy"      /> 
 		
-	<!-- Classpath setting -->
-	<property name="servlet.jar" value="${env.TOMCAT_HOME}/lib/servlet.jar"       />
-	<property name="ejb.jar"     value="${env.JBOSS_HOME}/lib/ext/ejb.jar"        />
-	<property name="jaxp.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar"           />
-	<property name="parser.jar"  value="${env.JBOSS_HOME}/lib/xml.jar"            />
-	<property name="jdbc.jar"    value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
-	<property name="api-jars"    value="${servlet.jar}:${ejb.jar}:${jdbc.jar}"    />
-	<property name="xml-jars"    value="${jaxp.jar}:${parser.jar}"                />
-	<property name="classpath"   value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
-	<echo message="classpath: ${classpath}" />
+	    <!-- Classpath setting -->
+	    <property name="servlet.jar" value="${env.TOMCAT_HOME}/lib/servlet.jar"       />
+	    <property name="ejb.jar"     value="${env.JBOSS_HOME}/lib/ext/ejb.jar"        />
+	    <property name="jaxp.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar"           />
+	    <property name="parser.jar"  value="${env.JBOSS_HOME}/lib/xml.jar"            />
+	    <property name="jdbc.jar"    value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
+	    <property name="api-jars"    value="${servlet.jar}:${ejb.jar}:${jdbc.jar}"    />
+	    <property name="xml-jars"    value="${jaxp.jar}:${parser.jar}"                />
+	    <property name="classpath"   value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
+	    <echo message="classpath: ${classpath}" />
     </target>
 
 
