@@ -39,7 +39,7 @@
 
 <p class="head1">Request a New Account</p>
 <br>
-<p>If you already have an account, use your browser's Back button to return to the Login page and log in from there.</p>
+<p class='tabletext'>If you already have an account, <a href='<ofbiz:url>/checkLogin/main</ofbiz:url>' class='buttontext'>log in here</a>.</p>
 <%String fontColor = "Black";%>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -171,7 +171,8 @@
           <td>
 <table width="100%">
   <tr>
-    <td colspan='2'>All phone numbers: [Country Code] [Area Code] [Contact Number] [Extension]</td>
+    <td width="26%"><div class="tabletext">All phone numbers:</div></td>
+    <td width="74%"><div class="tabletext">[Country] [Area Code] [Contact Number] [Extension]</div></td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Home phone<BR>(allow solicitation?)</font></div></td>
