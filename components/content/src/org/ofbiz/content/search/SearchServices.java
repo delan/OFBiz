@@ -1,5 +1,5 @@
 /*
- * $Id: SearchServices.java,v 1.1 2004/07/02 15:53:32 byersa Exp $
+ * $Id: SearchServices.java,v 1.2 2004/07/02 20:18:23 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  * SearchServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.1
  * 
  *  
@@ -65,6 +65,7 @@ public class SearchServices {
         String path = (String)context.get("path");
         Map envContext = (Map)context.get("context");
         GenericDelegator delegator = dctx.getDelegator();
+	  	if (Debug.infoOn()) Debug.logInfo("in indexTree, siteId:" + siteId, module);
 
         Map results = null;
         try {

@@ -1,5 +1,5 @@
 /*
- * $Id: SearchWorker.java,v 1.6 2004/07/02 15:48:26 byersa Exp $
+ * $Id: SearchWorker.java,v 1.7 2004/07/02 20:18:23 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.content.ContentWorker;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.1
  * 
  *  
@@ -63,17 +63,20 @@ public class SearchWorker {
 
             Map results = new HashMap();
             GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", siteId));
-            List siteList = ContentWorker.getAssociatedContent(content, "TO", UtilMisc.toList("SUBSITE"), null, UtilDateTime.nowTimestamp().toString(), null);
+            List siteList = ContentWorker.getAssociatedContent(content, "From", UtilMisc.toList("SUBSITE"), null, UtilDateTime.nowTimestamp().toString(), null);
+	  	//if (Debug.infoOn()) Debug.logInfo("in indexTree, siteList:" + siteList, module);
             Iterator iter = siteList.iterator();
             while (iter.hasNext()) {
                 GenericValue siteContent = (GenericValue)iter.next();
-                List subContentList = ContentWorker.getAssociatedContent(siteContent, "TO", UtilMisc.toList("PUBLISH_LINK"), null, UtilDateTime.nowTimestamp().toString(), null);
+                List subContentList = ContentWorker.getAssociatedContent(siteContent, "From", UtilMisc.toList("PUBLISH_LINK"), null, UtilDateTime.nowTimestamp().toString(), null);
+	  	//if (Debug.infoOn()) Debug.logInfo("in indexTree, subContentList:" + subContentList, module);
                 List contentIdList = new ArrayList();
-                Iterator iter2 = contentIdList.iterator();
+                Iterator iter2 = subContentList.iterator();
                 while (iter2.hasNext()) {
-                    GenericValue subContent = (GenericValue)iter.next();
+                    GenericValue subContent = (GenericValue)iter2.next();
                     contentIdList.add(subContent.getString("contentId")); 
                 }
+	  	//if (Debug.infoOn()) Debug.logInfo("in indexTree, contentIdList:" + contentIdList, module);
                 indexContentList(contentIdList, delegator, context);
 
                 String subSiteId = siteContent.getString("contentId");
@@ -101,7 +104,7 @@ public class SearchWorker {
 	        } catch(Exception e) {
                   // ignore
                 }
-		if (Debug.infoOn()) Debug.logInfo("in indexContent, reader:" + reader, module);
+		//if (Debug.infoOn()) Debug.logInfo("in indexContent, reader:" + reader, module);
     		    contentList = new ArrayList();
     		    iter = idList.iterator();
     		    while (iter.hasNext()) {
@@ -131,7 +134,7 @@ public class SearchWorker {
 	        } catch(Exception e) {
 		    writer = new IndexWriter(indexAllPath, new StandardAnalyzer(), true);
 		}
-	  	if (Debug.infoOn()) Debug.logInfo("in indexContent, writer:" + writer, module);
+	  	//if (Debug.infoOn()) Debug.logInfo("in indexContent, writer:" + writer, module);
 		
 		iter = contentList.iterator();
 		while (iter.hasNext()) {
@@ -192,7 +195,7 @@ public class SearchWorker {
 	
 	public static void indexContent(GenericDelegator delegator, Map context, GenericValue content, IndexWriter writer) throws Exception {
 	    Document doc = ContentDocument.Document(content, context);
-	    if (Debug.infoOn()) Debug.logInfo("in indexContent, content:" + content, module);
+	    //if (Debug.infoOn()) Debug.logInfo("in indexContent, content:" + content, module);
             writer.addDocument(doc);
             /*
             String dataResourceId = content.getString("dataResourceId");

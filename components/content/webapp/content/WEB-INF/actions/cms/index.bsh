@@ -24,9 +24,12 @@ Debug.logInfo("in search, indexAll:" + indexAll, "");
 
 formDefFile		= page.getProperty("formDefFile");
 singleFormName		= page.getProperty("singleFormName");
-            Debug.logInfo("in search, singleFormName:" + singleFormName, "");
 HtmlFormWrapper singleWrapper = new HtmlFormWrapper(formDefFile, singleFormName, request, response);
 context.put("singleWrapper", singleWrapper);
+
+singleFormName2		= page.getProperty("singleFormName2");
+HtmlFormWrapper singleWrapper2 = new HtmlFormWrapper(formDefFile, singleFormName2, request, response);
+context.put("singleWrapper2", singleWrapper2);
 
 
 

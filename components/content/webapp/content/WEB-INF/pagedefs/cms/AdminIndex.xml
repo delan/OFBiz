@@ -3,7 +3,8 @@
     <template>main</template> 
     <property name="title">Edit Sites</property>
     <property name="formDefFile">/cms/CMSForms.xml</property>    
-    <property name="singleFormName">AdminSearch</property>
+    <property name="singleFormName">AdminIndex</property>
+    <property name="singleFormName2">AdminIndexAll</property>
     <property name="headerItem">CMSMenu</property>    
     <property name="entityName"></property>    
     <property name="permission">CONTENTMGR</property>    

@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.32 2004/07/02 15:48:25 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.33 2004/07/02 20:18:22 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -663,6 +663,10 @@ public class DataResourceWorker {
     }
     
     public static void writeDataResourceTextCache(GenericValue dataResource, String mimeTypeId, Locale locale, Map context, GenericDelegator delegator, Writer outWriter) throws IOException, GeneralException {
+
+        if (context == null) 
+            context = new HashMap();
+
         String webSiteId = (String) context.get("webSiteId");
         String https = (String) context.get("https");
         

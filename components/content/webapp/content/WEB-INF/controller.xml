@@ -1307,6 +1307,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AdminIndex"/>
     </request-map>
+    <request-map uri="indexTree">
+        <security https="true" auth="true"/>
+        <event invoke="indexTree" path="" type="service"/>
+        <response name="success" type="view" value="AdminIndex"/>
+    </request-map>
 
 
 

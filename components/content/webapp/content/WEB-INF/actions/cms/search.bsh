@@ -19,6 +19,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.queryParser.QueryParser;
 import org.ofbiz.content.widget.html.HtmlFormWrapper;
+import org.ofbiz.product.feature.ParametricSearch;
 
 delegator = request.getAttribute("delegator");
 paramMap = UtilHttp.getParameterMap(request);
@@ -35,7 +36,6 @@ context.put("queryWrapper", queryWrapper);
 listFormName		= page.getProperty("listFormName");
             Debug.logInfo("in search, listFormName:" + listFormName, "");
 HtmlFormWrapper listWrapper = new HtmlFormWrapper(formDefFile, listFormName, request, response);
-            Debug.logInfo("in search, listWrapper:" + listWrapper, "");
 context.put("listWrapper", listWrapper);
 siteId = paramMap.get("lcSiteId");
             Debug.logInfo("in search, siteId:" + siteId, "");
@@ -43,13 +43,21 @@ searchFeature1 = paramMap.get("SEARCH_FEAT");
 searchFeature2 = paramMap.get("SEARCH_FEAT2");
 searchFeature3 = paramMap.get("SEARCH_FEAT3");
 Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap);
+            Debug.logInfo("in search, featureIdByType:" + featureIdByType, "");
 
 
-        if (UtilValidate.isNotEmpty(queryLine) || UtilValidate.isNotEmpty(siteId) ) {
+        combQuery = new BooleanQuery();
+        String indexPath = null;
+        Searcher searcher = null;
+        Analyzer analyzer = null;
           try {
             indexPath = SearchWorker.getIndexPath(null);
-            Searcher searcher = new IndexSearcher(indexPath);
-            Analyzer analyzer = new StandardAnalyzer();
+            searcher = new IndexSearcher(indexPath);
+            analyzer = new StandardAnalyzer();
+          } catch(java.io.FileNotFoundException e) {
+            request.setAttribute("errorMsgReq", "No index file exists.");
+          }
+        if (UtilValidate.isNotEmpty(queryLine) || UtilValidate.isNotEmpty(siteId) ) {
 
 //            reader = IndexReader.open("/usr/local/agi/ofbiz/components/content/index");
 //            Debug.logInfo("in search, reader:" + reader, "");
@@ -60,19 +68,21 @@ Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap);
 //             
 //            }
 
-            combQuery = new BooleanQuery();
             Query query = null;
             if (UtilValidate.isNotEmpty(queryLine)) {
                 query = QueryParser.parse(queryLine, "content", analyzer);
                 combQuery.add(query, true, false);
             }
+            Debug.logInfo("in search, combQuery(0):" + combQuery, "");
             if (UtilValidate.isNotEmpty(siteId)) {
                 termQuery = new TermQuery(new Term("site", siteId));
                 combQuery.add(termQuery, true, false);
                 Debug.logInfo("in search, termQuery:" + termQuery.toString(), "");
             }
+            Debug.logInfo("in search, combQuery(1):" + combQuery, "");
+        }
 
-            if ( UtilValidate.isNotEmpty(searchFeature1) || UtilValidate.isNotEmpty(searchFeature2) || UtilValidate.isNotEmpty(searchFeature3) || !featureIdByType.isEmpty() ) {
+        if ( UtilValidate.isNotEmpty(searchFeature1) || UtilValidate.isNotEmpty(searchFeature2) || UtilValidate.isNotEmpty(searchFeature3) || !featureIdByType.isEmpty() ) {
                 featureQuery = new BooleanQuery();
                 anyOrAll = paramMap.get("any_or_all");
                 boolean featuresRequired = true;
@@ -98,7 +108,7 @@ Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap);
                 }
 
                 if (!featureIdByType.isEmpty()) {
-                    List values = featureIdByType.values();
+                    values = featureIdByType.values();
                     iter = values.iterator();
                     while (iter.hasNext()) {
                         val = iter.next();
@@ -123,13 +133,6 @@ Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap);
                      hitSet.add(contentId);
                  }
             }
-            Debug.logInfo("in search, contentList:" + contentList, "");
             listWrapper.putInContext("queryResults", contentList); 
-          } catch(java.io.FileNotFoundException e) {
-            request.setAttribute("errorMsgReq", "No index file exists.");
-          }
 
-        } else {
-            request.setAttribute("errorMsgReq", "No content ids were specified.");
-        }
 

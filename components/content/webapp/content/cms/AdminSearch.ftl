@@ -41,6 +41,7 @@ ${menuWrapper.renderMenuString()}
         </div>
       </td>
     </tr>
+<#--
     <tr>
       <td align="right" valign="middle">
         <div class="tabletext">Feature IDs:</div>
@@ -53,6 +54,7 @@ ${menuWrapper.renderMenuString()}
         </div>
       </td>
     </tr>
+-->
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
@@ -64,7 +66,7 @@ ${menuWrapper.renderMenuString()}
         <td valign="middle">
           <div class="tabletext">
             <select class="selectBox" name="pft_${productFeatureTypeId}">
-              <option value="">- ${uiLabelMap.CommonAny} -</option>
+              <option value="">- Any -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
@@ -73,6 +75,7 @@ ${menuWrapper.renderMenuString()}
         </td>
       </tr>
     </#list>
+<#--
     <tr>
       <td align="right" valign="middle">
         <div class="tabletext">Sort Order:</div>
@@ -80,8 +83,8 @@ ${menuWrapper.renderMenuString()}
       <td valign="middle">
         <div class="tabletext">
           <select name="sortOrder" class="selectBox">
-            <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevency}</option>
-            <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
+            <option value="SortKeywordRelevancy">Keyword Relevency</option>
+            <option value="SortProductField:productName">Product Name</option>
             <option value="SortProductField:internalName">Internal Name</option>
             <option value="SortProductField:totalQuantityOrdered">Popularity by Orders</option>
             <option value="SortProductField:totalTimesViewed">Popularity by Views</option>
@@ -97,6 +100,7 @@ ${menuWrapper.renderMenuString()}
         </div>
       </td>
     </tr>
+-->
     <#if searchConstraintStrings?has_content>
       <tr>
         <td align="right" valign="top">
@@ -114,16 +118,6 @@ ${menuWrapper.renderMenuString()}
         </td>
       </tr>
     </#if>
-    <tr>
-      <td>
-        <div class="tabletext">
-          <a href="javascript:document.advtokeywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
-        </div>
-      </td>
-    </tr>
-  </table>
-</tr>
-<tr>
 <td width="20%" align="right">
 &nbsp;</td>
 <td>&nbsp;</td>

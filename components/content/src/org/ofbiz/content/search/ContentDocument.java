@@ -1,5 +1,5 @@
 /*
- * $Id: ContentDocument.java,v 1.4 2004/07/02 15:48:26 byersa Exp $
+ * $Id: ContentDocument.java,v 1.5 2004/07/02 20:18:22 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.util.Iterator;
  * ContentDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since 3.1
  * 
  *  
@@ -158,10 +158,10 @@ public class ContentDocument {
                 return;
 	    }
 	    String text = outWriter.toString();
-	    Debug.logInfo("in DataResourceDocument, text:" + text, module);
+	    //Debug.logInfo("in DataResourceDocument, text:" + text, module);
             if (UtilValidate.isNotEmpty(text)) {
               Field field = Field.UnStored("content", text);
-	      Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
+	      //Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
 	      doc.add(field);
             }
 
