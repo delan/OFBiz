@@ -2,6 +2,6 @@
 <page>
     <template>main_lr</template>    
     <property name="title">Main Page</property>
-    <page-action name="main.js"/>
+    <page-action name="main.bsh"/>
 </page>
 

@@ -2,5 +2,5 @@
 <page>
     <template>main_lr</template>
     <property name="title">Product Page</property>
-    <page-action name="/catalog/product.js"/>
+    <page-action name="/catalog/product.bsh"/>
 </page>

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <content-action name="/catalog/categorylisting.js"/>
+    <content-action name="/catalog/categorylisting.bsh"/>
 </page>
