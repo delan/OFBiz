@@ -473,10 +473,13 @@ public class LoginEvents {
             Debug.logInfo("Running autoLogin check.");
             try {
                 GenericValue autoUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", autoUserLoginId));
-                GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", autoUserLogin.getString("partyId")));
-                GenericValue group = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", autoUserLogin.getString("partyId")));
-
-                session.setAttribute("autoUserLogin", autoUserLogin);
+                GenericValue person = null;
+                GenericValue group = null;
+                if (autoUserLogin != null) {
+                    person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", autoUserLogin.getString("partyId")));
+                    group = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", autoUserLogin.getString("partyId")));
+                    session.setAttribute("autoUserLogin", autoUserLogin);
+                }b
                 if (person != null) {
                     session.setAttribute("autoName", person.getString("firstName") + " " + person.getString("lastName"));
                 } else if (group != null) {
