@@ -96,10 +96,6 @@ public class FlexibleMapAccessor {
             base = this.subMapAccessor.getSubMap(base);
         }
         
-        if (base == null) {
-            return null;
-        }
-        
         if (this.isListReference) {
             List lst = (List) base.get(extName);
             return lst.get(listIndex);
@@ -119,7 +115,11 @@ public class FlexibleMapAccessor {
             throw new IllegalArgumentException("Cannot put a value in a null base Map");
         }
         if (this.subMapAccessor != null) {
-            base = this.subMapAccessor.getSubMap(base);
+            Map subBase = this.subMapAccessor.getSubMap(base);
+            if (subBase == null) {
+                return;
+            }
+            base = subBase;
         }
         if (this.isListReference) {
             List lst = (List) base.get(extName);
@@ -181,14 +181,34 @@ public class FlexibleMapAccessor {
         }
         
         public Map getSubMap(Map base) {
+            if (base == null) return null;
             if (this.subMapAccessor != null) {
                 base = this.subMapAccessor.getSubMap(base);
             }
             if (this.isListReference) {
                 List lst = (List) base.get(extName);
-                return (Map) lst.get(listIndex);
+                if (lst == null) {
+                    lst = new LinkedList();
+                    base.put(extName, lst);
+                }
+                
+                Map extMap = null;
+                if (lst.size() > listIndex) {
+                    extMap = (Map) lst.get(listIndex);
+                }
+                if (extMap == null) {
+                    extMap = new HashMap();
+                    lst.add(listIndex, extMap);
+                }
+                
+                return extMap;
             } else {
-                return (Map) base.get(extName);
+                Map extMap = (Map) base.get(extName);
+                if (extMap == null) {
+                    extMap = new HashMap();
+                    base.put(extName, extMap);
+                }
+                return extMap;
             }
         }
     }
