@@ -1503,6 +1503,9 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String orderId = (String) context.get("orderId");
+        
+        Debug.logInfo("In updateSubscriptionByOrder service with orderId: " + orderId, module);
+        
         GenericValue orderHeader = null;
         try {
             List orderRoleList = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "END_USER_CUSTOMER"));
