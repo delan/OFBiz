@@ -28,7 +28,7 @@
  *  $Id$
 -->
 
-<!ENTITY % AllFields "display | hyperlink | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored">
+<!ENTITY % AllFields "display | hyperlink | lookup | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored">
 
 <!ELEMENT forms ( form+ )>
 
@@ -47,6 +47,7 @@
     name CDATA #REQUIRED
     type ( single | list | multi ) #REQUIRED
     target CDATA #REQUIRED
+    paginate-target CDATA #IMPLIED
     title CDATA #IMPLIED
     tooltip CDATA #IMPLIED
     list-name CDATA #IMPLIED
@@ -72,12 +73,14 @@
 <!ATTLIST auto-fields-service
     service-name CDATA #REQUIRED
     map-name CDATA #IMPLIED
+    default-field-type ( edit | find | display ) "edit"
 >
 
 <!ELEMENT auto-fields-entity EMPTY>
 <!ATTLIST auto-fields-entity
     entity-name CDATA #REQUIRED
     map-name CDATA #IMPLIED
+    default-field-type ( edit | find | display ) "edit"
 >
 
 <!--
@@ -162,16 +165,27 @@
     description CDATA #IMPLIED
 >
 
-<!ELEMENT text EMPTY>
+<!ELEMENT sub-hyperlink EMPTY>
+<!ATTLIST sub-hyperlink
+	use-when CDATA #IMPLIED
+	link-style CDATA #IMPLIED
+    target-type ( intra-app | inter-app | content | plain ) "intra-app"
+    target CDATA #REQUIRED
+    description CDATA #IMPLIED
+>
+
+<!ELEMENT text ( sub-hyperlink? )>
 <!ATTLIST text
     size CDATA "25"
     maxlength CDATA #IMPLIED
+    default-value CDATA #IMPLIED
 >
 
 <!ELEMENT textarea EMPTY>
 <!ATTLIST textarea
     cols CDATA "60"
     rows CDATA "3"
+    default-value CDATA #IMPLIED
 >
 
 <!-- a special entry for date-time fields; may just have a default size text 
@@ -180,6 +194,7 @@
 <!ELEMENT date-time EMPTY>
 <!ATTLIST date-time
     type ( timestamp | date | time ) "timestamp"
+    default-value CDATA #IMPLIED
 >
 
 <!-- entity-options will look up options for the field in the given entity
@@ -196,6 +211,7 @@
     key-field-name CDATA #IMPLIED
     description CDATA #REQUIRED
     cache ( true | false ) "true"
+    filter-by-date ( true | false | by-name ) "by-name"
 >
 
 <!ELEMENT entity-constraint EMPTY>
@@ -241,7 +257,7 @@
 	no-current-selected-key: the key to mark as selected when there is no
 		current entry value
 -->
-<!ELEMENT drop-down ( (entity-options | list-options | option)* )>
+<!ELEMENT drop-down ( (entity-options | list-options | option)*, sub-hyperlink? )>
 <!ATTLIST drop-down
     allow-empty ( true | false ) "false"
     current ( first-in-list | selected ) "first-in-list"
@@ -268,7 +284,36 @@
 <!ATTLIST hidden
     value CDATA #IMPLIED
 >
+
 <!ELEMENT ignored EMPTY>
+
+<!ELEMENT text-find ( sub-hyperlink? )>
+<!ATTLIST text-find
+    size CDATA "25"
+    maxlength CDATA #IMPLIED
+    default-value CDATA #IMPLIED
+>
+
+<!ELEMENT range-find ( sub-hyperlink? )>
+<!ATTLIST range-find
+    size CDATA "25"
+    maxlength CDATA #IMPLIED
+    default-value CDATA #IMPLIED
+>
+
+<!ELEMENT lookup ( sub-hyperlink? )>
+<!ATTLIST lookup
+    target-form-name CDATA #REQUIRED
+    size CDATA "25"
+    maxlength CDATA #IMPLIED
+    default-value CDATA #IMPLIED
+>
+
+<!ELEMENT date-find EMPTY>
+<!ATTLIST date-find
+    type ( timestamp | date | time ) "timestamp"
+    default-value CDATA #IMPLIED
+>
 
 <!ELEMENT sort-order ( sort-field* )>
 <!ATTLIST sort-order
