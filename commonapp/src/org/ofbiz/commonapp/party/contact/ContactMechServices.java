@@ -1,7 +1,8 @@
 /*
  * $Id$
- * 
- *  Copyright (c) 2001 The Open For Business Project and repected authors.
+ *
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -20,30 +21,27 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.party.contact;
 
-
-import javax.servlet.*;
-import javax.servlet.http.*;
 import java.util.*;
 import java.sql.*;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 
-
 /**
  * Services for Contact Mechanism maintenance
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on January 18, 2001
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ContactMechServices {
 
-    /** Creates a ContactMech
+    /** 
+     * Creates a ContactMech
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -97,7 +95,8 @@ public class ContactMechServices {
         return result;
     }
 
-    /** Updates a ContactMech
+    /** 
+     * Updates a ContactMech
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -211,7 +210,8 @@ public class ContactMechServices {
         return result;
     }
 
-    /** Deletes a ContactMech
+    /** 
+     * Deletes a ContactMech
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_DELETE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -262,7 +262,8 @@ public class ContactMechServices {
     // ============================================================================
     // ============================================================================
 
-    /** Creates a PostalAddress
+    /** 
+     * Creates a PostalAddress
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -323,7 +324,8 @@ public class ContactMechServices {
         return result;
     }
 
-    /** Updates a PostalAddress
+    /** 
+     * Updates a PostalAddress
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -458,7 +460,8 @@ public class ContactMechServices {
     // ============================================================================
     // ============================================================================
 
-    /** Creates a TelecomNumber
+    /** 
+     * Creates a TelecomNumber
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -507,7 +510,8 @@ public class ContactMechServices {
         return result;
     }
 
-    /** Updates a TelecomNumber
+    /** 
+     * Updates a TelecomNumber
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -637,7 +641,8 @@ public class ContactMechServices {
     // ============================================================================
     // ============================================================================
 
-    /** Creates a EmailAddress
+    /** 
+     * Creates a EmailAddress
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -653,7 +658,8 @@ public class ContactMechServices {
         return createContactMech(ctx, newContext);
     }
 
-    /** Updates a EmailAddress
+    /** 
+     * Updates a EmailAddress
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -670,7 +676,8 @@ public class ContactMechServices {
     // ============================================================================
     // ============================================================================
 
-    /** Creates a PartyContactMechPurpose
+    /** 
+     * Creates a PartyContactMechPurpose
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -726,7 +733,8 @@ public class ContactMechServices {
         return result;
     }
 
-    /** Deletes the PartyContactMechPurpose corresponding to the parameters in the context
+    /** 
+     * Deletes the PartyContactMechPurpose corresponding to the parameters in the context
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_DELETE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters

@@ -1,7 +1,8 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project and repected authors.
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -20,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.party.contact;
-
 
 import java.util.*;
 import javax.servlet.*;
@@ -31,13 +30,12 @@ import javax.servlet.jsp.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Worker methods for Contact Mechanisms
  *
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version 1.0
- *@created January 22, 2002
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ContactMechWorker {
     public static void getPartyContactMechValueMaps(PageContext pageContext, String partyId, boolean showOld, String partyContactMechValueMapsAttr) {
