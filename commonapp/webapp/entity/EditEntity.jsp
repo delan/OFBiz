@@ -102,9 +102,6 @@
     if(relEntity == null) errorMsg = errorMsg + "<li> Related Entity \"" + relEntityName + "\" not found, not adding.";
     else
     {
-      if("dependent".equals(request.getParameter("dependent"))) relation.dependent = true;
-      else relation.dependent = false;
-
       relation.relEntityName = relEntityName;
       relation.relTableName = relEntity.tableName;
       relation.type = type;
@@ -117,9 +114,7 @@
         {
           ModelField pkf = (ModelField)relEntity.pks.get(pk);
           ModelKeyMap keyMap = new ModelKeyMap();
-          keyMap.colName = pkf.colName;
           keyMap.fieldName = pkf.name;
-          keyMap.relColName = pkf.colName;
           keyMap.relFieldName = pkf.name;
           relation.keyMaps.add(keyMap);
         }
@@ -135,8 +130,6 @@
     ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
     relation.type = type;
     relation.title = title;
-    if("dependent".equals(request.getParameter("dependent"))) relation.dependent = true;
-    else relation.dependent = false;
   }
   else if("removeRelation".equals(event))
   {
@@ -157,9 +150,7 @@
     ModelField field = entity.getField(fieldName);
     ModelField relField = relEntity.getField(relFieldName);
 
-    keyMap.colName = field.colName;
     keyMap.fieldName = field.name;
-    keyMap.relColName = relField.colName;
     keyMap.relFieldName = relField.name;
   }
   else if("removeKeyMap".equals(event))
@@ -202,9 +193,7 @@
           ModelKeyMap curkm = (ModelKeyMap)relation.keyMaps.get(kmn);
           ModelKeyMap newkm = new ModelKeyMap();
           newRel.keyMaps.add(newkm);
-          newkm.colName = curkm.relColName;
           newkm.fieldName = curkm.relFieldName;
-          newkm.relColName = curkm.colName;
           newkm.relFieldName = curkm.fieldName;
         }
 
@@ -294,7 +283,8 @@ Column Name: <%=entity.tableName%><br>
       <%ModelField field = (ModelField)entity.fields.get(f);%>
       <TR>
         <TD><%=field.isPk?"<B>":""%><%=field.name%><%=field.isPk?"</B>":""%></TD>
-        <TD><%=field.colName%> (<%=field.colName.length()%>)</TD><TD><%=field.type%></TD>
+        <TD><%=field.colName%> (<%=field.colName.length()%>)</TD>
+        <TD><%=field.type%></TD>
         <TD>
           <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&fieldName=" + field.name + "&event=updateField")%>' style='margin: 0;'>
             <INPUT type=CHECKBOX name='primaryKey'<%=field.isPk?" checked":""%>>
@@ -341,12 +331,6 @@ Column Name: <%=entity.tableName%><br>
             <OPTION>&nbsp;</OPTION>
             <OPTION>one</OPTION>
             <OPTION>many</OPTION>
-          </SELECT>
-          <SELECT name='dependent'>
-            <OPTION selected><%=relation.dependent?"dependent":"independent"%></OPTION>
-            <OPTION>&nbsp;</OPTION>
-            <OPTION>dependent</OPTION>
-            <OPTION>independent</OPTION>
           </SELECT>
         </td>
         <td>
@@ -403,10 +387,6 @@ Column Name: <%=entity.tableName%><br>
   <SELECT name='type'>
     <OPTION>one</OPTION>
     <OPTION>many</OPTION>
-  </SELECT>
-  <SELECT name='dependent'>
-    <OPTION>dependent</OPTION>
-    <OPTION>independent</OPTION>
   </SELECT>
   <INPUT type=submit value='Create'>
 </FORM>
