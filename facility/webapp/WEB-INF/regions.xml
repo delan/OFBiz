@@ -73,5 +73,10 @@
     <define id='EditFacilityGroupMembers' region='MAIN_REGION'>
         <put section='title'>Edit Facility Group Member(s)</put>
         <put section='content' content='/group/EditFacilityGroupMembers.jsp'/>
-    </define>               
+    </define>         
+    
+    <define id='EditFacilityGroupRoles' region='MAIN_REGION'>
+        <put section='title'>Edit Facility Group Roles(s)</put>
+        <put section='content' content='/group/EditFacilityGroupRoles.jsp'/>
+    </define>                    
 </regions>

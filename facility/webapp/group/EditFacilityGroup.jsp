@@ -61,13 +61,7 @@
 %>
 
 <br>
-<%if(facilityGroupId != null && facilityGroupId.length() > 0){%>
-  <div class='tabContainer'>
-    <a href="<ofbiz:url>/EditFacilityGroup?facilityGroupId=<%=facilityGroupId%></ofbiz:url>" class="tabButtonSelected">Facility Group</a>
-    <a href="<ofbiz:url>/EditFacilityGroupRollup?showFacilityGroupId=<%=facilityGroupId%></ofbiz:url>" class="tabButtonSelected">Rollups</a>
-    <a href="<ofbiz:url>/EditFacilityGroupMembers?facilityGroupId=<%=facilityGroupId%></ofbiz:url>" class="tabButtonSelected">Facilities</a>
-  </div>
-<%}%>
+<%@ include file="/includes/facilityGroupMenu.jsp" %>
 
 <div class="head1">Facility Group<span class='head2'><%=UtilFormatOut.ifNotEmpty(facilityGroup==null?null:facilityGroup.getString("facilityGroupName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityGroupId)%>]</span></div>
 <a href="<ofbiz:url>/EditFacilityGroup</ofbiz:url>" class="buttontext">[New Group]</a>

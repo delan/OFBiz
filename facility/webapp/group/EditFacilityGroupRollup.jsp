@@ -60,15 +60,11 @@
     function setLineThruDateChild(line) { eval('document.lineChildForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
     function setLineThruDateParent(line) { eval('document.lineParentForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
 </script>
+
 <br>
-<%if(facilityGroupId != null && facilityGroupId.length() > 0) {%>
-  <div class='tabContainer'>
-    <a href="<ofbiz:url>/EditFacilityGroup?facilityGroupId=<%=facilityGroupId%></ofbiz:url>" class="tabButtonSelected">Facility Group</a>
-    <a href="<ofbiz:url>/EditFacilityGroupRollup?showFacilityGroupId=<%=facilityGroupId%></ofbiz:url>" class="tabButtonSelected">Rollups</a>
-    <a href="<ofbiz:url>/EditFacilityGroupMembers?facilityGroupId=<%=facilityGroupId%></ofbiz:url>" class="tabButtonSelected">Facilities</a>
-  </div>
-<%}%>
-<div class="head1">Rollup <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(facilityGroup==null?null:facilityGroup.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityGroupId)%>]</span></div>
+<%@ include file="/includes/facilityGroupMenu.jsp" %>
+
+<div class="head1">Rollups <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(facilityGroup==null?null:facilityGroup.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityGroupId)%>]</span></div>
 <a href="<ofbiz:url>/EditFacilityGroup</ofbiz:url>" class="buttontext">[New Group]</a>
 <br>
 <br>
@@ -128,7 +124,7 @@
     <%while(pit != null && pit.hasNext()) {%>
       <%GenericValue curGroup = (GenericValue)pit.next();%>
         <%if(!facilityGroupId.equals(curGroup.getString("facilityGroupId")) && !"_NA_".equals(curGroup.getString("facilityGroupId"))){%>
-          <option value="<%=curGroup.getString("facilityGroupId")%>"><%=curGroup.getString("description")%> [<%=curGroup.getString("facilityGroupId")%>]</option>
+          <option value="<%=curGroup.getString("facilityGroupId")%>"><%=curGroup.getString("facilityGroupName")%> [<%=curGroup.getString("facilityGroupId")%>]</option>
         <%}%>
     <%}%>
     </select>
@@ -194,7 +190,7 @@
     <%while (cit != null && cit.hasNext()) {%>
       <%GenericValue curGroup = (GenericValue)cit.next();%>
       <%if (!facilityGroupId.equals(curGroup.getString("facilityGroupId")) && !"_NA_".equals(curGroup.getString("facilityGroupId"))){%>
-        <option value="<%=curGroup.getString("facilityGroupId")%>"><%=curGroup.getString("description")%> [<%=curGroup.getString("facilityGroupId")%>]</option>
+        <option value="<%=curGroup.getString("facilityGroupId")%>"><%=curGroup.getString("facilityGroupName")%> [<%=curGroup.getString("facilityGroupId")%>]</option>
       <%}%>
     <%}%>
     </select>
