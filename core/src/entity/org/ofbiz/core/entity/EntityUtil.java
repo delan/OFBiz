@@ -289,6 +289,7 @@ public class EntityUtil {
     static class OrderByComparator implements Comparator {
 
         private String field;
+        private ModelField modelField = null;
         private boolean descending;
         private Comparator next = null;
 
@@ -329,8 +330,11 @@ public class EntityUtil {
         }
 
         private int compareAsc(GenericEntity obj, GenericEntity obj2) {
-            Object value = obj.get(field);
-            Object value2 = obj2.get(field);
+            if (this.modelField == null) {
+                this.modelField = obj.getModelEntity().getField(field);
+            }
+            Object value = obj.dangerousGetNoCheckButFast(this.modelField);
+            Object value2 = obj2.dangerousGetNoCheckButFast(this.modelField);
             //null is defined as the largest possible value
             if (value == null) return value2 == null ? 0 : 1;
             if (value2 == null) return value == null ? 0 : -1;

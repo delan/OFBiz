@@ -617,8 +617,8 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         int pksSize = modelEntity.getPksSize();
         for (int i = 0; i < pksSize; i++) {
             ModelField curField = modelEntity.getPk(i);
-            Comparable thisVal = (Comparable) this.get(curField.getName());
-            Comparable thatVal = (Comparable) that.get(curField.getName());
+            Comparable thisVal = (Comparable) this.fields.get(curField.getName());
+            Comparable thatVal = (Comparable) that.fields.get(curField.getName());
             if (thisVal == null) {
                 if (thatVal == null)
                     tempResult = 0;
@@ -639,8 +639,8 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         int nopksSize = modelEntity.getNopksSize();
         for (int i = 0; i < nopksSize; i++) {
             ModelField curField = modelEntity.getNopk(i);
-            Comparable thisVal = (Comparable) this.get(curField.getName());
-            Comparable thatVal = (Comparable) that.get(curField.getName());
+            Comparable thisVal = (Comparable) this.fields.get(curField.getName());
+            Comparable thatVal = (Comparable) that.fields.get(curField.getName());
             if (thisVal == null) {
                 if (thatVal == null)
                     tempResult = 0;

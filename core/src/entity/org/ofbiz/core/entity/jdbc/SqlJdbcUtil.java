@@ -282,7 +282,7 @@ public class SqlJdbcUtil {
             ModelField curField = modelEntity.getPk(j);
             
             //for where clause variables only setValue if not null...
-            if (entity.get(curField.getName()) != null) {
+            if (entity.dangerousGetNoCheckButFast(curField) != null) {
                 setValue(sqlP, curField, entity, modelFieldTypeReader);
             }
         }
