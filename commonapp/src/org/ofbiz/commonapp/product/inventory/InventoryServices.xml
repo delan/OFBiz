@@ -2,18 +2,19 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- * Copyright (c) 2001 The Open For Business Project and repective authors.
- * Permission is hereby granted, free of charge, to any person obtaining a
+  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -25,6 +26,7 @@
  * @version 1.0
  * Created on April 2, 2002
  -->
+
 <simple-methods>
     <simple-method method-name="createInventoryItem" short-description="Create an InventoryItem">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createInventoryItem you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
@@ -32,15 +34,15 @@
 
         <make-value value-name="newEntity" entity-name="InventoryItem"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
         <to-string field-name="inventoryItemId"/>
         <env-to-field env-name="inventoryItemId" map-name="newEntity"/>
         <field-to-result field-name="inventoryItemId" result-name="inventoryItemId"/>
-        
+
         <create-value value-name="newEntity"/>
-        
-        <!-- clear the by and caches -->        
+
+        <!-- clear the by and caches -->
         <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapOne"/>
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
@@ -61,7 +63,7 @@
         <set-nonpk-fields map-name="parameters" value-name="inventoryItem"/>
         <store-value value-name="inventoryItem"/>
 
-        <!-- clear the by and caches -->        
+        <!-- clear the by and caches -->
         <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapOne"/>
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
@@ -80,8 +82,8 @@
         <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
         <remove-value value-name="inventoryItem"/>
-        
-        <!-- clear the by and caches -->        
+
+        <!-- clear the by and caches -->
         <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapOne"/>
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
@@ -97,24 +99,24 @@
     <!-- ================================================================ -->
     <!-- Check/Reserve Inventory Services -->
     <!-- ================================================================ -->
-    
+
     <simple-method method-name="getProductInventoryAvailable" short-description="Get Inventory Available for a Product" login-required="false" use-transaction="false">
-        <!-- 
-            this method can be called with some optional parameters: 
+        <!--
+            this method can be called with some optional parameters:
                 -facilityId
                 -containerId
             If the service definitions are used then only one of these two will ever be specified, or neither of them.
-                
+
             Whatever it is called with, it will basicly get a list of InventoryItems and total the available amount.
         -->
-    
+
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
-        
+
         <!-- we might get away with a cache here since real serious errors will occur during the reservation service... but only if we need the speed -->
         <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems"/> <!-- use-cache="true" -->
-        
+
         <calculate field-name="availableToPromise" map-name="parameters"><number value="0"/></calculate>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
@@ -134,30 +136,30 @@
                 </if-not-empty>
             </if-compare>
         </iterate>
-        
+
         <field-to-result field-name="availableToPromise" map-name="parameters"/>
     </simple-method>
     <simple-method method-name="reserveProductInventory" short-description="Reserve Inventory for a Product">
-        <!-- 
-            this method can be called with some optional parameters: 
+        <!--
+            this method can be called with some optional parameters:
                 -facilityId
                 -containerId
             If the service definitions are used then only one of these two will ever be specified, or neither of them.
-                
+
             Whatever it is called with, it will basicly get a list of InventoryItems and reserve the first available inventory.
-            
-            If requireInventory is Y the quantity not reserved is returned, if N then a negative 
+
+            If requireInventory is Y the quantity not reserved is returned, if N then a negative
             availableToPromise will be used to track quantity ordered beyond what is in stock.
         -->
 
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
-        
+
         <!-- before we do the find, put together the orderBy list based on which reserveOrderEnumId is specified -->
         <if-compare value="INVRO_FIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
             <string-to-field string="+expireDate" field-name="orderByString"/>
-            
+
             <else>
             <if-compare value="INVRO_LIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
                 <string-to-field string="-expireDate" field-name="orderByString"/>
@@ -165,7 +167,7 @@
                 <else>
                 <if-compare value="INVRO_LIFO_REC" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
                     <string-to-field string="+dateReceived" field-name="orderByString"/>
-            
+
                     <else>
                         <!-- the default reserveOrderEnumId is INVRO_FIFO_REC, ie FIFO based on date received -->
                         <string-to-field string="-dateReceived" field-name="orderByString"/>
@@ -176,9 +178,9 @@
             </else>
         </if-compare>
         <field-to-list field-name="orderByString" list-name="orderByList"/>
-        
+
         <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems" order-by-list-name="orderByList"/>
-        
+
         <field-to-field field-name="quantity" map-name="parameters" to-field-name="quantityNotReserved"/>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <!-- only do something with this inventoryItem if there is more inventory to reserve -->
@@ -189,7 +191,7 @@
                         <string-to-field string="INV_PROMISED" field-name="statusId" map-name="inventoryItem"/>
                         <store-value value-name="inventoryItem"/>
 
-                        <!-- clear the by and caches -->        
+                        <!-- clear the by and caches -->
                         <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapOne"/>
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
@@ -234,7 +236,7 @@
                             </calculate>
                             <store-value value-name="inventoryItem"/>
 
-                            <!-- clear the by and caches -->        
+                            <!-- clear the by and caches -->
                             <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapOne"/>
                             <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
@@ -265,7 +267,7 @@
                             </calculate>
                         </if-compare>
                     </if-not-empty>
-                    
+
                     <!-- keep track of the last non-serialized inventory item and corresponding order item inv res for use if inventory is not required for purchase -->
                     <!-- use env variable named lastNonSerInventoryItem, lastNonSerOrderItemInventoryRes -->
                     <env-to-field env-name="inventoryItem" field-name="lastNonSerInventoryItem"/>
@@ -273,7 +275,7 @@
             </if-compare>
         </iterate>
 
-        <!-- 
+        <!--
             if inventory is not required for purchase and quantityNotReserved != 0:
                 - subtract the remaining quantityNotReserved from the availableToPromise of the last non-serialized inventory item
                 - or if none was found create a non-ser InventoryItem with availableToPromise = -quantityNotReserved
@@ -291,7 +293,7 @@
                         </calculate>
                         <store-value value-name="lastNonSerInventoryItem"/>
 
-                        <!-- clear the by and caches -->        
+                        <!-- clear the by and caches -->
                         <field-to-field field-name="productId" map-name="lastNonSerInventoryItem" to-map-name="clearCacheMapOne"/>
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
@@ -302,7 +304,7 @@
                         <field-to-field field-name="productId" map-name="lastNonSerInventoryItem" to-map-name="clearCacheMapThree"/>
                         <field-to-field field-name="containerId" map-name="lastNonSerInventoryItem" to-map-name="clearCacheMapThree"/>
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
-                        
+
                         <!-- update OrderItemInventoryRes record -->
                         <if-not-empty field-name="lastNonSerOrderItemInventoryRes">
                             <calculate field-name="quantity" map-name="lastNonSerOrderItemInventoryRes">
@@ -311,7 +313,7 @@
                                 </calcop>
                             </calculate>
                             <store-value value-name="lastNonSerOrderItemInventoryRes"/>
-                            
+
                             <else>
                                 <!-- okay, there was no last non-ser orderItemInventoryRes, so create one -->
                                 <make-value entity-name="OrderItemInventoryRes" value-name="newOiirEntity"/>
@@ -328,7 +330,7 @@
                             <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
                             <to-string field-name="inventoryItemId"/>
                             <env-to-field env-name="inventoryItemId" map-name="newNonSerInventoryItem"/>
-                            
+
                             <field-to-field field-name="productId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                             <field-to-field field-name="facilityId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                             <field-to-field field-name="containerId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
@@ -338,7 +340,7 @@
                             </calculate>
                             <create-value value-name="newNonSerInventoryItem"/>
 
-                            <!-- clear the by and caches -->        
+                            <!-- clear the by and caches -->
                             <field-to-field field-name="productId" map-name="newNonSerInventoryItem" to-map-name="clearCacheMapOne"/>
                             <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
@@ -359,12 +361,12 @@
                             <create-value value-name="newOiirEntity"/>
                         </else>
                     </if-not-empty>
-                    
+
                     <calculate field-name="quantityNotReserved" map-name="parameters"><number value="0"/></calculate>
                 </else>
             </if-compare>
         </if-compare>
-                
+
         <field-to-result field-name="quantityNotReserved" map-name="parameters"/>
     </simple-method>
 </simple-methods>

@@ -113,7 +113,7 @@
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
         <description>Create a CustRequestItem record</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
-        <attribute name="custRequestItemSeqId" type="String" mode="OUT" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="requiredByDate" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" type="String" mode="IN" optional="true"/>
         <attribute name="maximumAmount" type="String" mode="IN" optional="true"/>
@@ -126,6 +126,65 @@
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createCustRequestItemNote" engine="simple"
+            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestItemNote" auth="true">
+        <description>Create a CustRequestRole record</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="note" type="String" mode="IN" optional="false"/>
+    </service>
+
+  <!-- Requirement Services -->
+    <service name="createRequirement" engine="simple"
+            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="createRequirement">
+        <description>Create a new requirement</description>
+        <attribute name="requirementTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="deliverableId" type="String" mode="IN" optional="true"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="requiredByDate" type="String" mode="IN" optional="true"/>
+        <attribute name="estimatedBudget" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="String" mode="IN" optional="true"/>
+        <attribute name="story" type="String" mode="IN" optional="true"/>
+        <attribute name="reason" type="String" mode="IN" optional="true"/>
+        <attribute name="requirementId" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="updateRequirement" engine="simple"
+            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="updateRequirement">
+        <description>Update an existing requirement</description>
+        <attribute name="requirementId" type="String" mode="IN" optional="false"/>
+        <attribute name="requirementTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="deliverableId" type="String" mode="IN" optional="true"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="requiredByDate" type="String" mode="IN" optional="true"/>
+        <attribute name="estimatedBudget" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="String" mode="IN" optional="true"/>
+        <attribute name="story" type="String" mode="IN" optional="true"/>
+        <attribute name="reason" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteRequirement" engine="simple"
+            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="deleteRequirement">
+        <description>Delete a requirement</description>
+        <attribute name="requirementId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="addRequirementTask" engine="simple"
+            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="addTaskToRequirement">
+        <description>Associate an existing task w/ a requirement</description>
+        <attribute name="requirementId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+        <attribute name="workReqFulfTypeId" type="String" mode="IN" optional="true"/>
     </service>
 
     <!-- Order View Services -->

@@ -1,43 +1,105 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
+<!--
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@jflow.net)
+ * @version    1.0
+ * @created    July 31, 2002
+-->
+
 <simple-methods>
     <simple-method method-name="createCustRequest" short-description="Create Customer Request">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/order/request/CustRequestMapProcessor.xml"
-                processor-name="createCustRequest" in-map-name="parameters" out-map-name="custRequestContext"/>
-        <if-empty map-name="parameters" field-name="custRequestId">
-            <sequenced-id-to-env sequence-name="CustRequest" env-name="envCustRequest"/>
-            <env-to-field env-name="envCustRequest" map-name="custRequestContext" field-name="custRequestId"/>
-            <to-string map-name="custRequestContext" field-name="custRequestId"/>
-        </if-empty>
-        <field-to-result map-name="custRequestContext" field-name="custRequestId" result-name="custRequestId"/>
-        <check-errors/>
-        <make-value value-name="newCustRequest" entity-name="CustRequest" map-name="custRequestContext"/>
-        <create-value value-name="newCustRequest"/>
+        <make-value value-name="newEntity" entity-name="CustRequest"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <sequenced-id-to-env sequence-name="CustRequest" env-name="custRequestId"/>
+        <to-string field-name="custRequestId"/>
+        <env-to-field env-name="custRequestId" map-name="newEntity"/>
+        <field-to-result field-name="custRequestId" result-name="custRequestId"/>
+
+        <create-value value-name="newEntity"/>
     </simple-method>
+
+    <simple-method method-name="updateCustRequest" short-description="Update Customer Request">
+        <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="CustRequest" map-name="lookupPKMap" value-name="custRequest"/>
+        <set-nonpk-fields map-name="parameters" value-name="custRequest"/>
+        <store-value value-name="custRequest"/>
+    </simple-method>
+
     <simple-method method-name="createCustRequestAttribute" short-description="Create Customer Request Attribute">
-        <call-map-processor xml-resource="org/ofbiz/commonap/order/request/CustRequestMapProcessor.xml"
-            processor-name="createCustRequestAttribute" in-map-name="parameters" out-map-name="custRequestAttributeContext"/>
-        <check-errors/>
-        <make-value value-name="newCustRequestAttribute" entity-name="CustRequestAttribute" map-name="custRequestAttributeContext"/>
-        <create-value value-name="newCustRequestAttribute"/>
+        <make-value value-name="newEntity" entity-name="CustRequestAttribute"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nopk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
     </simple-method>
+
+    <simple-method method-name="updateCustRequestAttribute" short-description="Update Customer Request Attribute">
+        <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="attrName" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="CustRequestAttribute" map-name="lookupPKMap" value-name="custRequestAttr"/>
+        <set-nonpk-fields map-name="parameters" value-name="custRequestAttr"/>
+        <store-value value-name="custRequestAttr"/>
+    </simple-method>
+
     <simple-method method-name="createCustRequestItem" short-description="Create Customer Request Item">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/order/request/CustRequestMapProcessor.xml"
-                processor-name="createCustRequestItem" in-map-name="parameters" out-map-name="custRequestItemContext"/>
-        <sequenced-id-to-env sequence-name="CustRequestItem" env-name="envCustRequestItemSeqId"/>
-        <env-to-field env-name="envCustRequestItemSeqId" map-name="custRequestItemContext" field-name="custRequestItemSeqId"/>
-        <to-string map-name="custRequestItemContext" field-name="custRequestItemSeqId"/>
-        <field-to-result map-name="custRequestItemContext" field-name="custRequestItemSeqId" result-name="custRequestItemSeqId"/>
-        <check-errors/>
-        <make-value value-name="newCustRequestItem" entity-name="CustRequestItem" map-name="custRequestItemContext"/>
-        <create-value value-name="newCustRequestItem"/>
+        <make-value value-name="newEntity" entity-name="CustRequestAttribute"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nopk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
     </simple-method>
+
+    <simple-method method-name="updateCustRequestItem" short-description="Update Customer Request Item">
+        <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="custRequestItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="CustRequestItem" map-name="lookupPKMap" value-name="custRequestItem"/>
+        <set-nonpk-fields map-name="parameters" value-name="custRequestItem"/>
+        <store-value value-name="custRequestItem"/>
+    </simple-method>
+
     <simple-method method-name="createCustRequestRole" short-description="Create Customer RequestRole">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/order/request/CustRequestMapProcessor.xml"
-                processor-name="createCustRequestRole" in-map-name="parameters" out-map-name="custRequestRoleContext"/>
-        <check-errors/>
-        <make-value value-name="newCustRequestRole" entity-name="CustRequestRole" map-name="custRequestRoleContext"/>
-        <create-value value-name="newCustRequestRole"/>
+        <make-value value-name="newEntity" entity-name="CustRequestRole"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
     </simple-method>
+
+    <simple-method method-name="removeCustRequestRole" short-description="Remove Customer RequestRole">
+        <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="CustRequestRole" map-name="lookupPKMap" value-name="custRequestRole"/>
+        <remove-value value-name="custRequestRole"/>
+    </simple-method>
+
+    <simple-method method-name="createCustRequestItemNote" short-description="Create Customer RequestItem Note">
+        <make-value value-name="newEntity" entity-name="CustRequestItemNote"/>
+        <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="newEntity"/>
+        <field-to-field field-name="custRequestItemSeqId" map-name="parameters" to-map-name="newEntity"/>
+        <field-to-field field-name="note" map-name="parameters" to-map-name="newNoteMap"/>
+        <call-service service-name="createNote" in-map-name="newNoteMap">
+            <result-to-field result-name="noteId" map-name="newEntity"/>
+        </call-service>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+
 </simple-methods>
