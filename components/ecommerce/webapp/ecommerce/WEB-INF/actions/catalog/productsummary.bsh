@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
  */
 
@@ -49,6 +49,8 @@ userLogin = session.getAttribute("userLogin");
 
 context.put("nowTimestamp", UtilDateTime.nowTimestamp());
 context.remove("daysToShip");
+context.remove("averageRating");
+context.remove("numRatings");
 
 if (product != null) {
     productId = product.get("productId");
@@ -92,3 +94,25 @@ if (product != null) {
             
     request.setAttribute("priceMap", priceMap);
 }
+
+    // get the product review(s)
+    reviews = product.getRelated("ProductReview", null, UtilMisc.toList("-postedDateTime"));
+    context.put("productReviews", reviews);
+    // get the average rating
+    if (reviews != null && reviews.size() > 0) {
+        reviewIter = reviews.iterator();
+        double totalProductRating = 0;
+        long numRatings = 0;
+        while (reviewIter.hasNext()) {
+            productReview = reviewIter.next();
+            productRating = productReview.get("productRating");
+            if (productRating != null) {
+                totalProductRating += productRating;
+                numRatings++;
+            }
+        }
+        if (numRatings > 0) {
+            context.put("averageRating", totalProductRating/numRatings);
+            context.put("numRatings", numRatings);
+        }
+    }

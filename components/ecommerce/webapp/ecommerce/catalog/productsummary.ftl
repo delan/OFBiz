@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.17 $
+ *@version    $Revision: 1.18 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -66,7 +66,15 @@
                     ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                   </#if>
                 </b></nobr>
+                <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
+                  <#assign priceSaved = price.listPrice?double - price.price?double>
+                  <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
+                  <nobr>${uiLabelMap.EcommerceSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span></nobr>
+                </#if>
           </div>
+          <#if averageRating?exists && (averageRating?double > 0) && numRatings?exists && (numRatings?long > 2)>
+              <div class="tabletext">${uiLabelMap.EcommerceAverageRating}: ${averageRating} (${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.EcommerceRatings})</div>
+          </#if>
       </td>
       <td valign=center align=right>
           <#-- check to see if introductionDate hasn't passed yet -->

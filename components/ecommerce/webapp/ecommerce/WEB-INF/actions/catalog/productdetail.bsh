@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.28 $
+ *@version    $Revision: 1.29 $
  *@since      2.1
  */
 
@@ -178,7 +178,25 @@ if (product != null) {
 
     // get the product review(s)
     reviews = product.getRelated("ProductReview", null, UtilMisc.toList("-postedDateTime"));
-    request.setAttribute("productReviews", reviews);
+    context.put("productReviews", reviews);
+    // get the average rating
+    if (reviews != null && reviews.size() > 0) {
+        reviewIter = reviews.iterator();
+        double totalProductRating = 0;
+        long numRatings = 0;
+        while (reviewIter.hasNext()) {
+            productReview = reviewIter.next();
+            productRating = productReview.get("productRating");
+            if (productRating != null) {
+                totalProductRating += productRating;
+                numRatings++;
+            }
+        }
+        if (numRatings > 0) {
+            context.put("averageRating", totalProductRating/numRatings);
+            context.put("numRatings", numRatings);
+        }
+    }
 
     // get the days to ship
     productStore = ProductStoreWorker.getProductStore(request);
