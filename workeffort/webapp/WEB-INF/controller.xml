@@ -89,6 +89,25 @@
         <response name="error" type="view" value="task"/>
     </request-map>
 
+    <request-map uri="requirement"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="requirement"/>
+    </request-map>
+    <request-map uri="createrequirement"><security https="true" auth="true"/>
+        <event type="service" invoke="createRequirement"/>
+    	<response name="success" type="view" value="requirement"/>
+        <response name="error" type="view" value="requirement"/>
+    </request-map>
+    <request-map uri="updaterequirement"><security https="true" auth="true"/>
+        <event type="service" invoke="updateRequirement"/>
+    	<response name="success" type="view" value="requirement"/>
+        <response name="error" type="view" value="requirement"/>
+    </request-map>
+    <request-map uri="deleterequirement"><security https="true" auth="true"/>
+        <event type="service" invoke="deleteRequirement"/>
+    	<response name="success" type="view" value="requirement"/>
+        <response name="error" type="view" value="requirement"/>
+    </request-map>
+
     <request-map uri="activity"><security https="true" auth="true"/>
     	<response name="success" type="view" value="activity"/>
     </request-map>
@@ -166,8 +185,10 @@
     <view-map name="login" type="region"/>
 
     <view-map name="task" type="region"/>
+    <view-map name="requirement" type="region"/>
     <view-map name="activity" type="region"/>
     <view-map name="tasklist" type="region"/>
+    <view-map name="requirementList" type="region"/>
 
     <view-map name="event" type="region"/>
     <view-map name="day" type="region"/>
