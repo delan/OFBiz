@@ -1055,7 +1055,7 @@
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
     </service>
 
-    <service name="attachProductFeaturesToCategory" engine="simple"
+    <service name="attachProductFeaturesToCategory" engine="java"
                 location="org.ofbiz.product.feature.ParametricSearch" invoke="attachProductFeaturesToCategory" auth="true">
         <description>Attach Product Features To Category Through Groups</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>

@@ -307,6 +307,12 @@
         <response name="success" type="view" value="EditCategoryFeatureCats"/>
         <response name="error" type="view" value="EditCategoryFeatureCats"/>
     </request-map>
+    <request-map uri="attachProductFeaturesToCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="attachProductFeaturesToCategory"/>
+        <response name="success" type="view" value="EditCategoryFeatureCats"/>
+        <response name="error" type="view" value="EditCategoryFeatureCats"/>
+    </request-map>
 
     <!-- ================ Category Roles Requests ================= -->
     <request-map uri="EditCategoryParties">

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 
@@ -32,6 +32,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
     <div class="head1">Feature Categories and Groups <span class="head2">${uiLabelMap.CommonFor} <#if productCategory?exists>${(productCategory.description)?if_exists}</#if> [${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
     
     <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
+    <a href="<@ofbizUrl>/attachProductFeaturesToCategory?productCategoryId=${productCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[Attach Features to Category from Products]</a>
     <#if productCategoryId?has_content>
         <a href="/ecommerce/control/category?category_id=${productCategoryId?if_exists}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
     </#if>
@@ -72,11 +73,10 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         </tr>
         </#list>
         </table>
-        <br>
         <form method="POST" action="<@ofbizUrl>/createProductFeatureCatGrpAppl</@ofbizUrl>" style="margin: 0;" name="addNewForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         
-        <div class="head2">Apply Feature Category to Product Category:</div>
+        <div class="head2">Apply Feature Group to Product Category:</div>
         <select name="productFeatureGroupId" class="selectBox">
         <#list productFeatureGroups as productFeatureGroup>
             <option value="${(productFeatureGroup.productFeatureGroupId)?if_exists}">${(productFeatureGroup.description)?if_exists} [${(productFeatureGroup.productFeatureGroupId)?if_exists}]</option>
@@ -86,6 +86,8 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <a href="javascript:call_cal(document.addNewForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
         <input type="submit" value="${uiLabelMap.CommonAdd}">
         </form>
+        <br/>
+        <br/>
 
         <#-- Feature Categories -->
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
@@ -123,7 +125,6 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         </tr>
         </#list>
         </table>
-        <br>
         <form method="POST" action="<@ofbizUrl>/createProductFeatureCategoryAppl</@ofbizUrl>" style="margin: 0;" name="addNewForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         
