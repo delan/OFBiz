@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -151,7 +151,9 @@ function lookupPayment() {
 </form> 
 <script language="JavaScript">
 <!--//
-document.lookuppayment.paymentId.focus();
+    if (document.lookuppayment.paymentId != null) {
+        document.lookuppayment.paymentId.focus();
+    }
 //-->
 </script>
 

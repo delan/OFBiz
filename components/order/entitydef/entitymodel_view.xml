@@ -67,6 +67,7 @@
       <alias entity-alias="OH" name="orderStatusId" field="statusId"/>
       <alias entity-alias="OH" name="grandTotal"/>
       <alias entity-alias="OH" name="productStoreId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
       <alias entity-alias="OI" name="orderItemSeqId"/>
       <alias entity-alias="OI" name="productId"/>
       <alias entity-alias="OI" name="quantity"/>
@@ -74,6 +75,8 @@
       <alias entity-alias="OI" name="unitListPrice"/>
       <alias entity-alias="OI" name="itemDescription"/>
       <alias entity-alias="OI" name="itemStatusId" field="statusId"/>
+      <alias entity-alias="OI" name="estimatedShipDate"/>
+      <alias entity-alias="OI" name="orderItemTypeId"/>
       <view-link entity-alias="OH" rel-entity-alias="OI">
         <key-map field-name="orderId"/>
       </view-link>

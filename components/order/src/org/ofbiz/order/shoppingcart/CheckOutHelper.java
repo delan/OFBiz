@@ -476,6 +476,42 @@ public class CheckOutHelper {
             return ServiceUtil.returnError(errMsg);
         }
 
+        // ----------
+        // If needed, the production runs are created and linked to the order lines.
+        //
+        Iterator orderItems = ((List)context.get("orderItems")).iterator();
+        int counter = 0;
+        while (orderItems.hasNext()) {
+            GenericValue orderItem = (GenericValue)orderItems.next();
+            String productId = orderItem.getString("productId");
+            if (productId != null) {
+                try {
+                    GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+                    GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+                    if ("AGGREGATED".equals(product.getString("productTypeId"))) {
+                        org.ofbiz.product.config.ProductConfigWrapper config = this.cart.findCartItem(counter).getConfigWrapper();
+                        Map prunResult = null;
+                        Map inputMap = new HashMap();
+                        inputMap.put("config", config);
+                        inputMap.put("facilityId", productStore.getString("inventoryFacilityId"));
+                        inputMap.put("orderId", orderId);
+                        inputMap.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
+                        inputMap.put("quantity", orderItem.getDouble("quantity"));
+                        inputMap.put("userLogin", userLogin);
+                        prunResult = dispatcher.runSync("createProductionRunFromConfiguration", inputMap);
+                    }
+                } catch (Exception e) {
+                    String service = e.getMessage();
+                    Map messageMap = UtilMisc.toMap("service", service);
+                    String errMsg = UtilProperties.getMessage(resource, "checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+            }
+            counter++;
+        }
+        // ----------
+
         // set the orderId for use by chained events
         Map result = ServiceUtil.returnSuccess();
         result.put("order_id", orderId);

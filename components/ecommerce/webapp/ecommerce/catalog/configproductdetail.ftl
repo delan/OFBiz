@@ -303,14 +303,12 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <input type='hidden' name="product_id" value='${product.productId}'>
           <input type='hidden' name="add_product_id" value='${product.productId}'>
           <#if productNotAvailable?exists>
-<#--
-            <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
+            <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequiredAndAvailable(request, product, 1.0?double, true, null)>
               <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
               <#assign inStock = false>
             <#else>
               <div class='tabletext'><b>${product.inventoryMessage?if_exists}</b></div>
             </#if>
--->
           </#if>
         </#if>
 

@@ -279,6 +279,24 @@
                       </tr>
                     </#list>
                   </#if>
+                  <#-- now show linked work effort -->
+                  <#assign workEfforts = orderItem.getRelated("WorkOrderItemFulfillment")>
+                  <#if workEfforts?has_content>
+                    <#list workEfforts as workEffort>
+                      <tr>
+                        <td align="right" colspan="2">
+                          <div class="tabletext" style="font-size: xx-small;">
+                            <b><i>Production Run</i>:</b>
+                            <a target="manufacturing" href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${workEffort.workEffortId}</a>
+                          </div>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </#list>
+                  </#if>
                 </#list>
               </#if>
               <tr><td colspan="8"><hr class="sepbar"></td></tr>
