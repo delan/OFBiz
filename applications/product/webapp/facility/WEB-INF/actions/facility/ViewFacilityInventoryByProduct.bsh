@@ -40,8 +40,17 @@ dispatcher = request.getAttribute("dispatcher");
 
 action = request.getParameter("action");
 
+qty = -1;
+
 if (action != null) {
 
+    if (offsetQty != null && offsetQty.length() > 0) {
+        try {
+            qty = Integer.parseInt(offsetQty);
+        } catch(NumberFormatException nfe) {
+            qty = -1;
+        }
+    }
     // ------------------------------
     DynamicViewEntity prodView = new DynamicViewEntity();
     Map conditionMap = UtilMisc.toMap("facilityId", facilityId);
@@ -82,9 +91,9 @@ if (action != null) {
         // after rolling back, rethrow the exception
         throw e;
     } finally {
-    // only commit the transaction if we started one... this will throw an exception if it fails
-    TransactionUtil.commit(beganTransaction);
-}
+        // only commit the transaction if we started one... this will throw an exception if it fails
+        TransactionUtil.commit(beganTransaction);
+    }
 
     prodsIt = prods.iterator();
     rows = new ArrayList();
@@ -93,6 +102,18 @@ if (action != null) {
         oneProd = prodsIt.next();
         contextInput = UtilMisc.toMap("productId",oneProd.getString("productId"), "facilityId", facilityId);
         resultOutput = dispatcher.runSync("getInventoryAvailableByFacility",contextInput);
+        // qty
+        minimumStockInt = 0;
+        if (oneProd.get("minimumStock") != null) {
+            minimumStockInt = (oneProd.getDouble("minimumStock")).intValue();
+        }
+        quantityOnHandTotalInt = 0;
+        if (resultOutput.get("quantityOnHandTotal") != null) {
+            quantityOnHandTotalInt = ((Double)resultOutput.get("quantityOnHandTotal")).intValue();
+        }
+        offsetQtyAvailable = quantityOnHandTotalInt - minimumStockInt;
+        if (qty >= 0 && offsetQtyAvailable > qty) continue;
+
         oneInventory = new HashMap();
         oneInventory.put("productId", oneProd.getString("productId"));
         oneInventory.put("minimumStock", oneProd.getString("minimumStock"));
@@ -100,6 +121,7 @@ if (action != null) {
         oneInventory.put("daysToShip", oneProd.getString("daysToShip"));
         oneInventory.put("totalQuantityOnHand", resultOutput.get("quantityOnHandTotal"));
         oneInventory.put("totalAvailableToPromise", resultOutput.get("availableToPromiseTotal"));
+        oneInventory.put("offsetQtyAvailable", offsetQtyAvailable);
         rows.add(oneInventory);
     }
 

@@ -82,6 +82,7 @@
                 <set field="facilityId" from-field="parameters.facilityId"/>
                 <set field="productTypeId" from-field="parameters.productTypeId"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                <set field="offsetQty" from-field="parameters.offsetQty"/>
                 
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/ViewFacilityInventoryByProduct.bsh"/>
             </actions>
