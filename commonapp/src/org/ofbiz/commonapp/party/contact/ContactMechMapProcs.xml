@@ -30,9 +30,10 @@
  -->
 <simple-map-processors>
   <!-- ContactMech map procs -->
-  <simple-map-processor name="createContactMech">
+  <simple-map-processor name="contactMech">
     <process field="contactMechTypeId"><copy/><not-empty><fail-message message="Contact Mech Type ID is missing"/></not-empty></process>
     <process field="infoString"><copy/><not-empty><fail-message message="Info String is missing"/></not-empty></process>
+    <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
   <simple-map-processor name="updateContactMech">
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mechanism ID is missing"/></not-empty></process>
@@ -52,6 +53,7 @@
     <process field="postalCode"><copy/><not-empty><fail-message message="Zip/Postal Code is missing"/></not-empty></process>
     <process field="countryGeoId"><copy/></process>
     <process field="postalCodeGeoId"><copy/></process>
+    <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
 
   <simple-map-processor name="telecomNumber">
@@ -59,6 +61,7 @@
     <process field="areaCode"><copy/></process>
     <process field="contactNumber"><copy/><not-empty><fail-message message="Contact Number is missing"/></not-empty></process>
     <process field="extension"><copy/></process>
+    <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
   
   <simple-map-processor name="emailAddress">
@@ -66,6 +69,7 @@
         <copy/>
         <not-empty><fail-message message="Email Address is missing"/></not-empty>
         <validate-method method="isEmail"><fail-message message="Email Address is not formatted correctly, must be like foo@bar.com"/></validate-method></process>
+    <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
   
   <!-- PartyContactMechPurpose map procs -->
