@@ -36,6 +36,7 @@ import javax.servlet.http.HttpSession;
 
 import org.jpublish.view.freemarker.JPublishTemplateLoader;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.view.ViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
 

@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -49,6 +50,7 @@ import org.ofbiz.content.ContentManagementWorker;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
@@ -59,7 +61,6 @@ import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.webapp.ftl.FreeMarkerWorker;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -294,29 +295,31 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
 
         boolean inProgress = false;
         List nodeTrail = (List)ctx.get("nodeTrail");
-               FreeMarkerWorker.traceNodeTrail("11",nodeTrail);
+        ContentWorker.traceNodeTrail("11",nodeTrail);
         int sz = nodeTrail.size();
-        if (sz == 0) 
+        if (sz == 0) { 
             return false;
+        }
 
         Map currentNode = (Map)nodeTrail.get(sz - 1);
         Boolean isReturnAfter = (Boolean)currentNode.get("isReturnAfter");
-        if (isReturnAfter != null && isReturnAfter.booleanValue())
+        if (isReturnAfter != null && isReturnAfter.booleanValue()) {
             return false;
+        }
 
         List kids = (List)currentNode.get("kids");
         if (kids != null && kids.size() > 0) {
             int idx = 0;
             while (idx < kids.size()) {
                 currentNode = (Map)kids.get(idx);
-                FreeMarkerWorker.traceNodeTrail("12",nodeTrail);
+                ContentWorker.traceNodeTrail("12",nodeTrail);
                 Boolean isPick = (Boolean)currentNode.get("isPick");
                
                 if (isPick != null && isPick.booleanValue()) {
                     nodeTrail.add(currentNode);
                     inProgress = true;
                     selectKids(currentNode, ctx);
-                    FreeMarkerWorker.traceNodeTrail("14",nodeTrail);
+                    ContentWorker.traceNodeTrail("14",nodeTrail);
                     break;
                 } else {
                     Boolean isFollow = (Boolean)currentNode.get("isFollow");
@@ -337,11 +340,12 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
             // look for next sibling
             while (sz > 1) {
                 currentNode = (Map)nodeTrail.remove(--sz);
-                FreeMarkerWorker.traceNodeTrail("15",nodeTrail);
+                ContentWorker.traceNodeTrail("15",nodeTrail);
                 Map parentNode = (Map)nodeTrail.get(sz - 1);
                 kids = (List)parentNode.get("kids");
-                if (kids == null)
+                if (kids == null) {
                     continue;
+                }
 
                 int idx = kids.indexOf(currentNode);
                 while (idx < (kids.size() - 1)) {
@@ -353,22 +357,24 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
                     }
                     String contentAssocTypeId = (String)currentNode.get("contentAssocTypeId");
                     nodeTrail.add(currentNode);
-               FreeMarkerWorker.traceNodeTrail("16",nodeTrail);
+                    ContentWorker.traceNodeTrail("16",nodeTrail);
                     Boolean isPick = (Boolean)currentNode.get("isPick");
                     if (isPick == null || !isPick.booleanValue()) {
                         // If not a "pick" node, look at kids
                         inProgress = traverseSubContent(ctx);
-               FreeMarkerWorker.traceNodeTrail("17",nodeTrail);
-                        if (inProgress)
+                        ContentWorker.traceNodeTrail("17",nodeTrail);
+                        if (inProgress) {
                             break;
+                        }
                     } else {
                         inProgress = true;
                         break;
                     }
                     idx++;
                 }
-                if (inProgress)
+                if (inProgress) {
                     break;
+                }
             }
         }
         return inProgress;
@@ -1357,8 +1363,7 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
         return;
     }
 
-    public static boolean booleanDataType( Object boolObj ) {
-    
+    public static boolean booleanDataType(Object boolObj) {
         boolean bool = false;
         if (boolObj != null && ((Boolean)boolObj).booleanValue()) {
             bool = true;
@@ -1608,5 +1613,162 @@ public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
 
         }
         return mimeTypeId;
+    }
+
+    /*
+     * Tries to find the mime type of the associated content and parent content.
+     *
+     * @param delegator 
+     * @param view SubContentDataResourceView
+     * @param parentContent Content entity
+     * @param contentId part of primary key of view. To be used if view is null.
+     * @param dataResourceId part of primary key of view. To be used if view is null.
+     * @param parentContentId primary key of parent content. To be used if parentContent is null;
+     */
+    public static String determineMimeType(GenericDelegator delegator,
+            GenericValue view, GenericValue parentContent, String contentId,
+            String dataResourceId, String parentContentId)
+            throws GenericEntityException {
+        String mimeTypeId = null;
+
+        if (view != null) {
+            mimeTypeId = (String) view.get("mimeTypeId");
+            String drMimeTypeId = (String) view.get("drMimeTypeId");
+            if (UtilValidate.isNotEmpty(drMimeTypeId)) {
+                mimeTypeId = drMimeTypeId;
+            }
+        }
+
+        if (UtilValidate.isEmpty(mimeTypeId)) {
+            if (UtilValidate.isNotEmpty(contentId)
+                    && UtilValidate.isNotEmpty(dataResourceId)) {
+                view = delegator.findByPrimaryKey("SubContentDataResourceView",
+                        UtilMisc.toMap("contentId", contentId,
+                                "drDataResourceId", dataResourceId));
+                if (view != null) {
+                    mimeTypeId = (String) view.get("mimeTypeId");
+                    String drMimeTypeId = (String) view.get("drMimeTypeId");
+                    if (UtilValidate.isNotEmpty(drMimeTypeId)) {
+                        mimeTypeId = drMimeTypeId;
+                    }
+                }
+            }
+        }
+
+        if (UtilValidate.isEmpty(mimeTypeId)) {
+            if (parentContent != null) {
+                mimeTypeId = (String) parentContent.get("mimeTypeId");
+            }
+        }
+
+        if (UtilValidate.isEmpty(mimeTypeId)) {
+            if (UtilValidate.isNotEmpty(parentContentId)) {
+                parentContent = delegator.findByPrimaryKey("Content", UtilMisc
+                        .toMap("contentId", contentId));
+                if (parentContent != null) {
+                    mimeTypeId = (String) parentContent.get("mimeTypeId");
+                }
+            }
+        }
+
+        return mimeTypeId;
+    }
+
+    public static String logMap(String lbl, Map map, int indent) {
+        String sep = ":";
+        String eol = "\n";
+        String spc = "";
+        for (int i=0; i<indent; i++) { 
+            spc += "  ";
+        }
+        String s = (lbl != null) ? lbl : "";
+        s += "=" + indent + "==>" + eol;
+        Set keySet = map.keySet();
+        Iterator it = keySet.iterator();
+        while (it.hasNext()) {
+            String key = (String)it.next();
+            if ("request response session".indexOf(key) < 0) {
+                Object obj = map.get(key);
+                s += spc + key + sep;;
+                if (obj instanceof GenericValue) {
+                    GenericValue gv = (GenericValue)obj;
+                    GenericPK pk = gv.getPrimaryKey();
+                    s += logMap("GMAP[" + key + " name:" + pk.getEntityName()+ "]", pk, indent + 1);
+                } else if (obj instanceof List) {
+                    s += logList("LIST[" + ((List)obj).size() + "]", (List)obj, indent + 1);
+                } else if (obj instanceof Map) {
+                    s += logMap("MAP[" + key + "]", (Map)obj, indent + 1);
+                } else if (obj != null) {
+                    s += obj + sep + obj.getClass() + eol;
+                } else {
+                    s += eol;
+                }
+            }
+        }
+        return s + eol + eol;
+    }
+
+    public static String logList(String lbl, List lst, int indent) {
+   
+        String sep = ":";
+        String eol = "\n";
+        String spc = "";
+        if (lst == null)
+            return "";
+        int sz = lst.size();
+        for (int i=0; i<indent; i++) 
+            spc += "  ";
+        String s = (lbl != null) ? lbl : "";
+        s += "=" + indent + "==> sz:" + sz + eol;
+        Iterator it = lst.iterator();
+        while (it.hasNext()) {
+            Object obj = it.next();
+                s += spc;
+                if (obj instanceof GenericValue) {
+                    GenericValue gv = (GenericValue)obj;
+                    GenericPK pk = gv.getPrimaryKey();
+                    s += logMap("MAP[name:" + pk.getEntityName() + "]", pk, indent + 1);
+                } else if (obj instanceof List) {
+                    s += logList("LIST[" + ((List)obj).size() + "]", (List)obj, indent + 1);
+                } else if (obj instanceof Map) {
+                    s += logMap("MAP[]", (Map)obj, indent + 1);
+                } else if (obj != null) {
+                    s += obj + sep + obj.getClass() + eol;
+                } else {
+                    s += eol;
+                }
+        }
+        return s + eol + eol;
+    }
+    
+    public static void traceNodeTrail(String lbl, List nodeTrail) {
+        /*
+                if (!Debug.verboseOn()) {
+                    return;
+                }
+                if (nodeTrail == null) {
+                    return;
+                }
+                String s = "";
+                int sz = nodeTrail.size();
+                s = "nTsz:" + sz;
+                if (sz > 0) {
+                    Map cN = (Map)nodeTrail.get(sz - 1);
+                    if (cN != null) {
+                        String cid = (String)cN.get("contentId");
+                        s += " cN[" + cid + "]";
+                        List kids = (List)cN.get("kids");
+                        int kSz = (kids == null) ? 0 : kids.size();
+                        s += " kSz:" + kSz;
+                        Boolean isPick = (Boolean)cN.get("isPick");
+                        s += " isPick:" + isPick;
+                        Boolean isFollow = (Boolean)cN.get("isFollow");
+                        s += " isFollow:" + isFollow;
+                        Boolean isReturnAfterPick = (Boolean)cN.get("isReturnAfterPick");
+                        s += " isReturnAfterPick:" + isReturnAfterPick;
+                    }
+                }
+        */
+        return;
     }
 }

@@ -35,7 +35,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.webapp.ftl.FreeMarkerWorker;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.w3c.dom.Element;
 
 import freemarker.template.TemplateException;

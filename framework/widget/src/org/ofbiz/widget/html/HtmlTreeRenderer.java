@@ -85,7 +85,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             writer.write(">");
         }
 
-        String pkName = node.getModelTree().getPkName();
+        String pkName = node.getPkName();
         String entityId = null;
         String entryName = node.getEntryName();
     	if (UtilValidate.isNotEmpty(entryName)) {

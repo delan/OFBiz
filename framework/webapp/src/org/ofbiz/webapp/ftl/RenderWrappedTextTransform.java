@@ -33,6 +33,7 @@ import freemarker.template.TemplateTransformModel;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 /**
  * RenderWrappedTextTransform - Freemarker Transform for URLs (links)

@@ -30,11 +30,11 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.webapp.ftl.LoopWriter;
 
 import freemarker.core.Environment;
@@ -181,20 +181,20 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 }
 */
                 Map rootNode = ContentWorker.makeNode(subContentDataResourceView);
-                FreeMarkerWorker.traceNodeTrail("1",nodeTrail);
+                ContentWorker.traceNodeTrail("1",nodeTrail);
                 ContentWorker.selectKids(rootNode, traverseContext);
-                FreeMarkerWorker.traceNodeTrail("2",nodeTrail);
+                ContentWorker.traceNodeTrail("2",nodeTrail);
                 nodeTrail.add(rootNode);
                 boolean isPick = checkWhen(subContentDataResourceView, (String)traverseContext.get("contentAssocTypeId"));
                 rootNode.put("isPick", new Boolean(isPick));
                 if (!isPick) {
-                FreeMarkerWorker.traceNodeTrail("3",nodeTrail);
+                    ContentWorker.traceNodeTrail("3",nodeTrail);
                     isPick = ContentWorker.traverseSubContent(traverseContext);
-                FreeMarkerWorker.traceNodeTrail("4",nodeTrail);
+                    ContentWorker.traceNodeTrail("4",nodeTrail);
                 }
                 if (isPick) {
                     populateContext(traverseContext, templateCtx);
-                FreeMarkerWorker.traceNodeTrail("5",nodeTrail);
+                    ContentWorker.traceNodeTrail("5",nodeTrail);
                     return TransformControl.EVALUATE_BODY;
                 } else {
                     return TransformControl.SKIP_BODY;
@@ -206,12 +206,12 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 //buf.setLength(0);
                 //templateContext.put("buf", new StringBuffer());
                 List nodeTrail = (List)traverseContext.get("nodeTrail");
-                FreeMarkerWorker.traceNodeTrail("6",nodeTrail);
+                ContentWorker.traceNodeTrail("6",nodeTrail);
                 boolean inProgress = ContentWorker.traverseSubContent(traverseContext);
-                FreeMarkerWorker.traceNodeTrail("7",nodeTrail);
+                ContentWorker.traceNodeTrail("7",nodeTrail);
                 if (inProgress) {
                     populateContext(traverseContext, templateCtx);
-                FreeMarkerWorker.traceNodeTrail("8",nodeTrail);
+                    ContentWorker.traceNodeTrail("8",nodeTrail);
                     return TransformControl.REPEAT_EVALUATION;
                 } else
                     return TransformControl.END_EVALUATION;
