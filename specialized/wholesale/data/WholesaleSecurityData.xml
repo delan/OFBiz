@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityGroup groupId="WHOLESALENOINV" description="Wholesale - view catalog, place and view orders.  No inventory privileges" lastUpdatedStamp="2004-10-22 10:37:53.308417" lastUpdatedTxStamp="2004-10-22 10:37:53.308417"/>
+    <SecurityGroup groupId="WHOLESALELTD" description="Wholesale - view catalog only." lastUpdatedStamp="2004-01-21 17:11:27.867" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroup groupId="WHOLESALEFULL" description="Wholesale - view catalog, place and view orders." lastUpdatedStamp="2004-01-21 17:11:27.869" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+
+    <SecurityGroup groupId="REPLEVEL1" description="Sales Rep - view catalog only" lastUpdatedStamp="2004-01-21 17:11:27.87" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroup groupId="REPLEVEL7" description="Sales Rep - view catalog, place and view orders, view, change payment info, see inventory availability" lastUpdatedStamp="2004-01-21 17:11:27.873" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroup groupId="REPLEVEL3" description="Sales Rep - view catalog, place and view orders" lastUpdatedStamp="2004-01-21 17:56:13.226" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
+    <SecurityGroup groupId="REPLEVEL5" description="Sales Rep - view catalog, place and view orders, see inventory availability" lastUpdatedStamp="2004-01-21 17:11:27.871" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroup groupId="REPLEVEL9" description="Sales Rep - view catalog, place and view orders, see inventory quantities" lastUpdatedStamp="2004-01-21 17:11:27.874" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+
+
+    <SecurityGroupPermission groupId="WHOLESALENOINV" permissionId="WHOLESALE_ORDER_CREATE" lastUpdatedStamp="2004-10-22 10:40:22.612995" lastUpdatedTxStamp="2004-10-22 10:40:22.612995"/>
+    <SecurityGroupPermission groupId="WHOLESALENOINV" permissionId="WHOLESALE_ORDER_VIEW" lastUpdatedStamp="2004-10-22 10:40:22.612995" lastUpdatedTxStamp="2004-10-22 10:40:22.612995"/>
+    <SecurityGroupPermission groupId="WHOLESALENOINV" permissionId="WHOLESALE_VIEW" lastUpdatedStamp="2004-10-22 10:40:22.612995" lastUpdatedTxStamp="2004-10-22 10:40:22.612995"/>
+    <SecurityGroupPermission groupId="WHOLESALELTD" permissionId="WHOLESALE_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.896" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="WHOLESALEFULL" permissionId="WHOLESALE_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.898" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="WHOLESALEFULL" permissionId="WHOLESALE_ORDER_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.9" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="WHOLESALEFULL" permissionId="WHOLESALE_ORDER_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.901" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="WHOLESALEFULL" permissionId="INVENTORY_AVAIL" lastUpdatedStamp="2004-01-21 17:11:27.903" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL1" permissionId="SALESREP_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.904" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="SALESREP_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.906" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="SALESREP_ORDER_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.908" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="SALESREP_ORDER_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.909" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="ORDERMGR_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.911" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="ORDERMGR_DELETE" lastUpdatedStamp="2004-01-21 17:11:27.912" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="PAY_INFO_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.913" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="INVENTORY_AVAIL" lastUpdatedStamp="2004-01-21 17:11:27.915" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="SALESREP_CATALOG_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.916" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="SALESREP_ORDER_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.918" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="SALESREP_ORDER_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.919" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="ORDERMGR_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.921" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="ORDERMGR_DELETE" lastUpdatedStamp="2004-01-21 17:11:27.922" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="PAY_INFO_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.923" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="PAY_INFO_UPDATE" lastUpdatedStamp="2004-01-21 17:11:27.925" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="PAY_INFO_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.926" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="INVENTORY_AVAIL" lastUpdatedStamp="2004-01-21 17:11:27.928" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="SALESREP_CATALOG_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.929" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="SALESREP_ORDER_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.931" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="SALESREP_ORDER_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.932" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="ORDERMGR_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.934" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="ORDERMGR_DELETE" lastUpdatedStamp="2004-01-21 17:11:27.935" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="PAY_INFO_CREATE" lastUpdatedStamp="2004-01-21 17:11:28.038" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="PAY_INFO_UPDATE" lastUpdatedStamp="2004-01-21 17:11:28.04" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="PAY_INFO_VIEW" lastUpdatedStamp="2004-01-21 17:11:28.041" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="INVENTORY_QUANTITY" lastUpdatedStamp="2004-01-21 17:11:28.042" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityGroupPermission groupId="REPLEVEL3" permissionId="SALESREP_VIEW" lastUpdatedStamp="2004-01-21 17:56:13.229" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
+    <SecurityGroupPermission groupId="REPLEVEL3" permissionId="SALESREP_ORDER_CREATE" lastUpdatedStamp="2004-01-21 17:56:13.23" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
+    <SecurityGroupPermission groupId="REPLEVEL3" permissionId="SALESREP_ORDER_VIEW" lastUpdatedStamp="2004-01-21 17:56:13.232" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
+    <SecurityGroupPermission groupId="REPLEVEL3" permissionId="ORDERMGR_CREATE" lastUpdatedStamp="2004-01-21 17:56:13.233" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
+    <SecurityGroupPermission groupId="REPLEVEL3" permissionId="ORDERMGR_DELETE" lastUpdatedStamp="2004-01-21 17:56:13.235" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="SALESREP_VIEW" lastUpdatedStamp="2004-01-26 14:32:31.635" lastUpdatedTxStamp="2004-01-26 14:32:31.635"/>
+    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="SALESREP_VIEW" lastUpdatedStamp="2004-01-26 14:32:51.993" lastUpdatedTxStamp="2004-01-26 14:32:51.993"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="INVENTORY_AVAIL" lastUpdatedStamp="2004-02-11 12:46:42.72" lastUpdatedTxStamp="2004-02-11 12:46:42.72"/>
+    <SecurityGroupPermission groupId="REPLEVEL1" permissionId="REP_VIEW" lastUpdatedStamp="2004-04-07 11:42:24.622" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="REP_VIEW" lastUpdatedStamp="2004-04-07 11:42:24.661" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="REP_ORDER_CREATE" lastUpdatedStamp="2004-04-07 11:42:24.663" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="REP_ORDER_VIEW" lastUpdatedStamp="2004-04-07 11:42:24.664" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="REP_CATALOG_VIEW" lastUpdatedStamp="2004-04-07 11:42:24.667" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="REP_ORDER_CREATE" lastUpdatedStamp="2004-04-07 11:42:24.668" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="REP_ORDER_VIEW" lastUpdatedStamp="2004-04-07 11:42:24.67" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+
+    <SecurityPermission permissionId="WHOLESALE_ORDER_CREATE" description="Wholesale - place order" lastUpdatedStamp="2004-01-21 17:11:27.878" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityPermission permissionId="SALESREP_VIEW" description="Sales Rep - view catalog" lastUpdatedStamp="2004-01-21 17:11:27.881" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityPermission permissionId="SALESREP_ORDER_CREATE" description="Sales Rep - place order" lastUpdatedStamp="2004-01-21 17:11:27.883" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityPermission permissionId="SALESREP_ORDER_VIEW" description="Sales Rep - check orders" lastUpdatedStamp="2004-01-21 17:11:27.884" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityPermission permissionId="INVENTORY_AVAIL" description="Inventory - check availability" lastUpdatedStamp="2004-01-21 17:11:27.885" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityPermission permissionId="INVENTORY_QUANTITY" description="Inventory - check quantity" lastUpdatedStamp="2004-01-21 17:11:27.887" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+    <SecurityPermission permissionId="REP_VIEW" description="Sales Rep - view catalog" lastUpdatedStamp="2004-04-07 11:42:24.608" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+    <SecurityPermission permissionId="REP_ORDER_CREATE" description="Sales Rep - place order" lastUpdatedStamp="2004-04-07 11:42:24.61" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+    <SecurityPermission permissionId="REP_ORDER_VIEW" description="Sales Rep - check orders" lastUpdatedStamp="2004-04-07 11:42:24.611" lastUpdatedTxStamp="2004-04-07 11:42:24.583"/>
+    <SecurityPermission permissionId="WHOLESALE_VIEW" description="Wholesale - check orders" lastUpdatedStamp="2004-01-21 17:11:27.876" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
+</entity-engine-xml>
