@@ -1,0 +1,26 @@
+
+This configuration is for Macromedia JRun 4.
+
+Using it is pretty simple, but be sure to look at the JRun4 docs for chaning 
+the various config files, because there are quite a few.
+
+To get started make sure your JRun4 home directory is a sibling of the ofbiz
+home directory. Copy the ofbiz/setup/jrun4/bin/jvm.config file to the 
+jrun/bin directory and the ofbiz/setup/jrun4/lib/servers.xml file to the 
+jrun/lib directory.
+
+The servers.xml file is setup so that it points to this directory in OFBiz
+for the ofbiz server configuration, so you don't have to copy the 
+ofbiz/setup/jrun4/servers/ofbiz directory to jrun/servers.
+
+Once this is done you just need to setup your database in the 
+ofbiz/setup/jrun4/servers/ofbiz/SERVER-INF/jrun-resources.xml file. You
+may also want to adjust other settings in files in that directory.
+
+To run just use the jrun server start/stop application or the command line
+with java -jar.
+
+Good luck!
+-David Jones
+
+
