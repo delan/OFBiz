@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.5 2003/10/29 10:28:56 jonesde Exp $
+ * $Id: ModelFormField.java,v 1.6 2003/11/05 15:12:06 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -514,11 +514,11 @@ public class ModelFormField {
         }
     }
 
-    /** 
-     * Gets the name of the Service Attribute (aka Parameter) that corresponds 
+    /**
+     * Gets the name of the Service Attribute (aka Parameter) that corresponds
      * with this field. This can be used to get additional information about the field.
      * Use the getServiceName() method to get the Entity name that the field is in.
-     *  
+     *
      * @return
      */
     public String getAttributeName() {
@@ -541,7 +541,6 @@ public class ModelFormField {
     }
 
     /**
-     * @see org.ofbiz.content.widget.form.ModelFormField.getMapName()
      * @return
      */
     public String getEntryName() {
@@ -555,9 +554,9 @@ public class ModelFormField {
     /**
      * Gets the entry from the context that corresponds to this field; if this
      * form is being rendered in an error condition (ie isError in the context
-     * is true) then the value will be retreived from the parameters Map in 
+     * is true) then the value will be retreived from the parameters Map in
      * the context.
-     * 
+     *
      * @param context
      * @return
      */
@@ -614,10 +613,10 @@ public class ModelFormField {
     }
 
     /**
-     * Gets the name of the Entity Field that corresponds 
+     * Gets the name of the Entity Field that corresponds
      * with this field. This can be used to get additional information about the field.
      * Use the getEntityName() method to get the Entity name that the field is in.
-     * 
+     *
      * @return
      */
     public String getFieldName() {
@@ -628,12 +627,12 @@ public class ModelFormField {
         }
     }
 
-    /** Get the name of the Map in the form context that contains the entry, 
-     * available from the getEntryName() method. This entry is used to 
+    /** Get the name of the Map in the form context that contains the entry,
+     * available from the getEntryName() method. This entry is used to
      * pre-populate the field widget when not in an error condition. In an
      * error condition the parameter name is used to get the value from the
      * parameters Map.
-     * 
+     *
      * @return
      */
     public String getMapName() {
@@ -654,8 +653,8 @@ public class ModelFormField {
     /**
      * Get the name to use for the parameter for this field in the form interpreter.
      * For HTML forms this is the request parameter name.
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getParameterName(Map context) {
         String baseName;
@@ -694,9 +693,9 @@ public class ModelFormField {
     /**
      * the widget/interaction part will be red if the date value is
      *  before-now (for ex. thruDate), after-now (for ex. fromDate), or by-name (if the
-     *  field's name or entry-name or fromDate or thruDate the corresponding 
+     *  field's name or entry-name or fromDate or thruDate the corresponding
      *  action will be done); only applicable when the field is a timestamp
-     * 
+     *
      * @param context
      * @return
      */
@@ -835,7 +834,7 @@ public class ModelFormField {
             // always use upper case first letter...
             autoTitleBuffer.append(Character.toUpperCase(this.name.charAt(0)));
 
-            // just put spaces before the upper case letters            
+            // just put spaces before the upper case letters
             for (int i = 1; i < this.name.length(); i++) {
                 char curChar = this.name.charAt(i);
                 if (Character.isUpperCase(curChar)) {
@@ -918,7 +917,7 @@ public class ModelFormField {
                     Boolean boolVal = (Boolean) retVal;
                     condTrue = boolVal.booleanValue();
                 } else {
-                    throw new IllegalArgumentException("Return value from use-when condition eval was not a Boolean: " 
+                    throw new IllegalArgumentException("Return value from use-when condition eval was not a Boolean: "
                             + retVal.getClass().getName() + " [" + retVal + "] on the field " + this.name + " of form " + this.modelForm.name);
                 }
 
@@ -1086,7 +1085,7 @@ public class ModelFormField {
         public static final int LOOKUP = 16;
         public static final int FILE = 17;
 
-        // the numbering here represents the priority of the source; 
+        // the numbering here represents the priority of the source;
         //when setting a new fieldInfo on a modelFormField it will only set
         //the new one if the fieldSource is less than or equal to the existing
         //fieldSource, which should always be passed as one of the following...
@@ -1405,7 +1404,7 @@ public class ModelFormField {
                 } else {
                     values = delegator.findByAnd(this.entityName, expandedConstraintMap, this.orderByList);
                 }
-                
+
                 // filter-by-date if requested
                 if ("true".equals(this.filterByDate)) {
                     values = EntityUtil.filterByDate(values, true);
@@ -1416,7 +1415,7 @@ public class ModelFormField {
                         values = EntityUtil.filterByDate(values, true);
                     }
                 }
-                
+
                 Iterator valueIter = values.iterator();
                 while (valueIter.hasNext()) {
                     GenericValue value = (GenericValue) valueIter.next();
@@ -1976,7 +1975,7 @@ public class ModelFormField {
 
         /**
          * Returns the default-value if specified, otherwise the current date, time or timestamp
-         * 
+         *
          * @param context Context Map
          * @return Default value string for date-time
          */
@@ -2310,7 +2309,7 @@ public class ModelFormField {
         public String getFormName() {
             return this.formName;
         }
-        
+
         public void setFormName(String str) {
             this.formName = str;
         }
