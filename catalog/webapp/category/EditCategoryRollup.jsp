@@ -109,7 +109,7 @@
 </ofbiz:if>
 <ofbiz:unless name="currentProductCategoryRollups" size="0">
   <tr valign="middle">
-    <td colspan='3'><DIV class='tabletext'>No Parent Categories found.</DIV></td>
+    <td colspan='5'><DIV class='tabletext'>No Parent Categories found.</DIV></td>
   </tr>
 </ofbiz:unless>
 </table>
@@ -168,7 +168,7 @@
 </ofbiz:if>
 <ofbiz:unless name="parentProductCategoryRollups" size="0">
   <tr valign="middle">
-    <td colspan='3'><DIV class='tabletext'>No Child Categories found.</DIV></td>
+    <td colspan='5'><DIV class='tabletext'>No Child Categories found.</DIV></td>
   </tr>
 </ofbiz:unless>
 </table>
