@@ -260,8 +260,8 @@
 </table>
 </form>
 
-<a href="/login" class="buttonlink">&nbsp;&nbsp;[Back]</a>
-<a href="javascript:document.newuserform.submit()" class="buttonlink">&nbsp;&nbsp;[Save]</a>
+<a href="/login" class="buttontext">&nbsp;&nbsp;[Back]</a>
+<a href="javascript:document.newuserform.submit()" class="buttontext">&nbsp;&nbsp;[Save]</a>
 <br>
 <br>
 <%@ include file="/includes/onecolumnclose.jsp" %>

@@ -200,11 +200,11 @@
 <% } --%>
   <table border="0" cellpadding="1" width="100%"><tr><td>
     <table border="0" cellspacing="0" cellpadding="2" width="100%"><tr>
-      <td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttonlink">Back to Order History</a></div></td>
+      <td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttontext">Back to Order History</a></div></td>
       <td align="right">
         <table border="0" cellspacing="0" cellpadding="0"><tr>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderstatus?event=add_order_to_cart&order_identifier=" + orderId + "&order_add_mode=order")%>" class="buttonlink">Add All to Cart</a></div></td>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href="javascript:cartSubmitLines()" class="buttonlink">Add Checked to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderstatus?event=add_order_to_cart&order_identifier=" + orderId + "&order_add_mode=order")%>" class="buttontext">Add All to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href="javascript:cartSubmitLines()" class="buttontext">Add Checked to Cart</a></div></td>
         </tr></table>
       </td>
     </tr></table>
@@ -270,7 +270,7 @@
             <%}else{%>
               <input type="hidden" name="<%=HttpRequestConstants.QUANTITY%>" value="1">
             <%}%>
-            <a href="javascript:document.the<%=orderItem.getTransLineId().intValue()%>form.submit()" class="buttonlink">[Add to Cart]</a>
+            <a href="javascript:document.the<%=orderItem.getTransLineId().intValue()%>form.submit()" class="buttontext">[Add to Cart]</a>
           </nobr>
         </form>
         </td>
@@ -368,11 +368,11 @@
 
   <table border="0" cellpadding="1" width="100%"><tr><td>
     <table border="0" cellspacing="0" cellpadding="2" width="100%"><tr>
-      <td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttonlink">Back to Order History</a></div></td>
+      <td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttontext">Back to Order History</a></div></td>
       <td align="right">
         <table border="0" cellspacing="0" cellpadding="0"><tr>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderstatus?event=add_order_to_cart&order_identifier=" + orderId + "&order_add_move=order")%>" class="buttonlink">Add All to Cart</a></div></td>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href="javascript:cartSubmitLines()" class="buttonlink">Add Checked to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderstatus?event=add_order_to_cart&order_identifier=" + orderId + "&order_add_move=order")%>" class="buttontext">Add All to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href="javascript:cartSubmitLines()" class="buttontext">Add Checked to Cart</a></div></td>
         </tr></table>
       </td>
     </tr></table>

@@ -14,7 +14,8 @@
 
 <title>Open For Business: <%=pageName%></title>
 
-<link rel="stylesheet" href="/commonapp/includes/maincss.css" type="text/css">
+<%-- <link rel="stylesheet" href="<%=controlPath + "/view/includes/maincss.css"%>" type="text/css"> --%>
+<link rel="stylesheet" href="/ecommerce/includes/maincss.css" type="text/css">
 <%-- <%@ include file="/includes/maincss.jsp"%> --%>
 </head>
 

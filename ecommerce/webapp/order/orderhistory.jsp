@@ -27,7 +27,7 @@
   }
 %>
 
-<a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttonlink">&nbsp;[Back Home]</a>
+<a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttontext">&nbsp;[Back Home]</a>
 
   <table width="90%" cellpadding="3" cellspacing="0" border="1">
     <tr>
@@ -90,7 +90,7 @@
 </tr>
 <%}%>
   </table>
-<a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttonlink">&nbsp;[Back Home]</a>
+<a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttontext">&nbsp;[Back Home]</a>
 <br>
 <br>
 

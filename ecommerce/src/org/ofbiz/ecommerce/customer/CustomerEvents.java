@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/30 16:20:55  jonesde
+ * Greatly expanded new customer, also now uses the UtilValidate routines
+ *
  * Revision 1.2  2001/08/30 07:23:40  jonesde
  * First mostly working revision of the new customer and view profile pages and new customer event.
  *
@@ -140,7 +143,7 @@ public class CustomerEvents
     GenericValue tempUserLogin = helper.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "currentPassword", password, "partyId", username));
     // create Party, PartyClass, Person, ContactMechs for Address, phones
     tempUserLogin.preStoreOther(helper.makeValue("Party", UtilMisc.toMap("partyId", username)));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyClassification", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON", "partyClassificationTypeId", "PERSON_CLASSIFICATION", "fromDate", new Timestamp((new java.util.Date()).getTime()))));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyClassification", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON", "partyClassificationTypeId", "PERSON_CLASSIFICATION", "fromDate", UtilDateTime.nowTimestamp())));
     tempUserLogin.preStoreOther(helper.makeValue("PartyRole", UtilMisc.toMap("partyId", username, "roleTypeId", "CUSTOMER")));
     tempUserLogin.preStoreOther(helper.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName, "personalTitle", personalTitle, "suffix", suffix)));
     
@@ -161,36 +164,53 @@ public class CustomerEvents
     addrFields.put("countryGeoId", country);
     //addrFields.put("postalCodeGeoId", postalCodeGeoId);
     tempUserLogin.preStoreOther(helper.makeValue("PostalAddress", addrFields));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION")));
 
     //make home phone number
-    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
-    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-    tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
+    if(UtilValidate.isNotEmpty(homeContactNumber))
+    {
+      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+      tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+      tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "PHONE_HOME")));
+    }
     
     //make work phone number
-    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
-    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-    tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
+    if(UtilValidate.isNotEmpty(workContactNumber))
+    {
+      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+      tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+      tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "PHONE_WORK")));
+    }
     
     //make fax number
-    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
-    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-    tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
-    
+    if(UtilValidate.isNotEmpty(faxContactNumber))
+    {
+      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+      tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+      tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "FAX_NUMBER")));
+    }
+ 
     //make mobile phone number
-    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
-    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-    tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
-    
+    if(UtilValidate.isNotEmpty(mobileContactNumber))
+    {
+      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+      tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+      tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "PHONE_MOBILE")));
+    }
+      
     //make email
     newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
     tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
     
     newUserLogin = helper.create(tempUserLogin);
     if(newUserLogin == null) { errMsg = "<li>ERROR: Could not create new account (create failure). Please contact customer service."; return "error"; }
@@ -199,6 +219,11 @@ public class CustomerEvents
     return "success";
   }
   
+  public static String updateContactMech(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, javax.ejb.RemoveException, java.io.IOException, javax.servlet.ServletException
+  {
+    return "success";
+  }
+
 /*  
   public static boolean handleUpdateCustomer(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
   {

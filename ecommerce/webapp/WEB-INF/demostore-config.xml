@@ -35,6 +35,13 @@
         <error>view:error</error>
     </request-map>
     <request-map>
+        <uri>authview</uri>
+        <secure>false</secure>
+        <auth>true</auth>
+        <success>view:main</success>
+        <error>view:error</error>
+    </request-map>
+    <request-map>
         <uri>chain</uri>
         <event-type>java</event-type>
         <event-path>org.ofbiz.core.event.TestEvent</event-path>
@@ -42,6 +49,7 @@
         <success>request:/view</success>
         <error>view:error</error>
     </request-map>
+
     <request-map>
       <uri>additem</uri>
       <event-type>java</event-type>
@@ -78,12 +86,19 @@
 
     <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
 
-    <request-map><uri>viewprofile</uri><secure>true</secure><auth>true</auth><success>view:viewprofile</success></request-map>
     <request-map><uri>newcustomer</uri><secure>true</secure><auth>false</auth><success>view:newcustomer</success></request-map>
     <request-map>
         <uri>createcustomer</uri><secure>true</secure><auth>false</auth>
         <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>createCustomer</event-invoke>
         <success>view:main</success><error>view:newcustomer</error>
+    </request-map>
+
+    <request-map><uri>viewprofile</uri><secure>true</secure><auth>true</auth><success>view:viewprofile</success></request-map>
+    <request-map><uri>editcontactmech</uri><secure>true</secure><auth>true</auth><success>view:editcontactmech</success></request-map>
+    <request-map>
+        <uri>updatecontactmech</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>updateContactMech</event-invoke>
+        <success>view:editcontactmech</success><error>view:editcontactmech</error>
     </request-map>
 
     <!-- end of request mappings -->
@@ -103,5 +118,6 @@
 
     <view-map><view>viewprofile</view><mapped-page>/customer/viewprofile.jsp</mapped-page></view-map>
     <view-map><view>newcustomer</view><mapped-page>/customer/newcustomer.jsp</mapped-page></view-map>
+    <view-map><view>editcontactmech</view><mapped-page>/customer/editcontactmech.jsp</mapped-page></view-map>
     <!-- end of view mappings -->
 </site-conf>
