@@ -617,7 +617,7 @@ either the event or service objects that the calling simple-method was called wi
 </tr>
 <tr>
     <td>error-list-name</td><td>N</td>
-    <td>Defaults to "error_list".</td>
+    <td>The name of the list to in the method environment to check for error messages. Defaults to "error_list".</td>
 </tr>
 </table>
 
@@ -1286,6 +1286,10 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
     <td>The name of a map in the method environment that will be used for the
     entity fields.</td>
 </tr>
+<tr>
+    <td>set-if-null</td><td>N</td>
+    <td>Specifies whether or not to set fields that are null or empty. Defaults to true.</td>
+</tr>
 </table>
 <p>Looks for each PK field in the named map and if it exists there it will copy it into the named value object.</p>
 
@@ -1304,6 +1308,10 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
     <td>map-name</td><td>Y</td>
     <td>The name of a map in the method environment that will be used for the
     entity fields.</td>
+</tr>
+<tr>
+    <td>set-if-null</td><td>N</td>
+    <td>Specifies whether or not to set fields that are null or empty. Defaults to true.</td>
 </tr>
 </table>
 <p>Looks for each non-PK field in the named map and if it exists there it will copy it into the named value object.</p>
