@@ -5,8 +5,23 @@
   <management-mode>local</management-mode>
   
   <datasource>
+    <dbname>Postgres</dbname>
+    <jndiName>java:/PostgresDataSource</jndiName>
+    <driver>org.postgresql.Driver</driver>
+    <url>jdbc:postgresql://localhost/ofbiz</url>
+    <username>ofbiz</username>
+    <password>ofbiz</password>
+    <minimumSize>2</minimumSize>
+    <maximumSize>20</maximumSize>
+    <connectionTimeout>600</connectionTimeout>
+    <userTimeout>12</userTimeout>
+    <shrinkBy>2</shrinkBy>
+    <debugging>false</debugging>
+  </datasource>
+
+  <datasource>
     <dbname>MySql</dbname>
-    <jndiName>java:/MainDataSource</jndiName>
+    <jndiName>java:/MySqlDataSource</jndiName>
     <driver>org.gjt.mm.mysql.Driver</driver>
     <url>jdbc:mysql://localhost/ofbiz</url>
     <username>mysqldb</username>
@@ -21,7 +36,7 @@
 
   <datasource>
     <dbname>Hsql</dbname>
-    <jndiName>java:/MainDataSourceHsql</jndiName>
+    <jndiName>java:/HsqlDataSourceHsql</jndiName>
     <driver>org.hsqldb.jdbcDriver</driver>
     <url>jdbc:hsqldb:ofbiz</url>
     <username>sa</username>

@@ -2570,9 +2570,9 @@
   <!-- org.ofbiz.commonapp.humanres.position -->
   <!-- ========================================================= -->
 	
-    <entity entity-name="Position" 
+    <entity entity-name="EmplPosition" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="Position Entity">
+            title="EmplPosition Entity">
       <field name="positionId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
       <field name="partyId" type="id"></field>
@@ -2589,16 +2589,16 @@
       <field name="actualThruDate" type="date-time"></field>	
       <prim-key field="positionId" />
     </entity>	
-    <entity entity-name="PositionClassType" 
+    <entity entity-name="EmplPositionClassType" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="Position Classification Type Entity">
+            title="EmplPosition Classification Type Entity">
       <field name="positionClassTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="positionClassTypeId" />
     </entity>	
-    <entity entity-name="PositionFulfillment" 
+    <entity entity-name="EmplPositionFulfillment" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="Position Fulfillment Entity">
+            title="EmplPosition Fulfillment Entity">
       <field name="positionId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -2607,9 +2607,9 @@
       <prim-key field="positionId" />	
       <prim-key field="partyId" />
     </entity>	
-    <entity entity-name="PositionReportingStructure" 
+    <entity entity-name="EmplPositionReportingStruct" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="Position Reporting Structure Entity">
+            title="EmplPosition Reporting Structure Entity">
       <field name="positionIdReportingTo" type="id-ne"></field>
       <field name="positionIdManagedBy" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -2619,9 +2619,9 @@
       <prim-key field="positionIdReportingTo" />	
       <prim-key field="positionIdManagedBy" />
     </entity>	
-    <entity entity-name="PositionResponsibility" 
+    <entity entity-name="EmplPositionResponsibility" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="Position Responsibility Entity">
+            title="EmplPosition Responsibility Entity">
       <field name="positionId" type="id-ne"></field>
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -2630,18 +2630,18 @@
       <prim-key field="positionId" />	
       <prim-key field="responsibilityTypeId" />
     </entity>	
-    <entity entity-name="PositionType" 
+    <entity entity-name="EmplPositionType" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="Position Type Entity">
+            title="EmplPosition Type Entity">
       <field name="positionTypeId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="description" type="description"></field>	
       <prim-key field="positionTypeId" />
     </entity>	
-    <entity entity-name="PositionTypeClass" 
+    <entity entity-name="EmplPositionTypeClass" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="Position Type Class Entity">
+            title="EmplPosition Type Class Entity">
       <field name="positionTypeId" type="id-ne"></field>
       <field name="positionClassTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>

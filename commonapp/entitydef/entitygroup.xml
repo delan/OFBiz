@@ -285,13 +285,13 @@
   <!-- org.ofbiz.commonapp.humanres.position -->
   <!-- ========================================================= -->
 	
-    <entity-group group="org.ofbiz.commonapp" entity="Position" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PositionClassType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PositionFulfillment" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PositionReportingStructure" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PositionResponsibility" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PositionType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="PositionTypeClass" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EmplPosition" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionClassType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionFulfillment" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionReportingStructure" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionResponsibility" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionTypeClass" />	
     <entity-group group="org.ofbiz.commonapp" entity="ValidResponsibility" />
 
   <!-- ========================================================= -->
