@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.23 2004/07/18 10:09:43 jonesde Exp $
+ * $Id: LoginEvents.java,v 1.24 2004/07/24 18:59:10 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -67,7 +67,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -133,6 +133,7 @@ public class LoginEvents {
         // check if they have permission for this login attempt; if not log them out
         if (userLogin != null) {
             if (!hasBasePermission(userLogin, request) || isFlaggedLoggedOut(userLogin)) {
+                Debug.logInfo("User does not have permission or is flagged as logged out", module);
                 doBasicLogout(userLogin, request);
                 userLogin = null;
 
