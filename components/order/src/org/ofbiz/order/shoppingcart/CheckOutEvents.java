@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.22 2003/12/30 20:14:11 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.23 2004/02/22 00:32:39 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,26 +59,30 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class CheckOutEvents {
 
     public static final String module = CheckOutEvents.class.getName();
+    public static final String resource = "OrderUiLabels";
 
     public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         Locale locale = UtilHttp.getLocale(request);
+        String errMsg = null;
 
         if (cart != null && cart.size() > 0) {
             return "success";
         } else {
-            request.setAttribute("_ERROR_MESSAGE_", "Cart is empty.");
+            errMsg = UtilProperties.getMessage(resource,"checkevents.cart_empty", cart.getLocale());
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
     }
 
     public static String cancelOrderItem(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String orderId = request.getParameter("order_id");
@@ -87,11 +91,14 @@ public class CheckOutEvents {
 
         Map fields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", itemSeqId, "userLogin", userLogin);
         Map result = null;
+        String errMsg = null;
+
         try {
                 result = dispatcher.runSync("cancelOrderItem", fields);
         } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                request.setAttribute("_ERROR_MESSAGE_", "<li>Cannot cancel item at this time; please try again.");
+                errMsg = UtilProperties.getMessage(resource,"checkevents.cannot_cancel_item", cart.getLocale());
+                request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg );
                 return "error";
         }
 
@@ -113,6 +120,7 @@ public class CheckOutEvents {
       Debug.logInfo("CheckoutPage: " + curPage, module);
 
       Map callResult = null;
+      String errMsg = null;
 
       ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
       LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -168,7 +176,9 @@ public class CheckOutEvents {
                 billingAccountAmt = new Double(formatter.parse(billingAcctAmtStr).doubleValue());
             } catch (ParseException e) {
                 Debug.logError(e, module);
-                request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Billing Account #" + billingAccountId);
+                Map messageMap = UtilMisc.toMap("billingAccountId", billingAccountId );
+                errMsg = UtilProperties.getMessage(resource,"checkevents.invalid_amount_set_for_billing_account", messageMap, cart.getLocale());
+                request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg );
                 return "error";
             }
         }
@@ -219,13 +229,16 @@ public class CheckOutEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Locale locale = UtilHttp.getLocale(request);
 
+        String errMsg = null;
 
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
         String billingAccountId = cart.getBillingAccountId();
         double billingAccountAmt = cart.getBillingAccountAmount();
         double availableAmount = checkOutHelper.availableAccountBalance(billingAccountId);
         if (billingAccountAmt > availableAmount) {
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Not enough available on account #" + billingAccountId);
+            Map messageMap = UtilMisc.toMap("billingAccountId", billingAccountId );
+            errMsg = UtilProperties.getMessage(resource,"checkevents.not_enough_available_on_account", messageMap, cart.getLocale());
+            request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
             return "error";
         }
 
@@ -234,7 +247,8 @@ public class CheckOutEvents {
         List paymentTypes = cart.getPaymentMethodTypeIds();
         if (paymentTypes.contains("EXT_BILLACT") && paymentTypes.size() == 1 && paymentMethods.size() == 0) {
             if (cart.getGrandTotal() > availableAmount) {
-                request.setAttribute("_ERROR_MESSAGE_", "<li>Insufficient credit available on accounts.");
+                errMsg = UtilProperties.getMessage(resource,"checkevents.insufficient_credit_available_on_account", cart.getLocale());
+                request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg );
                 return "error";
             }
         }
@@ -267,7 +281,8 @@ public class CheckOutEvents {
         double selectedPaymentTotal = cart.getSelectedPaymentMethodsTotal();
         if (paymentMethods != null && paymentMethods.size() > 0 && requiredAmount > selectedPaymentTotal) {
             Debug.logError("Required Amount : " + requiredAmount + " / Selected Amount : " + selectedPaymentTotal, module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Selected payment methods will not cover this order.");
+            errMsg = UtilProperties.getMessage(resource,"checkevents.payment_not_cover_this_order", cart.getLocale());
+            request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg );
             return "error";
         }
 
@@ -275,11 +290,14 @@ public class CheckOutEvents {
     }
 
     public static Map getSelectedPaymentMethods(HttpServletRequest request) {
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         Locale locale = UtilHttp.getLocale(request);
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
         Map selectedPaymentMethods = new HashMap();
         String[] paymentMethods = request.getParameterValues("checkOutPaymentId");
+        String errMsg = null;
+
         if (paymentMethods != null) {
             for (int i = 0; i < paymentMethods.length; i++) {
                 String amountStr = request.getParameter("amount_" + paymentMethods[i]);
@@ -289,7 +307,8 @@ public class CheckOutEvents {
                         amount = new Double(formatter.parse(amountStr).doubleValue());
                     } catch (ParseException e) {
                         Debug.logError(e, module);
-                        request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Payment method.");
+                        errMsg = UtilProperties.getMessage(resource,"checkevents.invalid_amount_set_for_payment_method", cart.getLocale());
+                        request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg );
                         return null;
                     }
                 }
@@ -304,6 +323,8 @@ public class CheckOutEvents {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
+        String errMsg = null;
 
         // get the currency format
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
@@ -335,7 +356,10 @@ public class CheckOutEvents {
                 billingAccountAmt = new Double(formatter.parse(billingAcctAmtStr).doubleValue());
             } catch (ParseException e) {
                 Debug.logError(e, module);
-                request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Billing Account #" + billingAccountId);
+                Map messageMap = UtilMisc.toMap("billingAccountId", billingAccountId );
+                errMsg = UtilProperties.getMessage(resource,"checkevents.invalid_amount_set_for_billing_account", messageMap, cart.getLocale());
+                request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg );
+//                request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Billing Account #" + billingAccountId);
                 return "error";
             }
         }

@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingListEvents.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: ShoppingListEvents.java,v 1.2 2004/02/22 00:32:40 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -50,13 +51,14 @@ import org.ofbiz.service.ServiceUtil;
  * Shopping cart events.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ShoppingListEvents {
     
     public static final String module = ShoppingListEvents.class.getName();
-    
+    public static final String resource = "OrderUiLabels";
+
     public static String addBulkFromCart(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
@@ -64,9 +66,11 @@ public class ShoppingListEvents {
         
         String shoppingListId = request.getParameter("shoppingListId");
         String selectedCartItems[] = request.getParameterValues("selectedItem");
-        
+        String errMsg = null;
+
         if (selectedCartItems == null || selectedCartItems.length == 0) {
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Please select item(s) to add to the shopping list.");
+            errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.select_items_to_add_to_list", cart.getLocale());
+            request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg );
             return "error";
         }
                 
@@ -77,7 +81,8 @@ public class ShoppingListEvents {
                 newListResult = dispatcher.runSync("createShoppingList", UtilMisc.toMap("userLogin", userLogin));    
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problems creating new ShoppingList", module);
-                request.setAttribute("_ERROR_MESSAGE_", "<li>Cannot create new shopping list.");
+                errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.cannot_create_new_shopping_list", cart.getLocale());
+                request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
                 return "error";
             }
             
@@ -88,7 +93,8 @@ public class ShoppingListEvents {
             
             // if no list was created throw an error
             if (shoppingListId == null || shoppingListId.equals("")) {            
-                request.setAttribute("_ERROR_MESSAGE_", "<li>shoppingListId is a required parameter.");
+                errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.shoppingListId_is_required_parameter", cart.getLocale());
+                request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
                 return "error";
             }
         }
@@ -108,7 +114,8 @@ public class ShoppingListEvents {
                     serviceResult = dispatcher.runSync("createShoppingListItem", ctx);                    
                 } catch (GenericServiceException e) {
                     Debug.logError(e, "Problems creating ShoppingList item entity", module);
-                    request.setAttribute("_ERROR_MESSAGE_", "Error adding item to shopping list");
+                    errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.error_adding_item_to_shopping_list", cart.getLocale());
+                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
                     return "error";
                 }
             }           
@@ -127,10 +134,13 @@ public class ShoppingListEvents {
         String shoppingListId = request.getParameter("shoppingListId");
         String includeChild = request.getParameter("includeChild");
         String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
-        
+
+        String errMsg = null;
+
         // no list; no add
         if (shoppingListId == null) {
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Please choose a shopping list.");
+            errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.choose_shopping_list", cart.getLocale());
+            request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
             return "error";
         }
         
@@ -153,13 +163,15 @@ public class ShoppingListEvents {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting ShoppingList and ShoppingListItem records", module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Error getting shopping list and items.");
+            errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.error_getting_shopping_list_and_items", cart.getLocale());
+            request.setAttribute("_ERROR_MESSAGE_", "<li>" + errMsg);
             return "error";
         }
         
         // no items; not an error; just mention that nothing was added
         if (shoppingListItems == null || shoppingListItems.size() == 0) {
-            request.setAttribute("_EVENT_MESSAGE_", "<li>No items were added.");
+            errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.no_items_added", cart.getLocale());
+            request.setAttribute("_EVENT_MESSAGE_", "<li>" + errMsg);
             return "success";
         }
         
@@ -172,11 +184,15 @@ public class ShoppingListEvents {
             Double quantity = shoppingListItem.getDouble("quantity");
             try {
                 Map attributes = UtilMisc.toMap("shoppingListId", shoppingListItem.getString("shoppingListId"), "shoppingListItemSeqId", shoppingListItem.getString("shoppingListItemSeqId"));
-                int itemId = cart.addOrIncreaseItem(productId, quantity.doubleValue(), null, attributes, prodCatalogId, dispatcher);                               
-                eventMessage.append("<li>Added product (" + productId + ") to cart.\n");
+                int itemId = cart.addOrIncreaseItem(productId, quantity.doubleValue(), null, attributes, prodCatalogId, dispatcher);
+                Map messageMap = UtilMisc.toMap("productId", productId);
+                errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.added_product_to_cart", messageMap, cart.getLocale());
+                eventMessage.append(errMsg + "\n");
             } catch (CartItemModifyException e) {
                 Debug.logWarning(e, "Problems adding item from list to cart", module);
-                eventMessage.append("<li>Could NOT add product (" + productId + ") to cart.\n");                                
+                Map messageMap = UtilMisc.toMap("productId", productId);
+                errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.problem_adding_product_to_cart", messageMap, cart.getLocale());
+                eventMessage.append(errMsg + "\n");
             }            
         }
         
@@ -190,7 +206,7 @@ public class ShoppingListEvents {
 
     public static String replaceShoppingListItem(HttpServletRequest request, HttpServletResponse response) {
         String quantityStr = request.getParameter("quantity");
-        
+
         // just call the updateShoppingListItem service
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
