@@ -149,5 +149,6 @@ public class FreeMarkerViewHandler implements ViewHandler {
         
         // add the OFBiz transforms
         root.put("ofbizUrl", new OfbizUrlTransform());
+        root.put("ofbizContent", new OfbizContentTransform());
     }
 }
