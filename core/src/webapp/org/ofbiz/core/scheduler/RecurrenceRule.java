@@ -79,6 +79,8 @@ public class RecurrenceRule {
     /** Creates a new RecurrenceRule object from a RecurrenceInfo entity. */
     public RecurrenceRule(GenericValue rule) throws RecurrenceRuleException {
         this.rule = rule;
+        if ( !rule.getEntityName().equals("RecurrenceRule") )
+            throw new RecurrenceRuleException("Invalid RecurrenceRule Value object.");
         init();
     }
     

@@ -47,6 +47,8 @@ public class RecurrenceInfo {
     /** Creates new RecurrenceInfo */
     public RecurrenceInfo(GenericValue info) throws RecurrenceInfoException {
         this.info = info;
+        if ( !info.getEntityName().equals("RecurrenceInfo") )
+            throw new RecurrenceInfoException("Invalid RecurrenceInfo Value object.");
         init();
     }
     
@@ -101,6 +103,11 @@ public class RecurrenceInfo {
         // Sort the lists.
         Collections.sort(rDateList);
         Collections.sort(eDateList);
+    }
+    
+    /** Returns the primary key for this value object */
+    public String getID() {
+        return info.getString("recurrenceInfoId");
     }
     
     /** Returns the startDate Date object. */

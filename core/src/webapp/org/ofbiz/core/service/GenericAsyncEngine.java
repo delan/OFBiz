@@ -69,71 +69,43 @@ public abstract class GenericAsyncEngine implements GenericEngine {
      */
     public void runAsync(ModelService modelService, Map context, GenericRequester requester) throws GenericServiceException {
         GenericValue job = null;
+        
+        // Build the value object(s).
         try {
-            job = createScheduledJob(null,modelService.name);
+            // Create the recurrence info
+            String ruleId = dispatcher.getDelegator().getNextSeqId("RecurrenceRule").toString();
+            GenericValue rule = dispatcher.getDelegator().makeValue("RecurrenceRule",UtilMisc.toMap("recurrenceRuleId",ruleId));
+            String infoId = dispatcher.getDelegator().getNextSeqId("RecurrenceInfo").toString();
+            GenericValue info = dispatcher.getDelegator().makeValue("RecurrenceInfo",UtilMisc.toMap("recurrenceInfoId",infoId));
+            info.set("recurrenceRuleId",ruleId);
+            rule.set("frequency","DAILY");
+            rule.set("interval",new Integer(1));
+            rule.set("count",new Integer(1));
+            info.preStoreOther(rule);
+            // Create the job info
+            String jobName = new String(new Long((new Date().getTime())).toString());
+            Map jFields = UtilMisc.toMap("jobName",jobName,"serviceName",modelService.name,"recurrenceInfoId",infoId);
+            job = dispatcher.getDelegator().makeValue("JobSandbox",jFields);
+            job.preStoreOther(info);
+            dispatcher.getDelegator().create(job);           
         }
         catch ( GenericEntityException e ) {
             throw new GenericServiceException("Cannot begin asynchronous service.",e);
         }
-        scheduleJob(job,context);
-        if ( requester != null ) {
-            // implement the requester.
-        }
-    }
-    
-    // Private method to add a new scheduled Job.
-    private void scheduleJob(GenericValue job, Map context) throws GenericServiceException {
+        
+        if ( job == null )
+            throw new GenericServiceException("Problems creating job.");
+        
+        // Schedule the job.
         try {
             dispatcher.getJobManager().addJob(job,context);
         }
-        catch ( JobSchedulerException e ) {
-            throw new GenericServiceException("Cannot create Job.",e);
+        catch ( JobSchedulerException jse ) {
+            throw new GenericServiceException("Cannot schedule job.",jse);
         }
-    }
-    
-    // Private Methods to create a GenericValue object for a Job.
-    
-    private GenericValue createScheduledJob(String jobName, String service) throws GenericEntityException {
-        return createScheduledJob(jobName,service,null,null,null,null,null,null);
-    }
-    
-    private GenericValue createScheduledJob(String jobName, String service, Date startDate) throws GenericEntityException {
-        return createScheduledJob(jobName,service,startDate,null,null,null,null,null);
-    }
-    
-    private GenericValue createScheduledJob(String jobName, String service, Date startDate, Date endDate) throws GenericEntityException {
-        return createScheduledJob(jobName,service,startDate,endDate,null,null,null,null);
-    }
-         
-    private GenericValue createScheduledJob(String jobName, String serviceName, Date startDate, Date endDate,
-    String exceptions, String exceptionRule, String recurrences, String recurrenceRule) throws GenericEntityException {
         
-        // Make create a name if null.
-        if ( jobName == null )
-            jobName = new String(new Long(System.currentTimeMillis()).toString());
-        
-        // Get a sequence ID for the RecurrenceInfo entity.
-        String recurrenceId = dispatcher.getDelegator().getNextSeqId("RecurrenceInfo").toString();
-        
-        // Make the RecurrenceInfo field mapping.
-        Map rFields = new HashMap();
-        rFields.put("recurrenceInfoId",recurrenceId);
-        rFields.put("startDateTime",startDate);
-        rFields.put("endDateTime",endDate);
-        rFields.put("exceptionDateTimes",exceptions);
-        rFields.put("exceptionRule",exceptionRule);
-        rFields.put("recurrenceDateTimes",recurrences);
-        rFields.put("recurrenceRule",recurrenceRule);
-        
-        // Make the JobSandbox field mapping
-        Map jFields = UtilMisc.toMap("jobName",jobName,"serviceName",serviceName,"recurrenceInfoId",recurrenceId);
-        
-        // Create the value objects.
-        GenericValue job = dispatcher.getDelegator().makeValue("OrderHeader", jFields);
-        GenericValue rule = dispatcher.getDelegator().makeValue("RecurrenceInfo", rFields);
-        job.preStoreOther(rule);
-        dispatcher.getDelegator().create(job);
-        return job;
-    }
-    
+        // Implement the requester.
+        if ( requester != null ) {            
+        }
+    }                                                                                   
 }

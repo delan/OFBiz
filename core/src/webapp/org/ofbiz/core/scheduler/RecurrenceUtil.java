@@ -60,6 +60,42 @@ public class RecurrenceUtil {
         return newList;
     }
     
+    /** Returns a String from a Date object */
+    public static String formatDate(Date date) {
+        String formatString = new String();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        if ( cal.isSet(Calendar.MINUTE) )
+            formatString = "yyyyMMdd'T'hhmmss";
+        else
+            formatString = "yyyyMMdd";
+        SimpleDateFormat formatter = new SimpleDateFormat(formatString);
+        return formatter.format(date);
+    }
+    
+    /** Returns a Llist of date strings from a List of Date objects */
+    public static List formatDateList(List dateList) {
+        List newList = new ArrayList();
+        Iterator i = dateList.iterator();
+        while ( i.hasNext() )
+            newList.add(formatDate((Date)i.next()));
+        return newList;
+    }
+    
+    /** Creates a string seperated by delim from a List of strings */
+    public static String join(List list, String delim) {
+        if ( list == null || list.size() < 1 )
+            return null;
+        StringBuffer buf = new StringBuffer();
+        Iterator i = list.iterator();
+        while ( i.hasNext() ) {
+            buf.append((String)i.next());
+            if ( i.hasNext() )
+                buf.append(delim);
+        }
+        return buf.toString();
+    }
+    
     /** Uses StringTokenizer to split the string. */
     public static List split(String str, String delim) {
         List splitList = null;
@@ -81,5 +117,6 @@ public class RecurrenceUtil {
     public static long now() {
         return (new Date()).getTime();
     }
+    
 }
 
