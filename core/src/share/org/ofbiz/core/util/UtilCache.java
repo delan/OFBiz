@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/01/02 04:21:47  jonesde
+ * Small cleanups, mostly message related
+ *
  * Revision 1.3  2001/12/03 23:58:48  jonesde
  * Element remove without LRU list now works
  *
@@ -73,7 +76,7 @@ import javax.servlet.http.*;
  */
 public class UtilCache {
     /** A static Hashtable to keep track of all of the UtilCache instances. */
-    public static Hashtable utilCacheTable = new Hashtable();
+    public static Map utilCacheTable = new HashMap();
     /** An index number appended to utilCacheTable names when there are conflicts. */
     protected static int defaultIndex = 1;
     /** The name of the UtilCache instance, is also the key for the instance in utilCacheTable. */
@@ -82,7 +85,7 @@ public class UtilCache {
     /** A list of the elements order by Least Recent Use */
     public LinkedList keyLRUList = new LinkedList();
     /** A hashtable containing a value for each element. */
-    public Hashtable valueTable = new Hashtable();
+    public Map valueTable = new HashMap();
     /** A count of the number of cache hits */
     protected long hitCount = 0;
     /** A count of the number of cache misses */
@@ -93,7 +96,7 @@ public class UtilCache {
     protected long maxSize = 0;
 
     /** A hashtable containing a Long integer representing the time that the corresponding element was first loaded */
-    public Hashtable expireTable = new Hashtable();
+    public Map expireTable = new HashMap();
     /** Specifies the amount of time since initial loading before an element will be reported as expired.
      * If set to 0, elements will never expire.
      */
