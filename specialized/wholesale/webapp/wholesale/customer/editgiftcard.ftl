@@ -24,7 +24,7 @@
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>
 &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
@@ -95,7 +95,8 @@
           <#if ccExprMonth?has_content>
             <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
           </#if>
-          ${pages.get("/includes/ccmonths.ftl")}
+          <#if pages?exists>${pages.get("/includes/ccmonths.ftl")}</#if>
+			<#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#ccmonths")}</#if>
         </select>
         <select name="expYear" class='selectBox' onChange="javascript:makeExpDate();">
           <#if giftCard?has_content && expYear?has_content>
@@ -106,7 +107,8 @@
           <#if ccExprYear?has_content>
             <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
           </#if>
-          ${pages.get("/includes/ccyears.ftl")}
+          <#if pages?exists>${pages.get("/includes/ccyears.ftl")}</#if>
+		  <#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#ccyears")}</#if>
         </select>
       </td>
     </tr>

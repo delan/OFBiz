@@ -24,10 +24,10 @@
  *@since      3.0
 -->
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${survey.surveyName}</div>
@@ -38,7 +38,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <table width="100%" border="0" cellpadding="1">

@@ -40,10 +40,10 @@ function shipBillAddr() {
 }
 </script>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align='left'>
             <div class='boxhead'>&nbsp;Payment Information</div>
@@ -51,7 +51,8 @@ function shipBillAddr() {
           <td nowrap align="right">
             <#if requestParameters.singleUsePayment?default("N") != "Y">
               <div class="tabletext">
-                ${pages.get("/order/anonymoustrail.ftl")}
+              	<#if pages?exists>${pages.get("/order/anonymoustrail.ftl")}</#if>
+				<#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#anonymoustrail")}</#if>
               </div>
             </#if>
           </td>
@@ -61,7 +62,7 @@ function shipBillAddr() {
   </tr>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <#if (paymentMethodType?exists && !requestParameters.resetType?has_content) || finalizeMode?default("") == "payment">
@@ -127,7 +128,8 @@ function shipBillAddr() {
                     <td width="5">&nbsp;</td>
                     <td width="74%">&nbsp;</td>
                   </tr>
-                  ${pages.get("/order/genericaddress.ftl")}
+                  <#if pages?exists>${pages.get("/order/genericaddress.ftl")}</#if>
+				  <#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#genericaddress")}</#if>
                 </#if>
 
                 <#-- credit card fields -->
@@ -166,7 +168,8 @@ function shipBillAddr() {
                           <option>${creditCard.cardType}</option>
                           <option value="${creditCard.cardType}">---</option>
                         </#if>
-                        ${pages.get("/includes/cctypes.ftl")}
+                        <#if pages?exists>${pages.get("/includes/cctypes.ftl")}</#if>
+						<#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#cctypes")}</#if>
                       </select>
                     *</td>
                   </tr>
@@ -206,7 +209,8 @@ function shipBillAddr() {
                         <#if ccExprMonth?has_content>
                           <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
                         </#if>
-                        ${pages.get("/includes/ccmonths.ftl")}
+                        <#if pages?exists>${pages.get("/includes/ccmonths.ftl")}</#if>
+						<#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#ccmonths")}</#if>
                       </select>
                       <select name="expYear" class='selectBox'>
                         <#if creditCard?has_content && expYear?has_content>
@@ -217,7 +221,8 @@ function shipBillAddr() {
                         <#if ccExprYear?has_content>
                           <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
                         </#if>
-                        ${pages.get("/includes/ccyears.ftl")}
+                        <#if pages?exists>${pages.get("/includes/ccyears.ftl")}</#if>
+						<#if screens?exists>${screens.render("component://wholesale/widget/CommonScreens.xml#ccyears")}</#if>
                       </select>
                     *</td>
                   </tr>

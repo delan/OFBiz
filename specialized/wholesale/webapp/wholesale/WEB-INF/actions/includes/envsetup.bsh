@@ -30,7 +30,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.order.shoppingcart.*;
-import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.content.webapp.control.LoginWorker;
 
 userLogin = session.getAttribute("userLogin");
 

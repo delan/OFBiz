@@ -23,7 +23,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if requestAttributes.product?exists>
 <#-- variable setup -->
 <#assign product = requestAttributes.product>
@@ -54,18 +54,18 @@
       </td> 
       <td align="center" valign="middle" width="15%">
         <#-- check to see if Inventory is available -->
-        <#assign isStoreInventoryAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product.productId, 1)>
+	     <#assign isStoreInventoryAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product, 1)>
 
       <#if product.isVirtual?exists && product.isVirtual == "Y">        <#-- do not show inventory check if item is virtual -->
            &nbsp;
       <#else>
-        <#if security.hasEntityPermission("INVENTORY", "_AVAIL", session)> 
+<#--        <#if security.hasEntityPermission("INVENTORY", "_AVAIL", session)>  -->
           <#if isStoreInventoryAvailable>
             <IMG SRC="/images/checkmark.gif" ALT="In Stock">
           <#else>
             <IMG SRC="/images/crossmark.gif" ALT="Not In Stock">
           </#if>
-        </#if>
+<#--        </#if>-->
       </#if>  
       </td> 
       <td valign="middle" width="15%">
@@ -78,7 +78,7 @@
                   <#if price.isSale>
                     <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
                   </#if>
-                  <if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
+                  <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
                     <span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                   </#if>
             </nobr>

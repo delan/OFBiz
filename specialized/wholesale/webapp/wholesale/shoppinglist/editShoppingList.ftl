@@ -24,12 +24,12 @@
  *@version    $Revision$
  *@since      2.1.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingLists}</div>
@@ -43,7 +43,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <#if shoppingLists?has_content>
@@ -76,10 +76,10 @@
 <#if shoppingList?has_content>
     <#if canView>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingListDetail} - ${shoppingList.listName}</div>
@@ -93,13 +93,13 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
               <form name="updateList" method="post" action="<@ofbizUrl>/updateShoppingList</@ofbizUrl>">
                 <input type="hidden" class="inputBox" name="shoppingListId" value="${shoppingList.shoppingListId}">
                 <input type="hidden" class="inputBox" name="partyId" value="${shoppingList.partyId?if_exists}">
-                <table border='0' width='100%' cellspacing='0' cellpadding='0'>
+                <table border='0' cellspacing='0' cellpadding='0'>
                   <tr>
                     <td><div class="tableheadtext">${uiLabelMap.EcommerceListName}</div></td>
                     <td><input type="text" class="inputBox" size="25" name="listName" value="${shoppingList.listName}">
@@ -167,10 +167,10 @@
 
 <#if childShoppingListDatas?has_content>
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceChildShoppingList} - ${shoppingList.listName}</div>
@@ -184,10 +184,10 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-			<table width='100%' cellspacing="0" cellpadding="1" border="0">
+			<table cellspacing="0" cellpadding="1" border="0">
 			  <TR> 
 				<TD NOWRAP><div class='tabletext'><b>${uiLabelMap.EcommerceListName}</b></div></TD>
 				<TD NOWRAP align="right"><div class='tabletext'><b>${uiLabelMap.EcommerceTotalPrice}</b></div></TD>
@@ -229,10 +229,10 @@
 </#if>
 
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceListItems} - ${shoppingList.listName}</div>
@@ -246,11 +246,11 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <#if shoppingListItemDatas?has_content>
-                <table width='100%' cellspacing="0" cellpadding="1" border="0">
+                <table cellspacing="0" cellpadding="1" border="0">
                   <TR>
                     <TD NOWRAP><div class='tabletext'><b>${uiLabelMap.EcommerceProduct}</b></div></TD>
                     <TD NOWRAP align="center"><div class='tabletext'><b>${uiLabelMap.CommonQuantity}</b></div></TD>
@@ -348,10 +348,10 @@
 </TABLE>
 
 <br/>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingListPriceTotals} - ${shoppingList.listName}</div>
@@ -364,7 +364,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td align="left" width="5%">
           	<div class="tabletext">${uiLabelMap.EcommerceChildListTotalPrice}</div>

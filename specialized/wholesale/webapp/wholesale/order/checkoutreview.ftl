@@ -38,15 +38,17 @@
 // -->
 </script>
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <p class="head1">${uiLabelMap.OrderFinalCheckoutReview}</p>
 <p>${uiLabelMap.OrderDemoFrontNote}.</p>
 
 <#if cart?exists && 0 < cart.size()>
-  ${pages.get("/order/orderheader.ftl")}
+  <#if pages?exists>${pages.get("/order/orderheader.ftl")}</#if>
+  <#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#orderheader")}</#if>
   <br>
-  ${pages.get("/order/orderitems.ftl")}
+ <#if pages?exists>${pages.get("/order/orderitems.ftl")}</#if>
+ <#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#orderitems")}</#if>
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">

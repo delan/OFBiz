@@ -23,7 +23,9 @@
  *@version    $Revision$
  *@since      2.2
 -->
-
-${pages.get("/entry/order/orderheader.ftl")}
+<#if pages?exists>${pages.get("/order/orderheader.ftl")}</#if>
+<#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#orderheader")}</#if>
 <br>
-${pages.get("/entry/order/orderitems.ftl")}
+<#if pages?exists>${pages.get("/order/orderitems.ftl")}</#if>
+<#if screens?exists>${screens.render("component://wholesale/widget/OrderScreens.xml#orderitems")}</#if>
+

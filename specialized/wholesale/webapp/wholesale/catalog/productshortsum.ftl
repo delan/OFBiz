@@ -23,7 +23,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if requestAttributes.product?exists>
 <#-- variable setup -->
 <#assign product = requestAttributes.product>
@@ -57,7 +57,7 @@
                   <#if price.isSale>
                     <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
                   </#if>
-                  <if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
+                  <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
                     <span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                   </#if>
                 </b>

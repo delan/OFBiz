@@ -24,13 +24,13 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if productCategoryMembers?exists && 0 < productCategoryMembers.size()>
 <center>
   <table width='100%' border='0' cellpadding='2' cellspacing='0' class='boxoutside'>
     <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table width='100%'border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
             <div class="boxhead">${productCategory.description?if_exists}</div>
@@ -53,8 +53,9 @@
           ${setRequestAttribute("productCategoryMember", productCategoryMember)} 
           ${setRequestAttribute("listIndex", productCategoryMember_index)}
           ${setRequestAttribute("miniProdFormName", "theminireorderprod" + productCategoryMember_index + "form")}
-          ${setRequestAttribute("miniProdQuantity", 1)}       
-          ${pages.get("/catalog/productshortsum.ftl")}
+          ${setRequestAttribute("miniProdQuantity", 1)}
+          <#if pages?exists>${pages.get("/catalog/productshortsum.ftl")}</#if>
+		  <#if screens?exists>${screens.render("component://wholesale/widget/CatalogScreens.xml#productshortsum")}</#if>
         </td>
       </tr>             
       <tr><td><hr class='sepbar'></td></tr>
@@ -62,7 +63,7 @@
   </table>
 </center>
 <#else>
-<table border="0" width="100%" cellpadding="2">
+<table width='100%' border="0" width="100%" cellpadding="2">
   <tr>
     <td colspan="2"><hr class='sepbar'></td>
   </tr>

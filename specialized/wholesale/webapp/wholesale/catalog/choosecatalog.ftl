@@ -23,13 +23,13 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign catalogCol = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogIdsAvailable(request)?if_exists>
 <#assign currentCatalogId = Static["org.ofbiz.product.catalog.CatalogWorker"].getCurrentCatalogId(request)?if_exists>
 <#assign currentCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, currentCatalogId)?if_exists>
 
 <#if 0 < catalogCol?size>
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TABLE width='100%' border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>

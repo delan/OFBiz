@@ -23,8 +23,9 @@
  *@version    $Revision$
  *@since      2.1
 -->
+
 <#-- variable setup -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign product = requestAttributes.product?if_exists>
 <#assign price = requestAttributes.priceMap?if_exists>
 <#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
@@ -46,7 +47,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
  </script>
 
 
-<table border="0" width="100%" cellpadding="2" cellspacing='0'>
+<table border="0" cellpadding="2" cellspacing='0'>
   <#-- Category next/previous -->
   <#if requestAttributes.category?exists>
     <tr>
@@ -78,7 +79,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <div class="tabletext"><b>${uiLabelMap.ProductUsuallyShipsIn} <font color='red'>${daysToShip}</font> ${uiLabelMap.CommonDays}!<b></div>
       </#if>
 		<br/>
-      <div class="tabletext"><a href="<@ofbizUrl>/productfaq</@ofbizUrl>">FAQ</div></a>
+      <div class="tabletext"><a href="<@ofbizUrl>/productfaq/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>">FAQ</div></a>
 	   <br/>
 	  <div class="tabletext"><a href="<@ofbizUrl>/productdetail.pdf/~product_id=${product.productId?if_exists}</@ofbizUrl>">View as PDF</a></div>
 		<br/>	   
@@ -96,7 +97,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         ${uiLabelMap.ProductRegularPrice}: <@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/>
       </#if>
         <b>
-          <#if price.isSale>
+          <#if price.isSale?exists>
             <span class='salePrice'>${uiLabelMap.EcommerceOnSale}!</span>
             <#assign priceStyle = "salePrice">
           <#else>
@@ -119,11 +120,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </div>
       </#if>
 
-      <#-- tell a friend
+      <#-- tell a friend -->
       <div class="tabletext">&nbsp;</div>
       <div class="tabletext">
-        <a href="javascript:popUpSmall('<@ofbizUrl>/tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
-      </div>-->
+        <a href="javascript:popUpSmall('<@ofbizUrl>/tellafriend?productId=${product.productId?if_exists}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
+      </div>
       <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
@@ -146,16 +147,16 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <#assign inStock = false>
           </#if>
         <#else>
-          <input type='hidden' name="product_id" value='${product.productId}'>
-          <input type='hidden' name="add_product_id" value='${product.productId}'>
-          <#if !Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product.productId?string, 1.0?double)>
-            <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
+          <input type='hidden' name="product_id" value='${product.productId?if_exists}'>
+          <input type='hidden' name="add_product_id" value='${product.productId?if_exists}'>
+    <#--      <#if !Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product, 1.0?double)>
+            <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)> 
               <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
               <#assign inStock = false>
             <#else>
               <div class='tabletext'><b>${product.inventoryMessage?if_exists}</b></div>
             </#if>
-          </#if>
+          </#if>-->
         </#if>
         <p>&nbsp;</p>
 
@@ -248,7 +249,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
   </#if>
   <#if assocProducts?has_content>
     <tr><td>&nbsp;</td></tr>
-    <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
+    <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName?if_exists}</#if>${afterName?if_exists}</div></td></tr>
     <tr><td><hr class='sepbar'></td></tr>
 	<tr><td>
 	<table>
@@ -261,7 +262,8 @@ ${requestAttributes.virtualJavaScript?if_exists}
         ${setRequestAttribute("targetRequestName", targetRequestName)}
       </#if>
         <td>
-          ${pages.get("/catalog/productshortsum.ftl")}
+          <#if pages?exists>${pages.get("/catalog/productshortsum.ftl")}</#if>
+		  <#if screens?exists>${screens.render("component://wholesale/widget/CatalogScreens.xml#productshortsum")}</#if>
         </td>
       <#local listIndex = listIndex + 1>
     </#list>
@@ -278,12 +280,14 @@ ${setRequestAttribute("productValue", productValue)}
 
 <table width='100%'>
   <#-- obsolete -->
-  <@associated assocProducts=requestAttributes.obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
+<#--  <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/> -->
   <#-- cross sell -->
-  <@associated assocProducts=requestAttributes.crossSellProducts beforeName="" showName="N" afterName="Cross-sell suggestions:" formNamePrefix="cssl" targetRequestName="crosssell"/>
+<#--  <@associated assocProducts=crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl" targetRequestName="crosssell"/>-->
   <#-- up sell -->
-  <@associated assocProducts=requestAttributes.upSellProducts beforeName="Upsell suggestions:" showName="N" afterName="" formNamePrefix="upsl" targetRequestName="upsell"/>
-</table>
+<#--  <@associated assocProducts=upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>-->
+  <#-- obsolescence -->
+<#--  <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>-->
+</table> 
   <#-- end of upgrade/up-sell/replacement code -->
     </td>
   </tr>

@@ -23,8 +23,9 @@
  *@version    $Revision$
  *@since      2.1
 -->
+
 <#if page.title == "Order History">
-<table border=0 width='100%' cellspacing='0' cellpadding='0'>
+<table border=0 cellspacing='0' cellpadding='0'>
   <tr>
     <td align="right">
       <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="buttontext">[${requestAttributes.uiLabelMap.CommonProfile}]</a><br>&nbsp;&nbsp;
@@ -32,10 +33,10 @@
   </tr>
 </table>
 </#if>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align='left'><div class="boxhead">${requestAttributes.uiLabelMap.OrderHistory}</div></td>
           <#--<td align='right'>
@@ -47,7 +48,7 @@
   </tr>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <table width="100%" cellpadding="1" cellspacing="0" border="0">

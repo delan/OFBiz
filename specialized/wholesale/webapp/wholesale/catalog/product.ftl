@@ -22,11 +22,12 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
  *@since      2.1
--->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+-->${detailScreen}
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if requestAttributes.product?has_content>
-  ${pages.get(requestAttributes.detailTemplate)}
+  <#if pages?exists>${pages.get("${detailScreen}")}</#if>
+  <#if screens?exists>${screens.render("${detailScreen}")}</#if>
 <#else>
   <#assign productId = requestAttributes.productId?if_exists>
-  <center><div class='head2'>${uiLabelMap.ProductProductNotFound} ${productId?if_exists}!</div></center>
+  <center><div class='head2'>${uiLabelMap.ProductProductNotFound} ${productId?if_exists}!!!</div></center>
 </#if>

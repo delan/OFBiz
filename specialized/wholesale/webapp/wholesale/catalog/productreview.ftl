@@ -23,7 +23,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if requestParameters.product_id?exists>
   <form name="reviewProduct" method="post" action="<@ofbizUrl>/createProductReview</@ofbizUrl>">
     <input type="hidden" name="productId" value="${requestParameters.product_id}">

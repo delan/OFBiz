@@ -28,11 +28,11 @@
   <tr>
     <#-- left side -->
     <td width='50%' valign='top' align='left'>
-      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- general order info -->
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${requestAttributes.uiLabelMap.CommonInformation}</div>
@@ -48,7 +48,7 @@
         </tr>        
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>              
+            <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>              
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1">
@@ -118,11 +118,11 @@
       <br>
       
       <#if !orderHeader?has_content || orderPaymentPreferences?has_content || billingAccount?has_content>
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+      <table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- order payment info -->
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.AccountingPaymentInformation}</div>
@@ -133,7 +133,7 @@
         </tr>
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1">
@@ -239,10 +239,10 @@
     <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
     <#-- right side -->
     <td width='50%' valign='top' align='left'>
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
+      <table border=0 cellspacing='0' cellpadding='0' class='boxoutside'>        
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderShippingInformation}</div>
@@ -259,7 +259,7 @@
         <#-- shipping address -->
         <tr>
           <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+            <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1">

@@ -24,7 +24,7 @@
  *@version    $Revision$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <script language="JavaScript">
 <!--
 function toggle(e) {
@@ -68,10 +68,10 @@ function addToList() {
 }
 //-->
 </script>
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+      <table width='100%' border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingCart}</div>
@@ -155,23 +155,23 @@ function addToList() {
                         </td>
                         <td valign=middle align=left>
                           	<a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
-                      			${cartLine.getName()?if_exists} <#if cartLine.getProductFeatures()?has_content> - ${cartLine.getProductFeatures()} </#if>  </a>
+                      			${cartLine.getName()?if_exists} <#--<#if cartLine.getProductFeatures()?has_content> - ${cartLine.getProductFeatures()} </#if>  --></a>
                    		</td>
                       </tr>
                     </table>
                     <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                     <#assign itemProduct = cartLine.getProduct()>
                     <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, itemProduct)>
-                    <#assign isStoreInventoryAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, cartLine.getProductId(), cartLine.getQuantity())>
-                    <#if !isStoreInventoryRequired && !isStoreInventoryAvailable && itemProduct.inventoryMessage?has_content>
+<#--                    <#assign isStoreInventoryAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, cartLine.getProductId(), cartLine.getQuantity())>-->
+<#--                    <#if !isStoreInventoryRequired && !isStoreInventoryAvailable && itemProduct.inventoryMessage?has_content> 
                         <b>(${itemProduct.inventoryMessage})</b>
-                    </#if>
-
+-->                   </#if>
+<#--
                   <#else>
-                    <#-- this is a non-product item -->
-                    <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
-                  </#if>
-                </div>
+-->                    <#-- this is a non-product item -->
+<#--                    <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
+                  </#if> 
+-->                </div>
             </td>
 
             <#-- gift wrap option -->
@@ -358,7 +358,7 @@ function addToList() {
 </table>
 <#-- -->
 <br/>
-<TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<TABLE border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
     <TD width="100%" colspan="3">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -395,11 +395,11 @@ function addToList() {
          </form>
         </tr> 
 </TABLE>
-  <br/>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+        <table width='100%'border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;Promotion/Coupon Codes</div>
@@ -411,7 +411,7 @@ function addToList() {
     </tr>
     <tr>
       <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+        <table width='100%' border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
               <div class="tabletext">
