@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.4 2003/09/04 03:31:17 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.5 2003/09/18 16:01:22 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -160,14 +160,16 @@ public class LoginEvents {
             if ((username == null) || (password == null) || ("error".equals(login(request, response)))) {
                 Map reqParams = UtilHttp.getParameterMap(request);
                 String queryString = UtilHttp.urlEncodeArgs(reqParams);
+                Debug.logInfo("reqParams Map: " + reqParams, module);
+                Debug.logInfo("queryString: " + queryString, module);
 
                 session.setAttribute("_PREVIOUS_REQUEST_", request.getPathInfo());
                 if (queryString != null && queryString.length() > 0) {
                     session.setAttribute("_PREVIOUS_PARAMS_", queryString);
                 }
 
-                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString, module);
-                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo(), module);
+                if (Debug.infoOn()) Debug.logInfo("checkLogin: queryString=" + queryString, module);
+                if (Debug.infoOn()) Debug.logInfo("checkLogin: PathInfo=" + request.getPathInfo(), module);
 
                 return "error";
             }

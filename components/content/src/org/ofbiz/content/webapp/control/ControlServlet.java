@@ -1,5 +1,5 @@
 /*
- * $Id: ControlServlet.java,v 1.3 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: ControlServlet.java,v 1.4 2003/09/18 16:01:22 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import com.ibm.bsf.BSFManager;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ControlServlet extends HttpServlet {
@@ -186,7 +186,6 @@ public class ControlServlet extends HttpServlet {
             getRequestHandler().doRequest(request, response, null, userLogin, delegator);
         } catch (RequestHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
-
             Debug.logError(throwable, "Error in request handler: ", module);
             request.setAttribute("_ERROR_MESSAGE_", throwable.toString());
             errorPage = getRequestHandler().getDefaultErrorPage(request);
@@ -201,16 +200,18 @@ public class ControlServlet extends HttpServlet {
         // if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
         if (errorPage != null) {
+            Debug.logError("An error occurred, going to the errorPage: " + errorPage, module);
+            
             // some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
             request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, new Boolean(true));
             RequestDispatcher rd = request.getRequestDispatcher(errorPage);
 
             // use this request parameter to avoid infinite looping on errors in the error page...
-            if (request.getAttribute("_ERROR_OCCURRED_") == null) {
+            if (request.getAttribute("_ERROR_OCCURRED_") == null && rd != null) {
                 request.setAttribute("_ERROR_OCCURRED_", new Boolean(true));
-                if (rd != null) rd.include(request, response);
+                rd.include(request, response);
             } else {
-                String errorMessage = "ERROR in error page, avoiding infinite loop, but here is the text just in case it helps you: " + request.getAttribute("ERROR_MESSAGE_");
+                String errorMessage = "ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + request.getAttribute("ERROR_MESSAGE_");
 
                 if (UtilJ2eeCompat.useOutputStreamNotWriter(getServletContext())) {
                     response.getOutputStream().print(errorMessage);

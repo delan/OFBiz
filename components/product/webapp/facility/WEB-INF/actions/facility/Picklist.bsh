@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
  */
 
@@ -37,6 +37,9 @@ userLogin = session.getAttribute("userLogin");
 
 facilityId = request.getParameter("facilityId");
 context.put("facilityId", facilityId);
+facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
+context.put("facility", facility);
+
 shipmentMethodTypeId = request.getParameter("shipmentMethodTypeId");
 context.put("shipmentMethodTypeId", shipmentMethodTypeId);
 maxNumberOfOrders = Long.valueOf(request.getParameter("maxNumberOfOrders"));
@@ -49,6 +52,7 @@ context.put("setPickStartedDate", setPickStartedDate);
 inMap = UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId, "shipmentMethodTypeId", shipmentMethodTypeId, "maxNumberOfOrders", maxNumberOfOrders, "setPickStartedDate", setPickStartedDate);
 outMap = dispatcher.runSync("getPicklistData", inMap);
 
+context.put("facilityLocationInfoList", outMap.get("facilityLocationInfoList"));
 context.put("inventoryItemInfoList", outMap.get("inventoryItemInfoList"));
 context.put("orderHeaderInfoList", outMap.get("orderHeaderInfoList"));
 context.put("wrongQuantityReservedList", outMap.get("wrongQuantityReservedList"));

@@ -1,5 +1,5 @@
 /*
- * $Id: ControlApplet.java,v 1.1 2003/09/11 00:17:54 ajzeneski Exp $
+ * $Id: ControlApplet.java,v 1.2 2003/09/18 16:01:21 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import java.util.Map;
  * Control Applet - Client applet for page pushing and (future) chat
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ControlApplet extends Applet implements Runnable {
@@ -210,7 +210,7 @@ public class ControlApplet extends Applet implements Runnable {
     
     public String encodeArgs(Map args) {
         StringBuffer buf = new StringBuffer();
-        if (args == null) {        
+        if (args != null) {
             Iterator i = args.entrySet().iterator();
             while (i.hasNext()) {
                 Map.Entry entry = (Map.Entry) i.next();

@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.2
  -->
 <simple-methods>
@@ -211,6 +211,7 @@
                 shipmentMethodTypeId
                 maxNumberOfOrders
             Returns:
+                facilityLocationInfoList: List of Maps with facilityLocation, productInfoList, being a List of Maps with product, quantity, inventoryItemList, orderItemList
                 inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, statusItem, quantity
                 orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemInventoryResList
                 wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem
@@ -231,7 +232,7 @@
         <call-service service-name="findOrdersToPickMove" in-map-name="findOrdersToPickMoveMap">
             <result-to-field result-name="pickMoveByShipmentMethodInfoList"/>
         </call-service>
-
+        
         <!-- if maxNumberOfOrders is passed, get at most that many orders and go over them -->
         <calculate field-name="numberSoFar" type="Long"><number value="0"/></calculate>
         <iterate entry-name="pickMoveByShipmentMethodInfo" list-name="pickMoveByShipmentMethodInfoList">
@@ -313,7 +314,7 @@
                         <clear-field field-name="perItemResListValid"/>
                         
                         <!-- warn if wrong inventory has been reserved+issued -->
-                        <!-- change to include issued items as well, otherwise can't really do an effective check... -->
+                        <!-- must include issued items as well, otherwise can't really do an effective check... -->
                         <get-related value-name="orderItem" relation-name="ItemIssuance" list-name="itemIssuances"/>
                         <calculate field-name="issuedQuantity" type="Double"><number value="0"/></calculate>
                         <iterate entry-name="itemIssuance" list-name="itemIssuances">
@@ -379,7 +380,7 @@
             <!-- create a list of locations, then sort it, will have to create a reverse Map to go from location to inventory item -->
             <get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
             <if-not-empty field-name="facilityLocation">
-                <field-to-list field-name="facilityLocation" list-name="facilityLocations"/>
+                <env-to-env env-name="facilityLocation" to-env-name="facilityLocationMap.${facilityLocation.locationSeqId}"/>
                 <!-- support multiple invnetoryItemIds per facilityLocation.locationSeqId -->
                 <field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
                 <field-to-list field-name="inventoryItemId" list-name="inventoryItemIdList"/>
@@ -392,6 +393,11 @@
             <clear-field field-name="facilityLocation"/>
         </iterate-map>
         
+        <!-- make a facilityLocations List from the facilityLocationMap, which was used to guarantee uniqueness -->
+        <iterate-map key-name="locationSeqId" value-name="facilityLocation" map-name="facilityLocationMap">
+            <field-to-list field-name="facilityLocation" list-name="facilityLocations"/>
+        </iterate-map>
+        
         <!-- order the facilityLocations -->
         <string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
         <string-to-list string="+aisleId" list-name="facilityLocsOrdLst"/>
@@ -402,8 +408,11 @@
         
         <!-- for each facility location add an entry to the inventoryItemInfoList -->
         <iterate entry-name="facilityLocation" list-name="facilityLocations">
-            <!-- inventoryItemInfoList: facilityLocation, inventoryItem, orderItems, quantity -->
-            <field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
+            <!-- facilityLocationInfoList: facilityLocation, productInfoList (product, quantity, inventoryItemList, orderItemList) -->
+            <env-to-field env-name="facilityLocation" map-name="facilityLocationInfo"/>
+            
+            <!-- inventoryItemInfoList: facilityLocation, inventoryItem, orderItems, quantity, product, statusItems -->
+            <env-to-env env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}" to-env-name="inventoryItemIdList"/>
             <iterate entry-name="inventoryItemId" list-name="inventoryItemIdList">
                 <env-to-field env-name="facilityLocation" map-name="inventoryItemInfo"/>
                 <field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
@@ -413,8 +422,35 @@
                 <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
 
                 <field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
+                
+                <!-- before destroying inventoryItemInfo, add info to the productInfoMap -->
+                <env-to-env env-name="inventoryItemInfo.product" to-env-name="productInfoMap.${inventoryItemInfo.product.productId}.product"/>
+                <calculate field-name="productInfoMap.${inventoryItemInfo.product.productId}.quantity" type="Double">
+                    <calcop field-name="productInfoMap.${inventoryItemInfo.product.productId}.quantity" operator="get"/>
+                    <calcop field-name="inventoryItemInfo.quantity" operator="get"/>
+                </calculate>
+                <field-to-list field-name="inventoryItemInfo.inventoryItem" list-name="productInfoMap.${inventoryItemInfo.product.productId}.inventoryItemList"/>
+                <!-- put orderItems in Map by orderId:orderItemSeqId to make sure they are unique -->
+                <iterate entry-name="orderItem" list-name="inventoryItemInfo.orderItems">
+                    <env-to-env env-name="orderItem" to-env-name="orderItemMap.${orderItem.orderId}:${orderItem.orderItemSeqId}"/>
+                </iterate>
+                
                 <clear-field field-name="inventoryItemInfo"/>
             </iterate>
+
+            <iterate-map key-name="orderItemCompositeId" value-name="orderItem" map-name="orderItemMap">
+                <field-to-list field-name="orderItem" list-name="productInfoMap.${orderItem.productId}.orderItemList"/>
+            </iterate-map>
+                        
+            <!-- move all values from productInfoMap to facilityLocationInfo.productInfoList -->
+            <iterate-map key-name="productId" value-name="productInfo" map-name="productInfoMap">
+                <field-to-list field-name="productInfo" list-name="facilityLocationInfo.productInfoList"/>
+            </iterate-map>
+            
+            <field-to-list field-name="facilityLocationInfo" list-name="facilityLocationInfoList"/>
+            <clear-field field-name="orderItemMap"/>
+            <clear-field field-name="productInfoMap"/>
+            <clear-field field-name="facilityLocationInfo"/>
         </iterate>
         
         <!-- add all noLocationInventoryItemIds to inventoryItemInfoList with all entries except facilityLocation -->
@@ -429,6 +465,7 @@
             <clear-field field-name="inventoryItemInfo"/>
         </iterate>
         
+        <field-to-result field-name="facilityLocationInfoList"/>
         <field-to-result field-name="inventoryItemInfoList"/>
         <field-to-result field-name="orderHeaderInfoList"/>
         <field-to-result field-name="wrongQuantityReservedList"/>
@@ -831,8 +868,6 @@
                     <!-- see if there is enough physically moved over to move this reservation -->
                     <if-compare-field field-name="quantityLeftToProcess" operator="greater" to-field-name="orderItemInventoryResAndItemLocation.quantity" type="Double">
                         <get-related-one value-name="orderItemInventoryResAndItemLocation" relation-name="OrderItemInventoryRes" to-value-name="orderItemInventoryRes"/>
-                        <log level="info" message="orderItemInventoryResAndItemLocation is ${orderItemInventoryResAndItemLocation}"/>
-                        <log level="info" message="orderItemInventoryRes is ${orderItemInventoryRes}"/>
 
                         <!-- if there aren't enough to move, put this on a list for insufficient quantities and handle later -->
                         <if-compare-field field-name="orderItemInventoryRes.quantity" operator="greater" to-field-name="inventoryItem.quantityOnHand">

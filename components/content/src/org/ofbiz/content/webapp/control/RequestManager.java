@@ -1,5 +1,5 @@
 /*
- * $Id: RequestManager.java,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: RequestManager.java,v 1.3 2003/09/18 16:01:22 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.Debug;
  * RequestManager - Manages request, config and view mappings.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class RequestManager implements Serializable {
@@ -214,24 +214,31 @@ public class RequestManager implements Serializable {
 
     /** Gets the error page from the requestMap, if none uses the default */
     public String getErrorPage(String uriStr) {
+        //Debug.logInfo("uriStr is: " + uriStr, module);
         Map uri = getRequestMapMap(uriStr);
+        //Debug.logInfo("RequestMapMap is: " + uri, module);
 
         if (uri != null) {
-            String returnPage = getViewPage((String) uri.get(ConfigXMLReader.ERROR_PAGE));
+            String errorViewUri = (String) uri.get(ConfigXMLReader.ERROR_PAGE);
+            //Debug.logInfo("errorViewUri is: " + errorViewUri, module);
+            String returnPage = getViewPage(errorViewUri);
+            //Debug.logInfo("Got returnPage for ErrorPage: " + returnPage, module);
 
-            if (returnPage != null)
+            if (returnPage != null) {
                 return returnPage;
-            else
+            } else {
                 return getDefaultErrorPage();
-        } else
+            }
+        } else {
             return getDefaultErrorPage();
+        }
     }
 
     /** Gets the default error page from the configMap or static site default */
     public String getDefaultErrorPage() {
         String errorPage = null;
-
         errorPage = (String) ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.DEFAULT_ERROR_PAGE);
+        //Debug.logInfo("For DefaultErrorPage got errorPage: " + errorPage, module);
         if (errorPage != null) return errorPage;
         return "/error/error.jsp";
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: DBCPConnectionFactory.java,v 1.2 2003/08/18 03:15:08 ajzeneski Exp $
+ * $Id: DBCPConnectionFactory.java,v 1.3 2003/09/18 16:01:22 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  * transactional datasources yet (DBCP 1.0).
  *
  * @author     <a href="mailto:mike@atlassian.com">Mike Cannon-Brookes</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class DBCPConnectionFactory {
@@ -61,8 +61,7 @@ public class DBCPConnectionFactory {
             return dataSource.getConnection();
         }
 
-        try
-        {
+        try {
             synchronized (DBCPConnectionFactory.class) {
                 //try again inside the synch just in case someone when through while we were waiting
                 dataSource = (DataSource)dsCache.get(helperName);
@@ -82,7 +81,8 @@ public class DBCPConnectionFactory {
 
                 String driverClassName = dbcpJdbcElement.getAttribute("jdbc-driver");
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                loader.loadClass(driverClassName);
+                Class clazz = loader.loadClass(driverClassName);
+                clazz.newInstance();
                 org.apache.commons.dbcp.ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI,username,password);
 
                 // Now we'll create the PoolableConnectionFactory, which wraps
@@ -93,11 +93,8 @@ public class DBCPConnectionFactory {
                 // Finally, we create the PoolingDriver itself,
                 // passing in the object pool we created.
                 dataSource = new PoolingDataSource(connectionPool);
-
                 dataSource.setLogWriter(Debug.getPrintWriter());
-
                 dsCache.put(helperName, dataSource);
-
                 return dataSource.getConnection();
             }
         } catch (Exception e) {

@@ -21,7 +21,7 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author         Andy Zeneski (jaz@ofbiz.org)
- *@version        $Revision: 1.7 $
+ *@version        $Revision: 1.8 $
  *@since            2.2
 -->
 
@@ -69,7 +69,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                         <td>
                                             <div class="tabletext">
                                                 <#if orderReadyToPickInfoList?has_content>
-                                                    <form method="POST" action="<@ofbizUrl>/Picklist</@ofbizUrl>">
+                                                    <form method="POST" action="<@ofbizUrl>/Picklist.pdf</@ofbizUrl>">
                                                         <input type="hidden" name="facilityId" value="${facilityId}"/>
                                                         <input type="hidden" name="shipmentMethodTypeId" value="${shipmentMethodType.shipmentMethodTypeId}"/>
                                                         Pick First:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
@@ -89,7 +89,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                     <td><div class="tableheadtext">${orderNeedsStockMoveInfoListSizeTotal}</div></td>
                                     <td>
                                         <div class="tabletext">
-                                            <form method="POST" action="<@ofbizUrl>/Picklist</@ofbizUrl>">
+                                            <form method="POST" action="<@ofbizUrl>/Picklist.pdf</@ofbizUrl>">
                                                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                                                 Pick First:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
                                                 <input type="checkbox" name="setPickStartedDate" value="Y" class="checkBox"/>Flag Picking Started?
