@@ -20,12 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if requestParameters.product_id?exists>
   <form name="reviewProduct" method="post" action="<@ofbizUrl>/createProductReview</@ofbizUrl>">
+    <input type="hidden" name="productStoreId" value="${productStore.productStoreId}">
     <input type="hidden" name="productId" value="${requestParameters.product_id}">
     <input type="hidden" name="product_id" value="${requestParameters.product_id}">
     <input type="hidden" name="category_id" value="${requestParameters.category_id}">
@@ -47,7 +48,7 @@
           <div class="tabletext">
             <b>${uiLabelMap.EcommercePostAnonymous}:</b>
             &nbsp;${uiLabelMap.CommonYes}&nbsp;<input type="radio" name="postedAnonymous" value="true">
-            &nbsp;${uiLabelMap.CommonNo}&nbsp;<input type="radio" name="postedAnonymous" value="false">
+            &nbsp;${uiLabelMap.CommonNo}&nbsp;<input type="radio" name="postedAnonymous" value="false" CHECKED>
           </div>
         </td>
       </tr>
