@@ -1,5 +1,6 @@
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.securityext.login.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -28,4 +29,9 @@
     layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
     layoutSettings.put("headerMiddleBackgroundUrl", null);
     layoutSettings.put("headerRightBackgroundUrl", null);
+    
+    String externalLoginKey = LoginEvents.getExternalLoginKey(request);
+    String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
+    request.setAttribute("externalKeyParam", externalKeyParam);
+    request.setAttribute("externalLoginKey", externalLoginKey);
 %>
