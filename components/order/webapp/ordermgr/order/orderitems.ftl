@@ -181,6 +181,25 @@
                     </#list>
                   </#if>
 
+                  <#-- now show survey information per line item -->
+                  <#assign orderItemSurveyResponses = Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemSurveyResponse(orderItem)>
+                  <#if orderItemSurveyResponses?exists && orderItemSurveyResponses?has_content>
+                    <#list orderItemSurveyResponses as survey>
+                      <tr>
+                        <td align="right" colspan="2">
+                          <div class="tabletext" style="font-size: xx-small;">
+                            <b><i>Survey</i>:</b>
+                              <a href="/content/control/ViewSurveyResponses?surveyId=${survey.surveyId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${survey.surveyId}</a>
+                          </div>
+                        </td>                        
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </#list>
+                  </#if>
+
                   <#-- now show inventory reservation info per line item -->
                   <#assign orderItemInventoryReses = orderReadHelper.getOrderItemInventoryReses(orderItem)>
                   <#if orderItemInventoryReses?exists && orderItemInventoryReses?has_content>

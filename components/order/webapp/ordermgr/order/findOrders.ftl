@@ -272,6 +272,7 @@ document.lookuporder.order_id.focus();
           <td width="5%" align="left"><div class="tableheadtext">Type</div></td>
           <td width="5%" align="left"><div class="tableheadtext">OrderID</div></td>
           <td width="20%" align="left"><div class="tableheadtext">Name</div></td>
+          <td width="5%" align="right"><div class="tableheadtext">Survey</div></td>
           <td width="5%" align="right"><div class="tableheadtext">Items Ordered</div></td>
           <td width="5%" align="right"><div class="tableheadtext">Items Returned</div></td>
           <td width="10%" align="right"><div class="tableheadtext">Remaining Sub Total</div></td>
@@ -283,7 +284,7 @@ document.lookuporder.order_id.focus();
           <td width="10%">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan='12'><hr class='sepbar'></td>
+          <td colspan='13'><hr class='sepbar'></td>
         </tr>
         <#if orderHeaderList?has_content>
           <#assign rowClass = "viewManyTR2">
@@ -332,6 +333,7 @@ document.lookuporder.order_id.focus();
                 </div>
                 -->
               </td>
+              <td align="right"><div class="tabletext">${orh.hasSurvey()?string.number}</div></td>
               <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
               <td align="right"><div class="tabletext">${orh.getOrderReturnedQuantity()?string.number}</div></td>
               <td align="right"><div class="tabletext"><@ofbizCurrency amount=orderHeader.remainingSubTotal isoCode=orh.getCurrency()/></div></td>

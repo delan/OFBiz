@@ -786,6 +786,22 @@ public class OrderReadHelper {
         return calcOrderAdjustment(adjustment, getOrderItemsSubTotal());
     }
 
+    public int hasSurvey() {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        List surveys = null;
+        try {
+            surveys = delegator.findByAnd("SurveyResponse", UtilMisc.toMap("orderId", orderHeader.getString("orderId")));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        int size = 0;
+        if (surveys != null) {
+            size = surveys.size();
+        }
+
+        return size;
+    }
+
     // ========================================
     // ========== Order Item Methods ==========
     // ========================================
@@ -1374,6 +1390,39 @@ public class OrderReadHelper {
 
     public static double getOrderAdjustmentsTotal(List orderItems, List adjustments) {
         return calcOrderAdjustments(getOrderHeaderAdjustments(adjustments), getOrderItemsSubTotal(orderItems, adjustments), true, true, true);
+    }
+
+    public static List getOrderSurveyResponses(GenericValue orderHeader) {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        String orderId = orderHeader.getString("orderId");
+         List responses = null;
+        try {
+            responses = delegator.findByAnd("SurveyResponse", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", "_NA_"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (responses == null) {
+            responses = new LinkedList();
+        }
+        return responses;
+    }
+
+    public static List getOrderItemSurveyResponse(GenericValue orderItem) {
+        GenericDelegator delegator = orderItem.getDelegator();
+        String orderItemSeqId = orderItem.getString("orderItemSeqId");
+        String orderId = orderItem.getString("orderId");
+        List responses = null;
+        try {
+            responses = delegator.findByAnd("SurveyResponse", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (responses == null) {
+            responses = new LinkedList();
+        }
+        return responses;
     }
 
     // ================= Order Adjustments =================
