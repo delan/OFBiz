@@ -1,32 +1,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
   <title>The Open For Business Project: Workflow Engine Guide</title>
-
 </head>
 <body>
-
-<table width='100%'>
-  <tr>
-    <td width='50%' align='left' valign='center'>
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
-    </td>
-    <td width='50%' align='right' valign='center'>
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
-    </td>
-  </tr>
+<table width="100%">
+  <tbody>
+    <tr>
+      <td align="left" valign="center" width="50%"> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
+ alt="The Open For Business Project" border="0"></a> </td>
+      <td align="right" valign="center" width="50%"> <a
+ href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173"
+ alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
+ width="88"></a> </td>
+    </tr>
+  </tbody>
 </table>
-<hr class='sepbar'>
-
-<h2 align="Center">The Open For Business Project: Workflow Engine Guide</h2>
- 
-<div class='contenttext'>Written By: Andy Zeneski, <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
-<div class='contenttext'>Last Updated: January 17, 2003</div>
-<!-- $Id: workflow.html,v 1.2 2003/08/19 17:45:21 jonesde Exp $ -->
-
-<hr class='sepbar'>
+<hr class="sepbar">
+<h2 align="center">The Open For Business Project: Workflow Engine Guide</h2>
+<div class="contenttext">Written By: Andy Zeneski, <a
+ href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
+<div class="contenttext">Edited by Les Austin<br>
+Last Updated: August 04, 2004<br>
+</div>
+<!-- $Id: workflow.html,v 1.3 2004/08/06 23:57:19 jonesde Exp $ -->
+<hr class="sepbar">
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a></li>
@@ -36,154 +41,218 @@
   <li><a href="#Activities">Workflow Activities</a></li>
   <li><a href="#Usage">Usage</a></li>
 </ul>
-
-<hr class='sepbar'>
-<h3>
-<a NAME="Related_Documents"></a>Related Documents:
+<hr class="sepbar">
+<h3><a name="Related_Documents"></a>Related Documents:
 </h3>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <ul>
   <li><a href="api/index.html">Core JavaDoc (including Workflow Engine)</a></li>
-  <li><a href="http://www.wfmc.org/standards/docs/xpdl.dtd">XPDL Definition DTD</a></li>
-  <li><a href="http://www.wfmc.org/standards/docs/xpdl_010522..pdf">XPDL PDF</a></li>
+  <li><a href="http://www.wfmc.org/standards/docs/xpdl.dtd">XPDL
+Definition DTD</a></li>
+  <li><a href="http://www.wfmc.org/standards/docs/xpdl_010522..pdf">XPDL
+PDF</a></li>
   <li><a href="http://www.wfmc.org/standards/docs.htm">WfMC References</a></li>
-  <li><a href="http://www.omg.org/technology/documents/formal/omg_business_specs.htm">OMG References</a></li>
+  <li><a
+ href="http://www.omg.org/technology/documents/formal/omg_business_specs.htm">OMG
+References</a></li>
 </ul>
-
-<hr class='sepbar'>
-<h3><a NAME="Introduction"></a>Introduction</h3>
-<hr class='sepbar'>
-
-<p class='contenttext'>The Open for Business Workflow Engine is based on the <a href="http://www.wfmc.org">WfMC</a> and
-<a href="http://www.omg.org">OMG</a> spec; (See the <a href="#Related_Documents">related documents</a> for information
-on these specs.) it is a member of the Services Framework, and is tightly integrated with the Entity Engine.
-It uses the entities found in entitymodel_workflow.XML for definition information and entitymode_workeffort for
-runtime storage. All changes to a process or activity are persisted real-time. Therefore, the engine does not run in a
-thread, it is simply a group of APIs and common objects which handle the flow. When a change to the workflow is made,
-the engine then processes that change. When finished, the engine returns. Hence, if the application does crash, or the
-system reboots, the workflow will continue right where it left off upon restart.</p>
-<p class='contenttext'>The Workflow Engine is not designed for processing flow of a web site. This is a common mis-conception. Web site
-flow is controlled by the Control Servlet. Workflow is the processing of manual and automatic activities to fulfill
+<hr class="sepbar">
+<h3><a name="Introduction"></a>Introduction</h3>
+<hr class="sepbar">
+<p class="contenttext">The Open for Business Workflow Engine is based
+on the <a href="http://www.wfmc.org">WfMC</a> and
+<a href="http://www.omg.org">OMG</a> specifications. (See the <a
+ href="#Related_Documents">related documents</a> for information
+on these specs.) The Workflow Engine is a member of the Services
+Framework, and is tightly integrated with the Entity Engine.
+It uses the entities found in entitymodel_workflow.XML for definition
+information and entitymode_workeffort for
+runtime storage. All changes to a process or activity are persisted
+real-time. Therefore, the engine does not run in a
+thread, it is simply a group of APIs and common objects which handle
+the flow. When a change to the workflow is made,
+the engine then processes that change. When finished, the engine
+returns. Hence, if the application does crash, or the
+system reboots, the workflow will continue right where it left off upon
+restart.</p>
+<p class="contenttext">The Workflow Engine is not designed for
+processing flow of a web site. This is a common misconception. Web site
+flow is controlled by the Control Servlet. Workflow is the processing
+of manual and automatic activities to fulfill
 a specific goal.</p>
-<p class='contenttext'>OFBiz Workflow Engine uses XPDL as its process definition language. This is an open standard, and very flexible. In
-cases where the XPDL spec does not specifically state or leaves the implementation up to the vendor, we have noted them
-in the section XPDL Extensions.
-
-<hr class='sepbar'>
-<h3><a NAME="XPDLExtensions"></a>XPDL Extensions</h3>
-<hr class='sepbar'>
-
-<p class='contenttext'>Workflows are designed using a processes definition language called XPDL. This document does not go into detail
-about XPDL, that is explained in a document created by the <a href="http://www.wfmc.org">WfMC</a>, see
+<p class="contenttext">OFBiz Workflow Engine uses XPDL as its process
+definition language. This is an open standard, and very flexible. In
+cases where the XPDL spec does not specifically state or leaves the
+implementation up to the vendor, we have noted them
+in the section "XPDL Extensions," below.
+</p>
+<hr class="sepbar">
+<h3><a name="XPDLExtensions"></a>XPDL Extensions</h3>
+<hr class="sepbar">
+<p class="contenttext">Workflows are designed using a processes
+definition language called XPDL. This document does not go into detail
+about XPDL, that is explained in a document created by the <a
+ href="http://www.wfmc.org">WfMC</a>, see
 <a href="#Related_Documents">related documents</a>.</p>
-<p class='contenttext'>There are a number of attributes the WfMC says is left to the vendor. Here we will document our extensions:
- (These are implemented as 'ExtendedAttributes')</p>
-
-<p class='contenttext'>&nbsp;</p>
+<p class="contenttext">There are a number of attributes the WfMC says
+is left to the vendor. Here we will document our extensions: (These are
+implemented as 'ExtendedAttributes')</p>
+<p class="contenttext">&nbsp;</p>
 <b>ACTIVITY EXTENDED ATTRIBUTES</b>
 <ul>
-<p class='contenttext'><li><b>acceptAllAssignments</b> - This ExtendedAttribute tells the workflow engine that ALL assignments must be accepted
-before an activity will begin. This is useful when there are multiple participants to an activity and everyone must
-accept their assignment prior to the activity beginning. (Default is NO)</li>
-<p class='contenttext'><li><b>completeAllAssignments</b> - Simular to the acceptAll, this tells the workflow engine that all assignments must be
-completed before the activity completes. This is helpful when implementing activities like payroll, when all employees
-must submit their time-sheets prior to moving to the next step. (Default is NO)</li>
-<p class='contenttext'><li><b>limitService</b> - When defining an activity, a limit can be set. This is the amount of time which is allowed before this
-activity is expected to be complete. A service can be set to run if the activity has not completed in the allocated
-amount of time. (No default)</li>
-<p class='contenttext'><li><b>limitAfterStart</b> - This tells the workflow engine that the limit checking should take place after the activity has
-begun. By setting this to NO, the limit is calculated from the time the assignment is created, rather then the time the
-activity started. (Default is YES)</li>
-<p class='contenttext'><li><b>canStart</b> - This attribute tells the workflow engine that the activity attached to this ExtendedAttribute is allowed
-to initiate the workflow. So rather then the workflow starting with the first activity, the workflow can begin with any
-activity which has this set to yes.</li>
+  <p class="contenttext"></p>
+  <li><b>acceptAllAssignments</b> - This ExtendedAttribute tells the
+workflow engine that ALL assignments must be accepted
+before an activity will begin. This is useful when there are multiple
+participants to an activity and everyone must
+accept their assignment prior to the activity beginning. (Default is
+NO.)</li>
+  <p class="contenttext"></p>
+  <li><b>completeAllAssignments</b> - Similar to acceptAll, this tells
+the workflow engine that all assignments must be
+completed before the activity completes. This is helpful when
+implementing activities like payroll, when all employees
+must submit their time-sheets prior to moving to the next step.
+(Default is NO.)</li>
+  <p class="contenttext"></p>
+  <li><b>limitService</b> - When defining an activity, a limit can be
+set. This is the amount of time which is allowed before this
+activity is expected to be completed. A service can be set to run if
+the activity has not completed in the allocated
+amount of time. (No default.)</li>
+  <p class="contenttext"></p>
+  <li><b>limitAfterStart</b> - This tells the workflow engine that the
+limit checking should take place after the activity has
+begun. By setting this to NO, the limit is calculated from the time the
+assignment is created, rather then the time the
+activity started. (Default is YES.)</li>
+  <p class="contenttext"></p>
+  <li><b>canStart</b> - This attribute tells the workflow engine that
+the activity attached to this ExtendedAttribute is allowed
+to initiate the workflow. So rather than the workflow starting with the
+first activity, the workflow can begin with any
+activity which has this set to YES.</li>
 </ul>
-<p class='contenttext'>&nbsp;</p>
-<b>IMPLEMENTATION/TOOL EXTENDED ATTRIBUTES & ACTUAL PARAMETERS</b>
+<p class="contenttext">&nbsp;</p>
+<b>IMPLEMENTATION/TOOL EXTENDED ATTRIBUTES &amp; ACTUAL PARAMETERS</b>
 <ul>
-<p class='contenttext'><li><b>runAsUser</b> - This ExtendedAttribute will tell the TOOL (if it is a PROCEDURE) to run the defined service as
-<i>this</i> user. Specify the user's userLoginId as the value of the attribute. By default NO userLogin object will be passed.</li>
-<p class='contenttext'><li><b>Actual Parameters:</b></li>
+  <p class="contenttext"></p>
+  <li><b>runAsUser</b> - This ExtendedAttribute will tell the TOOL (if
+it is a PROCEDURE) to run the defined service as
+    <i>this</i> user. Specify the user's userLoginId as the value of
+the attribute. By default NO userLogin object will be passed.</li>
+  <p class="contenttext"></p>
+  <li><b>Actual Parameters:</b></li>
   <ul>
-    <li><u>Expressions:</u> You can use expressions inside ActualParameters to map context attributes to service parameters.
-    You must specifiy <i>expr:</i> to note an expression. Example:
-    <pre>&lt;ActualParameter&gt;expr:orderNumber=orderId&lt;/ActualParameter&gt;</pre>
-    will map the context attribute <i>orderId</i> to a buffered variable named <i>orderNumber</i> then if you did:
-    <pre>&lt;ActualParameter&gt;orderNumber&lt;/ActualParameter&gt;</pre>
-    the parameter <i>orderNumber</i> would be passed to the service with the value of <i>orderId</i>.</li>
+    <li><u>Expressions:</u> You can use expressions inside
+ActualParameters to map context attributes to service parameters. You
+must specifiy <i>expr:</i> to note an expression. Example:
+      <pre>&lt;ActualParameter&gt;expr:orderNumber=orderId&lt;/ActualParameter&gt;</pre>
+will map the context attribute <i>orderId</i> to a buffered variable
+named <i>orderNumber</i> then if you did:
+      <pre>&lt;ActualParameter&gt;orderNumber&lt;/ActualParameter&gt;</pre>
+the parameter <i>orderNumber</i> would be passed to the service with
+the value of <i>orderId</i>.</li>
     <br>
-    <li><u>WorkEffort ID:</u> You can use <i>workEffortId</i> as an ActualParameter, this will be mapped to the primary key
-    of the current activity.</li>
+    <li><u>WorkEffort ID:</u> You can use <i>workEffortId</i> as an
+ActualParameter, this will be mapped to the primary key of the current
+activity.</li>
   </ul>
 </ul>
-<p class='contenttext'>&nbsp;</p>
+<p class="contenttext">&nbsp;</p>
 <b>DEFAULT STARTING ACTIVITY</b>
-<ul><p class='contenttext'>By default when a workflow is started, the first activity in the list is set as the default starting activity. This
-means that when a workflow is started normally, we will run the first activity first, then follow the transitions. This
-is the most common way to invoke a workflow. However, there may be times when the workflow should be invoked from a
-number of different starting points. In this case, the client API would be used to call the appropriate activity to begin.
-The transitions would follow from that point. Only activities with the 'canStart' ExtendedAttribute are allowed to
-initiate a workflow.</p></ul>
-
-<hr class='sepbar'>
-<h3><a NAME="ClientAPI"></a>Client API</h3>
-<hr class='sepbar'>
-
-<p class='contenttext'>The client API for the OFBiz Workflow engine consists of a set of global services and a factory class. The
-factory class named <a href="api/org/ofbiz/core/workflow/WfFactory.html">org.ofbiz.workflow.WfFactory</a>,
-can either create a new instance of a workflow component (process/activity/assignment) or it can locate an existing
-instance. Instances are stored in the <i>WorkEffort</i> entity and are loaded as necessary. The set of global services
+<ul>
+  <p class="contenttext">By default when a workflow is started, the
+first activity in the list is set as the default starting activity.
+This
+means that when a workflow is started normally, we will run the first
+activity first, then follow the transitions. This
+is the most common way to invoke a workflow. However, there may be
+times when the workflow should be invoked from a
+number of different starting points. In this case, the client API would
+be used to call the appropriate activity to begin.
+The transitions would follow from that point. Only activities with the
+'canStart' ExtendedAttribute are allowed to
+initiate a workflow.</p>
+</ul>
+<hr class="sepbar">
+<h3><a name="ClientAPI"></a>Client API</h3>
+<hr class="sepbar">
+<p class="contenttext">The client API for the OFBiz Workflow engine
+consists of a set of global services and a factory class. The
+factory class named <a
+ href="api/org/ofbiz/core/workflow/WfFactory.html">org.ofbiz.workflow.WfFactory</a>,
+can either create a new instance of a workflow component
+(process/activity/assignment) or it can locate an existing
+instance. Instances are stored in the <i>WorkEffort</i> entity and are
+loaded as necessary. The set of global services
 found in <a href="api/org/ofbiz/core/workflow/WorkflowServices.html">org.ofbiz.workflow.WorkflowServices</a>
-are setup to make assigning, accepting and completing assignments/activities easier. It is not required to use these
-services, but it is highly recommended. You will want to review the JavaDocs for these classes.</p>
-<p class='contenttext'>The <i>workeffort</i> web application shows an example of a workflow web client. From this interface you can accept
-assignments which are currently assigned to your group/role and edit the state. Try
+are setup to make assigning, accepting and completing
+assignments/activities easier. It is not required to use these
+services, but it is highly recommended. You will want to review the
+JavaDocs for these classes.</p>
+<p class="contenttext">The <i>workeffort</i> web application shows an
+example of a workflow web client. From this interface you can accept
+assignments which are currently assigned to your group/role and edit
+the state. Try
 <a href="http://localhost:8080/workeffort">http://localhost:8080/workeffort</a>.</p>
-
-<hr class='sepbar'>
-<h3><a NAME="Activities"></a>Workflow Activities</h3>
-<hr class='sepbar'>
-
-<p class='contenttext'>The combination of manual and automatic activities is what makes a workflow so powerful. The OFBiz Workflow Engine
-currently implements NO, ROUTE, TOOL:Procedure, and SUB-FLOW type activities. TOOL:Application type activities are not yet
+<hr class="sepbar">
+<h3><a name="Activities"></a>Workflow Activities</h3>
+<hr class="sepbar">
+<p class="contenttext">The combination of manual and automatic
+activities is what makes a workflow so powerful. The OFBiz Workflow
+Engine
+currently implements NO, ROUTE, TOOL:Procedure, and SUB-FLOW type
+activities. TOOL:Application type activities are not yet
 implemented but will be in a future release.</p>
 <ul>
-  <p class='contenttext'><li><b>NO</b> - Just as is says, no activity. This describes a 'manual' activity.</li>
-  <p class='contenttext'><li><b>ROUTE</b> - A route activity is used for simply routing to other activities via the transitions.</li>
-  <p class='contenttext'><li><b>TOOL</b> - </li>
+  <p class="contenttext"></p>
+  <li><b>NO</b> - Just as is says, no activity. This describes a
+'manual' activity.</li>
+  <p class="contenttext"></p>
+  <li><b>ROUTE</b> - A route activity is used for simply routing to
+other activities via the transitions.</li>
+  <p class="contenttext"></p>
+  <li><b>TOOL</b> - </li>
   <ul>
-    <li><u>Application:</u> An external application is invoked. - <i>Not currently implemented</i>.</li>
+    <li><u>Application:</u> An external application is invoked. - <i>Not
+currently implemented</i>.</li>
     <br>
-    <li><u>Procedure:</u> OFBiz Workflow Engine implements procedures as internal service calls.</li>
+    <li><u>Procedure:</u> OFBiz Workflow Engine implements procedures
+as internal service calls.</li>
   </ul>
-  <p class='contenttext'><li><b>SUB-FLOW</b> - A sub-workflow is created and ran. These can be defined as synchronous or asynchronous.
+  <p class="contenttext"></p>
+  <li><b>SUB-FLOW</b> - A sub-workflow is created and ran. These can be
+defined as synchronous or asynchronous.
+  </li>
 </ul>
-<p class='contenttext'>The current version of the OFBiz Workflow Engine does not implement LOOPS. These too will be added in a future
+<p class="contenttext">The current version of the OFBiz Workflow Engine
+does not implement LOOPS. These too will be added in a future
 release.</p>
-
-
-<hr class='sepbar'>
-<h3><a NAME="Usage"></a>Usage</h3>
-<hr class='sepbar'>
-
-<p class='contenttext'>To use the workflow engine you must first have a process you wish to invoke. Design your process in XPDL format. Once
-your design is complete, import the XPDL file into the workflow entities. You can do this from the <i>webtools</i> web
-interface. After the workflow is imported it can now be made available for execution. The easiest way to invoke a workflow
-is to define it as a service. Create a service definition for the workflow process and set its engine-type to 'workflow'.
-From there you can start a workflow process just like running any other service.</p>
-
-<hr class='sepbar'>
-<h3><a NAME="Document_Notes"></a>Documentation Notes</h3>
-<hr class='sepbar'>
-
-<p class='contenttext'>We know this documentation does not go into much detail. And we apologize for that. However, we spend a most of our time
-writing the code base, so documentation doesn't get full attention. We realize the need for good documentation, but our resources are
-limited. If you or anyone you know is interested in helping The Open For Business Project by contributing time
-writing better documentation, please contact the e-mail address at the top of this document. Thank you.</p>
-
-<hr class='sepbar'>
-
+<hr class="sepbar">
+<h3><a name="Usage"></a>Usage</h3>
+<hr class="sepbar">
+<p class="contenttext">To use the workflow engine you must first have a
+process you wish to invoke. Design your process in XPDL format. Once
+your design is complete, import the XPDL file into the workflow
+entities. You can do this from the <i>webtools</i> web
+interface. After the workflow is imported it can now be made available
+for execution. The easiest way to invoke a workflow
+is to define it as a service. Create a service definition for the
+workflow process and set its engine-type to 'workflow'.
+From there you can start a workflow process just like running any other
+service.</p>
+<hr class="sepbar">
+<h3><a name="Document_Notes"></a>Documentation Notes</h3>
+<hr class="sepbar">
+<p class="contenttext">We know this documentation does not go into much
+detail. And we apologize for that. However, we spend a most of our time
+writing the code base, so documentation doesn't get full attention. We
+realize the need for good documentation, but our resources are
+limited. If you or anyone you know is interested in helping The Open
+For Business Project by contributing time
+writing better documentation, please contact the e-mail address at the
+top of this document. Thank you.</p>
+<hr class="sepbar">
 </body>
 </html>
-

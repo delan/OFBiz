@@ -2,299 +2,368 @@
 <html>
 <head>
   <title>Open For Business Framework Configuration Guide</title>
-  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css" type="text/css">
+  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css"
+ type="text/css">
 </head>
-
 <body>
-
 <table width="100%">
-  <tr>
-    <td width="50%" align="left" valign="center">
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt="The Open For Business Project"></a>
-    </td>
-    <td width="50%" align="right" valign="center">
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
-    </td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="left" valign="center" width="50%"> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
+ alt="The Open For Business Project" border="0"></a> </td>
+      <td align="right" valign="center" width="50%"> <a
+ href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173"
+ alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
+ width="88"></a> </td>
+    </tr>
+  </tbody>
 </table>
 <hr class="sepbar">
-
-<h2 align="center">The Open For Business Project: Framework Configuration Guide</h2>
- 
-<div class="contenttext">Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
-<div class="contenttext">Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
-<div class="contenttext">Last Updated: January 28, 2003</div>
-<!-- $Id: coreconfig.html,v 1.2 2004/03/07 03:28:30 jonesde Exp $ -->
-
+<h2 align="center">The Open For Business Project: Framework
+Configuration Guide</h2>
+<div class="contenttext">Written by: David E. Jones, <a
+ href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class="contenttext">Minor corrections by: <a
+ href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
+<div class="contenttext">Edited by: Les Austin<br>
+Last Updated: August 05, 2004<br>
+</div>
+<!-- $Id: coreconfig.html,v 1.3 2004/08/06 23:57:18 jonesde Exp $ -->
 <hr class="sepbar">
 <h3>Table of Contents</h3>
-
 <ul>
-  <li><a href="#Related_Documents">Related Documents</a>
-  <li><a href="#Introduction">Introduction</a>
-  <li><a href="#Properties">Properties File Extensions</a>
-  <li><a href="#cache">cache.properties</a>
-  <li><a href="#debug">debug.properties</a>
-  <li><a href="#jndiservers">jndiservers.xml</a>
-  <li><a href="#localdtds">localdtds.properties</a>
-  <li><a href="#security">security.properties</a>
-  <li><a href="#serverstats">serverstats.properties</a>
+  <li><a href="#Related_Documents">Related Documents</a> </li>
+  <li><a href="#Introduction">Introduction</a> </li>
+  <li><a href="#Properties">Properties File Extensions</a> </li>
+  <li><a href="#cache">cache.properties</a> </li>
+  <li><a href="#debug">debug.properties</a> </li>
+  <li><a href="#jndiservers">jndiservers.xml</a> </li>
+  <li><a href="#localdtds">localdtds.properties</a> </li>
+  <li><a href="#security">security.properties</a> </li>
+  <li><a href="#serverstats">serverstats.properties</a> </li>
   <li><a href="#url">url.properties</a>
+  </li>
 </ul>
-
 <hr class="sepbar">
-
 <h3><a name="Related_Documents">Related Documents:</a></h3>
 <hr class="sepbar">
 <ul>
   <li><a href="api/base/build/javadocs/index.html">Base API</a></li>
-
-  <li><a href="api/components/common/build/javadocs/index.html">Common Component API</a></li>
-  <li><a href="api/components/content/build/javadocs/index.html">Content Component API</a></li>
-  <li><a href="api/components/entity/build/javadocs/index.html">Entity Component API</a></li>
-  <li><a href="api/components/entityext/build/javadocs/index.html">Entity Extensions Component API</a></li>
-  <li><a href="api/components/minerva/build/javadocs/index.html">Minerva Component API</a></li>
-  <li><a href="api/components/security/build/javadocs/index.html">Security Component API</a></li>
-  <li><a href="api/components/securityext/build/javadocs/index.html">Security Extensions Component API</a></li>
-  <li><a href="api/components/service/build/javadocs/index.html">Service Component API</a></li>
-
+  <li><a href="api/components/common/build/javadocs/index.html">Common
+Component API</a></li>
+  <li><a href="api/components/content/build/javadocs/index.html">Content
+Component API</a></li>
+  <li><a href="api/components/entity/build/javadocs/index.html">Entity
+Component API</a></li>
+  <li><a href="api/components/entityext/build/javadocs/index.html">Entity
+Extensions Component API</a></li>
+  <li><a href="api/components/minerva/build/javadocs/index.html">Minerva
+Component API</a></li>
+  <li><a href="api/components/security/build/javadocs/index.html">Security
+Component API</a></li>
+  <li><a href="api/components/securityext/build/javadocs/index.html">Security
+Extensions Component API</a></li>
+  <li><a href="api/components/service/build/javadocs/index.html">Service
+Component API</a></li>
   <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
   <li><a href="serviceconfig.html">Service Engine Configuration Guide</a></li>
 </ul>
-
 <hr class="sepbar">
 <h3><a name="Introduction">Introduction</a></h3>
 <hr class="sepbar">
-
-<p class="contenttext">This document describes the configuration of the Framework of the Open For Business Framework. 
-It goes through each of the OFBiz Framework properties files to explain the available properties and their 
-usage. The properties files used for the OFBiz applications have
+<p class="contenttext">This document describes the configuration of the
+Framework of the Open For Business Framework. It goes through each of
+the OFBiz Framework properties files to explain the available
+properties and their usage. The properties files used for the OFBiz
+applications have
 examples of the different options and are located in <b><code>ofbiz/commonapp/etc/</code></b>.</p>
-
-<p class="contenttext">These files are resources on the classpath so they must be located somewhere
-on the classpath available to the Java application(s) for the proper operation
-of the OFBiz Framework. Because they are resources on the classpath 
+<p class="contenttext">These files are resources on the classpath so
+they must be located somewhere
+on the classpath available to the Java application(s) for the proper
+operation
+of the OFBiz Framework. Because they are resources on the classpath
 they can be overridden locally in webapps by putting
-a changed copy of the desired file in the webapp/WEB-INF/classes directory.</p>
-
-<p class="contenttext">The entityengine.xml file is not described in this document, it is described 
-in the Entity Engine Configuration Guide as a separate document because of the 
-large number of options in the file. See the Related Documents section for a link to
-the Entity Engine Configuration Guide. The same is true for the Service Engine
-Configuration Guide and the serviceengine.xml file, including a link in the
+a changed copy of the desired file in the webapp/WEB-INF/classes
+directory.</p>
+<p class="contenttext">The entityengine.xml file is not described in
+this document, it is described in the Entity Engine Configuration Guide
+as a separate document because of the large number of options in the
+file. See the Related Documents section for a link to
+the Entity Engine Configuration Guide. The same is true for the Service
+Engine
+Configuration Guide and the serviceengine.xml file, including a link in
+the
 Related Documents section above.</p>
-
 <hr class="sepbar">
 <h3><a name="Properties">Properties File Extensions</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The OFBiz UtilProperties class uses the OFBiz FlexibleProperties to read
-and parse properties files with a few extensions. The FlexibleProperties class
+<p class="contenttext">The OFBiz UtilProperties class uses the OFBiz
+FlexibleProperties to read
+and parse properties files with a few extensions. The
+FlexibleProperties class
 is an extension of the standard Java Properties class.</p>
-
-<p class="contenttext">The extensions included allow the value of a property to be substituted into
-the value of another property by simply using the ${property.name} syntax. Another
-extension is that if a "env." precedes a property.name inside the ${ and } 
-delimiters then the named property will be looked up in the system environment
+<p class="contenttext">The extensions included allow the value of a
+property to be substituted into
+the value of another property by simply using the ${property.name}
+syntax. Another
+extension is that if an "env." precedes a property.name inside the ${
+and } delimiters, then the named property will be looked up in the
+system environment
 instead of in the current properties file.</p>
-
 <p class="contenttext">For example the ofbiz.home system
-property is added using the -D parameter on the java command line and is used
+property is added using the -D parameter on the java command line and
+is used
 in the entityengine.xml and other properties files with <b><code>${env.ofbiz.home}</code></b>.</p>
-
-<p class="contenttext">Note that these extensions are only currently available for properties files
-used in configuration. The internationalization and localization related message
-properties files use the standard Java <CODE>MessageBundle</CODE> class that does not use
-these conventions. They do, however support parameters inserted into the
-messages using the Java <CODE>MessageFormat</CODE> class and related
+<p class="contenttext">Note that these extensions are only currently
+available for properties files
+used in configuration. The internationalization and localization
+related message
+properties files use the standard Java <code>MessageBundle</code>
+class that does not use
+these conventions. They do, however support parameters inserted into
+the
+messages using the Java <code>MessageFormat</code> class and related
 conventions.</p>
-
 <hr class="sepbar">
 <h3><a name="cache">cache.properties</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The cache.properties file contains cache setting used by the UtilCache class.
-Default cache parameters can be passed in when a cache is created but if cache
-parameters exist in this file for the given cache name then they will be
+<p class="contenttext">The cache.properties file contains cache setting
+used by the UtilCache class.
+Default cache parameters can be passed in when a cache is created but,
+if cache
+parameters exist in this file for the given cache name, then they will
+be
 loaded from the cache.properties file.</p>
-
-<p class="contenttext">There are three optional properties in this file for each named cache: 
-<b><code>{cache-name}.maxSize</code></b> (whole number), <b><code>{cache-name}.expireTime</code></b>
-(whole number)
-and <b><code>{cache-name}.useSoftReference</code></b> (true or false). The maxSize
-property specifies the maximum number of entries in the cache, but does nothing
-with respect to the size of each cache entry. The expireTime property specifies
-how long in milliseconds each cache entry will be valid. If either value is 0 the
+<p class="contenttext">There are three optional properties in this file
+for each named cache: <br>
+<b><code>&nbsp;&nbsp;&nbsp; {cache-name}.maxSize</code></b> (whole
+number)<b><code><br>
+&nbsp;&nbsp;&nbsp; {cache-name}.expireTime</code></b>
+(whole number) <b><code><br>
+&nbsp;&nbsp;&nbsp; {cache-name}.useSoftReference</code></b> (true or
+false). <br>
+The maxSize
+property specifies the maximum number of entries in the cache, but does
+nothing
+with respect to the size of each cache entry. The expireTime property
+specifies
+how long in milliseconds each cache entry will be valid. If either
+value is 0 the
 feature will be disabled, i.e. unlimited cache size or no expire time.</p>
-
-<p class="contenttext">The useSoftReference property is used to specify, true or false, whether soft
-references should be used for cache entries. Soft references help keep large
-caches from taking too much memory by allowing the garbage collector to clear
+<p class="contenttext">The useSoftReference property is used to
+specify, true or false, whether soft
+references should be used for cache entries. Soft references help keep
+large
+caches from taking too much memory by allowing the garbage collector to
+clear
 these entries when more memory is needed.</p>
-
 <p class="contenttext">If the values
-are not specified and are not passed to the UtilCache constructor, the values in
-the <b><code>default.maxSize</code></b>, <b><code>default.expireTime</code></b> 
+are not specified and are not passed to the UtilCache constructor, the
+values in
+the <b><code>default.maxSize</code></b>, <b><code>default.expireTime</code></b>
 and <b><code>default.useSoftReference</code></b> properties will
 be used.</p>
-
 <hr class="sepbar">
 <h3><a name="debug">debug.properties</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The debug.properties file contains options to turn OFBiz debug threads on/off 
-and also serves as the Log4J properties file (see jakarta.apache.org for 
-documentation on Log4J).</p>
-
-<p class="contenttext">In addition to the Log4J properties there are properties that turn OFBiz logging
-levels on and off. These are formatted like <b><code>print.{level-name}</code></b> where level-name
+<p class="contenttext">The debug.properties file contains options to
+turn OFBiz debug threads on/off and also serves as the Log4J properties
+file (see jakarta.apache.org for documentation on Log4J).</p>
+<p class="contenttext">In addition to the Log4J properties there are
+properties that turn OFBiz logging
+levels on and off. These are formatted like <b><code>print.{level-name}</code></b>
+where level-name
 is <b><code>verbose</code></b>, <b><code>timing</code></b>, <b><code>info</code></b>,
-<b><code>important</code></b>, <b><code>warning</code></b>, <b><code>error</code></b>, or <b><code>fatal</code></b>.</p>
-
+<b><code>important</code></b>, <b><code>warning</code></b>, <b><code>error</code></b>,
+or <b><code>fatal</code></b>.</p>
 <hr class="sepbar">
 <h3><a name="jndiservers">jndiservers.xml</a></h3>
 <hr class="sepbar">
-
-<p class="contenttext">This is a simple XML file that contains a number of <b><code>jndi-server</code></b>
-tags inside a single <b><code>jndi-config</code></b> tag. Each jndi-server tag
-corresponds to a named JNDI Server configuration that will be used in various
-places in the OFBiz Framework, especially in the Entity and Service Engines.</p>
-
-<p class="contenttext">The <b><code>jndi-server</code></b> tag is used to configure JNDI servers
-that will be used for JTA objects, JDBC objects, JMS objects, and other JNDI resources used
-by the Entity Engine, the Service Engine, and other framework or application
+<p class="contenttext">This is a simple XML file that contains a number
+of <b><code>jndi-server</code></b>
+tags inside a single <b><code>jndi-config</code></b> tag. Each
+jndi-server tag
+corresponds to a named JNDI Server configuration that will be used in
+various
+places in the OFBiz Framework, especially in the Entity and Service
+Engines.</p>
+<p class="contenttext">The <b><code>jndi-server</code></b> tag is used
+to configure JNDI servers
+that will be used for JTA objects, JDBC objects, JMS objects, and other
+JNDI resources used
+by the Entity Engine, the Service Engine, and other framework or
+application
 components.</p>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the JNDI Server. Used in other tags in the 'jndi-server-name' 
-    attribute. This is the only required attribute. The others can be left out
-    to use the default constructor of the InitialContext class, which will
-    load the JNDI parameters from the jndi.properties file, which most app servers include.</td>
-</tr>
-<tr>
-    <td>context-provider-url</td><td>N</td>
-    <td>Example: rmi://127.0.0.1:1099</td>
-</tr>
-<tr>
-    <td>initial-context-factory</td><td>N</td>
-    <td>Example: com.sun.jndi.rmi.registry.RegistryContextFactory</td>
-</tr>
-<tr>
-    <td>url-pkg-prefixes</td><td>N</td>
-    <td>Example: java.naming.rmi.security.manager</td>
-</tr>
-<tr>
-    <td>security-principal</td><td>N</td>
-    <td>JNDI Username</td>
-</tr>
-<tr>
-    <td>security-credentials</td><td>N</td>
-    <td>JNDI Password</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the JNDI Server. Used in other tags in the
+'jndi-server-name' attribute. This is the only required attribute. The
+others can be left out to use the default constructor of the
+InitialContext class, which will load the JNDI parameters from the
+jndi.properties file, which most app servers include.</td>
+    </tr>
+    <tr>
+      <td>context-provider-url</td>
+      <td>N</td>
+      <td>Example: rmi://127.0.0.1:1099</td>
+    </tr>
+    <tr>
+      <td>initial-context-factory</td>
+      <td>N</td>
+      <td>Example: com.sun.jndi.rmi.registry.RegistryContextFactory</td>
+    </tr>
+    <tr>
+      <td>url-pkg-prefixes</td>
+      <td>N</td>
+      <td>Example: java.naming.rmi.security.manager</td>
+    </tr>
+    <tr>
+      <td>security-principal</td>
+      <td>N</td>
+      <td>JNDI Username</td>
+    </tr>
+    <tr>
+      <td>security-credentials</td>
+      <td>N</td>
+      <td>JNDI Password</td>
+    </tr>
+  </tbody>
 </table>
-
 <hr class="sepbar">
 <h3><a name="localdtds">localdtds.properties</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The localdtds.properties file contains DTD names and the name of the .dtd
-file on the classpath that can be used for that name. This is used to accomplish
-local loading of DTDs rather than always getting them over the internet when
-an XML file is loaded and validated. This file is used by the UtilXml class.</p>
-
-<p class="contenttext">The properties in this file do not follow the standard name=value style
-properties because DTD names are not legal properties file names. So, they are
-specified using two attribute: <b><code>name.{number}</code></b> and <b><code>value.{number}</code></b>. 
-When looking for the value for a given DTD name the <b><code>name.1</code></b> property is
-looked at first and then the number is incremented until the current number
-is not found. So, if you have 8 name/value pairs then you highest number for 
-both <b><code>name.{number}</code></b> and <b><code>value.{number}</code></b> will be 8, with every number
-between 1 and 8 used. If, for example, the number 5 is skipped, then everything
+<p class="contenttext">The localdtds.properties file contains DTD names
+and the name of the .dtd
+file on the classpath that can be used for that name. This is used to
+accomplish
+local loading of DTDs rather than always getting them over the internet
+when
+an XML file is loaded and validated. This file is used by the UtilXml
+class.</p>
+<p class="contenttext">The properties in this file do not follow the
+standard name=value style
+properties because DTD names are not legal properties file names. So,
+they are
+specified using two attributes: <b><code>name.{number}</code></b> and <b><code>value.{number}</code></b>.
+When looking for the value for a given DTD name the <b><code>name.1</code></b>
+property is
+looked at first and then the number is incremented until the current
+number
+is not found. So, if you have 8 name/value pairs then your highest
+number for both <b><code>name.{number}</code></b> and <b><code>value.{number}</code></b>
+will be 8, with every number
+between 1 and 8 used. If, for example, the number 5 is skipped, then
+everything
 beyond 4 will be ignored.</p>
-
-<p class="contenttext">An example of these properties: <b><code>name.1=-//OFBiz//DTD Data Files//EN</code></code></b> for 
-the name and <b><code>value.1=datafiles.dtd</code></code></b> for the value. The <b><code>datafiles.dtd</code></b> 
-resource will be searched for on the classpath.</p>
-
+<p class="contenttext">An example of these properties: <b><code>name.1=-//OFBiz//DTD
+Data Files//EN</code></b> for the name and <b><code>value.1=datafiles.dtd</code></b>
+for the value. The <b><code>datafiles.dtd</code></b> resource will be
+searched for on the classpath.</p>
 <hr class="sepbar">
 <h3><a name="security">security.properties</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The security.properties file contains security related settings such as the
-minimum length for passwords. Currently the only property in the file is
-<b><code>password.length.min</code></b> which specifies the minimum number of characters in 
-a UserLogin password.</p>
-
+<p class="contenttext">The security.properties file contains security
+related settings such as the
+minimum length for passwords. Currently the only property in the file
+is
+<b><code>password.length.min</code></b> which specifies the minimum
+number of characters in a UserLogin password.</p>
 <hr class="sepbar">
 <h3><a name="serverstats">serverstats.properties</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The serverstats.properties file contains settings to control the gathering
-and persistence of server hit statistics. Statistics are gathered in two ways: 
-logging each resource hit and logging a bin of resource hits where the bin may 
-contain many hits that happen in a certain time period.</p>
-
-<p class="contenttext">The <b><code>stats.bin.length.millis</code></b> property is used to specify
+<p class="contenttext">The serverstats.properties file contains
+settings to control the gathering
+and persistence of server hit statistics. Statistics are gathered in
+two ways: logging each resource hit and logging a bin of resource hits
+where the bin may contain many hits that happen in a certain time
+period.</p>
+<p class="contenttext">The <b><code>stats.bin.length.millis</code></b>
+property is used to specify
 the length of statistics bins and is a whole number milliseconds value.</p>
-
-<p class="contenttext">To specify whether the <u>bins</u> for a certain resource should be persisted or not
-use the <b><code>stats.persist.{resource-name}.bin</code></b> property where 
-resource-name is <b><code>REQUEST</code></b> for Control Servlet requests, 
-<b><code>EVENT</code></b> for Control Servlet Events, or <b><code>VIEW</code></b> 
+<p class="contenttext">To specify whether the <u>bins</u> for a
+certain resource should be persisted or not,
+use the <b><code>stats.persist.{resource-name}.bin</code></b> property
+where resource-name is <b><code>REQUEST</code></b> for Control Servlet
+requests, <b><code>EVENT</code></b> for Control Servlet Events, or <b><code>VIEW</code></b>
 for Control Servlet Views (JSPs mostly).</p>
-
-<p class="contenttext">To specify whether <u>each hit</u> for a certain resource should be persisted or not
-use the <b><code>stats.persist.{resource-name}.hit</code></b> property where 
-resource-name is <b><code>REQUEST</code></b> for Control Servlet requests, 
-<b><code>EVENT</code></b> for Control Servlet Events, or <b><code>VIEW</code></b> 
+<p class="contenttext">To specify whether <u>each hit</u> for a
+certain resource should be persisted or not
+use the <b><code>stats.persist.{resource-name}.hit</code></b> property
+where resource-name is <b><code>REQUEST</code></b> for Control Servlet
+requests, <b><code>EVENT</code></b> for Control Servlet Events, or <b><code>VIEW</code></b>
 for Control Servlet Views (JSPs mostly).</p>
-
 <hr class="sepbar">
 <h3><a name="url">url.properties</a></h3>
 <hr class="sepbar">
-
-<p class="contenttext">The url.properties file is used to configure special server URLs for the
-cases where the URL of the current server is not sufficient. Examples of this
-include settings for automatically jumping to secure or non-secure areas of a
-site and referring to content that is on a different server or in a different
+<p class="contenttext">The url.properties file is used to configure
+special server URLs for the
+cases where the URL of the current server is not sufficient. Examples
+of this
+include settings for automatically jumping to secure or non-secure
+areas of a
+site and referring to content that is on a different server or in a
+different
 server farm.</p>
-
-<P>The first set of properties deals with creating links or redirecting to
+<p>The first set of properties deals with creating links or redirecting
+to
 secure and non-secure areas of the site. This is primarily used by the
-&lt;ofbiz:url&gt; JSP tag and the ControlServlet to make sure that each request
-comes in how it should, either secure or not. Requests in the controller.xml
-file are marked as secure with an <CODE>https="true"</CODE> attribute on the
-<CODE>security</CODE> tag under a given <CODE>request-map</CODE> tag.</P>
-
-<P>When requests are marked as secure they should go through the secure port. The
-ofbiz:url tag helps with this by creating an extended URL when necessary to go
-through the secure port. The ControlServlet also makes sure that when a secure
-request is required the request comes through a secure port, if not it will send
-a redirect to the same request through the secure port. The requests that are
-marked as not secure with <CODE>https="false"</CODE> behave just the opposite.
-This is done because it is more efficient and lighter on the server when the
-encryption and decryption do not have to be done.</P>
-
-<P>This option of automatically going between the secure and non-secure ports
-can be turned on and off with the <B><CODE>port.https.enabled</CODE></B>
-property which should be either a <B><CODE>Y or N</CODE></B>.</P>
-
-<P>To specify the secure (HTTPS) and non-secure (HTTP) ports and optionally host
-names to use with the ports, use the following properties: <B><CODE>port.https</CODE></B>,
-<B><CODE>force.https.host</CODE></B>, <B><CODE>port.http</CODE></B>, and 
-<B><CODE>force.http.host</CODE></B>.
-
-<P>The next set of properties in the file is for static content URLs. This
-includes images and other resources that can be moved to another server or farm to
-lighten the load of the application servers and the load balancers in front of
-the application servers. This is an inexpensive and easy way to handle more load
-on a site.</P>
-
-<P>There is one property for secure content:
-<B><CODE>content.url.prefix.secure</CODE></B>,
+&lt;ofbiz:url&gt; JSP tag and the ControlServlet to make sure that each
+request
+comes in how it should, either secure or not. Requests in the
+controller.xml
+file are marked as secure with an <code>https="true"</code> attribute
+on the
+<code>security</code> tag under a given <code>request-map</code> tag.</p>
+<p>When requests are marked as secure they should go through the secure
+port. The
+ofbiz:url tag helps with this by creating an extended URL when
+necessary to go
+through the secure port. The ControlServlet also makes sure that when a
+secure
+request is required the request comes through a secure port, if not it
+will send
+a redirect to the same request through the secure port. The requests
+that are
+marked as not secure with <code>https="false"</code> behave just the
+opposite.
+This is done because it is more efficient and lighter on the server
+when the
+encryption and decryption do not have to be done.</p>
+<p>This option of automatically going between the secure and non-secure
+ports
+can be turned on and off with the <b><code>port.https.enabled</code></b>
+property which should be either a <b><code>Y or N</code></b>.</p>
+<p>To specify the secure (HTTPS) and non-secure (HTTP) ports and
+optionally host
+names to use with the ports, use the following properties: <b><code>port.https</code></b>,
+<b><code>force.https.host</code></b>, <b><code>port.http</code></b>,
+and <b><code>force.http.host</code></b>.
+</p>
+<p>The next set of properties in the file is for static content URLs.
+This
+includes images and other resources that can be moved to another server
+or farm to
+lighten the load of the application servers and the load balancers in
+front of
+the application servers. This is an inexpensive and easy way to handle
+more load
+on a site.</p>
+<p>There is one property for secure content:
+<b><code>content.url.prefix.secure</code></b>,
 and one for standard or non-secure content:
-<B><CODE>content.url.prefix.standard</CODE></B>.</P>
-
+<b><code>content.url.prefix.standard</code></b>.</p>
 </body>
 </html>

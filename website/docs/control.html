@@ -2,31 +2,40 @@
 <html>
 <head>
   <title>The Open For Business Project: Control Servlet Guide</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css" type="text/css">
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css"
+ type="text/css">
 </head>
-<body bgcolor="#FFFFFF">
-
-<table width='100%'>
-  <tr>
-    <td width='50%' align='left' valign='center'>
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
-    </td>
-    <td width='50%' align='right' valign='center'>
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
-    </td>
-  </tr>
+<body bgcolor="#ffffff">
+<table width="100%">
+  <tbody>
+    <tr>
+      <td align="left" valign="center" width="50%"> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
+ alt="The Open For Business Project" border="0"></a> </td>
+      <td align="right" valign="center" width="50%"> <a
+ href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173"
+ alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
+ width="88"></a> </td>
+    </tr>
+  </tbody>
 </table>
-<hr class='sepbar'>
-
-<h2 align="Center">The Open For Business Project: Control Servlet Guide</h2>
- 
-<div class='contenttext'>Written By: Andy Zeneski, <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
-<div class='contenttext'>Last Updated: January 17, 2003</div>
-<!-- $Id: control.html,v 1.2 2003/08/19 17:45:21 jonesde Exp $ -->
-
-<hr class='sepbar'>
+<hr class="sepbar">
+<h2 align="center">The Open For Business Project: Control Servlet Guide</h2>
+<div class="contenttext">Written By: Andy Zeneski, <a
+ href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
+<div class="contenttext">Edited by: Les Austin<br>
+Last Updated: August 6, 2004<br>
+DAVID: [***] indicates apparently missing text, [???] asks if a
+statement given is still valid.<br>
+</div>
+<!-- $Id: control.html,v 1.3 2004/08/06 23:57:18 jonesde Exp $ -->
+<hr class="sepbar">
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a></li>
@@ -35,299 +44,378 @@
   <li><a href="#ControlServlet">Control Servlet</a> </li>
   <li><a href="#RequestHandler">Request Handler</a> </li>
   <li><a href="#EventHandler">Event Handler</a> </li>
-  <li><a href="#ViewHandler">View Handler</a></li>  
+  <li><a href="#ViewHandler">View Handler</a></li>
 </ul>
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="#Related_Documents">Related Documents</a></h3>
 <ul>
   <li><a href="api/index.html">Core JavaDoc (including Controller)</a></li>
-  <li><a href="/dtds/site-conf.dtd">Site Config (Request/View) Mapping DTD</a></li>
+  <li><a href="/dtds/site-conf.dtd">Site Config (Request/View) Mapping
+DTD</a></li>
   <li><a href="regions.html">Regions Guide</a></li>
   <li><a href="taglib.html">JSP Tag Library Guide</a></li>
 </ul>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Introduction">Introduction</a> </h3>
-<hr class='sepbar'>
-<p class='contenttext'>The Open For Business Controller is a group of classes use to manage the
-presentation    of a web application designed around the Open For Business
-framework. The Controller is designed to work along with the Entity Engine
-by keeping a constant state with the Entity Delegator, as well as the Services
-Framework by keeping a state with the Local Service Dispatcher. The goal
-of the Controller is to provide a clean mechanism of separating presentation
+<hr class="sepbar">
+<p class="contenttext">The Open For Business Controller is a group of
+classes use to manage the
+presentation of a web application designed around the Open For Business
+framework. The Controller is designed to work along with the Entity
+Engine
+by keeping a constant state with the Entity Delegator, as well as the
+Services
+Framework by keeping a state with the Local Service Dispatcher. The
+goal
+of the Controller is to provide a clean mechanism of separating
+presentation
 logic from the actual display.<br>
 <br>
-    This Controller makes use of several J2EE Presentation Tier design patterns.
-   The Context Security Filter is modeled after the <i><a href="http://developer.java.sun.com/developer/restricted/patterns/DecoratingFilter.html">
- Decorating    Filter</a>
+This Controller makes use of several J2EE Presentation Tier design
+patterns. The Context Security Filter is modeled after the <i><a
+ href="http://developer.java.sun.com/developer/restricted/patterns/DecoratingFilter.html">
+Decorating Filter</a>
 </i> pattern. The CSF runs at the context root and is able to restrict
-direct access to JSP templates as well as open doors for future services such
-   as debugging, logging and compression. The Control Servlet is modeled after
-   the <i><a href="http://developer.java.sun.com/developer/restricted/patterns/FrontController.html">
- Front    Controller</a>
-</i> pattern. This Servlet is where the web application's request processing
-begins. It makes use of helper classes which process security and events,
-then dispatches to a defined view. The Views are JSP templates which    are
-very similar to those described in the <a href="http://developer.java.sun.com/developer/restricted/patterns/CompositeView.html"><i>
- Composite    View</i></a>
-  pattern. These templates use helper files to limit the amount of logic found
-in the actual display page. These helper files are Java classes    which
+direct access to JSP templates as well as open doors for future
+services such as debugging, logging and compression. The Control
+Servlet is modeled after the <i><a
+ href="http://developer.java.sun.com/developer/restricted/patterns/FrontController.html">
+Front Controller</a>
+</i> pattern. This Servlet is where the web application's request
+processing
+begins. It makes use of helper classes which process security and
+events,
+then dispatches to a defined view. The Views are JSP templates which
+are
+very similar to those described in the <a
+ href="http://developer.java.sun.com/developer/restricted/patterns/CompositeView.html"><i>
+Composite View</i></a> pattern. These templates use helper files to
+limit the amount of logic found
+in the actual display page. These helper files are Java classes which
 perform the logic for a specific group of views. This process is based
- on the <a href="http://developer.java.sun.com/developer/restricted/patterns/ViewHelper.html"><i>
- View    Helper</i></a>
-  pattern.<br>
+on the <a
+ href="http://developer.java.sun.com/developer/restricted/patterns/ViewHelper.html"><i>
+View Helper</i></a> pattern. <br>
+</p>
+<p class="contenttext">&nbsp;&nbsp;&nbsp; Note: Links above are to the
+Sun Developer Network at http://developer.java.sun.com. If you're a
+registered member, log in; you should be automatically logged in from
+previous visits..<br>
 <br>
-    As stated above, the main purpose of the Controller is to separate logic
-from    display. This is accomplished by:</p>
+As stated above, the main purpose of the Controller is to separate
+logic
+from display. This is accomplished by:</p>
 <ul>
   <li>Using a Filter to secure JSP template in the web application</li>
   <li>Using a Servlet to manage application flow</li>
   <li>Using Events (commands) and View Helpers for presentation logic</li>
 </ul>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="ContextSecurityFilter">Context Security Filter</a>
 </h3>
-<hr class='sepbar'> The Context Security Filter (CSF) defined in <i>/WEB-INF/web.xml </i>
- is used to  restrict access to the web application files. In the future
-it may be used for  debugging and/or logging requests. This is the starting
-point for all web requests  to the application. By default all paths are rejected
-and only paths specifically  defined are allowed direct access. The CSF is
-set to allow all requests to the  <a href="#ControlServlet">Control Servlet</a>
-  by setting the mount point of the  Servlet in the 'allow list'. The allow
-list is defined as an init-param named  <i>allowedPaths</i>.The value is
-a single string of paths separated by  a colon. The example webapps allow
-'/control:/index.html:/index.jsp:/default.html:/default.jsp:/images'  paths.
+<hr class="sepbar"> The Context Security Filter (CSF) defined in <i>/WEB-INF/web.xml
+</i> is used to restrict access to the web application files. In the
+future
+it may be used for debugging and/or logging requests. This is the
+starting
+point for all web requests to the application. By default all paths are
+rejected
+and only paths specifically defined are allowed direct access. The CSF
+is
+set to allow all requests to the <a href="#ControlServlet">Control
+Servlet</a> by setting the mount point of the Servlet in the 'allow
+list'. The allow
+list is defined as an init-param named <i>allowedPaths</i>.The value
+is
+a single string of paths separated by a colon. The example webapps
+allow
+'/control:/index.html:/index.jsp:/default.html:/default.jsp:/images'
+paths.
 A path may be a directory name (starting from the root directory of the
 webapp) or a path to a specific file. <br>
 <br>
-  Example: '/images' will allow all files in the /images directory to be
-directly  accessed. <br>
-  Example: '/site-pages/contactus.html' will allow only the contactus.html
-file  found in the /site-pages directory to be directly accessed. <br>
- Example: '/site-pages/info/*' will allow only the files in the subdirectory
+Example: '/images' will allow all files in the /images directory to be
+directly accessed. <br>
+Example: '/site-pages/contactus.html' will allow only the
+contactus.html
+file found in the /site-pages directory to be directly accessed. <br>
+Example: '/site-pages/info/*' will allow only the files in the
+subdirectory
 'info' to be directly accessed.<br>
 <br>
-  When a direct request to a protected path is made the filter will do one
-of two  things. One, the filter can redirect the user to a page defined in
-<i>web.xml</i>.  This is defined by setting the init-param <i>redirectPath</i>
-  to properly formatted  URL. Two, the filter will throw a server error which
-can be defined by the init-param  <i>errorCode</i>. The error is thrown only
-if there is no redirect defined. If  no errorCode is defined, the filter will
+When a direct request to a protected path is made the filter will do
+one
+of two things. One, the filter can redirect the user to a page defined
+in
+<i>web.xml</i>. This is defined by setting the init-param <i>redirectPath</i>
+to properly formatted URL. Two, the filter will throw a server error
+which
+can be defined by the init-param <i>errorCode</i>. The error is thrown
+only
+if there is no redirect defined. If no errorCode is defined, the filter
+will
 throw a 404 server error.<br>
 <br>
-  The configuration looks like this:<br>
+The configuration looks like this:<br>
 <pre>&lt;filter&gt; <br>  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;<br>  &lt;display-name&gt;ContextSecurityFilter&lt;/display-name&gt; <br>  &lt;filter-class&gt;org.ofbiz.content.webapp.control.ContextSecurityFilter&lt;/filter-class&gt;    <br>  &lt;init-param&gt; <br>    &lt;param-name&gt;allowedPaths&lt;/param-name&gt; <br>    &lt;param-value&gt;/control:/index.html:/index.jsp:/default.html:/default.jsp:/images&lt;/param-value&gt;    <br>  &lt;/init-param&gt; <br>  &lt;init-param&gt; <br>    &lt;param-name&gt;errorCode&lt;/param-name&gt;    <br>    &lt;param-value&gt;403&lt;/param-value&gt; <br>  &lt;/init-param&gt; <br>&lt;/filter&gt;    <br>&lt;filter-mapping&gt; <br>  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;    <br>  &lt;url-pattern&gt;/*&lt;/url-pattern&gt; <br>&lt;/filter-mapping&gt; </pre>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="ControlServlet">Control Servlet</a>
 </h3>
-<hr class='sepbar'>
-<p class='contenttext'>The Control Servlet is at the heart of all request processing. Valid requests
-  which pass through the <a href="#ContextSecurityFilter">Context Security Filter</a>
-  begin processing here. When a request is received, the Control Servlet first
-  sets up an environment for the helper classes. This environment includes (but
-  is not limited to) setting up an initial session object and storing useful information
-  about the initial request and setting a reference to the Entity Delegator, Service
-  Dispatcher, and Security Handler for use by the helper classes. The request
-  is then passed to the <a href="#RequestHandler"> Request Handler</a> for processing.
-  The <a href="#RequestHandler">Request Handler</a> processes the request and&nbsp;
-  returns to the <code>ControlServlet</code> when finished.</p>
-  
-<p class='contenttext'>When the Control Servlet is first loaded it will create objects used by the
-  web application and store them in the application context (ServletContext).
-  These objects can be found by accessing the property in the context or via a
-  JSP &lt;useBean&gt; tag. These objects include: Entity Delegator, Security object,
-  Service Dispatcher, and the <a href="#RequestHandler">Request Handler</a>.<br>
+<hr class="sepbar">
+<p class="contenttext">The Control Servlet is at the heart of all
+request processing. Valid requests which pass through the <a
+ href="#ContextSecurityFilter">Context Security Filter</a> begin
+processing here. When a request is received, the Control Servlet first
+sets up an environment for the helper classes. This environment
+includes (but is not limited to) setting up an initial session object
+and storing useful information about the initial request and setting a
+reference to the Entity Delegator, Service Dispatcher, and Security
+Handler for use by the helper classes. The request is then passed to
+the <a href="#RequestHandler"> Request Handler</a> for processing. The
+<a href="#RequestHandler">Request Handler</a> processes the request
+and&nbsp; returns to the <code>ControlServlet</code> when finished.</p>
+<p class="contenttext">When the Control Servlet is first loaded it will
+create objects used by the web application and store them in the
+application context (ServletContext). These objects can be found by
+accessing the property in the context or via a JSP &lt;useBean&gt; tag.
+These objects include: Entity Delegator, Security object, Service
+Dispatcher, and the <a href="#RequestHandler">Request Handler</a>.<br>
 </p>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="RequestHandler">Request Handler</a>
 </h3>
-<hr class='sepbar'>
-<p class='contenttext'>The Request Handler makes use of a <code>RequestManager</code> helper class to gather
-a list of request mappings defined in an XML configuration file. The configuration file 
-lives in <code>/WEB-INF/controller.xml</code> for the appropriate context. The mapping consists
-of a request URI and an optional VIEW name. View names are mapped to in the configuration 
-file as well. A request URI can also be associated with an <i>Event</i>. Events are used to 
-process web related logic by either working directly with the Entity Engine through the Entity
-Delegator or invoking service(s) to handle the logic through the Service Dispatcher.</p>
-
-<p class='contenttext'>When a request is received through the Request Handler it is first looked up in the request 
-mappings, if no mapping is found an unknown request error is returned. Upon a successful lookup, 
-the Security Handler is called to verify if the current request requires authentication and the 
-user making the request is properly authenticated. If the current user is not authenticated the 
-Request Handler redirects the request to a proper login form. After successful authentication or 
-if no authentication is required the Request Handler then looks up a defined event for the 
-request. If an event is found, the request is passed to the <code>EventHandler</code>
-for processing. After event processing is complete, the default view is looked up for this request, 
-unless the <code>EventHandler</code> requests a specific view instead. The view is then checked in 
-the view mappings and the value is passed to the defined <code>ViewHandler</code> for dispatching. 
-If the view type is <code>none</code> it is expected that the event handles the response itself, 
-if the view type is <code>url</code> the RequestHandler then redirects to the specified URL 
-and no <code>ViewHandler</code> is called.</p>
-
-<p class='contenttext'>The Request Handler looks up request mappings in an XML file which is setup like this:</p>
+<hr class="sepbar">
+<p class="contenttext">The Request Handler makes use of a <code>RequestManager</code>
+helper class to gather
+a list of request mappings defined in an XML configuration file. The
+configuration file lives in <code>/WEB-INF/controller.xml</code> for
+the appropriate context. The mapping consists
+of a request URI and an optional VIEW name. View names are mapped to in
+the configuration file as well. A request URI can also be associated
+with an <i>Event</i>. Events are used to process web related logic by
+either working directly with the Entity Engine through the Entity
+Delegator or invoking service(s) to handle the logic through the
+Service Dispatcher.</p>
+<p class="contenttext">When a request is received through the Request
+Handler it is first looked up in the request mappings; if no mapping is
+found an 'unknown request error' is returned. Upon a successful lookup,
+the Security Handler is called to verify if the current request
+requires authentication and the user making the request is properly
+authenticated. If the current user is not authenticated the Request
+Handler redirects the request to a proper login form. After successful
+authentication or if no authentication is required the Request Handler
+then looks up a defined event for the request. If an event is found,
+the request is passed to the <code>EventHandler</code>
+for processing. After event processing is complete, the default view is
+looked up for this request, unless the <code>EventHandler</code>
+requests a specific view instead. The view is then checked in the view
+mappings and the value is passed to the defined <code>ViewHandler</code>
+for dispatching. If the view type is <code>none</code> it is expected
+that the event handles the response itself; if the view type is <code>url</code>
+the RequestHandler then redirects to the specified URL and no <code>ViewHandler</code>
+is called.</p>
+<p class="contenttext">The Request Handler looks up request mappings in
+an XML file which is setup like this:</p>
 <pre>  &lt;request-map uri="checkLogin" edit="false"&gt;<br>    &lt;description&gt;Verify a user is logged in.&lt;/description&gt;<br>    &lt;security https="false" auth="false"/&gt;<br>    &lt;event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin" /&gt;<br>    &lt;response name="success" type="view" value="name" /&gt;<br>    &lt;response name="error" type="view" value="login" /&gt;<br>  &lt;/request-map&gt;<br></pre>
-
-<p class='contenttext'>In the above mapping, the event return code <i>success</i> will load the view named <i>main</i>. 
-If <i>success</i> was defined with the type <i>request</i> it would then instead of displaying a view, 
-it in turn calls another request. This is known as <i>request chaining</i>.</p>
-
-<p class='contenttext'>The view mappings are defined as follows:</p>
+<p class="contenttext">In the above mapping, the event return code <i>success</i>
+will load the view named <i>main</i>. If <i>success</i> was defined
+with the type <i>request</i> it would then [***] instead of displaying
+a view, it in turn calls another request. This is known as <i>request
+chaining</i>.</p>
+<p class="contenttext">The view mappings are defined as follows:</p>
 <pre>  &lt;view-map name="login" page="/login.jsp"/&gt;<br></pre>
-<p class='contenttext'>A view is looked up by name and mapped to a JSP template (page).</p>
-
-<p class='contenttext'><code><b><u>request-map</u></b></code> tag:</p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>uri</td><td>Y</td>
-    <td>The name of this request. This will be the name use to access the request.</td>
-</tr>
-<tr>
-    <td>edit</td><td>N</td>
-    <td>Reserved for future use.</td>
-</tr>
+<p class="contenttext">A view is looked up by name and mapped to a JSP
+template (page).</p>
+<p class="contenttext"><code><b><u>request-map</u></b></code> tag:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>uri</td>
+      <td>Y</td>
+      <td>The name of this request. This will be the name used to
+access the request.</td>
+    </tr>
+    <tr>
+      <td>edit</td>
+      <td>N</td>
+      <td>Reserved for future use.</td>
+    </tr>
+  </tbody>
 </table>
-<p class='contenttext'>The <code>request-map</code> element contains 0 or 1 <code>security</code> tag, 0 or 1 <code>event</code>
+<p class="contenttext">The <code>request-map</code> element contains 0
+or 1 <code>security</code> tag, 0 or 1 <code>event</code>
 tag and 1 or more <code>response</code> tag(s).</p>
-
-<p class='contenttext'><code><b><u>security</u></b></code> tag:</p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>https</td><td>N</td>
-    <td>Does this request require being called secure (default <u>false</u>.</td>
-</tr>
-<tr>
-    <td>auth</td><td>N</td>
-    <td>Does this request require the caller to be authenticated (default <u>false</u>.</td>
-</tr>
-<tr>
-    <td>external-view</td><td>N</td>
-    <td>Does this request allow passing a view through the URL. (default <u>true</u>).</td>
-</tr>
-<tr>
-    <td>direct-request</td><td>N</td>
-    <td>Does this request allow being called directly through a URL, if false can only be used in a chain
-     (default <u>true</u>).</td>
-</tr>
+<p class="contenttext"><code><b><u>security</u></b></code> tag:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>https</td>
+      <td>N</td>
+      <td>Does this request require being called secure (default <u>false</u>.</td>
+    </tr>
+    <tr>
+      <td>auth</td>
+      <td>N</td>
+      <td>Does this request require the caller to be authenticated
+(default <u>false</u>.</td>
+    </tr>
+    <tr>
+      <td>external-view</td>
+      <td>N</td>
+      <td>Does this request allow passing a view through the URL.
+(default <u>true</u>).</td>
+    </tr>
+    <tr>
+      <td>direct-request</td>
+      <td>N</td>
+      <td>Does this request allow being called directly through a URL,
+if false can only be used in a chain (default <u>true</u>).</td>
+    </tr>
+  </tbody>
 </table>
-
-<p class='contenttext'><code><b><u>event</u></b></code> tag:</p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>type</td><td>Y</td>
-    <td>Mapped to the event handler definitions to determine which EventHander will be used to run the event.</td>
-</tr>
-<tr>
-    <td>path</td><td>N</td>
-    <td>The path to the class or XML file containing this event, leave empty for services.</td>
-</tr>
-<tr>
-    <td>invoke</td><td>Y</td>
-    <td>The name of the method or service to be run.</td>
-</tr>
+<p class="contenttext"><code><b><u>event</u></b></code> tag:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>Y</td>
+      <td>Mapped to the event handler definitions to determine which
+EventHander will be used to run the event.</td>
+    </tr>
+    <tr>
+      <td>path</td>
+      <td>N</td>
+      <td>The path to the class or XML file containing this event,
+leave empty for services.</td>
+    </tr>
+    <tr>
+      <td>invoke</td>
+      <td>Y</td>
+      <td>The name of the method or service to be run.</td>
+    </tr>
+  </tbody>
 </table>
-
-<p class='contenttext'><code><b><u>response</u></b></code> tag:</p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the response, will also match the string returned by the event.</td>
-</tr>
-<tr>
-    <td>type</td><td>Y</td>
-    <td>The type of response will follow: none, request, view, url.</td>
-</tr>
-<tr>
-    <td>value</td><td>N</td>
-    <td>The name of the method or service to be run.</td>
-</tr>
+<p class="contenttext"><code><b><u>response</u></b></code> tag:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the response, will also match the string returned
+by the event.</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>Y</td>
+      <td>The type of response will follow: none, request, view, url.</td>
+    </tr>
+    <tr>
+      <td>value</td>
+      <td>N</td>
+      <td>The name of the method or service to be run.</td>
+    </tr>
+  </tbody>
 </table>
-
-<p class='contenttext'>The <code>ViewHandler</code> is called on <code>view</code> type responses. Using the above example,
-the view handler <code>default</code> will be used, since no <code>type</code> is defined. This handler 
-will dispatch to a JSP/Servlet. All ViewHandlers will receive the <code>name</code> and <code>page</code>
+<p class="contenttext">The <code>ViewHandler</code> is called on <code>view</code>
+type responses. Using the above example,
+the view handler <code>default</code> will be used, since no <code>type</code>
+is defined. This handler will dispatch to a JSP/Servlet. All
+ViewHandlers will receive the <code>name</code> and <code>page</code>
 values from the <code>view-map</code> definition.</p>
-
-<p class='contenttext'><code><b><u>view-map</u></b></code> tag:</p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of this view mapping, matches the <code>value</code> of the response element.</td>
-</tr>
-<tr>
-    <td>page</td><td>N</td>
-    <td>The page mapped to this view.</td>
-</tr>
-<tr>
-    <td>type</td><td>N</td>
-    <td>The type of view this is, maps to a ViewHandler. An empty type will assume JSP type view.</td>
-</tr>
-<tr>
-    <td>info</td><td>N</td>
-    <td>Extended information passed to the view handler.</td>
-</tr>
+<p class="contenttext"><code><b><u>view-map</u></b></code> tag:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of this view mapping, matches the <code>value</code>
+of the response element.</td>
+    </tr>
+    <tr>
+      <td>page</td>
+      <td>N</td>
+      <td>The page mapped to this view.</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>N</td>
+      <td>The type of view this is, maps to a ViewHandler. An empty
+type will assume JSP type view.</td>
+    </tr>
+    <tr>
+      <td>info</td>
+      <td>N</td>
+      <td>Extended information passed to the view handler.</td>
+    </tr>
+  </tbody>
 </table>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="EventHandler">Event Handler</a>
 </h3>
-<hr class='sepbar'>
-<p class='contenttext'>Event Handlers are defined in the XML config file such as:</p>
+<hr class="sepbar">
+<p class="contenttext">Event Handlers are defined in the XML config
+file such as:</p>
 <pre>  &lt;handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/&gt;</pre>
-<p class='contenttext'>As in the above request mapping the login event is defined with a type
-of <code>java</code>.  The event type is mapped to an Event Handler using the handler
-definitions. Custom  Event Handlers can be designed and would be implemented
+<p class="contenttext">As in the above request mapping the login event
+is defined with a type
+of <code>java</code>. The event type is mapped to an Event Handler
+using the handler
+definitions. Custom Event Handlers can be designed and would be
+implemented
 like the above example. </p>
-
-<p class='contenttext'>   Java events are processed by locating the path of the event (package
-and classname)    then by using the Reflection API the Event Handler invokes
-the method defined.    A String object is returned to the <a href="#RequestHandler">
- Request Handler</a>
-  which is mapped to the response element of the request definition.<br>
+<p class="contenttext"> Java events are processed by locating the path
+of the event (package
+and classname); then, by using the Reflection API, the Event Handler
+invokes
+the method defined. A String object is returned to the <a
+ href="#RequestHandler"> Request Handler</a> which is mapped to the
+response element of the request definition.<br>
 <br>
-  A document on writing <i>Open For Business Events and Services</i> is forthcoming.</p>
-
-<hr class='sepbar'>
+[???] A document on writing <i>Open For Business Events and Services</i>
+is forthcoming. <br>
+</p>
+<hr class="sepbar">
 <h3><a name="ViewHandler">View Handler</a>
 </h3>
-<hr class='sepbar'>
-<p class='contenttext'>View Handlers are defined just like Event Handlers, except the type is <code>view</code>:</p>
+<hr class="sepbar">
+<p class="contenttext">View Handlers are defined just like Event
+Handlers, except the type is <code>view</code>:</p>
 <pre>  &lt;handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/&gt;</pre>
-
-<p class='contenttext'>The view handler handles rendering the next page the user will see. The <code>default</code> view 
-handler supports standard html/jsp pages by dispatching to the page defined in the view definition. Other
-view handlers like <code>region</code> and <code>velocity</code> use special logic to render the page to 
-the user.</p>
-
-<p class='contenttext'>Custom view handlers can be created easly by implementing the <code>ViewHandler</code> interface and setting a definition
+<p class="contenttext">The view handler handles rendering the next page
+the user will see. The <code>default</code> view handler supports
+standard html/jsp pages by dispatching to the page defined in the view
+definition. Other
+view handlers like <code>region</code> and <code>velocity</code> use
+special logic to render the page to the user.</p>
+<p class="contenttext">Custom view handlers can be created easily by
+implementing the <code>ViewHandler</code> interface and setting a
+definition
 in the <code>controller.xml</code> file like the above example.</p>
-<hr class='sepbar'>
+<hr class="sepbar">
 </body>
 </html>

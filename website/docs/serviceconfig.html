@@ -1,307 +1,374 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>The Open For Business Project: Service Engine Configuration Guide</title>
+  <title>The Open For Business Project: Service Engine Configuration
+Guide</title>
 </head>
-
 <body>
-
-<table width='100%'>
-  <tr>
-    <td width='50%' align='left' valign='center'>
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
-    </td>
-    <td width='50%' align='right' valign='center'>
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
-    </td>
-  </tr>
+<table width="100%">
+  <tbody>
+    <tr>
+      <td align="left" valign="center" width="50%"> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
+ alt="The Open For Business Project" border="0"></a> </td>
+      <td align="right" valign="center" width="50%"> <a
+ href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173"
+ alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
+ width="88"></a> </td>
+    </tr>
+  </tbody>
 </table>
-<hr class='sepbar'>
-
-<h2 align="center">The Open For Business Project: Service Engine Configuration Guide</h2>
- 
-<div class='contenttext'>Written By: Andy Zeneski, <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
-<div class='contenttext'>Minor changes/corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a> and
+<hr class="sepbar">
+<h2 align="center">The Open For Business Project: Service Engine
+Configuration Guide</h2>
+<div class="contenttext">Written by: Andy Zeneski, <a
+ href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
+<div class="contenttext">Minor changes/corrections by: <a
+ href="mailto:PDebski@a4.pl">Pawel H. Debski</a> and
 <a href="mailto:jonesde@ofbiz.org">David E. Jones</a></div>
-<div class='contenttext'>Last Updated: January 28, 2003</div>
-<!-- $Id: serviceconfig.html,v 1.2 2003/08/19 17:45:21 jonesde Exp $ -->
-
-<hr class='sepbar'>
+<div class="contenttext">Edited by Les Austin<br>
+Last Updated: August 04, 2004<br>
+</div>
+<!-- $Id: serviceconfig.html,v 1.3 2004/08/06 23:57:19 jonesde Exp $ -->
+<hr class="sepbar">
 <h3>Table of Contents</h3>
-
 <ul>
-  <li><a href="#Related_Documents">Related Documents</a>
-  <li><a href="#Introduction">Introduction</a>
-  <li><a href="#Authorization">Authorization</a>
-  <li><a href="#ThreadPool">Thread Pool</a>
-  <li><a href="#Engines">Engine Definitions</a>
-  <li><a href="#Resource">Resource Loaders</a>
-  <li><a href="#Global">Global Services</a>
-  <li><a href="#Groups">Service Groups</a>
-  <li><a href="#ECAs">ECAs</a>
+  <li><a href="#Related_Documents">Related Documents</a> </li>
+  <li><a href="#Introduction">Introduction</a> </li>
+  <li><a href="#Authorization">Authorization</a> </li>
+  <li><a href="#ThreadPool">Thread Pool</a> </li>
+  <li><a href="#Engines">Engine Definitions</a> </li>
+  <li><a href="#Resource">Resource Loaders</a> </li>
+  <li><a href="#Global">Global Services</a> </li>
+  <li><a href="#Groups">Service Groups</a> </li>
+  <li><a href="#ECAs">ECAs</a> </li>
   <li><a href="#JMS">JMS</a>
+  </li>
 </ul>
-<hr class='sepbar'>
-
+<hr class="sepbar">
 <h3><a name="Related_Documents">Related Documents:</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 <ul>
   <li><a href="services.html">Service Engine Guide</a></li>
   <li><a href="coreconfig.html">Core Configuration Guide</a></li>
   <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
   <li><a href="../dtds/service-config.html">Service Engine Config DTD</a></li>
 </ul>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Introduction">Introduction</a></h3>
-<hr class='sepbar'>
-
-<p class='contenttext'>This document describes the configuration of the Service Engine. It starts
-with an introduction to general ideas and then goes through each part of the
-serviceengine.xml file and explains the available elements and their 
+<hr class="sepbar">
+<p class="contenttext">This document describes the configuration of the
+Service Engine. It starts
+with an introduction to general ideas and then goes through each part
+of the
+serviceengine.xml file and explains the available elements and their
 usage. The serviceengine.xml file used for the OFBiz applications has
 examples of a number of different options and is located in <b><code>ofbiz/commonapp/etc/serviceengine.xml</code></b>.</p>
-
-<p class='contenttext'>The configuration of the Service Engine is done through a simple XML
-file called <b><code>serviceengine.xml</code></b> that must exist somewhere on the classpath.</p>
-
-<hr class='sepbar'>
+<p class="contenttext">The configuration of the Service Engine is done
+through a simple XML
+file called <b><code>serviceengine.xml</code></b> that must exist
+somewhere on the classpath.</p>
+<hr class="sepbar">
 <h3><a name="Authorization">Authorization</a></h3>
-<p class='contenttext'>The <b><code>authorization</code></b> tag is used to configure the service called for 
-service authentication. This tag has a single required attribute <code>service-name</code>; the value 
-of this attribute should be the name of the service to use for authorization. By default this
+<p class="contenttext">The <b><code>authorization</code></b> tag is
+used to configure the service called for service authentication. This
+tag has a single required attribute <code>service-name</code>; the
+value of this attribute should be the name of the service to use for
+authorization. By default this
 is defined to use the general OFBiz <code>userLogin</code> service.</p>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="ThreadPool">Thread Pool</a></h3>
-<p class='contenttext'>The job scheduler is used for asynchronous and scheduled jobs/services. It contains a <i>poller</i>
-thread and several <i>invoker</i> threads. The <b><code>thread-pool</code></b> tag is used to configure 
-how each thread operates. The following attributes are available:</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>ttl</td><td>Y</td>
-    <td>The time to live for each invoker thread. Once this time is reached the thread is destroyed.</td>
-</tr>
-<tr>
-    <td>wait-millis</td><td>Y</td>
-    <td>Each invoker thread will sleep for this amount of time before checking for jobs to run.</td>
-</tr>
-<tr>
-    <td>jobs</td><td>Y</td>
-    <td>The maximum number of jobs each invoker thread will run before being destroyed.</td>
-</tr>
-<tr>
-    <td>min-threads</td><td>Y</td>
-    <td>The minimum number of invoker threads to keep around.</td>
-</tr>
-<tr>
-    <td>max-threads</td><td>Y</td>
-    <td>The maximum number of invoker thread to create.</td>
-</tr>
-<tr>
-    <td>poll-enabled</td><td>Y</td>
-    <td>When 'true' the scheduler will poll the database for scheduled jobs.</td>
-</tr>
-<tr>
-    <td>poll-db-millis</td><td>Y</td>
-    <td>If polling is enabled this defined how often the poller thread runs.</td>
-</tr>
+<p class="contenttext">The job scheduler is used for asynchronous and
+scheduled jobs/services. It contains a <i>poller</i>
+thread and several <i>invoker</i> threads. The <b><code>thread-pool</code></b>
+tag is used to configure how each thread operates. The following
+attributes are available:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>ttl</td>
+      <td>Y</td>
+      <td>The time to live for each invoker thread. Once this time is
+reached the thread is destroyed.</td>
+    </tr>
+    <tr>
+      <td>wait-millis</td>
+      <td>Y</td>
+      <td>Each invoker thread will sleep for this amount of time before
+checking for jobs to run.</td>
+    </tr>
+    <tr>
+      <td>jobs</td>
+      <td>Y</td>
+      <td>The maximum number of jobs each invoker thread will run
+before being destroyed.</td>
+    </tr>
+    <tr>
+      <td>min-threads</td>
+      <td>Y</td>
+      <td>The minimum number of invoker threads to keep around.</td>
+    </tr>
+    <tr>
+      <td>max-threads</td>
+      <td>Y</td>
+      <td>The maximum number of invoker threads to create.</td>
+    </tr>
+    <tr>
+      <td>poll-enabled</td>
+      <td>Y</td>
+      <td>When 'true' the scheduler will poll the database for
+scheduled jobs.</td>
+    </tr>
+    <tr>
+      <td>poll-db-millis</td>
+      <td>Y</td>
+      <td>If polling is enabled this defined how often the poller
+thread runs.</td>
+    </tr>
+  </tbody>
 </table>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Engines">Engine Definitions</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>Each implementation of the <code>GenericEngine</code> interface needs to be defined in order to
-be used in the service definitions. The <b><code>engine</code></b> has the following attributes:</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the service engine. This must be unique.</td>
-</tr>
-<tr>
-    <td>class</td><td>Y</td>
-    <td>The class which implements <code>GenericEngine</code></td>
-</tr>
+<hr class="sepbar">
+<p class="contenttext">Each implementation of the <code>GenericEngine</code>
+interface needs to be defined in order to
+be used in the service definitions. The <b><code>engine</code></b> has
+the following attributes:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the service engine. This must be unique.</td>
+    </tr>
+    <tr>
+      <td>class</td>
+      <td>Y</td>
+      <td>The class which implements <code>GenericEngine</code></td>
+    </tr>
+  </tbody>
 </table>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Resource">Resource Loaders</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The <b><code>resource-loader</code></b> tag is used to configure a named resource loader
-that can be used elsewhere to load XML and other resources. It has the following
+<hr class="sepbar">
+<p class="contenttext">The <b><code>resource-loader</code></b> tag is
+used to configure a named resource loader
+that can be used elsewhere to load XML and other resources. It has the
+following
 attributes.</p>
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the resource loader. Used in other tags in the 'loader' attribute.</td>
-</tr>
-<tr>
-    <td>class</td><td>Y</td>
-    <td>The class to use that extends the abstract class org.ofbiz.service.config.ResourceLoader.
-    Available classes include FileLoader, UrlLoader, and ClasspathLoader, all in the
-    same package as the ResourceLoader class.</td>
-</tr>
-<tr>
-    <td>prepend-env</td><td>N</td>
-    <td>The name of a Java environment property to put at the very beginning of 
-    the full location, before the prefix. This is optional.</td>
-</tr>
-<tr>
-    <td>prefix</td><td>N</td>
-    <td>A string to put before the location when making the full location. This is optional.
-    If used will go after the prepended environment property and before the location
-    specified for each resource.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the resource loader. Used in other tags in the
+'loader' attribute.</td>
+    </tr>
+    <tr>
+      <td>class</td>
+      <td>Y</td>
+      <td>The class to use that extends the abstract class
+org.ofbiz.service.config.ResourceLoader. Available classes include
+FileLoader, UrlLoader, and ClasspathLoader, all in the same package as
+the ResourceLoader class.</td>
+    </tr>
+    <tr>
+      <td>prepend-env</td>
+      <td>N</td>
+      <td>The name of a Java environment property to put at the very
+beginning of the full location, before the prefix. This is optional.</td>
+    </tr>
+    <tr>
+      <td>prefix</td>
+      <td>N</td>
+      <td>A string to put before the location when making the full
+location. This is optional. If used will go after the prepended
+environment property and before the location specified for each
+resource.</td>
+    </tr>
+  </tbody>
 </table>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Global">Global Services</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The <b><code>global-services</code></b> tag is used to define the location of service definition files. 
-This tag has the following two attributes:</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>loader</td><td>Y</td>
-    <td>The <code>loader</code> referenced from the resource loader definitions.</td>
-</tr>
-<tr>
-    <td>location</td><td>Y</td>
-    <td>Specifies the location that the resource-loader will use inside itself to load the resource.</td>
-</tr>
+<hr class="sepbar">
+<p class="contenttext">The <b><code>global-services</code></b> tag is
+used to define the location of service definition files. This tag has
+the following two attributes:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>loader</td>
+      <td>Y</td>
+      <td>The <code>loader</code> referenced from the resource loader
+definitions.</td>
+    </tr>
+    <tr>
+      <td>location</td>
+      <td>Y</td>
+      <td>Specifies the location that the resource-loader will use
+inside itself to load the resource.</td>
+    </tr>
+  </tbody>
 </table>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Groups">Service Groups</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The <b><code>service-groups</code></b> tag is used to define the location of the service group
+<hr class="sepbar">
+<p class="contenttext">The <b><code>service-groups</code></b> tag is
+used to define the location of the service group
 definition files. This tag has the following two attributes:</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>loader</td><td>Y</td>
-    <td>The <code>loader</code> referenced from the resource loader definitions.</td>
-</tr>
-<tr>
-    <td>location</td><td>Y</td>
-    <td>Specifies the location that the resource-loader will use inside itself to load the resource.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>loader</td>
+      <td>Y</td>
+      <td>The <code>loader</code> referenced from the resource loader
+definitions.</td>
+    </tr>
+    <tr>
+      <td>location</td>
+      <td>Y</td>
+      <td>Specifies the location that the resource-loader will use
+inside itself to load the resource.</td>
+    </tr>
+  </tbody>
 </table>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="ECAs">ECAs</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>This <b><code>service-ecas</code></b> tag is used to define the location of the service event condition
+<hr class="sepbar">
+<p class="contenttext">This <b><code>service-ecas</code></b> tag is
+used to define the location of the service event condition
 action definition files. This tag has the following two attributes:</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>loader</td><td>Y</td>
-    <td>The <code>loader</code> referenced from the resource loader definitions.</td>
-</tr>
-<tr>
-    <td>location</td><td>Y</td>
-    <td>Specifies the location that the resource-loader will use inside itself to load the resource.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>loader</td>
+      <td>Y</td>
+      <td>The <code>loader</code> referenced from the resource loader
+definitions.</td>
+    </tr>
+    <tr>
+      <td>location</td>
+      <td>Y</td>
+      <td>Specifies the location that the resource-loader will use
+inside itself to load the resource.</td>
+    </tr>
+  </tbody>
 </table>
-
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="JMS">JMS</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>The tag <b><code>jms-service</code></b> defines service locations for JMS services.</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the JMS service, used as the location in service definitions.</td>
-</tr>
-<tr>
-    <td>send-mode</td><td>Y</td>
-    <td>The mode which to send the defined servers (below) can be: 
-    <code>none, all, first-available, random, round-robin, or least-load</code>.</td>
-</tr>
+<hr class="sepbar">
+<p class="contenttext">The tag <b><code>jms-service</code></b> defines
+service locations for JMS services.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the JMS service, used as the location in service
+definitions.</td>
+    </tr>
+    <tr>
+      <td>send-mode</td>
+      <td>Y</td>
+      <td>The mode which to send the defined servers (below) can be: <code>none,
+all, first-available, random, round-robin, or least-load</code>.</td>
+    </tr>
+  </tbody>
 </table>
-
-<p class='contenttext'>The <b><code>jms-service</code></b> tag includes one or more <b><code>server</code></b> tags
+<p class="contenttext">The <b><code>jms-service</code></b> tag
+includes one or more <b><code>server</code></b> tags
 that contain the following attributes:</p>
-
-<table cellpadding='2' cellspacing='0' border='1'>
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>jndi-server-name</td><td>Y</td>
-    <td>The name of the JNDI server defined in the jndiservers.xml.</td>
-</tr>
-<tr>
-    <td>jndi-name</td><td>Y</td>
-    <td>The name in JNDI for the JMS Factory.</td>
-</tr>
-<tr>
-    <td>topic-queue</td><td>Y</td>
-    <td>The name of the topic or queue.</td>
-</tr>
-<tr>
-    <td>type</td><td>Y</td>
-    <td>The JMS type can be either <code>topic</code> or <code>queue</code>.</td>
-</tr>
-<tr>
-    <td>username</td><td>Y</td>
-    <td>user name used to connect to the topic/queue.</td>
-</tr>
-<tr>
-    <td>password</td><td>Y</td>
-    <td>password used to connect to the topic/queue.</td>
-</tr>
-<tr>
-    <td>listen</td><td>Y</td>
-    <td><code>true/false</code> to enable listening on this queue/topic.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>jndi-server-name</td>
+      <td>Y</td>
+      <td>The name of the JNDI server defined in the jndiservers.xml.</td>
+    </tr>
+    <tr>
+      <td>jndi-name</td>
+      <td>Y</td>
+      <td>The name in JNDI for the JMS Factory.</td>
+    </tr>
+    <tr>
+      <td>topic-queue</td>
+      <td>Y</td>
+      <td>The name of the topic or queue.</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>Y</td>
+      <td>The JMS type can be either <code>topic</code> or <code>queue</code>.</td>
+    </tr>
+    <tr>
+      <td>username</td>
+      <td>Y</td>
+      <td>user name used to connect to the topic/queue.</td>
+    </tr>
+    <tr>
+      <td>password</td>
+      <td>Y</td>
+      <td>password used to connect to the topic/queue.</td>
+    </tr>
+    <tr>
+      <td>listen</td>
+      <td>Y</td>
+      <td><code>true/false</code> to enable listening on this
+queue/topic.</td>
+    </tr>
+  </tbody>
 </table>
-
-<p class='contenttext'>The jndi-server definition in the jndiservers.xml file should point to where the JMS client APIs can
-be located. This will be used to get either a TopicConnectionFactory or a QueueConnectionFactory depending
-on the <code>type</code> that is defined. The jndi-name should point to the name of the object in JNDI 
-that contains this connection factory instance.</p>
+<p class="contenttext">The jndi-server definition in the
+jndiservers.xml file should point to where the JMS client APIs can
+be located. This will be used to get either a TopicConnectionFactory or
+a QueueConnectionFactory depending
+on the <code>type</code> that is defined. The jndi-name should point
+to the name of the object in JNDI that contains this connection factory
+instance.</p>
 <br>
 </body>
 </html>

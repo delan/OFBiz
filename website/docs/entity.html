@@ -2,1101 +2,1313 @@
 <html>
 <head>
   <title>Open For Business Entity Engine Guide</title>
-  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css" type="text/css">
+  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css"
+ type="text/css">
 </head>
-
 <body>
-
 <table width="100%">
-  <tr>
-    <td width="50%" align="left" valign="center">
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt="The Open For Business Project"></a>
-    </td>
-    <td width="50%" align="right" valign="center">
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
-    </td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="left" valign="center" width="50%"> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
+ alt="The Open For Business Project" border="0"></a> </td>
+      <td align="right" valign="center" width="50%"> <a
+ href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173"
+ alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
+ width="88"></a> </td>
+    </tr>
+  </tbody>
 </table>
 <hr class="sepbar">
-
 <h2 align="center">The Open For Business Project: Entity Engine Guide</h2>
- 
-<div class="contenttext">Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
-<div class="contenttext">Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
-<div class="contenttext">Last Updated: March 6, 2004</div>
-<!-- $Id: entity.html,v 1.3 2004/03/07 03:28:30 jonesde Exp $ -->
-
+<div class="contenttext">Written By: David E. Jones, <a
+ href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class="contenttext">Minor corrections by: <a
+ href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
+<div class="contenttext">Edited by: Les Austin<br>
+Last Updated: August 5, 2004</div>
+<!-- $Id: entity.html,v 1.4 2004/08/06 23:57:19 jonesde Exp $ -->
 <hr class="sepbar">
 <h3>Table of Contents</h3>
-
 <ul>
-  <li><a href="#Related_Documents">Related Documents</a>
-  <li><a href="#Introduction">Introduction</a>
-  <li><a href="#Entity_Modeling">Entity Modeling</a>
-  <li><a href="#View_Entity_Modeling">View Entity Modeling</a>
-  <li><a href="#The_Entity_Engine_API">The Entity Engine API</a>
-  <li><a href="#JTA_Support">JTA Support</a>
+  <li><a href="#Related_Documents">Related Documents</a> </li>
+  <li><a href="#Introduction">Introduction</a> </li>
+  <li><a href="#Entity_Modeling">Entity Modeling</a> </li>
+  <li><a href="#View_Entity_Modeling">View Entity Modeling</a> </li>
+  <li><a href="#The_Entity_Engine_API">The Entity Engine API</a> </li>
+  <li><a href="#JTA_Support">JTA Support</a> </li>
   <li><a href="#Core_Web_Tools">Core Web Tools</a>
+  </li>
 </ul>
-
 <hr class="sepbar">
-
 <h3><a name="Related_Documents">Related Documents:</a></h3>
 <hr class="sepbar">
 <ul>
   <li><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
   <li><a href="coreconfig.html">Core Configuration Guide</a></li>
-  <li><a href="/api/components/entity/build/javadocs/index.html">Entity Component API</a></li>
-  <li><a href="/api/components/entityext/build/javadocs/index.html">Entity Extensions Component API</a></li>
+  <li><a href="/api/components/entity/build/javadocs/index.html">Entity
+Component API</a></li>
+  <li><a href="/api/components/entityext/build/javadocs/index.html">Entity
+Extensions Component API</a></li>
   <li><a href="/dtds/entitymodel.dtd">Entity Model DTD</a></li>
   <li><a href="/dtds/entitygroup.dtd">Entity Group DTD</a></li>
   <li><a href="/dtds/fieldtypemodel.dtd">Field Type Model DTD</a></li>
 </ul>
-
 <hr class="sepbar">
 <h3><a name="Introduction">Introduction</a></h3>
 <hr class="sepbar">
-<P>The Open For Business Entity Engine is a set of tools and patterns used to
-model and manage entity specific data. In this context an entity is a piece of
-data defined by a set of fields and a set of relations to other entities. This
+<p>The Open For Business Entity Engine is a set of tools and patterns
+used to
+model and manage entity specific data. In this context an entity is a
+piece of
+data defined by a set of fields and a set of relations to other
+entities. This
 definition comes from the standard Entity-Relation modeling concepts of
-Relational Database Management Systems. The goal of the entity engine is to
-simplify the enterprise wide use of entity data. This includes definition,
-maintenance, quality assurance, and development of entity related functionality.&nbsp;</P>
-<P>The entity engine uses a number of Business Tier and Integration Tier
-patterns that will be recognized by most enterprise software programmers. Many
-Presentation Tier patterns are also used in the Open For Business project, but
-only in the servlet controller, not in the entity engine. The patterns used in
-the Entity Engine include: Business Delegate, Value Object, Composite Entity
-(variation), Value Object Assembler, Service Locator, and Data Access Object.
-Implementations of other patterns and more complete implementations of these
-Patterns are planned.</P>
-<P> Descriptions of these
-patterns are all available in the book &quot;Core J2EE Patterns&quot; by Alur,
-Crupi, and Malks, published by Sun. You can also find information on these
-patterns at the site that contains the early work of the authors before the
-published book was finished. See <a href="http://developer.java.sun.com/developer/restricted/patterns/J2EEPatternsAtAGlance.html">http://developer.java.sun.com/developer/restricted/patterns/J2EEPatternsAtAGlance.html</a>.
+Relational Database Management Systems. The goal of the entity engine
+is to
+simplify the enterprise wide use of entity data. This includes
+definition,
+maintenance, quality assurance, and development of entity related
+functionality.&nbsp;</p>
+<p>The entity engine uses a number of Business Tier and Integration
+Tier
+patterns that will be recognized by most enterprise software
+programmers. Many
+Presentation Tier patterns are also used in the Open For Business
+project, but
+only in the servlet controller, not in the entity engine. The patterns
+used in
+the Entity Engine include: Business Delegate, Value Object, Composite
+Entity
+(variation), Value Object Assembler, Service Locator, and Data Access
+Object.
+Implementations of other patterns and more complete implementations of
+these
+Patterns are planned.</p>
+<p> Descriptions of these
+patterns are all available in the book "Core J2EE Patterns" by Alur,
+Crupi, and Malks, published by Sun. You can also find information on
+these
+patterns at the site that contains the early work of the authors before
+the
+published book was finished. See <a
+ href="http://developer.java.sun.com/developer/restricted/patterns/J2EEPatternsAtAGlance.html">http://developer.java.sun.com/developer/restricted/patterns/J2EEPatternsAtAGlance.html</a>.
 Note that you need a Java Developers Connection account to view this
-information.</P>
-<P>&nbsp;In addition there are a number of patterns
-used from the upcoming book &quot;EJB
-Design Patterns&quot; by <a class="undecorated" href="mailto:floyd@middleware-company.com">Floyd
-Marinescu</a> of TheServerSide.com. These include Data Transfer HashMap and
-Generic Attribute Access. For unique primary key generation we use an original
-pattern we like to call the &quot;Ethernet Key Generation&quot; pattern because
-it uses a collision detection mechanism to insure that multiple servers can use a single
-database to get banks of unique keys in a database independent way.</P>
-<P>The primary goal of the entity engine is to eliminate the need for entity
-specific persistence code in as many areas of a transactional application as
-possible. Granted that this sort of abstraction is a different issue for
-reporting and similar systems, but for transactional systems such as are used on
-a day to day basis in all businesses, an entity engine can save a great deal of
-development effort and dramatically reduce persistence related bugs in the
-system. These types of applications include everything from ecommerce to
-accounting to inventory and warehouse management to human resources and so on.
-These tools can be useful for reporting and analytical systems, but really
-aren't meant to allow for the wide variety of custom queries that often take
-place in such tools.</P>
-<P>In order to achieve having as little entity specific code as possible, all
-value objects are generic, using a map to store the fields values of the entity
-instance by name. The get and set methods for the fields take a String with the
-fieldName in it which is used to verify that the field is part of the entity,
-and then either get or set a value as desired. The danger of this flexibility is
-curtailed using a contract between the entity engine and the application, this
-is contained in a special XML file.</P>
-<P>Instead of writing entity specific code, entity definitions are read from an
-XML file and used by the entity engine to enforce a set of rules between the
-application and the data source, be it a database or some other source. These XML entity
-definitions specify the names of all of the entities and their fields along with
-which database tables and columns they correspond to. They are also used to
-specify a type for each field which is then looked up in the field types file for
-the given data source to find the Java and SQL data types. Relations between
-entities are also defined in this XML file. A relation is defined by specifying
-the related table, the type of relation (one or many) and the keymaps for the
-relation. A title can also be given to the relation which becomes part of its
+information.</p>
+<p>&nbsp;In addition there are a number of patterns
+used from the upcoming book "EJB
+Design Patterns" by <a class="undecorated"
+ href="mailto:floyd@middleware-company.com">Floyd
+Marinescu</a> of TheServerSide.com. These include Data Transfer HashMap
+and
+Generic Attribute Access. For unique primary key generation we use an
+original
+pattern we like to call the "Ethernet Key Generation" pattern because
+it uses a collision detection mechanism to insure that multiple servers
+can use a single
+database to get banks of unique keys in a database independent way.</p>
+<p>The primary goal of the entity engine is to eliminate the need for
+entity
+specific persistence code in as many areas of a transactional
+application as
+possible. Granted that this sort of abstraction is a different issue
+for
+reporting and similar systems, but for transactional systems such as
+are used on
+a day to day basis in all businesses, an entity engine can save a great
+deal of
+development effort and dramatically reduce persistence related bugs in
+the
+system. These types of applications include everything from ecommerce
+to
+accounting to inventory and warehouse management to human resources and
+so on.
+These tools can be useful for reporting and analytical systems, but
+really
+aren't meant to allow for the wide variety of custom queries that often
+take
+place in such tools.</p>
+<p>In order to achieve having as little entity specific code as
+possible, all
+value objects are generic, using a map to store the fields values of
+the entity
+instance by name. The <span style="font-style: italic;">get </span>and
+<span style="font-style: italic;">set </span>methods for the fields
+take a String with the
+fieldName in it which is used to verify that the field is part of the
+entity,
+and then either get or set a value as desired. The danger of this
+flexibility is
+curtailed using a contract between the entity engine and the
+application; this
+is contained in a special XML file.</p>
+<p>Instead of writing entity specific code, entity definitions are read
+from an
+XML file and used by the entity engine to enforce a set of rules
+between the
+application and the data source, be it a database or some other source.
+These XML entity
+definitions specify the names of all of the entities and their fields
+along with
+which database tables and columns they correspond to. They are also
+used to
+specify a type for each field which is then looked up in the field
+types file for
+the given data source to find the Java and SQL data types. Relations
+between
+entities are also defined in this XML file. A relation is defined by
+specifying
+the related table, the type of relation (one or many) and the keymaps
+for the
+relation. A title can also be given to the relation which becomes part
+of its
 name to distinguish it from other relations to that specific related
-entity.&nbsp;</P>
-<P>Using the Entity Engine as an abstraction layer, entity specific code can be
-easily created and modified. Code that uses the Entity Engine APIs to interact
-with entities can be deployed in various ways so that entity persistence can be
-done differently without changing the code that interacts with those entities on
-a higher level. An example of the usefulness of this abstraction is that by
-changing a configuration file an application written using the Entity Engine
-can switch from hitting a database directly through JDBC to using an EJB server
-and Entity Beans for persistence. The same code could also be used for custom
-data sources like legacy systems over HTTP or messaging services through a bit of custom coding within the same
-framework.</P>
-
-
+entity.&nbsp;</p>
+<p>Using the Entity Engine as an abstraction layer, entity specific
+code can be
+easily created and modified. Code that uses the Entity Engine APIs to
+interact
+with entities can be deployed in various ways so that entity
+persistence can be
+done differently without changing the code that interacts with those
+entities on
+a higher level. An example of the usefulness of this abstraction is
+that, by
+changing a configuration file, an application written using the Entity
+Engine
+can switch from hitting a database directly through JDBC to using an
+EJB server
+and Entity Beans for persistence. The same code could also be used for
+custom
+data sources like legacy systems over HTTP or messaging services
+through a bit of custom coding within the same
+framework.</p>
 <hr class="sepbar">
 <h3><a name="Entity_Modeling">Entity Modeling</a></h3>
 <hr class="sepbar">
-
-<P><B>Entity Modeling Files &amp; Locations</B></P>
-
-<P>The first thing to do when starting work with a new entity is to define or
-model that entity. In the OFBiz Entity Engine this is done through two XML
-files, one for entity modeling and the other for field type modeling. There are
-links to the XML DTDs for these documents in the <a href="#Related Documents">Related
-Documents</a> section above. The reason that these two files are separated is
-that field type definitions can be database specific. In other words, for a
-given entity model definition various field type definitions may exist for
-different databases. When a persistence server is defined the field type model
-XML file to be used for that server is specified.</P>
-
-<P>The main entity model XML files for Open For Business can be found in <B>ofbiz/commonapp/entitydef/</B>.
-Originally all of the entities were in the <B>entitymodel.xml</B> file, but now they are separated into various files
-in addition to the <B>entitymodel.xml</B> file. They are all named after the following pattern: <B>entitymodel_*.xml</B></P>
-
-<P>The MySQL field type model XML file for Open For Business can be found in <B>ofbiz/commonapp/entitydef/fieldtypemysql.xml</B>.
-There are other database specific field type files for Postgres, Hypersonic, Oracle, et cetera.
-From the entity model files and the field type files database tables can be created automatically through
-the checkDataSource routine on the GenericHelper interface. This can be done automatically on startup or through the tools in WebTools.</P>
-
-<P><B>Loading Seed Data</B></P>
-
-<P>While tables can be created automatically, data must be loaded from data files. These
-files can be either SQL scripts or XML Entity Engine files. All of the type information and other
-pre-loaded information such as statuses, enumerations, geo data, etc., are located in
-XML Entity Engine files in <B>ofbiz/commonapp/db/</B>. These files can be located and loaded automatically
-by the <B>install.jsp</B> page in WebTools. This page looks in the directories specified in
-the <B>entityengine.xml</B> file for a given entity group name and finds all .xml and .sql
-files. These are listed and confirmation is requested by the page. Clicking on the Yes, Load Now link
-will cause these files to attempt to be loaded. Error messages will appear in the page as
-well as on the console or in log files. Data files can also be loaded one at a time by specifying the
-full path of the .sql or .xml file in the load a single file form. While on the topic, XML Entity Engine files
-can also be imported and exported through the import & export pages in WebTools.</P>
-
-<P><B>An Example Entity Definition</B></P>
-
-<P>As mentioned above an entity consists of a set of fields and a set of
-relationships to other entities. In the XML entity definitions each of these are
-specified in addition to attributes of the entity itself such as the entity
-name, the corresponding table name, the package name for the entity, and meta
-data about the entity such as the author, a copyright notice, a description, and
-so forth. Here is an example of an XML entity definition:</P>
-
-<pre style="border: solid black 1px; background-color: #EEEEFF; color: black;">
-    &lt;entity title=&quot;Sample Entity&quot;
-            copyright=&quot;Copyright (c) 2001 John Doe Enterprises&quot;
-            author=&quot;John Doe&quot; version=&quot;1.0&quot;
-            package-name=&quot;org.ofbiz.commonapp.sample&quot;
-            entity-name=&quot;SampleEntity&quot;
-            table-name=&quot;SAMPLE_ENTITY&quot;&gt;
-      &lt;field name=&quot;primaryKeyFieldOne&quot; col-name=&quot;PRIMARY_KEY_FIELD_ONE&quot; type=&quot;id-ne&quot;&gt;&lt;/field&gt;
-      &lt;field name=&quot;primaryKeyFieldTwo&quot; type=&quot;id-ne&quot;&gt;&lt;/field&gt;
-      &lt;field name=&quot;fieldOne&quot; type=&quot;long-varchar&quot;&gt;&lt;/field&gt;
-      &lt;field name=&quot;fieldTwo&quot; type=&quot;long-varchar&quot;&gt;&lt;/field&gt;
-      &lt;field name=&quot;foreignKeyOne&quot; type=&quot;id&quot;&gt;&lt;/field&gt;
-      &lt;prim-key field=&quot;primaryKeyFieldOne&quot; /&gt;
-      &lt;prim-key field=&quot;primaryKeyFieldTwo&quot; /&gt;
-      &lt;relation type=&quot;one&quot; rel-entity-name=&quot;OtherSampleEntity&quot;&gt;
-        &lt;key-map field-name=&quot;foreignKeyOne&quot; rel-field-name=&quot;primaryKeyOne&quot; /&gt;
-      &lt;/relation&gt;
-      &lt;relation type=&quot;one&quot; title=&quot;Self&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
-        &lt;key-map field-name=&quot;primaryKeyFieldOne&quot; /&gt;
-        &lt;key-map field-name=&quot;primaryKeyFieldTwo&quot; /&gt;
-      &lt;/relation&gt;
-      &lt;relation type=&quot;many&quot; title=&quot;AllOne&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
-        &lt;key-map field-name=&quot;primaryKeyFieldOne&quot; /&gt;
-      &lt;/relation&gt;
-    &lt;/entity&gt;
-</pre>
-
-<P>This is a pretty simple entity that demonstrates a few small points. The meta
-data at the top is all optional, and if left unspecified will default to meta
-data defined for the entire entity model file. For example the &quot;description&quot;
-element was left out, so the ModelReader will use the description specified at
-the top of the XML file if one exists. The package-name is used to organize the
-entities, and specify a default location for any code that would be entity
-specific. This becomes extremely useful when you have an entity model with
-hundreds of entities.</P>
-
-<P><B>Entity and Field Definitions</B></P>
-
-<P> Notice
-that while the field primaryKeyFieldOne has a column name specified, none of the other
-fields do. The col-name and the table-name elements are optional. They can
-be derived from the field name or entity name through widely used conventions.
-These conventions dramatically simplify the definition of entities.</P>
-
-<P>Table and column names are written in caps with underscores separating the words like
-SAMPLE_ENTITY. Entity and field names are written using the Java conventions for
-class and field names where all letters are lowercase except for the first
-letter of each word, which is uppercase. Entity names correspond to Java classes
-to the first letter is upper case but field names correspond to member fields of
-a class so the first letter is lower case. For example: SampleEntity and
-fieldOne correspond to SAMPLE_ENTITY and FIELD_ONE.</P>
-
-<P>Multiple primary key columns can be specified using multiple &lt;prim-key&gt;
-tags specifying the names of the primary key fields.</P>
-
-<P>Field types are specified using a type string, which is defined in a
-fieldtypemodel XML file specified by the fieldtypemodel.dtd XML Data Type
-Definition. Each type maps to a Java type and an SQL type. Because of this
-separation different fieldtypemodel XML files can be specified for different
-databases allowing an entitymodel XML file to work with the various databases.
-In addition, validators can be specified for a field type or for any field. This
-denotes that the named validator should be called when data is input. These
-validators are defined in the class <B>org.ofbiz.base.util.UtilValidate</B> and
-follow the definition pattern: [<code>boolean isValid(String in);</code>].</P>
-
-<P><B>Entity Relationships (relations)</B></P>
-
-<P>Multiple relationships can exist for each entity. Each relation is either of type
-'one', 'one-nofk', or 'many' depending on the cardinality of the relation and
-whether a foreign key is desired or not. If the type is 'one' or 'one-nofk' then 
-the key-map elements must fully specify the primary key of
+<p><b>Entity Modeling Files &amp; Locations</b></p>
+<p>The first thing to do when starting work with a new entity is to
+define or
+model that entity. In the OFBiz Entity Engine this is done through two
+XML
+files, one for entity modeling and the other for field type modeling.
+There are
+links to the XML DTDs for these documents in the <a
+ href="#Related%20Documents">Related
+Documents</a> section above. The reason that these two files are
+separated is
+that field type definitions can be database specific. In other words,
+for a
+given entity model definition various field type definitions may exist
+for
+different databases. When a persistence server is defined the field
+type model
+XML file to be used for that server is specified.</p>
+<p>The main entity model XML files for Open For Business can be found
+in <b>ofbiz/commonapp/entitydef/</b>.
+Originally all of the entities were in the <b>entitymodel.xml</b>
+file, but now they are separated into various files
+in addition to the <b>entitymodel.xml</b> file. They are all named
+after the following pattern: <b>entitymodel_*.xml</b></p>
+<p>The MySQL field type model XML file for Open For Business can be
+found in <b>ofbiz/commonapp/entitydef/fieldtypemysql.xml</b>.
+There are other database specific field type files for Postgres,
+Hypersonic, Oracle, et cetera.
+From the entity model files and the field type files database tables
+can be created automatically through
+the checkDataSource routine on the GenericHelper interface. This can be
+done automatically on startup or through the tools in WebTools.</p>
+<p><b>Loading Seed Data</b></p>
+<p>While tables can be created automatically, data must be loaded from
+data files. These
+files can be either SQL scripts or XML Entity Engine files. All of the
+type information and other
+pre-loaded information such as statuses, enumerations, geo data, etc.,
+are located in
+XML Entity Engine files in <b>ofbiz/commonapp/db/</b>. These files can
+be located and loaded automatically
+by the <b>install.jsp</b> page in WebTools. This page looks in the
+directories specified in
+the <b>entityengine.xml</b> file for a given entity group name and
+finds all .xml and .sql
+files. These are listed and confirmation is requested by the page.
+Clicking on the Yes, Load Now link
+will cause these files to attempt to be loaded. Error messages will
+appear in the page as
+well as on the console or in log files. Data files can also be loaded
+one at a time by specifying the
+full path of the .sql or .xml file in the load a single file form.
+While on the topic, XML Entity Engine files
+can also be imported and exported through the import &amp; export pages
+in WebTools.</p>
+<p><b>An Example Entity Definition</b></p>
+<p>As mentioned above an entity consists of a set of fields and a set
+of
+relationships to other entities. In the XML entity definitions each of
+these are
+specified in addition to attributes of the entity itself such as the
+entity
+name, the corresponding table name, the package name for the entity,
+and meta
+data about the entity such as the author, a copyright notice, a
+description, and
+so forth. Here is an example of an XML entity definition:</p>
+<pre
+ style="border: 1px solid black; background-color: rgb(238, 238, 255); color: black;">    &lt;entity title="Sample Entity"<br>            copyright="Copyright (c) 2001 John Doe Enterprises"<br>            author="John Doe" version="1.0"<br>            package-name="org.ofbiz.commonapp.sample"<br>            entity-name="SampleEntity"<br>            table-name="SAMPLE_ENTITY"&gt;<br>      &lt;field name="primaryKeyFieldOne" col-name="PRIMARY_KEY_FIELD_ONE" type="id-ne"&gt;&lt;/field&gt;<br>      &lt;field name="primaryKeyFieldTwo" type="id-ne"&gt;&lt;/field&gt;<br>      &lt;field name="fieldOne" type="long-varchar"&gt;&lt;/field&gt;<br>      &lt;field name="fieldTwo" type="long-varchar"&gt;&lt;/field&gt;<br>      &lt;field name="foreignKeyOne" type="id"&gt;&lt;/field&gt;<br>      &lt;prim-key field="primaryKeyFieldOne" /&gt;<br>      &lt;prim-key field="primaryKeyFieldTwo" /&gt;<br>      &lt;relation type="one" rel-entity-name="OtherSampleEntity"&gt;<br>        &lt;key-map field-name="foreignKeyOne" rel-field-name="primaryKeyOne" /&gt;<br>      &lt;/relation&gt;<br>      &lt;relation type="one" title="Self" rel-entity-name="SampleEntity"&gt;<br>        &lt;key-map field-name="primaryKeyFieldOne" /&gt;<br>        &lt;key-map field-name="primaryKeyFieldTwo" /&gt;<br>      &lt;/relation&gt;<br>      &lt;relation type="many" title="AllOne" rel-entity-name="SampleEntity"&gt;<br>        &lt;key-map field-name="primaryKeyFieldOne" /&gt;<br>      &lt;/relation&gt;<br>    &lt;/entity&gt;<br></pre>
+<p>This is a pretty simple entity that demonstrates a few small points.
+The meta
+data at the top is all optional, and if left unspecified will default
+to meta
+data defined for the entire entity model file. For example the
+"description"
+element was left out, so the ModelReader will use the description
+specified at
+the top of the XML file if one exists. The package-name is used to
+organize the
+entities, and specify a default location for any code that would be
+entity
+specific. This becomes extremely useful when you have an entity model
+with
+hundreds of entities.</p>
+<p><b>Entity and Field Definitions</b></p>
+<p> Notice
+that while the field primaryKeyFieldOne has a column name specified,
+none of the other
+fields do. The col-name and the table-name elements are optional. They
+can
+be derived from the field name or entity name through widely used
+conventions.
+These conventions dramatically simplify the definition of entities.</p>
+<p>Table and column names are written in caps with underscores
+separating the words like
+SAMPLE_ENTITY. Entity and field names are written using the Java
+conventions for
+class and field names where all letters are lowercase except for the
+first
+letter of each word, which is uppercase. Entity names correspond to
+Java classes so the first letter is upper case but field names
+correspond to member fields of
+a class so the first letter is lower case. For example: SampleEntity
+and
+fieldOne correspond to SAMPLE_ENTITY and FIELD_ONE.</p>
+<p>Multiple primary key columns can be specified using multiple
+&lt;prim-key&gt;
+tags specifying the names of the primary key fields.</p>
+<p>Field types are specified using a type string, which is defined in a
+fieldtypemodel XML file specified by the fieldtypemodel.dtd XML Data
+Type
+Definition. Each type maps to a Java type and an SQL type. Because of
+this
+separation different fieldtypemodel XML files can be specified for
+different
+databases allowing an entitymodel XML file to work with the various
+databases.
+In addition, validators can be specified for a field type or for any
+field. This
+denotes that the named validator should be called when data is input.
+These
+validators are defined in the class <b>org.ofbiz.base.util.UtilValidate</b>
+and
+follow the definition pattern: [<code>boolean isValid(String in);</code>].</p>
+<p><b>Entity Relationships (relations)</b></p>
+<p>Multiple relationships can exist for each entity. Each relation is
+either of type
+'one', 'one-nofk', or 'many' depending on the cardinality of the
+relation and
+whether a foreign key is desired or not. If the type is 'one' or
+'one-nofk' then the key-map elements must fully specify the primary key
+of
 the related entity. If the type is 'many', the key-map elements are not
-restricted by the primary key of the related entity.</P>
-
-<P>Foreign keys and indexes on foreign keys can be created automatically by
-the Entity Engine. This is only done for type 'one' relations, not for 
-'one-nofk' or 'many' type relations.</P>
-
-<P>If multiple relations to the same related entity are used for a given entity, a title must
-be specified to make the relation name unique. By this convention the relation
-name is defined as [title][rel-table-name]. For the two SampleEntity relations
-their names are SelfSampleEntity and AllOneSampleEntity. For OtherSampleEntity 
-there is no title, so the relation name is simply OtherSampleEntity, or the name
-of the related entity.</P>
-
-<P>Key Maps are used to define how the related entity will be looked up. Each
-key map specified a field name (field-name) and a related field name (rel-field-name).
-If the two column names are the same, the rel-field-name does not have to be
-specified.</P>
-
+restricted by the primary key of the related entity.</p>
+<p>Foreign keys and indexes on foreign keys can be created
+automatically by
+the Entity Engine. This is only done for type 'one' relations, not for
+'one-nofk' or 'many' type relations.</p>
+<p>If multiple relations to the same related entity are used for a
+given entity, a title must
+be specified to make the relation name unique. By this convention the
+relation
+name is defined as [title][rel-table-name]. For the two SampleEntity
+relations
+their names are SelfSampleEntity and AllOneSampleEntity. For
+OtherSampleEntity there is no title, so the relation name is simply
+OtherSampleEntity, or the name
+of the related entity.</p>
+<p>Key Maps are used to define how the related entity will be looked
+up. Each
+key map specified a field name (field-name) and a related field name
+(rel-field-name).
+If the two column names are the same, the rel-field-name does not have
+to be
+specified.</p>
 <p class="contenttext"><b>Entity Element Reference</b></p>
-
 <p class="contenttext"><b><u>entity</u></b></p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>entity-name</td><td>Y</td>
-    <td>The name of the entity as it is referred to when using the Entity Engine
-    Java API and various other places in the Entity Engine.</td>
-</tr>
-<tr>
-    <td>table-name</td><td>N</td>
-    <td>The name of the database table that corresponds to this entity. This
-    attribute is optional and if not specified the table name will be derived 
-    from the entity name.</td>
-</tr>
-<tr>
-    <td>package-name</td><td>Y</td>
-    <td>The name of the package that this entity is contained in. With hundreds
-    of entities in a large data model this is used to organize and structure the
-    entities definitions.</td>
-</tr>
-<tr>
-    <td>dependent-on</td><td>N</td>
-    <td>This can be used to specify a parent entity or an entity that this
-    entity is dependent on. This is currently not used for anything automated in
-    the Entity Engine, but can be used to specify an heirarchical entity
-    structure.</td>
-</tr>
-<tr>
-    <td>enable-lock</td><td>N</td>
-    <td>Specifies whether or not optimistic locking should be used for this
-    entity. The <B>lastUpdatedStamp</B> field must exist on the entity and will
-    be used to keep track of the last time the entity instance was updated. If
-    the current instance to be updated does not have a matching lastUpdatedStamp
-    an EntityLockedException will be thrown. Must be true or false. Defaults to 
-    false.</td>
-</tr>
-<tr>
-    <td>never-cache</td><td>N</td>
-    <td>If this is set to true caching of this entity will not be allowed.
-    Automatic cache clearing will not be done to improve efficiency and any
-    attempt to use the cache methods on the entity will results in an exception
-    so that it is easier to find and eliminate where this is being done. Must be 
-    true or false. Defaults to false.</td>
-</tr>
-<tr>
-    <td>title</td><td>N</td>
-    <td>A title for the entity. If not specified defaults to the global setting
-    for the file the entity is in.</td>
-</tr>
-<tr>
-    <td>copyright</td><td>N</td>
-    <td>The copyright of the entity. If not specified defaults to the global setting
-    for the file the entity is in.</td>
-</tr>
-<tr>
-    <td>author</td><td>N</td>
-    <td>The author of the entity. If not specified defaults to the global setting
-    for the file the entity is in.</td>
-</tr>
-<tr>
-    <td>version</td><td>N</td>
-    <td>The version of the entity. If not specified defaults to the global setting
-    for the file the entity is in.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>entity-name</td>
+      <td>Y</td>
+      <td>The name of the entity as it is referred to when using the
+Entity Engine Java API and various other places in the Entity Engine.</td>
+    </tr>
+    <tr>
+      <td>table-name</td>
+      <td>N</td>
+      <td>The name of the database table that corresponds to this
+entity. This attribute is optional and if not specified the table name
+will be derived from the entity name.</td>
+    </tr>
+    <tr>
+      <td>package-name</td>
+      <td>Y</td>
+      <td>The name of the package that this entity is contained in.
+With hundreds of entities in a large data model this is used to
+organize and structure the entities definitions.</td>
+    </tr>
+    <tr>
+      <td>dependent-on</td>
+      <td>N</td>
+      <td>This can be used to specify a parent entity or an entity that
+this entity is dependent on. This is currently not used for anything
+automated in the Entity Engine, but can be used to specify an
+heirarchical entity structure.</td>
+    </tr>
+    <tr>
+      <td>enable-lock</td>
+      <td>N</td>
+      <td>Specifies whether or not optimistic locking should be used
+for this entity. The <b>lastUpdatedStamp</b> field must exist on the
+entity and will be used to keep track of the last time the entity
+instance was updated. If the current instance to be updated does not
+have a matching lastUpdatedStamp an EntityLockedException will be
+thrown. Must be true or false. Defaults to false.</td>
+    </tr>
+    <tr>
+      <td>never-cache</td>
+      <td>N</td>
+      <td>If this is set to true caching of this entity will not be
+allowed. Automatic cache clearing will not be done to improve
+efficiency and any attempt to use the cache methods on the entity will
+result in an exception so that it is easier to find and eliminate where
+this is being done. Must be true or false. Defaults to false.</td>
+    </tr>
+    <tr>
+      <td>title</td>
+      <td>N</td>
+      <td>A title for the entity. If not specified defaults to the
+global setting for the file the entity is in.</td>
+    </tr>
+    <tr>
+      <td>copyright</td>
+      <td>N</td>
+      <td>The copyright of the entity. If not specified defaults to the
+global setting for the file the entity is in.</td>
+    </tr>
+    <tr>
+      <td>author</td>
+      <td>N</td>
+      <td>The author of the entity. If not specified defaults to the
+global setting for the file the entity is in.</td>
+    </tr>
+    <tr>
+      <td>version</td>
+      <td>N</td>
+      <td>The version of the entity. If not specified defaults to the
+global setting for the file the entity is in.</td>
+    </tr>
+  </tbody>
 </table>
 <br>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Sub-Element&nbsp;Name</b></td>
-    <td><b>How&nbsp;Many</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>description</td><td>0 or 1</td>
-    <td>A description of the entity. If not specified defaults to the global setting
-    for the file the entity is in. This element has no attributes and should
-    contain only a simple string of characters.</td>
-</tr>
-<tr>
-    <td>field</td><td>1 to many</td>
-    <td>Used to declare fields that are part of the entity.</td>
-</tr>
-<tr>
-    <td>prim-key</td><td>0 to many</td>
-    <td>Used to declare which fields are primary keys</td>
-</tr>
-<tr>
-    <td>relation</td><td>0 to many</td>
-    <td>Used to declare relationships between entities.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Sub-Element&nbsp;Name</b></td>
+      <td><b>How&nbsp;Many</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>0 or 1</td>
+      <td>A description of the entity. If not specified defaults to the
+global setting for the file the entity is in. This element has no
+attributes and should contain only a simple string of characters.</td>
+    </tr>
+    <tr>
+      <td>field</td>
+      <td>1 to many</td>
+      <td>Used to declare fields that are part of the entity.</td>
+    </tr>
+    <tr>
+      <td>prim-key</td>
+      <td>0 to many</td>
+      <td>Used to declare which fields are primary keys</td>
+    </tr>
+    <tr>
+      <td>relation</td>
+      <td>0 to many</td>
+      <td>Used to declare relationships between entities.</td>
+    </tr>
+  </tbody>
 </table>
-
 <p class="contenttext"><b><u>field</u></b></p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the field that is used to refer to it in Java code and other
-    places.</td>
-</tr>
-<tr>
-    <td>col-name</td><td>N</td>
-    <td>The name of the corresponding database column. This is not required and
-    if not specified this will be derived from the field name.</td>
-</tr>
-<tr>
-    <td>type</td><td>Y</td>
-    <td>The type of the field. This is looked up in the field types file for the
-    current datasource at run-time to determine the Java and SQL types for the
-    field and database column.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the field that is used to refer to it in Java
+code and other places.</td>
+    </tr>
+    <tr>
+      <td>col-name</td>
+      <td>N</td>
+      <td>The name of the corresponding database column. This is not
+required and if not specified this will be derived from the field name.</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>Y</td>
+      <td>The type of the field. This is looked up in the field types
+file for the current datasource at run-time to determine the Java and
+SQL types for the field and database column.</td>
+    </tr>
+  </tbody>
 </table>
 <br>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Sub-Element&nbsp;Name</b></td>
-    <td><b>How&nbsp;Many</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>validate</td><td>0 to many</td>
-    <td>Each validate element has a single attribute called name which specifies
-    the name of the validation method to call. These methods are not called in
-    all Entity Engine operations and are only used for generic user interfaces
-    like the Entity Data Maintenance pages in WebTools.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Sub-Element&nbsp;Name</b></td>
+      <td><b>How&nbsp;Many</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>validate</td>
+      <td>0 to many</td>
+      <td>Each validate element has a single attribute called name
+which specifies the name of the validation method to call. These
+methods are not called in all Entity Engine operations and are only
+used for generic user interfaces like the Entity Data Maintenance pages
+in WebTools.</td>
+    </tr>
+  </tbody>
 </table>
-
 <p class="contenttext"><b><u>prim-key</u></b></p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>field</td><td>Y</td>
-    <td>The name of the field that will be part of the primary key.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>field</td>
+      <td>Y</td>
+      <td>The name of the field that will be part of the primary key.</td>
+    </tr>
+  </tbody>
 </table>
-
 <p class="contenttext"><b><u>relation</u></b></p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>type</td><td>Y</td>
-    <td>Specifies the type of the relationship including the cardinality of the
-    relationship (in one direction) and if a foreign key should be created for
-    cardinality one relationships. Must be "one", "one-nofk", or "many".</td>
-</tr>
-<tr>
-    <td>title</td><td>N</td>
-    <td>Because you may want to have more than one relationship to a single
-    entity this attribute allows you to specify a title that will be prepended
-    to the rel-entity-name to make up the name of the relationship. If not
-    specified the rel-entity-name alone will be used as the relationship name.</td>
-</tr>
-<tr>
-    <td>rel-entity-name</td><td>Y</td>
-    <td>The name of the related entity. The relationship goes from this entity
-    to the related entity.</td>
-</tr>
-<tr>
-    <td>fk-name</td><td>N</td>
-    <td>The foreign key name can be created automatically from the relationship
-    name, but this is not recommended for two reasons: many databases have a
-    very small maximum size (like 18 characters) for foreign key and index
-    names, and many databases require that the FK name be unique for the entire
-    database and not just for the table the FK is coming from.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>Y</td>
+      <td>Specifies the type of the relationship including the
+cardinality of the relationship (in one direction) and if a foreign key
+should be created for cardinality one relationships. Must be "one",
+"one-nofk", or "many".</td>
+    </tr>
+    <tr>
+      <td>title</td>
+      <td>N</td>
+      <td>Because you may want to have more than one relationship to a
+single entity this attribute allows you to specify a title that will be
+prepended to the rel-entity-name to make up the name of the
+relationship. If not specified the rel-entity-name alone will be used
+as the relationship name.</td>
+    </tr>
+    <tr>
+      <td>rel-entity-name</td>
+      <td>Y</td>
+      <td>The name of the related entity. The relationship goes from
+this entity to the related entity.</td>
+    </tr>
+    <tr>
+      <td>fk-name</td>
+      <td>N</td>
+      <td>The foreign key name can be created automatically from the
+relationship name, but this is not recommended for two reasons: many
+databases have a very small maximum size (like 18 characters) for
+foreign key and index names, and many databases require that the FK
+name be unique for the entire database and not just for the table the
+FK is coming from.</td>
+    </tr>
+  </tbody>
 </table>
 <br>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Sub-Element&nbsp;Name</b></td>
-    <td><b>How&nbsp;Many</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>key-map</td><td>1 to many</td>
-    <td>The key-map is used to specify a field in this entity that corresponds 
-    to a field in the related entity. This element has two attributes:
-    <b>field-name</b> and <b>rel-field-name</b>. These are used to specify the
-    name of the field on this entity and the corresponding name of the field on 
-    the related entity.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Sub-Element&nbsp;Name</b></td>
+      <td><b>How&nbsp;Many</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>key-map</td>
+      <td>1 to many</td>
+      <td>The key-map is used to specify a field in this entity that
+corresponds to a field in the related entity. This element has two
+attributes: <b>field-name</b> and <b>rel-field-name</b>. These are
+used to specify the name of the field on this entity and the
+corresponding name of the field on the related entity.</td>
+    </tr>
+  </tbody>
 </table>
-
 <hr class="sepbar">
 <h3><a name="View_Entity_Modeling">View Entity Modeling</a></h3>
 <hr class="sepbar">
-
-<P>In addition to entities that map directly to a single relational table you 
-can create "virtual" or "view" entities that map to a set of other entities.
-The idea of a <B><CODE>view-entity</CODE></B> is the same as the idea of a view in Oracle, Access, 
-or other popular database management systems. View Entities allow
-you to combine, or join, entities to make a new entity. The new entity's fields 
-will be aliases of the fields on the original entities. The member entities of the
-view will be linked together by creating a set of view-links that contain 
-key-maps, just like relationships do as described above.</P>
-
-<P>The meta data for a <B><CODE>view-entity</CODE></B> is nearly the same as for a normal entity. 
-It has a name, package, description, copyright, author, version, and so forth.
-It does not have a table name, since it does not map to a single relational 
-table in the data source. A view entity must also be assigned to a group in the
-entity group XML file, just like any normal entity. All member-entities in a
-view-entity must be in the same database, but not necessarily in the same entity
-group.</P>
-
-<pre style="border: solid black 1px; background-color: #EEEEFF; color: black;">
-    &lt;view-entity title=&quot;Sample View Entity&quot;
-            copyright=&quot;Copyright (c) 2001 John Doe Enterprises&quot;
-            author=&quot;John Doe&quot; version=&quot;1.0&quot;
-            package-name=&quot;org.ofbiz.commonapp.sample&quot;
-            entity-name=&quot;SampleViewEntity&quot;&gt;
-      &lt;member-entity entity-alias=&quot;SE&quot; entity-name=&quot;SampleEntity&quot; /&gt;
-      &lt;member-entity entity-alias=&quot;OSE&quot; entity-name=&quot;OtherSampleEntity&quot; /&gt;
-      &lt;alias entity-alias=&quot;SE&quot; name=&quot;primaryKeyFieldOne&quot; /&gt;
-      &lt;alias entity-alias=&quot;SE&quot; name=&quot;primaryKeyFieldTwo&quot; /&gt;
-      &lt;alias entity-alias=&quot;SE&quot; name=&quot;fieldOne&quot; /&gt;
-      &lt;alias entity-alias=&quot;SE&quot; name=&quot;fieldTwo&quot; /&gt;
-      &lt;alias entity-alias=&quot;OSE&quot; name=&quot;primaryKeyOne&quot; /&gt;
-      &lt;alias entity-alias=&quot;OSE&quot; name=&quot;otherFieldOne&quot; field=&quot;fieldOne&quot; /&gt;
-      &lt;view-link entity-alias=&quot;SE&quot; rel-entity-alias=&quot;OSE&quot;&gt;
-        &lt;key-map field-name=&quot;foreignKeyOne&quot; rel-field-name=&quot;primaryKeyOne&quot; /&gt;
-      &lt;/view-link&gt;
-      &lt;relation type=&quot;one&quot; rel-entity-name=&quot;OtherSampleEntity&quot;&gt;
-        &lt;key-map field-name=&quot;primaryKeyOne&quot; /&gt;
-      &lt;/relation&gt;
-      &lt;relation type=&quot;many&quot; title=&quot;AllOne&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
-        &lt;key-map field-name=&quot;primaryKeyFieldOne&quot; /&gt;
-      &lt;/relation&gt;
-    &lt;/view-entity&gt;
-</pre>
-
-
-<P><B>Member Entities</B></P>
-
-<P>Normal entities that will become part of the view entity are referred to 
-as member entities. Each member entity is given an alias and 
-is referred to by that alias for the rest of the definition. This allows a 
-single entity to be linked in multiple times.</P>
-
-<P><B>Field Aliases</B></P>
-
-<P>Rather than specifying fields with a view entity you specify aliases. 
-Each <B><CODE>alias</CODE></B> is effectively a field in usage and is defined
+<p>In addition to entities that map directly to a single relational
+table you can create "virtual" or "view" entities that map to a set of
+other entities.
+The idea of a <b><code>view-entity</code></b> is the same as the idea
+of a view in Oracle, Access, or other popular database management
+systems. View Entities allow
+you to combine, or join, entities to make a new entity. The new
+entity's fields will be aliases of the fields on the original entities.
+The member entities of the
+view will be linked together by creating a set of view-links that
+contain key-maps, just like relationships do as described above.</p>
+<p>The meta data for a <b><code>view-entity</code></b> is nearly the
+same as for a normal entity. It has a name, package, description,
+copyright, author, version, and so forth.
+It does not have a table name, since it does not map to a single
+relational table in the data source. A view entity must also be
+assigned to a group in the
+entity group XML file, just like any normal entity. All member-entities
+in a
+view-entity must be in the same database, but not necessarily in the
+same entity
+group.</p>
+<pre
+ style="border: 1px solid black; background-color: rgb(238, 238, 255); color: black;">    &lt;view-entity title="Sample View Entity"<br>            copyright="Copyright (c) 2001 John Doe Enterprises"<br>            author="John Doe" version="1.0"<br>            package-name="org.ofbiz.commonapp.sample"<br>            entity-name="SampleViewEntity"&gt;<br>      &lt;member-entity entity-alias="SE" entity-name="SampleEntity" /&gt;<br>      &lt;member-entity entity-alias="OSE" entity-name="OtherSampleEntity" /&gt;<br>      &lt;alias entity-alias="SE" name="primaryKeyFieldOne" /&gt;<br>      &lt;alias entity-alias="SE" name="primaryKeyFieldTwo" /&gt;<br>      &lt;alias entity-alias="SE" name="fieldOne" /&gt;<br>      &lt;alias entity-alias="SE" name="fieldTwo" /&gt;<br>      &lt;alias entity-alias="OSE" name="primaryKeyOne" /&gt;<br>      &lt;alias entity-alias="OSE" name="otherFieldOne" field="fieldOne" /&gt;<br>      &lt;view-link entity-alias="SE" rel-entity-alias="OSE"&gt;<br>        &lt;key-map field-name="foreignKeyOne" rel-field-name="primaryKeyOne" /&gt;<br>      &lt;/view-link&gt;<br>      &lt;relation type="one" rel-entity-name="OtherSampleEntity"&gt;<br>        &lt;key-map field-name="primaryKeyOne" /&gt;<br>      &lt;/relation&gt;<br>      &lt;relation type="many" title="AllOne" rel-entity-name="SampleEntity"&gt;<br>        &lt;key-map field-name="primaryKeyFieldOne" /&gt;<br>      &lt;/relation&gt;<br>    &lt;/view-entity&gt;<br></pre>
+<p><b>Member Entities</b></p>
+<p>Normal entities that will become part of the view entity are
+referred to as member entities. Each member entity is given an alias
+and is referred to by that alias for the rest of the definition. This
+allows a single entity to be linked in multiple times.</p>
+<p><b>Field Aliases</b></p>
+<p>Rather than specifying fields with a view entity you specify
+aliases. Each <b><code>alias</code></b> is effectively a field in
+usage and is defined
 by being mapped to a field on an aliases member entity. If the
-<B><CODE>field</CODE></B> name is the same as the alias
-<B><CODE>name</CODE></B>, there is no need to specify it. In
-other words if no field name is specified the alias name will be used 
+<b><code>field</code></b> name is the same as the alias
+<b><code>name</code></b>, there is no need to specify it. In
+other words if no field name is specified the alias name will be used
 as the field name to map to on the member entity with the specified
-<B><CODE>entity-alias</CODE></B>.</P>
-
-<P><B>View Links</B></P>
-
-<P>View links are used to specify the links between the member-entities 
+<b><code>entity-alias</code></b>.</p>
+<p><b>View Links</b></p>
+<p>View links are used to specify the links between the member-entities
 of the view. They link one entity-alias to another and use
-key-maps just like relations. Here the field-name specifies the name of 
+key-maps just like relations. Here the field-name specifies the name of
 the field on the aliased entity and the rel-field-name the field on
-the related aliased entity. As with many other things, the rel-field-name 
-is optional if it is the same as the field-name.</P>
-
-<P>To represent an outer join you can specify in a <B><CODE>view-link</CODE></B> element that the 
-related entity is optional using the <B><CODE>rel-optional</CODE></B> attribute, which
-can be either "true" or "false", and of course defaults to "false". The Entity
-Engine will generate ANSI, Oracle Theta, or MS SQL Server Theta style join code
-depending on the setting in the entityengine.xml file. See the Entity Engine
-Configuration Guide for more information.</P>
-
-<P><B>Primary Keys</B></P>
-
-<P>View Entities have primary keys just like normal entities. The Entity Engine
-automatically determines which aliases are primary keys by looking at the field
-that they alias.</P>
-
-<P>The primary key for a view entity should include all primary key fields of each
-member entity of the view. This means that all of the primary key fields must be 
-aliased, but fields that are used to link the entities need only be aliased
-once. For example, if an OrderHeader entity has an orderId primary key and an 
-OrderLine entity has an orderId primary key and an orderLineSeqId
-primary key, and the orderId was the mapped key that links the two entities, 
-then the view entity would have two primary keys: orderId and
-orderLineSeqId. In this case orderId would only be aliased once since by 
-definition the orderIds from each entity will always be the same since
-that is how the entities are linked (or joined).</P>
-
-<P><B>Relationships</B></P>
-
-<P>Relationships are specified the same way with view entities as they are with
+the related aliased entity. As with many other things, the
+rel-field-name is optional if it is the same as the field-name.</p>
+<p>To represent an outer join you can specify in a <b><code>view-link</code></b>
+element that the related entity is optional using the <b><code>rel-optional</code></b>
+attribute, which
+can be either "true" or "false", and of course defaults to "false". The
+Entity
+Engine will generate ANSI, Oracle Theta, or MS SQL Server Theta style
+join code
+depending on the setting in the entityengine.xml file. See the Entity
+Engine
+Configuration Guide for more information.</p>
+<p><b>Primary Keys</b></p>
+<p>View Entities have primary keys just like normal entities. The
+Entity Engine
+automatically determines which aliases are primary keys by looking at
+the field
+that they alias.</p>
+<p>The primary key for a view entity should include all primary key
+fields of each
+member entity of the view. This means that all of the primary key
+fields must be aliased, but fields that are used to link the entities
+need only be aliased
+once. For example, if an OrderHeader entity has an orderId primary key
+and an OrderLine entity has an orderId primary key and an
+orderLineSeqId
+primary key, and the orderId was the mapped key that links the two
+entities, then the view entity would have two primary keys: orderId and
+orderLineSeqId. In this case orderId would only be aliased once since
+by definition the orderIds from each entity will always be the same
+since
+that is how the entities are linked (or joined).</p>
+<p><b>Relationships</b></p>
+<p>Relationships are specified the same way with view entities as they
+are with
 normal entities. That key-map attributes are still called
-field-name and rel-field-name but in the case of view entities the field name 
-is actually the alias name that will be looked up.</P>
-
-<P><B>Grouping and Summary Data</B></P>
-
-<P>Another useful feature available in a view-entity is the Grouping and Summary
+field-name and rel-field-name but in the case of view entities the
+field name is actually the alias name that will be looked up.</p>
+<p><b>Grouping and Summary Data</b></p>
+<p>Another useful feature available in a view-entity is the Grouping
+and Summary
 Data feature. This is accomplished with two attributes on the
-<B><CODE>alias</CODE></B> element:
-<B><CODE>group-by</CODE></B> and <B><CODE>function</CODE></B>. These work the
-same way conceptually as grouping and functions in SQL.</P>
-
-<P>The <B><CODE>group-by</CODE></B> attribute can be set to either "true" or "false"
-and naturally defaults to "false". When set to true the results of a query will
-be grouped by the given aliased field. This means that results where the aliased
+<b><code>alias</code></b> element:
+<b><code>group-by</code></b> and <b><code>function</code></b>. These
+work the
+same way conceptually as grouping and functions in SQL.</p>
+<p>The <b><code>group-by</code></b> attribute can be set to either
+"true" or "false"
+and naturally defaults to "false". When set to true the results of a
+query will
+be grouped by the given aliased field. This means that results where
+the aliased
 fields with group-by set to true that have equal values will be grouped
-together.</P>
-
-<P>The <B><CODE>function</CODE></B> attribute is used to summarize data in a
-result group as described in the group-by description above. The values in the
-grouped results will be summarized as specified by the function. The functions
-available include: <B>min | max | sum | avg | count | count-distinct | upper |
-lower</B>. These parallel commonly available functions in SQL.</P>
-
-<P>While it is not required, to keep things simple I recommend querying only
-aliased fields that are either group-by aliases or function aliases. Also,
-remember that not all specified aliased fields may be included in the list of
-fields to retreive in the query because this will over-constrain the query.</P>
-
-<P>Grouping and summarizing data can be very useful for certain types of custom
-coded reports or for data migration and cleansing.</P>
-
-<P><B>Tips</B></P>
-
-<P>Note that view-entities can get pretty complex in a hurry. Those familiar
-with SQL can look at the generated SQL code to make sure it is doing what they
-intended. For everyone there are a few tips that might be helpful.</P>
-
-<P>First pay attention to ordering of view-links and in some cases field aliases. In
-view-links, except for the first one, make sure the member-entity referred to in
-the entity-alias attribute has been referred to in a previous view-link (this is
-how the link tree is kept clean).</P>
-
+together.</p>
+<p>The <b><code>function</code></b> attribute is used to summarize
+data in a
+result group as described in the group-by description above. The values
+in the
+grouped results will be summarized as specified by the function. The
+functions
+available include: <b>min | max | sum | avg | count | count-distinct |
+upper |
+lower</b>. These parallel commonly available functions in SQL.</p>
+<p>While it is not required, to keep things simple I recommend querying
+only
+aliased fields that are either group-by aliases or function aliases.
+Also,
+remember that not all specified aliased fields may be included in the
+list of
+fields to retreive in the query because this will over-constrain the
+query.</p>
+<p>Grouping and summarizing data can be very useful for certain types
+of custom
+coded reports or for data migration and cleansing.</p>
+<p><b>Tips</b></p>
+<p>Note that view-entities can get pretty complex in a hurry. Those
+familiar
+with SQL can look at the generated SQL code to make sure it is doing
+what they
+intended. For everyone there are a few tips that might be helpful.</p>
+<p>First pay attention to ordering of view-links and in some cases
+field aliases. In
+view-links, except for the first one, make sure the member-entity
+referred to in
+the entity-alias attribute has been referred to in a previous view-link
+(this is
+how the link tree is kept clean).</p>
 <p class="contenttext"><b>View Entity Element Reference</b></p>
-
 <p class="contenttext"><b><u>view-entity</u></b></p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>entity-name</td><td>Y</td>
-    <td>The name of the entity as it is referred to when using the Entity Engine
-    Java API and various other places in the Entity Engine.</td>
-</tr>
-<tr>
-    <td>package-name</td><td>Y</td>
-    <td>The name of the package that this entity is contained in. With hundreds
-    of entities in a large data model this is used to organize and structure the
-    entities definitions.</td>
-</tr>
-<tr>
-    <td>dependent-on</td><td>N</td>
-    <td>This can be used to specify a parent entity or an entity that this
-    entity is dependent on. This is currently not used for anything automated in
-    the Entity Engine, but can be used to specify an heirarchical entity
-    structure.</td>
-</tr>
-<tr>
-    <td>never-cache</td><td>N</td>
-    <td>If this is set to true caching of this entity will not be allowed.
-    Automatic cache clearing will not be done to improve efficiency and any
-    attempt to use the cache methods on the entity will results in an exception
-    so that it is easier to find and eliminate where this is being done. Must be 
-    true or false. Defaults to false.</td>
-</tr>
-<tr>
-    <td>title</td><td>N</td>
-    <td>A title for the entity. If not specified defaults to the global setting
-    for the file the entity is in.</td>
-</tr>
-<tr>
-    <td>copyright</td><td>N</td>
-    <td>The copyright of the entity. If not specified defaults to the global setting
-    for the file the entity is in.</td>
-</tr>
-<tr>
-    <td>author</td><td>N</td>
-    <td>The author of the entity. If not specified defaults to the global setting
-    for the file the entity is in.</td>
-</tr>
-<tr>
-    <td>version</td><td>N</td>
-    <td>The version of the entity. If not specified defaults to the global setting
-    for the file the entity is in.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>entity-name</td>
+      <td>Y</td>
+      <td>The name of the entity as it is referred to when using the
+Entity Engine Java API and various other places in the Entity Engine.</td>
+    </tr>
+    <tr>
+      <td>package-name</td>
+      <td>Y</td>
+      <td>The name of the package that this entity is contained in.
+With hundreds of entities in a large data model this is used to
+organize and structure the entities definitions.</td>
+    </tr>
+    <tr>
+      <td>dependent-on</td>
+      <td>N</td>
+      <td>This can be used to specify a parent entity or an entity that
+this entity is dependent on. This is currently not used for anything
+automated in the Entity Engine, but can be used to specify an
+heirarchical entity structure.</td>
+    </tr>
+    <tr>
+      <td>never-cache</td>
+      <td>N</td>
+      <td>If this is set to true caching of this entity will not be
+allowed. Automatic cache clearing will not be done to improve
+efficiency and any attempt to use the cache methods on the entity will
+results in an exception so that it is easier to find and eliminate
+where this is being done. Must be true or false. Defaults to false.</td>
+    </tr>
+    <tr>
+      <td>title</td>
+      <td>N</td>
+      <td>A title for the entity. If not specified defaults to the
+global setting for the file the entity is in.</td>
+    </tr>
+    <tr>
+      <td>copyright</td>
+      <td>N</td>
+      <td>The copyright of the entity. If not specified defaults to the
+global setting for the file the entity is in.</td>
+    </tr>
+    <tr>
+      <td>author</td>
+      <td>N</td>
+      <td>The author of the entity. If not specified defaults to the
+global setting for the file the entity is in.</td>
+    </tr>
+    <tr>
+      <td>version</td>
+      <td>N</td>
+      <td>The version of the entity. If not specified defaults to the
+global setting for the file the entity is in.</td>
+    </tr>
+  </tbody>
 </table>
 <br>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Sub-Element&nbsp;Name</b></td>
-    <td><b>How&nbsp;Many</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>description</td><td>0 or 1</td>
-    <td>A description of the entity. If not specified defaults to the global setting
-    for the file the entity is in. This element has no attributes and should
-    contain only a simple string of characters.</td>
-</tr>
-<tr>
-    <td>member-entity</td><td>1 to many</td>
-    <td>Used to declare which entities will be part of this view-entity and what
-    alias will be used to refer to them.</td>
-</tr>
-<tr>
-    <td>alias</td><td>1 to many</td>
-    <td>Used to declare the aliased fields from the member-entities that will be
-    part of the view entity.</td>
-</tr>
-<tr>
-    <td>view-link</td><td>1 to many</td>
-    <td>Used to declare how the member-entities in the view will be linked
-    together.</td>
-</tr>
-<tr>
-    <td>relation</td><td>0 to many</td>
-    <td>Used to declare relationships between entities.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Sub-Element&nbsp;Name</b></td>
+      <td><b>How&nbsp;Many</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>0 or 1</td>
+      <td>A description of the entity. If not specified defaults to the
+global setting for the file the entity is in. This element has no
+attributes and should contain only a simple string of characters.</td>
+    </tr>
+    <tr>
+      <td>member-entity</td>
+      <td>1 to many</td>
+      <td>Used to declare which entities will be part of this
+view-entity and what alias will be used to refer to them.</td>
+    </tr>
+    <tr>
+      <td>alias</td>
+      <td>1 to many</td>
+      <td>Used to declare the aliased fields from the member-entities
+that will be part of the view entity.</td>
+    </tr>
+    <tr>
+      <td>view-link</td>
+      <td>1 to many</td>
+      <td>Used to declare how the member-entities in the view will be
+linked together.</td>
+    </tr>
+    <tr>
+      <td>relation</td>
+      <td>0 to many</td>
+      <td>Used to declare relationships between entities.</td>
+    </tr>
+  </tbody>
 </table>
-
 <p class="contenttext"><b><u>member-entity</u></b></p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>entity-alias</td><td>Y</td>
-    <td>The alias to use for this member-entity. Must be unique among all
-    member-entities. This will be used to refer to the member-entity in other
-    places in the view-entity definition.</td>
-</tr>
-<tr>
-    <td>entity-name</td><td>Y</td>
-    <td>The name of the entity definition that this member entity corresponds
-    to. The same entity can be used multiple times in the same view-entity with
-    different entity-aliases.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>entity-alias</td>
+      <td>Y</td>
+      <td>The alias to use for this member-entity. Must be unique among
+all member-entities. This will be used to refer to the member-entity in
+other places in the view-entity definition.</td>
+    </tr>
+    <tr>
+      <td>entity-name</td>
+      <td>Y</td>
+      <td>The name of the entity definition that this member entity
+corresponds to. The same entity can be used multiple times in the same
+view-entity with different entity-aliases.</td>
+    </tr>
+  </tbody>
 </table>
-
 <p class="contenttext"><b><u>alias</u></b></p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>entity-alias</td><td>Y</td>
-    <td>The entity-alias of the member-entity that this aliased field
-    corresponds to.</td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the field alias. This is used when interacting with the
-    view-entity the same way a field name is used when interacting with an
-    entity.</td>
-</tr>
-<tr>
-    <td>field</td><td>N</td>
-    <td>The name of the field from the member-entity with the given entity-alias
-    that this field alias corresponds to. If not specified defaults to the alias
-    name as specified in the name attribute.</td>
-</tr>
-<tr>
-    <td>prim-key</td><td>N</td>
-    <td>Used to specify if this alias should be part of the view-entities
-    primary key. If specified must be either true or false. If not specified the
-    Entity Engine will look at the definition of the field it came from to see
-    if it is part of the original entity's primary key.</td>
-</tr>
-<tr>
-    <td>group-by</td><td>N</td>
-    <td>Used to specify that the aliased field should be used for grouping
-    results and should be used in conjunction with the function attribute on
-    other aliased fields. For a more complete discussion see the main text. Must
-    be either true or false. Defaults to false.</td>
-</tr>
-<tr>
-    <td>function</td><td>N</td>
-    <td>Used to specify a function to be used on this field to calculate summary
-    information. Should be used in conjunction with the group-by attribute to
-    specify how the summary results should be grouped. See the main text for a
-    more complete discussion of how to use this.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>entity-alias</td>
+      <td>Y</td>
+      <td>The entity-alias of the member-entity that this aliased field
+corresponds to.</td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the field alias. This is used when interacting
+with the view-entity the same way a field name is used when interacting
+with an entity.</td>
+    </tr>
+    <tr>
+      <td>field</td>
+      <td>N</td>
+      <td>The name of the field from the member-entity with the given
+entity-alias that this field alias corresponds to. If not specified
+defaults to the alias name as specified in the name attribute.</td>
+    </tr>
+    <tr>
+      <td>prim-key</td>
+      <td>N</td>
+      <td>Used to specify if this alias should be part of the
+view-entities primary key. If specified must be either true or false.
+If not specified the Entity Engine will look at the definition of the
+field it came from to see if it is part of the original entity's
+primary key.</td>
+    </tr>
+    <tr>
+      <td>group-by</td>
+      <td>N</td>
+      <td>Used to specify that the aliased field should be used for
+grouping results and should be used in conjunction with the function
+attribute on other aliased fields. For a more complete discussion see
+the main text. Must be either true or false. Defaults to false.</td>
+    </tr>
+    <tr>
+      <td>function</td>
+      <td>N</td>
+      <td>Used to specify a function to be used on this field to
+calculate summary information. Should be used in conjunction with the
+group-by attribute to specify how the summary results should be
+grouped. See the main text for a more complete discussion of how to use
+this.</td>
+    </tr>
+  </tbody>
 </table>
-
 <p class="contenttext"><b><u>view-link</u></b></p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>entity-alias</td><td>Y</td>
-    <td>The alias of the entity the link is coming from.</td>
-</tr>
-<tr>
-    <td>rel-entity-alias</td><td>Y</td>
-    <td>The alias of the entity the link is going to.</td>
-</tr>
-<tr>
-    <td>rel-optional</td><td>N</td>
-    <td>Used to specify whether or not the related entity is optional. If this
-    is true it effects an outer join to the related entity. Must be either true
-    or false. Defaults to false.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>entity-alias</td>
+      <td>Y</td>
+      <td>The alias of the entity the link is coming from.</td>
+    </tr>
+    <tr>
+      <td>rel-entity-alias</td>
+      <td>Y</td>
+      <td>The alias of the entity the link is going to.</td>
+    </tr>
+    <tr>
+      <td>rel-optional</td>
+      <td>N</td>
+      <td>Used to specify whether or not the related entity is
+optional. If this is true it effects an outer join to the related
+entity. Must be either true or false. Defaults to false.</td>
+    </tr>
+  </tbody>
 </table>
 <br>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Sub-Element&nbsp;Name</b></td>
-    <td><b>How&nbsp;Many</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>key-map</td><td>1 to many</td>
-    <td>The key-map is used to specify a field in this entity that corresponds 
-    to a field in the related entity. This element has two attributes:
-    <b>field-name</b> and <b>rel-field-name</b>. These are used to specify the
-    name of the field on this entity and the name of the field on the related
-    entity.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Sub-Element&nbsp;Name</b></td>
+      <td><b>How&nbsp;Many</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>key-map</td>
+      <td>1 to many</td>
+      <td>The key-map is used to specify a field in this entity that
+corresponds to a field in the related entity. This element has two
+attributes: <b>field-name</b> and <b>rel-field-name</b>. These are
+used to specify the name of the field on this entity and the name of
+the field on the related entity.</td>
+    </tr>
+  </tbody>
 </table>
-
 <p class="contenttext"><b><u>relation</u></b></p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>type</td><td>Y</td>
-    <td>Specifies the type of the relationship including the cardinality of the
-    relationship (in one direction) and if a foreign key should be created for
-    cardinality one relationships. Must be "one", "one-nofk", or "many".</td>
-</tr>
-<tr>
-    <td>title</td><td>N</td>
-    <td>Because you may want to have more than one relationship to a single
-    entity this attribute allows you to specify a title that will be prepended
-    to the rel-entity-name to make up the name of the relationship. If not
-    specified the rel-entity-name alone will be used as the relationship name.</td>
-</tr>
-<tr>
-    <td>rel-entity-name</td><td>Y</td>
-    <td>The name of the related entity. The relationship goes from this entity
-    to the related entity.</td>
-</tr>
-<tr>
-    <td>fk-name</td><td>N</td>
-    <td>The foreign key name can be created automatically from the relationship
-    name, but this is not recommended for two reasons: many databases have a
-    very small maximum size (like 18 characters) for foreign key and index
-    names, and many databases require that the FK name be unique for the entire
-    database and not just for the table the FK is coming from.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>Y</td>
+      <td>Specifies the type of the relationship including the
+cardinality of the relationship (in one direction) and if a foreign key
+should be created for cardinality one relationships. Must be "one",
+"one-nofk", or "many".</td>
+    </tr>
+    <tr>
+      <td>title</td>
+      <td>N</td>
+      <td>Because you may want to have more than one relationship to a
+single entity this attribute allows you to specify a title that will be
+prepended to the rel-entity-name to make up the name of the
+relationship. If not specified the rel-entity-name alone will be used
+as the relationship name.</td>
+    </tr>
+    <tr>
+      <td>rel-entity-name</td>
+      <td>Y</td>
+      <td>The name of the related entity. The relationship goes from
+this entity to the related entity.</td>
+    </tr>
+    <tr>
+      <td>fk-name</td>
+      <td>N</td>
+      <td>The foreign key name can be created automatically from the
+relationship name, but this is not recommended for two reasons: many
+databases have a very small maximum size (like 18 characters) for
+foreign key and index names, and many databases require that the FK
+name be unique for the entire database and not just for the table the
+FK is coming from.</td>
+    </tr>
+  </tbody>
 </table>
 <br>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Sub-Element&nbsp;Name</b></td>
-    <td><b>How&nbsp;Many</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>key-map</td><td>1 to many</td>
-    <td>The key-map is used to specify a field in this entity that corresponds 
-    to a field in the related entity. This element has two attributes:
-    <b>field-name</b> and <b>rel-field-name</b>. These are used to specify the
-    name of the field on this entity and the name of the field on the related
-    entity.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Sub-Element&nbsp;Name</b></td>
+      <td><b>How&nbsp;Many</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>key-map</td>
+      <td>1 to many</td>
+      <td>The key-map is used to specify a field in this entity that
+corresponds to a field in the related entity. This element has two
+attributes: <b>field-name</b> and <b>rel-field-name</b>. These are
+used to specify the name of the field on this entity and the name of
+the field on the related entity.</td>
+    </tr>
+  </tbody>
 </table>
-
 <hr class="sepbar">
 <h3><a name="The_Entity_Engine_API">The Entity Engine API</a></h3>
 <hr class="sepbar">
-
-<P>The Entity Engine classes in the package <B>org.ofbiz.entity</B> define the
-API used to interact with Entity Engine entity data. From a users point of view
-only three classes really need to be understood. They are <B>GenericDelegator</B>,
-<B>GenericValue</B> and <B>GenericPK</B>. The <B>GenericDelegator</B> class, usually used with the
-instance name '<B>delegator</B>', is used to do create, find, store and other operations on a
-<B>GenericValue</B> object. Once a <B> GenericValue</B> object is created it will contain a
-reference to the delegator that created it and through this reference it knows how
-to store, remove and do other operations without requiring a program to invoke methods on the delegator
-itself.</P>
-
-<P>I've been trying to think of how best to present information about this API
-but short of writing a number of documents about the specific usage of each
-piece there is not much that is useful that I could write here. I recommend
-reading through the JavaDocs for the Entity Engine and other framework components of OFBiz, 
-and browsing through the various 
-applications in OFBiz for examples. These heavily use the Entity Engine API.</P>
-
-<P>A few quick notes to help you get started might be in order.</P>
-
-<P><B>Factory Methods</B></P>
-
-<P>Rather than trying to construct a GenericValue or a GenericPK yourself, 
-you should use the <B>makeValue</B>
-and <B>makePK</B> methods on the <B>GenericDelegator</B>. These create an object
-without persisting it and allow you to add to it and create or store it later
-using their own <B>create</B> or <B>store</B> method, or calling the 
-<B>create</B> or <B>store</B> method on the <B>delegator</B> object.</P>
-
-<P><B>Creating, Storing and Removing</B></P>
-
-<P>To create (or insert) values into the database, use the <B>create</B> method on the
-<B>GenericValue</B> or <B>GenericDelegator</B> objects. To store (or update) existing values,
-use the <B>store</B> method on the <B>GenericValue</B> or <B>GenericDelegator</B>
-objects.</P>
-
-<P>For storing multiple entities the <B>GenericDelegator</B> class has a method
-called <B>storeAll</B>. This method takes many
-<B>GenericValue</B> instances and stores them in the same transaction. 
+<p>The Entity Engine classes in the package <b>org.ofbiz.entity</b>
+define the
+API used to interact with Entity Engine entity data. From a users point
+of view
+only three classes really need to be understood. They are <b>GenericDelegator</b>,
+<b>GenericValue</b> and <b>GenericPK</b>. The <b>GenericDelegator</b>
+class, usually used with the
+instance name '<b>delegator</b>', is used to do <span
+ style="font-weight: bold;">create</span>, <span
+ style="font-weight: bold;">find</span>, <span
+ style="font-weight: bold;">store</span><span
+ style="font-style: italic;"> </span>and other operations on a
+<b>GenericValue</b> object. Once a <b> GenericValue</b> object is
+created it will contain a
+reference to the delegator that created it and through this reference
+it knows how
+to store, remove and do other operations without requiring a program to
+invoke methods on the delegator
+itself.</p>
+<p>I've been trying to think of how best to present information about
+this API
+but short of writing a number of documents about the specific usage of
+each
+piece there is not much that is useful that I could write here. I
+recommend
+reading through the JavaDocs for the Entity Engine and other framework
+components of OFBiz, and browsing through the various applications in
+OFBiz for examples. These heavily use the Entity Engine API.</p>
+<p>A few quick notes to help you get started might be in order.</p>
+<p><b>Factory Methods</b></p>
+<p>Rather than trying to construct a GenericValue or a GenericPK
+yourself, you should use the <b>makeValue</b>
+and <b>makePK</b> methods on the <b>GenericDelegator</b>. These
+create an object
+without persisting it and allow you to add to it and create or store it
+later
+using their own <b>create</b> or <b>store</b> method, or calling the <b>create</b>
+or <b>store</b> method on the <b>delegator</b> object.</p>
+<p><b>Creating, Storing and Removing</b></p>
+<p>To create (or insert) values into the database, use the <b>create</b>
+method on the
+<b>GenericValue</b> or <b>GenericDelegator</b> objects. To store (or
+update) existing values,
+use the <b>store</b> method on the <b>GenericValue</b> or <b>GenericDelegator</b>
+objects.</p>
+<p>For storing multiple entities the <b>GenericDelegator</b> class has
+a method
+called <b>storeAll</b>. This method takes many
+<b>GenericValue</b> instances and stores them in the same transaction.
 Actually, to say that
-it stores them is incorrect. It checks to see if they exist and if so does an
-update, if not it does an insert. This may be optimized in the future for speed
-by allowing you to specify whether it should be inserted or updated based on
-prior knowledge of the existence if that entity. Note that this is a DIFFERENT
-behavior that the store method, which just does an update.</P>
-
-<P>Removal of entities is done through the <B>remove</B> method on either the 
-<B>delegator</B>, or the <B>GenericValue</B>.</P>
-
-<P><B>Finding</B></P>
-
-<P>Value instances can be retrieved from the database with the <B>findByPrimaryKey</B>
-methods, or a collection can be retrieved using the <B>findAll</B> or <B>findByAnd</B> methods.</P>
-
-<P>There are two main types of findByAnd methods. Each type has a number of variations
-that may include the use of a cache, and may accept an orderBy field list. The two
-main types accept different field lists. One accepts a Map of fields and finds entities
-by anding together expressions where each named field must equal the corresponding value
-in the map. The other type of findByAnd accepts a list of <B>EntityExpr</B> objects
-that are used to specify small expressions that will be anded together. Each 
-EntityExpr specifies a field name, an operation, and a value for the field.</P>
-
-<P><B>The EntityCondition Object</B></P>
-
-<P>Originally the EntityExpr object was meant to be nestable to allow for
+it stores them is incorrect. It checks to see if they exist and if so
+does an
+update, if not it does an insert. This may be optimized in the future
+for speed
+by allowing you to specify whether it should be inserted or updated
+based on
+prior knowledge of the existence of that entity. Note that this is a
+DIFFERENT
+behavior than the store method, which just does an update.</p>
+<p>Removal of entities is done through the <b>remove</b> method on
+either the <b>delegator</b>, or the <b>GenericValue</b>.</p>
+<p><b>Finding</b></p>
+<p>Value instances can be retrieved from the database with the <b>findByPrimaryKey</b>
+methods, or a collection can be retrieved using the <b>findAll</b> or <b>findByAnd</b>
+methods.</p>
+<p>There are two main types of findByAnd methods. Each type has a
+number of variations
+that may include the use of a cache, and may accept an orderBy field
+list. The two
+main types accept different field lists. One accepts a Map of fields
+and finds entities
+by anding together expressions where each named field must equal the
+corresponding value
+in the map. The other type of findByAnd accepts a list of <b>EntityExpr</b>
+objects
+that are used to specify small expressions that will be anded together.
+Each EntityExpr specifies a field name, an operation, and a value for
+the field.</p>
+<p><b>The EntityCondition Object</b></p>
+<p>Originally the EntityExpr object was meant to be nestable to allow
+for
 more flexible queries, but was never completed. Also, even if you could
 nest it the types of queries you could run would be limited because you
-couldn't have two ANDs (for instance) inside a set of parenthesis. To
-address these issues, and complete the EntityExpr implementation the
+couldn't have two ANDs (for instance) inside a set of parentheses. To
+address these issues, and complete the EntityExpr implementation, the
 EntityCondition abstract object has been introduced along with the
 EntityConditionList and EntityFieldMap objects which both extend
 EntityCondition. The EntityExpr object has also been changed to extend
-EntityCondition.<P>
-
-<P>The EntityConditionList and EntityFieldMap objects are pretty simple, they
+EntityCondition.</p>
+<p></p>
+<p>The EntityConditionList and EntityFieldMap objects are pretty
+simple. They
 are created with a List or Map, respectively, and an EntityOperator to
-specify operator used to join the members of these containers, generally
-AND or OR.</P>
-
-<P>The EntityExpr class now has two primary constructors: one for comparing
-a field to a value (the String, EntityOperator, Object constructor), and
+specify operator used to join the members of these containers,
+generally
+AND or OR.</p>
+<p>The EntityExpr class now has two primary constructors: one for
+comparing
+a field to a value (the String, EntityOperator, Object constructor),
+and
 one for comparing two EntityCondition objects (the EntityCondition,
-EntityOperator, EntityCondition constructor).</P>
-
-<P>A findByCondition method is now available that accepts an
+EntityOperator, EntityCondition constructor).</p>
+<p>A findByCondition method is now available that accepts an
 EntityCondition argument (as well as some other useful arguments) and
 this EntityCondition can be an EntityExpr, EntityConditionList or
-EntityFieldMap.</P>
-
-<P>The code inside the Entity Engine has changed somewhat because these
-EntityCondition objects now created their own WHERE clauses. This is a
+EntityFieldMap.</p>
+<p>The code inside the Entity Engine has changed somewhat because these
+EntityCondition objects now create their own WHERE clauses. This is a
 nice architectural point because other custom EntityConditions could
-also be created and used as desired by a savvy developer.</P>
-
-<P>On that note a "short cut" implementation of the EntityCondition abstract
-class has been created to incorporate SQL WHERE clause snippets or full clauses
+also be created and used as desired by a savvy developer.</p>
+<p>On that note a "short cut" implementation of the EntityCondition
+abstract
+class has been created to incorporate SQL WHERE clause snippets or full
+clauses
 into the EntityCondition querying framework. The class is named
 EntityWhereString and is constructed with a simple String argument that
-represents the SQL that will be inserted into the final generated SQL. This is
-not recommended when other options are available, but it necessary for certain
-functionality that the Entity Engine does not otherwise support.</P>
-
-<P><B>The EntityListIterator Object</B></P>
-
-<P>The EntityListIterator class implements the ListIterator interface for
-convenience, but also has other methods that are necessary for it's
-operation, like a close() method for when you are finished.</P>
-
-<P>This object allows you to iterate through query results efficiently in
+represents the SQL that will be inserted into the final generated SQL.
+This is
+not recommended when other options are available, but it necessary for
+certain
+functionality that the Entity Engine does not otherwise support.</p>
+<p><b>The EntityListIterator Object</b></p>
+<p>The EntityListIterator class implements the ListIterator interface
+for
+convenience, but also has other methods that are necessary for its
+operation, like a close() method for when you are finished.</p>
+<p>This object allows you to iterate through query results efficiently
+in
 both directions by keeping a reference to the ResultSet that comes back
-from the query. This makes is possible to use the cursor feature in the
+from the query. This makes it possible to use the cursor feature in the
 database and especially for large queries uses memory much more
 efficiently. This object constructs GenericValue objects on the fly
 rather than creating a bunch all at once, so if you need to export the
-results of a huge query to a file or something, it can be done without a
-massive amount of memory.</P>
-
-<P>The EntityListIterator also has helpful methods to get a subset of the result
-set with a start index value and a number of results desired and to get all of
-the results at once rather than having to create a custom loop to do so.</P>
-
-<P><B>The Entity Engine Cache</B></P>
-
-<P>Because the performance cost of retrieving data from a database can be very
-high and can have a serious impact on the overall performance of an application
-or component of an application the ability to cache data from the database is
-often very important. Many of the find methods on the GenericDelegator have
-corresponding cache methods with the "Cache" suffix on the function name. This
-makes it very easy to cache individual values found by primary key as well as
-value lists found by and, or by all.</P>
-
-<P>The Entity Engine cache uses the OFBiz <B><CODE>UtilCache</CODE></B> class to
-implement the actual cache. UtilCache has many features such as limited cache
-size, expiring cache entries after a configurable amount of time, and soft
-references so that the garbage collector can be reclaim entries from large
-caches when more memory is needed.</P>
-
-<P>There are two ways to configure UtilCache based caches. The first is to
-modify the cache.properties file (as documented in the Core Configuration Guide)
-for permanent changes. The second is to make temporary changes through the Cache
-Management pages in the WebTools webapp. Those pages can also be used to view
-statistics, clear cache values, and perform other cache related maintenance.</P>
-
-<P>A big issue with this type of cache, where it is not tied directly to the
-database, is clearing "dirty" cache entries. When create, store or remove
-operations are done through the Entity Engine it will normally be able to
-automatically clear any cache entries that might contain the updated value.
-Distributed cache clearing is also implemented and can be configured in a number
-of ways using the flexibility of the Service Engine.</P>
-
-<P>There are some cases where cache entries cannot be automatically cleared. The
-most major issue is with view-entities since when an entity is updated that is
-part of a view-entity it may only have some of the data in the primary key or
-and set that was used to find and index the cache for that data. There may be a
-way to do this automatically, but for now manually clearing view-entity caches
-is still necessary.</P>
-
+results of a huge query to a file or something, it can be done without
+a
+massive amount of memory.</p>
+<p>The EntityListIterator also has helpful methods to get a subset of
+the result
+set with a start index value and a number of results desired and to get
+all of
+the results at once rather than having to create a custom loop to do so.</p>
+<p><b>The Entity Engine Cache</b></p>
+<p>Because the performance cost of retrieving data from a database can
+be very
+high and can have a serious impact on the overall performance of an
+application
+or component of an application, the ability to cache data from the
+database is
+often very important. Many of the find methods on the GenericDelegator
+have
+corresponding cache methods with the "Cache" suffix on the function
+name. This
+makes it very easy to cache individual values found by primary key as
+well as
+value lists found by <span style="font-style: italic;">and</span>, or
+by <span style="font-style: italic;">all</span>.</p>
+<p>The Entity Engine cache uses the OFBiz <b><code>UtilCache</code></b>
+class to
+implement the actual cache. UtilCache has many features such as limited
+cache
+size, expiring cache entries after a configurable amount of time, and
+soft
+references so that the garbage collector can reclaim entries from large
+caches when more memory is needed.</p>
+<p>There are two ways to configure UtilCache based caches. The first is
+to
+modify the cache.properties file (as documented in the Core
+Configuration Guide)
+for permanent changes. The second is to make temporary changes through
+the Cache
+Management pages in the WebTools webapp. Those pages can also be used
+to view
+statistics, clear cache values, and perform other cache related
+maintenance.</p>
+<p>A big issue with this type of cache, where it is not tied directly
+to the
+database, is clearing "dirty" cache entries. When <span
+ style="font-style: italic;">create</span>, <span
+ style="font-style: italic;">store </span>or <span
+ style="font-style: italic;">remove
+</span>operations are done through the Entity Engine, it will normally
+be able to
+automatically clear any cache entries that might contain the updated
+value.
+Distributed cache clearing is also implemented and can be configured in
+a number
+of ways using the flexibility of the Service Engine.</p>
+<p>There are some cases where cache entries cannot be automatically
+cleared. The
+most major issue is with view-entities: when an entity that is
+part of a view-entity is updated, it may have only some of the data in
+the primary <span style="font-style: italic;">key </span>or
+<span style="font-style: italic;">and </span>set that was used to find
+and index the cache for that data. There may be a
+way to do this automatically, but for now manually clearing view-entity
+caches
+is still necessary.</p>
 <hr class="sepbar">
 <h3><a name="JTA_Support">JTA Support</a></h3>
 <hr class="sepbar">
-
-<P>The Entity Engine JTA Support is simple to use, but has a few complications in configuration.
-The support runs through an API and a Factory class so that no direct contact with the
-particular JTA implementation is necessary. The TransactionFactory class can be used to
-get the two main objects needed for JTA use: UserTransaction and TransactionManager. The
-current implementation supports the Tyrex JTA/JTS implementation. To use a different
-implementation simply change the TransactionFactory class, everything else uses that. 
-That's the tricky configuration part, if you aren't using Tyrex. For Tyrex make sure a domain
-configuration XML file called tyrexdomain.xml must be on the running classpath.</P>
-
-<P>To demarcate transactions you can use the TransactionUtil class. This class wraps the UserTransaction 
-class and only throws GenericEntityExceptions and runtime exceptions. The basic methods needed are 
-begin(), commit(), and rollback(), but the rest are included and can be very useful. A transaction
-is attached to the current thread so it is not necessary to pass it around all over the place.
-After beginning a transaction make sure it is always either committed or rolled back. This is 
-normally done by committing at the end of a try block and rolling back in each catch block. 
-You can also use the standard UserTransaction object by getting one from the TransactionFactory.</P>
-
+<p>The Entity Engine JTA Support is simple to use, but has a few
+complications in configuration.
+The support runs through an API and a Factory class so that no direct
+contact with the
+particular JTA implementation is necessary. The TransactionFactory
+class can be used to
+get the two main objects needed for JTA use: UserTransaction and
+TransactionManager. The
+current implementation supports the Tyrex JTA/JTS implementation. To
+use a different
+implementation simply change the TransactionFactory class; everything
+else uses that. That's the tricky configuration part, if you aren't
+using Tyrex. For Tyrex make sure that a domain
+configuration XML file called tyrexdomain.xml is on the running
+classpath.</p>
+<p>To demarcate transactions you can use the TransactionUtil class.
+This class wraps the UserTransaction class and only throws
+GenericEntityExceptions and runtime exceptions. The basic methods
+needed are begin(), commit(), and rollback(), but the rest are included
+and can be very useful. A transaction
+is attached to the current thread so it is not necessary to pass it
+around all over the place.
+After beginning a transaction make sure it is always either committed
+or rolled back. This is normally done by committing at the end of a try
+block and rolling back in each catch block. You can also use the
+standard UserTransaction object by getting one from the
+TransactionFactory.</p>
 <hr class="sepbar">
 <h3><a name="Core_Web_Tools">Core Web Tools</a></h3>
 <hr class="sepbar">
-
-<P>The WebTools web application contains a number of useful tools for working
-with the entity engine. These include a cross linked reference to the entity
-definitions, a tool for editing entity and relation definitions, and a JSP which
-acts as an XML template and also saves the XML entity definitions to their corresponding files. </P>
-
-<P>There is also a JSP that acts as a front end to the routines which checks the
-current state of the database table definitions and reports any differences.
-Where possible tables or columns that are missing can be added to the database.
+<p>The WebTools web application contains a number of useful tools for
+working
+with the entity engine. These include a cross linked reference to the
+entity
+definitions, a tool for editing entity and relation definitions, and a
+JSP which
+acts as an XML template and also saves the XML entity definitions to
+their corresponding files. </p>
+<p>There is also a JSP that acts as a front end to the routines which
+checks the
+current state of the database table definitions and reports any
+differences.
+Where possible tables or columns that are missing can be added to the
+database.
 This is the same routine that optionally runs when the server loads and
-optionally creates missing tables and columns.</P>
-
-<P>The entity code generator has been removed from the project, or deprecated if
-you will, because of the next generation entity tool which is the entity engine
-described herein. There are still some occasions where the use of templates to
-create entity specific code or other text is still useful, and in fact,
-necessary. One example of this is the JSP which creates the XML for the entity
-definitions from those definitions, and is used for writing out the XML after
-entity definitions have changed. Other uses for templates include manually
-generating database specific table creation SQL and quick start JSPs and event
-handlers that allow for finding, viewing and editing entity specific data.
-These can be used as starting points for task specific applications.</P>
-
-<P>Where entity data editing is not task specific, but instead is entity
-specific, the Entity Data Maintenance pages in WebTools can be used. They are
-dynamic pages that rely on the in memory entity definitions to create forms for
-the entering of data, and event for handing the entered data (including
-validators specified in the entity definition), and finding specific entities by
-any of the fields on the entity, or finding any relation entity instances for a
-given entity instance. For instance, when viewing the OrderHeader entity all of
-the relations to that entity can be viewed as well, including links to edit and
-view them. These related entities would include OrderType (one relation),
-OrderLine (many relation), and many others.</P>
-
-<P>Data in the database can be imported from and exported to Entity Engine XML files
-in the import and export pages. Importing data causes corresponding entity instances
-to either be created or updated, depending on whether or not they already exist. The
-Export page allows you to specify which entities you want to export the data for by
-using a big list of check boxes, one for each entity. For more granular control over
-exported data, the Entity Data Maintenance pages mentioned above would be the place
-to look (not yet finished though...).</P>
-
+optionally creates missing tables and columns.</p>
+<p>The entity code generator has been removed from the project, or
+deprecated if
+you will, because of the next generation entity tool which is the
+entity engine
+described herein. There are still some occasions where the use of
+templates to
+create entity specific code or other text is useful, and in fact,
+necessary. One example of this is the JSP which creates the XML for the
+entity
+definitions from those definitions, and is used for writing out the XML
+after
+entity definitions have changed. Other uses for templates include
+manually
+generating database-specific table creation SQL and quick start JSPs
+and event
+handlers that allow for finding, viewing and editing entity specific
+data.
+These can be used as starting points for task specific applications.</p>
+<p>Where entity data editing is not task specific, but instead is
+entity
+specific, the Entity Data Maintenance pages in WebTools can be used.
+They are
+dynamic pages that rely on the in-memory entity definitions to create
+forms for
+the entering of data, and events for handing the entered data
+(including
+validators specified in the entity definition), and finding specific
+entities by
+any of the fields on the entity, or finding any relation entity
+instances for a
+given entity instance. For instance, when viewing the OrderHeader
+entity all of
+the relations to that entity can be viewed as well, including links to
+edit and
+view them. These related entities would include OrderType (one
+relation),
+OrderLine (many relation), and many others.</p>
+<p>Data in the database can be imported from and exported to Entity
+Engine XML files
+in the import and export pages. Importing data causes corresponding
+entity instances
+to either be created or updated, depending on whether or not they
+already exist. The
+Export page allows you to specify which entities you want to export the
+data for by
+using a big list of check boxes, one for each entity. For more granular
+control over
+exported data, the Entity Data Maintenance pages mentioned above would
+be the place
+to look (not yet finished though...).</p>
 </body>
-
 </html>
