@@ -58,35 +58,43 @@ public class PartyRelationshipServices {
             return result;
 
         String partyIdFrom = (String) context.get("partyIdFrom");
-
         if (partyIdFrom == null) {
             partyIdFrom = (String) userLogin.getString("partyId");
         }
 
         String partyIdTo = (String) context.get("partyIdTo");
-
         if (partyIdTo == null) {
             return ServiceUtil.returnError("Cannot create party relationship, partyIdTo cannot be null.");
         }
 
         String roleTypeIdFrom = (String) context.get("roleTypeIdFrom");
-
         if (roleTypeIdFrom == null) {
             roleTypeIdFrom = "_NA_";
         }
 
         String roleTypeIdTo = (String) context.get("roleTypeIdTo");
-
         if (roleTypeIdTo == null) {
             roleTypeIdTo = "_NA_";
         }
 
         Timestamp fromDate = (Timestamp) context.get("fromDate");
-
         if (fromDate == null) {
             fromDate = UtilDateTime.nowTimestamp();
         }
 
+        try {
+            if (delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyIdFrom, "roleTypeId", roleTypeIdFrom)) == null) {
+                return ServiceUtil.returnError("Cannot create party relationship, partyIdFrom is not in specified role.");
+            }
+            
+            if (delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyIdTo, "roleTypeId", roleTypeIdTo)) == null) {
+                return ServiceUtil.returnError("Cannot create party relationship, partyIdTo is not in specified role.");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+            return ServiceUtil.returnError("Could not create party role (read failure): " + e.getMessage());
+        }
+        
         GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom, "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", fromDate));
         partyRelationship.setNonPKFields(context);
 

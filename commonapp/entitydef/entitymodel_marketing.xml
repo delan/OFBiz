@@ -170,6 +170,9 @@
       <relation type="one" fk-name="CNCT_LST_TYP" rel-entity-name="ContactListType">
         <key-map field-name="contactListTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="ContactListParty">
+        <key-map field-name="contactListId"/>
+      </relation>
     </entity>
     <entity entity-name="ContactListParty"
             package-name="org.ofbiz.commonapp.marketing.contact"

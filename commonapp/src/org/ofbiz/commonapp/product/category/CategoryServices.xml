@@ -61,14 +61,14 @@
         <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategory" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <!-- save this value before overwriting it so we can compare it later -->
-        <field-to-field field-name="primaryParentCategoryId" map-name="lookedUpValue" to-map-name="saveIdMap"/>
+        <!-- <field-to-field field-name="primaryParentCategoryId" map-name="lookedUpValue" to-map-name="saveIdMap"/> -->
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
 
         <!-- if setting the primaryParentCategoryId, create a rollup entity too -->
         <!-- NOTE: this is commented out to disable because it is dangerous to add category rollups on a live site without being able to specify a fromDate
         <if-not-empty field-name="primaryParentCategoryId" map-name="lookedUpValue">
-            <if-compare-field field-name="primaryParentCategoryId" map-name="lookedUpValue" operator="equals" to-map-name="saveIdMap">
+            <if-compare-field field-name="primaryParentCategoryId" map-name="lookedUpValue" operator="not-equals" to-map-name="saveIdMap">
                 <make-value entity-name="ProductCategoryRollup" value-name="newRollup"/>
                 <field-to-field field-name="productCategoryId" map-name="lookedUpValue" to-field-name="productCategoryId" to-map-name="newRollup"/>
                 <field-to-field field-name="primaryParentCategoryId" map-name="lookedUpValue" to-field-name="parentProductCategoryId" to-map-name="newRollup"/>

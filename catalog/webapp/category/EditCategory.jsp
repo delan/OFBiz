@@ -52,7 +52,7 @@
     Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
 
     GenericValue primaryParentCategory = null;
-    String primParentCatIdParam = request.getParameter("primaryParentProductCategoryId");
+    String primParentCatIdParam = request.getParameter("primaryParentCategoryId");
     if(productCategory != null && useValues)  {
         primaryParentCategory = productCategory.getRelatedOne("PrimaryParentProductCategory");
     } else if(primParentCatIdParam != null && primParentCatIdParam.length() > 0) {
@@ -208,7 +208,7 @@
     <td align=right><div class="tabletext">Primary Parent Category ID</div></td>
     <td>&nbsp;</td>
     <td>
-      <select name="primaryParentProductCategoryId" size=1 class='selectBox'>
+      <select name="primaryParentCategoryId" size=1 class='selectBox'>
         <%if(primaryParentCategory != null) {%>
           <option selected value='<%=primaryParentCategory.getString("productCategoryId")%>'><%=primaryParentCategory.getString("description")%> [<%=primaryParentCategory.getString("productCategoryId")%>]</option>
         <%}%>
