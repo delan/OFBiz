@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.6 2003/12/05 20:59:53 byersa Exp $
+ * $Id: ContentServices.java,v 1.7 2003/12/15 11:55:58 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,13 +61,16 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.content.data.DataServices;
 import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
+
+import freemarker.template.SimpleHash;
 
 
 /**
  * ContentServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  *
  *
@@ -284,9 +287,9 @@ public class ContentServices {
         String contentIdFrom = (String) context.get("contentIdFrom");
         String contentIdTo = (String) context.get("contentIdTo");
         String contentId = (String) context.get("contentId");
-        //Debug.logInfo("CREATING CONTENTASSOC contentIdFrom(1):" + contentIdFrom, null);
-        //Debug.logInfo("CREATING CONTENTASSOC contentIdTo(1):" + contentIdTo, null);
-        //Debug.logInfo("CREATING CONTENTASSOC contentId:" + contentId, null);
+        Debug.logInfo("CREATING CONTENTASSOC contentIdFrom(1):" + contentIdFrom, null);
+        Debug.logInfo("CREATING CONTENTASSOC contentIdTo(1):" + contentIdTo, null);
+        Debug.logInfo("CREATING CONTENTASSOC contentId:" + contentId, null);
         int contentIdCount = 0;
         if (UtilValidate.isNotEmpty(contentIdFrom)) contentIdCount++;
         if (UtilValidate.isNotEmpty(contentIdTo)) contentIdCount++;
@@ -301,6 +304,8 @@ public class ContentServices {
         if (UtilValidate.isNotEmpty(contentIdTo)) {
             if (UtilValidate.isEmpty(contentIdFrom)) contentIdFrom = contentId;
         }
+        Debug.logInfo("CREATING CONTENTASSOC contentIdFrom(2):" + contentIdFrom, null);
+        Debug.logInfo("CREATING CONTENTASSOC contentIdTo(2):" + contentIdTo, null);
 
         GenericValue contentAssoc = delegator.makeValue("ContentAssoc", new HashMap());
         contentAssoc.put("contentId", contentIdFrom);
@@ -606,32 +611,32 @@ public class ContentServices {
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map templateContext = (Map) context.get("templateContext"); 
+        SimpleHash templateContext = (SimpleHash) context.get("templateContext"); 
         String contentId = (String) context.get("contentId"); 
         Timestamp fromDate = (Timestamp) context.get("fromDate"); 
         GenericValue userLogin = (GenericValue)context.get("userLogin");
         if (templateContext != null && UtilValidate.isEmpty(contentId)) {
-            contentId = (String)templateContext.get("contentId");
+            contentId = (String)FreeMarkerWorker.get(templateContext, "contentId");
         }
         String mapKey = (String) context.get("mapKey"); 
         if (templateContext != null && UtilValidate.isEmpty(mapKey)) {
-            mapKey = (String)templateContext.get("mapKey");
+            mapKey = (String)FreeMarkerWorker.get(templateContext, "mapKey");
         }
         String subContentId = (String) context.get("subContentId"); 
         if (templateContext != null && UtilValidate.isEmpty(subContentId)) {
-            subContentId = (String)templateContext.get("subContentId");
+            subContentId = (String)FreeMarkerWorker.get(templateContext, "subContentId");
         }
         String mimeTypeId = (String) context.get("mimeTypeId"); 
         if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String)templateContext.get("mimeTypeId");
+            mimeTypeId = (String)FreeMarkerWorker.get(templateContext, "mimeTypeId");
         }
         Locale locale = (Locale) context.get("locale"); 
         if (templateContext != null && locale == null) {
-            locale = (Locale)templateContext.get("locale");
+            locale = (Locale)FreeMarkerWorker.get(templateContext, "locale");
         }
         GenericValue subContentDataResourceView = (GenericValue)context.get("subContentDataResourceView");
         if (subContentDataResourceView!= null && subContentDataResourceView== null) {
-            subContentDataResourceView= (GenericValue)templateContext.get("subContentDataResourceView");
+            subContentDataResourceView= (GenericValue)FreeMarkerWorker.get(templateContext, "subContentDataResourceView");
         }
         Writer out = (Writer) context.get("outWriter"); 
 
@@ -639,10 +644,10 @@ public class ContentServices {
         //Debug.logInfo("in renderSubContent(svc), subContentId:" + subContentId, "");
         //Debug.logInfo("in renderSubContent(svc), mapKey:" + mapKey, "");
         if (templateContext == null)
-            templateContext = new HashMap();
+            templateContext = new SimpleHash();
 
         try {
-            results = ContentWorker.renderSubContentAsText(dispatcher, delegator, 
+            results = ContentWorker.renderSubContentAsText( delegator, 
                                   contentId, out, mapKey, subContentId, subContentDataResourceView,
                                   templateContext, locale, mimeTypeId, userLogin, fromDate);
         } catch(IOException e) {
@@ -664,23 +669,23 @@ public class ContentServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Writer out = (Writer) context.get("outWriter"); 
-        Map templateContext = (Map) context.get("templateContext"); 
+        SimpleHash templateContext = (SimpleHash) context.get("templateContext"); 
         GenericValue userLogin = (GenericValue)context.get("userLogin");
         String contentId = (String) context.get("contentId"); 
         if (templateContext != null && UtilValidate.isEmpty(contentId)) {
-            contentId = (String)templateContext.get("contentId");
+            contentId = (String)FreeMarkerWorker.get(templateContext, "contentId");
         }
         String mimeTypeId = (String) context.get("mimeTypeId"); 
         if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String)templateContext.get("mimeTypeId");
+            mimeTypeId = (String)FreeMarkerWorker.get(templateContext, "mimeTypeId");
         }
         Locale locale = (Locale) context.get("locale"); 
         if (templateContext != null && locale == null) {
-            locale = (Locale)templateContext.get("locale");
+            locale = (Locale)FreeMarkerWorker.get(templateContext, "locale");
         }
 
         if (templateContext == null)
-            templateContext = new HashMap();
+            templateContext = new SimpleHash();
 
         GenericValue view = null;
         try {

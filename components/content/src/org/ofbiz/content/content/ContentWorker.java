@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.3 2003/12/05 21:01:18 byersa Exp $
+ * $Id: ContentWorker.java,v 1.4 2003/12/15 11:55:58 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,15 +52,17 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 
 import bsh.EvalError;
+import freemarker.template.SimpleHash;
 
 
 /**
  * ContentWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  *
  * 
@@ -512,7 +514,7 @@ public static List getContentAssocsWithId(GenericDelegator delegator, String con
         return permissionStatus;
     }
 
-    public static GenericValue getSubContent(LocalDispatcher dispatcher, GenericDelegator delegator,
+    public static GenericValue getSubContent( GenericDelegator delegator,
                      String contentId, String mapKey, String subContentId, GenericValue userLogin,
                      List assocTypes, Timestamp fromDate)
                      throws IOException {
@@ -560,17 +562,18 @@ public static List getContentAssocsWithId(GenericDelegator delegator, String con
         return content;
     }
 
-    public static Map renderSubContentAsText(LocalDispatcher dispatcher, GenericDelegator delegator, 
+    public static Map renderSubContentAsText( GenericDelegator delegator, 
         String contentId, Writer out, String mapKey, String subContentId, 
-        GenericValue subContentDataResourceView, Map templateContext, 
+        GenericValue subContentDataResourceView, SimpleHash templateContext, 
         Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate)
         throws IOException {
 
+        Map context = (Map)FreeMarkerWorker.get(templateContext, "context");
         //Debug.logInfo(" in renderSubContentAsText, mimeTypeId:" + mimeTypeId, module);
         Map results = new HashMap();
         GenericValue content = null;
         if (subContentDataResourceView == null) {
-                subContentDataResourceView = ContentWorker.getSubContent(dispatcher, delegator, 
+                subContentDataResourceView = ContentWorker.getSubContent( delegator, 
                                    contentId, mapKey, subContentId, userLogin, null, fromDate);
         }
         results.put("view", subContentDataResourceView);
@@ -585,7 +588,7 @@ public static List getContentAssocsWithId(GenericDelegator delegator, String con
         GenericValue dataResourceContentView = null;
 
        if (templateContext == null) 
-           templateContext = new HashMap();
+           templateContext = new SimpleHash();
 
            renderContentAsText(delegator, subContentId, out, 
                   templateContext, subContentDataResourceView, locale, mimeTypeId);
@@ -594,9 +597,10 @@ public static List getContentAssocsWithId(GenericDelegator delegator, String con
     }
 
     public static Map renderContentAsText(GenericDelegator delegator, String contentId, Writer out, 
-        Map templateContext, GenericValue view, Locale locale, String mimeTypeId )
+        SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId )
         throws IOException {
 
+        Map context = (Map)FreeMarkerWorker.get(templateContext, "context");
         //Debug.logInfo(" in renderContentAsText, mimeTypeId:" + mimeTypeId, module);
         Map results = new HashMap();
         GenericValue content = null;
@@ -651,10 +655,10 @@ public static List getContentAssocsWithId(GenericDelegator delegator, String con
        String contentTypeId = (String)view.get("contentTypeId"); 
        String dataResourceId = (String)view.get("drDataResourceId");
        if (templateContext == null) 
-           templateContext = new HashMap();
+           templateContext = new SimpleHash();
 
        try {
-            DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, 
+            DataResourceWorker.renderDataResourceAsHtml(delegator, dataResourceId, out, 
                   templateContext, view, locale, mimeTypeId);
         } catch(IOException e) {
             return ServiceUtil.returnError(e.getMessage());
