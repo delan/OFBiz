@@ -38,7 +38,8 @@
                workeffort/build.xml,product/build.xml,marketing/build.xml,
                order/build.xml,manufacturing/build.xml,
                accounting/build.xml,ecommerce/build.xml,
-               securityext/build.xml,pos/build.xml,webtools/build.xml"/>
+               securityext/build.xml,pos/build.xml,webtools/build.xml
+               example/build.xml"/>
 
     <filelist id="tests-subdirs" dir="."
         files="base/build.xml,components/entity/build.xml"/>
