@@ -27,6 +27,22 @@
   <display-name>Open For Business - Party Manager</display-name>
   <description>Party Manager Module of the Open For Business Project</description>
 
+  <context-param>
+    <param-name>entityServerName</param-name>
+    <param-value>default</param-value>
+    <description>The Name of the Entity Server to use, defined in servers.properties</description>
+  </context-param>
+  <context-param>
+    <param-name>siteConfigurationFile</param-name>
+    <param-value>/WEB-INF/controller-config.xml</param-value>
+    <description>Request/View Mapping And Site Configuration File</description>
+  </context-param>
+  <context-param>
+    <param-name>schedulerConfigurationFile</param-name>
+    <param-value>/WEB-INF/scheduler-config.xml</param-value>
+    <description>Configuration File For The Job Scheduler</description>
+  </context-param>
+
   <servlet>
     <servlet-name>ControlServlet</servlet-name>
     <display-name>ControlServlet</display-name>
@@ -39,22 +55,6 @@
     <url-pattern>/control/*</url-pattern>
   </servlet-mapping>
 
-  <context-param>
-    <description>The Name of the Entity Server to use, defined in servers.properties</description>
-    <param-name>entityServerName</param-name>
-    <param-value>default</param-value>
-  </context-param>
-  <context-param>
-    <description>Request/View Mapping And Site Configuration File</description>
-    <param-name>siteConfigurationFile</param-name>
-    <param-value>/WEB-INF/controller-config.xml</param-value>
-  </context-param>
-  <context-param>
-    <description>Configuration File For The Job Scheduler</description>
-    <param-name>schedulerConfigurationFile</param-name>
-    <param-value>/WEB-INF/scheduler-config.xml</param-value>
-  </context-param>
-
   <session-config>
     <session-timeout>60</session-timeout>    <!-- in minutes -->
   </session-config>
@@ -63,11 +63,6 @@
     <welcome-file>/index.jsp</welcome-file>
     <welcome-file>/main.jsp</welcome-file>
   </welcome-file-list>
-
-  <taglib> 
-     <taglib-uri>ofbizTags</taglib-uri>
-     <taglib-location>/WEB-INF/taglib.tld</taglib-location> 
-  </taglib> 
 
   <error-page>
     <error-code>403</error-code>
@@ -85,6 +80,11 @@
     <error-code>500</error-code>
     <location>/error/error.jsp</location>
   </error-page>
+
+  <taglib> 
+     <taglib-uri>ofbizTags</taglib-uri>
+     <taglib-location>/WEB-INF/taglib.tld</taglib-location> 
+  </taglib> 
 
 <!-- HTTP Response Code definitions:
 | "400"   ; Bad Request
