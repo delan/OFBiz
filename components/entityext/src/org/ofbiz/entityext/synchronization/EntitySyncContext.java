@@ -148,7 +148,7 @@ public class EntitySyncContext {
         this.userLogin = (GenericValue) context.get("userLogin");
         
         this.entitySyncId = (String) context.get("entitySyncId");
-        Debug.logInfo("Running runEntitySync with entitySyncId=" + entitySyncId, module);
+        Debug.logInfo("Creating EntitySyncContext with entitySyncId=" + entitySyncId, module);
 
         try {
             this.entitySync = delegator.findByPrimaryKey("EntitySync", UtilMisc.toMap("entitySyncId", this.entitySyncId));
@@ -226,6 +226,8 @@ public class EntitySyncContext {
             return valuesToCreate;
         }
 
+        Debug.logInfo("Getting values to create; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
+        
         // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
         Iterator entityModelToUseCreateIter = entityModelToUseList.iterator();
         while (entityModelToUseCreateIter.hasNext()) {
@@ -317,6 +319,8 @@ public class EntitySyncContext {
             return valuesToStore;
         }
 
+        Debug.logInfo("Getting values to store; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
+        
         // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
         Iterator entityModelToUseUpdateIter = entityModelToUseList.iterator();
         while (entityModelToUseUpdateIter.hasNext()) {
@@ -358,9 +362,9 @@ public class EntitySyncContext {
                 eli.close();
                 
                 // definately remove this message and related data gathering
-                //long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
-                //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
-                //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
+                long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
+                long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
+                if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
 
                 // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
                 if (valuesPerEntity == 0) {
@@ -417,6 +421,8 @@ public class EntitySyncContext {
             return keysToRemove;
         }
 
+        Debug.logInfo("Getting keys to remove; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
+        
         try {
             // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
             EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
