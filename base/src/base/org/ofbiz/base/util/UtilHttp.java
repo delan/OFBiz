@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.8 2003/09/26 17:05:35 jonesde Exp $
+ * $Id: UtilHttp.java,v 1.9 2003/11/08 20:53:18 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,11 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,28 +42,28 @@ import javax.servlet.http.HttpSession;
 /**
  * HttpUtil - Misc TTP Utility Functions
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.8 $
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision: 1.9 $
  * @since      2.1
  */
 public class UtilHttp {
-    
+
     public static final String module = UtilHttp.class.getName();
 
-    /** 
+    /**
      * Create a map from an HttpServletRequest object
      * @return The resulting Map
      */
     public static Map getParameterMap(HttpServletRequest request) {
-        Map paramMap = new OrderedMap();        
-        // first add in all path info parameters /~name1=value1/~name2=value2/        
+        Map paramMap = new OrderedMap();
+        // first add in all path info parameters /~name1=value1/~name2=value2/
         String pathInfoStr = request.getPathInfo();
-        
-        if (pathInfoStr != null && pathInfoStr.length() > 0) {                
+
+        if (pathInfoStr != null && pathInfoStr.length() > 0) {
             // make sure string ends with a trailing '/' so we get all values
             if (!pathInfoStr.endsWith("/")) pathInfoStr += "/";
-            
+
             int current = pathInfoStr.indexOf('/');
             int last = current;
             while ((current = pathInfoStr.indexOf('/', last + 1)) != -1) {
@@ -80,7 +76,7 @@ public class UtilHttp {
                 }
             }
         }
-        
+
         // now add all the actual parameters; these take priority
         java.util.Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
@@ -112,13 +108,13 @@ public class UtilHttp {
         return paramMap;
     }
 
-    /** 
-     * Given a request, returns the application name or "root" if deployed on root 
+    /**
+     * Given a request, returns the application name or "root" if deployed on root
      * @param request An HttpServletRequest to get the name info from
      * @return String
      */
     public static String getApplicationName(HttpServletRequest request) {
-        String appName = "root";    
+        String appName = "root";
         if (request.getContextPath().length() > 1) {
             appName = request.getContextPath().substring(1);
         }
@@ -138,7 +134,7 @@ public class UtilHttp {
     }
 
     public static StringBuffer getServerRootUrl(HttpServletRequest request) {
-        StringBuffer requestUrl = new StringBuffer();    
+        StringBuffer requestUrl = new StringBuffer();
         requestUrl.append(request.getScheme());
         requestUrl.append("://" + request.getServerName());
         if (request.getServerPort() != 80 && request.getServerPort() != 443)
@@ -147,7 +143,7 @@ public class UtilHttp {
     }
 
     public static StringBuffer getFullRequestUrl(HttpServletRequest request) {
-        StringBuffer requestUrl = UtilHttp.getServerRootUrl(request);    
+        StringBuffer requestUrl = UtilHttp.getServerRootUrl(request);
         requestUrl.append(request.getRequestURI());
         if (request.getQueryString() != null) {
             requestUrl.append("?" + request.getQueryString());
@@ -189,7 +185,7 @@ public class UtilHttp {
     public static void setLocale(HttpServletRequest request, Locale locale) {
         request.getSession().setAttribute("locale", locale);
     }
-    
+
     /** Simple event to set the users per-session locale setting */
     public static String setSessionLocale(HttpServletRequest request, HttpServletResponse response) {
         String localeString = request.getParameter("locale");
@@ -198,7 +194,45 @@ public class UtilHttp {
         }
         return "success";
     }
-    
+
+    /**
+     * Get the currency string from the session.
+     * @param session HttpSession object to use for lookup
+     * @return String The ISO currency code
+     */
+    public static String getCurrencyUom(HttpSession session) {
+        String iso = (String) session.getAttribute("currencyUom");
+        if (iso == null) {
+            // if none is set we will use the system default
+            Currency cur = Currency.getInstance(Locale.getDefault());
+            iso = cur.getCurrencyCode();
+        }
+        return iso;
+    }
+
+    /**
+     * Get the currency string from the session.
+     * @param request HttpServletRequest object to use for lookup
+     * @return String The ISO currency code
+     */
+    public static String getCurrencyUom(HttpServletRequest request) {
+        return getCurrencyUom(request.getSession());
+    }
+
+    /** Simple event to set the users per-session currency uom value */
+    public static void setCurrencyUom(HttpServletRequest request, String currencyUom) {
+        request.getSession().setAttribute("currencyUom", currencyUom);
+    }
+
+    /** Simple event to set the users per-session currency uom value */
+    public static String setSessionCurrencyUom(HttpServletRequest request, HttpServletResponse response) {
+        String currencyUom = request.getParameter("currencyUom");
+        if (UtilValidate.isNotEmpty(currencyUom)) {
+            UtilHttp.setCurrencyUom(request, currencyUom);
+        }
+        return "success";
+    }
+
     /** URL Encodes a Map of arguements */
     public static String urlEncodeArgs(Map args) {
         StringBuffer buf = new StringBuffer();
@@ -215,19 +249,19 @@ public class UtilHttp {
                     } else {
                         valueStr = value.toString();
                     }
-                    
+
                     if (valueStr != null && valueStr.length() > 0) {
                         if (buf.length() > 0) buf.append('&');
                         try {
                             buf.append(URLEncoder.encode(name, "UTF-8"));
                         } catch (UnsupportedEncodingException e) {
-                            Debug.logError(e, module);                        
+                            Debug.logError(e, module);
                         }
                         buf.append('=');
                         try {
                             buf.append(URLEncoder.encode(valueStr, "UTF-8"));
                         } catch (UnsupportedEncodingException e) {
-                            Debug.logError(e, module);                        
+                            Debug.logError(e, module);
                         }
                     }
                 }
@@ -235,30 +269,30 @@ public class UtilHttp {
         }
         return buf.toString();
     }
-    
+
     public static String setResponseBrowserProxyNoCache(HttpServletRequest request, HttpServletResponse response) {
         setResponseBrowserProxyNoCache(response);
         return "success";
     }
-    
+
     public static void setResponseBrowserProxyNoCache(HttpServletResponse response) {
-        long nowMillis = System.currentTimeMillis();        
+        long nowMillis = System.currentTimeMillis();
         response.setDateHeader("Expires", nowMillis);
         response.setDateHeader("Last-Modified", nowMillis); // always modified
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate"); // HTTP/1.1
         response.addHeader("Cache-Control", "post-check=0, pre-check=0, false");
-        response.setHeader("Pragma", "no-cache"); // HTTP/1.0               
+        response.setHeader("Pragma", "no-cache"); // HTTP/1.0
     }
-    
+
     public static String getContentTypeByFileName(String fileName) {
         FileNameMap mime = URLConnection.getFileNameMap();
         return mime.getContentTypeFor(fileName);
     }
-    
+
     /**
      * Stream an array of bytes to the browser
      * This method will close the ServletOutputStream when finished
-     * 
+     *
      * @param response HttpServletResponse object to get OutputStream from
      * @param bytes Byte array of content to stream
      * @param contentType The content type to pass to the browser
@@ -267,17 +301,17 @@ public class UtilHttp {
     public static void streamContentToBrowser(HttpServletResponse response, byte[] bytes, String contentType) throws IOException {
         // tell the browser not the cache
         setResponseBrowserProxyNoCache(response);
-        
+
         // set the response info
         response.setContentLength(bytes.length);
-        if (contentType != null) {                       
-            response.setContentType(contentType);            
+        if (contentType != null) {
+            response.setContentType(contentType);
         }
-        
+
         // create the streams
         OutputStream out = response.getOutputStream();
         InputStream in = new ByteArrayInputStream(bytes);
-        
+
         // stream the content
         try {
             streamContent(out, in, bytes.length);
@@ -286,20 +320,20 @@ public class UtilHttp {
             out.close(); // should we close the ServletOutputStream on error??
             throw e;
         }
-        
+
         // close the input stream
         in.close();
-        
+
         // close the servlet output stream
         out.flush();
         out.close();
     }
-    
+
     /**
      * Streams content from InputStream to the ServletOutputStream
      * This method will close the ServletOutputStream when finished
      * This method does not close the InputSteam passed
-     * 
+     *
      * @param response HttpServletResponse object to get OutputStream from
      * @param in InputStream of the actual content
      * @param length Size (in bytes) of the content
@@ -309,31 +343,31 @@ public class UtilHttp {
     public static void streamContentToBrowser(HttpServletResponse response, InputStream in, int length, String contentType) throws IOException {
         // tell the browser not the cache
         setResponseBrowserProxyNoCache(response);
-             
+
         // set the response info
         response.setContentLength(length);
-        if (contentType != null) {                      
-            response.setContentType(contentType);            
+        if (contentType != null) {
+            response.setContentType(contentType);
         }
-        
+
         // stream the content
         OutputStream out = response.getOutputStream();
-        try {       
+        try {
             streamContent(out, in, length);
         } catch (IOException e) {
             out.close();
             throw e;
         }
-        
+
         // close the servlet output stream
         out.flush();
         out.close();
-    }    
-            
+    }
+
     /**
      * Stream binary content from InputStream to OutputStream
      * This method does not close the streams passed
-     * 
+     *
      * @param out OutputStream content should go to
      * @param in InputStream of the actual content
      * @param length Size (in bytes) of the content
@@ -343,8 +377,8 @@ public class UtilHttp {
         int bufferSize = 512; // same as the default buffer size; change as needed
         BufferedOutputStream bos = new BufferedOutputStream(out, bufferSize);
         BufferedInputStream bis = new BufferedInputStream(in, bufferSize);
-          
-        byte[] buffer = new byte[length];     
+
+        byte[] buffer = new byte[length];
         int read = 0;
         try {
             while (-1 != (read = bis.read(buffer, 0, buffer.length))) {
@@ -354,8 +388,8 @@ public class UtilHttp {
             Debug.logError(e, "Problem reading/writing buffers", module);
             bis.close();
             bos.close();
-            throw e;           
-        } finally {       
+            throw e;
+        } finally {
             if (bis != null) {
                 bis.close();
             }
@@ -363,6 +397,6 @@ public class UtilHttp {
                 bos.flush();
                 bos.close();
             }
-        }                
-    }    
+        }
+    }
 }
