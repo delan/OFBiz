@@ -200,7 +200,7 @@ function setAssocFields(select) {
           <td align='right'><span class="tableheadtext">Oversize Unit</span></td>
           <td>
             <span class="tabletext">${estimate.oversizeUnit?default("N/A")}</span>
-            <span class="tabletext"> - Each product (height + width + depth) >= this amount</span>
+            <span class="tabletext"> - Each product ((height * 2) + (width * 2) + depth) >= this amount</span>
           </td>
           <td>&nbsp;</td>
         </tr>
@@ -385,7 +385,7 @@ function setAssocFields(select) {
           <td align='right'><span class="tableheadtext">Oversize Unit</span></td>
           <td>
             <input type="text" class="inputBox" name="oversizeUnit" value="" size="5">
-            <span class="tabletext">Each product (height + width + depth) >= this amount</span>
+            <span class="tabletext">Each product ((height * 2) + (width * 2) + depth) >= this amount</span>
           </td>
           <td>&nbsp;</td>
         </tr>

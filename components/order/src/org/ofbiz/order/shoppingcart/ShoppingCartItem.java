@@ -917,21 +917,21 @@ public class ShoppingCartItem implements java.io.Serializable {
         return featureSet;
     }
 
-    /** Returns the item's size (height * width * depth) */
+    /** Returns the item's size ((height * 2) + (width * 2) + depth) */
     public double getSize() {
         GenericValue product = getProduct();
         if (product != null) {
-            Double height = product.getDouble("productHeight");
-            Double width = product.getDouble("productWidth");
-            Double depth = product.getDouble("productDepth");
+            Double height = product.getDouble("shippingHeight");
+            Double width = product.getDouble("shippingWidth");
+            Double depth = product.getDouble("shippingDepth");
 
             // if all are null, see if there is an associated virtual product and get the info of that product
             if (height == null & width == null && depth == null) {
                 GenericValue parentProduct = this.getParentProduct();
                 if (parentProduct != null) {
-                    height = parentProduct.getDouble("productHeight");
-                    width = product.getDouble("productWidth");
-                    depth = product.getDouble("productDepth");
+                    height = parentProduct.getDouble("shippingHeight");
+                    width = product.getDouble("shippingWidth");
+                    depth = product.getDouble("shippingDepth");
                 }
             }
 
@@ -939,7 +939,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             if (width == null) width = new Double(0);
             if (depth == null) depth = new Double(0);
 
-            double size = height.doubleValue() * width.doubleValue() * depth.doubleValue();
+            double size = (height.doubleValue() * 2) + (width.doubleValue() * 2) + depth.doubleValue();
             return size;
         } else {
             // non-product items have 0 size
