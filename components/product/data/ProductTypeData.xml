@@ -232,4 +232,8 @@
   <StatusValidChange condition="" statusId="IXF_SCHEDULED" statusIdTo="IXF_COMPLETE" transitionName="Scheduled Inventory Completed"/>
   <StatusValidChange condition="" statusId="IXF_SCHEDULED" statusIdTo="IXF_CANCELLED" transitionName="Scheduled Inventory Cancelled"/>
   <StatusValidChange condition="" statusId="IXF_EN_ROUTE" statusIdTo="IXF_COMPLETE" transitionName="In Route Transfer Completed"/>
+
+  <VarianceReason varianceReasonId="VAR_LOST" description="Lost"/>
+  <VarianceReason varianceReasonId="VAR_STOLEN" description="Stolen"/>
+  <VarianceReason varianceReasonId="VAR_FOUND" description="Found"/>
 </entity-engine-xml>
