@@ -98,7 +98,7 @@
         <attribute name="value" type="GenericValue" mode="IN" optional="false"/>
     </service>
     <service name="clearCacheLineByValue" engine="java"
-            location="org.ofbiz.commonapp.common.EntityService" invoke="clearCacheLine">
+            location="org.ofbiz.commonapp.common.EntityCacheServices" invoke="clearCacheLine">
         <description>Clear Cache Line with a value (GenericValue); this is the preferred method since the all, by primary key and by and caches will be cleared.</description>
         <attribute name="value" type="GenericValue" mode="IN" optional="false"/>
     </service>
@@ -108,7 +108,7 @@
         <attribute name="dummyPK" type="GenericEntity" mode="IN" optional="false"/>
     </service>
     <service name="clearCacheLineByDummyPK" engine="java"
-            location="org.ofbiz.commonapp.common.EntityService" invoke="clearCacheLine">
+            location="org.ofbiz.commonapp.common.EntityCacheServices" invoke="clearCacheLine">
         <description>Clear Cache Line with a dummyPK (GenericEntity); clears that all cache entry and depending on whether the dummyPK is a primaryKey or not this clears the by primary key cache or the specified entry in the by and cache.</description>
         <attribute name="dummyPK" type="GenericEntity" mode="IN" optional="false"/>
     </service>
@@ -118,7 +118,7 @@
         <attribute name="primaryKey" type="GenericPK" mode="IN" optional="false"/>
     </service>
     <service name="clearCacheLineByPrimaryKey" engine="java"
-            location="org.ofbiz.commonapp.common.EntityService" invoke="clearCacheLine">
+            location="org.ofbiz.commonapp.common.EntityCacheServices" invoke="clearCacheLine">
         <description>Clear Cache Line with a primaryKey (GenericPK); clears the all and by primary key caches.</description>
         <attribute name="primaryKey" type="GenericPK" mode="IN" optional="false"/>
     </service>

@@ -27,7 +27,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             UserTransaction (RexIP)
     -->
 
-    <delegator name="default" entity-model-reader="main" entity-group-reader="main" distributed-cache-clear-enabled="false">
+    <delegator name="default" entity-model-reader="main" entity-group-reader="main" distributed-cache-clear-enabled="true">
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localpostgres"/>
     </delegator>
     <delegator name="other" entity-model-reader="main" entity-group-reader="main">

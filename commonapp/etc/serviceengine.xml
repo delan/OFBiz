@@ -46,31 +46,13 @@
     <service-ecas loader="mainfile" location="secas_workeffort.xml"/>
 
     <!-- JMS Service Queue/Topic Configuration -->
-    <jms-service name="testQueue" send-mode="all">
-        <server jndi-server-name="default"
-                jndi-name="jms/QueueConnectionFactory"
-                topic-queue="jms/OFBQueue"
-                type="queue"
-                username="ofbiz"
-                password="ofbiz"
-                listen="true"/>
-    </jms-service>
-    <jms-service name="testTopic" send-mode="all">
+    <jms-service name="entityCacheMessenger" send-mode="all">
         <server jndi-server-name="default"
                 jndi-name="jms/TopicConnectionFactory"
                 topic-queue="jms/OFBTopic"
                 type="topic"
                 username="admin"
                 password="admin"
-                listen="true"/>
-    </jms-service>
-    <jms-service name="entityCacheMessenger" send-mode="all">
-        <server jndi-server-name="default"
-                jndi-name="jms/TopicConnectionFactory"
-                topic-queue="jms/OFBTopic"
-                type="topic"
-                username="ofbiz"
-                password="ofbiz"
                 listen="true"/>
     </jms-service>
 
