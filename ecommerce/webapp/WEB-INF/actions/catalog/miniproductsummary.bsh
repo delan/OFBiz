@@ -25,11 +25,19 @@
  */
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.commonapp.product.catalog.*;
 
+delegator = request.getAttribute("delegator");
 miniProduct = request.getAttribute("miniProduct");
+optProductId = request.getAttribute("optProductId");
 
+if (optProductId != null) {
+    Debug.log("productId " + optProductId);
+    miniProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", optProductId));
+}
+    
 if (miniProduct != null) {
     userLogin = session.getAttribute("userLogin");
     dispatcher = request.getAttribute("dispatcher");

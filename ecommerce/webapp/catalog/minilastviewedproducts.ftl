@@ -19,24 +19,26 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
- *@since      2.1
+ *@since      2.2
 -->
 
-<#assign associatedProducts = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getRandomCartProductAssoc(request, true)?if_exists>
-
-<#if associatedProducts?has_content>
+<#if sessionAttributes.lastViewedProducts?exists && sessionAttributes.lastViewedProducts?has_content>
   <br>
-  <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>
       <td width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="center">
-              <div class="boxhead">You&nbsp;Might&nbsp;Like...</div>
+              <div class="boxhead">Last Viewed...</div>
             </td>
+            <#if 4 < sessionAttributes.lastViewedProducts?size>
+            <td valign="middle" align="right">
+              <a href="<@ofbizUrl>/lastviewedproducts</@ofbizUrl>" class="lightbuttontextsmall">more</a>
+            </td>
+            </#if>
           </tr>
         </table>
       </td>
@@ -46,20 +48,22 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
-              <table width='100%' CELLSPACING="0" CELLPADDING="0" BORDER="0">
-                <#-- random complementary products -->
-                <#list associatedProducts as miniProduct> 
-                  <tr>
-                    <td>
-                      ${setRequestAttribute("miniProdQuantity", 1)}
-                      ${setRequestAttribute("miniProdFormName", "theminiassocprod" + miniProduct_index + "form")}
-                      ${setRequestAttribute("optProductId", miniProduct.productId)}
-                      ${pages.get("/catalog/miniproductsummary.ftl")}
-                    </td>
-                  </tr>
-                  <#if miniProduct_has_next>
-                    <tr><td><hr class='sepbar'></td></tr>
+              <table width='100%' cellspacing="0" cellpadding="0" border="0"> 
+                <#assign count = 0>                           
+                <#list sessionAttributes.lastViewedProducts as productId>
+                  <#if count < 4>
+                    <tr>
+                      <td>                                            
+                        ${setRequestAttribute("optProductId", productId)}
+                        ${setRequestAttribute("miniProdFormName", "lastviewed" + productId_index + "form")}
+                        ${pages.get("/catalog/miniproductsummary.ftl")}
+                      </td>
+                    </tr>
+                    <#if productId_has_next && count < 3>
+                      <tr><td><hr class='sepbar'></td></tr>
+                    </#if>
                   </#if>
+                  <#assign count = count + 1>
                 </#list>
               </table>
             </td>
@@ -69,4 +73,3 @@
     </tr>
   </table>
 </#if>
-

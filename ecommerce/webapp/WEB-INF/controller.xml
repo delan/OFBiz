@@ -368,6 +368,10 @@
         <response name="success" type="view" value="product"/>
     </request-map>
     
+    <request-map uri="lastviewedproducts">
+        <response name="success" type="view" value="lastviewedproducts"/>
+    </request-map>
+    
     <request-map uri="reviewProduct">
     	<security https="false" auth="true"/>
         <response name="success" type="view" value="productReview"/>
@@ -609,6 +613,7 @@
     <view-map name="quickadd" type="jpublish" page="/catalog/quickadd.ftl"/>
     <view-map name="category" type="jpublish" page="/catalog/category.ftl"/>  
     <view-map name="product" type="jpublish" page="/catalog/product.ftl"/>
+    <view-map name="lastviewedproducts" type="jpublish" page="/catalog/lastviewedproducts.ftl"/>
     <view-map name="productReview" type="jpublish" page="/catalog/productreview.ftl"/>
 
     <view-map name="keywordsearch" type="jpublish" page="/catalog/keywordsearch.ftl"/>

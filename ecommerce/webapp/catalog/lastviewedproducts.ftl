@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -19,16 +19,47 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
- *@since      2.1
+ *@since      2.2
 -->
 
-  <td width='950' valign='top' align='left'>
-    ${pages.get("/catalog/choosecatalog.ftl")}
-    ${pages.get("/catalog/keywordsearchbox.ftl")}
-    ${pages.get("/catalog/sidedeepcategory.ftl")}
-    ${pages.get("/catalog/minireorderprods.ftl")}
-  </td>
-  <td width='5'>&nbsp;&nbsp;&nbsp;</td>
+<table border="0" width="100%" cellpadding="3">
+  <tr>
+    <td colspan="2">
+      <div class="head1">
+        Products Last Viewed
+      </div>
+    </td>
+  </tr>
+</table>
+
+<#if sessionAttributes.lastViewedProducts?exists && sessionAttributes.lastViewedProducts?has_content>
+<br>
+<center>
+  <table width='100%' border='0' cellpadding='0' cellspacing='0'>        
+    <#list sessionAttributes.lastViewedProducts as productId>              
+      <tr><td><hr class='sepbar'></td></tr>
+      <tr>
+        <td>
+          ${setRequestAttribute("optProductId", productId)}
+          ${setRequestAttribute("listIndex", productId_index)}
+          ${pages.get("/catalog/productsummary.ftl")}
+        </td>
+      </tr>
+    </#list>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
+  </table>
+</center>
+<#else>
+<table border="0" width="100%" cellpadding="2">
+  <tr>
+    <td colspan="2"><hr class='sepbar'></td>
+  </tr>
+  <tr>
+    <td>
+      <div class='tabletext'>You have not viewed any products this session.</DIV>
+    </td>
+  </tr>
+</table>
+</#if>

@@ -26,6 +26,7 @@
 -->
 
 <#if reorderProducts?has_content>
+  <br>
   <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>
       <td width='100%'>
@@ -49,7 +50,7 @@
                     <td>
                       ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}
                       ${setRequestAttribute("miniProdFormName", "theminireorderprod" + miniProduct_index + "form")}
-                      ${setRequestAttribute("miniProduct", miniProduct)}
+                      ${setRequestAttribute("optProductId", miniProduct.productId)}
                       ${pages.get("/catalog/miniproductsummary.ftl")}
                     </td>
                   </tr>

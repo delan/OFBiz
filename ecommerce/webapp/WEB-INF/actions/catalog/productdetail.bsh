@@ -87,6 +87,22 @@ if (product != null) {
     productTypeId = product.getString("productTypeId");  
     featureTypes = new HashMap();
     featureOrder = new LinkedList();
+    
+    // set this as a last viewed
+    lastViewedProducts = session.getAttribute("lastViewedProducts");
+    if (lastViewedProducts == null) { 
+        lastViewedProducts = new ArrayList();
+    } 
+    if (lastViewedProducts.contains(productId)) {
+        lastViewedProducts.remove(productId);
+    }
+    lastViewedProducts.add(0, productId);
+    session.setAttribute("lastViewedProducts", lastViewedProducts);
+    if (lastViewedProducts.size() > 10) {
+        while (lastViewedProducts.size() > 10) {
+            lastViewedProducts.remove(-1);
+        }        
+    }
 
     // get next/previous information for category
     categoryId = requestParams.get("category_id");
