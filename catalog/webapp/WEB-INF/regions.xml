@@ -84,9 +84,18 @@
         <put section='title'>Edit Product Features Page</put>
         <put section='content' content='/product/EditProductFeatures.jsp'/>
     </define>
+    <define id='EditProductInventoryItems' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product Inventory Items Page</put>
+        <put section='content' content='/product/EditProductInventoryItems.jsp'/>
+    </define>
     <define id='UploadImage' region='MAIN_REGION'>
         <put section='title'>Upload Product Image Page</put>
         <put section='content' content='/product/UploadImage.jsp'/>
+    </define>
+
+    <define id='EditInventoryItem' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Inventory Item Page</put>
+        <put section='content' content='/inventory/EditInventoryItem.jsp'/>
     </define>
 
     <define id='EditFeatureCategories' region='LEFT_ONLY_REGION'>

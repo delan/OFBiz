@@ -59,9 +59,10 @@
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Associations]</a>
   <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Attributes]</a>
   <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Features]</a>
+  <a href="<ofbiz:url>/EditProductInventoryItems?productId=<%=productId%></ofbiz:url>" class="buttontext">[InventoryItems]</a>
 <%}%>
 
-<div class="head1">Edit Features for Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
+<div class="head1">Features for Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
 
 <br>
 <br>

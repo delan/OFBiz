@@ -1,6 +1,6 @@
 <%
 /**
- *  Title: Edit Product Page
+ *  Title: Edit Inventory Item Page
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -42,8 +42,8 @@
   boolean useValues = true;
   if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
-  String productId = request.getParameter("PRODUCT_ID");
-  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+  String inventoryItemId = request.getParameter("inventoryItemId");
+  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("inventoryItemId", inventoryItemId));
   if(product == null) useValues = false;
 
   Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
@@ -69,32 +69,30 @@
 %>
 
 <br>
-<a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
-<%if(productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
-  <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Product]</a>
-  <a href="<ofbiz:url>/EditProductCategories?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Category Members]</a>
-  <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Keywords]</a>
-  <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Associations]</a>
-  <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Attributes]</a>
-  <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontext">[Features]</a>
-  <a href="<ofbiz:url>/EditProductInventoryItems?productId=<%=productId%></ofbiz:url>" class="buttontext">[InventoryItems]</a>
+<a href="<ofbiz:url>/EditInventoryItem</ofbiz:url>" class="buttontext">[New InventoryItem]</a>
+<%if(inventoryItemId != null && inventoryItemId.length() > 0){%>
+  <a href="<ofbiz:url>/EditInventoryItem?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontextdisabled">[Product]</a>
+  <a href="<ofbiz:url>/EditInventoryItemCategories?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Category Members]</a>
+  <a href="<ofbiz:url>/EditInventoryItemKeyword?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Keywords]</a>
+  <a href="<ofbiz:url>/EditInventoryItemAssoc?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Associations]</a>
+  <a href="<ofbiz:url>/EditInventoryItemAttributes?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Attributes]</a>
+  <a href="<ofbiz:url>/EditInventoryItemFeatures?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Features]</a>
 <%}%>
 
-<div class="head1">Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
+<div class="head1">Edit Product with ID "<%=UtilFormatOut.checkNull(inventoryItemId)%>"</div>
 
 <form action="<ofbiz:url>/UpdateProduct</ofbiz:url>" method=POST style='margin: 0;'>
 <table border='0' cellpadding='2' cellspacing='0'>
 
 <%if(product == null){%>
-  <%if(productId != null){%>
-    <h3>Could not find product with ID "<%=productId%>".</h3>
+  <%if(inventoryItemId != null){%>
+    <h3>Could not find product with ID "<%=inventoryItemId%>".</h3>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
       <td align=right><div class="tabletext">Product ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type="text" name="PRODUCT_ID" size="20" maxlength="20" value="<%=productId%>">
+        <input type="text" name="inventoryItemId" size="20" maxlength="20" value="<%=inventoryItemId%>">
       </td>
     </tr>
   <%}else{%>
@@ -103,18 +101,18 @@
       <td align=right><div class="tabletext">Product ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type="text" name="PRODUCT_ID" size="20" maxlength="20" value="">
+        <input type="text" name="inventoryItemId" size="20" maxlength="20" value="">
       </td>
     </tr>
   <%}%>
 <%}else{%>
   <input type=hidden name="UPDATE_MODE" value="UPDATE">
-  <input type=hidden name="PRODUCT_ID" value="<%=productId%>">
+  <input type=hidden name="inventoryItemId" value="<%=inventoryItemId%>">
   <tr>
     <td align=right><div class="tabletext">Product ID</div></td>
     <td>&nbsp;</td>
     <td>
-      <b><%=productId%></b> (This cannot be changed without re-creating the product.)
+      <b><%=inventoryItemId%></b> (This cannot be changed without re-creating the product.)
     </td>
   </tr>
 <%}%>
@@ -215,7 +213,7 @@
     <td>&nbsp;</td>
     <td width="74%">
       <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
-      <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%>
+      <%if(inventoryItemId != null && inventoryItemId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%>
     </td>
   </tr>
   <tr>
@@ -224,7 +222,7 @@
     <td>&nbsp;</td>
     <td width="74%">
       <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
-      <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=large&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Large Image]</a><%}%>
+      <%if(inventoryItemId != null && inventoryItemId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=large&inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Upload Large Image]</a><%}%>
     </td>
   </tr>
 
@@ -300,42 +298,6 @@
   </tr>
 </table>
 </form>
-    <%if (productId != null) {%>
-        <br>
-        <div class="head2">Duplicate Product</div>
-        <%-- <form action="<ofbiz:url>/DuplicateProduct</ofbiz:url>" method=POST style='margin: 0;'>
-            <INPUT type=hidden name='productId' value='<%=productId%>'>
-            <SPAN class='tabletext'>With New ID:</SPAN>&nbsp;<INPUT type=text size='20' maxlength='20' name='PRODUCT_ID'>&nbsp;
-            <INPUT type=submit value='AutoDuplicate'>
-        </form> --%>
-        <%if (product != null) {%>
-            <form action="<ofbiz:url>/EditProduct</ofbiz:url>" method=POST style='margin: 0;'>
-                <%-- <INPUT type=hidden name='PRODUCT_ID' value='<%=productId%>'> --%>
-                <INPUT type=hidden name='productTypeId' value='<%=UtilFormatOut.checkNull(product.getString("productTypeId"))%>'>
-                <INPUT type=hidden name='PRIMARY_PRODUCT_CATEGORY_ID' value='<%=UtilFormatOut.checkNull(product.getString("primaryProductCategoryId"))%>'>
-                <INPUT type=hidden name='MANUFACTURER_PARTY_ID' value='<%=UtilFormatOut.checkNull(product.getString("manufacturerPartyId"))%>'>
-                <INPUT type=hidden name='INTRODUCTION_DATE' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("introductionDate")))%>'>
-                <INPUT type=hidden name='SALES_DISCONTINUATION_DATE' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("salesDiscontinuationDate")))%>'>
-                <INPUT type=hidden name='SUPPORT_DISCONTINUATION_DATE' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("supportDiscontinuationDate")))%>'>
-                <INPUT type=hidden name='COMMENT' value='<%=UtilFormatOut.checkNull(product.getString("comments"))%>'>
-                <INPUT type=hidden name='NAME' value='<%=UtilFormatOut.checkNull(product.getString("productName"))%>'>
-                <INPUT type=hidden name='DESCRIPTION' value='<%=UtilFormatOut.checkNull(product.getString("description"))%>'>
-                <INPUT type=hidden name='LONG_DESCRIPTION' value='<%=UtilFormatOut.checkNull(product.getString("longDescription"))%>'>
-                <INPUT type=hidden name='SMALL_IMAGE_URL' value='<%=UtilFormatOut.checkNull(product.getString("smallImageUrl"))%>'>
-                <INPUT type=hidden name='LARGE_IMAGE_URL' value='<%=UtilFormatOut.checkNull(product.getString("largeImageUrl"))%>'>
-                <INPUT type=hidden name='LIST_PRICE' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("listPrice")))%>'>
-                <INPUT type=hidden name='DEFAULT_PRICE' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("defaultPrice")))%>'>
-                <INPUT type=hidden name='QUANTITY_UOM_ID' value='<%=UtilFormatOut.checkNull(product.getString("quantityUomId"))%>'>
-                <INPUT type=hidden name='QUANTITY_INCLUDED' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("quantityIncluded")))%>'>
-                <INPUT type=hidden name='WEIGHT_UOM_ID' value='<%=UtilFormatOut.checkNull(product.getString("weightUomId"))%>'>
-                <INPUT type=hidden name='WEIGHT' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("weight")))%>'>
-                <INPUT type=hidden name='TAXABLE' value='<%=UtilFormatOut.checkNull(product.getString("taxable"))%>'>
-                <INPUT type=hidden name='AUTO_CREATE_KEYWORDS' value='<%=UtilFormatOut.checkNull(product.getString("autoCreateKeywords"))%>'>
-                <SPAN class='tabletext'>In New Create Form:</SPAN>&nbsp;
-                <INPUT type=submit value='FormDuplicate'>
-            </form>
-        <%}%>
-    <%}%>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
