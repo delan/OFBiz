@@ -869,7 +869,7 @@
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="addFacilityGroupToGroup" auth="true">
         <description>Add FacilityGroup To FacilityGroup</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
-        <attribute name="parentGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentFacilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
@@ -878,7 +878,7 @@
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="updateFacilityGroupToGroup" auth="true">
         <description>Update FacilityGroup To FacilityGroup Rollup</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
-        <attribute name="parentGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentFacilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
@@ -886,8 +886,8 @@
     <service name="removeFacilityGroupFromGroup" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="removeFacilityGroupFromGroup" auth="true">
         <description>Remove FacilityGroup From FacilityGroup</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentFacilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>    
     
