@@ -1422,23 +1422,39 @@ public class ProductionRunServices {
         result.put("productionRunId", productionRunId);
 
         Iterator options = config.getSelectedOptions().iterator();
-        List components = new ArrayList();
+        HashMap components = new HashMap();
         while (options.hasNext()) {
             ConfigOption co = (ConfigOption)options.next();
-            components.addAll(co.getComponents());
+            //components.addAll(co.getComponents());
+            Iterator selComponents = co.getComponents().iterator();
+            while (selComponents.hasNext()) {
+                Double componentQuantity = null;
+                GenericValue selComponent = (GenericValue)selComponents.next();
+                if (componentQuantity == null) {
+                    componentQuantity = new Double(1);
+                }
+                componentQuantity = new Double(quantity.doubleValue() * componentQuantity.doubleValue());
+                if (components.containsKey(selComponent.getString("productId"))) {
+                    Double totalQuantity = (Double)components.get(selComponent.getString("productId"));
+                    componentQuantity = new Double(totalQuantity.doubleValue() + componentQuantity.doubleValue());
+                }
+                components.put(selComponent.getString("productId"), componentQuantity);
+            }
         }
-        Iterator componentsIt = components.iterator();
+        
+        Iterator componentsIt = components.entrySet().iterator();
         while (componentsIt.hasNext()) {
-            GenericValue component = (GenericValue)componentsIt.next();
-            Double componentQuantity = component.getDouble("quantity");
+            Map.Entry component = (Map.Entry)componentsIt.next();
+            String productId = (String)component.getKey();
+            Double componentQuantity = (Double)component.getValue();
             if (componentQuantity == null) {
                 componentQuantity = new Double(1);
             }
             resultService = null;
             serviceContext = new HashMap();
             serviceContext.put("productionRunId", productionRunId);
-            serviceContext.put("productId", component.getString("productId"));
-            serviceContext.put("estimatedQuantity", new Double(quantity.doubleValue() * componentQuantity.doubleValue()));
+            serviceContext.put("productId", productId);
+            serviceContext.put("estimatedQuantity", componentQuantity);
             serviceContext.put("userLogin", userLogin);
             try {
                 resultService = dispatcher.runSync("addProductionRunComponent", serviceContext);
