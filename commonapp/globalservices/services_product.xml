@@ -493,6 +493,17 @@
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
     </service>
+    <service name="applyFeatureToProductFromTypeAndCode" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="applyFeatureToProductFromTypeAndCode" auth="true">
+        <description>Apply a ProductFeature to a Product</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="idCode" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureApplTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
 
     <!-- Product Storage Services -->
     <service name="createFacility" engine="simple"

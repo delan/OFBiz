@@ -92,18 +92,9 @@
             <now-timestamp-to-env env-name="nowStamp"/>
             <env-to-field env-name="nowStamp" field-name="fromDate" map-name="parameters"/>
         </if-empty>
-        <call-map-processor in-map-name="parameters" out-map-name="newEntityContext">
-            <simple-map-processor name="populateEntity">
-                <process field="productId"><copy/></process>
-                <process field="productFeatureId"><copy/></process>
-                <process field="productFeatureApplTypeId"><copy/></process>
-                <process field="fromDate"><copy/></process>
-                <process field="thruDate"><copy/></process>
-                <process field="sequenceNum"><copy/></process>
-            </simple-map-processor>
-        </call-map-processor>
-        <check-errors/>
-        <make-value value-name="newEntity" entity-name="ProductFeatureAppl" map-name="newEntityContext"/>
+        <make-value value-name="newEntity" entity-name="ProductFeatureAppl"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
 
         <!-- clear caches -->
@@ -127,14 +118,7 @@
         <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
         <field-to-field field-name="fromDate" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
         <find-by-primary-key entity-name="ProductFeatureAppl" map-name="productFeatureApplPKMap" value-name="productFeatureAppl"/>
-        <call-map-processor in-map-name="parameters" out-map-name="productFeatureAppl">
-            <simple-map-processor name="populateEntity">
-                <process field="productFeatureApplTypeId"><copy/></process>
-                <process field="thruDate"><copy/></process>
-                <process field="sequenceNum"><copy/></process>
-            </simple-map-processor>
-        </call-map-processor>
-        <check-errors/>
+        <set-nonpk-fields map-name="parameters" value-name="productFeatureAppl"/>
         <store-value value-name="productFeatureAppl"/>
 
         <!-- clear caches -->
@@ -180,5 +164,31 @@
         <field-to-field field-name="productFeatureTypeId" map-name="productFeature" to-map-name="clearMakeGroupCacheMap"/>
         <string-to-field string="STANDARD_FEATURE" field-name="productFeatureApplTypeId" map-name="clearMakeGroupCacheMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearMakeGroupCacheMap"/>
+    </simple-method>
+
+    <simple-method method-name="applyFeatureToProductFromTypeAndCode" short-description="Apply Feature to Product using Feature Type and ID Code">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run applyFeatureToProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <!-- find the ProductFeatures by type and id code -->
+        <field-to-field field-name="productFeatureTypeId" map-name="parameters" to-map-name="findProductFeaturesContext"/>
+        <field-to-field field-name="idCode" map-name="parameters" to-map-name="findProductFeaturesContext"/>
+        <find-by-and entity-name="ProductFeature" map-name="findProductFeaturesContext" list-name="productFeatures"/>
+        
+        <iterate entry-name="productFeature" list-name="productFeatures">
+            <field-to-field field-name="productId" map-name="parameters" to-map-name="applyFeatureContext"/>
+            <field-to-field field-name="productFeatureApplTypeId" map-name="parameters" to-map-name="applyFeatureContext"/>
+            <field-to-field field-name="fromDate" map-name="parameters" to-map-name="applyFeatureContext"/>
+            <field-to-field field-name="thruDate" map-name="parameters" to-map-name="applyFeatureContext"/>
+            <field-to-field field-name="sequenceNum" map-name="parameters" to-map-name="applyFeatureContext"/>
+            
+            <field-to-field field-name="productFeatureId" map-name="productFeature" to-map-name="applyFeatureContext"/>
+
+            <if-empty field-name="sequenceNum" map-name="parameters">
+                <field-to-field field-name="defaultSequenceNum" map-name="productFeature" to-field-name="sequenceNum" to-map-name="applyFeatureContext"/>
+            </if-empty>
+            
+            <call-service service-name="applyFeatureToProduct" in-map-name="applyFeatureContext"/>
+        </iterate>
     </simple-method>
 </simple-methods>
