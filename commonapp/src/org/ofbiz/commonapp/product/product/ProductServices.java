@@ -127,8 +127,8 @@ public class ProductServices {
         Collection features = null;
         try {
             Map fields = UtilMisc.toMap("productId", productId);
-            List order = UtilMisc.toList("sequenceId", "featureType");
-            features = delegator.findByAnd("ProductFeature", fields);
+            List order = UtilMisc.toList("sequenceNum", "featureTypeId");
+            features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
             result.put("productFeatures", features);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (GenericEntityException e ) {
@@ -169,11 +169,25 @@ public class ProductServices {
      */
     public static Map prodFindAssociatedByType(DispatchContext dctx, Map context) {
         // * String productId      -- Current Product ID
-        // * String type           -- Type of association (ie PRODUCT_UPGRADE, PRODUCT_COMPLEMENT)
+        // * String type           -- Type of association (ie PRODUCT_UPGRADE, PRODUCT_COMPLEMENT, PRODUCT_VARIANT)
         GenericDelegator delegator = dctx.getDelegator();
         Map result = new HashMap();
         String productId = (String) context.get("productId");
+        String productIdTo = (String) context.get("productIdTo");
         String type = (String) context.get("type");
+
+        if (productId == null && productIdTo == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Both productId and productIdTo cannot be null");
+            return result;
+        }
+
+        if (productId != null && productIdTo != null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Both productId and productIdTo cannot be defined");
+            return result;
+        }
+
         GenericValue product = null;
         try {
             product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
@@ -190,7 +204,11 @@ public class ProductServices {
         }
 
         try {
-            Collection c = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type));
+            Collection c = null;
+            if (productIdTo == null)
+                c = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type));
+            else
+                c = product.getRelatedByAndCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", type));
             c = EntityUtil.filterByDate(c);
             result.put("assocProducts", c);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -207,7 +225,7 @@ public class ProductServices {
     private static Map makeGroup(Collection items, List order, int index)
             throws IllegalArgumentException, IllegalStateException {
         Map group = new HashMap();
-        Object orderKey = order.get(index);
+        String orderKey = (String) order.get(index);
 
         if (index < 0)
             throw new IllegalArgumentException("Invalid index '" + index + "' min index '0'");
@@ -220,15 +238,32 @@ public class ProductServices {
             // -------------------------------
             // Gather the necessary data
             // -------------------------------
-            GenericValue item = (GenericValue) itemIterator.next();
+            GenericValue thisItem = (GenericValue) itemIterator.next();
+            Collection features = null;
+            try {
+                Map fields = UtilMisc.toMap("productId", thisItem.get("productId"), "productFeatureTypeId", orderKey,
+                        "productFeatureApplTypeId", "STANDARD_FEATURE");
+                List sort = UtilMisc.toList("sequenceNum");
+
+                // get the features and filter out expired dates
+                features = thisItem.getDelegator().findByAndCache("ProductFeatureAndAppl", fields, sort);
+                features = EntityUtil.filterByDate(features);
+            } catch (GenericEntityException e) {
+                throw new IllegalStateException("Problem reading relation: " + e.getMessage());
+            }
             // -------------------------------
-            Object itemKey = item.get(orderKey);
-            if (group.containsKey(itemKey)) {
-                List itemList = (List) group.get(itemKey);
-                itemList.add(item);
-            } else {
-                List itemList = UtilMisc.toList(item);
-                group.put(itemKey, itemList);
+            Iterator featuresIterator = features.iterator();
+            while (featuresIterator.hasNext()) {
+                GenericValue item = (GenericValue) featuresIterator.next();
+                Object itemKey = item.get("productFeatureTypeId");
+                if (group.containsKey(itemKey)) {
+                    List itemList = (List) group.get(itemKey);
+                    if (!itemList.contains(thisItem))
+                        itemList.add(thisItem);
+                } else {
+                    List itemList = UtilMisc.toList(item);
+                    group.put(itemKey, itemList);
+                }
             }
         }
 
