@@ -64,6 +64,8 @@ public class EntityListIterator implements ListIterator {
     protected boolean haveMadeValue = false;
     protected GenericDelegator delegator = null;
 
+    private boolean haveShowHasNextWarning = false;
+    
     public EntityListIterator(SQLProcessor sqlp, ModelEntity modelEntity, List selectFields, ModelFieldTypeReader modelFieldTypeReader) {
         this.sqlp = sqlp;
         this.resultSet = sqlp.getResultSet();
@@ -219,6 +221,14 @@ public class EntityListIterator implements ListIterator {
      * 
      */
     public boolean hasNext() {
+        if (!haveShowHasNextWarning) {
+            // DEJ20050207 To further discourage use of this, and to find existing use, always log a big warning showing where it is used:
+            Exception whereAreWe = new Exception();
+            Debug.logWarning(whereAreWe, "WARNING: For performance reasons do not use the EntityListIterator.hasNext() method, just call next() until it returns null; see JavaDoc comments in the EntityListIterator class for details and an example", module);
+            
+            haveShowHasNextWarning = true;
+        }
+        
         try {
             if (resultSet.isLast() || resultSet.isAfterLast()) {
                 return false;
