@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.48 2004/07/04 06:06:02 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.49 2004/07/10 07:55:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.48 $
+ * @version    $Revision: 1.49 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -436,6 +436,14 @@ public class ShoppingCart implements Serializable {
         this.webSiteId = webSiteId;
     }
 
+    public String getOrderPartyId() {
+        return this.orderPartyId;
+    }
+
+    public void setOrderPartyId(String orderPartyId) {
+        this.orderPartyId = orderPartyId;
+    }
+    
     public String getPartyId() {
         String partyId = this.orderPartyId;
 
