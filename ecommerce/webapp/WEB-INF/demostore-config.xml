@@ -89,6 +89,11 @@
         <response name="success" type="view" value="quickadd"/>
         <response name="error" type="view" value="quickadd"/>
     </request-map>
+    <request-map uri="addCategoryDefaults">
+        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addCategoryDefaults"/>
+        <response name="success" type="view" value="showcart"/>
+        <response name="error" type="view" value="showcart"/>
+    </request-map>
 
     <request-map uri="addseperator">
         <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
