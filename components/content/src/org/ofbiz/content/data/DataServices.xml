@@ -497,4 +497,52 @@
         <find-by-primary-key entity-name="ElectronicText" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+    <!-- 
+    getElectronicText
+    Passed a Content GenericValue or a contentId, this service returns the text data from
+        ElectronicText in result.textData.
+
+    Not that this service does not now do permission checking.
+    -->
+
+    <simple-method method-name="getElectronicText" short-description="Get Electronic Text">
+        <field-to-env field-name="userLogin" map-name="parameters" env-name="userLogin"/>
+        <field-to-env field-name="content" map-name="parameters" env-name="currentContent"/>
+        <log level="always" message="GETELECTRONICTEXT, currentContent:${currentContent}"/>
+        
+        <if-empty field-name="currentContent">
+            <if-not-empty field-name="contentId" map-name="parameters">
+                <field-to-field field-name="contentId" map-name="parameters" to-map-name="contextA"/>
+                <find-by-primary-key value-name="currentContent" entity-name="Content"
+                         map-name="contextA" use-cache="true" />
+            </if-not-empty>
+            <if-empty field-name="currentContent" >
+                <add-error>
+                    <fail-message message="Neither content nor contentId supplied." />
+                </add-error>
+            </if-empty>
+        </if-empty>
+        <check-errors/>
+        <if-empty field-name="dataResourceId" map-name="currentContent">
+                <add-error>
+                    <fail-message message="No dataResourceId found" />
+                </add-error>
+        </if-empty>
+        <check-errors/>
+    
+        <field-to-field field-name="dataResourceId" map-name="currentContent" to-map-name="contextB"/>
+        <find-by-primary-key value-name="eText" entity-name="ElectronicText"
+                         map-name="contextB" use-cache="true" />
+        <if-empty field-name="eText" >
+                <add-error>
+                    <fail-message message="Electronic Text not found." />
+                </add-error>
+        </if-empty>
+        <check-errors/>
+
+
+        <field-to-result map-name="eText" field-name="textData" result-name="textData"/>
+        <log level="always" message="result:${result}"/>
+        <log level="always" message="parameters:${parameters}"/>
+    </simple-method>
 </simple-methods>
