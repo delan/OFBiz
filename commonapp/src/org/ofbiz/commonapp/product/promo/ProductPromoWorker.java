@@ -67,7 +67,7 @@ public class ProductPromoWorker {
                         ShoppingCart cart = null;
                         try {
                             req = (HttpServletRequest) request;
-                            cart = (ShoppingCart) req.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+                            cart = ShoppingCartEvents.getCartObject(req);
                         } catch (ClassCastException cce) {
                             Debug.logInfo("Not a HttpServletRequest, no shopping cart found.", module);
                         }
@@ -232,8 +232,10 @@ public class ProductPromoWorker {
         GenericValue userLogin = null;
         String partyId = null;
         if (cart != null) userLogin = cart.getUserLogin();
+        if (cart != null && userLogin == null) userLogin = cart.getAutoUserLogin();
         if (userLogin != null && userLogin.get("partyId") != null)
             partyId = userLogin.getString("partyId");
+
         if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond, module);
         int compare = 0;
         if ("PPIP_PRODUCT_ID".equals(productPromoCond.getString("inputParamEnumId"))) {

@@ -77,7 +77,7 @@ public class LoginEvents {
             session.removeAttribute("PASSWORD");
         }
         
-        return "SUCCESS";
+        return "success";
     }
     
     
@@ -181,7 +181,7 @@ public class LoginEvents {
         }
         
         request.setAttribute(SiteDefs.LOGIN_PASSED, "TRUE");
-        return "success";
+        return autoLoginSet(request, response);
     }
     
     /**
@@ -208,7 +208,8 @@ public class LoginEvents {
         if(currCatalog != null) {
             request.getSession().setAttribute("CURRENT_CATALOG_ID", currCatalog);
         }
-        
+        if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null)
+            return autoLoginCheck(request, response);
         return "success";
     }
     
@@ -411,4 +412,69 @@ public class LoginEvents {
         }
         return "success";
     }
+
+    public static String autoLoginCheck(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        HttpSession session = request.getSession();
+        String autoUserLoginId = null;
+        Cookie[] cookie = request.getCookies();
+        for (int i = 0; i < cookie.length; i++) {
+            if (cookie[i].getName().equals("autoUserLoginId")) {
+                autoUserLoginId = cookie[i].getValue();
+                break;
+            }
+        }
+        return autoLoginCheck(delegator, session, autoUserLoginId);
+    }
+
+    private static String autoLoginCheck(GenericDelegator delegator, HttpSession session, String autoUserLoginId) {
+        if (autoUserLoginId != null) {
+            Debug.logInfo("Running autoLogin check.");
+            try {
+                GenericValue autoUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", autoUserLoginId));
+                GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", autoUserLogin.getString("partyId")));
+                GenericValue group = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", autoUserLogin.getString("partyId")));
+
+                session.setAttribute("autoUserLogin", autoUserLogin);
+                if (person != null)
+                    session.setAttribute("autoName", person.getString("firstName"));
+                else if (group != null)
+                    session.setAttribute("autoName", group.getString("groupName"));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot get autoUserLogin information: " + e.getMessage());
+            }
+        }
+        return "success";
+    }
+
+    public static String autoLoginSet(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+        Cookie autoLoginCookie = new Cookie("autoUserLoginId", userLogin.getString("userLoginId"));
+        autoLoginCookie.setMaxAge(60*60*24*365);
+        response.addCookie(autoLoginCookie);
+        return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
+    }
+
+    public static String autoLoginRemove(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException {
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue) session.getAttribute("autoUserLogin");
+        // remove the cookie
+        if (userLogin != null) {
+            Cookie autoLoginCookie = new Cookie("autoUserLoginId", userLogin.getString("userLoginId"));
+            autoLoginCookie.setMaxAge(0);
+            response.addCookie(autoLoginCookie);
+        }
+        // remove the session attributes
+        session.removeAttribute("autoUserLogin");
+        session.removeAttribute("autoName");
+        // logout the user if logged in.
+        if (session.getAttribute("userLogin") != null) {
+            request.setAttribute("_AUTO_LOGIN_LOGOUT_", new Boolean(true));
+            return logout(request, response);
+        }
+        return "success";
+    }
+
 }

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/10/19 16:44:42  azeneski
+ * Moved Party/ContactMech/Login events to more appropiate packages.
+ *
  * Revision 1.10  2001/09/28 21:51:21  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -67,6 +70,27 @@ public class PartyHelper {
             result.append(UtilFormatOut.ifNotEmpty(person.getString("firstName"), "", " "));
             result.append(UtilFormatOut.ifNotEmpty(person.getString("middleName"), "", " "));
             result.append(UtilFormatOut.checkNull(person.getString("lastName")));
+        }
+        return result.toString().trim();
+    }
+
+    public static String getPartyName(GenericValue userLogin) {
+        StringBuffer result = new StringBuffer(20);
+        if (userLogin != null) {
+            try {
+                GenericValue person = userLogin.getDelegator().findByPrimaryKey("Person", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
+                if (person == null) {
+                    GenericValue group = userLogin.getDelegator().findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
+                    if (group != null)
+                        result.append(group.getString("groupName"));
+                } else {
+                    result.append(UtilFormatOut.ifNotEmpty(person.getString("firstName"), "", " "));
+                    result.append(UtilFormatOut.ifNotEmpty(person.getString("middleName"), "", " "));
+                    result.append(UtilFormatOut.checkNull(person.getString("lastName")));
+                }
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
         }
         return result.toString().trim();
     }

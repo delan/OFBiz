@@ -41,7 +41,12 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class CommonWorkers {
+
     public static String makeLoginUrl(PageContext pageContext) {
+        return makeLoginUrl(pageContext, "checkLogin");
+    }
+
+    public static String makeLoginUrl(PageContext pageContext, String requestName) {
         String queryString = null;
         ServletRequest request = pageContext.getRequest();
         
@@ -54,7 +59,7 @@ public class CommonWorkers {
             }
         }
         
-        String loginUrl = "/checkLogin/" + UtilFormatOut.checkNull((String)request.getAttribute(SiteDefs.CURRENT_VIEW));
+        String loginUrl = "/" + requestName + "/" + UtilFormatOut.checkNull((String)request.getAttribute(SiteDefs.CURRENT_VIEW));
         if(queryString != null) loginUrl = loginUrl  + "?" + UtilFormatOut.checkNull(queryString);
         
         return loginUrl;

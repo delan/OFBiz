@@ -112,7 +112,13 @@ public class PriceServices {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             partyId = userLogin.getString("partyId");
         }
-        
+
+        // check for auto-userlogin for price rules
+        if (partyId == null && context.get("autoUserLogin") != null) {
+            GenericValue userLogin = (GenericValue) context.get("autoUserLogin");
+            partyId = userLogin.getString("partyId");
+        }
+
         Double quantityDbl = (Double) context.get("quantity");
         if (quantityDbl == null) quantityDbl = new Double(1.0);
         double quantity = quantityDbl.doubleValue();

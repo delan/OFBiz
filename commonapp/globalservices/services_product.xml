@@ -127,7 +127,7 @@
         <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- Product Catalog Services -->
     <service name="createProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="createProdCatalog" auth="true">
@@ -359,6 +359,7 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="autoUserLogin" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="price" type="Double" mode="OUT" optional="false"/>
         <attribute name="listPrice" type="Double" mode="OUT" optional="true"/>
         <attribute name="defaultPrice" type="Double" mode="OUT" optional="true"/>
@@ -617,7 +618,7 @@
         <description>Delete an InventoryItem</description>
         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="getProductInventoryAvailable" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
         <description>Get Inventory Availability for a Product</description>
@@ -636,9 +637,9 @@
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="emailInventoryAlerts" auth="false">
         <description>Get all Inventory Alerts in effect for a given catalog</description>
         <attribute name="catalogId" type="String" mode="IN" optional="false"/>
-       
+
     </service>
-                
+
     <service name="getInventoryAvailableByFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
         <description>Get Inventory Availability for a Product constrained by a facilityId</description>
@@ -656,8 +657,8 @@
 
     <service name="reserveProductInventory" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
-        <description>Reserve Inventory for a Product. 
-            If requireInventory is Y the quantity not reserved is returned, if N then a negative 
+        <description>Reserve Inventory for a Product.
+            If requireInventory is Y the quantity not reserved is returned, if N then a negative
             availableToPromise will be used to track quantity ordered beyond what is in stock.
         </description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
@@ -671,7 +672,7 @@
     <service name="reserveProductInventoryByFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
         <description>Reserve Inventory for a Product By Facility
-            If requireInventory is Y the quantity not reserved is returned, if N then a negative 
+            If requireInventory is Y the quantity not reserved is returned, if N then a negative
             availableToPromise will be used to track quantity ordered beyond what is in stock.
         </description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
@@ -686,7 +687,7 @@
     <service name="reserveProductInventoryByContainer" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
         <description>Reserve Inventory for a Product By Container
-            If requireInventory is Y the quantity not reserved is returned, if N then a negative 
+            If requireInventory is Y the quantity not reserved is returned, if N then a negative
             availableToPromise will be used to track quantity ordered beyond what is in stock.
         </description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>

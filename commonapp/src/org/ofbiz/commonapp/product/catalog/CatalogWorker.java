@@ -572,7 +572,9 @@ public class CatalogWorker {
 
     public static void getQuickReorderProducts(PageContext pageContext, String productsAttrName, String quantitiesAttrName) {
         GenericDelegator delegator = (GenericDelegator)pageContext.getRequest().getAttribute("delegator");
-        GenericValue userLogin = (GenericValue)pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue)pageContext.findAttribute(SiteDefs.USER_LOGIN);
+        if (userLogin == null)
+            userLogin = (GenericValue) pageContext.findAttribute("autoUserLogin");
         if (userLogin == null) return;
 
         try {

@@ -188,9 +188,10 @@ public class ShoppingCartItem implements java.io.Serializable {
             Map priceContext = new HashMap();
             priceContext.put("product", this.getProduct());
             priceContext.put("prodCatalogId", prodCatalogId);
-            GenericValue userLogin = cart.getUserLogin();
-            if (userLogin != null) {
-                priceContext.put("partyId", userLogin.getString("partyId"));
+            if (cart.getUserLogin() != null) {
+                priceContext.put("partyId", cart.getUserLogin().getString("partyId"));
+            } else if (cart.getAutoUserLogin() != null) {
+                priceContext.put("partyId", cart.getAutoUserLogin().getString("partyId"));
             }
             priceContext.put("quantity", new Double(quantity));
             Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
