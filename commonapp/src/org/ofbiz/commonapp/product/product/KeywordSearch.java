@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/10 23:38:10  jonesde
+ * Moved to commonapp
+ *
  *
  * Revision 1.5  2001/09/05 00:30:15  jonesde
  * Initial keyword search implementation in place.
@@ -169,7 +172,7 @@ public class KeywordSearch {
   }
 
   public static String tokens = ";: ,.!?\t\"\'\r\n()[]{}*%<>";
-  public static void induceKeywords(GenericValue product, GenericHelper helper) throws java.rmi.RemoteException
+  public static void induceKeywords(GenericValue product, GenericHelper helper)
   {
     if(product == null || helper == null) return;
 
