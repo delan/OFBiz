@@ -8,7 +8,7 @@
     <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.product" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.party.party" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.party.contact" applEnumId="ESIA_INCLUDE"/>
-    <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.pos.PosTerminal" applEnumId="ESIA_INCLUDE"/>
+    <EntityGroupEntry entityGroupId="5500" entityOrPackage="PosTerminal" applEnumId="ESIA_INCLUDE"/>
 
 <!-- PSS->POS Per Store Server to POS Terminal -->
     <EntityGroup entityGroupId="5501" entityGroupName="POS: Per Store Server to POS Terminal"/>
