@@ -312,7 +312,7 @@
 
         <!-- now finished, log in the user... -->
         <if-compare field-name="create_allow_password" operator="equals" value="true">
-            <field-to-session field-name="newUserLogin" session-name="_USER_LOGIN_"/>
+            <field-to-session field-name="newUserLogin" session-name="userLogin"/>
         </if-compare>
     </simple-method>
 </simple-methods>
