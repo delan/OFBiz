@@ -1270,6 +1270,76 @@
         <key-map field-name="taxCategory"/>
       </relation>
     </entity>
+    <entity entity-name="ReturnHeader"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Return Entity">
+      <field name="returnId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <field name="fromPartyId" type="id"></field>
+      <field name="entryDate" type="date-time"></field>
+      <field name="originContactMechId" type="id"></field>
+      <field name="destinationFacilityId" type="id"></field>
+      <prim-key field="returnId"/>
+      <relation type="many" rel-entity-name="ReturnItem">
+        <key-map field-name="returnId"/>        
+      </relation>
+      <relation type="one" fk-name="RTN_FROM_PARTY" rel-entity-name="Party">
+        <key-map field-name="fromPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_TO_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="destinationFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_FROM_CTM" rel-entity-name="ContactMech">
+        <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PostalAddress">
+        <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ReturnStatus">
+        <key-map field-name="returnId"/>
+      </relation>      
+    </entity>
+    <entity entity-name="ReturnItem"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Return Item Entity">
+      <field name="returnId" type="id-ne"></field>
+      <field name="returnItemSeqId" type="id-ne"></field>
+      <field name="returnReason" type="comment"></field>
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <field name="returnQuantity" type="floating-point"></field>
+      <field name="returnPrice" type="currency-amount"></field>
+      <prim-key field="returnId"/>
+      <prim-key field="returnItemSeqId"/>
+      <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="ReturnHeader">
+        <key-map field-name="returnId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ReturnStatus">
+        <key-map field-name="returnId"/>
+        <key-map field-name="returnItemSeqId"/>
+      </relation>      
+    </entity>
+    <entity entity-name="ReturnStatus"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Return Status History Entity">
+      <field name="returnStatusId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <field name="returnId" type="id"></field>
+      <field name="returnItemSeqId" type="id"></field>
+      <field name="statusDatetime" type="date-time"></field>
+      <prim-key field="returnStatusId"/>
+      <relation type="one" fk-name="RTN_STTS_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_STTS_RTN" rel-entity-name="ReturnHeader">
+        <key-map field-name="returnId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ReturnItem">
+        <key-map field-name="returnId"/>
+        <key-map field-name="returnItemSeqId"/>
+      </relation>
+    </entity>         
     <entity entity-name="WorkOrderItemFulfillment"
             package-name="org.ofbiz.commonapp.order.order"
             title="Work Order Item Fulfillment Entity">
@@ -2126,7 +2196,7 @@
       <relation type="one" fk-name="RESP_PTY_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-    </entity>
+    </entity> 
     <entity entity-name="WorkReqFulfType"
             package-name="org.ofbiz.commonapp.order.request"
             title="Work Requirement Fulfillment Type Entity">

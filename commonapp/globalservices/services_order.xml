@@ -163,6 +163,27 @@
         <attribute name="note" type="String" mode="IN"/>
     </service>
 
+    <!-- Order Return Services -->
+    <service name="returnInterface" engine="interface" location="" invoke="">
+        <description>Return (header) Interface</description>             
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="entryDate" type="String" mode="IN" optional="true"/>
+        <attribute name="originContactMechId" type="String" mode="IN" optional="true"/>
+        <attribute name="destinationFacilityId" type="String" mode="IN" optional="true"/>                                
+    </service>
+    <service name="returnItemInterface" engine="interface" location="" invoke="">
+        <description>Return Item Interface</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+        <attribute name="returnReason" type="String" mode="IN" optional="true"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="returnQuantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="returnPrice" type="Double" mode="IN" optional="false"/>                              
+    </service>
+    
+    <!-- Tax Services -->
     <service name="calcTax" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="simpleTaxCalc">
         <description>Calc Tax Service</description>

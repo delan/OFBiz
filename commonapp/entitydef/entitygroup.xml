@@ -414,6 +414,9 @@
     <entity-group group="org.ofbiz.commonapp" entity="PicklistItem" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductOrderItem" />
     <entity-group group="org.ofbiz.commonapp" entity="SimpleSalesTaxLookup" />
+    <entity-group group="org.ofbiz.commonapp" entity="ReturnHeader" />
+    <entity-group group="org.ofbiz.commonapp" entity="ReturnItem" />
+    <entity-group group="org.ofbiz.commonapp" entity="ReturnStatus" />    
     <entity-group group="org.ofbiz.commonapp" entity="WorkOrderItemFulfillment" />
 
   <!-- ========================================================= -->
