@@ -83,7 +83,7 @@
 		target="addProdCatalogToWebSite" title=""
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="addProdCatalogToWebSite"/>
-		<field name="webSiteId" map-name="WebSite"><hidden/></field>
+		<field name="webSiteId" map-name="webSite"><hidden/></field>
 		<field name="prodCatalogId" title="Catalog" widget-style="selectBox">
 			<drop-down>
 				<entity-options entity-name="ProdCatalog" description="${catalogName}">

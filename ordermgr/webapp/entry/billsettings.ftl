@@ -34,9 +34,8 @@ function shipBillAddr() {
     }
 }
 function makeExpDate() {
-    document.billsetupform.expireDate.value = document.billsetupform.expMonth.value + "/" + document.billsetupform.expYear.value;
-}
-// -->
+    document.billsetupform.expireDate.value = document.billsetupform.expMonth.options[document.billsetupform.expMonth.selectedIndex].value + "/" + document.billsetupform.expYear.options[document.billsetupform.expYear.selectedIndex].value;
+}// -->
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
