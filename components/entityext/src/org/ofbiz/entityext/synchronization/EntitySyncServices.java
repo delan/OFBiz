@@ -393,6 +393,8 @@ public class EntitySyncServices {
                     result.put("valuesToStore", valuesToStore);
                     result.put("keysToRemove", keysToRemove);
                     return result;
+                } else {
+                    // save the progress to EntitySync and EntitySyncHistory, and move on...
                 }
             }
             
