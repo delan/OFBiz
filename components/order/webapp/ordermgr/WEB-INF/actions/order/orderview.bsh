@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 */
 
@@ -224,6 +224,17 @@ if (orderHeader != null) {
     context.put("maySplit", maySplit);
     context.put("giftMessage", giftMessage);
     context.put("isGift", isGift);
+
+    // get Shipment tracking info
+    osisCond = new EntityFieldMap(UtilMisc.toMap("orderId", orderId), EntityOperator.AND);
+    osisOrder = UtilMisc.toList("shipmentId", "shipmentRouteSegmentId", "shipmentPackageSeqId");
+    osisFields = UtilMisc.toList("shipmentId", "shipmentRouteSegmentId", "carrierPartyId", "shipmentMethodTypeId");
+    osisFields.add("shipmentPackageSeqId"); osisFields.add("trackingCode"); osisFields.add("boxNumber");
+    osisFindOptions = new EntityFindOptions(); osisFindOptions.setDistinct(true);
+    osisEli = delegator.findListIteratorByCondition("OrderShipmentInfoSummary", osisCond, null, osisFields, osisOrder, osisFindOptions);
+    orderShipmentInfoSummaryList = osisEli.getCompleteList();
+    osisEli.close();
+    context.put("orderShipmentInfoSummaryList", orderShipmentInfoSummaryList);
 
     customerPoNumber = null;
     orderItemPOIter = UtilMisc.toIterator(orderItemList);
