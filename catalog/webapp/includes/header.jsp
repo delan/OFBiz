@@ -42,8 +42,7 @@
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
           <%--<td class="headerButtonLeft"><a href="<ofbiz:url>/FindProdCatalog</ofbiz:url>" class="headerbuttontext">Catalogs</a></td>--%>
           <%--<td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Products</a></td>--%>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="headerbuttontext">FeatureCats</a></td>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindFacility</ofbiz:url>" class="headerbuttontext">Facilities</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="headerbuttontext">FeatureCats</a></td>          
           <td class="headerButtonLeft"><a href="<ofbiz:url>/FindProductPromo</ofbiz:url>" class="headerbuttontext">Promos</a></td>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="headerbuttontext">PriceRules</a></td>
 

@@ -297,25 +297,6 @@
     	<response name="error" type="view" value="EditProductInventoryItems"/>
     </request-map>
 
-    <request-map uri="EditInventoryItem"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditInventoryItem"/>
-    </request-map>
-    <request-map uri="CreateInventoryItem"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="createInventoryItem"/>
-    	<response name="success" type="view" value="EditInventoryItem"/>
-    	<response name="error" type="view" value="EditInventoryItem"/>
-    </request-map>
-    <request-map uri="UpdateInventoryItem"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateInventoryItem"/>
-    	<response name="success" type="view" value="EditInventoryItem"/>
-    	<response name="error" type="view" value="EditInventoryItem"/>
-    </request-map>
-    <request-map uri="DeleteInventoryItem"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteInventoryItem"/>
-    	<response name="success" type="view" value="EditInventoryItem"/>
-    	<response name="error" type="view" value="EditInventoryItem"/>
-    </request-map>
-
     <!-- ================ Feature Requests ================= -->
     <request-map uri="EditFeatureCategories"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditFeatureCategories"/>
@@ -377,29 +358,6 @@
         <event type="java" path="org.ofbiz.catalog.VariantEvents" invoke="quickAddChosenVariant" />
     	<response name="success" type="view" value="QuickAddVariants"/>
     	<response name="error" type="view" value="QuickAddVariants"/>
-    </request-map>
-
-    <!-- ================ FACILITY REQUESTS ================= -->
-    <request-map uri="FindFacility"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindFacility"/>
-    </request-map>
-
-    <request-map uri="EditFacility"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditFacility"/>
-    </request-map>
-    <request-map uri="CreateFacility"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="createFacility"/>
-    	<response name="success" type="view" value="EditFacility"/>
-    	<response name="error" type="view" value="EditFacility"/>
-    </request-map>
-    <request-map uri="UpdateFacility"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateFacility"/>
-    	<response name="success" type="view" value="EditFacility"/>
-    	<response name="error" type="view" value="EditFacility"/>
-    </request-map>
-
-    <request-map uri="EditFacilityInventoryItems"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditFacilityInventoryItems"/>
     </request-map>
 
     <!-- ================ ProdCatalog Requests ================= -->
@@ -677,14 +635,8 @@
 
     <view-map name="QuickAddVariants" type="region"/>
 
-    <view-map name="EditInventoryItem" type="region"/>
-
     <view-map name="EditFeatureCategories" type="region"/>
     <view-map name="EditFeatureCategoryFeatures" type="region"/>
-
-    <view-map name="FindFacility" type="region"/>
-    <view-map name="EditFacility" type="region"/>
-    <view-map name="EditFacilityInventoryItems" type="region"/>
 
     <view-map name="FindProdCatalog" type="region"/>
     <view-map name="EditProdCatalog" type="region"/>

@@ -107,11 +107,6 @@
         <put section='content' content='/product/QuickAddVariants.jsp'/>
     </define>
 
-    <define id='EditInventoryItem' region='LEFT_ONLY_REGION'>
-        <put section='title'>Edit Inventory Item</put>
-        <put section='content' content='/inventory/EditInventoryItem.jsp'/>
-    </define>
-
     <define id='EditFeatureCategories' region='LEFT_ONLY_REGION'>
         <put section='title'>Edit Product Feature Categories</put>
         <put section='content' content='/feature/EditFeatureCategories.jsp'/>
@@ -140,19 +135,6 @@
     <define id='UploadCategoryImage' region='MAIN_REGION'>
         <put section='title'>Upload Category Image</put>
         <put section='content' content='/category/UploadCategoryImage.jsp'/>
-    </define>
-
-    <define id='FindFacility' region='MAIN_REGION'>
-        <put section='title'>Edit Facility</put>
-        <put section='content' content='/storage/FindFacility.jsp'/>
-    </define>
-    <define id='EditFacility' region='MAIN_REGION'>
-        <put section='title'>Edit Facility</put>
-        <put section='content' content='/storage/EditFacility.jsp'/>
-    </define>
-    <define id='EditFacilityInventoryItems' region='MAIN_REGION'>
-        <put section='title'>Edit Facility InventoryItems</put>
-        <put section='content' content='/storage/EditFacilityInventoryItems.jsp'/>
     </define>
 
     <define id='FindProdCatalog' region='LEFT_ONLY_REGION'>
