@@ -853,7 +853,7 @@ public class OrderServices {
     }
     
     /** Service to prepare notification data */
-    public static Map prepareOrderEmail(DispatchContext ctx, Map context) {
+    public static Map prepareOrderEmailData(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         String orderId = (String) context.get("orderId");
@@ -940,182 +940,68 @@ public class OrderServices {
         }             
         return result;
     }
-    
-    /** Helper method to prepare a FTL template w/ order data */
-    public static Writer prepareOrderConfirm(GenericDelegator delegator, String orderId, URL template, Locale localLocale) {
-        // build the template data-model
-        WrappingTemplateModel.setDefaultObjectWrapper(BeansWrapper.getDefaultInstance());
-        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-        SimpleHash templateContext = new SimpleHash(wrapper);               
-        GenericValue orderHeader = null;
+        
+    /** Service to email a customer with order status changes */
+    public static Map prepareOrderNotification(DispatchContext ctx, Map context) {  
+        Map result = new HashMap();   
+        GenericDelegator delegator = ctx.getDelegator();                      
+        String orderId = (String) context.get("orderId");
+        String emailType = "WES_ODR_CHANGE";
+        String ofbizHome = System.getProperty("ofbiz.home");
+        
+        // get the order header and website
+        GenericValue orderHeader = null;        
         try {
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));                               
-            OrderReadHelper orh = new OrderReadHelper(orderHeader);                        
-            List orderItems = orh.getOrderItems();                        
-            List orderAdjustments = orh.getAdjustments();                 
-            List orderHeaderAdjustments = orh.getOrderHeaderAdjustments();                                                           
-            double orderSubTotal = orh.getOrderItemsSubTotal();
-            List headerAdjustmentsToShow = OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal);
-           
-            templateContext.put("localOrderReadHelper", orh);
-            templateContext.put("orderHeader", OrderReadHelper.getOrderHeaderDisplay(orderHeader, orderHeaderAdjustments, orderSubTotal));
-            templateContext.put("orderItems", OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments));
-            templateContext.put("orderAdjustments", orderAdjustments);
-            templateContext.put("orderHeaderAdjustments", orderHeaderAdjustments);
-            templateContext.put("orderSubTotal", new Double(orderSubTotal));
-            templateContext.put("headerAdjustmentsToShow", headerAdjustmentsToShow);
-                       
-            double shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
-            shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
-            templateContext.put("orderShippingTotal", new Double(shippingAmount));
-    
-            double taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
-            taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);
-            templateContext.put("orderTaxTotal", new Double(taxAmount));   
-            templateContext.put("orderGrandTotal", new Double(OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments)));
-                    
-            List placingCustomerOrderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
-            GenericValue placingCustomerOrderRole = EntityUtil.getFirst(placingCustomerOrderRoles);        
-            GenericValue placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
-            templateContext.put("placingCustomerPerson", placingCustomerPerson);
-      
-
-            GenericValue shippingAddress = orh.getShippingAddress();
-            templateContext.put("shippingAddress", shippingAddress);
-            GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
-            templateContext.put("billingAccount", billingAccount);
-    
-            Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
-            if (orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
-                GenericValue orderPaymentPreference = (GenericValue) orderPaymentPreferences.next();
-                GenericValue paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");        
-                GenericValue paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");
-                templateContext.put("paymentMethod", paymentMethod);
-                templateContext.put("paymentMethodType", paymentMethodType);
-          
-                if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-                    GenericValue creditCard = (GenericValue) paymentMethod.getRelatedOneCache("CreditCard");
-                    templateContext.put("creditCard", creditCard);
-                    templateContext.put("formattedCardNumber", ContactHelper.formatCreditCard(creditCard));
-                } else if (paymentMethod != null && "EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-                    GenericValue eftAccount = (GenericValue) paymentMethod.getRelatedOneCache("EftAccount");
-                    templateContext.put("eftAccount", eftAccount);
-                }        
-            }   
-           
-            Iterator orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
-            if (orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
-                GenericValue shipmentPreference = (GenericValue) orderShipmentPreferences.next();
-                templateContext.put("carrierPartyId", shipmentPreference.getString("carrierPartyId"));
-                templateContext.put("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId"));       
-                GenericValue shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId")));
-                templateContext.put("shipMethDescription", shipmentMethodType.getString("description"));       
-                templateContext.put("shippingInstructions", shipmentPreference.getString("shippingInstructions"));
-                templateContext.put("maySplit", shipmentPreference.getBoolean("maySplit"));
-                templateContext.put("giftMessage", shipmentPreference.getString("giftMessage"));
-                templateContext.put("isGift", shipmentPreference.getBoolean("isGift"));
-                templateContext.put("trackingNumber", shipmentPreference.getString("trackingNumber"));
-            }
-         
-            Iterator orderItemPOIter = UtilMisc.toIterator(orderItems);
-            if (orderItemPOIter != null && orderItemPOIter.hasNext()) {
-                GenericValue orderItemPo = (GenericValue) orderItemPOIter.next();
-                templateContext.put("customerPoNumber", orderItemPo.getString("correspondingPoId"));
-            }   
-      
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));            
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Entity read error", module);
-            ServiceUtil.returnError("Problem with entity lookup, see error log");            
-        } 
-        
-        // add an instance of the url transform
-        templateContext.put("ofbizUrl", new OfbizUrlTransform());
-         
-        // open the reader and read the template    
-        Reader reader = null;        
-        try {                    
-            reader = new InputStreamReader(template.openStream());
-        } catch (IOException e) {
-            Debug.logError(e, "Problems reading the template url", module);
-            ServiceUtil.returnError("Problems opening url, see error log");            
+            Debug.logError(e, "Problem getting OrderHeader", module);
         }
         
-        File rootPath = null;
-        if (template.getProtocol().equals("file")) {
-            Debug.logError("Setting rootPath to: " + template.getPath(), module);
-            File tmpFile = new File(template.getPath());
-            Debug.logError("getting parent: " + tmpFile.getParent(), module);
-            rootPath = new File(tmpFile.getParent());
+        GenericValue webSiteEmail = null;
+        if (orderHeader != null) {
+            try {
+                webSiteEmail = delegator.findByPrimaryKey("WebSiteEmailSetting", UtilMisc.toMap("webSiteId", orderHeader.get("webSiteId"), "emailType", emailType));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem getting the WebSiteEmailSetting", module);
+            }
+        }
+        
+        if (webSiteEmail == null) {
+            return ServiceUtil.returnError("No valid email setting for website");
+        } 
+                    
+        // get the email addresses from the order contact mech(s)
+        List orderContactMechs = null;
+        try {
+            Map ocFields = UtilMisc.toMap("orderId", orderId, "contactMechPurposeTypeId", "ORDER_EMAIL");
+            orderContactMechs = delegator.findByAnd("OrderContactMech", ocFields);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, "Problems getting order contact mechs", module);
         }        
-       
-        // process the template
-        Configuration config = Configuration.getDefaultConfiguration();            
-        config.setObjectWrapper(BeansWrapper.getDefaultInstance());        
-        config.setLocale(localLocale);    
-        TemplateHashModel staticModels = wrapper.getStaticModels();           
-        try {
-            config.setDirectoryForTemplateLoading(rootPath);
-        } catch (IOException e) {   
-            Debug.logError(e, "", module);         
-        }            
-       
-        templateContext.put("Static", staticModels);
-        try {                  
-            Debug.logError("" + staticModels, module);
-            Debug.logError("" + staticModels.get("org.ofbiz.commonapp.order.order.OrderReadHelper"), module);           
-        } catch (Exception e) {
-            Debug.logError(e, "", module);
-        }
-             
-        Writer writer = new StringWriter();      
-        try {        
-            Template ftl = new Template(template.toExternalForm(), reader, config);
-            ftl.process(templateContext, writer, BeansWrapper.getDefaultInstance());
-        } catch (IOException ie) {
-            Debug.logError(ie, "Problems reading from reader", module);
-            ServiceUtil.returnError("Template reading problem, see error logs");
-        } catch (TemplateException te) {
-            Debug.logError(te, "Problems processing template", module);
-            ServiceUtil.returnError("Template processing problem, see error log");
-        }
-        return writer;            
-    }
-    
-    /** Service to email a customer with order status */
-    public static Map emailOrderConfirm(DispatchContext ctx, Map context) {     
-        GenericDelegator delegator = ctx.getDelegator();
-        LocalDispatcher dispatcher = ctx.getDispatcher();
-        
-        Map mailFields = new HashMap(context);
-        String orderId = (String) mailFields.remove("orderId");            
-        String templateUrl = (String) mailFields.remove("templateUrl");
-        Locale localLocale = (Locale) context.get("locale");
 
-        URL templateURL = null;
-        try {
-            templateURL = new URL(templateUrl);
-        } catch (MalformedURLException e) {
-            Debug.logError(e, "Problems getting URL from string", module);
-            ServiceUtil.returnError("Cannot get template URL");            
-        } 
+        StringBuffer emails = new StringBuffer();        
+        if (orderContactMechs != null) {
+            Iterator oci = orderContactMechs.iterator();
+            while (oci.hasNext()) {
+                try {
+                    GenericValue orderContactMech = (GenericValue) oci.next();
+                    GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
+                    emails.append(emails.length() > 0 ? "," : "").append(contactMech.getString("infoString"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, "Problems getting contact mech from order contact mech", module);
+                }                        
+            }
+        }  
         
-        // get the parsed template writer
-        Writer writer = prepareOrderConfirm(delegator, orderId, templateURL, localLocale);           
-                     
-        // write the processed template as a string
-        mailFields.put("body", writer.toString());
-        
-        // invoke the sendMail service
-        Map result = null;
-        try {
-            result = dispatcher.runSync("sendMail", mailFields);
-        } catch (GenericServiceException e) {
-            Debug.logError(e, "Problems calling sendMail service", module);
-            ServiceUtil.returnError("Service sendMail failed, see error log");
-        }
+        result.put("templateName", ofbizHome + webSiteEmail.get("templatePath"));
+        result.put("subject", webSiteEmail.get("subject"));
+        result.put("sendFrom", webSiteEmail.get("fromAddress"));        
+        result.put("sendCc", webSiteEmail.get("ccAddress"));
+        result.put("sendBcc", webSiteEmail.get("ccAddress"));
+        result.put("sendTo", emails.toString());
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);            
                    
-        return ServiceUtil.returnSuccess();
-     
+        return result;     
     }
     
     /** Service to email order notifications for pending actions */
