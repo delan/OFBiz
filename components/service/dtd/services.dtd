@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Service Framework - Service Definition DTD
- *  $Id: services.dtd,v 1.3 2004/02/11 15:00:01 ajzeneski Exp $
+ *  $Id: services.dtd,v 1.4 2004/02/11 16:16:02 ajzeneski Exp $
 -->
 
 <!ELEMENT services (description?, vendor?, version?, created?, service+)>
@@ -40,11 +40,11 @@
 	name CDATA #REQUIRED
 	engine CDATA #REQUIRED
 	location CDATA #REQUIRED
-	invoke CDATA #REQUIRED	
+	invoke CDATA #REQUIRED
 	auth (true|false) "false"
 	export (true|false) "false"
 	validate (true|false) "true"
-	default-entity-name CDATA #IMPLIED	
+	default-entity-name CDATA #IMPLIED
 	use-transaction (true|false) "true"
 	require-new-transaction (true|false) "false"
 	transaction-timout CDATA #IMPLIED
@@ -62,9 +62,9 @@
 <!ATTLIST entity-permission
     base-name CDATA #REQUIRED
     action CDATA #REQUIRED
-    try-admin (true|false) "true"
 >
 <!ELEMENT role-member EMPTY>
+<!ATTLIST role-member
     role-type CDATA #REQUIRED
 >
 <!ELEMENT implements EMPTY>
