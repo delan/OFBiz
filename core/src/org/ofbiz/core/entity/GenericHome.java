@@ -33,11 +33,11 @@ import java.util.*;
  */
 public interface GenericHome extends EJBHome
 {
-  public GenericValue create(String entityName, Map fields) throws RemoteException, CreateException;
-  public GenericValue create(GenericValue value) throws RemoteException, CreateException;
-  public GenericValue create(GenericPK primaryKey) throws RemoteException, CreateException;
+  public GenericRemote create(String entityName, Map fields) throws RemoteException, CreateException;
+  public GenericRemote create(GenericValue value) throws RemoteException, CreateException;
+  public GenericRemote create(GenericPK primaryKey) throws RemoteException, CreateException;
 
-  public GenericValue findByPrimaryKey(GenericPK primaryKey) throws RemoteException, FinderException;
+  public GenericRemote findByPrimaryKey(GenericPK primaryKey) throws RemoteException, FinderException;
   public Collection findAll(String entityName, List orderBy) throws RemoteException, FinderException;
   public Collection findByAnd(String entityName, Map fields, List orderBy) throws RemoteException, FinderException;
 }

@@ -34,56 +34,87 @@ import org.ofbiz.core.entity.model.*;
  */
 public class GenericBean extends GenericEntity implements EntityBean
 {
-  GenericDAO dao = null;
+  GenericDAO genericDAO = null;
   EntityContext entityContext;
 
   /** Sets the values from ValueObject attribute of the GenericBean object
    *@param  valueObject  The new ValueObject value 
    */
-  public void setValueObject(GenericValue valueObject)
-  {
-    this.setNonPKFields(valueObject.getAllFields());
-  }
+  public void setValueObject(GenericValue valueObject) { this.setNonPKFields(valueObject.getAllFields()); }
 
   /** Gets the ValueObject attribute of the GenericBean object
    *@return    The ValueObject value
    */
-  public GenericValue getValueObject()
-  {
-    return new GenericValue(entityName, fields);
-  }
+  public GenericValue getValueObject() { return new GenericValue(entityName, fields); }
 
   /** Get the named Related Entity for the GenericValue from the persistent store
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    *@return Collection of GenericValue instances as specified in the relation definition
    */
-  public Collection getRelated(String relationName) 
-  {     
-    return dao.selectRelated(relationName, this);
-  }
+  public Collection getRelated(String relationName) { return genericDAO.selectRelated(relationName, this); }
 
   /** Remove the named Related Entity for the GenericValue from the persistent store
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    */
-  public void removeRelated(String relationName) 
-  { 
-    dao.deleteRelated(relationName, this); 
+  public void removeRelated(String relationName) { genericDAO.deleteRelated(relationName, this); }
+
+  /** Find a Generic Entity by its Primary Key
+   *@param primaryKey The primary key to find by.
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public GenericPK ejbFindByPrimaryKey(GenericPK primaryKey) throws FinderException
+  {
+    if(primaryKey == null) { return null; }
+    GenericValue genericValue = new GenericValue(primaryKey);
+    if(!genericDAO.select(genericValue)) throw new ObjectNotFoundException("GenericValue not found with primary key: " + primaryKey.toString());
+    return primaryKey;
+  }
+  /** Finds all Generic entities
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@return    Collection containing all Generic entities
+   */
+  public Collection ejbFindAll(String entityName, List orderBy) throws FinderException
+  {
+    return entitiesToPKs(genericDAO.selectByAnd(entityName, null, orderBy));
+  }
+  /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param fields The fields of the named entity to query by with their corresponging values
+   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@return Collection of GenericValue instances that match the query
+   */
+  public Collection ejbFindByAnd(String entityName, Map fields, List orderBy) throws FinderException
+  {
+    return entitiesToPKs(genericDAO.selectByAnd(entityName, fields, orderBy));
+  }
+  private Collection entitiesToPKs(Collection col)
+  {
+    if(col == null) return null;
+    Collection newCol = new LinkedList();
+    Iterator iter = col.iterator();
+    while(iter.hasNext())
+    {
+      GenericValue value = (GenericValue)iter.next();
+      newCol.add(value.getPrimaryKey());
+    }
+    return newCol;
   }
 
   public GenericPK ejbCreate(GenericPK primaryKey) throws CreateException { return ejbCreate(primaryKey.entityName, primaryKey.fields); }
-  public GenericPK ejbCreate(GenericEntity value) throws CreateException { return ejbCreate(value.entityName, value.fields); }
+  public GenericPK ejbCreate(GenericValue value) throws CreateException { return ejbCreate(value.entityName, value.fields); }
   public GenericPK ejbCreate(String entityName, Map fields) throws CreateException
   {
     this.entityName = entityName; 
     this.fields = new HashMap(fields);
-    dao = new GenericDAO("default");
-    if(dao == null) throw new CreateException("Could not get default JDBC Data Access Object.");
-    if(!dao.insert(this)) throw new CreateException("DAO Insert call failed.");
+    genericDAO = new GenericDAO("default");
+    if(genericDAO == null) throw new CreateException("Could not get default JDBC Data Access Object.");
+    if(!genericDAO.insert(this)) throw new CreateException("DAO Insert call failed.");
     return this.getPrimaryKey();
   }
 
   public void ejbPostCreate(GenericPK primaryKey) throws CreateException { ejbPostCreate(primaryKey.entityName, primaryKey.fields); }
-  public void ejbPostCreate(GenericEntity value) throws CreateException { ejbPostCreate(value.entityName, value.fields); }
+  public void ejbPostCreate(GenericValue value) throws CreateException { ejbPostCreate(value.entityName, value.fields); }
   public void ejbPostCreate(String entityName, Map fields) throws CreateException {}
 
   /** Called when the entity bean is removed.
@@ -91,7 +122,7 @@ public class GenericBean extends GenericEntity implements EntityBean
    */
   public void ejbRemove() throws RemoveException
   {
-    if(!dao.delete(this)) throw new RemoveException("DAO Delete call failed.");
+    if(!genericDAO.delete(this)) throw new RemoveException("DAO Delete call failed.");
   }
 
   /** Called when the entity bean is activated. */
@@ -103,14 +134,14 @@ public class GenericBean extends GenericEntity implements EntityBean
   /** Called when the entity bean is loaded. */
   public void ejbLoad() 
   { 
-    if(!dao.select(this)) {}
+    if(!genericDAO.select(this)) {}
     modified = false; 
   }
 
   /** Called when the entity bean is stored. */
   public void ejbStore()
   {
-    if(this.isModified()) { if(!dao.update(this)) {} }
+    if(this.isModified()) { if(!genericDAO.update(this)) {} }
     modified = false; 
   }
 
@@ -119,7 +150,7 @@ public class GenericBean extends GenericEntity implements EntityBean
    */
   public void setEntityContext(EntityContext entityContext) 
   { 
-    if(dao == null) dao = new GenericDAO("default");
+    if(genericDAO == null) genericDAO = new GenericDAO("default");
     this.entityContext = entityContext; 
   }
   /** Unsets the EntityContext, ie sets it to null. */
