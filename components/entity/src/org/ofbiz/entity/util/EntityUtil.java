@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: EntityUtil.java,v 1.2 2003/10/27 11:07:04 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -24,7 +24,6 @@
 
 package org.ofbiz.entity.util;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,7 +40,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelField;
-
 
 /**
  * Helper methods when dealing with Entities, especially ones that follow certain conventions
@@ -177,6 +175,22 @@ public class EntityUtil {
         }
 
         return result;
+    }
+    
+    public static boolean isValueActive(GenericValue datedValue, java.sql.Timestamp moment) {
+        return isValueActive(datedValue, moment, "fromDate", "thruDate");
+    }
+    
+    public static boolean isValueActive(GenericValue datedValue, java.sql.Timestamp moment, String fromDateName, String thruDateName) {
+        java.sql.Timestamp fromDate = datedValue.getTimestamp(fromDateName);
+        java.sql.Timestamp thruDate = datedValue.getTimestamp(thruDateName);
+
+        if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment))) {
+            return true;
+        } else {
+            // else not active at moment
+            return false;
+        }
     }
 
     /**
