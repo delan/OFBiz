@@ -107,7 +107,7 @@ public class ProductPromoWorker {
                     while (productPromoConds != null && productPromoConds.hasNext()) {
                         GenericValue productPromoCond = (GenericValue) productPromoConds.next();
                         
-                        boolean condResult = checkCondition(productPromoCond, cart, cartItem, oldQuantity);
+                        boolean condResult = checkCondition(productPromoCond, cart, cartItem, oldQuantity, delegator);
                         //if apply, a false condition will cause it to not perform the action
                         //if unapply, a true condition will cause it to not perofrm the action
                         //so, if apply != condResult (ie true/false or false/true) then don't perform actions
@@ -141,11 +141,23 @@ public class ProductPromoWorker {
         }
     }
     
-    public static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity) {
+    public static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator) throws GenericEntityException {
         Debug.logVerbose("Checking promotion condition: " + productPromoCond);
         int compare = 0;
         if ("PPIP_PRODUCT_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
             compare = cartItem.getProductId().compareTo(productPromoCond.getString("condValue"));
+        } else if ("PPIP_CATEGORY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
+            //if a ProductCategoryMember exists for this productId and the specified productCategoryId
+            Collection productCategoryMembers = delegator.findByAndCache("ProductCategoryMember", 
+                    UtilMisc.toMap("productId", cartItem.getProductId(), "productCategoryId", productPromoCond.getString("condValue")));
+            // and from/thru date within range
+            productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers);
+            // then 0 (equals), otherwise 1 (not equals)
+            if (productCategoryMembers != null && productCategoryMembers.size() > 0) {
+                compare = 0;
+            } else {
+                compare = 1;
+            }
         } else if ("PPIP_ORDER_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
             Double orderSubTotal = new Double(cart.getSubTotal());
             Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal);
