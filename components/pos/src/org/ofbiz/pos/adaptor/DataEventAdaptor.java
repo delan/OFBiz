@@ -29,8 +29,8 @@ import jpos.events.DataEvent;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    Rev
- * @since      Aug 6, 2004
+ * @version    $Rev:$
+ * @since      3.2
  */
 public class DataEventAdaptor implements jpos.events.DataListener {
 

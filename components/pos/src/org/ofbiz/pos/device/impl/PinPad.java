@@ -22,27 +22,29 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.pos.device;
+package org.ofbiz.pos.device.impl;
 
-import jpos.JposException;
 import jpos.JposConst;
+import jpos.JposException;
+
+import org.ofbiz.pos.device.GenericDevice;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
-public class LineDisplay extends GenericDevice {
+public class PinPad extends GenericDevice {
 
-    public static final String module = LineDisplay.class.getName();
+    public static final String module = PinPad.class.getName();
 
-    public LineDisplay(String deviceName, int timeout) {
+    public PinPad(String deviceName, int timeout) {
         super(deviceName, timeout);
-        this.control = new jpos.LineDisplay();
+        this.control = new jpos.PINPad();
     }
 
-    protected void initialize() throws JposException {
+    public void initialize() throws JposException {
         throw new JposException(JposConst.JPOS_E_NOEXIST, "Device not yet implemented");
     }
 }

@@ -22,24 +22,26 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.pos.device;
+package org.ofbiz.pos.device.impl;
 
-import jpos.JposException;
 import jpos.JposConst;
+import jpos.JposException;
+
+import org.ofbiz.pos.device.GenericDevice;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
-public class CheckScanner extends GenericDevice {
+public class LineDisplay extends GenericDevice {
 
-    public static final String module = CheckScanner.class.getName();
+    public static final String module = LineDisplay.class.getName();
 
-    public CheckScanner(String deviceName, int timeout) {
+    public LineDisplay(String deviceName, int timeout) {
         super(deviceName, timeout);
-        this.control = new jpos.CheckScanner();
+        this.control = new jpos.LineDisplay();
     }
 
     protected void initialize() throws JposException {

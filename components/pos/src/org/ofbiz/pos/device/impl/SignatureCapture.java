@@ -22,24 +22,26 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.pos.device;
+package org.ofbiz.pos.device.impl;
 
-import jpos.JposException;
 import jpos.JposConst;
+import jpos.JposException;
+
+import org.ofbiz.pos.device.GenericDevice;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
-public class Journal extends GenericDevice {
+public class SignatureCapture extends GenericDevice {
 
-    public static final String module = CheckScanner.class.getName();
+    public static final String module = SignatureCapture.class.getName();
 
-    public Journal(String deviceName, int timeout) {
+    public SignatureCapture(String deviceName, int timeout) {
         super(deviceName, timeout);
-        this.control = new jpos.POSPrinter();
+        this.control = new jpos.SignatureCapture();
     }
 
     protected void initialize() throws JposException {

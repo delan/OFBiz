@@ -24,6 +24,8 @@
  */
 package org.ofbiz.pos.device;
 
+
+
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>

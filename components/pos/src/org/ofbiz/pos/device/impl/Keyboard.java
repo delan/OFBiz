@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.pos.device;
+package org.ofbiz.pos.device.impl;
 
 import java.util.List;
 
@@ -31,6 +31,7 @@ import jpos.JposException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.adaptor.DataEventAdaptor;
 import org.ofbiz.pos.config.ButtonEventConfig;
+import org.ofbiz.pos.device.GenericDevice;
 import org.ofbiz.pos.screen.PosScreen;
 
 /**

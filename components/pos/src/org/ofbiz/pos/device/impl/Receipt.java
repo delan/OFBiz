@@ -22,28 +22,29 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.pos.device;
+package org.ofbiz.pos.device.impl;
 
-import java.net.URL;
-import java.io.InputStream;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 
 import jpos.JposException;
-import jpos.POSPrinterConst;
 import jpos.POSPrinter;
+import jpos.POSPrinterConst;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.pos.device.GenericDevice;
 import org.ofbiz.pos.screen.DialogCallback;
 import org.ofbiz.pos.screen.PosDialog;
 import org.ofbiz.pos.screen.PosScreen;
