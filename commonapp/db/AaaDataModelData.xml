@@ -131,7 +131,7 @@
   <EnumerationType description="Product Promotion Parent Enum Type" enumTypeId="PROD_PROMO" hasTable="N" parentTypeId=""/>
   <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
   <EnumerationType description="Product Promotion Condition" enumTypeId="PROD_PROMO_COND" hasTable="N" parentTypeId="PROD_PROMO"/>
-  
+
   <Enumeration description="For Your Information" enumCode="FYI" enumId="WEE_FYI" sequenceId="01" enumTypeId="WORK_EFF_EXPECT"/>
   <Enumeration description="Involvement Required" enumCode="REQUIRE" enumId="WEE_REQUIRE" sequenceId="02" enumTypeId="WORK_EFF_EXPECT"/>
   <Enumeration description="Involvement Requested" enumCode="REQUEST" enumId="WEE_REQUEST" sequenceId="03" enumTypeId="WORK_EFF_EXPECT"/>
@@ -151,38 +151,38 @@
 
   <Enumeration description="Automatic Mode" enumCode="Automatic" enumId="WAM_AUTOMATIC" sequenceId="01" enumTypeId="WFLOW_ACTIVITY_MODE"/>
   <Enumeration description="Manual Mode" enumCode="Manual" enumId="WAM_MANUAL" sequenceId="02" enumTypeId="WFLOW_ACTIVITY_MODE"/>
- 
+
   <Enumeration description="Route" enumCode="Route" enumId="WAT_ROUTE" sequenceId="01" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
   <Enumeration description="No Implementation" enumCode="No" enumId="WAT_NO" sequenceId="02" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
   <Enumeration description="Tools Implementation" enumCode="Tool" enumId="WAT_TOOL" sequenceId="03" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
   <Enumeration description="Subflow Implementation" enumCode="Subflow" enumId="WAT_SUBFLOW" sequenceId="04" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
   <Enumeration description="Loop Implementation" enumCode="Loop" enumId="WAT_LOOP" sequenceId="05" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
-  
+
   <Enumeration description="Activity can only be instantiated once (DEFAULT)" enumCode="ONCE" enumId="WFI_ONCE" sequenceId="01" enumTypeId="WFLOW_INSTANTIATION"/>
   <Enumeration description="Activity can be instantiated multiple times" enumCode="MULTIPLE" enumId="WFI_MULTIPLE" sequenceId="02" enumTypeId="WFLOW_INSTANTIATION"/>
-  
+
   <Enumeration description="Synchronize all incoming transitions (wait for all)" enumCode="AND" enumId="WJT_AND" sequenceId="01" enumTypeId="WORKFLOW_JOIN_TYPE"/>
   <Enumeration description="No incoming synchronization required (start on first)" enumCode="XOR" enumId="WJT_XOR" sequenceId="02" enumTypeId="WORKFLOW_JOIN_TYPE"/>
-  
+
   <Enumeration description="Allow concurrent outgoing transitions" enumCode="AND" enumId="WST_AND" sequenceId="01" enumTypeId="WORKFLOW_SPLIT_TYPE"/>
   <Enumeration description="Only allow a single outgoing transition" enumCode="XOR" enumId="WST_XOR" sequenceId="02" enumTypeId="WORKFLOW_SPLIT_TYPE"/>
-  
+
   <Enumeration description="Application" enumCode="APPLICATION" enumId="WTT_APPLICATION" sequenceId="01" enumTypeId="WORKFLOW_TOOL_TYPE"/>
   <Enumeration description="Procedure" enumCode="PROCEDURE" enumId="WTT_PROCEDURE" sequenceId="02" enumTypeId="WORKFLOW_TOOL_TYPE"/>
-  
+
   <Enumeration description="Asynchronous Execution" enumCode="ASYNCHR" enumId="WSE_ASYNCHR" sequenceId="01" enumTypeId="WORKFLOW_SUB_EXEC"/>
   <Enumeration description="Synchronous Execution" enumCode="SYNCHR" enumId="WSE_SYNCHR" sequenceId="02" enumTypeId="WORKFLOW_SUB_EXEC"/>
-  
+
   <Enumeration description="While loop - go until condition evaluates to false" enumCode="WHILE" enumId="WLK_WHILE" sequenceId="01" enumTypeId="WORKFLOW_LOOP_KIND"/>
   <Enumeration description="Repeat Until loop - go until condition evaluates to true" enumCode="REPEAT_UNTIL" enumId="WLK_REPEAT_UNTIL" sequenceId="02" enumTypeId="WORKFLOW_LOOP_KIND"/>
-  
+
   <Enumeration description="No Loop" enumCode="NOLOOP" enumId="WTL_NOLOOP" sequenceId="01" enumTypeId="WORKFLOW_TRANS_LOOP"/>
   <Enumeration description="From Loop" enumCode="FROMLOOP" enumId="WTL_FROMLOOP" sequenceId="02" enumTypeId="WORKFLOW_TRANS_LOOP"/>
   <Enumeration description="To Loop" enumCode="TOLOOP" enumId="WTL_TOLOOP" sequenceId="03" enumTypeId="WORKFLOW_TRANS_LOOP"/>
-  
+
   <Enumeration description="Condition" enumCode="CONDITION" enumId="WTC_CONDITION" sequenceId="01" enumTypeId="WORKFLOW_TRANS_COND"/>
   <Enumeration description="Otherwise" enumCode="OTHERWISE" enumId="WTC_OTHERWISE" sequenceId="02" enumTypeId="WORKFLOW_TRANS_COND"/>
-  
+
   <Enumeration description="Boolean - Plain Type" enumCode="BOOLEAN" enumId="WDT_BOOLEAN" sequenceId="01" enumTypeId="WORKFLOW_DATA_TYPE"/>
   <Enumeration description="Unit - Plain Type" enumCode="UNIT" enumId="WDT_UNIT" sequenceId="02" enumTypeId="WORKFLOW_DATA_TYPE"/>
   <Enumeration description="Performer - Plain Type" enumCode="PERFORMER" enumId="WDT_PERFORMER" sequenceId="03" enumTypeId="WORKFLOW_DATA_TYPE"/>
@@ -426,7 +426,7 @@
   <ProductPromoActionType description="Item Amount Discount (per quantity)" productPromoActionTypeId="PROMO_ITEM_AMNTPQ"/>
   <ProductPromoActionType description="Order Percent Discount" productPromoActionTypeId="PROMO_ORDER_PERCENT"/>
   <ProductPromoActionType description="Order Amount Discount (flat)" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
-  
+
   <ProductType description="Service" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
   <ProductType description="Good" hasTable="N" parentTypeId="" productTypeId="GOOD"/>
   <ProductType description="Raw Material" hasTable="N" parentTypeId="GOOD" productTypeId="RAW_MATERIAL"/>
@@ -476,8 +476,10 @@
   <ShoppingListType description="Baby Registry" shoppingListTypeId="SLT_BABY_REG"/>
   <ShoppingListType description="Wedding Registry" shoppingListTypeId="SLT_WEDDING_REG"/>
   <ShoppingListType description="Frequent Purchases" shoppingListTypeId="SLT_FREQ_PURCHASES"/>
-  
+
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="ORDER_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="ORDER_STATUS" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="CALENDAR_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="TASK_STATUS"/>
@@ -507,14 +509,19 @@
   <StatusItem description="Available" sequenceId="02" statusCode="AVAILABLE" statusId="INV_AVAILABLE" statusTypeId="INV_SERIALIZED_STTS"/>
   <StatusItem description="Promised" sequenceId="03" statusCode="PROMISED" statusId="INV_PROMISED" statusTypeId="INV_SERIALIZED_STTS"/>
   <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="INV_DELIVERED" statusTypeId="INV_SERIALIZED_STTS"/>
-  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDERED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Paid" sequenceId="02" statusCode="PAID" statusId="PAID" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Processing" sequenceId="03" statusCode="PROCESSING" statusId="PROCESSING" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Scheduled" sequenceId="04" statusCode="SCHEDULED" statusId="SCHEDULED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Shipped" sequenceId="05" statusCode="SHIPPED" statusId="SHIPPED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Invoiced" sequenceId="06" statusCode="INVOICED" statusId="INVOICED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="BACKORDERED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="CANCELLED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDER_ORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ORDER_APPROVED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Shipped" sequenceId="05" statusCode="SHIPPED" statusId="ORDER_SHIPPED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ORDER_BACKORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ITEM_ORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ITEM_APPROVED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Shipped" sequenceId="05" statusCode="SHIPPED" statusId="ITEM_SHIPPED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ITEM_BACKORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Authorized" sequenceId="01" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Settled" sequenceId="02" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="PAYMENT_DECLINED" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusItem description="Needs Action" sequenceId="01" statusCode="NEEDS ACTION" statusId="CAL_NEEDS_ACTION" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Sent" sequenceId="02" statusCode="SENT" statusId="CAL_SENT" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="CAL_DECLINED" statusTypeId="CALENDAR_STATUS"/>
@@ -539,22 +546,21 @@
   <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_AVAILABLE" transitionName="Cancel Promise"/>
   <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_DELIVERED" transitionName="Deliver"/>
   <StatusValidChange condition="" statusId="INV_DELIVERED" statusIdTo="INV_AVAILABLE" transitionName="Return"/>
-  <StatusValidChange condition="" statusId="ORDERED" statusIdTo="PAID" transitionName="Payment Received"/>
-  <StatusValidChange condition="" statusId="PAID" statusIdTo="PROCESSING" transitionName="Processing Order"/>
-  <StatusValidChange condition="" statusId="PAID" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
-  <StatusValidChange condition="" statusId="PROCESSING" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
-  <StatusValidChange condition="" statusId="SCHEDULED" statusIdTo="SHIPPED" transitionName="Ship Order"/>
-  <StatusValidChange condition="" statusId="SHIPPED" statusIdTo="INVOICED" transitionName="Invoice Order"/>
-  <StatusValidChange condition="" statusId="ORDERED" statusIdTo="BACKORDERED" transitionName="Back Order"/>
-  <StatusValidChange condition="" statusId="PAID" statusIdTo="BACKORDERED" transitionName="Back Order"/>
-  <StatusValidChange condition="" statusId="PROCESSING" statusIdTo="BACKORDERED" transitionName="Back Order"/>
-  <StatusValidChange condition="" statusId="BACKORDERED" statusIdTo="PROCESSING" transitionName="Processing Order"/>
-  <StatusValidChange condition="" statusId="BACKORDERED" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
-  <StatusValidChange condition="" statusId="ORDERED" statusIdTo="CANCELLED" transitionName="Cancel Order"/>
-  <StatusValidChange condition="" statusId="BACKORDERED" statusIdTo="CANCELLED" transitionName="Cancel Back Order"/>
-  <StatusValidChange condition="" statusId="PAID" statusIdTo="CANCELLED" transitionName="Last Minute Cancel Order"/>
-  <StatusValidChange condition="" statusId="PROCESSING" statusIdTo="CANCELLED" transitionName="Last Minute Cancel Order"/>
-  <StatusValidChange condition="" statusId="SCHEDULED" statusIdTo="CANCELLED" transitionName="Last Minute Cancel Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_APPROVED" transitionName="Approve Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_SHIPPED" transitionName="Ship Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="ORDER_BACKORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Back Order"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Order"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_SHIPPED" transitionName="Ship Order"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Back Order"/>
+  <StatusValidChange condition="" statusId="PAYMENT_AUTHORIZED" statusIdTo="PAYMENT_SETTLED" transitionName="Payment Settled"/>
   <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_SENT" transitionName="Send"/>
   <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
   <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_ACCEPTED" transitionName="Accept"/>
