@@ -23,6 +23,16 @@
  */
 package org.ofbiz.core.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -43,6 +53,8 @@ import javax.servlet.http.HttpSession;
  * @since      2.1
  */
 public class UtilHttp {
+    
+    public static final String module = UtilHttp.class.getName();
 
     /** 
      * Create a map from an HttpServletRequest object
@@ -217,16 +229,94 @@ public class UtilHttp {
     }
     
     public static String setResponseBrowserProxyNoCache(HttpServletRequest request, HttpServletResponse response) {
-        long nowMillis = System.currentTimeMillis();
-        //response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-        //SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z", Locale.US);
-        //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        setResponseBrowserProxyNoCache(response);
+        return "success";
+    }
+    
+    public static void setResponseBrowserProxyNoCache(HttpServletResponse response) {
+        long nowMillis = System.currentTimeMillis();        
         response.setDateHeader("Expires", nowMillis);
         response.setDateHeader("Last-Modified", nowMillis); // always modified
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate"); // HTTP/1.1
         response.addHeader("Cache-Control", "post-check=0, pre-check=0, false");
-        response.setHeader("Pragma", "no-cache"); // HTTP/1.0
-        
-        return "success";
+        response.setHeader("Pragma", "no-cache"); // HTTP/1.0               
     }
+    
+    public static String getContentTypeByFileName(String fileName) {
+        FileNameMap mime = URLConnection.getFileNameMap();
+        return mime.getContentTypeFor(fileName);
+    }
+    
+    public static void streamContentToBrowser(HttpServletResponse response, byte[] bytes, String fileName) throws IOException {
+        // tell the browser not the cache
+        setResponseBrowserProxyNoCache(response);
+        
+        // set the response info
+        response.setContentLength(bytes.length);
+        if (fileName != null) {
+            String contentType = getContentTypeByFileName(fileName);            
+            response.setContentType(contentType);            
+        }
+        
+        // create the streams
+        OutputStream out = response.getOutputStream();
+        InputStream in = new ByteArrayInputStream(bytes);
+        
+        // stream the content
+        streamContent(out, in, bytes.length);
+        
+        // close the input stream
+        in.close();
+        
+        // close the servlet output stream
+        out.flush();
+        out.close();
+    }
+    
+    public static void streamContentToBrowser(HttpServletResponse response, InputStream in, int length, String fileName) throws IOException {
+        // tell the browser not the cache
+        setResponseBrowserProxyNoCache(response);
+             
+        // set the response info
+        response.setContentLength(length);
+        if (fileName != null) {
+            String contentType = getContentTypeByFileName(fileName);            
+            response.setContentType(contentType);            
+        }
+        
+        // stream the content
+        OutputStream out = response.getOutputStream();        
+        streamContent(out, in, length);
+        
+        // close the servlet output stream
+        out.flush();
+        out.close();
+    }    
+            
+    public static void streamContent(OutputStream out, InputStream in, int length) throws IOException {
+        int bufferSize = 512; // same as the default buffer size; change as needed
+        BufferedOutputStream bos = new BufferedOutputStream(out, bufferSize);
+        BufferedInputStream bis = new BufferedInputStream(in, bufferSize);
+          
+        byte[] buffer = new byte[length];     
+        int read = 0;
+        try {
+            while (-1 != (read = bis.read(buffer, 0, buffer.length))) {
+                bos.write(buffer, 0, read);
+            }
+        } catch (IOException e) {
+            Debug.logError(e, "Problem reading/writing buffers", module);
+            bis.close();
+            bos.close();
+            throw e;           
+        } finally {       
+            if (bis != null) {
+                bis.close();
+            }
+            if (bos != null) {
+                bos.flush();
+                bos.close();
+            }
+        }                
+    }    
 }

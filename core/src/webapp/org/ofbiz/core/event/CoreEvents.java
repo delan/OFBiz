@@ -24,11 +24,18 @@
  */
 package org.ofbiz.core.event;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.Timestamp;
 import java.util.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.calendar.*;
+import org.ofbiz.core.control.RequestHandler;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
@@ -434,5 +441,30 @@ public class CoreEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ServiceEventHandler threw an exception: " + e.getMessage());
             return "error";
         }
+    }
+    
+    public static String streamFile(HttpServletRequest request, HttpServletResponse response) {
+        RequestHandler rh = (RequestHandler) request.getAttribute(SiteDefs.REQUEST_HANDLER);
+        String filePath = RequestHandler.getNextPageUri(request.getPathInfo());
+        String fileName = filePath.substring(filePath.lastIndexOf("/")+1);
+        
+        // load the file
+        File file = new File(filePath);
+        if (file.exists()) {
+            Long longLen = new Long(file.length());
+            int length = longLen.intValue();
+            try {
+                FileInputStream fis = new FileInputStream(file);                                
+                UtilHttp.streamContentToBrowser(response, fis, length, fileName);
+                fis.close();                
+            } catch (FileNotFoundException e) {
+                Debug.logError(e, module);
+                return "error";
+            } catch (IOException e) {
+                Debug.logError(e, module);
+                return "error";
+            }
+        }                        
+        return null;
     }
 }
