@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
@@ -126,7 +126,9 @@
           [Create New Address]</a>&nbsp;&nbsp;
         -->
         <table width="100%" border="0" cellpadding="1">
-        <#if curPostalAddress?exists>
+        <#assign hasCurrent = false>
+        <#if curPostalAddress?has_content>
+          <#assign hasCurrent = true>
           <tr>
             <td align="right" valign="top" width="1%">
               <input type="radio" name="contactMechId" value="${curContactMechId}" checked>
@@ -203,7 +205,7 @@
           </#if>
           <tr>
             <td align="right" valigh="top" width="1%">
-              <input type="radio" name="contactMechId" value="_NEW_" checked>
+              <input type="radio" name="contactMechId" value="_NEW_" <#if !hasCurrent>checked</#if>>
             </td>
             <td align="left" valign="middle" width="80%">
               <span class="tabletext">${uiLabelMap.PartyCreateNewBillingAddress}.</span>

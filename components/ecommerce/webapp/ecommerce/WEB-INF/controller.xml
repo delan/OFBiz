@@ -588,21 +588,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="createContactMech">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="updateContactMech">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="deleteContactMech">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePartyContactMech"/>
@@ -616,14 +613,12 @@
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="createPostalAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyPostalAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="updatePostalAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyPostalAddress"/>
@@ -637,7 +632,6 @@
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="updateTelecomNumber">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyTelecomNumber"/>
@@ -651,7 +645,6 @@
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="updateEmailAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyEmailAddress"/>
@@ -665,7 +658,6 @@
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
-
     <request-map uri="deletePartyContactMechPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePartyContactMechPurpose"/>

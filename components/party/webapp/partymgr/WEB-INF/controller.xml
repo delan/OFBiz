@@ -102,82 +102,82 @@
     </request-map>
     <request-map uri="createContactMech">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="createPartyContactMech"/>
+        <event type="service" invoke="createPartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateContactMech">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updatePartyContactMech"/>
+        <event type="service" invoke="updatePartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="deleteContactMech">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="deletePartyContactMech"/>
+        <event type="service" invoke="deletePartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createPostalAddressAndPurpose">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/ContactMechSimpleEvents.xml" invoke="createPostalAddressAndPurpose"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createPostalAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="createPartyPostalAddress"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="updatePostalAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updatePartyPostalAddress"/>
+        <event type="service" invoke="updatePartyPostalAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createTelecomNumber">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="createPartyTelecomNumber"/>
+        <event type="service" invoke="createPartyTelecomNumber"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="updateTelecomNumber">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updatePartyTelecomNumber"/>
+        <event type="service" invoke="updatePartyTelecomNumber"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createEmailAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="createPartyEmailAddress"/>
+        <event type="service" invoke="createPartyEmailAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="updateEmailAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="updatePartyEmailAddress"/>
+        <event type="service" invoke="updatePartyEmailAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createPartyContactMechPurpose">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/ContactMechSimpleEvents.xml" invoke="createPartyContactMechPurpose"/>
+        <event type="service" invoke="createPartyContactMechPurpose"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="deletePartyContactMechPurpose">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/party/contact/ContactMechSimpleEvents.xml" invoke="deletePartyContactMechPurpose"/>
+        <event type="service" invoke="deletePartyContactMechPurpose"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
