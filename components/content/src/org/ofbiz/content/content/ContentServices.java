@@ -59,6 +59,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.security.Security;
 
 import java.io.ByteArrayOutputStream;
@@ -281,8 +282,9 @@ public class ContentServices {
 
             result.put("contentId", contentId);
         } else {
-            String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
-            return ServiceUtil.returnError(errorMsg);
+            String errorMsg = (String)permResults.get(ModelService.ERROR_MESSAGE);
+            result.put(ModelService.ERROR_MESSAGE, errorMsg);
+            return ServiceUtil.returnFailure(errorMsg);
         }
 
         context.remove("currentContent");

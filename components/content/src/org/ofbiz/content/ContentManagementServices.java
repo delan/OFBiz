@@ -182,6 +182,7 @@ public class ContentManagementServices {
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Boolean bDisplayFailCond = (Boolean)context.get("displayFailCond");
         Map permContext = new HashMap();
         String mapKey = (String) context.get("mapKey"); 
         String deactivateExisting = (String) context.get("deactivateExisting"); 
@@ -450,6 +451,7 @@ public class ContentManagementServices {
                     Map ctx = contentModel.makeValid(context, "IN");
                     contentContext.putAll(ctx);
                     contentContext.put("userLogin", userLogin);
+                    contentContext.put("displayFailCond", bDisplayFailCond);
                     contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     Map thisResult = dispatcher.runSync("updateContent", contentContext);
                     String errMsg = ServiceUtil.getErrorMessage(thisResult);
@@ -467,6 +469,7 @@ public class ContentManagementServices {
                     Map ctx = contentModel.makeValid(context, "IN");
                     contentContext.putAll(ctx);
                     contentContext.put("userLogin", userLogin);
+                    contentContext.put("displayFailCond", bDisplayFailCond);
                     contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     Map thisResult = dispatcher.runSync("createContent", contentContext);
                     String errMsg = ServiceUtil.getErrorMessage(thisResult);
