@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  */
 -->
 
@@ -242,6 +242,7 @@
             package-name="org.ofbiz.common.keyword">
       <field name="enteredKeyword" type="short-varchar"></field>
       <field name="alternateKeyword" type="short-varchar"></field>
+      <field name="replaceEntered" type="indicator"></field>
       <prim-key field="enteredKeyword"/>
       <prim-key field="alternateKeyword"/>
     </entity>
