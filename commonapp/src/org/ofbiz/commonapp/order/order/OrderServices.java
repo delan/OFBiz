@@ -60,8 +60,7 @@ public class OrderServices {
         GenericValue order = delegator.makeValue("OrderHeader",
         UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
         "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
-        "statusId", "Ordered", "shippingInstructions", shippingInstructions));
-        order.set("billingAccountId", billingAccountId);
+        "statusId", "ORDERED", "billingAccountId", billingAccountId));
         
         // add in discount adjustment
         Double cartDiscount = (Double) context.get("cartDiscount");
@@ -149,7 +148,7 @@ public class OrderServices {
         // set the order status
         order.preStoreOther(delegator.makeValue("OrderStatus",
         UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
-        "statusId", "Requested", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
+        "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
         
         String creditCardId = (String) context.get("creditCardId");
         if (creditCardId != null) {
