@@ -1,5 +1,5 @@
 /*
- * $Id: EntityOperator.java,v 1.10 2004/07/14 04:18:52 doogie Exp $
+ * $Id: EntityOperator.java,v 1.11 2004/07/14 06:36:18 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.0
  */
 public abstract class EntityOperator extends EntityConditionBase {
@@ -214,7 +214,11 @@ public abstract class EntityOperator extends EntityConditionBase {
 
     public abstract boolean mapMatches(GenericDelegator delegator, Map map, Object lhs, Object rhs);
     public abstract void validateSql(ModelEntity entity, Object lhs, Object rhs) throws GenericModelException;
-    public abstract void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, Object rhs, Object lhs);
+    public void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, Object lhs, Object rhs) {
+        addSqlValue(sql, entity, entityConditionParams, true, lhs, rhs);
+    }
+
+    public abstract void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, boolean compat, Object rhs, Object lhs);
     public abstract EntityCondition freeze(Object lhs, Object rhs);
     public abstract void visit(EntityConditionVisitor visitor, Object lhs, Object rhs);
 
