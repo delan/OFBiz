@@ -9,9 +9,7 @@
     <!-- Order processing services -->
     <service name="processOrder" engine="workflow" location="org.ofbiz.commonapp.order.order" invoke="ProcessOrder">
         <description>Service for testing the workflow engine</description>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="statusId" type="String" mode="INOUT" optional="false"/>   
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>        
     </service>
     
     <service name="prepareOrderEmailData" engine="java"
@@ -616,6 +614,13 @@
         <attribute name="distributorId" type="String" mode="OUT"/>
         <attribute name="statusString" type="String" mode="OUT"/>
     </service>
+    
+    <service name="getOrderHeaderInformation" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="getOrderHeaderInformation">
+        <description>Get basic order header information.</description>
+        <auto-attributes entity-name="OrderHeader" include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes entity-name="OrderHeader" include="nonpk" mode="OUT" optional="true"/>
+    </service>    	
 
     <!-- Order Delivery Services -->
     <service name="createOrderDeliverySchedule" default-entity-name="OrderDeliverySchedule" engine="simple"

@@ -89,19 +89,7 @@
                         <BasicType Type="STRING"/>
                     </DataType>
                     <Description>The order number</Description>
-                </FormalParameter>                                                
-                <FormalParameter Id="orderTypeId" Index="2" Mode="IN">
-                    <DataType>
-                        <BasicType Type="STRING"/>
-                    </DataType>
-                    <Description>The type of order</Description>
-                </FormalParameter>
-                <FormalParameter Id="statusId" Index="2" Mode="INOUT">
-                    <DataType>
-                        <BasicType Type="STRING"/>
-                    </DataType>
-                    <Description>Status of the order</Description>
-                </FormalParameter>                                         
+                </FormalParameter>                              
             </FormalParameters>
             
             <DataFields>
@@ -117,7 +105,17 @@
                 <Activity Id="receiveOrder" Name="Receive Order">
                     <Description>Initial activity when order is received</Description>
                     <Limit>1</Limit>
-                    <Route/>
+                    <Implementation>
+                        <Tool Id="receiveOrderInformation" Type="PROCEDURE">
+                            <ActualParameters>                            	
+                                <ActualParameter>orderId</ActualParameter>                                
+                            </ActualParameters>   
+                            <ExtendedAttributes>                            	                            	                                
+                                <ExtendedAttribute Name="serviceName" Value="getOrderHeaderInformation"/>
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>                                                     
+                        </Tool>
+                    </Implementation>
                     <Performer>admin</Performer>
                     <StartMode>
                         <Automatic/>

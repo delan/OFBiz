@@ -1212,6 +1212,26 @@ public class OrderServices {
         return result;
     }
 
+    /** Service to get order header information as standard results. */
+    public static Map getOrderHeaderInformation(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting order header detial", module);
+            return ServiceUtil.returnError("Cannot get order header : " + e.getMessage());
+        }
+        if (orderHeader != null) {
+            Map result = ServiceUtil.returnSuccess();
+            result.putAll(orderHeader);
+            return result;
+        }
+        return ServiceUtil.returnError("Error getting order header information; null");       
+    }
+    
     /** Service to get basic order information. */
     public static Map getOrderInformation(DispatchContext dctx, Map context) {
         Map result = new HashMap();

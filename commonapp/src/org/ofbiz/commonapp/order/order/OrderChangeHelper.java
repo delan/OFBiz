@@ -195,31 +195,12 @@ public class OrderChangeHelper {
             return false;
         }        
                          
-        if (workEffort != null) {
-            // get the order header
-            String currentStatusId = null;
-            GenericValue orderHeader = null;
-            try {
-                orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problems getting the order header for: " + orderId, module);
-                return false;
-            }
-            // get the current order status to pass into the workflow
-            if (orderHeader != null) {
-                currentStatusId = orderHeader.getString("statusId");
-            } else {
-                Debug.logWarning("OrderHeader is empty, cannot continue", module);
-                return false;
-            }
+        if (workEffort != null) {            
             // attempt to release the order workflow from 'Hold' status (resume workflow)                        
             String workEffortId = workEffort.getString("workEffortId");
-            try {            
-                WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());
-                // first send the new order status to the workflow
-                client.appendContext(workEffortId, UtilMisc.toMap("statusId", currentStatusId));
-                // next resume the activity
-                if (workEffort.getString("currentStatusId").equals("WF_SUSPENDED")) {                
+            try {                                           
+                if (workEffort.getString("currentStatusId").equals("WF_SUSPENDED")) {
+                    WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());                
                     client.resume(workEffortId);
                 }                 
             } catch (WfException e) {
