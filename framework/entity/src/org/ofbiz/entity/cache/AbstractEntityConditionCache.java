@@ -97,12 +97,12 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
     }
 
     protected Map getOrCreateConditionCache(String entityName, EntityCondition condition) {
-        UtilCache cache = getOrCreateCache(entityName);
+        UtilCache utilCache = getOrCreateCache(entityName);
         Object conditionKey = getConditionKey(condition);
-        Map conditionCache = (Map) cache.get(conditionKey);
+        Map conditionCache = (Map) utilCache.get(conditionKey);
         if (conditionCache == null) {
             conditionCache = new HashMap();
-            cache.put(conditionKey, conditionCache);
+            utilCache.put(conditionKey, conditionCache);
         }
         return conditionCache;
     }
