@@ -42,9 +42,9 @@ import org.ofbiz.pos.jpos.service.BaseKybService;
  * @version    $Rev$
  * @since      3.2
  */
-public class KybServiceInstanceFactory extends Object implements JposServiceInstanceFactory {
+public class OfbizJposServiceFactory extends Object implements JposServiceInstanceFactory {
 
-    public static final String module = KybServiceInstanceFactory.class.getName();
+    public static final String module = OfbizJposServiceFactory.class.getName();
     private static Map serviceMap = new HashMap();
 
     public JposServiceInstance createInstance(String logicalName, JposEntry entry) throws JposException {
