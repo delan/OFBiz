@@ -27,6 +27,7 @@ import org.ofbiz.minerva.pool.jdbc.ConnectionWrapper;
 import org.ofbiz.minerva.pool.jdbc.PreparedStatementFactory;
 import org.ofbiz.minerva.pool.jdbc.PreparedStatementInPool;
 import org.ofbiz.minerva.pool.jdbc.StatementInPool;
+
 /**
  * Wrapper for database connections used by an XAConnection.  When close is
  * called, it does not close the underlying connection, just informs the
@@ -38,6 +39,7 @@ import org.ofbiz.minerva.pool.jdbc.StatementInPool;
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAClientConnection implements ConnectionWrapper {
+
     private final static String CLOSED = "Connection has been closed!";
 
     private Connection con;
@@ -47,7 +49,7 @@ public class XAClientConnection implements ConnectionWrapper {
     private int preparedStatementCacheSize = 0;
     private ObjectCache preparedStatementCache;
     private String stackTrace = null;
-   
+
     /**
      * Creates a new connection wrapper.
      * @param xaCon The handler for all the transactional details.
@@ -56,27 +58,23 @@ public class XAClientConnection implements ConnectionWrapper {
     public XAClientConnection(XAConnectionImpl xaCon, Connection con, boolean saveStackTrace) {
         this.con = con;
         this.xaCon = xaCon;
-        preparedStatementCache = (ObjectCache)ConnectionInPool.psCaches.get(con);
-        if(preparedStatementCache == null) {
+        preparedStatementCache = (ObjectCache) ConnectionInPool.psCaches.get(con);
+        if (preparedStatementCache == null) {
             PreparedStatementFactory factory = new PreparedStatementFactory(con);
             preparedStatementCache = new LeastRecentlyUsedCache(factory, preparedStatementCacheSize);
             ConnectionInPool.psCaches.put(con, preparedStatementCache);
         }
         statements = new HashSet();
         listeners = new Vector();
-        if (saveStackTrace)
-        {
-           try
-           {
-              ByteArrayOutputStream baos = new ByteArrayOutputStream();
-              PrintStream stream = new PrintStream(baos);
-              new Throwable().printStackTrace(stream);
-              baos.close();
-              stackTrace = baos.toString();
-           }
-           catch (Exception ex)
-           {
-           }
+        if (saveStackTrace) {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                PrintStream stream = new PrintStream(baos);
+                new Throwable().printStackTrace(stream);
+                baos.close();
+                stackTrace = baos.toString();
+            } catch (Exception ex) {
+            }
         }
     }
 
@@ -87,7 +85,7 @@ public class XAClientConnection implements ConnectionWrapper {
      */
     public void setPSCacheSize(int maxSize) {
         preparedStatementCacheSize = maxSize;
-        if(preparedStatementCache != null) {
+        if (preparedStatementCache != null) {
             preparedStatementCache.setSize(maxSize);
         }
     }
@@ -143,9 +141,8 @@ public class XAClientConnection implements ConnectionWrapper {
      */
     public void statementClosed(Statement st) {
         statements.remove(st);
-        if ((con != null) && (st instanceof PreparedStatementInPool) && 
-            preparedStatementCacheSize != 0) {
-                
+        if ((con != null) && (st instanceof PreparedStatementInPool) && preparedStatementCacheSize != 0) {
+
             // Now return the "real" statement to the pool
             PreparedStatementInPool ps = (PreparedStatementInPool) st;
             PreparedStatement ups = ps.getUnderlyingPreparedStatement();
@@ -168,66 +165,66 @@ public class XAClientConnection implements ConnectionWrapper {
 
     // ---- Implementation of java.sql.Connection ----
     public Statement createStatement() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             StatementInPool st = new StatementInPool(con.createStatement(), this);
             statements.add(st);
             return st;
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             PreparedStatement ps;
             if (preparedStatementCacheSize == 0) {
                 // cache disabled
                 ps = con.prepareStatement(sql);
             } else {
-                ps = (PreparedStatement)preparedStatementCache.useObject(sql);
+                ps = (PreparedStatement) preparedStatementCache.useObject(sql);
             }
-            if(ps == null)
+            if (ps == null)
                 throw new SQLException("Unable to create PreparedStatement!");
             PreparedStatementInPool wrapper = new PreparedStatementInPool(ps, this, sql);
             statements.add(wrapper);
             return wrapper;
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public CallableStatement prepareCall(String sql) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.prepareCall(sql);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public String nativeSQL(String sql) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.nativeSQL(sql);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
-        if(((XAResourceImpl)xaCon.getXAResource()).isTransaction() && autoCommit)
+        if (con == null) throw new SQLException(CLOSED);
+        if (((XAResourceImpl) xaCon.getXAResource()).isTransaction() && autoCommit)
             throw new SQLException("Cannot set AutoCommit for a transactional connection: See JDBC 2.0 Optional Package Specification section 7.1 (p25)");
 
         try {
             con.setAutoCommit(autoCommit);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
@@ -235,219 +232,221 @@ public class XAClientConnection implements ConnectionWrapper {
     }
 
     public boolean getAutoCommit() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.getAutoCommit();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public void commit() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
-        if(((XAResourceImpl)xaCon.getXAResource()).isTransaction())
+        if (con == null) throw new SQLException(CLOSED);
+        if (((XAResourceImpl) xaCon.getXAResource()).isTransaction())
             throw new SQLException("Cannot commit a transactional connection: See JDBC 2.0 Optional Package Specification section 7.1 (p25)");
         try {
             con.commit();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public void rollback() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
-        if(((XAResourceImpl)xaCon.getXAResource()).isTransaction())
+        if (con == null) throw new SQLException(CLOSED);
+        if (((XAResourceImpl) xaCon.getXAResource()).isTransaction())
             throw new SQLException("Cannot rollback a transactional connection: See JDBC 2.0 Optional Package Specification section 7.1 (p25)");
     }
 
-   public void forcedClose() throws SQLException
-   {
-      if (stackTrace != null)
-         System.err.println("A forced close because a non-closed connection:\n" + stackTrace);
-      if(con == null) throw new SQLException(CLOSED);
-      Collection copy = (Collection)statements.clone();
-      Iterator it = copy.iterator();
-      while(it.hasNext())
-         try {
-            ((Statement)it.next()).close();
-         } catch(SQLException e) {}
-      shutdown();
-   }
-    public void close() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
-        Collection copy = (Collection)statements.clone();
+    public void forcedClose() throws SQLException {
+        if (stackTrace != null)
+            System.err.println("A forced close because a non-closed connection:\n" + stackTrace);
+        if (con == null) throw new SQLException(CLOSED);
+        Collection copy = (Collection) statements.clone();
         Iterator it = copy.iterator();
-        while(it.hasNext())
+        while (it.hasNext())
             try {
-                ((Statement)it.next()).close();
-            } catch(SQLException e) {}
+                ((Statement) it.next()).close();
+            } catch (SQLException e) {
+            }
+        shutdown();
+    }
+
+    public void close() throws SQLException {
+        if (con == null) throw new SQLException(CLOSED);
+        Collection copy = (Collection) statements.clone();
+        Iterator it = copy.iterator();
+        while (it.hasNext())
+            try {
+                ((Statement) it.next()).close();
+            } catch (SQLException e) {
+            }
 
         xaCon.clientConnectionClosed(this);
         shutdown();
     }
 
     public boolean isClosed() throws SQLException {
-        if(con == null) return true;
+        if (con == null) return true;
         try {
             return con.isClosed();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public DatabaseMetaData getMetaData() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.getMetaData();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public void setReadOnly(boolean readOnly) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             con.setReadOnly(readOnly);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public boolean isReadOnly() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.isReadOnly();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public void setCatalog(String catalog) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             con.setCatalog(catalog);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public String getCatalog() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.getCatalog();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public void setTransactionIsolation(int level) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             con.setTransactionIsolation(level);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public int getTransactionIsolation() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.getTransactionIsolation();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public SQLWarning getWarnings() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.getWarnings();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public void clearWarnings() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             con.clearWarnings();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             StatementInPool st = new StatementInPool(con.createStatement(resultSetType, resultSetConcurrency), this);
             statements.add(st);
             return st;
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.prepareStatement(sql, resultSetType, resultSetConcurrency);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.prepareCall(sql, resultSetType, resultSetConcurrency);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public Map getTypeMap() throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             return con.getTypeMap();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     public void setTypeMap(Map map) throws SQLException {
-        if(con == null) throw new SQLException(CLOSED);
+        if (con == null) throw new SQLException(CLOSED);
         try {
             con.setTypeMap(map);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             setError(e);
             throw e;
         }
     }
 
     // JDK 1.4 methods
-    
+
     /* (non-Javadoc)
      * @see java.sql.Connection#setHoldability(int)
      */
     public void setHoldability(int arg0) throws SQLException {
         // TODO Auto-generated method stub
-        
+
     }
 
     /* (non-Javadoc)
@@ -479,7 +478,7 @@ public class XAClientConnection implements ConnectionWrapper {
      */
     public void rollback(Savepoint arg0) throws SQLException {
         // TODO Auto-generated method stub
-        
+
     }
 
     /* (non-Javadoc)
@@ -487,7 +486,7 @@ public class XAClientConnection implements ConnectionWrapper {
      */
     public void releaseSavepoint(Savepoint arg0) throws SQLException {
         // TODO Auto-generated method stub
-        
+
     }
 
     /* (non-Javadoc)

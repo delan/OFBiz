@@ -15,16 +15,19 @@ import java.sql.*;
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public interface ConnectionWrapper extends Connection {
+
     /**
      * Sets the time this connection (or a statement or result set derived from
      * it) was used.
      */
     public void setLastUsed();
+
     /**
      * Indicates to the connection that an error occured.  This is typically
      * used by statements and result sets derived from this connection.
      */
     public void setError(SQLException e);
+
     /**
      * Indicates that a statement derived from this connection was closed.
      * Statements are tracked so that any open statements can be closed when

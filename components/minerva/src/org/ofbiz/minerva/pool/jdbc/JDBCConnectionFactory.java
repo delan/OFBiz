@@ -22,230 +22,202 @@ import org.ofbiz.minerva.pool.cache.ObjectCache;
  *
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
-public class JDBCConnectionFactory
-   extends PoolObjectFactory
-{
-   private String url;
-   private Properties props;
-   private String userName;
-   private String password;
-   private int psCacheSize = 10;
-   private ObjectPool pool;
+public class JDBCConnectionFactory extends PoolObjectFactory {
 
-   private static Logger log = Logger.getLogger( JDBCConnectionFactory.class );
+    private String url;
+    private Properties props;
+    private String userName;
+    private String password;
+    private int psCacheSize = 10;
+    private ObjectPool pool;
 
-   /**
-    * Creates a new factory.  You must configure it with JDBC properties
-    * before you can use it.
-    */
-   public JDBCConnectionFactory()
-   {
-   }
+    private static Logger log = Logger.getLogger(JDBCConnectionFactory.class);
 
-   /**
-    * Sets the JDBC URL used to create new connections.
-    */
-   public void setConnectURL(String url)
-   {
-      this.url = url;
-   }
+    /**
+     * Creates a new factory.  You must configure it with JDBC properties
+     * before you can use it.
+     */
+    public JDBCConnectionFactory() {
+    }
 
-   /**
-    * Gets the JDBC URL used to create new connections.
-    */
-   public String getConnectURL()
-   {
-      return url;
-   }
+    /**
+     * Sets the JDBC URL used to create new connections.
+     */
+    public void setConnectURL(String url) {
+        this.url = url;
+    }
 
-   /**
-    * Sets the JDBC Propeties used to create new connections.
-    * This is optional, and will only be used if present.
-    */
-   public void setConnectProperties(Properties props)
-   {
-      this.props = props;
-   }
+    /**
+     * Gets the JDBC URL used to create new connections.
+     */
+    public String getConnectURL() {
+        return url;
+    }
 
-   /**
-    * Gets the JDBC Properties used to create new connections.
-    */
-   public Properties getConnectProperties()
-   {
-      return props;
-   }
+    /**
+     * Sets the JDBC Propeties used to create new connections.
+     * This is optional, and will only be used if present.
+     */
+    public void setConnectProperties(Properties props) {
+        this.props = props;
+    }
 
-   /**
-    * Sets the JDBC user name used to create new connections.
-    * This is optional, and will only be used if present.
-    */
-   public void setUser(String userName)
-   {
-      this.userName = userName;
-   }
+    /**
+     * Gets the JDBC Properties used to create new connections.
+     */
+    public Properties getConnectProperties() {
+        return props;
+    }
 
-   /**
-    * Gets the JDBC user name used to create new connections.
-    */
-   public String getUser()
-   {
-      return userName;
-   }
+    /**
+     * Sets the JDBC user name used to create new connections.
+     * This is optional, and will only be used if present.
+     */
+    public void setUser(String userName) {
+        this.userName = userName;
+    }
 
-   /**
-    * Sets the JDBC password used to create new connections.
-    * This is optional, and will only be used if present.
-    */
-   public void setPassword(String password)
-   {
-      this.password = password;
-   }
+    /**
+     * Gets the JDBC user name used to create new connections.
+     */
+    public String getUser() {
+        return userName;
+    }
 
-   /**
-    * Gets the JDBC password used to create new connections.
-    */
-   public String getPassword()
-   {
-      return password;
-   }
+    /**
+     * Sets the JDBC password used to create new connections.
+     * This is optional, and will only be used if present.
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-   /**
-    * Sets the number of PreparedStatements to be cached for each
-    * Connection.  Your DB product may impose a limit on the number
-    * of open PreparedStatements.  The default value is 10.
-    */
-   public void setPSCacheSize(int size)
-   {
-      psCacheSize = size;
-   }
+    /**
+     * Gets the JDBC password used to create new connections.
+     */
+    public String getPassword() {
+        return password;
+    }
 
-   /**
-    * Gets the number of PreparedStatements to be cached for each
-    * Connection.  The default value is 10.
-    */
-   public int getPSCacheSize()
-   {
-      return psCacheSize;
-   }
+    /**
+     * Sets the number of PreparedStatements to be cached for each
+     * Connection.  Your DB product may impose a limit on the number
+     * of open PreparedStatements.  The default value is 10.
+     */
+    public void setPSCacheSize(int size) {
+        psCacheSize = size;
+    }
 
-   /**
-    * Validates that connection properties were set (at least a URL).
-    */
-   public void poolStarted(ObjectPool pool)
-   {
-      if( log.isDebugEnabled() )
-         log.debug( "Starting" );
+    /**
+     * Gets the number of PreparedStatements to be cached for each
+     * Connection.  The default value is 10.
+     */
+    public int getPSCacheSize() {
+        return psCacheSize;
+    }
 
-      super.poolStarted(pool);
-      if(url == null)
-      {
-         log.error( "Must specify JDBC connection URL" );
-         throw new IllegalStateException("Must specify JDBC connection URL to "+getClass().getName());
-      }
-      this.pool = pool;
-   }
+    /**
+     * Validates that connection properties were set (at least a URL).
+     */
+    public void poolStarted(ObjectPool pool) {
+        if (log.isDebugEnabled())
+            log.debug("Starting");
 
-   /**
-    * Cleans up.
-    */
-   public void poolClosing(ObjectPool pool)
-   {
-      if( log.isDebugEnabled() )
-         log.debug( "Stopping" );
+        super.poolStarted(pool);
+        if (url == null) {
+            log.error("Must specify JDBC connection URL");
+            throw new IllegalStateException("Must specify JDBC connection URL to " + getClass().getName());
+        }
+        this.pool = pool;
+    }
 
-      super.poolClosing(pool);
-      this.pool = null;
-   }
+    /**
+     * Cleans up.
+     */
+    public void poolClosing(ObjectPool pool) {
+        if (log.isDebugEnabled())
+            log.debug("Stopping");
 
-   /**
-    * Creates a new JDBC Connection.
-    */
-   public Object createObject(Object parameters) throws Exception
-   {
-      
-         log.debug( "Opening new connection" );
+        super.poolClosing(pool);
+        this.pool = null;
+    }
 
-      try
-      {
-         if(userName != null && userName.length() > 0)
-            return DriverManager.getConnection(url, userName, password);
-         else if(props != null)
-            return DriverManager.getConnection(url, props);
-         else
-            return DriverManager.getConnection(url);
-      }
-      catch(SQLException e)
-      {
-         log.error( "SQL Error", e );
-         throw e;
-      }
-   }
+    /**
+     * Creates a new JDBC Connection.
+     */
+    public Object createObject(Object parameters) throws Exception {
 
-   /**
-    * Wraps the connection with a ConnectionInPool.
-    * @see org.ofbiz.minerva.pool.jdbc.ConnectionInPool
-    */
-   public Object prepareObject(Object pooledObject)
-   {
-      Connection con = (Connection)pooledObject;
-      ConnectionInPool wrapper = new ConnectionInPool(con);
-      wrapper.setPSCacheSize(psCacheSize);
-      return wrapper;
-   }
+        log.debug("Opening new connection");
 
-   /**
-    * Returns the original connection from a ConnectionInPool.
-    * @see org.ofbiz.minerva.pool.jdbc.ConnectionInPool
-    */
-   public Object translateObject(Object clientObject)
-   {
-      return ((ConnectionInPool)clientObject).getUnderlyingConnection();
-   }
+        try {
+            if (userName != null && userName.length() > 0)
+                return DriverManager.getConnection(url, userName, password);
+            else if (props != null)
+                return DriverManager.getConnection(url, props);
+            else
+                return DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            log.error("SQL Error", e);
+            throw e;
+        }
+    }
 
-   /**
-    * Closes all outstanding work for the connection, rolls it back, and
-    * returns the underlying connection to the pool.
-    */
-   public Object returnObject(Object clientObject)
-   {
-      ConnectionInPool wrapper = (ConnectionInPool)clientObject;
-      Connection con = wrapper.getUnderlyingConnection();
-      try
-      {
-         wrapper.reset();
-      } catch(SQLException e)
-      {
-         pool.markObjectAsInvalid(clientObject);
-      }
-      return con;
-   }
+    /**
+     * Wraps the connection with a ConnectionInPool.
+     * @see org.ofbiz.minerva.pool.jdbc.ConnectionInPool
+     */
+    public Object prepareObject(Object pooledObject) {
+        Connection con = (Connection) pooledObject;
+        ConnectionInPool wrapper = new ConnectionInPool(con);
+        wrapper.setPSCacheSize(psCacheSize);
+        return wrapper;
+    }
 
-   /**
-    * Closes a connection.
-    */
-   public void deleteObject(Object pooledObject)
-   {
-      Connection con = (Connection)pooledObject;
-      try
-      {
-         con.rollback();
-      } catch(SQLException ignored)
-      {
-      }
+    /**
+     * Returns the original connection from a ConnectionInPool.
+     * @see org.ofbiz.minerva.pool.jdbc.ConnectionInPool
+     */
+    public Object translateObject(Object clientObject) {
+        return ((ConnectionInPool) clientObject).getUnderlyingConnection();
+    }
 
-      // Removed all the cached PreparedStatements for this Connection
-      ObjectCache cache = (ObjectCache)ConnectionInPool.psCaches.remove(con);
-      if(cache != null)
-         cache.close();
+    /**
+     * Closes all outstanding work for the connection, rolls it back, and
+     * returns the underlying connection to the pool.
+     */
+    public Object returnObject(Object clientObject) {
+        ConnectionInPool wrapper = (ConnectionInPool) clientObject;
+        Connection con = wrapper.getUnderlyingConnection();
+        try {
+            wrapper.reset();
+        } catch (SQLException e) {
+            pool.markObjectAsInvalid(clientObject);
+        }
+        return con;
+    }
 
-      try
-      {
-         con.close();
-      } catch(SQLException ignored)
-      {
-      }
-   }
+    /**
+     * Closes a connection.
+     */
+    public void deleteObject(Object pooledObject) {
+        Connection con = (Connection) pooledObject;
+        try {
+            con.rollback();
+        } catch (SQLException ignored) {
+        }
+
+        // Removed all the cached PreparedStatements for this Connection
+        ObjectCache cache = (ObjectCache) ConnectionInPool.psCaches.remove(con);
+        if (cache != null)
+            cache.close();
+
+        try {
+            con.close();
+        } catch (SQLException ignored) {
+        }
+    }
 }
+
 /*
 vim:tabstop=3:et:shiftwidth=3
 */

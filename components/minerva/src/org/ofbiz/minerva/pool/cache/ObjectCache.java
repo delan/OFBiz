@@ -14,6 +14,7 @@ package org.ofbiz.minerva.pool.cache;
  * @author Aaron Mulder ammulder@alumni.princeton.edu
  */
 public interface ObjectCache {
+
     /**
      * When setting the size, this constant means there should
      * be no limit on the size of the cache.  This is not

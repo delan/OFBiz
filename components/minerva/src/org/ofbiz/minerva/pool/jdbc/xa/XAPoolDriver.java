@@ -26,113 +26,96 @@ import org.apache.log4j.Logger;
  * <P>This driver will be loaded automatically whenever an XA Pool is
  * created, but you can also use the standard <CODE>Class.forName</CODE>
  * call to load it.</P>
- * @see org.jboss.pool.jdbc.xa.XAPoolDataSource
+ * @see org.ofbiz.minerva.pool.jdbc.xa.XAPoolDataSource
  *
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 
-public class XAPoolDriver implements Driver
-{
-   private final static Logger log = Logger.getLogger( XAPoolDriver.class );
-   private final static String URL_START = "jdbc:minerva:xa:";
-   private final static XAPoolDriver instance;
+public class XAPoolDriver implements Driver {
 
-   static
-   {
-      instance = new XAPoolDriver();
-      try
-      {
-         DriverManager.registerDriver(XAPoolDriver.instance());
-      } catch(SQLException e)
-      {
-         log.error( "Unable to register Minerva XA DB pool driver!", e );
-      }
-   }
+    private final static Logger log = Logger.getLogger(XAPoolDriver.class);
+    private final static String URL_START = "jdbc:minerva:xa:";
+    private final static XAPoolDriver instance;
 
-   /**
-    * Gets the singleton driver instance.
-    */
-   public static XAPoolDriver instance()
-   {
-      return instance;
-   }
+    static {
+        instance = new XAPoolDriver();
+        try {
+            DriverManager.registerDriver(XAPoolDriver.instance());
+        } catch (SQLException e) {
+            log.error("Unable to register Minerva XA DB pool driver!", e);
+        }
+    }
 
-   private XAPoolDriver()
-   {
-   }
+    /**
+     * Gets the singleton driver instance.
+     */
+    public static XAPoolDriver instance() {
+        return instance;
+    }
 
-   /**
-    * Tells which URLs this driver can handle.
-    */
-   public boolean acceptsURL(String url)
-      throws java.sql.SQLException
-   {
-      return url.startsWith(URL_START);
-   }
+    private XAPoolDriver() {
+    }
 
-   /**
-    * Retrieves a connection from a connection pool.
-    */
-   public Connection connect(String url, Properties props)
-      throws java.sql.SQLException
-   {
-      if(url.startsWith(URL_START))
-      {
-         return getXAConnection(url.substring(URL_START.length()));
-      }
-      return null;  // No SQL Exception here!
-   }
+    /**
+     * Tells which URLs this driver can handle.
+     */
+    public boolean acceptsURL(String url) throws java.sql.SQLException {
+        return url.startsWith(URL_START);
+    }
 
-   private Connection getXAConnection(String name)
-   {
-      Connection con = null;
-      try
-      {
-         DataSource source = XAPoolDataSource.getDataSource(name);
-         if(source != null)
-            con = source.getConnection();
-      } catch(Exception e)
-      {
-         log.error( "Can't get DataSource from XAPool", e );
-      }
-      return con;
-   }
+    /**
+     * Retrieves a connection from a connection pool.
+     */
+    public Connection connect(String url, Properties props) throws java.sql.SQLException {
+        if (url.startsWith(URL_START)) {
+            return getXAConnection(url.substring(URL_START.length()));
+        }
+        return null;  // No SQL Exception here!
+    }
 
-   /**
-    * Returns the driver version.
-    */
-   public int getMajorVersion()
-   {
-      return 2;
-   }
+    private Connection getXAConnection(String name) {
+        Connection con = null;
+        try {
+            DataSource source = XAPoolDataSource.getDataSource(name);
+            if (source != null)
+                con = source.getConnection();
+        } catch (Exception e) {
+            log.error("Can't get DataSource from XAPool", e);
+        }
+        return con;
+    }
 
-   /**
-    * Returns the driver version.
-    */
-   public int getMinorVersion()
-   {
-      return 0;
-   }
+    /**
+     * Returns the driver version.
+     */
+    public int getMajorVersion() {
+        return 2;
+    }
 
-   /**
-    * Returns no properties.  You do not need properties to connect to the
-    * pool, and the properties for the underlying driver are not managed here.
-    */
-   public DriverPropertyInfo[] getPropertyInfo(String url, Properties info)
-      throws SQLException
-   {
-      return new DriverPropertyInfo[0];
-   }
+    /**
+     * Returns the driver version.
+     */
+    public int getMinorVersion() {
+        return 0;
+    }
 
-   /**
-    * Returns <B>false</B> since it is not known which underlying driver will
-    * be used and what its capabilities are.
-    */
-   public boolean jdbcCompliant()
-   {
-      return false;
-   }
+    /**
+     * Returns no properties.  You do not need properties to connect to the
+     * pool, and the properties for the underlying driver are not managed here.
+     */
+    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
+        return new DriverPropertyInfo[0];
+    }
+
+    /**
+     * Returns <B>false</B> since it is not known which underlying driver will
+     * be used and what its capabilities are.
+     */
+    public boolean jdbcCompliant() {
+        return false;
+    }
 }
+
 /*
 vim:tabstop=3:et:shiftwidth=3
 */

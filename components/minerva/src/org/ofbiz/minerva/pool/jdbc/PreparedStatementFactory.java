@@ -17,6 +17,7 @@ import org.ofbiz.minerva.pool.cache.CachedObjectFactory;
  * @author Aaron Mulder ammulder@alumni.princeton.edu
  */
 public class PreparedStatementFactory extends CachedObjectFactory {
+
     private Connection con;
     private Logger logger = Logger.getLogger(PreparedStatementFactory.class);
 
@@ -28,10 +29,10 @@ public class PreparedStatementFactory extends CachedObjectFactory {
      * Creates a PreparedStatement from a Connection & SQL String.
      */
     public Object createObject(Object sqlString) {
-        String sql = (String)sqlString;
+        String sql = (String) sqlString;
         try {
             return con.prepareStatement(sql);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             logger.warn("Error creating prepared statement.", e);
             return null;
         }
@@ -42,7 +43,8 @@ public class PreparedStatementFactory extends CachedObjectFactory {
      */
     public void deleteObject(Object pooledObject) {
         try {
-            ((PreparedStatement)pooledObject).close();
-        } catch(SQLException e) {}
+            ((PreparedStatement) pooledObject).close();
+        } catch (SQLException e) {
+        }
     }
 }

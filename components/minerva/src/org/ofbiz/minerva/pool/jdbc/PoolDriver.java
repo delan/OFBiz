@@ -27,13 +27,15 @@ import javax.sql.DataSource;
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class PoolDriver implements Driver {
+
     private final static String URL_START = "jdbc:minerva:";
     private final static PoolDriver instance;
+
     static {
         instance = new PoolDriver();
         try {
             DriverManager.registerDriver(PoolDriver.instance());
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Unable to register Minerva DB pool driver!");
             e.printStackTrace();
         }
@@ -60,7 +62,7 @@ public class PoolDriver implements Driver {
      * Retrieves a connection from a connection pool.
      */
     public Connection connect(String url, Properties props) throws java.sql.SQLException {
-        if(url.startsWith(URL_START)) {
+        if (url.startsWith(URL_START)) {
             return getJDBCConnection(url.substring(URL_START.length()));
         }
         return null;  // No SQL Exception here!
@@ -70,9 +72,9 @@ public class PoolDriver implements Driver {
         Connection con = null;
         try {
             DataSource source = JDBCPoolDataSource.getDataSource(name);
-            if(source != null)
+            if (source != null)
                 con = source.getConnection();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return con;

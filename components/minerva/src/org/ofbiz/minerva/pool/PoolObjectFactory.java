@@ -10,6 +10,7 @@ package org.ofbiz.minerva.pool;
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public abstract class PoolObjectFactory {
+
     /**
      * Creates a new object to be stored in an object pool.  This is the
      * instance that will actually be sotred in the pool and reused.  If you
@@ -43,8 +44,8 @@ public abstract class PoolObjectFactory {
      * @throws java.lang.IllegalArgumentException
      *         Occurs when the pool is null.
      */
-    public void poolStarted( ObjectPool pool ) {
-        if(pool == null)
+    public void poolStarted(ObjectPool pool) {
+        if (pool == null)
             throw new IllegalArgumentException("Cannot start factory with null pool!");
     }
 
@@ -104,7 +105,7 @@ public abstract class PoolObjectFactory {
      *         Occurs when the pool is null.
      */
     public void poolClosing(ObjectPool pool) {
-        if(pool == null)
+        if (pool == null)
             throw new IllegalArgumentException("Cannot close factory with a null pool!");
     }
 

@@ -14,6 +14,7 @@ import java.util.EventObject;
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class PoolEvent extends EventObject {
+
     /**
      * The object has been closed and should be returned to the pool.  Note this
      * is not a final sort of closing - the object must still be able to be
@@ -27,12 +28,12 @@ public class PoolEvent extends EventObject {
      * normally.  This should not be used for final or destructive errors - the
      * object must stil be able to be returned to the pool and reused.
      */
-    public final static int OBJECT_ERROR  = -8986433;
+    public final static int OBJECT_ERROR = -8986433;
     /**
      * Indicates that the object was used, and its timestamp should be updated
      * accordingly (if the pool tracks timestamps).
      */
-    public final static int OBJECT_USED   = -8986434;
+    public final static int OBJECT_USED = -8986434;
 
     private int type;
     private boolean catastrophic = false;
@@ -47,7 +48,7 @@ public class PoolEvent extends EventObject {
      */
     public PoolEvent(Object source, int type) {
         super(source);
-        if(type != OBJECT_CLOSED && type != OBJECT_ERROR && type != OBJECT_USED)
+        if (type != OBJECT_CLOSED && type != OBJECT_ERROR && type != OBJECT_USED)
             throw new IllegalArgumentException("Invalid event type!");
         this.type = type;
     }
