@@ -44,6 +44,10 @@
 
 <%
     String orderId = request.getParameter("order_id");
+    if (orderId == null) orderId = (String) request.getAttribute("orderId");
+    if (orderId == null) orderId = (String) request.getSession().getAttribute("orderId");
+    else request.getSession().setAttribute("orderId", orderId);
+
     GenericValue orderHeader = null;
     GenericValue orderRole = null;
 
@@ -99,11 +103,16 @@
 
         Collection statusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",orderHeader.getString("statusId")));
         if (statusChange != null) pageContext.setAttribute("statusChange", statusChange);
+
+        Collection notes = delegator.findByAnd("OrderHeaderNoteView", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("-noteDateTime"));
+        if (notes != null && notes.size() > 0) pageContext.setAttribute("notes", notes);
 %>
 
 <%@ include file="/order/orderinformation.jsp" %>
 <br>
 <%@ include file="/order/orderitems.jsp" %>
+<br>
+<%@ include file="/order/ordernotes.jsp" %>
 
 <%}%><%-- OrderHeader --%>
 <ofbiz:unless name="orderHeader">

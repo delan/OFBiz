@@ -118,13 +118,16 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <div class='tabletext'>Current Status: <ofbiz:entityfield attribute="currentStatus" field="description"/> [<ofbiz:entityfield attribute="orderHeader" field="statusId"/>]</div>
+                    <ofbiz:if name="orderHeaderStatuses">
+                      <hr class="sepbar">
+                    </ofbiz:if>
                     <ofbiz:iterator name="orderHeaderStatus" property="orderHeaderStatuses">
                         <%GenericValue loopStatusItem = orderHeaderStatus.getRelatedOneCache("StatusItem");%>
                         <%if (loopStatusItem != null) pageContext.setAttribute("loopStatusItem", loopStatusItem);%>
                         <div class='tabletext'>
-                            <ofbiz:entityfield attribute="orderHeaderStatus" field="statusDatetime"/>: 
                             <ofbiz:entityfield attribute="loopStatusItem" field="description"/>
-                            [<ofbiz:entityfield attribute="orderHeaderStatus" field="statusId"/>]
+                            [<ofbiz:entityfield attribute="orderHeaderStatus" field="statusId"/>] -
+                            <ofbiz:entityfield attribute="orderHeaderStatus" field="statusDatetime"/>
                         </div>
                     </ofbiz:iterator>
                   </td>

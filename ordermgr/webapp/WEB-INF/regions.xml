@@ -51,4 +51,8 @@
         <put section='title'>Order List Page</put>
         <put section='content' content='/order/orderlist.jsp'/>
     </define>
+    <define id='createnewnote' region='MAIN_REGION'>
+        <put section='title'>Create New Note</put>
+        <put section='content' content='/order/newnote.jsp'/>
+    </define>
 </regions>

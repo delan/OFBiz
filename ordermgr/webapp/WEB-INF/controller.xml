@@ -5,7 +5,7 @@
     <description>Order Manager Module Site Configuration File</description>
     <owner>The Open For Business Project (c) 2001 </owner>
     <errorpage>/error/error.jsp</errorpage>
-    
+
     <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
@@ -13,7 +13,7 @@
 
     <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
-    
+
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
     	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
@@ -53,27 +53,39 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
-    
-    <request-map uri="chain">
-        <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
-        <response name="success" type="request" value="view"/>
-        <response name="error" type="view" value="error"/>
-    </request-map>
 
-    <request-map uri="main"><security https="true" auth="true"/>
+    <request-map uri="main">
+        <security https="true" auth="true"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
-    <request-map uri="orderview"><security https="true" auth="true"/>
+
+    <request-map uri="orderview">
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="orderview"/>
     </request-map>
-    <request-map uri="orderlist"><security https="true" auth="true"/>
+
+    <request-map uri="orderlist">
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="orderlist"/>
     </request-map>
-    
-    <request-map uri="changeOrderStatus"><security https="true" auth="true"/>
+
+    <request-map uri="changeOrderStatus">
+        <security https="true" auth="true"/>
         <event type="service" invoke="changeOrderStatus"/>
         <response name="success" type="view" value="orderlist"/>
         <response name="error" type="view" value="orderview"/>
+    </request-map>
+
+    <request-map uri="createnewnote">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createnewnote"/>
+    </request-map>
+
+    <request-map uri="createordernote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrderNote"/>
+        <response name="success" type="view" value="orderlist"/>
+        <response name="error" type="view" value="createnewnote"/>
     </request-map>
 
     <request-map uri="changeDelegator">
@@ -90,5 +102,6 @@
 
     <view-map name="orderview" type="region"/>
     <view-map name="orderlist" type="region"/>
+    <view-map name="createnewnote" type="region"/>
     <!-- end of view mappings -->
 </site-conf>
