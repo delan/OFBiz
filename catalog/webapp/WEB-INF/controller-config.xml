@@ -55,6 +55,11 @@
     	<response name="success" type="view" value="main"/>
     </request-map>
 
+    <request-map uri="keywordsearch">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="keywordsearch"/>
+    </request-map>
+    
     <request-map uri="ChooseTopCategory">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="ChooseTopCategory"/>
@@ -132,6 +137,7 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.jsp"/>
 
+    <view-map name="keywordsearch" page="/find/keywordsearch.jsp"/>
     <view-map name="ChooseTopCategory" page="/ChooseTopCategory.jsp"/>
     <view-map name="EditCategory" page="/EditCategory.jsp"/>
     <view-map name="EditProduct" page="/EditProduct.jsp"/>

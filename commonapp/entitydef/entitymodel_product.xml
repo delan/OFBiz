@@ -1120,10 +1120,8 @@
             title="Product Keyword Entity">
       <field name="productId" type="id-ne"></field>
       <field name="keyword" type="short-varchar"></field>
-      <field name="groupName" type="id-ne"></field>	
       <prim-key field="productId" />	
       <prim-key field="keyword" />	
-      <prim-key field="groupName" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>

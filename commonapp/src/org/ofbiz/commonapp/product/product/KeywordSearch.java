@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/10/14 09:32:24  jonesde
+ * Finished pass of renaming entities and fields to eliminate reserved word collisions
+ *
  * Revision 1.6  2001/09/28 21:51:21  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -75,9 +78,10 @@ public class KeywordSearch {
   /** Does a product search by keyword using the PRODUCT_KEYWORD table.
    *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
    *@param delegator The delegator to look up the name of the helper/server to get a connection to
+   *@param categoryId If not null the list of products will be restricted to those in this category
    *@return Collection of productId Strings
    */
-  public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String groupName) {
+  public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId) {
     if(delegator == null) return null;
     String helperName = null;
     helperName = delegator.getEntityHelperName("ProductKeyword");
@@ -190,7 +194,7 @@ public class KeywordSearch {
   }
   
   public static String tokens = ";: ,.!?\t\"\'\r\n()[]{}*%<>";
-  public static void induceKeywords(GenericValue product, String groupName) throws GenericEntityException {
+  public static void induceKeywords(GenericValue product) throws GenericEntityException {
     if(product == null) return;
     GenericDelegator delegator = product.getDelegator();
     if(delegator == null) return;
@@ -219,7 +223,7 @@ public class KeywordSearch {
     Iterator kiter = keywords.iterator();
     while(kiter.hasNext()) {
       String keyword = (String)kiter.next();
-      GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword, "groupName", groupName));
+      GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword));
       if(delegator.findByPrimaryKey(productKeyword.getPrimaryKey()) != null) continue;
       productKeyword.create();
     }

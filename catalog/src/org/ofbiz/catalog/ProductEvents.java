@@ -116,9 +116,6 @@ public class ProductEvents {
     String taxable = request.getParameter("TAXABLE");
     String autoCreateKeywords = request.getParameter("AUTO_CREATE_KEYWORDS");
 
-    String groupName = request.getParameter("GROUP_NAME");
-    if(!UtilValidate.isNotEmpty(groupName)) groupName = "default";
-
     if(UtilValidate.isNotEmpty(introductionDateStr))
     {
       try { introductionDate = UtilDateTime.toSqlDate(introductionDateStr); }
@@ -202,7 +199,7 @@ public class ProductEvents {
       }
       if(product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
         try { 
-          KeywordSearch.induceKeywords(product, groupName); 
+          KeywordSearch.induceKeywords(product); 
         }
         catch(GenericEntityException e) {
           request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
@@ -219,7 +216,7 @@ public class ProductEvents {
       }
       if(product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
         try { 
-          KeywordSearch.induceKeywords(product, groupName); 
+          KeywordSearch.induceKeywords(product); 
         }
         catch(GenericEntityException e) {
           request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
@@ -260,8 +257,6 @@ public class ProductEvents {
 
     String productId = request.getParameter("PRODUCT_ID");
     String keyword = request.getParameter("KEYWORD");
-    String groupName = request.getParameter("GROUP_NAME");
-    if(!UtilValidate.isNotEmpty(groupName)) groupName = "default";
     
     if(!UtilValidate.isNotEmpty(productId)) errMsg += "<li>Product ID is missing.";
     if(!UtilValidate.isNotEmpty(keyword)) errMsg += "<li>Keyword is missing.";
@@ -272,7 +267,7 @@ public class ProductEvents {
     }
     
     if(updateMode.equals("CREATE")) {
-      GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "groupName", groupName));
+      GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
       GenericValue newValue = null;
       try { newValue = delegator.findByPrimaryKey(productKeyword.getPrimaryKey()); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newValue = null; }
@@ -291,7 +286,7 @@ public class ProductEvents {
     }
     else if(updateMode.equals("DELETE")) {
       GenericValue productKeyword = null;
-      try { productKeyword = delegator.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "groupName", groupName)); }
+      try { productKeyword = delegator.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword)); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productKeyword = null; }
       if(productKeyword == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (does not exist)");
@@ -341,9 +336,6 @@ public class ProductEvents {
       return "error";
     }
 
-    String groupName = request.getParameter("GROUP_NAME");
-    if(!UtilValidate.isNotEmpty(groupName)) groupName = "default";
-    
     GenericValue product = null;
     try { product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)); }
     catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); product = null; }
@@ -354,7 +346,7 @@ public class ProductEvents {
 
     if(updateMode.equals("CREATE")) {
       try { 
-        KeywordSearch.induceKeywords(product, groupName); 
+        KeywordSearch.induceKeywords(product); 
       }
       catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
@@ -394,9 +386,6 @@ public class ProductEvents {
       return "error";
     }
 
-    String groupName = request.getParameter("GROUP_NAME");
-    if(!UtilValidate.isNotEmpty(groupName)) groupName = "default";
-
     Iterator iterator = null;
     try { iterator = UtilMisc.toIterator(delegator.findAll("Product", null)); }
     catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); iterator = null; }
@@ -406,7 +395,7 @@ public class ProductEvents {
       GenericValue product = (GenericValue)iterator.next();
       if(product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
         try { 
-          KeywordSearch.induceKeywords(product, groupName); 
+          KeywordSearch.induceKeywords(product);
         }
         catch(GenericEntityException e) {
           request.setAttribute("ERROR_MESSAGE", "Could not create keywords (write error).");
