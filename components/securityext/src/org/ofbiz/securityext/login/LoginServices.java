@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServices.java,v 1.2 2003/11/03 14:45:03 jonesde Exp $
+ * $Id: LoginServices.java,v 1.3 2003/12/09 20:47:32 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class LoginServices {
@@ -274,7 +274,7 @@ public class LoginServices {
                             try {
                                 TransactionUtil.commit(beganTransaction);
                             } catch (GenericTransactionException e) {
-                                Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
+                                Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), module);
                             }
                         } finally {
                             // resume/restore parent transaction
