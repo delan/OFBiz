@@ -848,9 +848,34 @@ public class OrderServices {
                         }
                     }
 
+                    GenericValue shippingAddress = orh.getShippingAddress(shipGroupSeqId);
+                    if (shippingAddress == null) {
+                        // face-to-face order; use the facility address
+                        String facilityId = orderHeader.getString("originFacilityId");
+                        if (facilityId != null) {
+                            List fcp = null;
+                            try {
+                                fcp = delegator.findByAnd("FacilityContactMechPurpose", UtilMisc.toMap("facilityId",
+                                        facilityId, "contactMechPurposeTypeId", "SHIP_ORIG_LOCATION"));
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e, module);
+                            }
+                            fcp = EntityUtil.filterByDate(fcp);
+                            GenericValue purp = EntityUtil.getFirst(fcp);
+                            if (purp != null) {
+                                try {
+                                    shippingAddress = delegator.findByPrimaryKey("PostalAddress",
+                                            UtilMisc.toMap("contactMechId", purp.getString("contactMechId")));
+                                } catch (GenericEntityException e) {
+                                    Debug.logError(e, module);
+                                }
+                            }
+                        }
+                    }
+
                     // prepare the service context
                     Map serviceContext = UtilMisc.toMap("productStoreId", orh.getProductStoreId(), "itemProductList", products, "itemAmountList", amounts,
-                        "itemShippingList", shipAmts, "orderShippingAmount", orderShipping, "shippingAddress", orh.getShippingAddress(shipGroupSeqId));
+                        "itemShippingList", shipAmts, "orderShippingAmount", orderShipping, "shippingAddress", shippingAddress);
 
                     // invoke the calcTax service
                     Map serviceResult = null;
@@ -952,8 +977,12 @@ public class OrderServices {
                 GenericValue shipGroup = (GenericValue) i.next();
                 String shipGroupSeqId = shipGroup.getString("shipGroupSeqId");
 
-                Map shippingEstMap = ShippingEvents.getShipEstimate(dispatcher, delegator, orh, shipGroupSeqId);
+                if (shipGroup.get("contactMechId") == null || shipGroup.get("shipmentMethodTypeId") == null) {
+                    // not shipped (face-to-face order)
+                    continue;
+                }
 
+                Map shippingEstMap = ShippingEvents.getShipEstimate(dispatcher, delegator, orh, shipGroupSeqId);
                 Double shippingTotal = null;
                 if (orh.getValidOrderItems(shipGroupSeqId) == null || orh.getValidOrderItems(shipGroupSeqId).size() == 0) {
                     shippingTotal = new Double(0.00);
