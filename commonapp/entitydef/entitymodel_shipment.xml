@@ -257,6 +257,7 @@
       <field name="shipmentBoxTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="packagingTypeCode" type="very-short"></field>
+      <field name="oversizeCode" type="very-short"></field>
       <prim-key field="shipmentBoxTypeId"/>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="CARR_SHBX_TYPE" rel-entity-name="ShipmentBoxType">
