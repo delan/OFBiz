@@ -52,6 +52,8 @@
 
   <ContactMechPurposeType contactMechPurposeTypeId="SHIPPING_LOCATION" description="Shipping Destination Address"/>
   <ContactMechPurposeType contactMechPurposeTypeId="BILLING_LOCATION" description="Billing Address"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIPPING" description="Shipping Phone Number"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="PHONE_BILLING" description="Billing Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_HOME" description="Main Home Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_WORK" description="Main Work Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_WORK_SEC" description="Secondary Work Phone Number"/>
