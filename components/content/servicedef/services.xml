@@ -1055,7 +1055,7 @@
             <exclude field-name="contentId"/>
             <exclude field-name="contentTypeId"/>
         </auto-attributes>
-        <attribute mode="IN" name="contentTypeId" optional="true" type="String"/>
+
         <auto-attributes entity-name="DataResource" include="all" mode="IN" optional="true">
             <exclude field-name="dataResourceId"/>
         </auto-attributes>
@@ -1067,13 +1067,10 @@
             <exclude field-name="contentId"/>
         </auto-attributes>
         <attribute mode="INOUT" entity-name="Content" name="contentId" optional="true" type="String"/>
-
         <attribute mode="INOUT" entity-name="DataResource" name="dataResourceId" optional="true" type="String"/>
-
-
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdTo" optional="true" type="String"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
-
+        <attribute mode="IN" name="contentTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
