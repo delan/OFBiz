@@ -61,7 +61,7 @@
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="prodCatalogId"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="catalogName"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="title"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="facilityName"/> [<ofbiz:inputvalue entityAttr="prodCatalog" field="inventoryFacilityId"/>]</div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="facilityName"/> <ofbiz:entityfield attribute="prodCatalog" field="inventoryFacilityId" prefix="[" suffix="]"/></div></td>
     <td>
       <a href='<ofbiz:url>/EditProdCatalog?prodCatalogId=<ofbiz:inputvalue entityAttr="prodCatalog" field="prodCatalogId"/></ofbiz:url>' class="buttontext">
       [Edit]</a>

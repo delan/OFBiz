@@ -52,9 +52,9 @@
 
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
 <%if (productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
+  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
   <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Product]</a>
-  <a href="<ofbiz:url>/EditProductCategories?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Category Members]</a>
+  <a href="<ofbiz:url>/EditProductCategories?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Categories]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Associations]</a>
   <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Attributes]</a>
@@ -74,10 +74,7 @@
     <td><div class="tabletext"><b>Feature&nbsp;Type</b></div></td>
     <td><div class="tabletext"><b>Feature&nbsp;Category</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-    <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
-    <td><div class="tabletext"><b>Sequence</b></div></td>
-    <td><div class="tabletext"><b>Application&nbsp;Type</b></div></td>
-    <td><div class="tabletext">&nbsp;</div></td>
+    <td><div class="tabletext"><b>Thru&nbsp;Date, Sequence, Application&nbsp;Type</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
 <ofbiz:iterator name="productFeatureAndAppl" property="productFeatureAndAppls">
@@ -94,9 +91,9 @@
         <ofbiz:entityfield attribute="curProductFeatureCategory" field="description"/>
         [<ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureCategoryId"/>]</a></td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate"/></div></td>
-    <td><input type=text size='18' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/>></td>
-    <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/>></td>
     <td>
+        <input type=text size='18' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/>>
+        <input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/>>
       <select name='productFeatureApplTypeId' size=1>
         <%if (productFeatureAndAppl.get("productFeatureApplTypeId") != null) {%>
           <option value='<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>'> [<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>]</option>
@@ -106,8 +103,8 @@
           <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> [<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]</option>
         </ofbiz:iterator>
       </select>
+        <INPUT type=submit value='Update'>
     </td>
-    <td><INPUT type=submit value='Update'></td>
     </FORM>
     <td>
       <a href='<ofbiz:url>/RemoveFeatureFromProduct?productId=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productId"/>&productFeatureId=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productFeatureId"/>&fromDate=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate"/></ofbiz:url>' class="buttontext">

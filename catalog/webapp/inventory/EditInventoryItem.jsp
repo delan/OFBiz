@@ -91,6 +91,8 @@
     //facilities
     Collection facilities = delegator.findAll("Facility");
     if (facilities != null) pageContext.setAttribute("facilities", facilities);
+
+    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 %>
 
 <br>
@@ -141,7 +143,7 @@
         <td width="26%" align=right><div class="tabletext">Product Id</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-            <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true"/> size="20" maxlength="20">
+            <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20">
             <%if (inventoryItem != null && UtilValidate.isNotEmpty(inventoryItem.getString("productId"))) {%>
                 <a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>[Edit&nbsp;Product&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>]</a>
             <%}%>
@@ -150,7 +152,7 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Party Id</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true"/> size="20" maxlength="20"></td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Status</div></td>
@@ -171,10 +173,10 @@
         <td width="74%">
             Select a Facility:
             <select name="facilityId">
-              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'><ofbiz:inputvalue entityAttr="facility" field="facilityName"/> [<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>]</option>
+              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'><ofbiz:inputvalue entityAttr="facility" field="facilityName"/> <ofbiz:entityfield attribute="inventoryItem" field="facilityId" prefix="[" suffix="]"/></option>
               <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'>----</option>
               <ofbiz:iterator name="nextFacility" property="facilities">
-                <option value='<ofbiz:inputvalue entityAttr="nextFacility" field="facilityId"/>'><ofbiz:inputvalue entityAttr="nextFacility" field="facilityName"/> [<ofbiz:inputvalue entityAttr="nextFacility" field="facilityId"/>]</option>
+                <option value='<ofbiz:inputvalue entityAttr="nextFacility" field="facilityId"/>'><ofbiz:inputvalue entityAttr="nextFacility" field="facilityName"/> <ofbiz:entityfield attribute="nextFacility" field="facilityId" prefix="[" suffix="]"/></option>
               </ofbiz:iterator>
             </select>
             <%if (inventoryItem != null && UtilValidate.isNotEmpty(inventoryItem.getString("facilityId"))) {%>
