@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.4 2003/08/25 17:52:41 jonesde Exp $
+ * $Id: OrderServices.java,v 1.5 2003/08/25 20:19:32 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,6 +54,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
@@ -70,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 
@@ -572,6 +573,78 @@ public class OrderServices {
         }
         
         return ServiceUtil.returnSuccess();
+    }
+    
+    /** Service for checking and re-calc the shipping amount */
+    public static Map recalcOrderShipping(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
+        // check and make sure we have permission to change the order
+        Security security = ctx.getSecurity();
+        if (!security.hasEntityPermission("ORDERMGR", "_UPDATE", userLogin)) {
+            GenericValue placingCustomer = null;
+            try {
+                Map placingCustomerFields = UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER");
+                placingCustomer = delegator.findByPrimaryKey("OrderRole", placingCustomerFields);                
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + e.getMessage());
+            }
+            if (placingCustomer == null)
+                return ServiceUtil.returnError("You do not have permission to change this order's status.");
+        }
+        
+        // get the order header
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));            
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError("ERROR: Cannot get OrderHeader entity: " + e.getMessage());    
+        }
+        
+        if (orderHeader == null) {
+            return ServiceUtil.returnError("ERROR: No valid order header found for orderId : " + orderId);
+        }
+        
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        Debug.log("Shippable Total : " + orh.getShippableTotal(), module);
+        
+        Map shippingEstMap = ShippingEvents.getShipEstimate(delegator, orh);
+        Double shippingTotal = (Double) shippingEstMap.get("shippingTotal");
+        Debug.log("New Shipping Total : " + shippingTotal, module);
+        
+        double currentShipping = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orh.getOrderItems(), orh.getAdjustments(), false, false, true);
+        currentShipping += OrderReadHelper.calcOrderAdjustments(orh.getOrderHeaderAdjustments(), orh.getOrderItemsSubTotal(), false, false, true);
+        Debug.log("Old Shipping Total : " + currentShipping);
+        
+        List errorMessageList = (List) shippingEstMap.get(ModelService.ERROR_MESSAGE_LIST);
+        if (errorMessageList != null) {
+            return ServiceUtil.returnError(errorMessageList);
+        }
+        
+        if (shippingTotal.doubleValue() != currentShipping) {
+            // place the difference as a new shipping adjustment
+            Double adjustmentAmount = new Double(shippingTotal.doubleValue() - currentShipping);
+            String adjSeqId = delegator.getNextSeqId("OrderAdjustment").toString();
+            GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", adjSeqId));
+            orderAdjustment.set("orderAdjustmentTypeId", "SHIPPING_CHARGES");
+            orderAdjustment.set("amount", adjustmentAmount);
+            orderAdjustment.set("orderId", orh.getOrderId());
+            orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
+            //orderAdjustment.set("comments", "Shipping Re-Calc Adjustment");
+            try {
+                orderAdjustment.create();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem creating shipping re-calc adjustment : " + orderAdjustment, module);
+                return ServiceUtil.returnError("ERROR: Cannot create adjustment");
+            }
+        }
+        
+        // TODO: re-balance free shipping adjustment
+        
+        return ServiceUtil.returnSuccess();
+            
     }
     
     /** Service for checking to see if an order is fully completed or canceled */
@@ -1947,8 +2020,23 @@ public class OrderServices {
                 Timestamp orderDate = orderHeader.getTimestamp("entryDate");
                 String webSiteId = orderHeader.getString("webSiteId");
                 
+                // name of the payment.properties file to use
+                String propsFile = null;
+                
                 // need the payment.properties file for the website
-                String propsFile = "payment.properties"; // TODO: change this to use store settings
+                Map lookupFields = UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId"), "paymentMethodTypeId", "EXT_OFFLINE", "paymentServiceTypeEnumId", "_NA_");
+                GenericValue paymentSettings = null;
+                try {
+                    paymentSettings = delegator.findByPrimaryKey("ProductStorePaymentSetting", lookupFields);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Cannot get product store payment setting record");
+                }
+                if (paymentSettings == null || paymentSettings.get("paymentPropertiesPath") == null) {
+                    propsFile = "payment.properties";   
+                } else {
+                    propsFile = paymentSettings.getString("paymentPropertiesPath");
+                }
+                                
                 String daysStr = UtilProperties.getPropertyValue(propsFile, "payment.general.offline.cancel", "30");
                 int daysTillCancel = 30;
                 // convert days to int
@@ -1966,6 +2054,8 @@ public class OrderServices {
                     cal.add(Calendar.DAY_OF_YEAR, daysTillCancel);
                     Date cancelDate = cal.getTime();
                     Date nowDate = new Date();
+                    Debug.log("Cancel Date : " + cancelDate, module);
+                    Debug.log("Current Date : " + nowDate, module);
                     if (cancelDate.equals(nowDate) || cancelDate.after(nowDate)) {
                         // cancel the order item(s)
                         Map svcCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
