@@ -1,5 +1,5 @@
 /*
- * $Id: RmiServiceContainer.java,v 1.2 2004/04/01 18:11:51 ajzeneski Exp $
+ * $Id: RmiServiceContainer.java,v 1.3 2004/04/08 13:28:27 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ package org.ofbiz.service.rmi;
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.container.ContainerConfig;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.GenericDelegator;
 
@@ -34,12 +35,14 @@ import java.rmi.RemoteException;
 import java.rmi.Naming;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 /**
  * RMI Service Engine Container / Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class RmiServiceContainer implements Container {
@@ -54,6 +57,7 @@ public class RmiServiceContainer implements Container {
     public boolean start(String configFile) throws ContainerException {
         // get the container config
         ContainerConfig.Container cfg = ContainerConfig.getContainer("rmi-dispatcher", configFile);
+        ContainerConfig.Container.Property initialCtxProp = cfg.getProperty("use-initial-context");
         ContainerConfig.Container.Property lookupHostProp = cfg.getProperty("bound-host");
         ContainerConfig.Container.Property lookupPortProp = cfg.getProperty("bound-port");
         ContainerConfig.Container.Property lookupNameProp = cfg.getProperty("bound-name");
@@ -73,8 +77,10 @@ public class RmiServiceContainer implements Container {
             throw new ContainerException("Invalid delegator-name defined in container configuration");
         }
 
+        String useCtx = initialCtxProp == null || initialCtxProp.value == null ? "false" : initialCtxProp.value;
         String host = lookupHostProp == null || lookupHostProp.value == null ? "localhost" : lookupHostProp.value;
         String port = lookupPortProp == null || lookupPortProp.value == null ? "1099" : lookupPortProp.value;
+
 
         // setup the factories
         RMIClientSocketFactory csf = null;
@@ -114,14 +120,35 @@ public class RmiServiceContainer implements Container {
             throw new ContainerException("Unable to start the RMI dispatcher", e);
         }
 
-        // bind this object in JNDI
-        try {
-            Naming.rebind("//" + host + ":" + port + "/" + name, remote);
-        } catch (RemoteException e) {
-            throw new ContainerException("Unable to bind object", e);
-        } catch (java.net.MalformedURLException e) {
-            throw new ContainerException("Problem binding JNDI name", e);
-        }
+        if (!useCtx.equalsIgnoreCase("true")) {
+            // bind RMIDispatcher to RMI Naming (Must be JRMP protocol)
+            try {
+                Naming.rebind("//" + host + ":" + port + "/" + name, remote);
+            } catch (RemoteException e) {
+                throw new ContainerException("Unable to bind RMIDispatcher to RMI", e);
+            } catch (java.net.MalformedURLException e) {
+                throw new ContainerException("Invalid URL for binding", e);
+            }
+        } else {
+            // bind RMIDispatcher to InitialContext (must be RMI protocol not IIOP)
+            try {
+                InitialContext ic = new InitialContext();
+                ic.rebind(name, remote);
+            } catch (NamingException e) {
+                throw new ContainerException("Unable to bind RMIDispatcher to JNDI", e);
+            }
+
+            // check JNDI
+            try {
+                InitialContext ic = new InitialContext();
+                Object o = ic.lookup(name);
+                if (o == null) {
+                    throw new NamingException("Object came back null");
+                }
+            } catch (NamingException e) {
+                throw new ContainerException("Unable to lookup bound objects", e);
+            }
+        }        
 
         return true;
     }
