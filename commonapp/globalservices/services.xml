@@ -8,48 +8,66 @@
 
     <!-- Test services -->
     <service name="testScv" engine="java" export="true"
-    location="ServiceTest" invoke="testOne">
+            location="ServiceTest" invoke="testOne">
         <description>Test service</description>
         <attribute name="message" type="String" mode="IN" optional="true"/>	  
         <attribute name="resp" type="String" mode="OUT"/>
     </service>
-	<service name="testSoap" engine="soap" export="true"
-	location="http://nagoya.apache.org:5049/axis/servlet/AxisServlet" invoke="echoString">
-	    <description>Test SOAP service; calls echoString service on Axis server</description>
-	    <namespace>http://soapinterop.org/</namespace>
-	    <attribute name="message" type="String" mode="IN"/>
-	    <attribute name="result" type="String" mode="OUT"/>
-	</service>
-	<service name="testBsh" engine="bsh" 
-	location="BshServiceTest.bsh" invoke="">
-	    <description>Test BeanShell Script Service</description>
-	    <attribute name="message" type="String" mode="IN" optional="true"/>
-	    <attribute name="result" type="String" mode="OUT"/>
-	</service>
+    <service name="testSoap" engine="soap" export="true"
+            location="http://nagoya.apache.org:5049/axis/servlet/AxisServlet" invoke="echoString">
+        <description>Test SOAP service; calls echoString service on Axis server</description>
+        <namespace>http://soapinterop.org/</namespace>
+        <attribute name="message" type="String" mode="IN"/>
+        <attribute name="result" type="String" mode="OUT"/>
+    </service>
+    <service name="testBsh" engine="bsh" 
+            location="BshServiceTest.bsh" invoke="">
+        <description>Test BeanShell Script Service</description>
+        <attribute name="message" type="String" mode="IN" optional="true"/>
+        <attribute name="result" type="String" mode="OUT"/>
+    </service>
 
     <!-- Security services -->
     <service name="userLogin" engine="java"
-    location="org.ofbiz.commonapp.security.login.LoginServices" invoke="userLogin">
+            location="org.ofbiz.commonapp.security.login.LoginServices" invoke="userLogin">
         <description>Authenticate a username/password; create a UserLogin object</description>
         <attribute name="login.username" type="String" mode="IN"/>
         <attribute name="login.password" type="String" mode="IN"/>
         <attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
     </service>
+    <service name="createUserLogin" engine="java"
+            location="org.ofbiz.commonapp.security.login.LoginServices" invoke="createUserLogin" auth="false">
+        <description>Create a UserLogin</description>
+        <attribute name="userLoginId" type="String" mode="IN" optional="false"/>
+        <attribute name="currentPassword" type="String" mode="IN" optional="false"/>
+        <attribute name="currentPasswordVerify" type="String" mode="IN" optional="false"/>
+        <attribute name="passwordHint" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePassword" engine="java"
+            location="org.ofbiz.commonapp.security.login.LoginServices" invoke="updatePassword" auth="true">
+        <description>Update a UserLogin Password</description>
+        <attribute name="userLoginId" type="String" mode="IN" optional="true"/>
+        <attribute name="currentPassword" type="String" mode="IN" optional="false"/>
+        <attribute name="newPassword" type="String" mode="IN" optional="false"/>
+        <attribute name="newPasswordVerify" type="String" mode="IN" optional="false"/>
+        <attribute name="passwordHint" type="String" mode="IN" optional="true"/>
+    </service>
 
     <!-- Common services -->
-	<service name="sendMail" engine="java"
-	location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMail">
-	    <description>Send E-Mail Service</description>
-		<attribute name="sendTo" type="String" mode="IN"/>
-		<attribute name="sendCc" type="String" mode="IN" optional="true"/>
-		<attribute name="sendBcc" type="String" mode="IN" optional="true"/>
-		<attribute name="sendFrom" type="String" mode="IN"/>
-		<attribute name="subject" type="String" mode="IN"/>
-		<attribute name="body" type="String" mode="IN"/>
-		<attribute name="sendVia" type="String" mode="IN"/>
-		<attribute name="sendType" type="String" mode="IN" optional="true"/>
-		<attribute name="contentType" type="String" mode="IN" optional="true"/>
-	</service>
+    <service name="sendMail" engine="java"
+            location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMail">
+        <description>Send E-Mail Service</description>
+        <attribute name="sendTo" type="String" mode="IN"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
+        <attribute name="sendFrom" type="String" mode="IN"/>
+        <attribute name="subject" type="String" mode="IN"/>
+        <attribute name="body" type="String" mode="IN"/>
+        <attribute name="sendVia" type="String" mode="IN"/>
+        <attribute name="sendType" type="String" mode="IN" optional="true"/>
+        <attribute name="contentType" type="String" mode="IN" optional="true"/>
+    </service>
 		
     <!-- Workflow services -->
     <service name="wfLimitInvoker" engine="java"
@@ -127,11 +145,11 @@
         <attribute name="maySplit" type="Boolean" mode="IN"/>
         <attribute name="creditCardId" type="String" mode="IN"/>
     </service>
-	<service name="changeOrderStatus" engine="java"
-	location="org.ofbiz.commonapp.order.order.OrderServices" invoke="setOrderStatus">
-	    <description>Change the status of an existing order</description>
-		<attribute name="orderId" type="String" mode="IN"/>
-		<attribute name="statusId" type="String" mode="IN"/>
+    <service name="changeOrderStatus" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="setOrderStatus">
+        <description>Change the status of an existing order</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="statusId" type="String" mode="IN"/>
     </service>
     <service name="addOrderRole" engine="java"
     location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">
