@@ -9,20 +9,20 @@
 
   <tag>
     <name>url</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.UrlTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.UrlTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <info>Add control path and URL encode if necessary. This is for links to dynamic pages in the same webapp.</info>
   </tag>
   <tag>
     <name>contenturl</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.ContentUrlTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.ContentUrlTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <info>Build a URL for content referred to by this page. This is generally for static content.</info>
   </tag>
 
   <tag>
     <name>if</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.IfTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.IfTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <info>Displays the body element if true.</info>
     <attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
@@ -32,7 +32,7 @@
   </tag>
   <tag>
      <name>unless</name>
-     <tagclass>org.ofbiz.content.webapp.taglib.UnlessTag</tagclass>
+     <tagclass>org.ofbiz.webapp.taglib.UnlessTag</tagclass>
      <bodycontent>JSP</bodycontent>
      <info>Displays the body element if false.</info>
      <attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
@@ -43,8 +43,8 @@
 
   <tag>
     <name>iterator</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.IteratorTag</tagclass>
-    <teiclass>org.ofbiz.content.webapp.taglib.IteratorTEI</teiclass>
+    <tagclass>org.ofbiz.webapp.taglib.IteratorTag</tagclass>
+    <teiclass>org.ofbiz.webapp.taglib.IteratorTEI</teiclass>
     <bodycontent>JSP</bodycontent>
     <info>
         Iterate through an embedded collection.
@@ -61,8 +61,8 @@
   </tag>
   <tag>
     <name>iterateNext</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.IterateNextTag</tagclass>
-    <teiclass>org.ofbiz.content.webapp.taglib.IterateNextTEI</teiclass>
+    <tagclass>org.ofbiz.webapp.taglib.IterateNextTag</tagclass>
+    <teiclass>org.ofbiz.webapp.taglib.IterateNextTEI</teiclass>
     <bodycontent>JSP</bodycontent>
     <info>Grab the next iteration of the parent iterator tag.</info>
     <attribute><name>name</name><required>false</required></attribute>
@@ -71,21 +71,21 @@
   </tag>
   <tag>
     <name>iteratorHasNext</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.IteratorHasNextTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.IteratorHasNextTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <info>Only process body if parent iterator tag has another entry.</info>
   </tag>
 
   <tag>
     <name>format</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.FormatTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.FormatTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <info>Formats dates, numbers and currencies.</info>
     <attribute><name>type</name><required>false</required></attribute>
   </tag>
   <tag>
     <name>print</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.PrintTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.PrintTag</tagclass>
     <bodycontent>empty</bodycontent>
     <info>Prints an attribute from the pageContext, prints nothing if null.</info>
     <attribute><name>attribute</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
@@ -93,7 +93,7 @@
   </tag>
   <tag>
     <name>field</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.EntityFieldTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.EntityFieldTag</tagclass>
     <bodycontent>empty</bodycontent>
     <info>Displays a properly formatted string from field in the specified attribute.</info>
     <attribute><name>attribute</name><required>true</required></attribute>
@@ -104,7 +104,7 @@
   </tag>
   <tag>
     <name>entityfield</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.EntityFieldTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.EntityFieldTag</tagclass>
     <bodycontent>empty</bodycontent>
     <info>
         Displays a properly formatted localized string from a field in the entity in the specified attribute.
@@ -119,7 +119,7 @@
   </tag>
   <tag>
     <name>inputvalue</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.InputValueTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.InputValueTag</tagclass>
     <bodycontent>empty</bodycontent>
     <info>Outputs a string for an input box from either an entity field or a request parameter.
           Decides which to use by checking to see if the entityAttr exist and using the specified field if it does.
@@ -137,28 +137,28 @@
 
   <tag>
     <name>i18nBundle</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.I18nBundleTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.I18nBundleTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
     <attribute><name>baseName</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
   </tag>
   <tag>
     <name>i18nMessage</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.I18nMessageTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.I18nMessageTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <attribute><name>key</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
     <attribute><name>bundleId</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
   </tag>
   <tag>
     <name>i18nMessageArgument</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.I18nMessageArgumentTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.I18nMessageArgumentTag</tagclass>
     <bodycontent>empty</bodycontent>
     <attribute><name>value</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
   </tag>
 
   <tag>
     <name>service</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.ServiceTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.ServiceTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <info>Invokes a service.</info>
     <attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
@@ -167,7 +167,7 @@
   </tag>
   <tag>
     <name>param</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.ParamTag</tagclass>
+    <tagclass>org.ofbiz.webapp.taglib.ParamTag</tagclass>
     <bodycontent>empty</bodycontent>
     <info>Adds a parameter to a parameter tag</info>
     <attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
@@ -180,8 +180,8 @@
 
   <tag>
     <name>object</name>
-    <tagclass>org.ofbiz.content.webapp.taglib.ObjectTag</tagclass>
-    <teiclass>org.ofbiz.content.webapp.taglib.ObjectTEI</teiclass>
+    <tagclass>org.ofbiz.webapp.taglib.ObjectTag</tagclass>
+    <teiclass>org.ofbiz.webapp.taglib.ObjectTEI</teiclass>
     <bodycontent>JSP</bodycontent>
     <info>Makes an attribute available in the Java context of the page.</info>
     <attribute><name>name</name><required>true</required></attribute>
