@@ -28,10 +28,13 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.servlet.*;
+import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.workflow.*;
+import org.ofbiz.core.workflow.client.*;
 import org.ofbiz.commonapp.order.shoppingcart.*;
 
 import com.worldpay.select.*;
@@ -61,12 +64,8 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         String webSiteId = request.getParameter("M_webSiteId");
         String delegatorName = request.getParameter("M_delegatorName");
         String dispatchName = request.getParameter("M_dispatchName");
-        
-        Debug.logInfo("Gor orderProps: " + orderPropertiesString);
-        Debug.logInfo("Got websiteId: " + webSiteId, module);
-        Debug.logInfo("Got delegatorName:" + delegatorName, module);
-        Debug.logInfo("Got dispatchName:" + dispatchName, module);
-        
+        String userLoginId = request.getParameter("M_userLoginId");
+                     
         // get the delegator
         delegator = GenericDelegator.getGenericDelegator(delegatorName);
         
@@ -75,15 +74,14 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         DispatchContext dctx = serviceDisp.getLocalContext(dispatchName);
         dispatcher = dctx.getDispatcher();  
         
-        // get the admin userLogin
+        // get the userLogin
         try {
-            userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "admin"));      
+            userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));      
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get admin UserLogin entity", module);
         }
                 
-        // get the properties file
-        //String webSiteId = sctx.getInitParameter("webSiteId");
+        // get the properties file       
         String configString = null;
         try {
             GenericValue webSitePayment = delegator.findByPrimaryKey("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_WORLDPAY"));
@@ -100,7 +98,9 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
         
         // store some stuff for calling existing events
-        //request.setAttribute("servletContext", sctx);
+        HttpSession session = request.getSession(true);
+        session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
+        
         request.setAttribute("delegator", delegator);
         request.setAttribute("dispatcher", dispatcher);
         request.setAttribute("order_id", orderId);
@@ -142,6 +142,33 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             Debug.logError(gte, "Unable to commit transaction", module);
         }
         
+        // find the workEffortId for this order
+        GenericValue workEffort = null;
+        try {
+            List workEfforts = delegator.findByAnd("WorkfEffort", UtilMisc.toMap("sourceReferenceId", orderId, "currentStatusId", "WF_SUSPENDED"));
+            if (workEfforts != null && workEfforts.size() > 0) {
+                Debug.logWarning("More then order suspended activity with order ref number: " + orderId, module);                
+            }
+            workEffort = EntityUtil.getFirst(workEfforts);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
+        }
+        
+        // release the order workflow from 'Hold' status (resume workflow)
+        if (workEffort != null) {
+            final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
+            String workEffortId = workEffort.getString("workEffortId");
+            try {            
+                WorkflowClient client = new WorkflowClient(dctx);
+                // first send the new order status to the workflow
+                client.appendContext(workEffortId, UtilMisc.toMap("orderStatusId", HEADER_APPROVE_STATUS));
+                // next resume the activity
+                client.resume(workEffortId);                 
+            } catch (WfException e) {
+                Debug.logError(e, "Problem resuming workflow", module);                       
+            }
+        }
+                
         // call the existing confirm order events (calling direct)
         String confirm = CheckOutEvents.renderConfirmOrder(request, response);
         String email = CheckOutEvents.emailOrder(request, response);
