@@ -25,7 +25,7 @@
 package org.ofbiz.pos.component;
 
 import net.xoetrope.swing.XTable;
-import net.xoetrope.xui.XPage;
+import net.xoetrope.swing.XPanel;
 import net.xoetrope.xui.data.XModel;
 
 import org.ofbiz.base.util.Debug;
@@ -46,11 +46,14 @@ public class Journal {
     private static String[] name = { "SKU", "ITEM", "QTY", "AMT" };
     private static int[] width = { 100, 170, 60, 80};
 
+    protected XPanel jpanel = null;
     protected XTable jtable = null;
     protected String style = null;
 
-    public Journal(XPage page) {
+    public Journal(PosScreen page) {
         this.jtable = (XTable) page.findComponent("jtable");
+        this.jpanel = (XPanel) page.findComponent("journal_panel");
+        this.jpanel.setVisible(false);
 
         // set the table as selectable
         jtable.setInteractiveTable(true);
@@ -76,8 +79,7 @@ public class Journal {
     }
 
     public String getSelectedSku() {
-        XModel jmodel = (XModel) XModel.getInstance().get("journal/items");
-        Debug.log("Selected Index : " + jtable.getSelectedRow(), module);
+        XModel jmodel = (XModel) XModel.getInstance().get("journal/items");        
         XModel model = jmodel.get(jtable.getSelectedRow() + 1);
         return model.getValueAsString("sku");
     }
@@ -101,6 +103,9 @@ public class Journal {
         jtable.setFocusable(!lock);
         jtable.setVisible(!lock);
         jtable.setEnabled(!lock);
+        if (!lock) {
+            this.jpanel.setVisible(true);
+        }
     }
 
     public void refresh(PosScreen pos) {

@@ -25,7 +25,8 @@
 package org.ofbiz.pos.component;
 
 import net.xoetrope.swing.XEdit;
-import net.xoetrope.xui.XPage;
+
+import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
@@ -44,11 +45,11 @@ public class Output {
     public static final String CREDEX = "Enter Expiration Date (MMYY):";
     public static final String CREDCF = "Enter Last 4 Digits:";
     public static final String CREDZP = "Enter Billing ZipCode:";
-    public static final String ISOPEN = "Register Is Open.";
+    public static final String ISOPEN = "Register Is Open";
 
     protected XEdit output = null;
 
-    public Output(XPage page) {
+    public Output(PosScreen page) {
         this.output = (XEdit) page.findComponent("pos_output");
         this.output.setFocusable(false);
         this.clear();

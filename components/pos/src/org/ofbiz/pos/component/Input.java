@@ -32,7 +32,6 @@ import java.util.EmptyStackException;
 import java.util.Iterator;
 
 import net.xoetrope.swing.XEdit;
-import net.xoetrope.xui.XPage;
 
 import org.ofbiz.base.util.collections.LifoSet;
 import org.ofbiz.pos.screen.PosScreen;
@@ -52,13 +51,11 @@ public class Input implements KeyboardReceiver, KeyListener {
 
     protected LifoSet functionStack = new LifoSet();
     protected Component[] pageComs = null;
-    protected PosScreen pos = null;
     protected Color lastColor = null;
     protected XEdit input = null;
     protected boolean isLocked = false;
 
-    public Input(XPage page) {
-        this.pos = (PosScreen) page;
+    public Input(PosScreen page) {
         this.input = (XEdit) page.findComponent("pos_input");
         this.input.setVisible(true);
         this.input.setFocusable(false);
