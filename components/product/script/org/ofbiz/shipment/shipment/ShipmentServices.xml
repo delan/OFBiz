@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
 -->
 <simple-methods>
@@ -683,7 +683,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
-        <field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>  
+        <field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
     </simple-method>
     <simple-method method-name="updateShipmentPackageContent" short-description="Update ShipmentPackageContent">
         <check-permission permission="FACILITY" action="_UPDATE">
@@ -711,6 +711,31 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShipmentPackageContent" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="addShipmentContentToPackage" short-description="Add Shipment Content To Package">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run addShipmentContentToPackage you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <string-to-field string="Create ShipmentPackageContent" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ShipmentPackageContent"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <find-by-primary-key value-name="shipmentPackageContent" map-name="newEntity"/>
+        <if-empty field-name="shipmentPackageContent">
+            <set-service-fields service-name="createShipmentPackageContent" map-name="parameters" to-map-name="createSPCMap"/>
+            <call-service service-name="createShipmentPackageContent" in-map-name="createSPCMap"/>
+        <else>
+            <!-- add the quantities and store it -->
+            <calculate field-name="shipmentPackageContent.quantity" type="Double">
+                <calcop field-name="shipmentPackageContent.quantity" operator="add"><calcop field-name="parameters.quantity" operator="get"/></calcop>
+            </calculate>
+            <set-service-fields service-name="updateShipmentPackageContent" map-name="shipmentPackageContent" to-map-name="updateSPCMap"/>
+            <call-service service-name="updateShipmentPackageContent" in-map-name="updateSPCMap"/>
+        </else>
+        </if-empty>
+        <field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
     </simple-method>
 
     <!-- ShipmentPackageRouteSeg services -->
@@ -1028,7 +1053,7 @@
             <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="packageId" map-name="packageSeqMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
-            <call-service service-name="createShipmentPackageContent" in-map-name="shipItemContext">
+            <call-service service-name="addShipmentContentToPackage" in-map-name="shipItemContext">
                 <result-to-field result-name="shipmentPackageSeqId" field-name="packageId" map-name="packageSeqMap"/>
             </call-service>
         </iterate>
@@ -1126,7 +1151,7 @@
 						<field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
 						<field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
 						<field-to-field field-name="packageId" map-name="packageSeqMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
-						<call-service service-name="createShipmentPackageContent" in-map-name="shipItemContext">
+						<call-service service-name="addShipmentContentToPackage" in-map-name="shipItemContext">
 							<result-to-field result-name="shipmentPackageSeqId" field-name="packageId" map-name="packageSeqMap"/>
 						</call-service>
 					</iterate>
@@ -1225,7 +1250,7 @@
             <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
-            <call-service service-name="createShipmentPackageContent" in-map-name="shipItemContext">
+            <call-service service-name="addShipmentContentToPackage" in-map-name="shipItemContext">
                 <result-to-field result-name="shipmentPackageSeqId" field-name="${itemMap.trackingNum}" map-name="packageMap"/>
                 <result-to-field result-name="shipmentPackageSeqId" map-name="routeSegLookup"/>
             </call-service>
