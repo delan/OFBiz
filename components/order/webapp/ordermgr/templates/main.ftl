@@ -23,12 +23,14 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign layoutSettings = requestAttributes.layoutSettings>
+<#assign locale = Static["org.ofbiz.base.util.UtilHttp"].getLocale(session)>
+
 <html>
 <head>
     <#assign layoutSettings = requestAttributes.layoutSettings>
@@ -61,10 +63,10 @@
             <div class="insideHeaderText">
                 <form method="POST" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
                 <select name="locale" class="selectBox">
-                    <option value="${requestAttributes.locale.toString()}">${requestAttributes.locale.getDisplayName()}</option>
+                    <option value="${requestAttributes.locale.toString()}">${locale.getDisplayName(locale)}</option>
                     <option value="${requestAttributes.locale.toString()}">----</option>
                     <#list requestAttributes.availableLocales as availableLocale>
-                        <option value="${availableLocale.toString()}">${availableLocale.getDisplayName()}</option>
+                        <option value="${availableLocale.toString()}">${availableLocale.getDisplayName(locale)}</option>
                     </#list>
                 </select>
                 <input type="submit" value="${uiLabelMap.CommonSet}" class="smallSubmit"/>

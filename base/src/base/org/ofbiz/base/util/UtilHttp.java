@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.14 2004/07/09 04:31:51 ajzeneski Exp $
+ * $Id: UtilHttp.java,v 1.15 2004/07/09 18:14:40 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.base.util.collections.OrderedMap;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -181,8 +181,28 @@ public class UtilHttp {
     }
 
     private static Locale getLocale(HttpServletRequest request, HttpSession session) {
-        Object localeObject = session != null ? session.getAttribute("locale") : null;
-        if (localeObject == null) localeObject = request != null ? request.getLocale() : null;        
+        Map userLogin = (Map) session.getAttribute("userLogin");
+        if (userLogin == null) {
+            userLogin = (Map) session.getAttribute("autoUserLogin");
+        }
+        
+        Object localeObject = null;
+
+        // check userLogin first
+        if (userLogin != null) {
+            localeObject = userLogin.get("lastLocale");
+        }
+
+        // session second
+        if (localeObject == null) {
+            localeObject = session != null ? session.getAttribute("locale") : null;
+        }
+
+        // finally request (w/ a fall back to default)
+        if (localeObject == null) {
+            localeObject = request != null ? request.getLocale() : null;
+        }
+
         return UtilMisc.ensureLocale(localeObject);
     }
 
@@ -215,35 +235,46 @@ public class UtilHttp {
         request.getSession().setAttribute("locale", locale);
     }
 
-    /** Simple event to set the users per-session locale setting */
-    public static String setSessionLocale(HttpServletRequest request, HttpServletResponse response) {
-        String localeString = request.getParameter("locale");
-        if (UtilValidate.isNotEmpty(localeString)) {
-            UtilHttp.setLocale(request, localeString);
-        }
-        return "success";
-    }
-
     /**
      * Get the currency string from the session.
      * @param session HttpSession object to use for lookup
      * @return String The ISO currency code
      */
     public static String getCurrencyUom(HttpSession session) {
-        String iso = (String) session.getAttribute("currencyUom");
+        Map userLogin = (Map) session.getAttribute("userLogin");
+        if (userLogin == null) {
+            userLogin = (Map) session.getAttribute("autoUserLogin");
+        }
+
+        String iso = null;
+
+        // check userLogin first
+        if (userLogin != null) {
+            iso = (String) userLogin.get("lastCurrencyUom");
+        }
+
+        // session next
         if (iso == null) {
-            // if none is set we will use the configured default
+            iso = (String) session.getAttribute("currencyUom");
+        }
+
+        // if none is set we will use the configured default
+        if (iso == null) {
+
             try {
                 iso = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
             } catch (Exception e) {
                 Debug.logWarning("Error getting the general:currency.uom.id.default value: " + e.toString(), module);
             }
         }
+
+
+        // if still none we will use the default for whatever locale we can get...
         if (iso == null) {
-            // if none is set we will use the default for whatever locale we can get...
             Currency cur = Currency.getInstance(getLocale(session));
             iso = cur.getCurrencyCode();
         }
+        
         return iso;
     }
 
@@ -259,15 +290,6 @@ public class UtilHttp {
     /** Simple event to set the users per-session currency uom value */
     public static void setCurrencyUom(HttpServletRequest request, String currencyUom) {
         request.getSession().setAttribute("currencyUom", currencyUom);
-    }
-
-    /** Simple event to set the users per-session currency uom value */
-    public static String setSessionCurrencyUom(HttpServletRequest request, HttpServletResponse response) {
-        String currencyUom = request.getParameter("currencyUom");
-        if (UtilValidate.isNotEmpty(currencyUom)) {
-            UtilHttp.setCurrencyUom(request, currencyUom);
-        }
-        return "success";
     }
 
     /** URL Encodes a Map of arguements */
