@@ -82,6 +82,22 @@ public class OrderHelper {
             return null;
         }
     }
+   
+    public static Collection getContactMech(GenericValue party, String contactMechTypeId, boolean includeOld) {
+        Collection result = new LinkedList();
+        Date now = new java.util.Date();
+        Iterator partyContactMechIter = party.getRelated("PartyContactMech").iterator();
+        while (partyContactMechIter.hasNext()) {
+            GenericValue partyContactMech = (GenericValue) partyContactMechIter.next();
+            if (includeOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(now)) {
+                GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
+                if (contactMechTypeId == null || contactMechTypeId.equals(contactMech.get("contactMechTypeId"))) {
+                    result.add(contactMech);
+                }//else wrong type
+            }//else old and includeOld is false
+        }
+        return result;
+    }
     
     public static String getPersonName(GenericValue person) {
         StringBuffer result = new StringBuffer(20);
