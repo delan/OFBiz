@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Edit Billing Account Roles</property>
-    <property name="titleProperty">PageTitleEditBillingAccountRoles</property>
-    <property name="headerItem">billingaccount</property>
-    <property name="tabButtonItem">EditBillingAccountRoles</property>
-    <content-action name="/billingaccount/EditBillingAccountRoles.bsh"/>
-</page>

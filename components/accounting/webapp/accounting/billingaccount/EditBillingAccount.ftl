@@ -25,9 +25,9 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <#if billingAccount?has_content>
   <div class="head1">${uiLabelMap.AccountingUpdateBillingAccount}</div>
@@ -70,7 +70,13 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
     <tr>
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingCurrencyUom}</div></td>
       <td width="5">&nbsp;</td>
-      <td width="74%"><input type="text" class="inputBox" size="10" name="accountCurrencyUomId" value="${billingAccountData.accountCurrencyUomId?if_exists}">
+      <td width="74%">
+        <select class="selectBox" name="accountCurrencyUomId">
+          <option value=""></option>
+          <#list currencies as currency>
+            <option value="${currency.uomId}" <#if (defaultCurrencyUomId?has_content) && (currency.uomId == defaultCurrencyUomId)>selected</#if>>${currency.uomId}</option>
+          </#list>
+        </select>
       </td>
     </tr>
     <tr>

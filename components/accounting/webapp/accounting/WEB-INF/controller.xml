@@ -444,12 +444,12 @@
     <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
     <view-map name="login" type="screen" page="component://accounting/widget/CommonScreens.xml#login"/>
     
-    <view-map name="FindBillingAccount" type="jpublish" page="/billingaccount/FindBillingAccount.ftl"/>
-    <view-map name="EditBillingAccount" type="jpublish" page="/billingaccount/EditBillingAccount.ftl"/>
-    <view-map name="EditBillingAccountRoles" type="jpublish" page="/billingaccount/EditBillingAccountRoles.ftl"/>
-    <view-map name="EditBillingAccountTerms" type="jpublish" page="/billingaccount/EditBillingAccountTerms.ftl"/>
-    <view-map name="BillingAccountInvoices" type="jpublish" page="/billingaccount/BillingAccountInvoices.ftl"/>
-    <view-map name="BillingAccountPayments" type="jpublish" page="/billingaccount/BillingAccountPayments.ftl"/>    
+    <view-map name="FindBillingAccount" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#FindBillingAccount"/>
+    <view-map name="EditBillingAccount" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#EditBillingAccount"/>
+    <view-map name="EditBillingAccountRoles" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#EditBillingAccountRoles"/>
+    <view-map name="EditBillingAccountTerms" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#EditBillingAccountTerms"/>
+    <view-map name="BillingAccountInvoices" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#BillingAccountInvoices"/>
+    <view-map name="BillingAccountPayments" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#BillingAccountPayments"/>
     
     <view-map name="findInvoices" type="jpublish" page="/invoice/findInvoices.ftl"/>
     <view-map name="editInvoice" type="jpublish" page="/invoice/editInvoice.ftl"/>

@@ -29,8 +29,8 @@
         <section>
             <actions>
                 <set field="title" value="Assign GlAccount"/>
-                <set field="titleProperty" value="PageTitleEditProduct"/>
-                <set field="tabButtonItem" value="EditProduct"/>
+                <!-- <set field="titleProperty" value=""/> -->
+                <set field="headerItem" value="chartofaccounts"/>
                 <set field="labelTitleProperty" value="Assign Account"/>
     
                 <!-- set field="accountId" from-field="parameters.accountId"/>
@@ -56,8 +56,8 @@
         <section>
             <actions>
                 <set field="title" value="Test AddGlAccount"/>
-                <set field="titleProperty" value="PageTitleEditProduct"/>
-                <set field="tabButtonItem" value="EditProduct"/>
+                <!-- <set field="titleProperty" value=""/> -->
+                <set field="headerItem" value="chartofaccounts"/>
                 <set field="labelTitleProperty" value="ListAccounts"/>
                 <!-- parameters includes requestAttributes and parameter map -->
                 <!-- requestParameters is just the parameter map -->
@@ -117,7 +117,7 @@
                             <fail-widgets>
                                 <label style="head3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
                             </fail-widgets>
-                        </section>                    
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
