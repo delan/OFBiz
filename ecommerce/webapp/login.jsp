@@ -32,7 +32,6 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
-<%String loginFormUrl=controlPath + "/login"; if(previousParams != null) loginFormUrl=loginFormUrl + "?" + previousParams;%>
 
 <br>
 <div class="head1">Log&nbsp;In</div>
@@ -58,10 +57,38 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-      <form method="POST" action="<%=response.encodeURL(loginFormUrl)%>" name="loginform" style='margin: 0;'>
+      <form method="POST" action="<ofbiz:url>/login<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="loginform" style='margin: 0;'>
         <div align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
         <div align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
         <div align=center><input type="submit" value="Login"></div>
+      </form>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+<BR>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+        <tr>
+          <td valign=middle align=center>
+      <div class="boxhead">Forgot&nbsp;Your&nbsp;Password?</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <tr>
+          <td>
+      <form method="POST" action="<ofbiz:url>/forgotpassword<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="forgotpassword" style='margin: 0;'>
+        <div align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
+        <div align=center><input type="submit" value="Get Password Hint" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" value="Email Password" name="EMAIL_PASSWORD"></div>
       </form>
           </td>
         </tr>
