@@ -182,11 +182,17 @@
     </xs:attributeGroup>
     <xs:element name="datasource">
         <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="any">
-                    <xs:attributeGroup ref="attlist.datasource"/>
-                </xs:extension>
-            </xs:complexContent>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="sql-load-path"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="read-data"/>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                    <xs:element minOccurs="0" maxOccurs="1" ref="jndi-jdbc"/>
+                    <xs:element minOccurs="0" maxOccurs="1" ref="inline-jdbc"/>
+                    <xs:element minOccurs="0" maxOccurs="1" ref="tyrex-dataSource"/>
+                </xs:choice>
+                <!-- <xs:any minOccurs="0" maxOccurs="unbounded"/> -->
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.datasource"/>
         </xs:complexType>
     </xs:element>
     <!-- main subelements of datasource are (sql-load-path*, (inline-jdbc | jndi-jdbc | tyrex-dataSource | ANY), but ANY must be used alone for certain XML parsers -->
