@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.4 2003/11/07 19:09:29 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.5 2003/11/28 19:28:57 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -48,7 +48,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ProductSearchSession {
@@ -238,17 +238,21 @@ public class ProductSearchSession {
     }
 
     public static void processSearchParameters(Map parameters, HttpSession session) {
+        boolean constraintsChanged = false;
+        
         // clear search? by default yes, but if the clearSearch parameter is N then don't
         String clearSearchString = (String) parameters.get("clearSearch");
         if (!"N".equals(clearSearchString)) {
             searchClear(session);
+            constraintsChanged = true;
         } else {
             String removeConstraint = (String) parameters.get("removeConstraint");
             if (UtilValidate.isNotEmpty(removeConstraint)) {
                 try {
                     searchRemoveConstraint(Integer.parseInt(removeConstraint), session);
+                    constraintsChanged = true;
                 } catch (Exception e) {
-                    Debug.logError(e, "Error removing constraint [" + removeConstraint + "]", "keywordsearch.bsh");
+                    Debug.logError(e, "Error removing constraint [" + removeConstraint + "]", module);
                 }
             }
         }
@@ -258,6 +262,7 @@ public class ProductSearchSession {
         String searchSubCategories = (String) parameters.get("SEARCH_SUB_CATEGORIES");
         if (UtilValidate.isNotEmpty(searchCategoryId)) {
             searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories)), session);
+            constraintsChanged = true;
         }
 
         // if keywords were specified, add a constraint for them
@@ -270,10 +275,14 @@ public class ProductSearchSession {
         }
         if (UtilValidate.isNotEmpty(keywordString)) {
             searchAddConstraint(new ProductSearch.KeywordConstraint(keywordString, true, true, null, "AND".equals(searchOperator)), session);
+            constraintsChanged = true;
         }
 
         // if features were selected add a constraint for each
         Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(parameters);
+        if (featureIdByType.size() > 0) {
+            constraintsChanged = true;
+        }
         searchAddFeatureIdConstraints(featureIdByType.values(), session);
 
         // set the sort order
@@ -289,6 +298,12 @@ public class ProductSearchSession {
             } else if (sortOrder.equals("SortListPrice")) {
                 searchSetSortOrder(new ProductSearch.SortListPrice(ascending), session);
             }
+        }
+        
+        if (constraintsChanged) {
+            // query changed, clear out the VIEW_INDEX & VIEW_SIZE
+            session.removeAttribute(ProductSearchSession.PRODUCT_SEARCH_VIEW_INDEX);
+            session.removeAttribute(ProductSearchSession.PRODUCT_SEARCH_VIEW_SIZE);
         }
 
         String viewIndexStr = (String) parameters.get("VIEW_INDEX");
