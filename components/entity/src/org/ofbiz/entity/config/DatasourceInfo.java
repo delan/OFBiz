@@ -106,6 +106,7 @@ public class DatasourceInfo {
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-indices-on-start (false)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)", module);
             Debug.logWarning("datasource def not found with name " + this.name + ", using default for always-use-constraint-keyword (false)", module);
+            Debug.logWarning("datasource def not found with name " + this.name + ", using default for table-type (none)", module);
         } else {
             schemaName = datasourceElement.getAttribute("schema-name");
             // anything but false is true
@@ -147,6 +148,7 @@ public class DatasourceInfo {
             aliasViews = !"false".equals(datasourceElement.getAttribute("alias-view-columns"));
             // anything but true is false
             alwaysUseConstraintKeyword = "true".equals(datasourceElement.getAttribute("always-use-constraint-keyword"));
+            tableType = datasourceElement.getAttribute("table-type");
         }
         if (fkStyle == null || fkStyle.length() == 0) fkStyle = "name_constraint";
         if (joinStyle == null || joinStyle.length() == 0) joinStyle = "ansi";
