@@ -24,8 +24,11 @@
  */
 package org.ofbiz.pos.event;
 
+import net.xoetrope.xui.XProjectManager;
+
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.device.DeviceLoader;
+import org.ofbiz.base.util.UtilCache;
 
 /**
  * 
@@ -38,10 +41,22 @@ public class ManagerEvents {
     public static final String module = ManagerEvents.class.getName();
 
     public static void openDrawer(PosScreen pos) {
-        DeviceLoader.drawer[0].openDrawer();    
+        DeviceLoader.drawer[0].openDrawer();
+        pos.refresh();
+    }
+
+    public static void clearCache(PosScreen pos) {
+        UtilCache.clearAllCaches();
+        pos.refresh();
+    }
+
+    public static void resetXui(PosScreen pos) {
+        XProjectManager.getPageManager().reset();
+        pos.refresh();
     }
 
     public static void logoff(PosScreen pos) {
+        pos.getOutput().print("Logging out...");
         System.exit(0);
     }
 }
