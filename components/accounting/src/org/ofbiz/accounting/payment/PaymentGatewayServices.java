@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.34 2004/06/25 23:23:33 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.35 2004/06/27 03:29:48 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.34 $
+ * @version    $Revision: 1.35 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -333,6 +333,7 @@ public class PaymentGatewayServices {
         processContext.put("shippingAddress", orh.getShippingAddress());
         processContext.put("paymentConfig", paymentConfig);
         processContext.put("currency", orh.getCurrency());
+        processContext.put("cardSecurityCode", paymentPreference.get("securityCode"));
         processContext.put("orderPaymentPreference", paymentPreference);
 
         // get the billing information
@@ -996,6 +997,7 @@ public class PaymentGatewayServices {
         // set the status of the OrderPaymentPreference
         if (result != null && authResult.booleanValue()) {
             paymentPreference.set("statusId", "PAYMENT_AUTHORIZED");
+            paymentPreference.set("securityCode", null);
         } else if (result != null && !authResult.booleanValue()) {
             paymentPreference.set("statusId", "PAYMENT_DECLINED");
         } else {
@@ -1469,6 +1471,7 @@ public class PaymentGatewayServices {
             String expDate = expMonth + "/" + expYear;
             creditCard.set("expireDate", expDate);
             requestContext.put("creditCard", creditCard);
+            requestContext.put("cardSecurityCode", context.get("cardSecurityCode"));
 
             GenericValue billingAddress = delegator.makeValue("PostalAddress", null);
             billingAddress.setAllFields(context, true, null, null);

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      3.0
 -->
 
@@ -69,22 +69,65 @@
         *</td>
       </tr>
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
-      <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Name on Card</div></td>
-        <td width="5">&nbsp;</td>
-        <td width="74%">
-          <input type="text" class="inputBox" size="15" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)?if_exists}">
-          &nbsp;
-          <input type="text" class="inputBox" size="15" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)?if_exists}">
-        *</td>
-      </tr>
-      <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Company Name on Card</div></td>
-        <td width="5">&nbsp;</td>
-        <td width="74%">
-          <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnCard" value="${(creditCard.companyNameOnCard)?if_exists}">
-        </td>
-      </tr>
+
+    <tr>
+      <td width="26%" align=right valign=top><div class="tableheadtext">Company Name On Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${(creditCard.companyNameOnCard)?if_exists}">
+      </td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tableheadtext">Prefix On Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <select name="titleOnCard" class="selectBox">
+          <option value="">Select One</option>
+          <option<#if ((creditCard.titleOnCard)?default("") == "Mr.")> checked</#if>>Mr.</option>
+          <option<#if ((creditCard.titleOnCard)?default("") == "Mrs.")> checked</#if>>Mrs.</option>
+          <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> checked</#if>>Ms.</option>
+          <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> checked</#if>>Dr.</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tableheadtext">First Name On Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <input type="text" class="inputBox" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)?if_exists}">
+      *</td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tableheadtext">Middle Name On Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <input type="text" class="inputBox" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)?if_exists}">
+      </td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tableheadtext">Last Name On Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <input type="text" class="inputBox" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)?if_exists}">
+      *</td>
+    </tr>
+    <tr>
+      <td width="26%" align=right valign=top><div class="tableheadtext">Suffix On Card</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <select name="suffixOnCard" class="selectBox">
+          <option value="">Select One</option>
+          <option<#if ((creditCard.suffixOnCard)?default("") == "Jr.")> checked</#if>>Jr.</option>
+          <option<#if ((creditCard.suffixOnCard)?default("") == "Sr.")> checked</#if>>Sr.</option>
+          <option<#if ((creditCard.suffixOnCard)?default("") == "I")> checked</#if>>I</option>
+          <option<#if ((creditCard.suffixOnCard)?default("") == "II")> checked</#if>>II</option>
+          <option<#if ((creditCard.suffixOnCard)?default("") == "III")> checked</#if>>III</option>
+          <option<#if ((creditCard.suffixOnCard)?default("") == "IV")> checked</#if>>IV</option>
+          <option<#if ((creditCard.suffixOnCard)?default("") == "V")> checked</#if>>V</option>
+        </select>
+      </td>
+    </tr>
+
       <tr>
         <td width="26%" align=right valign=middle><div class="tableheadtext">Card Type</div></td>
         <td width="5">&nbsp;</td>
@@ -105,13 +148,13 @@
           <input type="text" class="inputBox" size="20" maxlength="30" name="cardNumber" value="${(creditCard.cardNumber)?if_exists}">
         *</td>
       </tr>
-      <#--<tr>
+      <tr>
         <td width="26%" align=right valign=middle><div class="tableheadtext">Card Security Code</div></td>
         <td width="5">&nbsp;</td>
         <td width="74%">
           <input type="text" size="5" maxlength="10" name="cardSecurityCode" value="">
         </td>
-      </tr>-->
+      </tr>
       <tr>
         <td width="26%" align=right valign=middle><div class="tableheadtext">Expiration Date</div></td>
         <td width="5">&nbsp;</td>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.1
 -->
 
@@ -188,8 +188,13 @@
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
-                                ${creditCard.firstNameOnCard} ${creditCard.lastNameOnCard}<br>
                                 <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br></#if>
+                                <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp</#if>
+                                ${creditCard.firstNameOnCard}&nbsp;
+                                <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp</#if>
+                                ${creditCard.lastNameOnCard}
+                                <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
+                                <br>
                                 ${formattedCardNumber}
                               </div>
                             </td>
