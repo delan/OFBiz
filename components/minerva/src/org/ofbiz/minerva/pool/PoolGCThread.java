@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  * run on any pools which are "pretty close" to their requested time.
  *
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
- * @version $Revision: 1.2 $
+ * @version $Rev:$
  */
 class PoolGCThread extends Thread {
 

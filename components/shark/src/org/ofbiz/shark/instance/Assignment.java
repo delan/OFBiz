@@ -1,5 +1,5 @@
 /*
- * $Id: Assignment.java,v 1.1 2004/04/22 15:41:00 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class Assignment implements AssignmentPersistenceInterface {

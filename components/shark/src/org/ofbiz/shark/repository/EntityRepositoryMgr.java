@@ -1,5 +1,5 @@
 /*
- * $Id: EntityRepositoryMgr.java,v 1.2 2004/07/13 22:22:04 ajzeneski Exp $
+ * $Id$
  *
  */
 package org.ofbiz.shark.repository;
@@ -30,7 +30,7 @@ import org.enhydra.shark.api.TransactionException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class EntityRepositoryMgr implements RepositoryPersistenceManager {

@@ -1,5 +1,5 @@
 /*
- * $Id: ThreadedToolAgentManager.java,v 1.2 2004/07/11 23:26:22 ajzeneski Exp $
+ * $Id$
  *
  */
 package org.enhydra.shark;
@@ -43,7 +43,7 @@ import org.enhydra.shark.xpdl.XMLComplexElement;
 
 /**
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      Mar 30, 2004
  */
 public class ThreadedToolAgentManager implements ToolAgentManager {

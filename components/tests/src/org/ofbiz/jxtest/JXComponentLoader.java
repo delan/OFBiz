@@ -1,5 +1,5 @@
 /*
- * $Id: JXComponentLoader.java,v 1.2 2004/07/31 20:10:16 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.base.util.UtilValidate;
  * Follows examples from the ComponentContainers and Start classes
  *
  * @author     <a href="mailto:bgpalmer@computer.org">Brett G. Palmer</a> 
-  *@version    $Revision: 1.2 $
+  *@version    $Rev:$
  * @since      3.0
  */
 public class JXComponentLoader {

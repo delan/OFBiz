@@ -1,5 +1,5 @@
 /*
- * $Id: UtilCacheEvents.java,v 1.1 2003/08/18 22:03:18 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.security.Security;
  * Contains events for the UtilCache class; must be external to access security resources
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class UtilCacheEvents {

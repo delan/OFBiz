@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.24 2004/07/24 18:59:10 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -67,7 +67,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.24 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class LoginEvents {

@@ -1,5 +1,5 @@
 /*
- * $Id: DataEventAudit.java,v 1.1 2004/07/11 23:26:23 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.enhydra.shark.api.internal.eventaudit.DataEventAuditPersistenceInterf
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class DataEventAudit extends EventAudit implements DataEventAuditPersistenceInterface {

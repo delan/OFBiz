@@ -1,5 +1,5 @@
 /*
- * $Id: EntityAuditMgr.java,v 1.1 2004/07/11 23:26:23 ajzeneski Exp $
+ * $Id$
  *
  */
 package org.ofbiz.shark.audit;
@@ -28,7 +28,7 @@ import org.enhydra.shark.api.internal.working.CallbackUtilities;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class EntityAuditMgr implements EventAuditManagerInterface {

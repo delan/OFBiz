@@ -1,5 +1,5 @@
 /*
- * $Id: ModelField.java,v 1.1 2003/08/19 00:27:10 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.datafile;
  * ModelField
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelField {

@@ -1,5 +1,5 @@
 /*
- * $Id: SecurityFactory.java,v 1.3 2003/08/19 20:54:12 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class SecurityFactory {

@@ -1,5 +1,5 @@
 /*
- * $Id: DataFile.java,v 1.3 2004/04/11 08:28:19 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.base.util.Debug;
  *  DataFile main class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 

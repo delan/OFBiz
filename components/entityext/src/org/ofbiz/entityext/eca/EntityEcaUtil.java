@@ -1,5 +1,5 @@
 /*
- * $Id: EntityEcaUtil.java,v 1.4 2004/07/17 07:05:11 doogie Exp $
+ * $Id$
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class EntityEcaUtil {

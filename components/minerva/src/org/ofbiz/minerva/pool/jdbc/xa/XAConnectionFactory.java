@@ -47,7 +47,7 @@ import org.ofbiz.minerva.pool.jdbc.xa.wrapper.XAResourceImpl;
  *
  * REVISIONS:
  * 20010703 bill added code for transaction isolation
- @version $Revision: 1.3 $
+ @version $Rev:$
  */
 public class XAConnectionFactory extends PoolObjectFactory {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityApplicationMap.java,v 1.2 2004/07/11 23:26:28 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.enhydra.shark.api.RootException;
  * Shark Application Map Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class EntityApplicationMap implements ApplicationMap {

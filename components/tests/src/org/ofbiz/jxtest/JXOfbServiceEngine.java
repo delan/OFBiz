@@ -50,7 +50,7 @@ import org.ofbiz.service.ModelService;
  * JXOfbServiceEngine is a JXUnit test driver to run OFBiz services. 
  *
  * @author     <a href="mailto:bgpalmer@computer.org">Brett G. Palmer</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      1.0
  */
 public class JXOfbServiceEngine implements JXTestStep

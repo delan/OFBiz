@@ -1,5 +1,5 @@
 /*
- * $Id: JotmContainer.java,v 1.3 2004/07/31 20:10:15 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import javax.naming.NamingException;
  * JOTM Container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class JotmContainer implements Container {

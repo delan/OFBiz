@@ -1,5 +1,5 @@
 /*
- * $Id: Process.java,v 1.2 2004/05/11 16:59:55 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class Process implements ProcessPersistenceInterface {

@@ -1,5 +1,5 @@
 /*
- * $Id: Deadline.java,v 1.1 2004/07/11 23:26:26 ajzeneski Exp $
+ * $Id$
  *
  */
 package org.ofbiz.shark.instance;
@@ -17,7 +17,7 @@ import org.enhydra.shark.api.internal.instancepersistence.PersistenceException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      Jul 11, 2004
  */
 public class Deadline implements DeadlinePersistenceInterface {
