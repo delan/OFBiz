@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 
@@ -107,15 +107,11 @@
                           </#list>
                         </#if>
                       </td>
-                      <td align="center" valign="top" nowrap>
-                        <div class="tabletext" nowrap>
-                          <#if orderItem.cancelQuantity?has_content>
-                            (${orderItem.quantity?string.number})&nbsp;
-                          </#if>
-                          <#assign displayQuantity = (orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0))>
-                          ${displayQuantity?string.number}
-
-                        &nbsp;</div>
+                      <td align="right" valign="top" nowrap>
+                        <#assign remainingQuantity = (orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0))>
+                        <div class="tabletext">Ordered:&nbsp;${orderItem.quantity?default(0)?string.number}&nbsp;&nbsp;</div>
+                        <div class="tabletext">Cancelled:&nbsp;${orderItem.cancelQuantity?default(0)?string.number}&nbsp;&nbsp;</div>
+                        <div class="tabletext">Remaining:&nbsp;${remainingQuantity?string.number}&nbsp;&nbsp;</div>
                       </td>
                       <td align="right" valign="top" nowrap>
                         <div class="tabletext" nowrap><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/> / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/></div>
@@ -128,7 +124,7 @@
                       </td>
                       <td>&nbsp;</td>
                       <td align="right" valign="top" nowrap>
-                        <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED">
+                        <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED") || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && orderHeader.statusId != "ORDER_SENT")>
                           <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[Cancel]</a></div>
                         <#else>
                           &nbsp;
