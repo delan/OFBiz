@@ -86,8 +86,14 @@
 </table>
 
 <center>
-  <table width='100%' border='0' cellpadding='0' cellspacing='0'>
-    <#list productCategoryMembers as productCategoryMember>              
+  <table width='100%' border='0' cellpadding='0' cellspacing='0'>    
+    <#assign startIndex = requestAttributes.viewSize * requestAttributes.viewIndex>
+    <#if requestAttributes.highIndex < requestAttributes.listSize>
+      <#assign endIndex = requestAttributes.highIndex - 1>
+    <#else>
+      <#assign endIndex = requestAttributes.listSize - 1>
+    </#if>
+    <#list productCategoryMembers[startIndex..endIndex] as productCategoryMember>              
       <tr><td><hr class='sepbar'></td></tr>
       <tr>
         <td>
