@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.34 2004/03/05 20:30:26 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.35 2004/04/04 16:33:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.34 $
+ * @version    $Revision: 1.35 $
  * @since      2.0
  */
 
@@ -995,7 +995,7 @@ public class OrderServices {
             while (itemsIterator.hasNext()) {
                 GenericValue orderItem = (GenericValue) itemsIterator.next();
                 if (orderItem == null) {
-                    ServiceUtil.returnError("ERROR: Cannot cancel item; item not found : " + itemMsgInfo);
+                    return ServiceUtil.returnError("ERROR: Cannot cancel item; item not found : " + itemMsgInfo);
                 }
 
                 Double quantity = orderItem.getDouble("quantity");
@@ -1082,8 +1082,9 @@ public class OrderServices {
             Iterator itemsIterator = orderItems.iterator();
             while (itemsIterator.hasNext()) {
                 GenericValue orderItem = (GenericValue) itemsIterator.next();
-                if (orderItem == null)
-                    ServiceUtil.returnError("ERROR: Cannot change item status; item not found.");
+                if (orderItem == null) {
+                    return ServiceUtil.returnError("ERROR: Cannot change item status; item not found.");
+                }
                 if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setItemStatus] : Status Change: [" + orderId + "] (" + orderItem.getString("orderItemSeqId"), module);
                 if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setIte,Status] : From Status : " + orderItem.getString("statusId"), module);
                 if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId, module);
@@ -1430,7 +1431,7 @@ public class OrderServices {
 
         } catch (GenericEntityException e) {
             Debug.logError(e, "Entity read error", module);
-            ServiceUtil.returnError("Problem with entity lookup, see error log");
+            return ServiceUtil.returnError("Problem with entity lookup, see error log");
         }
         return result;
     }
@@ -1529,7 +1530,7 @@ public class OrderServices {
             if (sourceReferenceId != null)
                 orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", sourceReferenceId));
         } catch (GenericEntityException e) {
-            ServiceUtil.returnError("Problem with entity lookup");
+            return ServiceUtil.returnError("Problem with entity lookup");
         }
 
         // find the assigned user's email address(s)
@@ -1538,7 +1539,7 @@ public class OrderServices {
         try {
             party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", assignedToUser));
         } catch (GenericEntityException e) {
-            ServiceUtil.returnError("Problem with entity lookup");
+            return ServiceUtil.returnError("Problem with entity lookup");
         }
         if (party != null)
             assignedToEmails = ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false);
@@ -1592,7 +1593,7 @@ public class OrderServices {
         try {
             dispatcher.runAsync("sendGenericNotificationEmail", sendMailContext);
         } catch (GenericServiceException e) {
-            ServiceUtil.returnError("SendMail service failed: " + e.getMessage());
+            return ServiceUtil.returnError("SendMail service failed: " + e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
@@ -3101,7 +3102,7 @@ public class OrderServices {
 
                 // make sure we have a valid item
                 if (orderItem == null) {
-                    ServiceUtil.returnError("ERROR: Cannot check for fulfillment; item not found.");
+                    return ServiceUtil.returnError("ERROR: Cannot check for fulfillment; item not found.");
                 }
 
                 // locate the Product & ProductContent records
@@ -3110,7 +3111,7 @@ public class OrderServices {
                 try {
                     product = orderItem.getRelatedOne("Product");
                     if (product == null) {
-                        ServiceUtil.returnError("ERROR: Cannot check for fulfillment; product not found.");
+                        return ServiceUtil.returnError("ERROR: Cannot check for fulfillment; product not found.");
                     }
 
                     List allProductContent = product.getRelated("ProductContent");

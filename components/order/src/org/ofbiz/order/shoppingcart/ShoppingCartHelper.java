@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.11 2004/03/02 20:02:17 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.12 2004/04/04 16:33:13 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -530,7 +530,7 @@ public class ShoppingCartHelper {
             try {
                 this.cart.removeCartItem(itemIndex, dispatcher);
             } catch (CartItemModifyException e) {
-                ServiceUtil.returnError(new Vector());
+                result = ServiceUtil.returnError(new Vector());
                 errorMsgs.add(e.getMessage());
             }
         }

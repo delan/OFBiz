@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.8 2004/01/22 17:47:24 ajzeneski Exp $
+ * $Id: InvoiceServices.java,v 1.9 2004/04/04 16:33:11 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.product.product.ProductWorker;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  */
 public class InvoiceServices {
@@ -168,7 +168,7 @@ public class InvoiceServices {
             billingAccount = orderHeader.getRelatedOne("BillingAccount");            
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting BillingAccount entity from OrderHeader", module);
-            ServiceUtil.returnError("Trouble getting BillingAccount entity from OrderHeader");
+            return ServiceUtil.returnError("Trouble getting BillingAccount entity from OrderHeader");
         }
         
         // for billing accounts we will use related information
@@ -181,7 +181,7 @@ public class InvoiceServices {
                 billingAccountTerms = billingAccount.getRelated("BillingAccountTerm");                
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Trouble getting BillingAccountTerm entity list", module);
-                ServiceUtil.returnError("Trouble getting BillingAccountTerm entity list");
+                return ServiceUtil.returnError("Trouble getting BillingAccountTerm entity list");
             }
             
             // set the invoice terms as defined for the billing account
@@ -204,7 +204,7 @@ public class InvoiceServices {
                 billToRoles = billingAccount.getRelated("BillingAccountRole", UtilMisc.toMap("roleTypeId", "BILL_TO_CUSTOMER"), null);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Trouble getting BillingAccountRole entity list", module);
-                ServiceUtil.returnError("Trouble getting BillingAccountRole entity list");
+                return ServiceUtil.returnError("Trouble getting BillingAccountRole entity list");
             }
             Iterator billToIter = billToRoles.iterator();
             while (billToIter.hasNext()) {
@@ -244,7 +244,7 @@ public class InvoiceServices {
             delegator.create(invoice);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot create invoice record", module);
-            ServiceUtil.returnError("Problems storing Invoice record");
+            return ServiceUtil.returnError("Problems storing Invoice record");
         }
                 
         // get a list of the payment method types
@@ -303,7 +303,7 @@ public class InvoiceServices {
                         product = orderItem.getRelatedOne("Product");                  
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Trouble getting Product from OrderItem", module);
-                        ServiceUtil.returnError("Trouble getting Product from OrderItem");
+                        return ServiceUtil.returnError("Trouble getting Product from OrderItem");
                     }
                 }
                 
