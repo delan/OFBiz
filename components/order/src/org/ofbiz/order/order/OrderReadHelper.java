@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Arrays;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -873,7 +874,12 @@ public class OrderReadHelper {
                 if (height == null) height = new Double(0);
                 if (width == null) width = new Double(0);
                 if (depth == null) depth = new Double(0);
-                size = ((height.doubleValue() * 2) + (width.doubleValue() * 2) + depth.doubleValue());
+
+                // determine girth (longest field is length)
+                double[] sizeInfo = { height.doubleValue(), width.doubleValue(), depth.doubleValue() };
+                Arrays.sort(sizeInfo);
+                
+                size = (sizeInfo[0] * 2) + (sizeInfo[1] * 2) + sizeInfo[2];
             }
         }
 
