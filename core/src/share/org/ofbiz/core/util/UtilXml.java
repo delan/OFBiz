@@ -131,7 +131,7 @@ public class UtilXml {
     public static Document readXmlDocument(String content, boolean validate)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (content == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing", module);
             return null;
         }
         ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
@@ -357,7 +357,7 @@ public class UtilXml {
      * Function boolean hadDTD() is here to avoid validation errors in
      * descriptors that do not have a DOCTYPE declaration.
      */
-    private static class LocalResolver implements EntityResolver {
+    public static class LocalResolver implements EntityResolver {
 
         private boolean hasDTD = false;
         private EntityResolver defaultResolver;
@@ -410,7 +410,7 @@ public class UtilXml {
     /** Local error handler for entity resolver to DocumentBuilder parser.
      * Error is printed to output just if DTD was detected in the XML file.
      */
-    private static class LocalErrorHandler implements ErrorHandler {
+    public static class LocalErrorHandler implements ErrorHandler {
 
         private String docDescription;
         private LocalResolver localResolver;

@@ -85,6 +85,7 @@
         values.close();
     }
     writer.println("</entity-engine-xml>");
+    writer.close();
 
 /* the OLD way:
     document = GenericEntity.makeXmlDocument(null);

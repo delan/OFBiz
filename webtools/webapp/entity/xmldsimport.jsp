@@ -64,12 +64,17 @@
     try { url = isUrl?new URL(filename):UtilURL.fromFilename(filename); }
     catch(java.net.MalformedURLException e) { %><div>ERROR: <%=e.toString()%></div><% }
 
+    EntitySaxReader reader = new EntitySaxReader(delegator);
+    long numberRead = reader.parse(url);
+  %>
+      <div>Got <%=numberRead%> entities to write to the datasource.</div>
+<%-- The OLD way:
+  <%
     Collection values = null;
     try {
       values = delegator.readXmlDocument(url);
       delegator.storeAll(values);
-    }
-    catch(Exception e) {
+    } catch(Exception e) {
       %><div>ERROR: <%=e.toString()%></div><%
     }
   %>
@@ -78,7 +83,14 @@
     <%}else{%>
       <div>Could not get any values from the XML file.</div>
     <%}%>
+--%>
   <%} else if (fulltext != null && fulltext.length() > 0) {%>
+  <%
+    EntitySaxReader reader = new EntitySaxReader(delegator);
+    long numberRead = reader.parse(fulltext);
+  %>
+      <div>Got <%=numberRead%> entities to write to the datasource.</div>
+<%-- The OLD way:
   <%
     Collection values = null;
     try {
@@ -95,6 +107,7 @@
     <%}else{%>
       <div>Could not get any values from the XML text.</div>
     <%}%>
+--%>
   <%} else {%>
     <div>No filename/URL or complete XML document specified, doing nothing.</div>
   <%}%>

@@ -171,11 +171,14 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
         errorMessages.add(xmlError); Debug.logWarning(xmlError);
       }
 
-      Collection values = null;
       try {
-        values = delegator.readXmlDocument(url);
+      /* The OLD way
+        Collection values = delegator.readXmlDocument(url);
         delegator.storeAll(values);
         rowsChanged += values.size();
+       */
+        EntitySaxReader reader = new EntitySaxReader(delegator);
+        rowsChanged += reader.parse(url);
       } catch(Exception e) {
         String xmlError = "[install.loadData]: Error loading XML file \"" + dataFile.getAbsolutePath() + "\"; Error was: " + e.getMessage();
         errorMessages.add(xmlError);
