@@ -37,6 +37,7 @@
 <div class="apptitle">${uiLabelMap.AccountingManagerApplication}</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.AccountingMainMenu}</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/FindAgreement</@ofbizUrl>" class="${selectedLeftClassMap.agreement?default(unselectedLeftClassName)}">${uiLabelMap.AccountingAgreements}</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindBillingAccount</@ofbizUrl>" class="${selectedLeftClassMap.billingaccount?default(unselectedLeftClassName)}">${uiLabelMap.AccountingBillingMenu}</a></div>
   <div class="col"><a href="<@ofbizUrl>/findInvoices</@ofbizUrl>" class="${selectedLeftClassMap.invoices?default(unselectedLeftClassName)}">${uiLabelMap.AccountingInvoicesMenu}</a></div>
   <div class="col"><a href="<@ofbizUrl>/findPayment</@ofbizUrl>" class="${selectedLeftClassMap.payments?default(unselectedLeftClassName)}">${uiLabelMap.AccountingPaymentsMenu}</a></div>
