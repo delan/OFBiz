@@ -1,0 +1,71 @@
+
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<forms>
+    <form name="EditProductFeature" type="single" 
+            target="updateProductFeature" title="" default-map-name="productFeature"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <alt-target use-when="productFeature==null" target="createProductFeature"/>
+        
+        <auto-fields-service service-name="updateProductFeature" map-name=""/>
+        
+        <field use-when="productFeature!=null" name="productFeatureId" tooltip="This cannot be changed without re-creating the Product Catalog."><display/></field>
+        <field use-when="productFeature==null&amp;&amp;productFeatureId!=null" name="productFeatureId" tooltip="Could not find ProductFeature with ID [${productFeatureId}]"><text size="20" maxlength="20"/></field>
+        <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
+        <field use-when="productFeature==null&amp;&amp;productFeatureId==null" name="productFeatureId"><ignored/></field>
+
+        <field name="productFeatureTypeId" title="${uiLabelMap.ProductFeatureType}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductFeatureType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+        <field name="productFeatureCategoryId" title="${uiLabelMap.ProductFeatureCategory}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductFeatureCategory" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field use-when="productFeature!=null&amp;&amp;productFeature.getString(&quot;productFeatureCategoryId&quot;)!=null" name="categoryLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="/EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeature.productFeatureCategoryId}" target-type="intra-app"
+                description="[Go to Feature Category ${productFeature.productFeatureCategoryId}]" also-hidden="false"/>
+        </field>
+
+        <field name="description" title="${uiLabelMap.CommonDescription}"/>
+        <field name="uomId" title="${uiLabelMap.ProductUnitOfMeasureId}"/>
+        <field name="numberSpecified" title="${uiLabelMap.ProductNumberQuantity}"/>
+        <field name="defaultAmount" title="${uiLabelMap.ProductDefaultAmount}"/>
+        <field name="defaultSequenceNum" title="${uiLabelMap.ProductDefaultSequenceNumber}"/>
+        <field name="idCode" title="${uiLabelMap.ProductIdCode}"/>
+        <field name="abbrev" title="${uiLabelMap.ProductAbbreviation}"/>
+
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+</forms>
+
