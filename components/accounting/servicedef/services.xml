@@ -116,6 +116,7 @@
             location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="createBillingAccount">
         <description>Create a Billing Account</description>
         <attribute name="accountLimit" type="Double" mode="IN" optional="true"/>
+        <attribute name="accountCurrencyUomId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
@@ -129,6 +130,7 @@
         <description>Update a Billing Account</description>
         <attribute name="billingAccountId" type="String" mode="IN" optional="false"/>
         <attribute name="accountLimit" type="Double" mode="IN" optional="true"/>
+        <attribute name="accountCurrencyUomId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>

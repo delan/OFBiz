@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -66,6 +66,12 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
       <td width="5">&nbsp;</td>
       <td width="74%"><input type="text" class="inputBox" size="10" name="accountLimit" value="${billingAccountData.accountLimit?default(0)?string("##0.00")}">
       *</td>
+    </tr>
+    <tr>
+      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingCurrencyUom}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%"><input type="text" class="inputBox" size="10" name="accountCurrencyUomId" value="${billingAccountData.accountCurrencyUomId?if_exists}">
+      </td>
     </tr>
     <tr>
       <td width="26%" align="right" valign="top">
