@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.11 2003/10/19 10:08:03 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.12 2003/10/23 09:51:41 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -35,6 +35,7 @@ import java.util.Set;
 import java.sql.Timestamp;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
@@ -64,7 +65,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -73,6 +74,37 @@ public class ProductSearch {
     
     /** This cache contains a Set with the IDs of the entire sub-category tree, including the current productCategoryId */
     public static UtilCache subCategoryCache = new UtilCache("product.SubCategory", 0, 0, true);
+
+    public static ArrayList searchDo(HttpSession session, GenericDelegator delegator) {
+        // TODO: implement this
+        return null;
+    }
+    
+    public static void searchClear(HttpSession session) {
+        // TODO: implement this
+    }
+    
+    public static List searchGetContraintStrings(HttpSession session) {
+        // TODO: implement this
+        return null;
+    }
+    
+    public static String searchGetSortOrderString(HttpSession session) {
+        // TODO: implement this
+        return null;
+    }
+    
+    public static void searchSetSortOrder(ResultSortOrder sortOrder, HttpSession session) {
+        // TODO: implement this
+    }
+    
+    public static void searchAddConstraint(ProductSearchConstraint constraint, HttpSession session) {
+        // TODO: implement this
+    }
+    
+    public static void searchRemoveConstraint(int index, HttpSession session) {
+        // TODO: implement this
+    }
     
     public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         Set featureIdSet = new HashSet();
@@ -106,33 +138,12 @@ public class ProductSearch {
     }
 
     public static ArrayList searchProducts(List productSearchConstraintList, ResultSortOrder resultSortOrder, GenericDelegator delegator, String visitId) {
-
-        ProductSearchContext productSearchContext = new ProductSearchContext();
+        ProductSearchContext productSearchContext = new ProductSearchContext(delegator, visitId);
         
-        // Go through the constraints and add them in
-        Iterator productSearchConstraintIter = productSearchConstraintList.iterator();
-        while (productSearchConstraintIter.hasNext()) {
-            ProductSearchConstraint constraint = (ProductSearchConstraint) productSearchConstraintIter.next();
-            constraint.addConstraint(productSearchContext, delegator);
-        }
-        
-        // handle the now assembled or and and keyword fixed lists
-        productSearchContext.finishKeywordConstraints();
-        
-        // set the sort order
+        productSearchContext.addProductSearchConstraints(productSearchConstraintList);
         productSearchContext.setResultSortOrder(resultSortOrder);
 
-        long startMillis = System.currentTimeMillis();
-        
-        // do the query
-        EntityListIterator eli = productSearchContext.doQuery(delegator);
-        ArrayList productIds = productSearchContext.makeProductIdList(eli);
-
-        long endMillis = System.currentTimeMillis();
-        
-        // store info about results in the database, attached to the user's visitId, if specified
-        productSearchContext.saveSearchResultInfo(visitId, new Long(productIds.size()), new Double(((double)endMillis - (double)startMillis)/1000.0), delegator);
-        
+        ArrayList productIds = productSearchContext.doSearch();
         return productIds;
     }
     
@@ -186,13 +197,46 @@ public class ProductSearch {
         public List andKeywordFixedList = new LinkedList();
         public List productSearchConstraintList = new LinkedList();
         public ResultSortOrder resultSortOrder = null;
+        protected GenericDelegator delegator = null;
+        protected String visitId = null;
         
-        public ProductSearchContext() {
+        public ProductSearchContext(GenericDelegator delegator, String visitId) {
+            this.delegator = delegator;
+            this.visitId = visitId;
             dynamicViewEntity.addMemberEntity("PROD", "Product");
+        }
+        
+        public GenericDelegator getDelegator() {
+            return this.delegator;
+        }
+        
+        public void addProductSearchConstraints(List productSearchConstraintList) {
+            // Go through the constraints and add them in
+            Iterator productSearchConstraintIter = productSearchConstraintList.iterator();
+            while (productSearchConstraintIter.hasNext()) {
+                ProductSearchConstraint constraint = (ProductSearchConstraint) productSearchConstraintIter.next();
+                constraint.addConstraint(this);
+            }
         }
         
         public void setResultSortOrder(ResultSortOrder resultSortOrder) {
             this.resultSortOrder = resultSortOrder;
+        }
+        
+        public ArrayList doSearch() {
+            long startMillis = System.currentTimeMillis();
+
+            // do the query
+            EntityListIterator eli = this.doQuery(delegator);
+            ArrayList productIds = this.makeProductIdList(eli);
+
+            long endMillis = System.currentTimeMillis();
+            double totalMillis = ((double)endMillis - (double)startMillis)/1000.0;
+
+            // store info about results in the database, attached to the user's visitId, if specified
+            this.saveSearchResultInfo(new Long(productIds.size()), new Double(totalMillis));
+            
+            return productIds;
         }
         
         public void finishKeywordConstraints() {
@@ -269,8 +313,11 @@ public class ProductSearch {
         }
         
         public EntityListIterator doQuery(GenericDelegator delegator) {
+            // handle the now assembled or and and keyword fixed lists
+            this.finishKeywordConstraints();
+        
             if (resultSortOrder != null) {
-                resultSortOrder.setSortOrder(this, delegator);
+                resultSortOrder.setSortOrder(this);
             }
             
             dynamicViewEntity.addAlias("PROD", "productId", null, null, null, new Boolean(productIdGroupBy), null);
@@ -303,7 +350,7 @@ public class ProductSearch {
             return productIds;
         }
         
-        public void saveSearchResultInfo(String visitId, Long numResults, Double secondsTotal, GenericDelegator delegator) {
+        public void saveSearchResultInfo(Long numResults, Double secondsTotal) {
             // uses entities: ProductSearchResult and ProductSearchConstraint
             
             try {
@@ -317,7 +364,7 @@ public class ProductSearch {
                     String productSearchResultId = nextPkrSeqId.toString();
 
                     productSearchResult.set("productSearchResultId", productSearchResultId);
-                    productSearchResult.set("visitId", visitId);
+                    productSearchResult.set("visitId", this.visitId);
                     productSearchResult.set("orderByName", this.resultSortOrder.getOrderName());
                     productSearchResult.set("isAscending", this.resultSortOrder.isAscending() ? "Y" : "N");
                     productSearchResult.set("numResults", numResults);
@@ -354,7 +401,7 @@ public class ProductSearch {
         public ProductSearchConstraint() {
         }
         
-        public abstract void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator);
+        public abstract void addConstraint(ProductSearchContext productSearchContext);
         public abstract String prettyPrintConstraint(GenericDelegator delegator);
     }
     
@@ -368,12 +415,12 @@ public class ProductSearch {
             this.includeSubCategories = includeSubCategories;
         }
         
-        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext) {
             List productCategoryIdList = null;
             if (includeSubCategories) {
                 // find all sub-categories recursively, make a Set of productCategoryId
                 Set productCategoryIdSet = new HashSet();
-                ProductSearch.getAllSubCategoryIds(productCategoryId, productCategoryIdSet, delegator, productSearchContext.nowTimestamp);
+                ProductSearch.getAllSubCategoryIds(productCategoryId, productCategoryIdSet, productSearchContext.getDelegator(), productSearchContext.nowTimestamp);
                 productCategoryIdList = new ArrayList(productCategoryIdSet);
             } else {
                 productCategoryIdList = UtilMisc.toList(productCategoryId);
@@ -394,7 +441,7 @@ public class ProductSearch {
             productSearchContext.entityConditionList.add(new EntityExpr(prefix + "FromDate", EntityOperator.LESS_THAN, productSearchContext.nowTimestamp));
             
             // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
-            productSearchContext.productSearchConstraintList.add(delegator.makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productCategoryId, "includeSubCategories", this.includeSubCategories ? "Y" : "N")));
+            productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productCategoryId, "includeSubCategories", this.includeSubCategories ? "Y" : "N")));
         }
 
         public String prettyPrintConstraint(GenericDelegator delegator) {
@@ -411,7 +458,7 @@ public class ProductSearch {
             this.productFeatureId = productFeatureId;
         }
         
-        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext) {
             // make index based values and increment
             String entityAlias = "PFA" + productSearchContext.index;
             String prefix = "pfa" + productSearchContext.index;
@@ -427,7 +474,7 @@ public class ProductSearch {
             productSearchContext.entityConditionList.add(new EntityExpr(prefix + "FromDate", EntityOperator.LESS_THAN, productSearchContext.nowTimestamp));
             
             // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
-            productSearchContext.productSearchConstraintList.add(delegator.makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productFeatureId)));
+            productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productFeatureId)));
         }
 
         public String prettyPrintConstraint(GenericDelegator delegator) {
@@ -456,7 +503,7 @@ public class ProductSearch {
             }
         }
         
-        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext) {
             // just make the fixed keyword lists and put them in the context
             List keywordFirstPass = KeywordSearch.makeKeywordList(keywordsString);
             List keywordList = KeywordSearch.fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, isAnd);
@@ -472,7 +519,7 @@ public class ProductSearch {
             valueMap.put("anySuffix", this.anySuffix ? "Y" : "N");
             valueMap.put("isAnd", this.isAnd ? "Y" : "N");
             valueMap.put("removeStems", this.removeStems ? "Y" : "N");
-            productSearchContext.productSearchConstraintList.add(delegator.makeValue("ProductSearchConstraint", valueMap));
+            productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", valueMap));
         }
 
         public String prettyPrintConstraint(GenericDelegator delegator) {
@@ -491,7 +538,7 @@ public class ProductSearch {
             this.thruDate = thruDate;
         }
         
-        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext) {
             // TODO: implement LastUpdatedRangeConstraint makeEntityCondition
         }
 
@@ -511,7 +558,7 @@ public class ProductSearch {
             this.highPrice = highPrice;
         }
         
-        public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
+        public void addConstraint(ProductSearchContext productSearchContext) {
             // TODO: implement ListPriceRangeConstraint makeEntityCondition
         }
 
@@ -529,7 +576,7 @@ public class ProductSearch {
         public ResultSortOrder() {
         }
 
-        public abstract void setSortOrder(ProductSearchContext productSearchContext, GenericDelegator delegator);
+        public abstract void setSortOrder(ProductSearchContext productSearchContext);
         public abstract String getOrderName();
         public abstract boolean isAscending();
     }
@@ -538,7 +585,7 @@ public class ProductSearch {
         public SortKeywordRelevancy() {
         }
 
-        public void setSortOrder(ProductSearchContext productSearchContext, GenericDelegator delegator) {
+        public void setSortOrder(ProductSearchContext productSearchContext) {
             if (productSearchContext.includedKeywordSearch) {
                 // we have to check this in order to be sure that there is a totalRelevancy to sort by...
                 productSearchContext.orderByList.add("-totalRelevancy");
@@ -570,7 +617,7 @@ public class ProductSearch {
             this.ascending = ascending;
         }
 
-        public void setSortOrder(ProductSearchContext productSearchContext, GenericDelegator delegator) {
+        public void setSortOrder(ProductSearchContext productSearchContext) {
             productSearchContext.dynamicViewEntity.addAlias("PROD", fieldName);
             if (ascending) {
                 productSearchContext.orderByList.add("+" + fieldName);
@@ -594,7 +641,7 @@ public class ProductSearch {
             this.ascending = ascending;
         }
 
-        public void setSortOrder(ProductSearchContext productSearchContext, GenericDelegator delegator) {
+        public void setSortOrder(ProductSearchContext productSearchContext) {
             // TODO: implement SortListPrice, this will be a bit more complex, need to add a ProductPrice member entity
         }
         
