@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.12 2003/12/22 03:41:28 ajzeneski Exp $
+ * $Id: Start.java,v 1.13 2004/03/28 15:57:12 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -44,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.12 $
+  *@version    $Revision: 1.13 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -61,12 +63,17 @@ public class Start implements Runnable {
     private Config config = null;
     
     public Start(String configFile) throws IOException {
-        if (configFile == null) {
-            configFile = CONFIG_FILE;
+        this.loaders = new ArrayList();
+        this.config = new Config();
+
+        // always read the default properties first
+        config.readConfig(CONFIG_FILE);
+
+        // if we specified a config file; replace the values
+        if (configFile != null) {
+            System.out.println("External startup configuration file - " + configFile);
+            config.readConfig(configFile);
         }
-                
-        this.config = new Config(configFile);              
-        this.loaders = new ArrayList();          
     }
     
     public void startListenerThread() throws IOException {
@@ -300,22 +307,53 @@ public class Start implements Runnable {
         public String logDir;
         public List loaders;
         public String awtHeadless;
-        
-        public Config(String config) {
+
+        private Properties getPropertiesFile(String config) throws IOException {
+            InputStream propsStream = null;
+            Properties props = new Properties();
             try {
-                init(config);
-            } catch (IOException e) {                
-                e.printStackTrace();
-                System.exit(-1);
+                // first try classpath
+                propsStream = getClass().getClassLoader().getResourceAsStream(config);
+                if (propsStream != null) {
+                    props.load(propsStream);
+                } else {
+                    throw new IOException();
+                }
+            } catch (IOException e) {
+                // next try file location
+                File propsFile = new File(config);
+                if (propsFile != null) {
+                    FileInputStream fis = null;
+                    try {
+                        fis = new FileInputStream(propsFile);
+                        if (fis != null) {
+                            props.load(fis);
+                        } else {
+                            throw new FileNotFoundException();
+                        }
+                    } catch (FileNotFoundException e2) {
+                        // do nothing; we will see empty props below
+                    } finally {
+                        if (fis != null) {
+                            fis.close();
+                        }
+                    }
+                }
+            } finally {
+                if (propsStream != null) {
+                    propsStream.close();
+                }
             }
-        }
-        public void init(String config) throws IOException {
-            InputStream propsStream = getClass().getClassLoader().getResourceAsStream(config);
-            if (propsStream == null) {
+
+            // check for empty properties
+            if (props.isEmpty()) {
                 throw new IOException("Cannot load configuration properties : " + config);
             }
-            Properties props = new Properties();
-            props.load(propsStream);
+            return props;
+        }
+
+        public void readConfig(String config) throws IOException {
+            Properties props = this.getPropertiesFile(config);
             
             // set the ofbiz.home            
             if (ofbizHome == null) {        
@@ -393,7 +431,7 @@ public class Start implements Runnable {
         
             // build a default log4j configuration based on ofbizHome
             if (log4jConfig == null) {
-                log4jConfig = ofbizHome + "/config/debug.properties";
+                log4jConfig = ofbizHome + "/base/config/debug.properties";
             }
         
             // set the log4j configuration property so we don't pick up one inside jars by mistake
@@ -422,9 +460,6 @@ public class Start implements Runnable {
                     currentPosition++;
                 }
             }
-                 
-            // close the stream                 
-            propsStream.close();            
         }        
     }
 }
