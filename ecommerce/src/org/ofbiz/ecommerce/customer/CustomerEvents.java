@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.26  2001/09/26 02:58:32  jonesde
+ * Fix necessary to compile.
+ *
  * Revision 1.25  2001/09/25 20:26:09  epabst
  * enabled emailing a password or showing the password hint if the user forgot the password
  * put helper method into ContactHelper as an overload to getContactMech()
@@ -139,7 +142,7 @@ public class CustomerEvents {
     String password = request.getParameter("PASSWORD");
     String confirmPassword = request.getParameter("CONFIRM_PASSWORD");
     String passwordHint = request.getParameter("PASSWORD_HINT");
-
+    
     
     //get all parameters:
     String firstName = request.getParameter("USER_FIRST_NAME");
@@ -195,7 +198,7 @@ public class CustomerEvents {
     if(!UtilValidate.isEmail(email)) errMsg += "<li>" + UtilValidate.isEmailMsg;
     
     if(!UtilValidate.isNotEmpty(username)) errMsg += "<li>Username missing.";
-
+    
     if(username != null && username.length() > 0) {
       GenericValue userLogin;
       try { userLogin = delegator.findByPrimaryKey(delegator.makePK("UserLogin", UtilMisc.toMap("userLoginId", username))); }
@@ -208,9 +211,9 @@ public class CustomerEvents {
     
     GenericValue tempUserLogin = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "partyId", username));
     if (UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) {
-        errMsg += setPassword(tempUserLogin, password, confirmPassword, passwordHint);
+      errMsg += setPassword(tempUserLogin, password, confirmPassword, passwordHint);
     }
- 
+    
     
     if(errMsg.length() > 0) {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
@@ -222,7 +225,7 @@ public class CustomerEvents {
     if(!UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) password = UtilProperties.getPropertyValue("ecommerce", "default.customer.password", "ungssblepswd");
     
     Timestamp now = UtilDateTime.nowTimestamp();
-
+    
     // create Party, PartyClass, Person, ContactMechs for Address, phones
     tempUserLogin.preStoreOther(delegator.makeValue("Party", UtilMisc.toMap("partyId", username)));
     tempUserLogin.preStoreOther(delegator.makeValue("PartyClassification", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON", "partyClassificationTypeId", "PERSON_CLASSIFICATION", "fromDate", now)));
@@ -386,16 +389,16 @@ public class CustomerEvents {
           return "error";
         }
         tempContactMech.set("infoString", infoString);
-
+        
         String cmPurposeTypeId;
         try {
-            GenericValue party = userLogin.getRelatedOne("Party");
-            if (UtilValidate.isEmpty(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", false))) {
-                cmPurposeTypeId = "PRIMARY_EMAIL";
-            } else {
-                cmPurposeTypeId = "OTHER_EMAIL";
-            }
-            tempContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", cmPurposeTypeId, "fromDate", now)));
+          GenericValue party = userLogin.getRelatedOne("Party");
+          if (UtilValidate.isEmpty(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", false))) {
+            cmPurposeTypeId = "PRIMARY_EMAIL";
+          } else {
+            cmPurposeTypeId = "OTHER_EMAIL";
+          }
+          tempContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", cmPurposeTypeId, "fromDate", now)));
         } catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); }
       }
       else {
@@ -836,7 +839,7 @@ public class CustomerEvents {
         request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not find credit card info to delete (read failure). Please contact customer service.");
         return "error";
       }
-
+      
       creditCardInfo.set("thruDate", now);
       try { creditCardInfo.store(); }
       catch(GenericEntityException e) {
@@ -1031,8 +1034,8 @@ public class CustomerEvents {
     
     String errMsg = setPassword(userLogin, newPassword, confirmPassword, passwordHint);
     if (UtilValidate.isNotEmpty(errMsg)) {
-        request.setAttribute("ERROR_MESSAGE", errMsg);
-        return "error";
+      request.setAttribute("ERROR_MESSAGE", errMsg);
+      return "error";
     }
     
     try { userLogin.store(); }
@@ -1049,9 +1052,9 @@ public class CustomerEvents {
    */
   public static String forgotPassword(HttpServletRequest request, HttpServletResponse response) {
     if (UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT"))) {
-        return showPasswordHint(request, response);
+      return showPasswordHint(request, response);
     } else {
-        return emailPassword(request, response);
+      return emailPassword(request, response);
     }
   }
   
@@ -1073,21 +1076,21 @@ public class CustomerEvents {
     
     GenericValue supposedUserLogin = null;
     try {
-        supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+      supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
     } catch (GenericEntityException gee) { Debug.logWarning(gee); }
     if (supposedUserLogin == null) {
-        //the Username was not found
-        request.setAttribute("ERROR_MESSAGE", "<li>The Username was not found, please re-enter.");
-        return "error";
+      //the Username was not found
+      request.setAttribute("ERROR_MESSAGE", "<li>The Username was not found, please re-enter.");
+      return "error";
     }
-
+    
     String passwordHint = supposedUserLogin .getString("passwordHint");
     if (!UtilValidate.isNotEmpty(passwordHint)) {
-        //the Username was not found
-        request.setAttribute("ERROR_MESSAGE", "<li>No password hint was specified, try having the password emailed instead.");
-        return "error";
+      //the Username was not found
+      request.setAttribute("ERROR_MESSAGE", "<li>No password hint was specified, try having the password emailed instead.");
+      return "error";
     }
-
+    
     request.setAttribute("EVENT_MESSAGE", "The Password Hint is: " + passwordHint);
     return "success";
   }
@@ -1110,55 +1113,55 @@ public class CustomerEvents {
     
     GenericValue supposedUserLogin = null;
     try {
-        supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+      supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
     } catch (GenericEntityException gee) { Debug.logWarning(gee); }
     if (supposedUserLogin == null) {
-        //the Username was not found
-        request.setAttribute("ERROR_MESSAGE", "<li>The Username was not found, please re-enter.");
-        return "error";
+      //the Username was not found
+      request.setAttribute("ERROR_MESSAGE", "<li>The Username was not found, please re-enter.");
+      return "error";
     }
-
+    
     StringBuffer emails = new StringBuffer();
     GenericValue party = null;
     try { party = supposedUserLogin.getRelatedOne("Party"); }
     catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); party = null; }
     if(party != null) {
-        //Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
-        Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", false));
-        while(emailIter != null && emailIter.hasNext()) {
-            GenericValue email = (GenericValue) emailIter.next();
-            emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
-        }
+      //Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
+      Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", false));
+      while(emailIter != null && emailIter.hasNext()) {
+        GenericValue email = (GenericValue) emailIter.next();
+        emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
+      }
     }
-
+    
     if (!UtilValidate.isNotEmpty(emails.toString())) {
-        //the Username was not found
-        request.setAttribute("ERROR_MESSAGE", "<li>No Primary Email Address has been set, please contact ustomer service.");
-        return "error";
+      //the Username was not found
+      request.setAttribute("ERROR_MESSAGE", "<li>No Primary Email Address has been set, please contact ustomer service.");
+      return "error";
     }
     
     final String SMTP_SERVER = UtilProperties.getPropertyValue("ecommerce", "smtp.relay.host");
     final String LOCAL_MACHINE = UtilProperties.getPropertyValue("ecommerce", "smtp.local.machine");
     final String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue("ecommerce", "password.send.email");
-
+    
     String content = "Username: " + userLoginId + "\nPassword: " + UtilFormatOut.checkNull(supposedUserLogin.getString("currentPassword"));
     try {
-        SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, PASSWORD_SENDER_EMAIL, emails.toString(), content);
-        mail.setLocalMachine(LOCAL_MACHINE);
-        mail.setSubject(SiteDefs.SITE_NAME + " Password Reminder");
-        //mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
-        mail.setMessage(content);
-        mail.send();
+      SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, PASSWORD_SENDER_EMAIL, emails.toString(), content);
+      mail.setLocalMachine(LOCAL_MACHINE);
+      mail.setSubject(SiteDefs.SITE_NAME + " Password Reminder");
+      //mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
+      mail.setMessage(content);
+      mail.send();
     } catch (java.io.IOException e) {
-        Debug.logWarning(e);
-        request.setAttribute(SiteDefs.ERROR_MESSAGE, "error occurred: unable to email password.  Please try again later or contact customer service.");
-        return "error";
+      Debug.logWarning(e);
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "error occurred: unable to email password.  Please try again later or contact customer service.");
+      return "error";
     }
     
     request.setAttribute("EVENT_MESSAGE", "Your password has been sent to you.  Please check your Email.");
     return "success";
   }
-
+  
   /**
    * Will not persist the password - just set the attribute
    *
@@ -1167,29 +1170,30 @@ public class CustomerEvents {
   private static String setPassword(GenericValue userLogin, String password, String confirmPassword, String passwordHint) {
     String errMsg = "";
     if (UtilValidate.isEmpty(passwordHint)) passwordHint = null;
-
-    if(!UtilValidate.isNotEmpty(password) || !UtilValidate.isNotEmpty(confirmPassword)) { 
-        errMsg += "<li>Password(s) missing."; 
-    } else if(!password.equals(confirmPassword)) { 
-        errMsg += "<li>Password confirmation did not match."; 
+    
+    if(!UtilValidate.isNotEmpty(password) || !UtilValidate.isNotEmpty(confirmPassword)) {
+      errMsg += "<li>Password(s) missing.";
+    } else if(!password.equals(confirmPassword)) {
+      errMsg += "<li>Password confirmation did not match.";
     } else {
-        int minPasswordLength;
-        try { minPasswordLength = Integer.parseInt(UtilProperties.getPropertyValue("security", "password.length.min", "0"));
-        } catch (NumberFormatException nfe) { minPasswordLength = 0; };
-        if(!(password.length() >= minPasswordLength)) { 
-            errMsg += "<li>Password must be at least " + minPasswordLength + " characters long.";
-        } else if (password.equalsIgnoreCase(userLogin.getString("userLoginId"))) {
-            errMsg += "<li>Password may not equal the Username.";
-        } else if (UtilValidate.isNotEmpty(passwordHint) 
-                && (passwordHint.toUpperCase().indexOf(password.toUpperCase()) >= 0)) {
-            errMsg += "<li>Password hint may not contain the password.";
-        }
+      int minPasswordLength;
+      try { minPasswordLength = Integer.parseInt(UtilProperties.getPropertyValue("security", "password.length.min", "0"));
+      } catch (NumberFormatException nfe) { minPasswordLength = 0; };
+      if(!(password.length() >= minPasswordLength)) {
+        errMsg += "<li>Password must be at least " + minPasswordLength + " characters long.";
+      }
+      if(password.equalsIgnoreCase(userLogin.getString("userLoginId"))) {
+        errMsg += "<li>Password may not equal the Username.";
+      }
+      if(UtilValidate.isNotEmpty(passwordHint) && (passwordHint.toUpperCase().indexOf(password.toUpperCase()) >= 0)) {
+        errMsg += "<li>Password hint may not contain the password.";
+      }
     }
     
     if (errMsg.length() == 0) {
-        //all is well, update password
-        userLogin.set("currentPassword", password);
-        userLogin.set("passwordHint", passwordHint);
+      //all is well, update password
+      userLogin.set("currentPassword", password);
+      userLogin.set("passwordHint", passwordHint);
     }
     
     return errMsg;
