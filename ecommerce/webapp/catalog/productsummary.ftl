@@ -80,7 +80,7 @@
               <br><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>
             </form>
             
-            <#if requestAttributes.productCategoryMember?exists>
+            <#if requestAttributes.productCategoryMember?exists>              
 			  <#assign prodCatMem = requestAttributes.productCategoryMember>
 			  <#if prodCatMem?exists && prodCatMem.quantity?exists && 0.00 < prodCatMem.quantity?double>
                 <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform" style='margin: 0;'>
@@ -91,7 +91,7 @@
                   <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
                   <#if requestParameters.SEARCH_STRING?exists><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'></#if>
                   <#if requestParameters.SEARCH_CATEGORY_ID?exists><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'></#if>                                              
-                  <a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform.submit()" class="buttontext"><nobr>[Add Default(${productCategoryMember.quantity?string.number}) to Cart]</nobr></a>
+                  <a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform.submit()" class="buttontext"><nobr>[Add Default(${prodCatMem.quantity?string.number}) to Cart]</nobr></a>
                 </form>
               </#if>
             </#if>

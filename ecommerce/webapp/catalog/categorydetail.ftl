@@ -95,6 +95,7 @@
       <tr>
         <td>
           ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
+          ${setRequestAttribute("productCategoryMember", productCategoryMember)} 
           ${setRequestAttribute("listIndex", productCategoryMember_index)}         
           ${pages.get("/catalog/productsummary.ftl")}
         </td>
