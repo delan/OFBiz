@@ -1,29 +1,27 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.control;
-
 
 import java.io.*;
 import java.net.*;
@@ -39,14 +37,13 @@ import org.ofbiz.core.stats.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * ControlServlet.java - Master servlet for the web application.
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    June 28, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ControlServlet extends HttpServlet {
 
@@ -123,7 +120,6 @@ public class ControlServlet extends HttpServlet {
 
             while (headerNames.hasMoreElements()) {
                 String headerName = (String) headerNames.nextElement();
-
                 Debug.logVerbose(headerName + ":" + request.getHeader(headerName), module);
             }
             Debug.logVerbose("--- End Request Headers: ---", module);
@@ -136,20 +132,19 @@ public class ControlServlet extends HttpServlet {
 
         while (paramNames.hasMoreElements()) {
             String paramName = (String) paramNames.nextElement();
-
             if (Debug.verboseOn()) Debug.logVerbose(paramName + ":" + request.getParameter(paramName), module);
         }
         Debug.logVerbose("--- End Request Parameters: ---", module);
 
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
-        // if (Debug.infoOn()) Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH), module);
+        if (Debug.verboseOn()) 
+            Debug.logVerbose("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH), module);
 
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
         // try to get it from the session first so that we can have a delegator/dispatcher/security for a certain user if desired
         GenericDelegator delegator = null;
         String delegatorName = (String) session.getAttribute("delegatorName");
-
         if (UtilValidate.isNotEmpty(delegatorName)) {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
         }
@@ -165,7 +160,6 @@ public class ControlServlet extends HttpServlet {
         }
 
         LocalDispatcher dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");
-
         if (dispatcher == null) {
             dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
         }
@@ -175,7 +169,6 @@ public class ControlServlet extends HttpServlet {
         request.setAttribute("dispatcher", dispatcher);
 
         Security security = (Security) session.getAttribute("security");
-
         if (security == null) {
             security = (Security) getServletContext().getAttribute("security");
         }
@@ -190,17 +183,14 @@ public class ControlServlet extends HttpServlet {
         // Because certain app servers are lame and don't support the HttpSession.getServletContext method,
         // we put it in the request here
         ServletContext servletContext = getServletContext();
-
         request.setAttribute("servletContext", servletContext);
 
         StringBuffer serverRootUrl = UtilMisc.getServerRootUrl(request);
-
         request.setAttribute(SiteDefs.SERVER_ROOT_URL, serverRootUrl.toString());
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s) and View(s)", module);
 
         String errorPage = null;
-
         try {
             // the ServerHitBin call for the event is done inside the doRequest method
             getRequestHandler().doRequest(request, response, null, userLogin, delegator);
@@ -241,8 +231,32 @@ public class ControlServlet extends HttpServlet {
         }
 
         ServerHitBin.countRequest(webappName + "." + rname, request, requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
-
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
+        
+        // Print out some useful application/session/request information
+        if (Debug.verboseOn()) {
+            Enumeration appNames = servletContext.getAttributeNames();
+            Debug.logVerbose("--- Start ServletContext Attributes: ---", module);
+            while (appNames.hasMoreElements()) {
+                String attName = (String) appNames.nextElement();
+                Debug.logVerbose(attName + ":" + servletContext.getAttribute(attName), module);
+            }
+            Debug.logVerbose("--- End ServletContext Attributes ---", module);
+            Enumeration sesNames = session.getAttributeNames();
+            Debug.logVerbose("--- Start Session Attributes: ---", module);
+            while (sesNames.hasMoreElements()) {
+                String attName = (String) sesNames.nextElement();
+                Debug.logVerbose(attName + ":" + session.getAttribute(attName), module);
+            }
+            Debug.logVerbose("--- End Session Attributes ---", module);
+            Enumeration reqNames = request.getAttributeNames();
+            Debug.logVerbose("--- Start Request Attributes: ---", module);
+            while (reqNames.hasMoreElements()) {
+                String attName = (String) reqNames.nextElement();
+                Debug.logVerbose(attName + ":" + request.getAttribute(attName), module);
+            }
+            Debug.logVerbose("--- End Request Attributes ---", module);
+        }
     }
 
     private RequestHandler getRequestHandler() {

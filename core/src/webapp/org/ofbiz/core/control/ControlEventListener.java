@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.control;
-
 
 import java.net.*;
 import java.sql.*;
@@ -35,13 +33,12 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.stats.*;
 
-
 /**
  * HttpSessionListener that gathers and tracks various information and statistics
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    16 August 2002
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ControlEventListener implements HttpSessionListener {
     // Debug module name

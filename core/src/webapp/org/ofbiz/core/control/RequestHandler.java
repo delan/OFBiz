@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.control;
-
 
 import java.io.*;
 import java.util.*;
@@ -39,15 +37,14 @@ import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.view.*;
 
-
 /**
  * RequestHandler - Request Processor Object
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     Dustin Caldwell
- *@created    June 28, 2001
- *@version    1.1
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     Dustin Caldwell
+ * @version    $Revision$
+ * @since      2.0
  */
 public class RequestHandler implements Serializable {
 
