@@ -1,5 +1,5 @@
 /*
- * $Id: ControlServlet.java,v 1.5 2004/01/24 16:08:23 ajzeneski Exp $
+ * $Id: ControlServlet.java,v 1.6 2004/05/23 03:20:35 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import com.ibm.bsf.BSFManager;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ControlServlet extends HttpServlet {
@@ -181,6 +181,9 @@ public class ControlServlet extends HttpServlet {
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s) and View(s)", module);
 
+        // some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
+        request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, new Boolean(true));
+        
         String errorPage = null;
         try {
             // the ServerHitBin call for the event is done inside the doRequest method
@@ -203,8 +206,6 @@ public class ControlServlet extends HttpServlet {
         if (errorPage != null) {
             Debug.logError("An error occurred, going to the errorPage: " + errorPage, module);
             
-            // some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
-            request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, new Boolean(true));
             RequestDispatcher rd = request.getRequestDispatcher(errorPage);
 
             // use this request parameter to avoid infinite looping on errors in the error page...
