@@ -150,7 +150,6 @@ public class ShoppingCart implements Serializable {
             shipGroup.set("maySplit", new String(maySplit));
             shipGroup.set("isGift", new String(isGift));
             shipGroup.set("shipGroupSeqId", shipGroupSeqId);
-            Debug.log("Created Ship Group - " + shipGroup, module);
             values.add(shipGroup);
 
             // create the shipping estimate adjustments
@@ -159,7 +158,6 @@ public class ShoppingCart implements Serializable {
                 shipAdj.set("orderAdjustmentTypeId", "SHIPPING_CHARGES");
                 shipAdj.set("amount", new Double(shipEstimate));
                 shipAdj.set("shipGroupSeqId", shipGroupSeqId);
-                Debug.log("Created Ship Group Shipping Adjustment - " + shipAdj, module);
                 values.add(shipAdj);
             }
 
@@ -168,12 +166,10 @@ public class ShoppingCart implements Serializable {
             while (ti.hasNext()) {
                 GenericValue taxAdj = (GenericValue) ti.next();
                 taxAdj.set("shipGroupSeqId", shipGroupSeqId);
-                Debug.log("Created Ship Group Tax Adjustment - " + taxAdj, module);
                 values.add(taxAdj);
             }
 
             // create the ship group item associations
-            Debug.log("Creating associations - " + shipItemInfo.size(), module);
             Iterator i = shipItemInfo.keySet().iterator();
             while (i.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) i.next();
@@ -183,17 +179,14 @@ public class ShoppingCart implements Serializable {
                 assoc.set("orderItemSeqId", item.getOrderItemSeqId());
                 assoc.set("shipGroupSeqId", shipGroupSeqId);
                 assoc.set("quantity", new Double(itemInfo.quantity));
-                Debug.log("Created ShipGroupAssoc - " + assoc, module);
                 values.add(assoc);
 
-                // create the item tax adjustment
-                Debug.log("Item Tax Adj - " + itemInfo.itemTaxAdj, module);
+                // create the item tax adjustment                
                 Iterator iti = itemInfo.itemTaxAdj.iterator();
                 while (iti.hasNext()) {
                     GenericValue taxAdj = (GenericValue) iti.next();
                     taxAdj.set("orderItemSeqId", item.getOrderItemSeqId());
                     taxAdj.set("shipGroupSeqId", shipGroupSeqId);
-                    Debug.log("Created Item Tax Adj - " + taxAdj, module);
                     values.add(taxAdj);
                 }
             }
@@ -322,7 +315,6 @@ public class ShoppingCart implements Serializable {
                     Map lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
                     String billingAddressId = null;
 
-                    Debug.log("Doing billing location lookup for - " + valueObj, module);
                     // billing account, credit card, gift card, eft account all have postal address
                     try {
                         GenericValue pmObj = null;
@@ -336,10 +328,9 @@ public class ShoppingCart implements Serializable {
                             pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
                         }
                         if (pmObj != null) {
-                            Debug.log("Found PaymentMethod - " + pmObj, module);
                             billingAddressId = pmObj.getString("contactMechId");
                         } else {
-                            Debug.log("No PaymentMethod Object Found - " + paymentMethodId, module);
+                            Debug.logInfo("No PaymentMethod Object Found - " + paymentMethodId, module);
                         }
                     } catch (GenericEntityException e) {
                         Debug.logError(e ,module);
@@ -1033,7 +1024,6 @@ public class ShoppingCart implements Serializable {
             }
         }
 
-        Debug.log("Returning new payment info", module);
         return thisInf;
     }
 
@@ -1050,7 +1040,6 @@ public class ShoppingCart implements Serializable {
             paymentInfo.remove(inf);
         }
         paymentInfo.add(inf);
-        Debug.log("Added Payment Method : " + inf.toString(), module);
     }
 
     /** adds a payment method/payment method type */
@@ -1098,7 +1087,6 @@ public class ShoppingCart implements Serializable {
         Iterator i = paymentInfo.iterator();
         while (i.hasNext()) {
             CartPaymentInfo inf = (CartPaymentInfo) i.next();
-            Debug.log("Adding Payment Info - " + inf.toString(), module);
             if (inf.amount != null) {
                 total += inf.amount.doubleValue();
             }
@@ -1372,7 +1360,6 @@ public class ShoppingCart implements Serializable {
         for (int i = 0; i < shipInfo.size(); i++) {
             CartShipInfo csi = this.getShipInfo(i);
             csi.shipItemInfo.remove(item);
-            Debug.log("Removed item from ShipInfo - " + i + " / " + item.getProductId(), module);
         }
         this.cleanUpShipGroups();
     }
@@ -1398,7 +1385,6 @@ public class ShoppingCart implements Serializable {
     public void setItemShipGroupQty(ShoppingCartItem item, int itemIndex, double quantity, int idx) {
         if (itemIndex > -1) {
             CartShipInfo csi = this.getShipInfo(idx);
-            Debug.log("Adding item qty - (" + itemIndex + " / " + item.getProductId() + ") " + idx + " / " + quantity, module);
 
             // never set less than zero
             if (quantity < 0) {
@@ -1411,8 +1397,6 @@ public class ShoppingCart implements Serializable {
             }
             CartShipInfo.CartShipItemInfo csii = csi.setItemInfo(item, quantity);
             this.checkShipItemInfo(csi, csii);
-        } else {
-            Debug.log("Not setting quantity (" + quantity + ") item index = -1 : " + item.getProductId(), module);
         }
     }
 
@@ -1460,7 +1444,6 @@ public class ShoppingCart implements Serializable {
                 if (quantity > fromQty) {
                     quantity = fromQty;
                 }
-                Debug.log("Moving item (" + this.getItemIndex(item) + ") [" + quantity + "] from - " + fromIndex + " to - " + toIndex, module);
                 fromQty -= quantity;
                 toQty += quantity;
                 this.setItemShipGroupQty(item, fromQty, fromIndex);
@@ -2574,7 +2557,6 @@ public class ShoppingCart implements Serializable {
     /** Returns a Map of cart values to pass to the storeOrder service */
     public Map makeCartMap(LocalDispatcher dispatcher, boolean explodeItems) {
         Map result = new HashMap();
-        Debug.log("Making cart map.", module);
 
         result.put("orderTypeId", this.getOrderType());
         result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
