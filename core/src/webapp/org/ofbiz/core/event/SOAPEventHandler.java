@@ -39,7 +39,9 @@ import org.ofbiz.core.util.*;
  * SOAPEventHandler - SOAP Event Handler implementation
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
- * @version    $Revision
+ * @author     <a href="mailto:">Andy Chen</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
  * @since      2.0
  */
 public class SOAPEventHandler implements EventHandler {
@@ -62,6 +64,7 @@ public class SOAPEventHandler implements EventHandler {
 
         try {
             axisServer = AxisServer.getServer(UtilMisc.toMap("name", "OFBiz/Axis Server", "provider", null));
+        
         } catch (AxisFault e) {
             sendError(response, e);
             throw new EventHandlerException("Problems with the AXIS server", e);
@@ -91,11 +94,12 @@ public class SOAPEventHandler implements EventHandler {
 
         // get the service name and parameters
         try {
-            reqEnv = msg.getSOAPPart().getAsSOAPEnvelope();
+            reqEnv = (SOAPEnvelope) msg.getSOAPEnvelope();
         } catch (AxisFault e) {
             sendError(response, e);
             throw new EventHandlerException("Cannot get the envelope", e);
         }
+        
         List bodies = null;
 
         try {
@@ -155,12 +159,16 @@ public class SOAPEventHandler implements EventHandler {
                             resBody.addParam(par);
                         }
                         resEnv.addBodyElement(resBody);
-                        resEnv.setEncodingStyleURI(Constants.URI_SOAP_ENC);
+                        
+                        resEnv.setEncodingStyle(Constants.URI_SOAP_ENC);
                     } else {
                         sendError(response, "Request service not available");
                         throw new EventHandlerException("Service is not exported");
                     }
                 } catch (GenericServiceException e) {
+                    sendError(response, "Problem process the service");
+                    throw new EventHandlerException(e.getMessage(), e);
+                } catch (javax.xml.soap.SOAPException e) {
                     sendError(response, "Problem process the service");
                     throw new EventHandlerException(e.getMessage(), e);
                 }
