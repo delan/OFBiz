@@ -85,7 +85,9 @@
   }
   curFindString = UtilFormatOut.encodeQuery(curFindString);
 
-  GenericValue value = delegator.findByPrimaryKey(findByPK);
+  GenericValue value = null;
+  //only try to find it if this is a valid primary key...
+  if(findByPK.isPrimaryKey()) value = delegator.findByPrimaryKey(findByPK);
   if(value == null) useValue = false;
 %>
 
