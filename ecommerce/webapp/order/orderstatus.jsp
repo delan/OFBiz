@@ -55,191 +55,60 @@
 
   String orderId = request.getParameter("order_id");
   GenericValue orderHeader = null;
-  Iterator orderItemIter = null;
-  GenericValue shippingAddress = null;
-  GenericValue billingAddress = null;
-  int numberLines = 0;
-  OrderReadHelper order = null;
 
   if(orderId != null && orderId.length() > 0) {
     orderHeader = helper.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+    if (orderHeader != null) {
+        pageContext.setAttribute("orderHeader", orderHeader);
+        //check ownership
+        GenericValue orderRole = helper.findByPrimaryKey("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER"));
+        if (orderRole == null) {
+            pageContext.removeAttribute("orderHeader");
+        }
+    }
+  }%>
+<ofbiz:if name="orderHeader">
+    <%
+      Iterator orderItemIter = null;
+      GenericValue billingAddress = null; 
+      GenericValue shippingAddress = null; 
+      int numberLines = 0;
 
-    if(orderHeader != null)
-    {
-      order = new OrderReadHelper(orderHeader);
+      OrderReadHelper order = new OrderReadHelper(orderHeader);
+
       //XXX should we look in the OrderItemContactMech's here, too?
       Collection shippingLocationList = helper.findByAnd("OrderContactMech", UtilMisc.toMap(
               "orderId", orderId, "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null);
-      if (shippingLocationList.size() > 0)
+      if (shippingLocationList.size() > 0) {
           shippingAddress = ((GenericValue) shippingLocationList.iterator().next()).getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
-
+          if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);
+      }
       //XXX should we look in the OrderItemContactMech's here, too?
       Collection billingLocationList = helper.findByAnd("OrderContactMech", UtilMisc.toMap(
               "orderId", orderId, "contactMechPurposeTypeId", "BILLING_LOCATION"), null);
-      if (billingLocationList.size() > 0) 
+      if (billingLocationList.size() > 0) {
           billingAddress = ((GenericValue) billingLocationList.iterator().next()).getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
+          if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);
+      }
 
       pageContext.setAttribute("orderItemList", orderHeader.getRelated("OrderItem"));
-    } 
-  }
 
-  Iterator statusIterator = null;
+      GenericValue creditCardInfo = orderHeader.getRelatedOne("OrderPaymentPreference").getRelatedOne("CreditCardInfo");
+      if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);
+
+      GenericValue shipmentPreference = orderHeader.getRelatedOne("OrderShipmentPreference");
+      Boolean maySplit = shipmentPreference.getBoolean("maySplit");
+      if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);
+      String carrierPartyId = shipmentPreference.getString("carrierPartyId");
+      String shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
+      String shippingInstructions = shipmentPreference.getString("shippingInstructions");
+
+      String customerPoNumber = ((GenericValue) orderHeader.getRelated("OrderItem").iterator().next()).getString("correspondingPoId");
 %>
 
-<%
-  if(orderHeader == null) {
-%>
-<h3>The specified order was not found, please try again.</h3>
-<% 
-  } else { %>
-<% //check ownership
-  GenericValue orderRole = helper.findByPrimaryKey("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER"));
-  if(orderRole == null) {
-%>
-<h3>The specified order does not correspond to your current customer account.  You may not view or edit it.</h3>
-<%
-  } else {
-%>
+<%@ include file="orderinformation.jsp" %>
 
-<p class="head1">Order #<%=orderHeader.getString("orderId")%> Information</p>
-  <table border="0" width="100%" cellpadding="1" cellspacing="2">
-    <tr valign="top" bgcolor="<%=bColorA1%>">
-      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Person Username</b></div></td>
-      <td>
-        <div class="tabletext">&nbsp;
-          <%GenericValue userPerson = userLogin.getRelatedOne("Person");%>
-          <%=UtilFormatOut.checkNull(userLogin.getString("userLoginId"))%>
-          <%if(userPerson!=null){%>
-            (<%=PartyHelper.getPersonName(userPerson)%>)
-          <%}%>
-        </div>
-      </td>
-    </tr>
-    <tr valign="top" bgcolor="<%=bColorA2%>">
-      <td><div class="tabletext"><b>&nbsp;Order Status</b></div></td>
-      <td><div class="tabletext">&nbsp;<%=order.getStatusString()%></div></td>
-    </tr>
-    <tr valign="top" bgcolor="<%=bColorA1%>">
-      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Date Created</b></div></td>
-      <td>
-        <div class="tabletext">&nbsp;
-          <%=UtilDateTime.toDateTimeString(orderHeader.getTimestamp("orderDate"))%>
-        </div>
-      </td>
-    </tr>
-    <tr valign="top" bgcolor="<%=bColorA2%>">
-      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Desired Ship Date</b></div></td>
 
-    <%
-      String dsDateString = null;
-      String dsTimeString = null;
-      String shipmentInstructions = null;
-      String shipmentTypeId = null;
-    %>
-    <%
-        Collection orderShipmentList = orderHeader.getRelated("OrderShipment");
-        if (orderShipmentList.size() > 0) {
-            GenericValue orderShipment = (GenericValue) orderShipmentList.iterator().next();
-            GenericValue shipment = orderShipment.getRelatedOne("Shipment");
-            shipmentInstructions = shipment.getString("handlingInstructions");
-            shipmentTypeId = shipment.getString("shipmentTypeId");
-            java.sql.Timestamp dsTimestamp = shipment.getTimestamp("estimatedShipDate");
-            if(dsTimestamp  != null)
-            {
-              dsDateString = UtilDateTime.toDateString(dsTimestamp);
-              dsTimeString = UtilDateTime.toTimeString(dsTimestamp);
-            }
-        }//else no OrderShipment
-    %>
-      <td><div class="tabletext">&nbsp;<%=UtilFormatOut.checkNull(dsDateString)%> <%=UtilFormatOut.checkNull(dsTimeString)%></div></td>
-    </tr>
-<%--    <tr valign="top" bgcolor="<%=bColorA1%>">
-      <td><div class="tabletext"><b>Splitting Preference</b></div></td>
-      <td><div class="tabletext"><%=UtilFormatOut.checkNull(orderHeader.getSplittingPreference())%></div></td>
-    </tr> --%>
-    <tr valign="top" bgcolor="<%=bColorA1%>">
-      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Handling Instructions</b></div></td>
-      <td><div class="tabletext">&nbsp;<%=UtilFormatOut.checkNull(shipmentInstructions)%></div></td>
-    </tr>
-    <tr valign="top" bgcolor="<%=bColorA2%>">
-      <td width='1%' nowrap><div class="tabletext"><b>&nbsp;Shipping Method</b></div></td>
-      <td>
-        <div class="tabletext">&nbsp;
-          <%=UtilFormatOut.checkNull(shipmentTypeId)%>
-        </div>
-      </td>
-    </tr>
-    <tr valign="top" bgcolor="<%=bColorA1%>">
-      <td valign="top" width='1%' nowrap><div class="tabletext"><b>&nbsp;Shipping Address</b></div></td>
-      <td valign="top">
-        <div class="tabletext">
-        <% if(shippingAddress != null) { %>
-          <%=UtilFormatOut.checkNull(shippingAddress.getString("address1"))%><br>
-          <% if(UtilValidate.isNotEmpty(shippingAddress.getString("address2"))) { %> <%=shippingAddress.getString("address2")%><br> <% } %>
-          <%=UtilFormatOut.checkNull(shippingAddress.getString("city"))%><br>
-          <% GenericValue countryGeo = shippingAddress.getRelatedOne("CountryGeo");
-             if(countryGeo != null && UtilValidate.isNotEmpty(countryGeo.getString("name"))) { %> <%=countryGeo.getString("name")%> <% } %>
-          <% GenericValue stateProvinceGeo = shippingAddress.getRelatedOne("StateProvinceGeo"); %>
-          <%=stateProvinceGeo != null ? UtilFormatOut.checkNull(stateProvinceGeo.getString("name")) : ""%> &nbsp; <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
-        <% } else { %>
-          <font color="red">ERROR: Shipping Address record lookup failed.</font>
-        <% } %>
-        </div>
-      </td>
-    </tr>
-    <tr valign="top" bgcolor="<%=bColorA2%>">
-      <td valign="top" width='1%' nowrap><div class="tabletext"><b>&nbsp;Payment Info</b></div></td>
-      <td valign="top">
-        <div class="tabletext">
-          <% GenericValue billToPerson = order.getBillToPerson();
-  
-            String billToPersonName = PartyHelper.getPersonName(billToPerson);
-            if(billToPersonName != null && billToPersonName.length() > 0) { %>
-            <%=billToPersonName%><br>
-          <% } %>
-
-          <% if(billingAddress != null) { %>
-            <%=UtilFormatOut.checkNull(billingAddress.getString("address1"))%><br>
-            <% if(billingAddress.getString("address2") != null && billingAddress.getString("address2").length() != 0) { %> <%=billingAddress.getString("address2")%><br> <% } %>
-            <%=UtilFormatOut.checkNull(billingAddress.getString("city"))%><br>
-            <% GenericValue countryGeo = billingAddress.getRelatedOne("CountryGeo");
-               if(countryGeo != null && UtilValidate.isNotEmpty(countryGeo.getString("name"))) { %> <%=countryGeo.getString("name")%> <% } %>
-            <% GenericValue stateProvinceGeo = billingAddress.getRelatedOne("StateProvinceGeo"); %>
-            <%=stateProvinceGeo != null ? UtilFormatOut.checkNull(stateProvinceGeo.getString("name")) : ""%> &nbsp; <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
-          <% } else { %>
-            No billing address<br>
-          <% } %>
-
-<%--          <% if(orderHeader.getPaymentType() != null && orderHeader.getPaymentType().length() > 0) { %>
-            <%=orderHeader.getPaymentType()%>
-          <% } %> --%>
-<%--          <%
-            if(orderHeader.getPaymentNumber() != null)
-            {
-              if(orderHeader.getPaymentType() != null && (orderHeader.getPaymentType().compareTo("STORE_CREDIT") == 0 || orderHeader.getPaymentType().compareTo("PURCHASE_ORDER") == 0))
-              {
-          %>
-                <%=orderHeader.getPaymentNumber()%>
-          <%
-              }
-              else if(orderHeader.getPaymentNumber().length() > 4)
-              {
-          %>
-                <%=orderHeader.getPaymentNumber().substring(orderHeader.getPaymentNumber().length()-4)%>
-          <%
-              }
-            }
-          %>
-          <% if(orderHeader.getPaymentExpireDate() != null && orderHeader.getPaymentExpireDate().length() > 0) { %>
-            <%=orderHeader.getPaymentExpireDate()%>
-          <% } %>--%>
-        </div>
-      </td>
-    </tr>
-  </table>
-<%-- } else { %>
-  <font color="red">ERROR: Sales Order lookup failed.</font> 
-<% } --%>
   <form name="addOrderToCartForm" action="<ofbiz:url><%="/addordertocart/orderstatus?order_id=" + orderId%></ofbiz:url>" method="GET">
   <input type="HIDDEN" name="add_all" value="false">
   <input type="HIDDEN" name="order_id" value="<%=orderId%>">
@@ -354,8 +223,10 @@
   <tr><td><font color="red">ERROR: Sales Order lookup failed.</font></td></tr> --%>
 </table>
 
-<%} //end if customerId matches %>
-<%} //end if orderHeader null %>
+</ofbiz:if> <%-- Order --%>
+<ofbiz:unless name="orderHeader">
+<h3>The specified order was not found, please try again.</h3>
+</ofbiz:unless>
 
   <table border="0" cellpadding="1" width="100%"><tr><td>
     <table border="0" cellspacing="0" cellpadding="2" width="100%"><tr>

@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/09/13 18:31:36  epabst
+ * cleaned up
+ * fixed billing account handling
+ *
  * Revision 1.7  2001/09/13 15:12:25  epabst
  * cleaned up a little
  * separated shippingMethod into carrierPartyId and shipmentMethodTypeId
@@ -155,7 +159,9 @@ public class CheckOutEvents {
             order.preStoreOther(helper.makeValue("OrderContactMech", UtilMisc.toMap( "contactMechId", cart.getShippingContactMechId(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
             
             String shipmentId = helper.getNextSeqId("Shipment").toString();
-            order.preStoreOther(helper.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", cart.getShipmentMethodTypeId(), "carrierPartyId", cart.getCarrierPartyId(), "carrierRoleTypeId", "CARRIER" /*XXX*/, "shippingInstructions", cart.getShippingInstructions())));
+            GenericValue orderShipmentPreference = helper.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", cart.getShipmentMethodTypeId(), "carrierPartyId", cart.getCarrierPartyId(), "carrierRoleTypeId", "CARRIER" /*XXX*/, "shippingInstructions", cart.getShippingInstructions()));
+            orderShipmentPreference.set("maySplit", cart.getMaySplit());
+            order.preStoreOther(orderShipmentPreference);
 
             Iterator itemIter = cart.iterator();
             int seqId = 1;

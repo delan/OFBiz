@@ -52,106 +52,24 @@
   GenericValue shippingAddress = cart.getShippingAddress(helper);
   GenericValue creditCardInfo = cart.getCreditCardInfo(helper);
   GenericValue  billingAddress = cart.getBillingAddress(helper);
+  String shippingInstructions = cart.getShippingInstructions();
   String customerPoNumber = cart.getPoNumber();
+  String carrierPartyId = cart.getCarrierPartyId();
+  String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
+  Boolean maySplit = cart.getMaySplit();
 //  if (creditCardInfo == null) {
 
   if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);
   if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);
   if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);
+  if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);
   pageContext.setAttribute("cartItems", cart.items()); 
 %>
 
-<ofbiz:unless name="shippingAddress">
-  <h3>ERROR: Shipping address must be specified, please go back or start over.</h3>
-</ofbiz:unless>
-<ofbiz:if name="shippingAddress">
-<table width="100%" cellpadding="3" cellspacing="0" border="0">
-  <%-- row to set cell widths --%>
-  <tr>
-    <td width="5%"></td>
-    <td width="95%"></td>
-  </tr>
- <tr>
-    <td colspan="2" align="left"><div class="head2">Shipping Destination</div></td>
- </tr>
+<%@ include file="orderinformation.jsp" %>
 
- <tr>
-    <td>&nbsp;</td>
-    <td align="left" valign="top" nowrap>
-      <div class="tabletext">
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
-      </div>
-    </td>
-  </tr>
-<%--  <tr>
-    <td align="left" colspan="2"><div class="head2">Shipment Splitting Preference</div></td>
-  </tr>
-  <tr>
-      <td>&nbsp;</td>
-      <td align="left">
-        <div class="tabletext"><%=splittingPreferenceCode%></div>
-      </td>
-  </tr>  --%>
+<%-- *************************** OLD --%>
 
-
-
-  <tr>
-    <td align="left" colspan="2"><div class="head2">Shipping Instructions</div></td>
-  </tr>
-  <tr>
-      <td>&nbsp;</td>
-      <td align="left">
-  <div class="tabletext"><%=UtilFormatOut.checkNull(cart.getShippingInstructions())%></div>
-      </td>
-  </tr>
-
-  <tr>
-    <td align="left" colspan="5"><div class="head2">Shipping Method</div></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td align="left">
-        <div class="tabletext">
-          <%=UtilFormatOut.checkNull(cart.getCarrierPartyId())%> 
-          <%=UtilFormatOut.checkNull(helper.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId())).getString("description"))%>
-          <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
-        </div>
-    </td>
-  </tr> 
-      <tr>
-        <td align="left" colspan="5"><div class="head2">Payment Information</div></td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td align="left" valign="top" nowrap>
-<ofbiz:if name="creditCardInfo"> 
-        <div class="tabletext">
-          <b>Name on Card:</b> <%=creditCardInfo.getString("nameOnCard")%><br>
-        </div>
-        <div class="tabletext"><b><%=ContactHelper.formatCreditCard(creditCardInfo)%></b></div>
-</ofbiz:if>
-<ofbiz:if name="billingAddress">
-        <div class="tabletext"><b>Purchase Order Number: <%=UtilFormatOut.checkNull(customerPoNumber)%></b></div>
-        <div class="tabletext">
-          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-          <%=UtilFormatOut.checkNull(billingAddress.getString("address1"))%><br>
-          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("address2"),  "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("city"), "", "<br>")%>
-          <%=UtilFormatOut.checkNull(billingAddress.getString("stateProvinceGeoId"))%> &nbsp; <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
-          <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("countryGeoId"), "", "")%>
-        </div>
-</ofbiz:if>
-        </td>
-      </tr>
-</table>
-</ofbiz:if> <%-- shippingAddress --%>
 <%-- table for shoppingcartline items --%>
   <table border="0" cellpadding="1" width="100%">
     <%-- use this row to set the widths on all the columns --%>
