@@ -65,10 +65,10 @@
       <field name="addendumEffectiveDate" type="date-time"></field>
       <field name="addendumText" type="long-varchar"></field>
       <prim-key field="addendumId"/>
-      <relation type="one" rel-entity-name="Agreement">
+      <relation type="one" fk-name="ADDNDM_AGRMNT" rel-entity-name="Agreement">
         <key-map field-name="agreementId"/>
       </relation>
-      <relation type="one" rel-entity-name="AgreementItem">
+      <relation type="one" fk-name="ADDNDM_AGRMNT_ITM" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
       </relation>
@@ -89,26 +89,26 @@
       <field name="description" type="description"></field>
       <field name="textData" type="long-varchar"></field>
       <prim-key field="agreementId"/>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="AGRMNT_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" title="From" rel-entity-name="Party">
+      <relation type="one" fk-name="AGRMNT_FPARTY" title="From" rel-entity-name="Party">
         <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" title="From" rel-entity-name="RoleType">
+      <relation type="one" fk-name="AGRMNT_FROLE" title="From" rel-entity-name="RoleType">
         <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="one" title="From" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="AGRMNT_FPRTYRLE" title="From" rel-entity-name="PartyRole">
         <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
         <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="one" title="To" rel-entity-name="Party">
+      <relation type="one" fk-name="AGRMNT_TPARTY" title="To" rel-entity-name="Party">
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" title="To" rel-entity-name="RoleType">
+      <relation type="one" fk-name="AGRMNT_TROLE" title="To" rel-entity-name="RoleType">
         <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="one" title="To" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="AGRMNT_TPRTYRLE" title="To" rel-entity-name="PartyRole">
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
         <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
       </relation>
@@ -121,7 +121,7 @@
       <relation type="many" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId"/>
       </relation>
-      <relation type="one" rel-entity-name="AgreementType">
+      <relation type="one" fk-name="AGRMNT_TYPE" rel-entity-name="AgreementType">
         <key-map field-name="agreementTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementTypeAttr">
@@ -142,7 +142,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="agreementId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Agreement">
+      <relation type="one" fk-name="AGRMNT_ATTR" rel-entity-name="Agreement">
         <key-map field-name="agreementId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementTypeAttr">
@@ -169,10 +169,10 @@
       <field name="agreementImage" type="blob"></field>
       <prim-key field="agreementId"/>
       <prim-key field="agreementItemSeqId"/>
-      <relation type="one" rel-entity-name="Agreement">
+      <relation type="one" fk-name="AGRMNT_ITEM_AGR" rel-entity-name="Agreement">
         <key-map field-name="agreementId"/>
       </relation>
-      <relation type="one" rel-entity-name="AgreementItemType">
+      <relation type="one" fk-name="AGRMNT_ITEM_TYPE" rel-entity-name="AgreementItemType">
         <key-map field-name="agreementItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementItemTypeAttr">
@@ -197,7 +197,7 @@
       <prim-key field="agreementId"/>
       <prim-key field="agreementItemSeqId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="AgreementItem">
+      <relation type="one" fk-name="AGRMNT_ITEM_ATTR" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
       </relation>
@@ -213,7 +213,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="agreementItemTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="AgreementItemType">
+      <relation type="one" fk-name="AGRMNT_TYPEPAR" title="Parent" rel-entity-name="AgreementItemType">
         <key-map field-name="parentTypeId" rel-field-name="agreementItemTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="AgreementItemType">
@@ -233,7 +233,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="agreementItemTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="AgreementItemType">
+      <relation type="one" fk-name="AGRMNT_ITEM_TYPATR" rel-entity-name="AgreementItemType">
         <key-map field-name="agreementItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementItemAttribute">
@@ -293,7 +293,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="agreementTermId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="AgreementTerm">
+      <relation type="one" fk-name="AGRMNT_TERM_ATTR" rel-entity-name="AgreementTerm">
         <key-map field-name="agreementTermId"/>
       </relation>
       <relation type="many" rel-entity-name="TermTypeAttr">
@@ -308,7 +308,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="agreementTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="AgreementType">
+      <relation type="one" fk-name="AGRMNT_TYPE_PAR" title="Parent" rel-entity-name="AgreementType">
         <key-map field-name="parentTypeId" rel-field-name="agreementTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="AgreementType">
@@ -328,7 +328,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="agreementTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="AgreementType">
+      <relation type="one" fk-name="AGRMNT_TYPE_ATTR" rel-entity-name="AgreementType">
         <key-map field-name="agreementTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementAttribute">
@@ -346,7 +346,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="termTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="TermType">
+      <relation type="one" fk-name="TERM_TYPE_PAR" title="Parent" rel-entity-name="TermType">
         <key-map field-name="parentTypeId" rel-field-name="termTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="TermType">
@@ -375,7 +375,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="termTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="TermType">
+      <relation type="one" fk-name="TERM_TYPE_ATTR" rel-entity-name="TermType">
         <key-map field-name="termTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementTermAttribute">
@@ -425,7 +425,7 @@
       <field name="datetimeEnded" type="date-time"></field>
       <field name="note" type="comment"></field>
       <prim-key field="communicationEventId"/>
-      <relation type="one" rel-entity-name="CommunicationEventType">
+      <relation type="one" fk-name="COM_EVNT_TYPE" rel-entity-name="CommunicationEventType">
         <key-map field-name="communicationEventTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="CommunicationEventPurpose">
@@ -440,7 +440,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="communicationEventPrpTypId"/>
-      <relation type="one" title="Parent" rel-entity-name="CommunicationEventPrpTyp">
+      <relation type="one" fk-name="COM_EVNT_PRP_TYP" title="Parent" rel-entity-name="CommunicationEventPrpTyp">
         <key-map field-name="parentTypeId" rel-field-name="communicationEventPrpTypId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="CommunicationEventPrpTyp">
@@ -458,10 +458,10 @@
       <field name="description" type="description"></field>
       <prim-key field="communicationEventPrpTypId"/>
       <prim-key field="communicationEventId"/>
-      <relation type="one" rel-entity-name="CommunicationEvent">
+      <relation type="one" fk-name="COM_EVNT_PRP_EVNT" rel-entity-name="CommunicationEvent">
         <key-map field-name="communicationEventId"/>
       </relation>
-      <relation type="one" rel-entity-name="CommunicationEventPrpTyp">
+      <relation type="one" fk-name="COM_EVNT_PRP_TYPE" rel-entity-name="CommunicationEventPrpTyp">
         <key-map field-name="communicationEventPrpTypId"/>
       </relation>
     </entity>
@@ -483,7 +483,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="communicationEventTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="CommunicationEventType">
+      <relation type="one" fk-name="COM_EVNT_TYPE_PAR" title="Parent" rel-entity-name="CommunicationEventType">
         <key-map field-name="parentTypeId" rel-field-name="communicationEventTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="CommunicationEventType">
@@ -524,7 +524,7 @@
       <field name="contactMechTypeId" type="id"></field>
       <field name="infoString" type="long-varchar"></field>
       <prim-key field="contactMechId"/>
-      <relation type="one" rel-entity-name="ContactMechType">
+      <relation type="one" fk-name="CONT_MECH_TYPE" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ContactMechTypeAttr">
@@ -566,7 +566,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="contactMechId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="CONT_MECH_ATTR" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="many" rel-entity-name="ContactMechTypeAttr">
@@ -580,10 +580,10 @@
       <field name="contactMechIdTo" type="id-ne"></field>
       <prim-key field="contactMechIdFrom"/>
       <prim-key field="contactMechIdTo"/>
-      <relation type="one" title="From" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="CONT_MECH_FCMECH" title="From" rel-entity-name="ContactMech">
         <key-map field-name="contactMechIdFrom" rel-field-name="contactMechId"/>
       </relation>
-      <relation type="one" title="To" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="CONT_MECH_TCMECH" title="To" rel-entity-name="ContactMech">
         <key-map field-name="contactMechIdTo" rel-field-name="contactMechId"/>
       </relation>
     </entity>
@@ -614,7 +614,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="contactMechTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="ContactMechType">
+      <relation type="one" fk-name="CONT_MECH_TYP_PAR" title="Parent" rel-entity-name="ContactMechType">
         <key-map field-name="parentTypeId" rel-field-name="contactMechTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ContactMechType">
@@ -640,7 +640,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="contactMechTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="ContactMechType">
+      <relation type="one" fk-name="CONT_MECH_TYP_ATR" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ContactMechAttribute">
@@ -658,10 +658,10 @@
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <prim-key field="contactMechTypeId"/>
       <prim-key field="contactMechPurposeTypeId"/>
-      <relation type="one" rel-entity-name="ContactMechType">
+      <relation type="one" fk-name="CONT_MECH_TP_TYPE" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMechPurposeType">
+      <relation type="one" fk-name="CONT_MECH_TP_PRPTP" rel-entity-name="ContactMechPurposeType">
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
     </entity>
@@ -679,17 +679,17 @@
       <prim-key field="partyId"/>
       <prim-key field="contactMechId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_CMECH_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="PARTY_CMECH_PROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="PARTY_CMECH_ROLE" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="PARTY_CMECH_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="TelecomNumber">
@@ -716,13 +716,13 @@
         <key-map field-name="partyId"/>
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMechPurposeType">
+      <relation type="one" fk-name="PARTY_CMPRP_TYPE" rel-entity-name="ContactMechPurposeType">
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_CMPRP_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="PARTY_CMPRP_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
@@ -741,7 +741,7 @@
       <field name="stateProvinceGeoId" type="id"></field>
       <field name="postalCodeGeoId" type="id"></field>
       <prim-key field="contactMechId"/>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="POST_ADDR_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="many" rel-entity-name="CreditCard">
@@ -750,13 +750,13 @@
       <relation type="many" rel-entity-name="PostalAddressBoundary">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" title="Country" rel-entity-name="Geo">
+      <relation type="one" fk-name="POST_ADDR_CGEO" title="Country" rel-entity-name="Geo">
         <key-map field-name="countryGeoId" rel-field-name="geoId"/>
       </relation>
-      <relation type="one" title="StateProvince" rel-entity-name="Geo">
+      <relation type="one" fk-name="POST_ADDR_SPGEO" title="StateProvince" rel-entity-name="Geo">
         <key-map field-name="stateProvinceGeoId" rel-field-name="geoId"/>
       </relation>
-      <relation type="one" title="PostalCode" rel-entity-name="Geo">
+      <relation type="one" fk-name="POST_ADDR_PCGEO" title="PostalCode" rel-entity-name="Geo">
         <key-map field-name="postalCodeGeoId" rel-field-name="geoId"/>
       </relation>
     </entity>
@@ -767,10 +767,10 @@
       <field name="geoId" type="id-ne"></field>
       <prim-key field="contactMechId"/>
       <prim-key field="geoId"/>
-      <relation type="one" rel-entity-name="PostalAddress">
+      <relation type="one" fk-name="POST_ADDR_BNDRY" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="Geo">
+      <relation type="one" fk-name="POST_ADDR_BNDRYGEO" rel-entity-name="Geo">
         <key-map field-name="geoId"/>
       </relation>
     </entity>
@@ -782,7 +782,7 @@
       <field name="areaCode" type="very-short"></field>
       <field name="contactNumber" type="short-varchar"></field>
       <prim-key field="contactMechId"/>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="TEL_NUM_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
@@ -793,10 +793,10 @@
       <field name="contactMechTypeId" type="id-ne"></field>
       <prim-key field="roleTypeId"/>
       <prim-key field="contactMechTypeId"/>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="VAL_CMRLE_ROLE" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMechType">
+      <relation type="one" fk-name="VAL_CMRLE_CMTYPE" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId"/>
       </relation>
     </entity>
@@ -848,10 +848,10 @@
       <field name="dateTimeCreated" type="date-time"></field>
       <field name="dateTimeApproved" type="date-time"></field>
       <prim-key field="partyId"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="AFFILIATE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyGroup">
+      <relation type="one" fk-name="AFFILIATE_PGRP" rel-entity-name="PartyGroup">
         <key-map field-name="partyId"/>
       </relation>
     </entity>
@@ -861,7 +861,7 @@
       <field name="partyId" type="id-ne"></field>
       <field name="partyTypeId" type="id-ne"></field>
       <prim-key field="partyId"/>
-      <relation type="one" rel-entity-name="PartyType">
+      <relation type="one" fk-name="PARTY_TYPE" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyTypeAttr">
@@ -945,7 +945,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="partyId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_ATTR" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyTypeAttr">
@@ -963,13 +963,13 @@
       <prim-key field="partyId"/>
       <prim-key field="partyClassificationGroupId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_CLASS_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyClassificationType">
+      <relation type="one" fk-name="PARTY_CLASS_TYPE" rel-entity-name="PartyClassificationType">
         <key-map field-name="partyClassificationTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyClassificationGroup">
+      <relation type="one" fk-name="PARTY_CLASS_GRP" rel-entity-name="PartyClassificationGroup">
         <key-map field-name="partyClassificationGroupId"/>
       </relation>
     </entity>
@@ -981,7 +981,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="partyClassificationGroupId"/>
-      <relation type="one" title="Parent" rel-entity-name="PartyClassificationGroup">
+      <relation type="one" fk-name="PARTY_CLASS_GRPPAR" title="Parent" rel-entity-name="PartyClassificationGroup">
         <key-map field-name="parentTypeId" rel-field-name="partyClassificationGroupId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="PartyClassificationGroup">
@@ -1005,7 +1005,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="partyClassificationTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="PartyClassificationType">
+      <relation type="one" fk-name="PARTY_CLASS_TYPPAR" title="Parent" rel-entity-name="PartyClassificationType">
         <key-map field-name="parentTypeId" rel-field-name="partyClassificationTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="PartyClassificationType">
@@ -1047,13 +1047,13 @@
         <key-map field-name="partyId"/>
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMechPurposeType">
+      <relation type="one-nofk" rel-entity-name="ContactMechPurposeType">
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one-nofk" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="TelecomNumber">
@@ -1067,10 +1067,10 @@
       <field name="dataObjectId" type="id-ne"></field>
       <prim-key field="partyId"/>
       <prim-key field="dataObjectId"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_DATA_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="DataObject">
+      <relation type="one" fk-name="PARTY_DATA_DATA" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
@@ -1081,7 +1081,7 @@
       <field name="groupName" type="name"></field>
       <field name="federalTaxId" type="short-varchar"></field>
       <prim-key field="partyId"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_GRP_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
     </entity>
@@ -1092,10 +1092,10 @@
       <field name="noteId" type="id-ne"></field>
       <prim-key field="partyId"/>
       <prim-key field="noteId"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_NOTE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="NoteData">
+      <relation type="one" fk-name="PARTY_NOTE_NOTE" rel-entity-name="NoteData">
         <key-map field-name="noteId"/>
       </relation>
     </entity>
@@ -1138,27 +1138,27 @@
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="fromDate"/>
-      <relation type="one" title="From" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_REL_FPARTY" title="From" rel-entity-name="Party">
         <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" title="To" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_REL_TPARTY" title="To" rel-entity-name="Party">
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" title="From" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="PARTY_REL_FPROLE" title="From" rel-entity-name="PartyRole">
         <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
         <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="one" title="To" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="PARTY_REL_TPROLE" title="To" rel-entity-name="PartyRole">
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
         <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="PARTY_REL_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="one" rel-entity-name="PriorityType">
+      <relation type="one" fk-name="PARTY_REL_PRTYP" rel-entity-name="PriorityType">
         <key-map field-name="priorityTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRelationshipType">
+      <relation type="one" fk-name="PARTY_REL_TYPE" rel-entity-name="PartyRelationshipType">
         <key-map field-name="partyRelationshipTypeId"/>
       </relation>
     </entity>
@@ -1173,7 +1173,7 @@
       <field name="description" type="description"></field>
       <field name="partyRelationshipName" type="name"></field>
       <prim-key field="partyRelationshipTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="PartyRelationshipType">
+      <relation type="one" fk-name="PARTY_RELTYP_PAR" title="Parent" rel-entity-name="PartyRelationshipType">
         <key-map field-name="parentTypeId" rel-field-name="partyRelationshipTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="PartyRelationshipType">
@@ -1182,10 +1182,10 @@
       <relation type="many" rel-entity-name="PartyRelationship">
         <key-map field-name="partyRelationshipTypeId"/>
       </relation>
-      <relation type="one" title="ValidFrom" rel-entity-name="RoleType">
+      <relation type="one" fk-name="PARTY_RELTYP_VFRT" title="ValidFrom" rel-entity-name="RoleType">
         <key-map field-name="roleTypeIdValidFrom" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="one" title="ValidTo" rel-entity-name="RoleType">
+      <relation type="one" fk-name="PARTY_RELTYP_VTRT" title="ValidTo" rel-entity-name="RoleType">
         <key-map field-name="roleTypeIdValidTo" rel-field-name="roleTypeId"/>
       </relation>
     </entity>
@@ -1196,10 +1196,10 @@
       <field name="roleTypeId" type="id-ne"></field>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_RLE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="PARTY_RLE_ROLE" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="RoleTypeAttr">
@@ -1252,7 +1252,7 @@
       <prim-key field="partyId"/>
       <prim-key field="surveyId"/>
       <prim-key field="surveyResponseId"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PARTY_SRVYRSP_PTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
     </entity>
@@ -1264,7 +1264,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="partyTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="PartyType">
+      <relation type="one" fk-name="PARTY_TYPE_PAR" title="Parent" rel-entity-name="PartyType">
         <key-map field-name="parentTypeId" rel-field-name="partyTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="PartyType">
@@ -1287,7 +1287,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="partyTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="PartyType">
+      <relation type="one" fk-name="PARTY_TYP_ATTR" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyAttribute">
@@ -1319,7 +1319,7 @@
       <field name="totalYearsWorkExperience" type="floating-point"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="partyId"/>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
@@ -1371,7 +1371,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="roleTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="RoleType">
+      <relation type="one" fk-name="ROLE_TYPE_PAR" title="Parent" rel-entity-name="RoleType">
         <key-map field-name="parentTypeId" rel-field-name="roleTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="RoleType">
@@ -1415,7 +1415,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="roleTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="ROLE_TYPE_ATTR" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyAttribute">
