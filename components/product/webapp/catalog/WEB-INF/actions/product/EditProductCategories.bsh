@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -60,7 +60,9 @@ while (productCategoryMemberIter.hasNext()) {
 HtmlFormWrapper updateProductCategoryMemberWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "UpdateProductCategoryMemeber", request, response);
 context.put("updateProductCategoryMemberWrapper", updateProductCategoryMemberWrapper);
 updateProductCategoryMemberWrapper.putInContext("productCategoryMemberDatas", productCategoryMemberDatas);
+updateProductCategoryMemberWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 HtmlFormWrapper addProductCategoryMemberWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddProductCategoryMember", request, response);
 context.put("addProductCategoryMemberWrapper", addProductCategoryMemberWrapper);
 addProductCategoryMemberWrapper.putInContext("product", product);
+addProductCategoryMemberWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -60,9 +60,9 @@
                 <#list shoppingCart.items() as cartLine>
                     <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
                     <#if cartLine.getIsPromo()>
-                        <div class="tabletext">${uiLabelMap.EcommerceItem} #${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${uiLabelMap.EcommerceIsAPromotionalItem}</div>
+                        <div class="tabletext">${uiLabelMap.EcommerceItemN} ${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${uiLabelMap.EcommerceIsAPromotionalItem}</div>
                     <#else>
-                        <div class="tabletext">${uiLabelMap.EcommerceItem} #${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${cartLine.getPromoQuantityUsed()?string.number}/${cartLine.getQuantity()?string.number} ${uiLabelMap.CommonUsed} - ${cartLine.getPromoQuantityAvailable()?string.number} ${uiLabelMap.CommonAvailable}</div>
+                        <div class="tabletext">${uiLabelMap.EcommerceItemN} ${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${cartLine.getPromoQuantityUsed()?string.number}/${cartLine.getQuantity()?string.number} ${uiLabelMap.CommonUsed} - ${cartLine.getPromoQuantityAvailable()?string.number} ${uiLabelMap.CommonAvailable}</div>
                         <#list cartLine.getQuantityUsedPerPromoActualIter() as quantityUsedPerPromoActualEntry>
                             <#assign productPromoActualPK = quantityUsedPerPromoActualEntry.getKey()>
                             <#assign actualQuantityUsed = quantityUsedPerPromoActualEntry.getValue()>

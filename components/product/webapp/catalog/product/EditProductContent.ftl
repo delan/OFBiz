@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -65,21 +65,21 @@ ${pages.get("/product/ProductTabBar.ftl")}
     <#else>
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
         <tr class="tableheadtext">
-            <td>Content</td>
-            <td>Type</td>
-            <td>From</td>
-            <td>Thru</td>
-            <td>Purchase From</td>
-            <td>Purchase Thru</td>
-            <td>Use Count</td>
-            <td>Use Days</td>
+            <td>${uiLabelMap.ProductContent}</td>
+            <td>${uiLabelMap.ProductType}</td>
+            <td>${uiLabelMap.CommonFrom}</td>
+            <td>${uiLabelMap.CommonThru}</td>
+            <td>${uiLabelMap.ProductPurchaseFrom}</td>
+            <td>${uiLabelMap.ProductPurchaseThru}</td>
+            <td>${uiLabelMap.ProductUseCount}</td>
+            <td>${uiLabelMap.ProductUseDays}</td>
             <td>&nbsp;</td>
         </tr>
         <#list productContentList as entry>
             <#assign productContent=entry.productContent/>
             <#assign productContentType=productContent.getRelatedOneCache("ProductContentType")/>
             <tr class="tabletext">
-                <td><a href="<@ofbizUrl>/EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[No description]")} [${entry.content.contentId}]</td>
+                <td><a href="<@ofbizUrl>/EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</td>
                 <td>${productContentType.description?default(productContent.productContentTypeId)}</td>
                 <td>${productContent.fromDate?default("N/A")}</td>
                 <td>${productContent.thruDate?default("N/A")}</td>
@@ -87,23 +87,23 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td>${productContent.purchaseThruDate?default("N/A")}</td>
                 <td>${productContent.useCountLimit?default("N/A")}</td>
                 <td>${productContent.useDaysLimit?default("N/A")}</td>
-                <td><a href="<@ofbizUrl>/removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a></td>
-                <td><a href="/content/control/EditContent?contentId=${productContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[Edit Content ${entry.content.contentId}]</td>
+                <td><a href="<@ofbizUrl>/removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></td>
+                <td><a href="/content/control/EditContent?contentId=${productContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[${uiLabelMap.ProductEditContent} ${entry.content.contentId}]</td>
              </tr>
         </#list>
         </table>
-        <div class="head2">Create New Product Content</div>
+        <div class="head2">${uiLabelMap.ProductCreateNewProductContent}</div>
         <#if productId?has_content && product?has_content>
             ${prepareAddProductContentWrapper.renderFormString()}
         </#if>
-        <div class="head2">Add Content to Product</div>
+        <div class="head2">${uiLabelMap.ProductAddContentProduct}</div>
         <#if productId?has_content && product?has_content>
             ${addProductContentWrapper.renderFormString()}
         </#if>
 
         <hr class="sepbar"/>
         
-        <div class="head2">Override Simple Fields</div>
+        <div class="head2">${uiLabelMap.ProductOverrideSimpleFields}</div>
         <form action="<@ofbizUrl>/updateProductContent</@ofbizUrl>" method=POST style="margin: 0;" name="productForm">
         <table border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name="productId" value="${productId?if_exists}">
@@ -122,7 +122,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
         </tr>        
         <tr>
-            <td width="20%" align=right valign=top><div class="tabletext"><b>Long Description</b></div></td>
+            <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductLongDescription}</b></div></td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
                 <textarea class="textAreaBox" name="longDescription" cols="60" rows="7">${(product.longDescription)?if_exists}</textarea>

@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.12 2004/04/11 08:28:23 jonesde Exp $
+ * $Id: LoginEvents.java,v 1.13 2004/04/16 02:06:19 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -511,7 +511,7 @@ public class LoginEvents {
         serviceContext.put("subject", subjectString);
         serviceContext.put("sendFrom", productStoreEmail.get("fromAddress"));
         serviceContext.put("sendCc", productStoreEmail.get("ccAddress"));
-        serviceContext.put("sendBcc", productStoreEmail.get("ccAddress"));
+        serviceContext.put("sendBcc", productStoreEmail.get("bccAddress"));
         serviceContext.put("contentType", productStoreEmail.get("contentType"));
         serviceContext.put("sendTo", emails.toString());
 

@@ -21,7 +21,7 @@
  *
  * @author     Andy Zeneski
  * @author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 -->
@@ -79,7 +79,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
                     <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br></#if>
                     ${postalAddress.address1?if_exists}<br>
-                    <#if postalAddress.address2?has_content><br></#if>
+                    <#if postalAddress.address2?has_content>${postalAddress.address2?if_exists}<br></#if>
                     ${postalAddress.city?if_exists},
                     ${postalAddress.stateProvinceGeoId?if_exists}
                     ${postalAddress.postalCode?if_exists}

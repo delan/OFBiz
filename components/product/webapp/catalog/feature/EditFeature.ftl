@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -29,7 +29,7 @@
 <#if hasPermission>
 
 <#-- ${pages.get("/feature/FeatureTabBar.ftl")} -->
-<div class="head1">Edit Feature: ${(productFeature.description)?if_exists}</div>
+<div class="head1">${uiLabelMap.ProductEditFeature} : ${(productFeature.description)?if_exists}</div>
 
 ${editProductFeatureWrapper.renderFormString()}
 
