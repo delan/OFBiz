@@ -898,7 +898,17 @@
         <event type="service" invoke="updateProductStore"/>
         <response name="success" type="view" value="EditProductStore"/>
         <response name="error" type="view" value="EditProductStore"/>
-    </request-map>    
+    </request-map>
+    <request-map uri="ProductStoreWebSites">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProductStoreWebSites"/>
+    </request-map>
+    <request-map uri="storeUpdateWebSite">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWebSite"/>
+        <response name="success" type="view" value="ProductStoreWebSites"/>
+        <response name="error" type="view" value="ProductStoreWebSites"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
@@ -959,5 +969,6 @@
     
     <view-map name="FindProductStore" type="jpublish" page="/store/FindProductStore.ftl"/>
     <view-map name="EditProductStore" type="jpublish" page="/store/EditProductStore.ftl"/>
+    <view-map name="ProductStoreWebSites" type="jpublish" page="/store/ProductStoreWebSites.ftl"/>
     <!-- end of view mappings -->
 </site-conf>

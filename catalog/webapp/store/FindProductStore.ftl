@@ -24,25 +24,29 @@
  *@since      2.2
 -->
 
-<div class="head1">Product Store List</div>
-<div><a href='<@ofbizUrl>/EditProductStore</@ofbizUrl>' class="buttontext">[Create New ProductStore]</a></div>
-<br>
-<table border="1" cellpadding='2' cellspacing='0'>
-  <tr>
-    <td><div class="tabletext"><b>Store&nbsp;Name&nbsp;[ID]</b></div></td>
-    <td><div class="tabletext"><b>Title</b></div></td>
-    <td><div class="tabletext"><b>Sub-Title</b></div></td>
-    <td><div class="tabletext">&nbsp;</div></td>
-  </tr>
-  <#list productStores as productStore>
-    <tr valign="middle">
-      <td><div class='tabletext'>&nbsp;<a href='<@ofbizUrl>/EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>' class="buttontext">${productStore.storeName} [${productStore.productStoreId}]</a></div></td>
-      <td><div class='tabletext'>&nbsp;${productStore.title?if_exists}</div></td>
-      <td><div class='tabletext'>&nbsp;${productStore.subtitle?if_exists}</div></td>
-      <td>
-        <a href='<@ofbizUrl>/EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>' class="buttontext">[Edit]</a>
-      </td>
+<#if hasPermission>
+  <div class="head1">Product Store List</div>
+  <div><a href='<@ofbizUrl>/EditProductStore</@ofbizUrl>' class="buttontext">[Create New ProductStore]</a></div>
+  <br>
+  <table border="1" cellpadding='2' cellspacing='0'>
+    <tr>
+      <td><div class="tabletext"><b>Store&nbsp;Name&nbsp;[ID]</b></div></td>
+      <td><div class="tabletext"><b>Title</b></div></td>
+      <td><div class="tabletext"><b>Sub-Title</b></div></td>
+      <td><div class="tabletext">&nbsp;</div></td>
     </tr>
-  </#list>
-</table>
-<br>
+    <#list productStores as productStore>
+      <tr valign="middle">
+        <td><div class='tabletext'>&nbsp;<a href='<@ofbizUrl>/EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>' class="buttontext">${productStore.storeName} [${productStore.productStoreId}]</a></div></td>
+        <td><div class='tabletext'>&nbsp;${productStore.title?if_exists}</div></td>
+        <td><div class='tabletext'>&nbsp;${productStore.subtitle?if_exists}</div></td>
+        <td>
+          <a href='<@ofbizUrl>/EditProductStore?productStoreId=${productStore.productStoreId}</@ofbizUrl>' class="buttontext">[Edit]</a>
+        </td>
+      </tr>
+    </#list>
+  </table>
+<#else>
+  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+</#if>
+

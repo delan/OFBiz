@@ -36,5 +36,20 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-productStores = delegator.findAll("ProductStore", UtilMisc.toList("storeName"));
-context.put("productStores", productStores);
+productStoreId = request.getParameter("productStoreId");
+if (productStoreId == null) {
+    productStoreId = request.getAttribute("productStoreId");
+}
+if (productStoreId != null) {
+    productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+    storeWebSites = delegator.findByAnd("WebSite", UtilMisc.toMap("productStoreId", productStoreId));
+    context.put("productStoreId", productStoreId);
+    context.put("productStore", productStore);
+    context.put("storeWebSites", storeWebSites);
+}
+
+webSites = delegator.findAll("WebSite", UtilMisc.toList("siteName"));
+context.put("webSites", webSites);
+
+
+

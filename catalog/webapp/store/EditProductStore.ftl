@@ -25,17 +25,18 @@
 -->
 
 <#if hasPermission>
+  <#if productStoreId?has_content>
+    <div class='tabContainer'>
+      <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">Store</a>
+      <a href="<@ofbizUrl>/ProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">WebSites</a>
+    </div>
+  </#if>
+  <div class="head1">Product Store <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
+  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
+  <br>
+  <br>
 
-<#if productStoreId?has_content>
-  <div class='tabContainer'>
-  </div>
-</#if>
-<div class="head1">Product Store <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New ProductStore]</a>
-<br>
-<br>
-
-${editProductStoreForm.renderFormString()}
+  ${editProductStoreForm.renderFormString()}
 
 <#else>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
