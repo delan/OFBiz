@@ -43,6 +43,7 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.WrappingTemplateModel;
 
 /**
  * FreemarkerViewHandler - Freemarker Template Engine View Handler
@@ -67,7 +68,8 @@ public class FreeMarkerViewHandler implements ViewHandler {
         } catch (java.io.IOException e) {
             throw new ViewHandlerException("Could not create file for webapp root path", e);
         }
-        config.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
+        config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+        WrappingTemplateModel.setDefaultObjectWrapper(BeansWrapper.getDefaultInstance());
     }    
     
     public void render(String name, String page, String info, String contentType, String encoding, 
@@ -76,7 +78,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
             throw new ViewHandlerException("Invalid template source");
         
         // make the root context (data model) for freemarker            
-        SimpleHash root = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
+        SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());
         prepOfbizRoot(root, request, response);
         
         // get the template
@@ -86,11 +88,11 @@ public class FreeMarkerViewHandler implements ViewHandler {
         } catch (IOException e) {
             throw new ViewHandlerException("Cannot open template file: " + page, e);
         }
-        template.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
+        template.setObjectWrapper(BeansWrapper.getDefaultInstance());
         
         // process the template & flush the output
         try {
-            template.process(root, response.getWriter());
+            template.process(root, response.getWriter(), BeansWrapper.getDefaultInstance());
             response.flushBuffer();
         } catch (TemplateException te) {
             throw new ViewHandlerException("Problems processing Freemarker template", te);
@@ -120,10 +122,10 @@ public class FreeMarkerViewHandler implements ViewHandler {
         
         // add the session object (for transforms) to the context as a BeanModel
         BeanModel sessionBModel = new BeanModel(session, BeansWrapper.getDefaultInstance());
-        root.put("session", sessionBModel);        
+        root.put("session", sessionBModel);
 
         // add the session
-        HttpSessionHashModel sessionModel = new HttpSessionHashModel(session, ObjectWrapper.SIMPLE_WRAPPER);           
+        HttpSessionHashModel sessionModel = new HttpSessionHashModel(session, BeansWrapper.getDefaultInstance());
         root.put("sessionAttributes", sessionModel);
 
         // add the request object (for transforms) to the context as a BeanModel
@@ -131,10 +133,10 @@ public class FreeMarkerViewHandler implements ViewHandler {
         root.put("request", requestBModel);
 
         // add the request
-        HttpRequestHashModel requestModel = new HttpRequestHashModel(request, ObjectWrapper.SIMPLE_WRAPPER);            
+        HttpRequestHashModel requestModel = new HttpRequestHashModel(request, BeansWrapper.getDefaultInstance());
         root.put("requestAttributes", requestModel);
 
-        // add the request parameters                        
+        // add the request parameters
         HttpRequestParametersHashModel requestParametersModel = new HttpRequestParametersHashModel(request);
         root.put("requestParameters", requestParametersModel);
         
@@ -143,7 +145,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
         root.put("application", applicationBModel);
         
         // add the servlet context    
-        ServletContextHashModel servletContextModel = new ServletContextHashModel(servletContext, ObjectWrapper.SIMPLE_WRAPPER);     
+        ServletContextHashModel servletContextModel = new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance());
         root.put("applicationAttributes", servletContextModel);
         
         // add the response object (for transforms) to the context as a BeanModel

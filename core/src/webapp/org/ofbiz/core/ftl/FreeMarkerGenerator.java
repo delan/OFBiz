@@ -91,7 +91,8 @@ public class FreeMarkerGenerator extends AbstractGenerator {
                     //nice thought, but doesn't do auto reloading with this: config.setServletContextForTemplateLoading(servletContext, "/");
                     config.setDirectoryForTemplateLoading(site.getRealPageRoot());
                     Debug.logInfo("Site page root: " + site.getRealPageRoot().getAbsolutePath());
-                    config.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
+                    config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+                    WrappingTemplateModel.setDefaultObjectWrapper(BeansWrapper.getDefaultInstance());
                 }
             }
         }
@@ -116,12 +117,12 @@ public class FreeMarkerGenerator extends AbstractGenerator {
             } catch (IOException e) {
                 throw new WSPException(e);
             }
-            parsedTemplate.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
+            parsedTemplate.setObjectWrapper(BeansWrapper.getDefaultInstance());
             
             Writer writer = new OutputStreamWriter(inOutput ,"UTF-8");
             
             try {
-                SimpleHash root = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
+                SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());
 
                 //TODO: should make the config file tell us what TemplateModel to create
                 Map map = new JPublishContextMap(inContext);
@@ -143,7 +144,7 @@ public class FreeMarkerGenerator extends AbstractGenerator {
                 TemplateModel document = new DOMNodeModel(doc);
                 root.put("document", document);
                  */
-                parsedTemplate.process(root, writer);
+                parsedTemplate.process(root, writer, BeansWrapper.getDefaultInstance());
                 writer.flush();
             } finally {
                 writer.close();
@@ -155,12 +156,6 @@ public class FreeMarkerGenerator extends AbstractGenerator {
             throw new WSPException(ioe);
         }
         
-    }
-    
-    protected  freemarker.template.Configuration getConfiguration() throws IOException {
-        freemarker.template.Configuration config = freemarker.template.Configuration.getDefaultConfiguration();
-        config.setDirectoryForTemplateLoading(getSiteContext().getRealPageRoot());
-        return config;
     }
 }
 
