@@ -45,7 +45,8 @@ import org.ofbiz.core.minilang.operation.*;
  */
 public class SimpleMethod {
 
-    protected static UtilCache simpleMethodsCache = new UtilCache("SimpleMethods", 0, 0);
+    protected static UtilCache simpleMethodsResourceCache = new UtilCache("SimpleMethodsResource", 0, 0);
+    protected static UtilCache simpleMethodsURLCache = new UtilCache("SimpleMethodsURL", 0, 0);
 
     // ----- Event Context Invokers -----
     
@@ -80,63 +81,92 @@ public class SimpleMethod {
     // ----- General Method Invokers -----
     
     public static String runSimpleMethod(String xmlResource, String methodName, MethodContext methodContext) throws MiniLangException {
-        URL xmlURL = UtilURL.fromResource(xmlResource, methodContext.getLoader());
-        if (xmlURL == null) {
-            throw new MiniLangException("Could not find SimpleMethod XML document in resource: " + xmlResource);
+        Map simpleMethods = getSimpleMethods(xmlResource, methodName, methodContext.getLoader());
+        SimpleMethod simpleMethod = (SimpleMethod) simpleMethods.get(methodName);
+        if (simpleMethod == null) {
+            throw new MiniLangException("Could not find SimpleMethod " + methodName + " in XML document in resource: " + xmlResource);
         }
-        return runSimpleMethod(xmlURL, methodName, methodContext);
+        return simpleMethod.exec(methodContext);
     }
     public static String runSimpleMethod(URL xmlURL, String methodName, MethodContext methodContext) throws MiniLangException {
-        SimpleMethod simpleMethod = getSimpleMethod(xmlURL, methodName);
+        Map simpleMethods = getSimpleMethods(xmlURL, methodName);
+        SimpleMethod simpleMethod = (SimpleMethod) simpleMethods.get(methodName);
         if (simpleMethod == null) {
-            throw new MiniLangException("Could not find SimpleMethod " + methodName + " in XML document in resource: " + xmlURL.toString());
+            throw new MiniLangException("Could not find SimpleMethod " + methodName + " in XML document from URL: " + xmlURL.toString());
         }
         return simpleMethod.exec(methodContext);
     }
 
-    protected static SimpleMethod getSimpleMethod(URL xmlURL, String methodName) throws MiniLangException {
-        Map simpleMethods = (Map) simpleMethodsCache.get(xmlURL);
+    protected static Map getSimpleMethods(String xmlResource, String methodName, ClassLoader loader) throws MiniLangException {
+        Map simpleMethods = (Map) simpleMethodsResourceCache.get(xmlResource);
         if (simpleMethods == null) {
             synchronized (SimpleMethod.class) {
-                simpleMethods = (Map) simpleMethodsCache.get(xmlURL);
+                simpleMethods = (Map) simpleMethodsResourceCache.get(xmlResource);
                 if (simpleMethods == null) {
-                    simpleMethods = new HashMap();
-
-                    //read in the file
-                    Document document = null;
-                    try {
-                        document = UtilXml.readXmlDocument(xmlURL, true);
-                    } catch (java.io.IOException e) {
-                        throw new MiniLangException("Could not read XML file", e);
-                    } catch (org.xml.sax.SAXException e) {
-                        throw new MiniLangException("Could not parse XML file", e);
-                    } catch (javax.xml.parsers.ParserConfigurationException e) {
-                        throw new MiniLangException("XML parser not setup correctly", e);
+                    URL xmlURL = UtilURL.fromResource(xmlResource, loader);
+                    if (xmlURL == null) {
+                        throw new MiniLangException("Could not find SimpleMethod XML document in resource: " + xmlResource);
                     }
-
-                    if (document == null) {
-                        throw new MiniLangException("Could not find SimpleMethod XML document: " + xmlURL.toString());
-                    }
-
-                    Element rootElement = document.getDocumentElement();
-                    List simpleMethodElements = UtilXml.childElementList(rootElement, "simple-method");
-
-                    Iterator simpleMethodIter = simpleMethodElements.iterator();
-                    while (simpleMethodIter.hasNext()) {
-                        Element simpleMethodElement = (Element) simpleMethodIter.next();
-                        SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement);
-                        simpleMethods.put(simpleMethod.getMethodName(), simpleMethod);
-                    }
+                    simpleMethods = getAllSimpleMethods(xmlURL);
 
                     //put it in the cache
-                    simpleMethodsCache.put(xmlURL, simpleMethods);
+                    simpleMethodsResourceCache.put(xmlResource, simpleMethods);
                 }
             }
         }
 
-        return (SimpleMethod) simpleMethods.get(methodName);
+        return simpleMethods;
     }
 
+    protected static Map getSimpleMethods(URL xmlURL, String methodName) throws MiniLangException {
+        Map simpleMethods = (Map) simpleMethodsURLCache.get(xmlURL);
+        if (simpleMethods == null) {
+            synchronized (SimpleMethod.class) {
+                simpleMethods = (Map) simpleMethodsURLCache.get(xmlURL);
+                if (simpleMethods == null) {
+                    simpleMethods = getAllSimpleMethods(xmlURL);
+
+                    //put it in the cache
+                    simpleMethodsURLCache.put(xmlURL, simpleMethods);
+                }
+            }
+        }
+
+        return simpleMethods;
+    }
+
+    protected static Map getAllSimpleMethods(URL xmlURL) throws MiniLangException {
+        Map simpleMethods = new HashMap();
+
+        //read in the file
+        Document document = null;
+        try {
+            document = UtilXml.readXmlDocument(xmlURL, true);
+        } catch (java.io.IOException e) {
+            throw new MiniLangException("Could not read XML file", e);
+        } catch (org.xml.sax.SAXException e) {
+            throw new MiniLangException("Could not parse XML file", e);
+        } catch (javax.xml.parsers.ParserConfigurationException e) {
+            throw new MiniLangException("XML parser not setup correctly", e);
+        }
+
+        if (document == null) {
+            throw new MiniLangException("Could not find SimpleMethod XML document: " + xmlURL.toString());
+        }
+
+        Element rootElement = document.getDocumentElement();
+        List simpleMethodElements = UtilXml.childElementList(rootElement, "simple-method");
+
+        Iterator simpleMethodIter = simpleMethodElements.iterator();
+        while (simpleMethodIter.hasNext()) {
+            Element simpleMethodElement = (Element) simpleMethodIter.next();
+            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement);
+            simpleMethods.put(simpleMethod.getMethodName(), simpleMethod);
+        }
+        
+        return simpleMethods;
+    }
+    
     // Member fields begin here...
     List methodOperations = new LinkedList();
     String methodName;
