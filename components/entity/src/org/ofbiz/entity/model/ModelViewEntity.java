@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.14 2004/06/29 19:56:02 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.15 2004/06/29 20:13:05 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -526,6 +526,7 @@ public class ModelViewEntity extends ModelEntity {
             
             List excludes = UtilXml.childElementList(aliasAllElement, "exclude");
             if (excludes != null && excludes.size() > 0) {
+                this.fieldsToExclude = new HashSet();
                 Iterator excludeIter = excludes.iterator();
                 while (excludeIter.hasNext()) {
                     Element excludeElement = (Element) excludeIter.next();
