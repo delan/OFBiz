@@ -224,16 +224,16 @@
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Min</div></td>
                   <td width="40%">
-                    <input type="text" name="minDate" size="22" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("minDate"))%>'>
-                    <a href="javascript:call_cal(document.lookuporderd.minDate, '<%=fromStr%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
+                    <input type="text" name="minDate" size="25" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("minDate"))%>'>
+                    <a href="javascript:call_cal(document.lookuporderd.minDate, '<%=fromStr%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                   </td>
                   <td width="35%">&nbsp</td>
                 </tr>
                 <tr>
                   <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Max</div></td>
                   <td width="40%">
-                    <input type="text" name="maxDate" size="22" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("maxDate"))%>'>
-                    <a href="javascript:call_cal(document.lookuporderd.maxDate, '<%=toStr%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
+                    <input type="text" name="maxDate" size="25" class="inputBox" value='<%=UtilFormatOut.checkNull(request.getParameter("maxDate"))%>'>
+                    <a href="javascript:call_cal(document.lookuporderd.maxDate, '<%=toStr%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                   </td>
                   <td width="35%"><a href="javascript:document.lookuporderd.submit()" class="buttontext">[Lookup Orders]</a></td>
                 </tr>
