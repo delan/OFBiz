@@ -24,12 +24,22 @@
  */
 package org.ofbiz.core.control;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.util.List;
 
-import org.ofbiz.core.util.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.StringUtil;
 
 /**
  * ContextSecurityFilter - Security Filter to restrict access to raw JSP pages.
@@ -56,11 +66,13 @@ public class ContextSecurityFilter implements Filter {
         return config;
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {        
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
 
+        // set the ServletContext in the request for future use
+        request.setAttribute("servletContext", config.getServletContext());
+        
         // check if we are told to redirect everthing
         String redirectAllTo = config.getInitParameter("forceRedirectAll");
 

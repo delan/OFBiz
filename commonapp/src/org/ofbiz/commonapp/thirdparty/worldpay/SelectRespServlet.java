@@ -61,7 +61,13 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         String dispatchName = request.getParameter("M_dispatchName");
         String userLoginId = request.getParameter("M_userLoginId");
         String confirmTemplate = request.getParameter("M_confirmTemplate");
-                     
+        
+        // get the ServletContext
+        ServletContext context = (ServletContext) request.getAttribute("servletContext");
+        if (context != null) {
+            Debug.logInfo("Got ServletContext named: " + context.getServletContextName(), module);
+        }
+        
         // get the delegator
         GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
         
