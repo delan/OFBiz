@@ -217,8 +217,10 @@ public class ModelReader {
    */
   public ModelEntity getModelEntity(String entityName) {
     Map ec = getEntityCache();
-    if(ec != null) return (ModelEntity)ec.get(entityName);
-    else return null;
+    if(ec == null) throw new java.lang.IllegalStateException("ERROR: Unable to load Entity Cache");
+    //if(ec != null) 
+      return (ModelEntity)ec.get(entityName);
+    //else return null;
   }
   
   /** Creates a Iterator with the entityName of each Entity defined in the specified XML Entity Descriptor file.
@@ -235,6 +237,7 @@ public class ModelReader {
    */
   public Collection getEntityNames() {
     Map ec = getEntityCache();
+    if(ec == null) throw new java.lang.IllegalStateException("ERROR: Unable to load Entity Cache");
     return ec.keySet();
   }
   
