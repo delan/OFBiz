@@ -41,6 +41,8 @@ import org.ofbiz.commonapp.product.product.*;
  */
 public class ParametricSearch {
     
+    public static final String module = ParametricSearch.class.getName();
+    
     /** Gets all features associated with the specified category through: 
      * ProductCategory -> ProductFeatureCategoryAppl -> ProductFeatureCategory -> ProductFeature.
      * Returns a Map of Lists of ProductFeature GenericValue objects organized by productFeatureTypeId. 

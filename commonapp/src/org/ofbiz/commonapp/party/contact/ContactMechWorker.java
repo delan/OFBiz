@@ -38,6 +38,9 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class ContactMechWorker {
+    
+    public static final String module = ContactMechWorker.class.getName();
+    
     public static void getPartyContactMechValueMaps(PageContext pageContext, String partyId, boolean showOld, String partyContactMechValueMapsAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         List partyContactMechValueMaps = getPartyContactMechValueMaps(delegator, partyId, showOld);

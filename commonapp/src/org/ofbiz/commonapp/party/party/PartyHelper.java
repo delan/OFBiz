@@ -34,6 +34,9 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class PartyHelper {
+    
+    public static final String module = PartyHelper.class.getName();
+    
     public static String formatPartyId(String partyId, GenericDelegator delegator) {
         if (UtilValidate.isEmpty(partyId)) return "(none)";
         GenericValue person = null;

@@ -56,6 +56,8 @@ import org.ofbiz.core.util.UtilValidate;
  * @since      2.0
  */
 public class WorkEffortServices {
+    
+    public static final String module = WorkEffortServices.class.getName();
 
     public static Map getWorkEffortAssignedTasks(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();

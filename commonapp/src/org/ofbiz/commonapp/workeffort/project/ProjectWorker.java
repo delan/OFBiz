@@ -38,6 +38,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class ProjectWorker {
+    
+    public static final String module = ProjectWorker.class.getName();
 
     public static void getAssignedProjects(PageContext pageContext, String projectsAttrName) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");

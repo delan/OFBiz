@@ -40,6 +40,8 @@ import org.ofbiz.commonapp.product.catalog.*;
  * @version    1.0
  */
 public class CategoryServices {
+    
+    public static final String module = CategoryServices.class.getName();
 
     public static Map getCategoryMembers(DispatchContext dctx, Map context) {
         Map result = new HashMap();

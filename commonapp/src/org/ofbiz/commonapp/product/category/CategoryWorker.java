@@ -42,6 +42,8 @@ import org.ofbiz.commonapp.product.product.*;
  * @since      2.0
  */
 public class CategoryWorker {
+    
+    public static final String module = CategoryWorker.class.getName();
 
     public static String getCatalogTopCategory(PageContext pageContext, String defaultTopCategory) {
         return getCatalogTopCategory(pageContext.getRequest(), defaultTopCategory);

@@ -49,6 +49,9 @@ import org.ofbiz.core.util.UtilMisc;
  * @since      2.0
  */
 public class WorkEffortWorker {
+    
+    public static final String module = WorkEffortWorker.class.getName();
+    
     // TODO: REMOVE this method when JSPs/etc are moved to FreeMarker; this is replaced by a corresponding service
     public static void getWorkEffort(PageContext pageContext, String workEffortIdAttrName, String workEffortAttrName, String partyAssignsAttrName,
         String canViewAttrName, String tryEntityAttrName, String currentStatusAttrName) {

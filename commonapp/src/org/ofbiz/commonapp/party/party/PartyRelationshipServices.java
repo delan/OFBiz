@@ -40,6 +40,8 @@ import org.ofbiz.core.service.*;
  * @since      2.0
  */
 public class PartyRelationshipServices {
+    
+    public static final String module = PartyRelationshipServices.class.getName();
 
     /** Creates a PartyRelationship
      *@param ctx The DispatchContext that this service is operating in

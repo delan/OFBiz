@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/08/01 17:20:42  azeneski
+ * auto-fix debug statements
+ *
  * Revision 1.11  2002/10/01 04:29:11  azeneski
  * ran through jacobe
  *
@@ -73,6 +76,9 @@ import org.ofbiz.core.util.*;
  *@created Sep 12, 2001
  */
 public class ContactHelper {
+    
+    public static final String module = ContactHelper.class.getName();
+    
     public static Collection getContactMech(GenericValue party, boolean includeOld) {
         return getContactMech(party, null, null, includeOld);
     }

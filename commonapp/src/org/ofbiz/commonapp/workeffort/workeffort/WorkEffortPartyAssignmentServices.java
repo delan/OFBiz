@@ -41,6 +41,8 @@ import org.ofbiz.core.service.*;
  * @since      2.0
  */
 public class WorkEffortPartyAssignmentServices {
+    
+    public static final String module = WorkEffortPartyAssignmentServices.class.getName();
 
     /**
      * Service that creates a WorkEffortPartyAssignment entity

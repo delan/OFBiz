@@ -39,6 +39,8 @@ import org.ofbiz.core.util.*;
  * @since      2.1
  */
 public class KeywordSearch {
+    
+    public static final String module = KeywordSearch.class.getName();
 
     /** Does a product search by keyword using the PRODUCT_KEYWORD table.
      *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.

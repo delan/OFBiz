@@ -44,6 +44,8 @@ import org.ofbiz.commonapp.order.shoppingcart.*;
  * @since      2.0
  */
 public class CatalogWorker {
+    
+    public static final String module = CatalogWorker.class.getName();
 
     public static boolean isCatalogInventoryRequired(String prodCatalogId, String productId, GenericDelegator delegator) {
         GenericValue product = null;

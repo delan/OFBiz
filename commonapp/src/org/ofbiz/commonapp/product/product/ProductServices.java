@@ -42,6 +42,8 @@ import org.ofbiz.commonapp.product.category.*;
  * @created    April 1, 2002
  */
 public class ProductServices {
+    
+    public static final String module = ProductServices.class.getName();
 
     /**
      * Creates a Collection of product entities which are variant products from the specified product ID.

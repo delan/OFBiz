@@ -37,6 +37,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class KeywordIndex {
+    
+    public static final String module = KeywordIndex.class.getName();
 
     public static void indexKeywords(GenericValue product) throws GenericEntityException {
         if (product == null) return;

@@ -39,6 +39,8 @@ import org.ofbiz.core.service.*;
  * @since      2.0
  */
 public class ContactMechServices {
+    
+    public static final String module = ContactMechServices.class.getName();
 
     /** 
      * Creates a ContactMech

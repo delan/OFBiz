@@ -55,6 +55,8 @@ import org.ofbiz.core.util.UtilProperties;
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
+    
+    public static final String module = ShoppingCart.class.getName();
        
     private List paymentMethodIds = new LinkedList();
     private Map paymentMethodAmounts = new HashMap();

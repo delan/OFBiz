@@ -38,6 +38,8 @@ import org.ofbiz.core.service.*;
  * @since      2.0
  */
 public class PartyRoleServices {
+    
+    public static final String module = PartyRoleServices.class.getName();
 
     /** 
      * Creates a PartyRole

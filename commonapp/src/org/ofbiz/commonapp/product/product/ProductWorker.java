@@ -43,6 +43,8 @@ import org.ofbiz.commonapp.product.feature.*;
  * @since      2.0
  */
 public class ProductWorker {
+    
+    public static final String module = ProductWorker.class.getName();
 
     public static void getProduct(PageContext pageContext, String attributeName) {
         getProduct(pageContext, attributeName, null);

@@ -43,6 +43,8 @@ import org.ofbiz.commonapp.order.shoppingcart.*;
  * @since      2.0
  */
 public class ShippingEvents {
+    
+    public static final String module = ShippingEvents.class.getName();
 
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);

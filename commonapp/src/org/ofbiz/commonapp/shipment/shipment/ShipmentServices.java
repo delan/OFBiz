@@ -37,6 +37,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class ShipmentServices {
+    
+    public static final String module = ShipmentServices.class.getName();
 
     public static Map createShipmentEstimate(DispatchContext dctx, Map context) {
         Map result = new HashMap();

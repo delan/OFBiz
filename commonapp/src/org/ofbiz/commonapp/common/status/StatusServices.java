@@ -38,6 +38,9 @@ import org.ofbiz.core.service.*;
  * @since      2.1
  */
 public class StatusServices {
+    
+    public static final String module = StatusServices.class.getName();
+    
     public static Map getStatusItems(DispatchContext ctx, Map context) {
         GenericDelegator delegator = (GenericDelegator) ctx.getDelegator();
         List statusTypes = (List) context.get("statusTypeIds");
