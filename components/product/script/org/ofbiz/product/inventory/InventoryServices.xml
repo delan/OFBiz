@@ -629,8 +629,8 @@
         <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
         <iterate entry-name="oiir" list-name="oiirList">
             <field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
-               <field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
-               <field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>
+            <field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
+            <field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>
             <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
         </iterate>
     </simple-method>
@@ -646,9 +646,13 @@
         </if-compare>
         <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
             <log level="verbose" message="Non-Serialized inventory item incrementing availableToPromise."/>
+            <field-to-env field-name="cancelQuantity" map-name="parameters" env-name="cancelQuantity"/>
+            <if-empty field-name="cancelQuantity">
+                <field-to-env field-name="quantity" map-name="orderItemInventoryRes" env-name="cancelQuantity"/>
+            </if-empty>
             <calculate field-name="availableToPromise" map-name="inventoryItem">
                 <calcop operator="add" field-name="availableToPromise" map-name="inventoryItem">
-                    <calcop operator="get" field-name="quantity" map-name="orderItemInventoryRes"/>
+                    <calcop operator="get" field-name="cancelQuantity"/>
                 </calcop>
             </calculate>
         </if-compare>

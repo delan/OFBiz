@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 <simple-methods>
@@ -37,20 +37,20 @@
 
         <make-value value-name="newEntity" entity-name="Shipment"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
-        <sequenced-id-to-env sequence-name="Shipment" env-name="sequencedId" to-string="true"/>        
+
+        <sequenced-id-to-env sequence-name="Shipment" env-name="sequencedId" to-string="true"/>
         <env-to-field env-name="sequencedId" field-name="shipmentId" map-name="newEntity"/>
         <field-to-result field-name="sequencedId" result-name="shipmentId"/>
-        
+
         <!-- set the created and lastModified info -->
         <now-timestamp-to-env env-name="newEntity.createdDate"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
         <now-timestamp-to-env env-name="newEntity.lastModifiedDate"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
 
-        <!-- if needed create some WorkEfforts and remember their IDs: 
+        <!-- if needed create some WorkEfforts and remember their IDs:
             estimatedShipDate: estimatedShipWorkEffId
-            estimatedArrivalDate: estimatedArrivalWorkEffId 
+            estimatedArrivalDate: estimatedArrivalWorkEffId
         -->
         <!-- always create the WorkEfforts, even if dates aren't specified yet; when they are they will be set in the update service... -->
 
@@ -72,7 +72,7 @@
             <string-to-field string="CAL_SENT" field-name="statusId" map-name="assignPartyToWorkEffortShip"/>
             <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortShip"/>
         </if-not-empty>
-        
+
         <!-- the Arrival WorkEffort entity -->
         <string-to-field string="Shipment #${sequencedId} Arrival" field-name="workEffortName" map-name="arrivalWorkEffortMap"/>
         <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="arrivalWorkEffortMap"/>
@@ -93,7 +93,7 @@
         </if-not-empty>
 
         <create-value value-name="newEntity"/>
-        
+
         <!-- get the ShipmentStatus history started -->
         <if-not-empty field-name="statusId" map-name="newEntity">
             <make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
@@ -113,7 +113,7 @@
         <make-value value-name="lookupPKMap" entity-name="Shipment"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="Shipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        
+
         <if-not-empty field-name="parameters.statusId">
             <if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="lookedUpValue.statusId">
                 <!-- make sure a StatusValidChange record exists, if not return error -->
@@ -123,7 +123,7 @@
                 <if-empty field-name="checkStatusValidChange">
                     <string-to-list string="ERROR: Changing the status from ${lookedUpValue.statusId} to ${parameters.statusId} is not allowed." list-name="error_list"/>
                 </if-empty>
-                
+
                 <make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
                 <field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
                 <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
@@ -182,7 +182,7 @@
                 <call-service service-name="updateWorkEffort" in-map-name="estimatedArrivalWorkEffortUpdMap"/>
             </then>
         </if>
-        
+
         <!-- if the partyIdTo or partyIdFrom has changed, add WEPAs -->
         <if>
             <condition>
@@ -271,14 +271,14 @@
 
         <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderHeaderPKMap"/>
         <find-by-primary-key entity-name="OrderHeader" map-name="lookupOrderHeaderPKMap" value-name="orderHeader"/>
-        
+
         <if-compare field-name="orderTypeId" map-name="orderHeader" operator="equals" value="SALES_ORDER">
             <string-to-field string="SALES_SHIPMENT" field-name="shipmentTypeId" map-name="shipment"/>
         </if-compare>
         <if-compare field-name="orderTypeId" map-name="orderHeader" operator="equals" value="PURCHASE_ORDER">
             <string-to-field string="PURCHASE_SHIPMENT" field-name="shipmentTypeId" map-name="shipment"/>
         </if-compare>
-        
+
         <!-- set the facility if we are from a store with a single facility -->
         <if-empty field-name="originFacilityId" map-name="shipment">
             <if-compare field-name="shipmentTypeId" map-name="shipment" operator="equals" value="SALES_SHIPMENT">
@@ -291,10 +291,10 @@
                 </if-not-empty>
             </if-compare>
         </if-empty>
-        
+
         <!-- partyIdFrom, partyIdTo (vendorPartyId) - NOTE: these work the same for Purchase and Sales Orders... -->
         <find-by-and entity-name="OrderRole" map-name="lookupOrderHeaderPKMap" list-name="orderRoles"/>
-        
+
         <!-- From: SHIP_FROM_VENDOR -->
         <if-empty field-name="partyIdFrom" map-name="shipment">
             <string-to-field string="SHIP_FROM_VENDOR" field-name="roleTypeId" map-name="limitRoleMap"/>
@@ -336,7 +336,7 @@
             </if-not-empty>
             <clear-field field-name="limitRoleMap"/><clear-field field-name="limitOrderRoles"/><clear-field field-name="limitOrderRole"/>
         </if-empty>
-        
+
         <find-by-and entity-name="OrderContactMech" map-name="lookupOrderHeaderPKMap" list-name="orderContactMechs"/>
         <!-- destinationContactMechId -->
         <if-empty field-name="destinationContactMechId" map-name="shipment">
@@ -375,25 +375,25 @@
                 <field-to-field field-name="contactMechId" map-name="originTelecomOrderContactMech" to-field-name="originTelecomNumberId" to-map-name="shipment"/>
             </if-not-empty>
         </if-empty>
-        
+
         <if-empty field-name="estimatedShipCost" map-name="shipment">
             <call-bsh><![CDATA[
                     import org.ofbiz.order.order.OrderReadHelper;
-                
+
                     orderReadHelper = new OrderReadHelper(orderHeader);
                     orderItems = orderReadHelper.getValidOrderItems();
                     orderAdjustments = orderReadHelper.getAdjustments();
                     orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
                     orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
-                   
+
                     shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
                     shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
                     //org.ofbiz.base.util.Debug.log("shippingAmmount=" + shippingAmount);
                     shipment.put("estimatedShipCost", shippingAmount);
             ]]></call-bsh>
         </if-empty>
-        
-        <!-- create a ShipmentRouteSegment with originFacilityId (if set on Shipment), destContactMechId, 
+
+        <!-- create a ShipmentRouteSegment with originFacilityId (if set on Shipment), destContactMechId,
             and from OrderShipmentPreference shipmentMethodTypeId, carrierPartyId, etc -->
         <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
         <find-by-and entity-name="ShipmentRouteSegment" map-name="shipmentRouteSegmentMap" list-name="shipmentRouteSegments"/>
@@ -401,14 +401,14 @@
             <!-- estimatedShipDate, estimatedArrivalDate -->
             <field-to-field field-name="estimatedShipDate" map-name="shipment" to-field-name="estimatedStartDate" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="estimatedArrivalDate" map-name="shipment" to-field-name="estimatedArrivalDate" to-map-name="shipmentRouteSegmentMap"/>
-    
+
             <field-to-field field-name="originFacilityId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="originContactMechId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="originTelecomNumberId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="destFacilityId" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="destinationContactMechId" map-name="shipment" to-field-name="destContactMechId" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="destinationTelecomNumberId" map-name="shipment" to-field-name="destTelecomNumberId" to-map-name="shipmentRouteSegmentMap"/>
-    
+
             <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderSpPKMap"/>
             <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="lookupOrderSpPKMap"/>
             <find-by-primary-key entity-name="OrderShipmentPreference" map-name="lookupOrderSpPKMap" value-name="orderShipmentPreference"/>
@@ -435,9 +435,9 @@
 
         <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="lookupShipmentPKMap"/>
         <find-by-primary-key entity-name="Shipment" map-name="lookupShipmentPKMap" value-name="shipment"/>
-        
+
         <clone-value value-name="shipment" new-value-name="shipmentCopy"/>
-        
+
         <string-to-list string="-fromDate" list-name="descendingFromDateOrder"/>
         <if-not-empty field-name="originFacilityId" map-name="shipment">
             <if-empty field-name="originContactMechId" map-name="shipment">
@@ -475,7 +475,7 @@
                 <field-to-field field-name="contactMechId" map-name="facilityContactMechPurpose" to-field-name="destinationTelecomNumberId" to-map-name="shipment"/>
             </if-empty>
         </if-not-empty>
-        
+
         <if-compare-field field-name="shipment" operator="not-equals" to-field-name="shipmentCopy">
             <set-service-fields service-name="updateShipment" map-name="shipment" to-map-name="shipmentUpdateMap"/>
             <call-service service-name="updateShipment" in-map-name="shipmentUpdateMap"/>
@@ -491,14 +491,14 @@
         <make-value entity-name="Shipment" value-name="shipment"/>
         <set-pk-fields value-name="shipment" map-name="parameters"/>
         <find-by-primary-key map-name="shipment" value-name="shipment"/>
-        
+
         <!-- find email address for currently logged in user, set as sendFrom -->
         <field-to-field field-name="partyId" map-name="userLogin" to-map-name="curUserPcmFindMap"/>
         <string-to-field string="EMAIL_ADDRESS" field-name="contactMechTypeId" map-name="curUserPcmFindMap"/>
         <find-by-and entity-name="PartyAndContactMech" map-name="curUserPcmFindMap" list-name="curUserPartyAndContactMechs"/>
         <first-from-list entry-name="curUserPartyAndContactMech" list-name="curUserPartyAndContactMechs"/>
         <string-append field-name="sendEmailMap.sendFrom" string="${curUserPartyAndContactMech.infoString}" prefix=","/>
-        
+
         <!-- find email addresses of partyIdFrom, set as sendTo -->
         <env-to-env env-name="shipment.partyIdFrom" to-env-name="sendToPartyIdMap.${shipment.partyIdFrom}"/>
 
@@ -509,7 +509,7 @@
         <iterate entry-name="supplierAgentOrderRole" list-name="supplierAgentOrderRoles">
             <env-to-env env-name="supplierAgentOrderRole.partyId" to-env-name="sendToPartyIdMap.${supplierAgentOrderRole.partyId}"/>
         </iterate>
-        
+
         <!-- go through all send to parties and get email addresses -->
         <iterate-map key-name="sendToPartyId" value-name="sendToPartyIdValue" map-name="sendToPartyIdMap">
             <env-to-field env-name="sendToPartyId" field-name="partyId" map-name="sendToPartyPcmFindMap"/>
@@ -519,7 +519,7 @@
                 <string-append field-name="sendEmailMap.sendTo" string="${sendToPartyPartyAndContactMech.infoString}" prefix=","/>
             </iterate>
         </iterate-map>
-        
+
         <!-- set subject, contentType, templateName, templateData -->
         <string-to-field string="Scheduled Notification for Shipment ${shipment.shipmentId}" field-name="subject" map-name="sendEmailMap"/>
         <if-not-empty field-name="shipment.primaryOrderId">
@@ -528,7 +528,7 @@
         <string-to-field string="text/html" field-name="contentType" map-name="sendEmailMap"/>
         <string-to-field string="org/ofbiz/shipment/shipment/ShipmentScheduledNotice.ftl" field-name="templateName" map-name="sendEmailMap"/>
         <env-to-env env-name="shipment" to-env-name="sendEmailMap.templateData.shipment"/>
-        
+
         <!-- call sendGenericNotificationEmail service, if enough information was found -->
         <log level="info" message="Sending generic notification email (if all info is in place): ${sendEmailMap}"/>
         <if>
@@ -563,7 +563,7 @@
         <!-- if no shipmentItemSeqId, generate one based on existing items, ie one greater than the current higher number -->
         <make-next-seq-id value-name="newEntity" seq-field-name="shipmentItemSeqId"/>
         <field-to-result field-name="shipmentItemSeqId" map-name="newEntity" result-name="shipmentItemSeqId"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateShipmentItem" short-description="Update ShipmentItem">
@@ -614,9 +614,9 @@
         <!-- if no shipmentPackageSeqId, generate one based on existing items, ie one greater than the current higher number -->
         <make-next-seq-id value-name="newEntity" seq-field-name="shipmentPackageSeqId"/>
         <field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
-        
+
         <now-timestamp-to-env env-name="newEntity.dateCreated"/>
-        
+
         <create-value value-name="newEntity"/>
 
         <field-to-env map-name="newEntity" field-name="shipmentId"/>
@@ -636,7 +636,7 @@
         <find-by-primary-key entity-name="ShipmentPackage" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-        
+
         <field-to-env map-name="lookedUpValue" field-name="shipmentId"/>
         <field-to-env map-name="lookedUpValue" field-name="shipmentPackageSeqId"/>
         <call-simple-method method-name="ensurePackageRouteSeg"/>
@@ -681,7 +681,7 @@
         <make-value value-name="newEntity" entity-name="ShipmentPackageContent"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateShipmentPackageContent" short-description="Update ShipmentPackageContent">
@@ -722,7 +722,7 @@
         <make-value value-name="newEntity" entity-name="ShipmentPackageRouteSeg"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateShipmentPackageRouteSeg" short-description="Update ShipmentPackageRouteSeg">
@@ -761,7 +761,7 @@
         <make-value value-name="newEntity" entity-name="ShipmentContactMech"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateShipmentContactMech" short-description="Update ShipmentContactMech">
@@ -806,11 +806,11 @@
         <!-- if no shipmentRouteSegmentSeqId, generate one based on existing items, ie one greater than the current higher number -->
         <make-next-seq-id value-name="newEntity" seq-field-name="shipmentRouteSegmentId"/>
         <field-to-result field-name="shipmentRouteSegmentId" map-name="newEntity" result-name="shipmentRouteSegmentId"/>
-        
+
         <if-empty field-name="carrierServiceStatusId" map-name="newEntity">
             <string-to-field string="SHRSCS_NOT_STARTED" field-name="carrierServiceStatusId" map-name="newEntity"/>
         </if-empty>
-        
+
         <create-value value-name="newEntity"/>
 
         <field-to-env map-name="newEntity" field-name="shipmentId"/>
@@ -833,12 +833,12 @@
         <if-empty field-name="carrierServiceStatusId" map-name="newEntity">
             <string-to-field string="SHRSCS_NOT_STARTED" field-name="carrierServiceStatusId" map-name="newEntity"/>
         </if-empty>
-        
+
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        
+
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="updatedByUserLoginId" to-map-name="lookedUpValue"/>
         <env-to-field env-name="nowTimestamp" field-name="lastUpdatedDate" map-name="lookedUpValue"/>
-        
+
         <store-value value-name="lookedUpValue"/>
 
         <field-to-env map-name="lookedUpValue" field-name="shipmentId"/>
@@ -920,37 +920,37 @@
             </then>
         </if>
     </simple-method>
-    
+
     <!-- shipment method type services -->
-    <simple-method method-name="createCarrierShipmentMethod" short-description="Creates a CarrierShipmentMethod">        
+    <simple-method method-name="createCarrierShipmentMethod" short-description="Creates a CarrierShipmentMethod">
         <make-value value-name="carrierShipmentMethod" entity-name="CarrierShipmentMethod"/>
         <set-pk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
         <set-nonpk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
-        <create-value value-name="carrierShipmentMethod"/>                        
+        <create-value value-name="carrierShipmentMethod"/>
     </simple-method>
-    <simple-method method-name="updateCarrierShipmentMethod" short-description="Updates a CarrierShipmentMethod">        
+    <simple-method method-name="updateCarrierShipmentMethod" short-description="Updates a CarrierShipmentMethod">
         <make-value value-name="lookupMap" entity-name="CarrierShipmentMethod"/>
         <set-pk-fields map-name="parameters" value-name="lookupMap"/>
         <find-by-primary-key entity-name="CarrierShipmentMethod" map-name="lookupMap" value-name="carrierShipmentMethod"/>
-        
+
         <set-nonpk-fields map-name="parameters" value-name="carrierShipmentMethod"/>
-        <store-value value-name="carrierShipmentMethod"/>                        
-    </simple-method>    
+        <store-value value-name="carrierShipmentMethod"/>
+    </simple-method>
     <simple-method method-name="createShipmentMethodType" short-description="Creates a ShipmentMethodType">
         <make-value value-name="shipmentMethodType" entity-name="ShipmentMethodType"/>
         <set-pk-fields map-name="parameters" value-name="shipmentMethodType"/>
         <set-nonpk-fields map-name="parameters" value-name="shipmentMethodType"/>
-        <create-value value-name="shipmentMethodType"/>                        
+        <create-value value-name="shipmentMethodType"/>
     </simple-method>
     <simple-method method-name="updateShipmentMethodType" short-description="Updates a ShipmentMethodType">
         <make-value value-name="lookupMap" entity-name="ShipmentMethodType"/>
         <set-pk-fields map-name="parameters" value-name="lookupMap"/>
         <find-by-primary-key entity-name="ShipmentMethodType" map-name="lookupMap" value-name="shipmentMethodType"/>
-        
+
         <set-nonpk-fields map-name="parameters" value-name="shipmentMethodType"/>
-        <store-value value-name="shipmentMethodType"/>                        
+        <store-value value-name="shipmentMethodType"/>
     </simple-method>
-    
+
     <!-- quick ship entire order in single package -->
     <simple-method method-name="quickShipEntireOrder" short-description="Quick ships an entire order">
         <!-- first get the order header; make sure we have a product store -->
@@ -982,7 +982,7 @@
                 </if-empty>
             </if-not-empty>
         </if-empty>
-        
+
         <!-- we are all good to go; create the shipment -->
         <if-not-empty field-name="originFacilityId" map-name="parameters">
             <field-to-field field-name="originFacilityId" map-name="parameters" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
@@ -1033,7 +1033,93 @@
             <call-service service-name="updateShipment" in-map-name="packedContext"/>
         </if-empty>
         <field-to-result field-name="shipmentId" map-name="shipment" result-name="shipmentId"/>
-    </simple-method>            
+    </simple-method>
+
+    <!-- quick ship order using multiple packages per tracking number -->
+    <!-- The input list contains a Map with four keys: orderItemSeqId, inventoryItemId, qtyShipped, trackingNum -->
+    <simple-method method-name="quickShipOrderByItem" short-description="Quick ships order based on item list">
+        <!-- first get the order header; make sure we have a product store -->
+        <field-to-field field-name="orderId" map-name="parameters" to-map-name="ohpkmap"/>
+        <find-by-primary-key entity-name="OrderHeader" map-name="ohpkmap" value-name="orderHeader"/>
+        <if-empty field-name="originFacilityId" map-name="parameters">
+            <if-empty field-name="productStoreId" map-name="orderHeader">
+                <!-- no store cannot use quick ship; throw error -->
+                <add-error><fail-message message="No ProductStore associated with order; cannot use Quick Ship"/></add-error>
+                <check-errors/>
+            </if-empty>
+            <if-not-empty field-name="productStoreId" map-name="orderHeader">
+                <!-- get the product store entity -->
+                <field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
+                <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
+                <if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
+                    <!-- no reservations; no shipment; cannot use quick ship -->
+                    <add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship"/></add-error>
+                </if-compare>
+                <if-compare field-name="oneInventoryFacility" map-name="productStore" operator="not-equals" value="Y">
+                    <!-- if we allow multiple facilities we cannot use quick ship; throw error -->
+                    <add-error><fail-message message="ProductStore [${productStore.productStoreId}] allows multiple facilities; cannot use Quick Ship"/></add-error>
+                    <check-errors/>
+                </if-compare>
+                <if-empty field-name="inventoryFacilityId" map-name="productStore">
+                    <!-- if no inventoryFacility is defined we cannot use quick ship; throw error -->
+                    <add-error><fail-message message="No inventory facility associated with ProductStore [${productStore.productStoreId}]; cannot use Quick Ship"/></add-error>
+                    <check-errors/>
+                </if-empty>
+            </if-not-empty>
+        </if-empty>
+
+        <!-- we are all good to go; create the shipment -->
+        <if-not-empty field-name="originFacilityId" map-name="parameters">
+            <field-to-field field-name="originFacilityId" map-name="parameters" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
+        </if-not-empty>
+        <field-to-field field-name="orderId" map-name="orderHeader" to-field-name="primaryOrderId" to-map-name="shipmentContext"/>
+        <string-to-field field-name="statusId" map-name="shipmentContext" string="SHIPMENT_INPUT"/>
+        <call-service service-name="createShipment" in-map-name="shipmentContext">
+            <result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
+        </call-service>
+        <find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
+
+        <!-- issue the passed in order items -->
+        <iterate list-name="itemMapList" entry-name="itemMap">
+            <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
+            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueContext"/>
+            <field-to-field field-name="orderItemSeqId" map-name="itemMap" to-map-name="issueContext"/>
+            <field-to-field field-name="inventoryItemId" map-name="itemMap" to-map-name="issueContext"/>
+            <field-to-field field-name="qtyShipped" map-name="itemMap" to-field-name="quantity" to-map-name="issueContext"/>
+            <call-service service-name="issueOrderItemInventoryResToShipment" in-map-name="issueContext">
+                <result-to-field result-name="itemIssuanceId" field-name="itemIssuanceId" map-name="itemMap"/>
+            </call-service>
+        </iterate>
+
+        <!-- place all issued items into a unique package per tracking num -->
+        <iterate list-name="itemMapList" entry-name="itemMap">
+            <field-to-field field-name="itemIssuanceId" map-name="itemMap" to-map-name="issuanceLookup"/>
+            <find-by-primary-key entity-name="ItemIssuance" map-name="issuanceLookup" value-name="itemIssuance"/>
+            <field-to-field field-name="${itemMap.trackNum}" map-name="packageMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
+            <if-empty field-name="shipmentPackageSeqId" map-name="shipItemContext">
+                <string-to-field field-name="shipmentPackageSeqId" map-name="shipItemContext" string="New"/>
+            </if-empty>
+
+            <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
+            <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
+            <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
+            <call-service service-name="createShipmentPackageContent" in-map-name="shipItemContext">
+                <result-to-field result-name="shipmentPackageSeqId" field-name="${itemMap.trackNum}" map-name="packageMap"/>
+            </call-service>
+        </iterate>
+
+        <!-- update the shipment status to packed -->
+        <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
+        <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_PACKED"/>
+        <call-service service-name="updateShipment" in-map-name="packedContext"/>
+        <!-- update the shipment status to shipped -->
+        <if-empty map-name="parameters" field-name="setPackedOnly">
+              <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
+            <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
+            <call-service service-name="updateShipment" in-map-name="packedContext"/>
+        </if-empty>
+        <field-to-result field-name="shipmentId" map-name="shipment" result-name="shipmentId"/>
+    </simple-method>
 </simple-methods>
 
     <!-- FooBar services -->
@@ -1047,7 +1133,7 @@
         <make-value value-name="newEntity" entity-name="FooBar"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateFooBar" short-description="Update FooBar">
