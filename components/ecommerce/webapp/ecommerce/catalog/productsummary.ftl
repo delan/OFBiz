@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -49,7 +49,7 @@
           <div class="tabletext">${product.description?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
           <div class="tabletext">
             <nobr>
-              <b>${product.productId?if_exists}</b>,
+              <b>${product.productId?if_exists}</b>
                 <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
                   ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>
                 </#if>
@@ -57,7 +57,9 @@
                   <#if price.isSale>
                     <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
                   </#if>
-                  ${uiLabelMap.EcommerceYourPrice}: <span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+                  <if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
+                    ${uiLabelMap.EcommerceYourPrice}: <span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+                  </#if>
                 </b>
             </nobr>
           </div>
@@ -72,6 +74,9 @@
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
             <a href="<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>
+          <#-- check to see if the product requires an amount -->
+          <#elseif product.requireAmount?exists && product.requireAmount == "Y">
+            <a href="<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext"><nobr>[Choose Amount...]</nobr></a>
           <#else>
             <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style="margin: 0;">
               <input type="hidden" name="add_product_id" value="${product.productId}">
