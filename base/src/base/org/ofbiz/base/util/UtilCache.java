@@ -243,9 +243,9 @@ public class UtilCache implements Serializable {
 
         UtilCache.CacheLine oldCacheLine;
         if (expireTime > 0) {
-            oldCacheLine = (UtilCache.CacheLine) cacheLineTable.put(key, new UtilCache.CacheLine(this, value, useSoftReference, System.currentTimeMillis()));
+            oldCacheLine = (UtilCache.CacheLine) cacheLineTable.put(key, new UtilCache.CacheLine(this, value, useSoftReference, System.currentTimeMillis(), expireTime));
         } else {
-            oldCacheLine = (UtilCache.CacheLine) cacheLineTable.put(key, new UtilCache.CacheLine(this, value, useSoftReference));
+            oldCacheLine = (UtilCache.CacheLine) cacheLineTable.put(key, new UtilCache.CacheLine(this, value, useSoftReference, expireTime));
         }
         if (maxSize > 0 && cacheLineTable.size() > maxSize) {
             Object lastKey = keyLRUList.getLast();
@@ -519,10 +519,10 @@ public class UtilCache implements Serializable {
         // check this BEFORE checking to see if expireTime <= 0, ie if time expiration is enabled
         // check to see if we are using softReference first, slight performance increase
         if (this.useSoftReference && line.getValue() == null) return true;
-        if (expireTime <= 0) return false;
+        if (line.expireTime <= 0) return false;
 
         if (line.loadTime <= 0) return true;
-        if ((line.loadTime + expireTime) < System.currentTimeMillis()) {
+        if ((line.loadTime + line.expireTime) < System.currentTimeMillis()) {
             return true;
         } else {
             return false;
@@ -633,9 +633,10 @@ public class UtilCache implements Serializable {
         public UtilCache utilCache;
         public Object valueRef = null;
         public long loadTime = 0;
+        public long expireTime = 0;
         public boolean useSoftReference = false;
 
-        public CacheLine(UtilCache utilCache, Object value, boolean useSoftReference) {
+        public CacheLine(UtilCache utilCache, Object value, boolean useSoftReference, long expireTime) {
             this.utilCache = utilCache;
             if (useSoftReference) {
                 this.valueRef = new UtilCache.CacheSoftRef(value);
@@ -643,10 +644,11 @@ public class UtilCache implements Serializable {
                 this.valueRef = value;
             }
             this.useSoftReference = useSoftReference;
+            this.expireTime = expireTime;
         }
 
-        public CacheLine(UtilCache utilCache, Object value, boolean useSoftReference, long loadTime) {
-            this(utilCache, value, useSoftReference);
+        public CacheLine(UtilCache utilCache, Object value, boolean useSoftReference, long loadTime, long expireTime) {
+            this(utilCache, value, useSoftReference, expireTime);
             this.loadTime = loadTime;
         }
 
