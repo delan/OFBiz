@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.15 $
+ *@version    $Revision: 1.16 $
  *@since      2.1
  */
 
@@ -29,6 +29,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.service.*;
+import org.ofbiz.content.webapp.taglib.*;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
@@ -110,7 +111,7 @@ if (product != null) {
             lastViewedProducts.remove(lastViewedProducts.size() - 1);
         }
     }
-    
+
     // make the productContentWrapper
     ProductContentWrapper productContentWrapper = new ProductContentWrapper(product, request);
     request.setAttribute("productContentWrapper", productContentWrapper);
@@ -248,6 +249,14 @@ if (product != null) {
 	                    }
 	                    if (largeImage == null || largeImage.length() == 0) {
 	                        largeImage = virtualLargeImage;
+	                    }
+
+	                    // append the content prefix
+	                    if (detailImage == null || detailImage.length() == 0) {
+	                        detailImage = ContentUrlTag.getContentPrefix(request) + detailImage;
+	                    }
+	                    if (largeImage == null || largeImage.length() == 0) {
+	                        largeImage = ContentUrlTag.getContentPrefix(request) + largeImage;
 	                    }
 
 	                    jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options[" + (counter+1) + "] = new Option(\"" + key + "\",\"" + opt + "\");");
