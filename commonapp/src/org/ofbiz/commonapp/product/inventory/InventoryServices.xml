@@ -204,6 +204,7 @@
                         <field-to-field field-name="orderId" map-name="parameters" to-map-name="newOiirEntity"/>
                         <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                         <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="newOiirEntity"/>
+                        <string-to-field string="OIIR_RESERVED" field-name="statusId" map-name="newOiirEntity"/>
                         <calculate field-name="quantity" map-name="newOiirEntity"><number value="1"/></calculate>
                         <create-value value-name="newOiirEntity"/>
 
@@ -238,6 +239,7 @@
                             <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                             <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="newOiirEntity"/>
                             <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
+                            <string-to-field string="OIIR_RESERVED" field-name="statusId" map-name="newOiirEntity"/>
                             <create-value value-name="newOiirEntity"/>
 
                             <!-- keep track of the last non-serialized inventory item and corresponding order item inv res for use if inventory is not required for purchase -->
@@ -293,6 +295,7 @@
                                 <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                                 <field-to-field field-name="inventoryItemId" map-name="lastNonSerInventoryItem" to-field-name="inventoryItemId" to-map-name="newOiirEntity"/>
                                 <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
+                                <string-to-field string="OIIR_RESERVED" field-name="statusId" map-name="newOiirEntity"/>
                                 <create-value value-name="newOiirEntity"/>
                             </else>
                         </if-not-empty>
@@ -319,6 +322,7 @@
                             <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                             <field-to-field field-name="inventoryItemId" map-name="newNonSerInventoryItem" to-field-name="inventoryItemId" to-map-name="newOiirEntity"/>
                             <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
+                            <string-to-field string="OIIR_RESERVED" field-name="statusId" map-name="newOiirEntity"/>
                             <create-value value-name="newOiirEntity"/>
                         </else>
                     </if-not-empty>
