@@ -118,5 +118,39 @@
         <find-by-primary-key entity-name="OrderShipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+    
+    <simple-method method-name="checkCreateOrderRequirement" short-description="Create OrderRequirementCommitment and Requirement">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run checkCreateOrderRequirement you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="OrderHeader" auto-field-map="true" value-name="order"/>
+        <if-compare field-name="order.orderTypeId" operator="equals" value="SALES_ORDER">
+            <entity-one entity-name="Product" auto-field-map="true" value-name="product"/>
+            <field-to-field field-name="product.requirementMethodEnumId" to-field-name="requirementMethodId"/>
+            <if-empty field-name="requirementMethodEnumId">
+                <entity-one entity-name="ProductStore" value-name="productStore">
+                    <field-map env-name="order.productStoreId" field-name="productStoreId"/>
+                </entity-one>
+                <field-to-field field-name="productStore.requirementMethodEnumId" to-field-name="requirementMethodId"/>
+            </if-empty>
+            <if-compare field-name="requirementMethodId" operator="equals" value="PRODRQM_AUTO">
+                <field-to-field field-name="parameters.productId" to-map-name="inputMap" to-field-name="productId"/>
+                <field-to-field field-name="parameters.quantity" to-map-name="inputMap" to-field-name="quantity"/>
+                <string-to-field string="PRODUCT_REQUIREMENT" map-name="inputMap" field-name="requirementTypeId"/>
+                <call-service service-name="createRequirement" in-map-name="inputMap">
+                    <result-to-field field-name="parameters.requirementId" result-name="requirementId"/>
+                </call-service>
+
+                <make-value value-name="commitment" entity-name="OrderRequirementCommitment"/>
+                <set-pk-fields map-name="parameters" value-name="commitment"/>
+                <set-nonpk-fields map-name="parameters" value-name="commitment"/>
+                <create-value value-name="commitment"/>
+
+                <field-to-result field-name="parameters.requirementId" result-name="requirementId"/>
+            </if-compare>
+        </if-compare>
+    </simple-method>
+    
 </simple-methods>
 
