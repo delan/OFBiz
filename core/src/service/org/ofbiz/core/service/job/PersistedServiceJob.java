@@ -70,13 +70,13 @@ public class PersistedServiceJob extends GenericServiceJob {
 
         try {
             GenericValue newJob = new GenericValue(job);
-
             job.set("startDateTime", UtilDateTime.nowTimestamp());
             job.store();
             if (recurrence != null) {
                 recurrence.incrementCurrentCount();
                 long next = recurrence.next();
-
+                if (Debug.verboseOn()) Debug.logVerbose("Next runtime returned: " + next, module);
+                
                 if (next > runtime) {
                     newJob.set("runTime", new java.sql.Timestamp(next));
                     delegator.create(newJob);

@@ -134,7 +134,6 @@ public class JobPoller implements Runnable {
 
             for (int i = 0; i < addSize; i++) {
                 JobInvoker iv = new JobInvoker(this, invokerWaitTime());
-
                 pool.add(iv);
             }
         }
@@ -150,7 +149,6 @@ public class JobPoller implements Runnable {
         if (pool.size() < minThreads()) {
             for (int i = 0; i < minThreads() - pool.size(); i++) {
                 JobInvoker iv = new JobInvoker(this, invokerWaitTime());
-
                 pool.add(iv);
             }
         }
@@ -162,7 +160,6 @@ public class JobPoller implements Runnable {
 
         while (threadPool.size() < minThreads()) {
             JobInvoker iv = new JobInvoker(this, invokerWaitTime());
-
             threadPool.add(iv);
         }
 

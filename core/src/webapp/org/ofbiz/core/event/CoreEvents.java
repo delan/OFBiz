@@ -173,7 +173,7 @@ public class CoreEvents {
      *  SERVICE_TIME      - First time the service will occur
      *  SERVICE_FREQUENCY - The type of recurrence (SECONDLY,MINUTELY,DAILY,etc)
      *  SERVICE_INTERVAL  - The interval of the frequency (every 5 minutes, etc)
-     *  SERVICE_COUNT     - The number of time the service should run
+     *  SERVICE_COUNT     - The number of time the service should run (-1 for ever)
      *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
