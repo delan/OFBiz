@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/17 03:45:09  azeneski
+ * Changed request and view config to NOT use the leading '/'. All request and
+ * view mappings should now leave be 'request' instead of '/request'.
+ *
  * Revision 1.2  2001/07/16 22:31:06  azeneski
  * Moved multi-site support to be handled by the webapp.
  *
@@ -48,6 +52,7 @@ import org.ofbiz.core.util.Debug;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Andy Zeneski (jaz@zsolv.com)
+ * @author David E. Jones
  * @version 1.0
  * Created on June 28, 2001, 10:12 PM
  */
@@ -64,7 +69,7 @@ public class RequestHandler implements Serializable {
         rm = new RequestManager(context);
     }
     
-    public String doRequest( HttpServletRequest request, HttpServletResponse response, String chain ) throws RequestHandlerException {        
+    public String doRequest( HttpServletRequest request, HttpServletResponse response, String chain ) throws RequestHandlerException {
         String requestUri = null;
         String eventType = null;
         String eventPath = null;
@@ -84,23 +89,101 @@ public class RequestHandler implements Serializable {
         }
         
         Debug.log("***Request: " + requestUri);
+                
+        String eventReturnString = null;
+        /** Perform security check. */
+        if(rm.requiresAuth(requestUri))
+        {
+          // Invoke the security handler
+          // catch exceptions and throw RequestHandlerException if failed.
+          String checkLoginType = rm.getEventType(SiteDefs.CHECK_LOGIN_REQUEST_URI);
+          String checkLoginPath = rm.getEventPath(SiteDefs.CHECK_LOGIN_REQUEST_URI);
+          String checkLoginMethod = rm.getEventMethod(SiteDefs.CHECK_LOGIN_REQUEST_URI);
+          String checkLoginReturnString = doEvent(request, response, checkLoginType, checkLoginPath, checkLoginMethod);
+          if(!"success".equalsIgnoreCase(checkLoginReturnString))
+          {
+            //previous URL already saved by event, so just do as the return says...
+            eventReturnString = checkLoginReturnString;
+            /* Set event info. */
+            eventType = checkLoginType;
+            eventPath = checkLoginPath;
+            eventMethod = checkLoginMethod;
+            requestUri = SiteDefs.CHECK_LOGIN_REQUEST_URI;
+          }
+        }
         
-        /** Get event info. */
-        eventType = rm.getEventType(requestUri);
-        eventPath = rm.getEventPath(requestUri);
-        eventMethod = rm.getEventMethod(requestUri);
-        
-        if ( nextView == null )
-            nextView = rm.getViewName(requestUri);
-        
+        if ( nextView == null ) nextView = rm.getViewName(requestUri);
         Debug.log("Current View: " + nextView);
         
-        /** Perform security check. */
-        // Invoke the security handler
-        // catch exceptions and throw RequestHandlerException if failed.
+        /** Invoke the event if defined, and if login not already done. */
+        if(eventReturnString == null) 
+        {
+          /** Get event info. */
+          eventType = rm.getEventType(requestUri);
+          eventPath = rm.getEventPath(requestUri);
+          eventMethod = rm.getEventMethod(requestUri);
+
+          eventReturnString = doEvent(request, response, eventType, eventPath, eventMethod);
+        }
         
-        /** Invoke the event if defined. */
+        /** Process the eventReturn. */        
+        String eventReturn = rm.getRequestAttribute(requestUri,eventReturnString);
+        Debug.log("Event Qualified: " + eventReturn);
+        
+        if ( eventReturn != null ) 
+            nextView = eventReturn;
+                
+        /** Check for a chain request. */
+        if ( nextView != null && nextView.indexOf(':') != -1 ) {
+            String type = nextView.substring(0,nextView.indexOf(':'));
+            String view = nextView.substring(nextView.indexOf(':') + 1);            
+            nextView = view;
+            chainRequest = type.equalsIgnoreCase("request") ? true : false;
+        }
+                    
+        /** Get the next view. */
+        if ( !chainRequest ) {
+            String tempView = nextView;
+            if(tempView != null && tempView.charAt(0) == '/') tempView = tempView.substring(1);
+            Debug.log("Getting View Map: " + tempView);
+            tempView = rm.getViewPage(tempView);
+            nextPage = tempView != null ? tempView : nextView;
+            Debug.log("Mapped To: " + nextPage);
+        }
+        
+        /** Handle Errors. */
+        if ( eventPath == null && nextPage == null && eventReturn == null )
+            throw new RequestHandlerException("RequestHandler: Unknown Request.");
+        if ( nextPage == null && eventReturn == null )
+            throw new RequestHandlerException("RequestHandler: No Next Page To Display");
+        
+        /** Invoke chained requests. */
+        if ( chainRequest ) {
+            Debug.log("Running Chained Request: " + nextView);
+            nextPage = doRequest(request,response,nextView);
+        }
+
+        /** If previous request exists, do that now... */
+        if ( requestUri.equals(SiteDefs.LOGIN_REQUEST_URI) )
+        {
+          String previousRequest = (String) request.getSession().getAttribute(SiteDefs.PREVIOUS_REQUEST);
+          if ( previousRequest != null ) 
+          {
+            request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
+            //here we need to display nothing, and request that the browser forward to a new request, which was the previous request
+            Debug.log("Requesting Browser Forward to Previous Request: " + previousRequest);
+            try { response.sendRedirect(previousRequest); }
+            catch(java.io.IOException ioe) { throw new RequestHandlerException("RequestHandler: Unable to forward to Previous Request"); }
+            return null;
+          }
+        }
+            
+        return nextPage;
+    }
+    
+    public String doEvent( HttpServletRequest request, HttpServletResponse response, String eventType, String eventPath, String eventMethod) throws RequestHandlerException {
         String eventReturnString = null;
+
         if ( eventType != null && eventPath != null && eventMethod != null ) {
             if ( eventType.compareToIgnoreCase("java") == 0 ) {
                 try {
@@ -129,51 +212,9 @@ public class RequestHandler implements Serializable {
                 throw new RequestHandlerException("RequestHandler: Unknown Event Type.");
             }
         }
-        
-        /** Process the eventReturn. */        
-        String eventReturn = rm.getRequestAttribute(requestUri,eventReturnString);
-        Debug.log("Event Qualified: " + eventReturn);
-        
-        if ( eventReturn != null ) 
-            nextView = eventReturn;
-                
-        /** Check for a chain request. */
-        if ( nextView != null && nextView.indexOf(':') != -1 ) {
-            String type = nextView.substring(0,nextView.indexOf(':'));
-            String view = nextView.substring(nextView.indexOf(':') + 1);            
-            nextView = view;
-            chainRequest = type.equalsIgnoreCase("request") ? true : false;
-        }
-                    
-        /** Get the next view. */
-        if ( !chainRequest ) {
-            Debug.log("Getting View Map: " + nextView);
-            nextPage = rm.getViewPage(nextView) != null ? rm.getViewPage(nextView) : nextView;
-            Debug.log("Mapped To: " + nextPage);
-        }
-        
-        /** Handle Errors. */
-        if ( eventPath == null && nextPage == null && eventReturn == null )
-            throw new RequestHandlerException("RequestHandler: Unknown Request.");
-        if ( nextPage == null && eventReturn == null )
-            throw new RequestHandlerException("RequestHandler: No Next Page To Display");
-        
-        /** Invoke chained requests. */
-        if ( chainRequest ) {
-            Debug.log("Running Chained Request: " + nextView);
-            nextPage = doRequest(request,response,nextView);
-        }
-        return nextPage;
+        return eventReturnString;
     }
-    
-    public String doRequest( HttpServletRequest request, HttpServletResponse response ) throws RequestHandlerException {
-        HttpSession session = request.getSession();
-        String previousRequest = (String) session.getAttribute(SiteDefs.PREVIOUS_REQUEST);
-        if ( previousRequest != null )
-            session.removeAttribute(SiteDefs.PREVIOUS_REQUEST);
-        return doRequest(request,response,previousRequest);
-    }
-    
+
     public String getDefaultErrorPage( HttpServletRequest request ) {        
         String requestUri = getRequestUri(request.getPathInfo());
         return rm.getErrorPage(requestUri);
@@ -186,7 +227,7 @@ public class RequestHandler implements Serializable {
         if ( path.lastIndexOf('/') == 0 )
             return path.substring(1);
         int nextIndex = path.indexOf('/',1);
-        return path.substring(1,nextIndex - 1);
+        return path.substring(1,nextIndex);
     }
     
     /** Gets the next page to view from path_info */

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/17 03:01:51  azeneski
+ * Fixed the double slash in CONTROL_PATH request attribute.
+ *
  * Revision 1.2  2001/07/16 22:31:06  azeneski
  * Moved multi-site support to be handled by the webapp.
  *
@@ -76,7 +79,7 @@ public class ControlServlet extends HttpServlet {
         Debug.log("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
         
         try {
-            nextPage = getRequestHandler().doRequest(request,response);
+            nextPage = getRequestHandler().doRequest(request,response, null);
         } catch( Exception e ) {
             e.printStackTrace();
             request.setAttribute(SiteDefs.ERROR_MESSAGE,e.getMessage());
@@ -85,7 +88,11 @@ public class ControlServlet extends HttpServlet {
         
         // Forward to the JSP
         Debug.log("Dispatching to: " + nextPage);
-        getServletConfig().getServletContext().getRequestDispatcher(nextPage).forward(request,response);
+        if(nextPage != null)
+        {
+          RequestDispatcher rd = request.getRequestDispatcher(nextPage);
+          if(rd != null) rd.forward(request,response);
+        }
     }
     
     private RequestHandler getRequestHandler() {

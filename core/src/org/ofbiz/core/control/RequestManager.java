@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/17 03:45:09  azeneski
+ * Changed request and view config to NOT use the leading '/'. All request and
+ * view mappings should now leave be 'request' instead of '/request'.
+ *
  * Revision 1.2  2001/07/16 22:31:06  azeneski
  * Moved multi-site support to be handled by the webapp.
  *
@@ -156,7 +160,7 @@ public class RequestManager implements Serializable {
     
     /** Gets the next page (jsp) from the viewMap */
     public String getViewPage(String viewStr) {
-        if ( viewStr.startsWith("view:") )
+        if ( viewStr != null && viewStr.startsWith("view:") )
             viewStr = viewStr.substring(viewStr.indexOf(':'));
         if ( viewMap != null && viewMap.containsKey(viewStr) ) {
             HashMap page = (HashMap) viewMap.get(viewStr);

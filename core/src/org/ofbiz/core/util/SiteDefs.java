@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/16 22:31:06  azeneski
+ * Moved multi-site support to be handled by the webapp.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *
@@ -42,8 +45,10 @@ public final class SiteDefs {
     /** Default Site Config Variables */
     public static final String SITE_NAME = "Jaguar E-Business Suite";
     public static final String SITE_CONF = "/WEB-INF/xml/siteconf.properties";
-    public static final String ERROR_PAGE = "/jsp/default/error.jsp";
-    public static final String SECURITY_CLASS = "org.ofbiz.commonapp.security.Security.class";
+    public static final String ERROR_PAGE = "/error/error.jsp";
+    public static final String CHECK_LOGIN_REQUEST_URI = "checkLogin";
+    public static final String LOGIN_REQUEST_URI = "login";
+    public static final String LOGOUT_REQUEST_URI = "logout";
  
     /** Required context init paramater to locate site specific configuration */
     public static final String SITE_CONFIG = "siteConfigurationFile";
