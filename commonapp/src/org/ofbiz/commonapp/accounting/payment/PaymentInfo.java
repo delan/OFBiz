@@ -214,7 +214,7 @@ public class PaymentInfo {
             }
             payment.setCurrency(currency);
             payment.fill(address,
-                    orh.getTotalPrice(),
+                    orh.getOrderGrandTotal(),
                     billToPerson,
                     email,
                     orderHeader,

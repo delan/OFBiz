@@ -340,8 +340,8 @@
                     &nbsp;
                   </ofbiz:unless>
                 </td>
-                <td align="right"><div class="tabletext"><%=UtilFormatOut.formatQuantity(new Double(order.getTotalItems()))%></div></td></div></td>
-                <td align="right"><div class="tabletext"><%=UtilFormatOut.formatPrice(new Double(order.getTotalPrice()))%></div></td>
+                <td align="right"><div class="tabletext"><%=UtilFormatOut.formatQuantity(new Double(order.getTotalOrderItemsQuantity()))%></div></td></div></td>
+                <td align="right"><div class="tabletext"><%=UtilFormatOut.formatPrice(new Double(order.getOrderGrandTotal()))%></div></td>
                 <td>&nbsp;</td>
                 <td><div class="tabletext"><%=UtilFormatOut.checkNull(orderStatus)%></div></td>
                 <td><div class="tabletext"><nobr><%=orderHeader.getTimestamp("orderDate")%></nobr></div></td>

@@ -71,7 +71,7 @@ public class PaymentGatewayServices {
         }
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        double amountToBill = orh.getTotalPrice();
+        double amountToBill = orh.getOrderGrandTotal();
         if (Debug.verboseOn())
             Debug.logVerbose("Amount to charge is: " + amountToBill, module);
 

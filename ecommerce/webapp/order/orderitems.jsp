@@ -84,7 +84,7 @@ NOTE: This page is meant to be included, not called independently
                         <div class="tabletext" nowrap><%EntityField.run("orderItem", "unitPrice", pageContext);%></div>
                     </td>
                     <td align="right" valign="top">
-                        <div class="tabletext" nowrap><ofbiz:format type="currency"><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemAdjustments(orderItem, orderAdjustments, true, false, false))%></ofbiz:format></div>
+                        <div class="tabletext" nowrap><ofbiz:format type="currency"><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false))%></ofbiz:format></div>
                     </td>
                     <td align="right" valign="top" nowrap>
                       <div class="tabletext"><ofbiz:format type="currency"><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemSubTotal(orderItem, orderAdjustments))%></ofbiz:format></div>
@@ -122,7 +122,7 @@ NOTE: This page is meant to be included, not called independently
                     <td align="right" nowrap><div class="tabletext"><ofbiz:format type="currency"><%=UtilFormatOut.formatPrice(orderSubTotal)%></ofbiz:format></div></td>
                 </tr>
 
-                <%Collection headerAdjustmentsToShow = OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false);%>
+                <%Collection headerAdjustmentsToShow = OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false);%>
                 <%if (headerAdjustmentsToShow != null) pageContext.setAttribute("headerAdjustmentsToShow", headerAdjustmentsToShow);%>
                 <ofbiz:iterator name="orderHeaderAdjustment" property="headerAdjustmentsToShow">
                     <%GenericValue adjustmentType = orderHeaderAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
@@ -132,13 +132,13 @@ NOTE: This page is meant to be included, not called independently
                     </tr>
                 </ofbiz:iterator>
                 <%-- do tax and shipping separate so that we can total up the line item adjustments and the order header adjustments --%>
-                <%double shippingAmount = OrderReadHelper.getOrderItemsAdjustments(orderItems, orderAdjustments, false, false, true);%>
+                <%double shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);%>
                 <%shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);%>
                 <tr>
                     <td align="right" colspan="4"><div class="tabletext"><b>Shipping and Handling</b></div></td>
                     <td align="right" nowrap><div class="tabletext"><ofbiz:format type="currency"><%=UtilFormatOut.formatPrice(shippingAmount)%></ofbiz:format></div></td>
                 </tr>
-                <%double taxAmount = OrderReadHelper.getOrderItemsAdjustments(orderItems, orderAdjustments, false, true, false);%>
+                <%double taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);%>
                 <%taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);%>
                 <tr>
                     <td align="right" colspan="4"><div class="tabletext"><b>Sales Tax</b></div></td>
@@ -148,7 +148,7 @@ NOTE: This page is meant to be included, not called independently
                 <tr>
                     <td align="right" colspan="4"><div class="tabletext"><b>Total Due</b></div></td>
                     <td align="right" nowrap>
-                        <div class="tabletext"><ofbiz:format type="currency"><%=UtilFormatOut.formatPrice(OrderReadHelper.getTotalPrice(orderItems, orderAdjustments))%></ofbiz:format></div>
+                        <div class="tabletext"><ofbiz:format type="currency"><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments))%></ofbiz:format></div>
                     </td>
                 </tr>
             <%-- } else { %>

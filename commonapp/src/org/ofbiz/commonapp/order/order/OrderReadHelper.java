@@ -33,6 +33,10 @@ import org.ofbiz.commonapp.common.*;
 /**
  * Utility class for easily extracting important information from orders
  *
+ * <p>NOTE: in the current scheme order adjustments are never included in tax or shipping, 
+ * but order item adjustments ARE included in tax and shipping calcs unless they are 
+ * tax or shipping adjustments or the includeInTax or includeInShipping are set to N.</p>
+ *
  *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Eric Pabst
@@ -276,14 +280,7 @@ public class OrderReadHelper {
         return null;
     }
 
-    public double getTotalPrice() {
-        if (totalPrice == null) {
-            totalPrice = new Double(getTotalPrice(getOrderItems(), getAdjustments()));
-        }//else already set
-        return totalPrice.doubleValue();
-    }
-
-    public double getTotalItems() {
+    public double getTotalOrderItemsQuantity() {
         List orderItems = getOrderItems();
         double totalItems = 0;
         for (int i=0; i<orderItems.size();i++) {
@@ -293,9 +290,16 @@ public class OrderReadHelper {
         return totalItems;
     }
 
-    public static double getTotalPrice(List orderItems, List adjustments) {
+    public double getOrderGrandTotal() {
+        if (totalPrice == null) {
+            totalPrice = new Double(getOrderGrandTotal(getOrderItems(), getAdjustments()));
+        }//else already set
+        return totalPrice.doubleValue();
+    }
+
+    public static double getOrderGrandTotal(List orderItems, List adjustments) {
         double total = getOrderItemsTotal(orderItems, adjustments);
-        double adj = getOrderAdjustments(orderItems, adjustments);
+        double adj = getOrderAdjustmentsTotal(orderItems, adjustments);
         return total + adj;
     }
 
@@ -327,10 +331,10 @@ public class OrderReadHelper {
         return newOrderStatuses;
     }
 
-    public double getOrderAdjustments() {
-        return getOrderAdjustments(getOrderItems(), getAdjustments());
+    public double getOrderAdjustmentsTotal() {
+        return getOrderAdjustmentsTotal(getOrderItems(), getAdjustments());
     }
-    public static double getOrderAdjustments(List orderItems, List adjustments) {
+    public static double getOrderAdjustmentsTotal(List orderItems, List adjustments) {
         return calcOrderAdjustments(getOrderHeaderAdjustments(adjustments), getOrderItemsSubTotal(orderItems, adjustments), true, true, true);
     }
 
@@ -339,7 +343,7 @@ public class OrderReadHelper {
     public static double calcOrderAdjustments(List orderHeaderAdjustments, double subTotal, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double adjTotal = 0.0;
         if (orderHeaderAdjustments != null && orderHeaderAdjustments.size() > 0) {
-            List filteredAdjs = filterOrderAdjustments(orderHeaderAdjustments, includeOther, includeTax, includeShipping);
+            List filteredAdjs = filterOrderAdjustments(orderHeaderAdjustments, includeOther, includeTax, includeShipping, false, false);
             Iterator adjIt = filteredAdjs.iterator();
             while (adjIt.hasNext()) {
                 GenericValue orderAdjustment = (GenericValue) adjIt.next();
@@ -381,6 +385,11 @@ public class OrderReadHelper {
 
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
     public static double getOrderItemSubTotal(GenericValue orderItem, List adjustments) {
+        return getOrderItemSubTotal(orderItem, adjustments, false, false);
+    }
+
+    /** The passed adjustments can be all adjustments for the order, ie for all line items */
+    public static double getOrderItemSubTotal(GenericValue orderItem, List adjustments, boolean forTax, boolean forShipping) {
         Double unitPrice = orderItem.getDouble("unitPrice");
         Double quantity = orderItem.getDouble("quantity");
         double result = 0.0;
@@ -391,7 +400,7 @@ public class OrderReadHelper {
         }
 
         //subtotal also includes non tax and shipping adjustments; tax and shipping will be calculated using this adjusted value
-        result += getOrderItemAdjustments(orderItem, adjustments, true, false, false);
+        result += getOrderItemAdjustmentsTotal(orderItem, adjustments, true, false, false, forTax, forShipping);
 
         return result;
     }
@@ -413,31 +422,37 @@ public class OrderReadHelper {
     }
     public static double getOrderItemTotal(GenericValue orderItem, List adjustments) {
         //add tax and shipping to subtotal
-        return (getOrderItemSubTotal(orderItem, adjustments) + getOrderItemAdjustments(orderItem, adjustments, false, true, true));
+        return (getOrderItemSubTotal(orderItem, adjustments) + getOrderItemAdjustmentsTotal(orderItem, adjustments, false, true, true));
     }
 
     public double getOrderItemTax(GenericValue orderItem) {
-        return getOrderItemAdjustments(orderItem, false, true, false);
+        return getOrderItemAdjustmentsTotal(orderItem, false, true, false);
     }
 
     public double getOrderItemShipping(GenericValue orderItem) {
-        return getOrderItemAdjustments(orderItem, false, false, true);
+        return getOrderItemAdjustmentsTotal(orderItem, false, false, true);
     }
 
-    public static double getOrderItemsAdjustments(List orderItems, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+    public static double getAllOrderItemsAdjustmentsTotal(List orderItems, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(orderItems);
         while (itemIter != null && itemIter.hasNext()) {
-            result += getOrderItemAdjustments((GenericValue) itemIter.next(), adjustments, includeOther, includeTax, includeShipping);
+            result += getOrderItemAdjustmentsTotal((GenericValue) itemIter.next(), adjustments, includeOther, includeTax, includeShipping);
         }
         return result;
     }
-    public double getOrderItemAdjustments(GenericValue orderItem, boolean includeOther, boolean includeTax, boolean includeShipping) {
-        return getOrderItemAdjustments(orderItem, getAdjustments(), includeOther, includeTax, includeShipping);
+    public double getOrderItemAdjustmentsTotal(GenericValue orderItem, boolean includeOther, boolean includeTax, boolean includeShipping) {
+        return getOrderItemAdjustmentsTotal(orderItem, getAdjustments(), includeOther, includeTax, includeShipping);
     }
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
-    public static double getOrderItemAdjustments(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
-        return calcItemAdjustments(orderItem, getOrderItemAdjustmentList(orderItem, adjustments), includeOther, includeTax, includeShipping);
+    public static double getOrderItemAdjustmentsTotal(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+        return getOrderItemAdjustmentsTotal(orderItem, adjustments, includeOther, includeTax, includeShipping, false, false);
+    }
+    /** The passed adjustments can be all adjustments for the order, ie for all line items */
+    public static double getOrderItemAdjustmentsTotal(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
+        return calcItemAdjustments(orderItem.getDouble("quantity"), orderItem.getDouble("unitPrice"), 
+                getOrderItemAdjustmentList(orderItem, adjustments),
+                includeOther, includeTax, includeShipping, false, false);
     }
     public static List getOrderItemAdjustmentList(GenericValue orderItem, List adjustments) {
         return EntityUtil.filterByAnd(adjustments, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
@@ -451,15 +466,11 @@ public class OrderReadHelper {
     }
 
     //Order Item Adjs Utility Methods
-
-    public static double calcItemAdjustments(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
-        return calcItemAdjustments(orderItem.getDouble("quantity"), orderItem.getDouble("unitPrice"), adjustments, includeOther, includeTax, includeShipping);
-    }
-
-    public static double calcItemAdjustments(Double quantity, Double unitPrice, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+    
+    public static double calcItemAdjustments(Double quantity, Double unitPrice, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
         double adjTotal = 0.0;
         if (adjustments != null && adjustments.size() > 0) {
-            List filteredAdjs = filterOrderAdjustments(adjustments, includeOther, includeTax, includeShipping);
+            List filteredAdjs = filterOrderAdjustments(adjustments, includeOther, includeTax, includeShipping, forTax, forShipping);
             Iterator adjIt = filteredAdjs.iterator();
             while (adjIt.hasNext()) {
                 GenericValue orderAdjustment = (GenericValue) adjIt.next();
@@ -488,7 +499,7 @@ public class OrderReadHelper {
         return adjustment;
     }
 
-    public static List filterOrderAdjustments(List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
+    public static List filterOrderAdjustments(List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
         List newOrderAdjustmentsList = new LinkedList();
         if (adjustments != null && adjustments.size() > 0) {
             Iterator adjIt = adjustments.iterator();
@@ -504,6 +515,16 @@ public class OrderReadHelper {
                     if (includeOther) includeAdjustment = true;
                 }
 
+                //default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
+                if (forTax && "N".equals(orderAdjustment.getString("includeInTax"))) {
+                    includeAdjustment = false;
+                }
+
+                //default to yes, include for shipping; so only exclude if includeInShipping is N, or false; if Y or null or anything else it will be included
+                if (forShipping && "N".equals(orderAdjustment.getString("includeInShipping"))) {
+                    includeAdjustment = false;
+                }
+                
                 if (includeAdjustment) {
                     newOrderAdjustmentsList.add(orderAdjustment);
                 }
@@ -512,20 +533,10 @@ public class OrderReadHelper {
         return newOrderAdjustmentsList;
     }
 	
-	/** Getter for property orderHeader.
-	 * @return Value of property orderHeader.
-	 */
-	public org.ofbiz.core.entity.GenericValue getOrderHeader()
-	{
-		return orderHeader;
-	}
-	
-	/** Setter for property orderHeader.
-	 * @param orderHeader New value of property orderHeader.
-	 */
-	public void setOrderHeader(org.ofbiz.core.entity.GenericValue orderHeader)
-	{
-		this.orderHeader = orderHeader;
-	}
-	
+    /** Getter for property orderHeader.
+     * @return Value of property orderHeader.
+     */
+    public GenericValue getOrderHeader() {
+        return orderHeader;
+    }
 }

@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Order History Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -26,8 +23,7 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
 
@@ -99,7 +95,7 @@
                         <div class="tabletext"><%=orderHeader.getString("orderId")%></div>
                       </td>
                       <td>
-                        <div class="tabletext"><%=UtilFormatOut.formatPrice(order.getTotalPrice())%></div>
+                        <div class="tabletext"><%=UtilFormatOut.formatPrice(order.getOrderGrandTotal())%></div>
                       </td>
                       <td>
                         <div class="tabletext"><%=orderStatusString%></div>

@@ -102,7 +102,7 @@
                         <div class="tabletext" nowrap><%=UtilFormatOut.formatPrice(orderItem.getDouble("unitPrice"))%> / <%=UtilFormatOut.formatPrice(orderItem.getDouble("unitListPrice"))%></div>
                     </td>
                     <td align="right" valign="top" nowrap>
-                        <div class="tabletext" nowrap><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemAdjustments(orderItem, orderAdjustments, true, false, false))%></div>
+                        <div class="tabletext" nowrap><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false))%></div>
                     </td>
                     <td align="right" valign="top" nowrap>
                       <div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderItemSubTotal(orderItem, orderAdjustments))%></div>
@@ -188,13 +188,13 @@
                     <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(otherAdjAmount)%></div></td>
                 </tr>
                 <%-- do tax and shipping separate so that we can total up the line item adjustments and the order header adjustments --%>
-                <%double shippingAmount = OrderReadHelper.getOrderItemsAdjustments(orderItems, orderAdjustments, false, false, true);%>
+                <%double shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);%>
                 <%shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);%>
                 <tr>
                     <td align="right" colspan="5"><div class="tabletext"><b>Total Shipping and Handling</b></div></td>
                     <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(shippingAmount)%></div></td>
                 </tr>
-                <%double taxAmount = OrderReadHelper.getOrderItemsAdjustments(orderItems, orderAdjustments, false, true, false);%>
+                <%double taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);%>
                 <%taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);%>
                 <tr>
                     <td align="right" colspan="5"><div class="tabletext"><b>Total Sales Tax</b></div></td>
@@ -204,7 +204,7 @@
                 <tr>
                     <td align="right" colspan="5"><div class="tabletext"><b>Total Due</b></div></td>
                    <td align="right" nowrap>
-                  <div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.getTotalPrice(orderItems, orderAdjustments))%></div>
+                  <div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments))%></div>
                     </td>
                 </tr>
             <%-- } else { %>

@@ -285,20 +285,28 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
     /** Returns the "other" adjustments. */
     public double getOtherAdjustments() {
-        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), true, false, false);
+        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), true, false, false, false, false);
     }
     /** Returns the total line price. */
     public double getItemSubTotal() {
         return (getBasePrice() * quantity) + getOtherAdjustments();
     }
+    /** Returns the total line price for tax calculation purposes. */
+    public double getItemSubTotalForTax() {
+        return (getBasePrice() * quantity) + OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), true, false, false, true, false);
+    }
+    /** Returns the total line price for shipping calculation purposes. */
+    public double getItemSubTotalForShipping() {
+        return (getBasePrice() * quantity) + OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), true, false, false, false, true);
+    }
 
     /** Returns the tax adjustments. */
     public double getItemTax() {
-        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), false, true, false);
+        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), false, true, false, false, false);
     }
     /** Returns the shipping adjustments. */
     public double getItemShipping() {
-        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), false, false, true);
+        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), false, false, true, false, false);
     }
 
     public void addAllProductFeatureAndAppls(Map additionalProductFeatureAndAppls) {

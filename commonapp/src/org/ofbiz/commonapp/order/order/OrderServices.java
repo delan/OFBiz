@@ -543,8 +543,8 @@ public class OrderServices {
             Collection orderItems = orderHeader.getRelatedCache("OrderItem");
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
             String statusString = orh.getStatusString();
-            Double totalItems = new Double(orh.getOrderItemsTotal());
-            Double totalPrice = new Double(orh.getTotalPrice());
+            Double totalItems = new Double(orh.getTotalOrderItemsQuantity());
+            Double totalPrice = new Double(orh.getOrderGrandTotal());
             GenericValue shipAddress = orh.getShippingAddress();
             GenericValue billAddress = orh.getBillingAddress();
             GenericValue billTo = orh.getBillToPerson();

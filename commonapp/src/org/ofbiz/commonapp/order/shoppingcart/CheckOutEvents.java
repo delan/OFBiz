@@ -400,15 +400,16 @@ public class CheckOutEvents {
         List items = cart.makeOrderItems();
         List adjs = cart.makeAllAdjustments();
         GenericValue shipAddress = cart.getShippingAddress();
-        if (shipAddress == null)
+        if (shipAddress == null) {
             throw new GeneralException("Shipping address is not set in the shopping cart.");
+        }
 
         // remove old tax adjustments
         cart.removeAdjustmentByType("SALES_TAX");
 
         // get the tax adjustments
         List taxReturn = getTaxAdjustments(dispatcher, "calcTax", items, adjs, shipAddress);
-        Debug.logVerbose("ReturnList: " + taxReturn);
+        if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn);
 
         List orderAdj = (List) taxReturn.get(0);
         List itemAdj = (List) taxReturn.get(1);
@@ -435,7 +436,7 @@ public class CheckOutEvents {
 
     // Calc the tax adjustments.
     private static List getTaxAdjustments(LocalDispatcher dispatcher, String taxService, List orderItems,
-                                          List allAdjustments, GenericValue shipAddress) throws GeneralException {
+            List allAdjustments, GenericValue shipAddress) throws GeneralException {
         List products = new ArrayList(orderItems.size());
         List amounts = new ArrayList(orderItems.size());
         List shipAmts = new ArrayList(orderItems.size());
@@ -444,13 +445,13 @@ public class CheckOutEvents {
         List orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(allAdjustments);
         Double cartShipping = new Double(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true));
 
-        // build up the list of taxware parameters
+        // build up the list of tax calc service parameters
         for (int i = 0; i < orderItems.size(); i++) {
             GenericValue orderItem = (GenericValue) orderItems.get(i);
             try {
                 products.add(i, orderItem.getRelatedOne("Product"));  // get the product entity
-                amounts.add(i, new Double(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments))); // get the item amount
-                shipAmts.add(i, new Double(OrderReadHelper.getOrderItemAdjustments(orderItem, allAdjustments, false, false, true))); // get the shipping amount
+                amounts.add(i, new Double(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments, true, false))); // get the item amount
+                shipAmts.add(i, new Double(OrderReadHelper.getOrderItemAdjustmentsTotal(orderItem, allAdjustments, false, false, true))); // get the shipping amount
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Cannot read order item entity (" + e.getMessage() + ")");
                 throw new GeneralException("Cannot read the order item entity", e);
