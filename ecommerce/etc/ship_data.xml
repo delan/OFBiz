@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+  <Party partyId="UPS"/>
+  <PartyRole partyId="UPS" roleTypeId="CARRIER"/>
+  <Party partyId="Company"/>
+  <PartyRole partyId="Company" roleTypeId="CARRIER"/>
+  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND"/>
   <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND"/>
   <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="AIR"/>
   <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY"/>
   <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY"/>
-  <Party partyId="UPS"/>
   <QuantityBreak fromQuantity="0.0" quantityBreakId="10000"
     quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
   <QuantityBreak fromQuantity="0.0" quantityBreakId="10003"
