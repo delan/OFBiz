@@ -133,10 +133,12 @@
     <entity entity-name="WorkflowActivity" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Entity">
-      <field name="activityId" type="id-ne"></field>
-      <field name="activityName" type="name"></field>
+      <field name="executionObjectId" type="id-ne"></field>
+      <field name="objectName" type="name"></field>
+      <field name="objectPriority" type="numeric"></field>
+      <field name="objectState" type="name"></field>
       <field name="description" type="description"></field>
-      <field name="priority" type="numeric"></field>
+      <field name="runtimeDataId" type="id-ne"></field>
       <field name="timeLimit" type="floating-point"></field>
       <field name="startModeEnumId" type="id"></field>
       <field name="finishModeEnumId" type="id"></field>
@@ -384,16 +386,19 @@
     <entity entity-name="WorkflowProcess" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Process Entity">
-      <field name="processId" type="id-ne"></field>
-      <field name="processName" type="name"></field>
+      <field name="executionObjectId" type="id-ne"></field>
+      <field name="objectName" type="name"></field>
+      <field name="objectPriority" type="numeric"></field>
+      <field name="objectState" type="name"></field>
       <field name="description" type="description"></field>
+      <field name="runtimeDataId" type="id-ne"></field>
       <field name="creationDateTime" type="date-time"></field>
       <field name="processVersion" type="very-short"></field>
       <field name="author" type="name"></field>
       <field name="codepage" type="short-varchar"></field>
       <field name="countryGeoId" type="id"></field>
       <field name="publicationStatusId" type="id"></field>
-      <field name="priority" type="numeric"></field>
+      
       <field name="timeLimit" type="floating-point"></field>
       <field name="validFromDate" type="date-time"></field>
       <field name="validToDate" type="date-time"></field>
