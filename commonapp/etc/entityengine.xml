@@ -16,8 +16,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties -->
     
     <transaction-factory class="org.ofbiz.core.entity.transaction.JNDIFactory">
-        <user-transaction-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
-        <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
+        <user-transaction-jndi jndi-server-name="default" jndi-name="UserTransaction"/>
+        <transaction-manager-jndi jndi-server-name="default" jndi-name="UserTransaction"/>
     </transaction-factory>
     
     <!-- It is common to use UserTransaction for the TransactionManager, but if that doesn't work, try this: <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/TransactionManager"/> -->
@@ -28,7 +28,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     -->
 
     <delegator name="default" entity-model-reader="main" entity-group-reader="main">
-        <group-map group-name="org.ofbiz.commonapp" datasource-name="localsapdb"/>
+        <group-map group-name="org.ofbiz.commonapp" datasource-name="localpostgres"/>
     </delegator>
     <delegator name="sap" entity-model-reader="main" entity-group-reader="main">
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localsapdb"/>
@@ -79,13 +79,15 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             use-foreign-key-indices="true">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <!--
         <inline-jdbc
                 jdbc-driver="org.hsqldb.jdbcDriver"
                 jdbc-uri="jdbc:hsqldb:../../data/ofbiz"
                 jdbc-username="sa"
                 jdbc-password=""
                 isolation-level="ReadUncommitted"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="Serializable"/> -->
+        -->
+        <jndi-jdbc jndi-server-name="default" jndi-name="HsqlDataSource" isolation-level="ReadUncommitted"/> 
     </datasource>
 
     <datasource name="localcloudscape"
@@ -123,18 +125,20 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 
     <datasource name="localpostgres"
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
-            field-type-name="postgres72"
+            field-type-name="postgres"
             check-on-start="true"
             add-missing-on-start="true">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <!--
         <inline-jdbc
                 jdbc-driver="org.postgresql.Driver"
                 jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"/>
-        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="java:comp/env/jdbc/PostgresDataSource" isolation-level="ReadCommitted"/> -->
+        -->
+        <jndi-jdbc jndi-server-name="default" jndi-name="PostgresDataSource" isolation-level="ReadCommitted"/> 
         <!-- <tyrex-dataSource dataSource-name="localpostgres" isolation-level="ReadCommitted"/> -->
     </datasource>
 
@@ -169,7 +173,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"/> -->
-        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localsapdb" isolation-level="ReadCommitted"/>
+        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/SapDBDataSource" isolation-level="ReadCommitted"/>
         <!-- <tyrex-dataSource dataSource-name="localsapdb" isolation-level="ReadCommitted"/> -->
     </datasource>
 
