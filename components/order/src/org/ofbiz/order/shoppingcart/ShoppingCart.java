@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.56 2004/07/29 20:56:35 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.57 2004/08/01 02:22:35 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.56 $
+ * @version    $Revision: 1.57 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -86,6 +86,9 @@ public class ShoppingCart implements Serializable {
     private GenericValue orderShipmentPreference = null;
     private String orderAdditionalEmails = null;
     private boolean viewCartOnAdd = false;
+
+    private Timestamp lastListRestore = null;
+    private String autoSaveListId = null;
 
     /** Holds value of order adjustments. */
     private List adjustments = new LinkedList();
@@ -121,6 +124,7 @@ public class ShoppingCart implements Serializable {
     private List freeShippingProductPromoActions = new ArrayList();
     /** Note that even though this is promotion info, it should NOT be cleared when the promos are cleared, it is a preference that will be used in the next promo calculation */
     private Map desiredAlternateGiftByAction = new HashMap();
+    private Timestamp cartCreatedTs = UtilDateTime.nowTimestamp();
 
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
@@ -227,6 +231,9 @@ public class ShoppingCart implements Serializable {
         this.locale = locale;
     }
 
+    public Timestamp getCartCreatedTime() {
+        return this.cartCreatedTs;
+    }
 
     // =======================================================================
     // Methods for cart items
@@ -475,6 +482,22 @@ public class ShoppingCart implements Serializable {
         return partyId;
     }
 
+    public void setAutoSaveListId(String id) {
+        this.autoSaveListId = id;
+    }
+
+    public String getAutoSaveListId() {
+        return this.autoSaveListId;
+    }
+
+    public void setLastListRestore(Timestamp time) {
+        this.lastListRestore = time;
+    }
+
+    public Timestamp getLastListRestore() {
+        return this.lastListRestore;
+    }
+
     public Double getPartyDaysSinceCreated(Timestamp nowTimestamp) {
         String partyId = this.getPartyId();
         if (UtilValidate.isEmpty(partyId)) {
@@ -537,12 +560,17 @@ public class ShoppingCart implements Serializable {
             if (ul == null) {
                 ul = this.getAutoUserLogin();
             }
-            String autoSaveListId = null;
-            try {
-                autoSaveListId = org.ofbiz.order.shoppinglist.ShoppingListEvents.getAutoSaveListId(delegator, null, ul);
-            } catch (GeneralException e) {
-                Debug.logError(e, module);
+
+            // load the auto-save list ID
+            if (autoSaveListId == null) {
+                try {
+                    autoSaveListId = org.ofbiz.order.shoppinglist.ShoppingListEvents.getAutoSaveListId(delegator, null, ul);
+                } catch (GeneralException e) {
+                    Debug.logError(e, module);
+                }
             }
+
+            // clear the list
             if (autoSaveListId != null) {
                 try {
                     org.ofbiz.order.shoppinglist.ShoppingListEvents.clearListInfo(delegator, autoSaveListId);
@@ -550,6 +578,8 @@ public class ShoppingCart implements Serializable {
                     Debug.logError(e, module);
                 }
             }
+            this.lastListRestore = null;
+            this.autoSaveListId = null;
         }
     }
 

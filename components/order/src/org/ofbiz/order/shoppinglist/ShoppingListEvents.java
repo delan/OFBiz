@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingListEvents.java,v 1.5 2004/07/10 06:04:09 ajzeneski Exp $
+ * $Id: ShoppingListEvents.java,v 1.6 2004/08/01 02:22:35 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,6 +41,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -50,6 +51,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -59,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  * Shopping cart events.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class ShoppingListEvents {
@@ -332,9 +334,13 @@ public class ShoppingListEvents {
     /**
      * Finds or creates a specialized (auto-save) shopping list used to record shopping bag contents between user visits.
      */
-    public static String getAutoSaveListId(GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException, GenericServiceException {
+    public static String getAutoSaveListId(GenericDelegator delegator, LocalDispatcher dispatcher, String partyId, GenericValue userLogin) throws GenericEntityException, GenericServiceException {
+        if (partyId == null) {
+            partyId = userLogin.getString("partyId");
+        }
+
         String autoSaveListId = null;
-        List persistantLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.get("partyId"),
+        List persistantLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", partyId,
                 "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME));
 
         GenericValue list = null;
@@ -343,7 +349,7 @@ public class ShoppingListEvents {
             autoSaveListId = list.getString("shoppingListId");
         }
 
-        if (list == null && dispatcher != null) {
+        if (list == null && dispatcher != null && userLogin != null) {
             Map listFields = UtilMisc.toMap("userLogin", userLogin, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
             Map newListResult = dispatcher.runSync("createShoppingList", listFields);
 
@@ -353,6 +359,14 @@ public class ShoppingListEvents {
         }
 
         return autoSaveListId;
+    }
+
+    public static String getAutoSaveListId(GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException, GenericServiceException {
+        return getAutoSaveListId(delegator, dispatcher, null, userLogin);
+    }
+
+    public static String getAutoSaveListId(GenericDelegator delegator, LocalDispatcher dispatcher, String partyId) throws GenericEntityException, GenericServiceException {
+        return getAutoSaveListId(delegator, dispatcher, partyId, null);
     }
 
     /**
@@ -378,6 +392,12 @@ public class ShoppingListEvents {
     public static String restoreAutoSaveList(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericValue productStore = ProductStoreWorker.getProductStore(request);
+
+        if (!ProductStoreWorker.autoSaveCart(productStore)) {
+            // if auto-save is disabled just return here
+            return "success";
+        }
 
         HttpSession session = request.getSession();
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
@@ -387,26 +407,57 @@ public class ShoppingListEvents {
             cart.setWebSiteId(CatalogWorker.getWebSiteId(request));
         }
 
-        // using the autoUserLogin since it will always exist even if logged in; this
-        // will allow the cart to be restored at first vist back to the site otherwise
-        // the items may get added to what the user thinks is an empty cart
-        GenericValue userLogin = (GenericValue) session.getAttribute("autoUserLogin");
+        // locate the user's identity
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         if (userLogin == null) {
-            Debug.log("No auto-userlogin found cannot restore cart", module);
+            userLogin = (GenericValue) session.getAttribute("autoUserLogin");
+        }
+
+        if (userLogin == null) {
+            // not logged in; cannot identify the user
             return "success";
         }
 
-        String autoSaveListId = null;
-        try {
-            autoSaveListId = getAutoSaveListId(delegator, dispatcher, userLogin);
-        } catch (GeneralException e) {
-            Debug.logError(e, module);
+        // find the list ID
+        String autoSaveListId = cart.getAutoSaveListId();
+        if (autoSaveListId == null) {
+            try {
+                autoSaveListId = getAutoSaveListId(delegator, dispatcher, userLogin);
+            } catch (GeneralException e) {
+                Debug.logError(e, module);
+            }
+            cart.setAutoSaveListId(autoSaveListId);
         }
 
-        if (autoSaveListId != null) {
+        // check to see if we are okay to load this list
+        java.sql.Timestamp lastLoad = cart.getLastListRestore();
+        boolean okayToLoad = autoSaveListId == null ? false : (lastLoad == null ? true : false);
+        if (!okayToLoad && lastLoad != null) {
+            GenericValue shoppingList = null;
+            try {
+                shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", autoSaveListId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (shoppingList != null) {
+                java.sql.Timestamp lastModified = shoppingList.getTimestamp("lastAdminModified");
+                if (lastModified != null) {
+                    if (lastModified.after(lastLoad)) {
+                        okayToLoad = true;
+                    }
+                    if (cart.size() == 0 && lastModified.after(cart.getCartCreatedTime())) {
+                        okayToLoad = true;
+                    }
+                }
+            }
+        }
+
+        // load (restore) the list of we have determined it is okay to load
+        if (okayToLoad) {
             String prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
             try {
                 addListToCart(delegator, dispatcher, cart, prodCatalogId, autoSaveListId, false, false, false);
+                cart.setLastListRestore(UtilDateTime.nowTimestamp());
             } catch (IllegalArgumentException e) {
                 Debug.logError(e, module);
             }
