@@ -265,14 +265,21 @@ public class UtilCache {
         }
     }
 
-    /** Removes all element from the cache
-     */
+    /** Removes all elements from this cache */
     public synchronized void clear() {
-        // Enumeration e;
-        // for (e = cacheLineTable.keys(); e.hasMoreElements();) remove(e.nextElement());
         cacheLineTable.clear();
         keyLRUList.clear();
         clearCounters();
+    }
+
+    /** Removes all elements from this cache */
+    public static void clearAllCaches() {
+        Iterator entries = utilCacheTable.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry entry = (Map.Entry) entries.next();
+            UtilCache utilCache = (UtilCache) entry.getValue();
+            utilCache.clear();
+        }
     }
 
     /** Getter for the name of the UtilCache instance.
@@ -551,6 +558,17 @@ public class UtilCache {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not clear cache, cache not found with name: " + name);
             return "error";
         }
+        return "success";
+    }
+
+    /** An HTTP WebEvent handler that clears all caches
+     * @param request The HTTP request object for the current JSP or Servlet request.
+     * @param response The HTTP response object for the current JSP or Servlet request.
+     * @return
+     */
+    public static String clearAllEvent(HttpServletRequest request, HttpServletResponse response) {
+        clearAllCaches();
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Cleared all caches.");
         return "success";
     }
 
