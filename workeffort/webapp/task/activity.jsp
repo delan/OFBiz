@@ -75,7 +75,6 @@
               <form action="<ofbiz:url>/updateactivity</ofbiz:url>" method=POST style='margin: 0;'>
               <table border='0' cellpadding='2' cellspacing='0'>
                 <ofbiz:if name="workEffort">
-                  <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
                   <input type='hidden' name='workEffortId' value='<ofbiz:print attribute="workEffortId"/>'>
 
                 <tr>
@@ -217,7 +216,6 @@
                   <%StatusWorker.getStatusValidChangeToDetails(pageContext, "taskStatusDetails", statusId);%>
                   <form action="<ofbiz:url>/updateactivityassign</ofbiz:url>" method=POST style='margin: 0;'>
                   <table border='0' cellpadding='2' cellspacing='0'>
-                    <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
                     <input type='hidden' name='workEffortId' value='<ofbiz:print attribute="workEffortId"/>'>
                     <input type='hidden' name='partyId' value='<ofbiz:entityfield field="partyId" attribute="workEffortPartyAssignment"/>'>
                     <input type='hidden' name='roleTypeId' value='<ofbiz:entityfield field="roleTypeId" attribute="workEffortPartyAssignment"/>'>
