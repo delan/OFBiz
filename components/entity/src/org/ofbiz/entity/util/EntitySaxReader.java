@@ -415,7 +415,9 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
             try {
                 currentValue = delegator.makeValue(entityName, null);
-                currentValue.setIsFromEntitySync(true);
+                // TODO: do we really want this? it makes it so none of the values imported have create/update timestamps set 
+                // DEJ 10/16/04 I think they should all be stamped, so commenting this out
+                //currentValue.setIsFromEntitySync(true);
             } catch (Exception e) {
                 Debug.logError(e, module);
             }
