@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -331,7 +331,7 @@ public class ShoppingCart implements Serializable {
                     } else if ("GIFT_CARD".equals(paymentMethodTypeId)) {
                         pmObj = delegator.findByPrimaryKey("GiftCard", lookupFields);
                     } else if ("EFT_ACCOUNT".equals(paymentMethodTypeId)) {
-                        pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
+                        pmObj = delegator.findByPrimaryKey("EftAccount", lookupFields);
                     } else if ("EXT_BILLACT".equals(paymentMethodTypeId)) {
                         pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
                     }
@@ -2561,7 +2561,6 @@ public class ShoppingCart implements Serializable {
         } 
         return allWorkEfforts;
     }
-
 
     /** make a list of all adjustments including order adjustments, order line adjustments, and special adjustments (shipping and tax if applicable) */
     public List makeAllAdjustments() {
