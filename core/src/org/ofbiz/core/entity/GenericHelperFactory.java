@@ -33,15 +33,16 @@ public class GenericHelperFactory
 {
   public static GenericHelper getDefaultHelper()
   {
-    if(UtilProperties.propertyValueEqualsIgnoreCase("servers", "jdbc.uri", "jdbc"))
-      return getJDBCHelper();
-    else
-      return getEJBHelper();
+    String defaultName = UtilProperties.getPropertyValue("servers", "server.default.name", "default");
+    if(UtilProperties.propertyValueEqualsIgnoreCase("servers", "server.default.type", "ejb"))
+      return getEJBHelper(defaultName);
+    //if no default type is specified, go with jdbc
+    return getJDBCHelper(defaultName);
   }
 
-  public static GenericHelper getJDBCHelper() { return new GenericHelperDAO(); }
+  public static GenericHelper getJDBCHelper() { return new GenericHelperDAO(UtilProperties.getPropertyValue("servers", "server.default.name", "default")); }
   public static GenericHelper getJDBCHelper(String serverName) { return new GenericHelperDAO(serverName); }
 
-  public static GenericHelper getEJBHelper() { return new GenericHelperEJB(); }
+  public static GenericHelper getEJBHelper() { return new GenericHelperEJB(UtilProperties.getPropertyValue("servers", "server.default.name", "default")); }
   public static GenericHelper getEJBHelper(String serverName) { return new GenericHelperEJB(serverName); }
 }

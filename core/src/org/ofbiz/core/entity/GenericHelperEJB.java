@@ -37,7 +37,6 @@ public class GenericHelperEJB implements GenericHelper
   /** A variable to cache the Home object for the Generic EJB */
   private GenericHome genericHome;
 
-  public GenericHelperEJB() { getGenericHome("default"); }
   public GenericHelperEJB(String serverName) { getGenericHome(serverName); }
   
   /** Initializes the genericHome, from a JNDI lookup */

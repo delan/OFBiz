@@ -34,7 +34,6 @@ public class GenericHelperDAO implements GenericHelper
 {
   GenericDAO genericDAO;
   
-  public GenericHelperDAO() { genericDAO = new GenericDAO("default"); }
   public GenericHelperDAO(String serverName) { genericDAO = new GenericDAO(serverName); }
   
   /** Creates a Entity in the form of a GenericValue and write it to the database
