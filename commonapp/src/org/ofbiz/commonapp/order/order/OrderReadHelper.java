@@ -60,6 +60,19 @@ public class OrderReadHelper {
         return null;
     }
         
+    public GenericValue getBillingAddress() {
+        GenericHelper helper = orderHeader.getHelper();
+        GenericValue orderContactMech = getFirst(helper.findByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId", 
+                "BILLING_LOCATION", "orderId", orderHeader.getString("orderId")), null));
+        if (orderContactMech != null) {
+            GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
+            if (contactMech != null) {
+                return contactMech.getRelatedOne("PostalAddress");
+            }
+        }
+        return null;
+    }
+        
     public double getShippingTotal() {
         GenericHelper helper = orderHeader.getHelper();
         Iterator shippingChargeIter = helper.findByAnd("OrderAdjustment", UtilMisc.toMap(
@@ -162,54 +175,23 @@ public class OrderReadHelper {
         
         public Object next() {
             GenericValue orderAdjustment = (GenericValue) orderAdjustmentIter.next();
-            return new Adjustment(orderAdjustment, basePrice);
+            GenericValue orderAdjustmentType = orderAdjustment.getRelatedOne("OrderAdjustmentType");
+            String description;
+            if (orderAdjustmentType != null) {
+                description = orderAdjustmentType.getString("description");
+            } else {
+                //if not linked to an adjustment type, leave the description generic
+                description = "Adjustment"; 
+            }
+            Adjustment result = new Adjustment(description, orderAdjustment.getDouble("amount"), orderAdjustment.getDouble("percentage"), basePrice);
+            if ("SHIPPING_CHARGES".equals(orderAdjustmentType.getString("orderAdjustmentTypeId"))
+                    && (getShippingMethod() != null)) {
+                //put the shipping method in the adjustment description
+                result.prependDescription(getShippingMethod() + " ");
+            }//else keep as is
+            return result;
         }
         
         public void remove() { throw new UnsupportedOperationException(); }
-    }
-    
-    public class Adjustment {
-        private GenericValue orderAdjustment;
-        private String description;
-        private double amount;
-        
-        private Adjustment(GenericValue orderAdjustment, double basePrice) {
-            GenericValue orderAdjustmentType = orderAdjustment.getRelatedOne("OrderAdjustmentType");
-            if (orderAdjustmentType != null) {
-                this.description = orderAdjustmentType.getString("description");
-                if ("SHIPPING_CHARGES".equals(orderAdjustmentType.getString("orderAdjustmentTypeId"))) {
-                    //put the shipping method in the adjustment description
-                    this.description = UtilFormatOut.ifNotEmpty(getShippingMethod(), "", " ") + this.description;
-                }//else do nothing
-            } else {
-                //if not linked to an adjustment type, leave the description generic
-                this.description = "Adjustment"; 
-            }
-                        
-            Double adjustmentAmount = orderAdjustment.getDouble("amount");
-            Double adjustmentPercentage = orderAdjustment.getDouble("percentage");
-            if ((adjustmentAmount != null) != (adjustmentPercentage != null)) {
-                if (adjustmentAmount != null) {
-                    this.amount = adjustmentAmount.doubleValue();
-                } else {
-                    this.amount = adjustmentPercentage.doubleValue() * basePrice;
-                    this.description = UtilFormatOut.formatPercentage(adjustmentPercentage) 
-                            + " " + this.description;
-                }
-            } else {
-                throw new IllegalArgumentException(
-                        "Either amount or percentage must be specified for adjustment: " + orderAdjustment);
-            }
-        }
-        
-        /** include the percentage amount, if applicable */
-        public String getDescription() {
-            return this.description;
-        }
-        
-        /** uses either the amount or percentage */
-        public double getAmount() {
-            return this.amount;
-        }
     }
 }
