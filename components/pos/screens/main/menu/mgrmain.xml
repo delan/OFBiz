@@ -8,16 +8,9 @@
         <Button name="menuPromo" x="306" y="0" w="100" h="60" style="posButton" content="PROMO" alignment="Center"/>
         <Button name="" x="408" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="menuPay" x="510" y="0" w="100" h="60" style="posButton" content="PAY" alignment="Center"/>
-
-        <Button name="" x="0" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="102" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="204" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="306" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="408" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="510" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
-
+        
         <!-- col 2 -->
-        <Button name="" x="0" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="mgrPriceChg" x="0" y="62" w="100" h="60" style="posButton" content="CHANGE PRICE" alignment="Center"/>
         <Button name="" x="102" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="204" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>

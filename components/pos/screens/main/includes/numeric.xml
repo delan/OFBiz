@@ -6,7 +6,7 @@
             <Button name="numSeven" x="0" y="0" w="75" h="68" style="numButton" content="7" alignment="Center"/>
             <Button name="numEight" x="76" y="0" w="75" h="68" style="numButton" content="8" alignment="Center"/>
             <Button name="numNine" x="152" y="0" w="75" h="68" style="numButton" content="9" alignment="Center"/>
-            <Button name="" x="228" y="0" w="75" h="68" style="numButton" content="%" alignment="Center"/>
+            <Button name="numPercent" x="228" y="0" w="75" h="68" style="numButton" content="%" alignment="Center"/>
             <Button name="numFour" x="0" y="69" w="75" h="68" style="numButton" content="4" alignment="Center"/>
             <Button name="numFive" x="76" y="69" w="75" h="68" style="numButton" content="5" alignment="Center"/>
             <Button name="numSix" x="152" y="69" w="75" h="68" style="numButton" content="6" alignment="Center"/>
@@ -29,17 +29,17 @@
             <!--<Button name="menuChgQty" x="0" y="69" w="75" h="68" style="posButton" content="MOD" alignment="Center"/>-->
             <Button name="menuQty" x="76" y="69" w="75" h="68" style="posButton" content="QTY" alignment="Center"/>
             <Button name="menuChgQty" x="152" y="69" w="75" h="68" style="posButton" content="MOD" alignment="Center"/>
-            <Button name="" x="228" y="69" w="75" h="68" style="posButton" content="DISC" alignment="Center"/>
+            <Button name="menuItemDisc" x="228" y="69" w="75" h="68" style="posButton" content="ITEM DISC" alignment="Center"/>
 
             <!--<Button name="menuVoidItem" x="0" y="138" w="75" h="68" style="posButton" content="" alignment="Center"/>-->
             <Button name="menuVoidItem" x="76" y="138" w="75" h="68" style="posButton" content="VOID ITEM" alignment="Center"/>
             <Button name="menuVoidAll" x="152" y="138" w="75" h="68" style="posButton" content="VOID SALE" alignment="Center"/>
-            <Button name="" x="228" y="138" w="75" h="68" style="posButton" content="" alignment="Center"/>
+            <Button name="menuSaleDisc" x="228" y="138" w="75" h="68" style="posButton" content="SALE DISC" alignment="Center"/>
 
             <!--<Button name="" x="0" y="207" w="75" h="68" style="posButton" content="" alignment="Center"/>-->
             <Button name="" x="76" y="207" w="75" h="68" style="posButton" content="TRANS SAVE" alignment="Center"/>
             <Button name="" x="152" y="207" w="75" h="68" style="posButton" content="TRANS RET" alignment="Center"/>
-            <Button name="" x="228" y="207" w="75" h="68" style="posButton" content="" alignment="Center"/>
+            <Button name="menuClrDisc" x="228" y="207" w="75" h="68" style="posButton" content="CLR DISC" alignment="Center"/>
         </Panel>
     </Components>    
 </XPage>

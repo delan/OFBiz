@@ -93,6 +93,9 @@ public class PosTransaction implements Serializable {
     protected int drawerIdx = 0;
 
     private GenericValue shipAddress = null;
+    private Map skuDiscounts = new HashMap();
+    private int cartDiscount = -1;
+
 
     public PosTransaction(XuiSession session) {
         this.session = session;
@@ -350,6 +353,51 @@ public class PosTransaction implements Serializable {
             item.setBasePrice(price);
         } else {
             trace("item not found", productId);
+        }
+    }
+
+    public void addDiscount(String productId, double discount, boolean percent) {
+        GenericValue adjustment = session.getDelegator().makeValue("OrderAdjustment", null);
+        adjustment.set("orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT");
+        if (percent) {
+            adjustment.set("percentage", new Double(discount));
+        } else {
+            adjustment.set("amount", new Double(discount));
+        }
+
+        if (productId != null) {
+            trace("add item adjustment");
+            ShoppingCartItem item = cart.findCartItem(productId, null, null, null, 0.00);
+            Integer itemAdj = (Integer) skuDiscounts.get(productId);
+            if (itemAdj != null) {
+                item.removeAdjustment(itemAdj.intValue());
+            }
+            int idx = item.addAdjustment(adjustment);
+            skuDiscounts.put(productId, new Integer(idx));
+        } else {
+            trace("add sale adjustment");
+            if (cartDiscount > -1) {
+                cart.removeAdjustment(cartDiscount);
+            }
+            cartDiscount = cart.addAdjustment(adjustment);
+        }
+    }
+
+    public void clearDiscounts() {
+        if (cartDiscount > -1) {
+            cart.removeAdjustment(cartDiscount);
+            cartDiscount = -1;
+        }
+        if (skuDiscounts.size() > 0) {
+            Iterator i = skuDiscounts.keySet().iterator();
+            while (i.hasNext()) {
+                String productId = (String) i.next();
+                ShoppingCartItem item = cart.findCartItem(productId, null, null, null, 0.00);
+                Integer itemAdj = (Integer) skuDiscounts.remove(productId);
+                if (itemAdj != null) {
+                    item.removeAdjustment(itemAdj.intValue());
+                }
+            }
         }
     }
 
