@@ -1,5 +1,5 @@
 /*
- * $Id: NavagationEvents.java,v 1.1 2004/07/27 18:37:38 ajzeneski Exp $
+ * $Id: NavagationEvents.java,v 1.2 2004/08/15 21:26:42 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,28 +24,34 @@
  */
 package org.ofbiz.pos.event;
 
-import net.xoetrope.xui.XProjectManager;
-
+import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class NavagationEvents {
 
-    public static void showMgrScreen(PosScreen pos) {
-        XProjectManager.getPageManager().showPage("main/mgrpanel");
+    public static void showPosScreen(PosScreen pos) {        
+        pos.showPage("main/pospanel");
     }
 
-    public static void showPosScreen(PosScreen pos) {
-        XProjectManager.getPageManager().showPage("main/pospanel");
+    public static void showPayScreen(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        if (trans.isEmpty()) {
+            pos.showDialog("main/dialog/error/noitems");
+        } else {
+            PosScreen newPos = pos.showPage("main/paypanel");
+            newPos.getInput().setFunction("TOTAL");
+            newPos.refresh();
+        }
     }
 
     public static void showPromoScreen(PosScreen pos) {
-        XProjectManager.getPageManager().showPage("main/promopanel");
+        pos.showPage("main/promopanel");
     }
 }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Output.java,v 1.1 2004/07/27 18:37:36 ajzeneski Exp $
+ * $Id: Output.java,v 1.2 2004/08/15 21:26:41 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -30,15 +30,21 @@ import net.xoetrope.xui.XPage;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class Output {
 
     public static final String module = Output.class.getName();
+    public static final String TOTALD = "Total Due: ";
+    public static final String CHANGE = "Change Due: ";
     public static final String ULOGIN = "Enter User ID:";
-    public static final String UPASSW = "Enter Password:";    
-    public static final String ISOPEN = "Register Is Open.";    
+    public static final String UPASSW = "Enter Password:";
+    public static final String CREDNO = "Enter Card Number:";
+    public static final String CREDEX = "Enter Expiration Date (MMYY):";
+    public static final String CREDCF = "Enter Last 4 Digits:";
+    public static final String CREDZP = "Enter Billing ZipCode:";
+    public static final String ISOPEN = "Register Is Open.";
 
     protected XEdit output = null;
 
@@ -61,6 +67,6 @@ public class Output {
     }
 
     public void clear() {
-        output.setText(ISOPEN);
+        output.setText("");
     }
 }

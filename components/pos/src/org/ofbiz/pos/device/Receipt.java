@@ -1,5 +1,5 @@
 /*
- * $Id: Receipt.java,v 1.1 2004/08/06 20:55:11 ajzeneski Exp $
+ * $Id: Receipt.java,v 1.2 2004/08/15 21:26:41 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,11 +27,13 @@ package org.ofbiz.pos.device;
 import jpos.JposException;
 
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.base.util.Debug;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class Receipt extends GenericDevice {
@@ -44,5 +46,9 @@ public class Receipt extends GenericDevice {
     }
 
     protected void initialize() throws JposException {        
+    }
+
+    public void print(PosTransaction trans) {
+        Debug.log("Print Receipt Requested : " + trans.getTransactionId(), module);
     }
 }

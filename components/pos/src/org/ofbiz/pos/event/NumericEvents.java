@@ -1,5 +1,5 @@
 /*
- * $Id: NumericEvents.java,v 1.2 2004/08/13 19:43:21 ajzeneski Exp $
+ * $Id: NumericEvents.java,v 1.3 2004/08/15 21:26:42 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class NumericEvents {
@@ -81,16 +81,20 @@ public class NumericEvents {
         pos.getInput().appendString("00");
     }
 
-
     // extended number events
     public static void triggerClear(PosScreen pos) {
         // clear the components
-        if (UtilValidate.isEmpty(pos.getInput().value())) {
+        if (pos.getInput().getFunction("PAID") != null) {
             pos.getInput().clear();
+            pos.showPage("main/pospanel");
+        } else if (pos.getInput().getFunction("TOTAL") == null) {
+            if (UtilValidate.isEmpty(pos.getInput().value())) {
+                pos.getInput().clear();
+            }
         }
-        pos.getInput().clearInput();
-        pos.getOutput().clear();
-        pos.getJournal().refresh(pos);
+
+        // refresh the current screen
+        pos.refresh();
 
         // clear out the manual locks
         if (!pos.isLocked()) {
@@ -117,8 +121,6 @@ public class NumericEvents {
                 SecurityEvents.mgrLogin(pos);
             } else if ("LOGIN".equals(lastFunc[0])) {
                 SecurityEvents.login(pos);
-            } else if ("UNLOCK".equals(lastFunc[0])) {
-                SecurityEvents.unlock(pos);
             } else if ("CREDIT".equals(lastFunc[0]) || "CREDITINFO".equals(lastFunc[0])) {
                 PaymentEvents.payCredit(pos);
             }

@@ -1,5 +1,5 @@
 /*
- * $Id: MenuEvents.java,v 1.1 2004/07/27 18:37:38 ajzeneski Exp $
+ * $Id: MenuEvents.java,v 1.2 2004/08/15 21:26:42 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.pos.event;
 
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.component.Input;
@@ -34,7 +35,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class MenuEvents {
@@ -62,19 +63,19 @@ public class MenuEvents {
             }
         }
 
-        // clear the notification bar
-        pos.getOutput().clear();
-
         // add the item to the cart; report any errors to the user
         try {
             trans.addItem(value, quantity);
         } catch (CartItemModifyException e) {
-            pos.getOutput().print(e.getMessage());
+            Debug.logError(e, module);
+            pos.showDialog("main/dialog/error/producterror");
         }
 
-        // clear the other components
-        pos.getJournal().refresh(pos);
-        input.clear();
+        // re-calc tax
+        trans.calcTax();
+
+        // refresh the other components
+        pos.refresh();
     }
 
     public static void changeQty(PosScreen pos) {
@@ -120,11 +121,15 @@ public class MenuEvents {
         try {
             trans.modifyQty(sku, quantity);
         } catch (CartItemModifyException e) {
-            pos.getOutput().print(e.getMessage());
+            Debug.logError(e, module);
+            pos.showDialog("main/dialog/error/producterror");
         }
 
-        pos.getJournal().refresh(pos);
-        pos.getInput().clear();
+        // re-calc tax
+        trans.calcTax();
+
+        // refresh the other components
+        pos.refresh();
     }
 
     public static void calcTotal(PosScreen pos) {
@@ -154,6 +159,9 @@ public class MenuEvents {
         } catch (CartItemModifyException e) {
             pos.getOutput().print(e.getMessage());
         }
+
+        // re-calc tax
+        trans.calcTax();
 
         pos.getJournal().refresh(pos);
         pos.getInput().clear();

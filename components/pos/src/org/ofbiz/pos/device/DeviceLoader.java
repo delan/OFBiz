@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceLoader.java,v 1.2 2004/08/06 23:45:31 ajzeneski Exp $
+ * $Id: DeviceLoader.java,v 1.3 2004/08/15 21:26:41 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.2
  */
 public class DeviceLoader {
@@ -74,6 +74,7 @@ public class DeviceLoader {
         // load the keyboard
 
         // load the receipt printer
+        receipt = new Receipt("PosPrinter", -1, screen);
 
         // load the journal printer
 
@@ -82,5 +83,7 @@ public class DeviceLoader {
         // load the clerk display
 
         // load the cash drawers
+        drawer = new CashDrawer[1];
+        drawer[0] = new CashDrawer("CashDrawer", -1, screen);
     }
 }

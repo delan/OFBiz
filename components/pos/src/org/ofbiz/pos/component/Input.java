@@ -1,5 +1,5 @@
 /*
- * $Id: Input.java,v 1.3 2004/08/07 01:23:07 ajzeneski Exp $
+ * $Id: Input.java,v 1.4 2004/08/15 21:26:40 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -41,13 +41,13 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class Input implements KeyboardReceiver {
 
     public static final String module = Input.class.getName();
-    private static final String[] validFunc = { "LOGIN", "UNLOCK", "MGRLOGIN", "PLU", "TOTAL", "CREDIT", "CREDITINFO", "CHECK", "CHECKINFO", "QTY" };
+    private static final String[] validFunc = { "LOGIN", "UNLOCK", "MGRLOGIN", "PAID", "TOTAL", "CREDIT", "MSRINFO", "CHECK", "CHECKINFO", "QTY" };
 
     protected LifoSet functionStack = new LifoSet();
     protected Component[] pageComs = null;
@@ -63,8 +63,7 @@ public class Input implements KeyboardReceiver {
         this.input.setFocusable(false);
 
         // initialize the KeyboardAdaptor
-        KeyboardAdaptor.setInput(this);
-        KeyboardAdaptor.getInstance(this, KeyboardAdaptor.KEYBOARD_DATA);
+        KeyboardAdaptor.getInstance(this, KeyboardAdaptor.KEYBOARD_DATA, page.getComponents());
     }
 
     public Component[] getComponents() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Scanner.java,v 1.4 2004/08/10 18:58:56 ajzeneski Exp $
+ * $Id: Scanner.java,v 1.5 2004/08/15 21:26:42 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.2
  */
 public class Scanner extends GenericDevice {
@@ -95,7 +95,7 @@ public class Scanner extends GenericDevice {
 
             // call the PLU event - maybe make this configurable
             try {
-                ButtonEventConfig.invokeButtonEvent("menuPlu", screen);
+                ButtonEventConfig.invokeButtonEvent("menuSku", screen);
             } catch (ButtonEventConfig.ButtonEventException e) {
                 Debug.logError(e, module);
             } catch (ButtonEventConfig.ButtonEventNotFound e) {

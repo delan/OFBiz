@@ -1,5 +1,5 @@
 /*
- * $Id: Journal.java,v 1.2 2004/08/06 20:55:09 ajzeneski Exp $
+ * $Id: Journal.java,v 1.3 2004/08/15 21:26:41 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -29,14 +29,13 @@ import net.xoetrope.xui.XPage;
 import net.xoetrope.xui.data.XModel;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class Journal {
@@ -115,17 +114,11 @@ public class Journal {
         XModel jmodel = this.createModel();
         if (!tx.isEmpty()) {
             tx.appendItemDataModel(jmodel);
-            // check for TOTAL function
-            String[] func = pos.getInput().getLastFunction();
-            if (func != null && "TOTAL".equals(func[0])) {
+            this.appendEmpty(jmodel);
+            tx.appendTotalDataModel(jmodel);
+            if (tx.selectedPayments() > 0) {
                 this.appendEmpty(jmodel);
-                tx.appendTotalDataModel(jmodel);
-                if (tx.selectedPayments() > 0) {
-                    this.appendEmpty(jmodel);
-                    tx.appendPaymentDataModel(jmodel);
-                }
-                pos.getOutput().print("Total Amount Due: " + UtilFormatOut.formatPrice(tx.getTotalDue()));
-                pos.getInput().clearInput();
+                tx.appendPaymentDataModel(jmodel);
             }
         } else {
             this.appendEmpty(jmodel);

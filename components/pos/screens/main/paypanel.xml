@@ -3,13 +3,13 @@
     <Components>
         <Panel name="mainPanel" x="0" y="0" w="1024" h="768" style="input" border="0">
             <Panel name="inputPanel" x="0" y="0" w="1024" h="48" style="input" border="0">
-                <Include file="main/includes/posinput"/>
+                <Include file="main/includes/payinput"/>
             </Panel>
             <Panel name="journalPanel" x="0" y="48" w="412" h="700" style="menu">
                 <Include file="main/includes/journal"/>
             </Panel>
             <Panel name="menuPanel" x="412" y="48" w="612" h="410" style="menu">
-                <Include file="main/menu/promomain"/>
+                <Include file="main/menu/paymain"/>
             </Panel>
             <Panel name="numericPanel" x="412" y="458" w="612" h="290" style="menu">
                 <Include file="main/includes/numeric"/>

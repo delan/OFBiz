@@ -21,22 +21,25 @@
 
         <!-- right side options -->
         <Panel x="308" y="0" w="306" h="282" style="posButton">
-            <Button x="0" y="0" w="75" h="68" style="posButton" content="% OFF" alignment="Center"/>
-            <Button name="menuTotal" x="76" y="0" w="75" h="68" style="posButton" content="TOTAL" alignment="Center"/>
-            <Button name="menuCash" x="152" y="0" w="75" h="68" style="posButton" content="CASH" alignment="Center"/>
-            <Button x="228" y="0" w="75" h="68" style="posButton" content="VISA" alignment="Center"/>
-            <Button name="menuChgQty" x="0" y="69" w="75" h="68" style="posButton" content="MOD" alignment="Center"/>
-            <Button x="76" y="69" w="75" h="68" style="posButton" alignment="Center"/>
-            <Button x="152" y="69" w="75" h="68" style="posButton" content="CHECK" alignment="Center"/>
-            <Button x="228" y="69" w="75" h="68" style="posButton" content="MC" alignment="Center"/>
-            <Button name="menuVoidItem" x="0" y="138" w="75" h="68" style="posButton" content="VOID ITEM" alignment="Center"/>
-            <Button x="76" y="138" w="75" h="68" style="posButton" content="TRANS SAVE" alignment="Center"/>
-            <Button x="152" y="138" w="75" h="68" style="posButton" content="GIFT CERT" alignment="Center"/>
-            <Button x="228" y="138" w="75" h="68" style="posButton" content="AMEX" alignment="Center"/>
-            <Button name="menuVoidAll" x="0" y="207" w="75" h="68" style="posButton" content="VOID SALE" alignment="Center"/>
-            <Button x="76" y="207" w="75" h="68" style="posButton" content="TRANS RET" alignment="Center"/>
-            <Button x="152" y="207" w="75" h="68" style="posButton" content="OTHER" alignment="Center"/>
-            <Button x="228" y="207" w="75" h="68" style="posButton" content="DISCV" alignment="Center"/>
+            <!--<Button x="0" y="0" w="75" h="68" style="posButton" content="" alignment="Center"/>-->
+            <Button name="" x="76" y="0" w="75" h="68" style="posButton" content="% OFF" alignment="Center"/>
+            <Button name="" x="152" y="0" w="75" h="68" style="posButton" content="" alignment="Center"/>
+            <Button x="228" y="0" w="75" h="68" style="posButton" content="" alignment="Center"/>
+
+            <!--<Button name="menuChgQty" x="0" y="69" w="75" h="68" style="posButton" content="MOD" alignment="Center"/>-->
+            <Button name="menuChgQty" x="76" y="69" w="75" h="68" style="posButton" alignment="Center"/>
+            <Button name="" x="152" y="69" w="75" h="68" style="posButton" content="" alignment="Center"/>
+            <Button name="" x="228" y="69" w="75" h="68" style="posButton" content="" alignment="Center"/>
+
+            <!--<Button name="menuVoidItem" x="0" y="138" w="75" h="68" style="posButton" content="" alignment="Center"/>-->
+            <Button name="menuVoidItem" x="76" y="138" w="75" h="68" style="posButton" content="VOID ITEM" alignment="Center"/>
+            <Button x="152" y="138" w="75" h="68" style="posButton" content="" alignment="Center"/>
+            <Button x="228" y="138" w="75" h="68" style="posButton" content="TRANS SAVE" alignment="Center"/>
+
+            <!--<Button name="" x="0" y="207" w="75" h="68" style="posButton" content="" alignment="Center"/>-->
+            <Button name="menuVoidAll" x="76" y="207" w="75" h="68" style="posButton" content="VOID SALE" alignment="Center"/>
+            <Button x="152" y="207" w="75" h="68" style="posButton" content="" alignment="Center"/>
+            <Button x="228" y="207" w="75" h="68" style="posButton" content="TRANS RET" alignment="Center"/>
         </Panel>
     </Components>    
 </XPage>

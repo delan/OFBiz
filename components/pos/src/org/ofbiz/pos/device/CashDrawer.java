@@ -1,5 +1,5 @@
 /*
- * $Id: CashDrawer.java,v 1.1 2004/08/06 20:55:10 ajzeneski Exp $
+ * $Id: CashDrawer.java,v 1.2 2004/08/15 21:26:41 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,11 +27,12 @@ package org.ofbiz.pos.device;
 import jpos.JposException;
 
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.base.util.Debug;
 
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class CashDrawer extends GenericDevice {
@@ -47,6 +48,7 @@ public class CashDrawer extends GenericDevice {
     }
 
     public void openDrawer() {
+        Debug.log("Open Drawer Requested!", module);
     }
 
     public boolean isDrawerOpen() {

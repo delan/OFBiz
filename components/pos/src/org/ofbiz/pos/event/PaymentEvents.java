@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentEvents.java,v 1.1 2004/07/27 18:37:39 ajzeneski Exp $
+ * $Id: PaymentEvents.java,v 1.2 2004/08/15 21:26:42 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,18 +24,20 @@
  */
 package org.ofbiz.pos.event;
 
-import org.ofbiz.pos.screen.PosScreen;
+import java.util.List;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.component.Input;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class PaymentEvents {
@@ -49,30 +51,12 @@ public class PaymentEvents {
             Debug.log("Processing [Cash] Amount : " + amount, module);
 
             // add the payment
-            double remaining = trans.addPayment("CASH", amount);
-            if (remaining <= 0) {
-                // refresh the journal
-                pos.getJournal().refresh(pos);
-
-                // finalize sale
-                double change = trans.processSale();
-
-                // report change
-                pos.getOutput().print("Change Due : " + UtilFormatOut.formatPrice(change));
-                pos.getInput().clear();
-
-                // manual locks (not secured; will be unlocked on clear)
-                pos.getInput().setLock(true);
-                pos.getButtons().setLock(true);
-            } else {
-                Debug.log("Ramining total : " + remaining, module);
-                pos.getJournal().refresh(pos);
-            }
+            trans.addPayment("CASH", amount);
         } catch (GeneralException e) {
-            // clear all payments
-            trans.clearPayments();
             // errors handled
         }
+
+        pos.refresh();
     }
 
     public static void payCredit(PosScreen pos) {
@@ -80,12 +64,12 @@ public class PaymentEvents {
         Input input = pos.getInput();
         String[] func = input.getLastFunction();
 
-        if ("CREDITINFO".equals(func[0])) {
+        if ("MSRINFO".equals(func[0])) {
             // make sure we have all necessary data
             int allInfo = validateCreditInfo(func[1]);
-            if (allInfo == 0) {
+            if (allInfo == 1) {
                 // missing expiration date
-            } else if (allInfo == -1) {
+            } else if (allInfo == 0) {
                 // missing card number (??)
             } else {
                 // all info available add the payment
@@ -103,9 +87,36 @@ public class PaymentEvents {
                 // set the CREDIT function
                 input.setFunction("CREDIT");
             } catch (GeneralException e) {
-                // clear all payments
-                trans.clearPayments();
                 // errors handled
+            }
+        }
+    }
+
+    public static void clearAllPayments(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        trans.clearPayments();
+        pos.refresh();
+    }
+
+    public static void processSale(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        if (trans.getTotalDue() > 0) {
+            pos.showDialog("main/dialog/error/notenoughfunds");
+        } else {
+            // manual locks (not secured; will be unlocked on clear)
+            pos.getInput().setLock(true);
+            pos.getButtons().setLock(true);
+            pos.getInput().clear();
+            pos.getInput().setFunction("PAID");
+
+            // display change
+            pos.refresh();
+
+            // process the order
+            try {
+                trans.processSale();
+            } catch (GeneralException e) {
+                pos.showDialog("main/dialog/error/testerror");
             }
         }
     }
@@ -122,7 +133,7 @@ public class PaymentEvents {
                 } catch (NumberFormatException e) {
                     Debug.logError("Invalid number for amount : " + amtStr, module);
                     pos.getOutput().print("Invalid Amount!");
-                    input.clear();
+                    input.clearInput();
                     throw new GeneralException();
                 }
                 amount = amount / 100; // convert to decimal
@@ -139,10 +150,7 @@ public class PaymentEvents {
     }
 
     private static int validateCreditInfo(String creditInfo) {
-        return 0;
-    }
-
-    private static void processSale(PosTransaction trans, PosScreen pos) {
-
+        List cardSplit = StringUtil.split(creditInfo, "|");
+        return cardSplit.size();
     }
 }
