@@ -47,6 +47,30 @@
             </widgets>
         </section>
     </screen>
+    <screen name="CommonOrderCatalogDecorator">
+        <section>
+            <actions>
+                <set field="leftbarScreenName" value="leftbarCatalog"/>
+                <set field="leftbarScreenLocation" value="component://order/widget/ordermgr/OrderEntryCommonScreens.xml"/>
+                <set field="headerItem" value="orderentry"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/SetShoppingCart.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://order/webapp/ordermgr/entry/OrderEntryCatalogTabBar.ftl"/></html>
+                                </platform-specific>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="CommonOrderCheckoutDecorator">
         <section>
             <actions>
@@ -75,10 +99,22 @@
         <section>
             <widgets>
                 <container style="column-left">
+                    <include-screen name="orderHeaderInfo" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
+                    <include-screen name="orderShortcuts" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
                     <include-screen name="choosecatalog" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
                     <include-screen name="keywordsearchbox" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
                     <include-screen name="sidedeepcategory" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
-                    <!--<include-screen name="minicart" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>-->
+                </container>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="leftbarCatalog">
+        <section>
+            <widgets>
+                <container style="column-left">
+                    <include-screen name="orderHeaderInfo" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
+                    <include-screen name="minicart" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
+                    <include-screen name="sidedeepcategory" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
                 </container>
             </widgets>
         </section>

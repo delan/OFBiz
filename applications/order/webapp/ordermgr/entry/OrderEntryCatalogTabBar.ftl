@@ -1,5 +1,3 @@
-<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Copyright (c) 2003 The Open For Business Project - www.ofbiz.org -->
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -21,35 +19,26 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@author     Olivier.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
- *@since      2.1
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev$
+ *@since      2.2
 -->
 
-${common.get("/includes/header.ftl")}
-${common.get("/includes/appbar.ftl")}
-
-<div class="centerarea">
-  ${pages.get("/includes/appheader.ftl")}
-  <div class="contentarea">
-    <div style='border: 0; margin: 0; padding: 0; width: 100%;'>
-      <table style='border: 0; margin: 0; padding: 0; width: 100%;' cellpadding='0' cellspacing='0'>
-        <tr>
-          <#if page.leftbar?exists>${pages.get(page.leftbar)}</#if>
-          <td width='100%' valign='top' align='left'>
-            ${common.get("/includes/messages.ftl")}
-            ${pages.get(page.path)}
-          </td>
-          <#if page.rightbar?exists>${pages.get(page.rightbar)}</#if>
-        </tr>
-      </table>       
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
+<div class="boxtop">
+    <div class="boxhead" align="left">
+        &nbsp;${uiLabelMap.CommonCreate}
+        <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+            ${uiLabelMap.OrderPurchaseOrder}
+        <#else>
+            ${uiLabelMap.OrderSalesOrder}
+        </#if>
     </div>
-    <div class='spacer'></div>
-  </div>
+    <div class="boxhead" align="right">
+        <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderOrderItems}</a>
+    </div>
 </div>
-
-${common.get("/includes/footer.ftl")}
-
-</body>
-</html>

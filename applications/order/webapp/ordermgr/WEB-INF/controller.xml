@@ -319,6 +319,9 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="showPromotionDetails"/>
     </request-map>
+    <request-map uri="quickadd">
+        <response name="success" type="view" value="quickadd"/>
+    </request-map>
 
     <request-map uri="advancedsearch">
         <security https="true" auth="true"/>
@@ -766,6 +769,7 @@
 
     <view-map name="category" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#category"/>
     <view-map name="product" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#product"/>
+    <view-map name="quickadd" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#quickadd"/>
 
     <view-map name="custsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#CustSettings"/>
     <view-map name="shipsetting" type="screen" page="component://order/widget/ordermgr/OrderEntryOrderScreens.xml#ShipSettings"/>

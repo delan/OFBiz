@@ -38,7 +38,6 @@
         :&nbsp;${stepTitle?if_exists}
     </div>
     <div class="boxhead" align="right">
-        <span class="submenutextdisabled">&nbsp;</span>
         <#list checkoutSteps as checkoutStep>
             <#assign stepUiLabel = uiLabelMap.get(checkoutStep.label)>
             <#if checkoutStep.enabled == "N">
@@ -47,11 +46,11 @@
                 <a href="<@ofbizUrl>${checkoutStep.uri}</@ofbizUrl>" class="submenutext">${stepUiLabel}</a>
             </#if>
         </#list>
-        <span class="submenutextdisabled">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span class="submenutextrightdisabled">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <#if isLastStep == "N">
             <a href="javascript:document.checkoutsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
         <#else>
-            <a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderCreateOrder}</a>
+            <a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCreateOrder}</a>
         </#if>
     </div>
 </div>

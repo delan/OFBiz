@@ -120,7 +120,8 @@ function gwAll(e) {
       <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>           
-            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">              
+            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
+<#--
               <table border="0" cellspacing="0" cellpadding="2">
                 <tr>
                   <td valign="middle">
@@ -128,29 +129,15 @@ function gwAll(e) {
                     <#if person?has_content>
                       <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam?if_exists}" target="partymgr" class="buttontext">${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]</a>
                     <#elseif partyGroup?has_content>
-                      <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]</a>
+                      <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam?if_exists}" target="partymgr" class="buttontext">${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]</a>
                     <#else>
                       <span class="tabletext">[${uiLabelMap.PartyPartyNotDefined}]</span>
                     </#if>
                     - <span class="tabletext"><a href="<@ofbizUrl>/orderentry?updateParty=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonChange}]</a><#if partyId?default("_NA_") == "_NA_"> - <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">[${uiLabelMap.PartyFindParty}]</a></#if></span>
                   </td>
-                  <td valign="middle">
-                     <div class="tabletext">${uiLabelMap.AccountingCurrency} : [${currencyUomId}]
-                  </td>
-                  <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-                  <td align="right" valign="middle">
-                     <a href="<@ofbizUrl>/RequirementsForSupplier</@ofbizUrl>" class="buttontext">[${uiLabelMap.Requirements}]</a>
-                  </td>
-                  </#if>
-
-                  <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
-                  <td align="right" valign="middle">
-                    <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">[${uiLabelMap.ProductCreateNewProduct}]</a>
-                  </td>
-                  </#if>
                 </tr>              
               </table>
-	      
+-->	      
               <table border="0">
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.ProductProductId} :<div></td>
@@ -158,7 +145,7 @@ function gwAll(e) {
                     <span class='tabletext'>
                       <a href="javascript:call_fieldlookup2(document.quickaddform.add_product_id,'LookupProduct');">
                         <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
-                      </a> 
+                      </a>
                     </span>
                   </td>
                 </tr>
@@ -168,33 +155,26 @@ function gwAll(e) {
                 </tr>
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.OrderDesiredDeliveryDate} :</div></td>
-                  <td><input type="text" class="inputBox" size="25" maxlength="30" name="itemDesiredDeliveryDate" <#if useAsDefaultDesiredDeliveryDate?exists>value="${defaultDesiredDeliveryDate}"</#if>>
+                  <td>
+                    <div class="tabletext">
+                    <input type="text" class="inputBox" size="25" maxlength="30" name="itemDesiredDeliveryDate" <#if useAsDefaultDesiredDeliveryDate?exists>value="${defaultDesiredDeliveryDate}"</#if>>
                     <a href="javascript:call_cal(document.quickaddform.itemDesiredDeliveryDate,'${defaultDesiredDeliveryDate} 00:00:00.0');">
                       <img src="/images/cal.gif" width="16" height="16" border="0" alt="${uiLabelMap.calendar_click_here_for_calendar}">
                     </a>
+		    <input type="checkbox" class="inputBox" name="useAsDefaultDesiredDeliveryDate" value="true" <#if useAsDefaultDesiredDeliveryDate?exists>checked</#if>>
+		    ${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
+                    </div>
                   </td>
-		        </tr>
-		        <tr>
-		          <td></td>
-		          <td colspan="2">
-		            <div class="tabletext">
-		              <input type="checkbox" class="inputBox" name="useAsDefaultDesiredDeliveryDate" value="true" <#if useAsDefaultDesiredDeliveryDate?exists>checked</#if>>
-		              ${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
-		            </div>
-		          </td>
                 </tr>
                 <tr>
                   <td align="right"><div class="tableheadtext">${uiLabelMap.CommonComment} :</div></td>
-                  <td><input type="text" class="inputBox" size="25" name="itemComment" value="${defaultComment?if_exists}"></td>
-		        </tr>
-		        <tr>
-		          <td></td>
-		          <td colspan="2">
-		            <div class="tabletext">
-		              <input type="checkbox" class="inputBox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment?exists>checked</#if>>
-		              ${uiLabelMap.OrderUseDefaultComment}
-		            </div>
-		          </td>
+                  <td>
+                    <div class="tabletext">
+                    <input type="text" class="inputBox" size="25" name="itemComment" value="${defaultComment?if_exists}">
+                    <input type="checkbox" class="inputBox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment?exists>checked</#if>>
+                    ${uiLabelMap.OrderUseDefaultComment}
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td></td>

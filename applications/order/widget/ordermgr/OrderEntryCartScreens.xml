@@ -43,6 +43,20 @@
             </widgets>
         </section>
     </screen>
+    <screen name="orderHeaderInfo">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/orderHeaderInfo.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="orderShortcuts">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/orderShortcuts.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
     
     <!-- =========== Top-Level and Stand-Alone Screens =========== -->
     <screen name="ShowCart">

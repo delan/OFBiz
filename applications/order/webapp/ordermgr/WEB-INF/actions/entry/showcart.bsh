@@ -66,6 +66,7 @@ partyId = shoppingCart.getPartyId();
 if (partyId != null && partyId.equals("_NA_")) partyId = null;
 context.put("partyId", partyId);  
 
+/*
 if (partyId != null) {
     partyMap = PartyWorker.getPartyOtherValues(request, partyId, "party", "person", "partyGroup");
     if (partyMap != null) {
@@ -76,7 +77,7 @@ if (partyId != null) {
         }
     }
 }
-
+*/
 defaultDesiredDeliveryDate = shoppingCart.getDefaultItemDeliveryDate();
 if (UtilValidate.isEmpty(defaultDesiredDeliveryDate)) {
     defaultDesiredDeliveryDate = (new java.sql.Date(System.currentTimeMillis())).toString();
