@@ -9,8 +9,9 @@
     <!-- Order processing services -->
     <service name="processOrder" engine="workflow" location="org.ofbiz.commonapp.order.order" invoke="ProcessOrder">
         <description>Service for testing the workflow engine</description>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>         
-        <attribute name="orderStatusId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="INOUT" optional="false"/>   
     </service>
     
     <service name="prepareOrderEmailData" engine="java"
@@ -140,7 +141,7 @@
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="distributorId" type="String" mode="IN" optional="true"/>
-        <attribute name="orderTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderTypeId" type="String" mode="INOUT" optional="false"/>
         <attribute name="orderItems" type="java.util.List" mode="IN"/>
         <attribute name="orderAdjustments" type="java.util.List" mode="IN"/>
         <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
@@ -155,7 +156,8 @@
         <attribute name="orderItemContactMechs" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemPriceInfos" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="trackingCodeOrders" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="orderId" type="String" mode="OUT"/>    
+        <attribute name="orderId" type="String" mode="OUT"/>
+        <attribute name="statusId" type="String" mode="OUT"/>      
     </service>
 
     <service name="createOrderItemBilling" engine="simple"
