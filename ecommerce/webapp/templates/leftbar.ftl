@@ -1,10 +1,10 @@
-  <td width='950' valign=top align=left>
-    ${pages.get("/catalog/choosecatalog.jsp")}
+  <td width='950' valign='top' align='left'>
+    ${pages.get("/catalog/choosecatalog.ftl")}
     <br>
-    ${pages.get("/catalog/keywordsearchbox.jsp")}
+    $pages.get("/catalog/keywordsearchbox.ftl")}
     <br>
-    ${pages.get("/catalog/sidedeepcategory.jsp")}
+    $pages.get("/catalog/sidedeepcategory.ftl")}
     <br>
-    ${pages.get("/catalog/minireorderprods.jsp")}
+    $pages.get("/catalog/minireorderprods.ftl")}
   </td>
   <td width='5'>&nbsp;&nbsp;&nbsp;</td>
