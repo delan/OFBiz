@@ -79,9 +79,22 @@ public class Msr extends GenericDevice {
                     decodedData[3] = msr.getSurname();
                     decodedData[4] = msr.getSuffix();
                     decodedData[5] = msr.getAccountNumber();
-                                       
+
+                    // verify the acct num exists
+                    if (UtilValidate.isEmpty(decodedData[5])) {
+                        PosScreen.currentScreen.showDialog("main/dialog/error/cardreaderror");
+                        msr.clearInput();
+                        return;
+                    }
+
                     // fix expDate (reversed)
-                    decodedData[6] = msr.getExpirationDate().substring(2) + msr.getExpirationDate().substring(0, 2);
+                    if (msr.getExpirationDate() != null && msr.getExpirationDate().length() > 3) {
+                        decodedData[6] = msr.getExpirationDate().substring(2) + msr.getExpirationDate().substring(0, 2);
+                    } else {
+                        PosScreen.currentScreen.showDialog("main/dialog/error/cardreaderror");
+                        msr.clearInput();
+                        return;
+                    }
 
                     msr.clearInput();
                 } catch (jpos.JposException e) {
