@@ -145,7 +145,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         // find the workEffortId for this order
         GenericValue workEffort = null;
         try {
-            List workEfforts = delegator.findByAnd("WorkfEffort", UtilMisc.toMap("sourceReferenceId", orderId, "currentStatusId", "WF_SUSPENDED"));
+            List workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("sourceReferenceId", orderId, "currentStatusId", "WF_SUSPENDED"));
             if (workEfforts != null && workEfforts.size() > 0) {
                 Debug.logWarning("More then order suspended activity with order ref number: " + orderId, module);                
             }
