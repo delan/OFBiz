@@ -50,7 +50,7 @@
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | refresh-value | remove-value | remove-related | remove-by-and | clear-cache-line | clear-entity-caches | set-pk-fields | set-nonpk-fields">
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % EntityTxOperations "transaction-begin | transaction-commit | transaction-rollback">
-<!ENTITY % IfOperations "if | if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty | if-has-permission | check-permission | check-id">
+<!ENTITY % IfOperations "if | if-validate-method | if-instance-of | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty | if-has-permission | check-permission | check-id">
 <!ENTITY % OtherOperations "property-to-field | log | calculate">
 
 <!ENTITY % SimpleMethodOperations "%CallOperations; | %CallJavaOperations; | %EventOperations; |
@@ -688,7 +688,7 @@ simple-map-processor process operations that validate incoming data
 -->
 
 <!-- note that while the definitions for the if-* operations are used, the tags should be empty because of the differing semantics -->
-<!ENTITY % IfConditions "or | xor | and | not | if-validate-method | if-compare | if-compare-field | if-empty | if-regexp | if-has-permission">
+<!ENTITY % IfConditions "or | xor | and | not | if-validate-method | if-instance-of | if-compare | if-compare-field | if-empty | if-regexp | if-has-permission">
 
 <!ELEMENT if ( condition, then, else-if*, else? )>
 <!ELEMENT condition ( %IfConditions; )>
@@ -709,6 +709,13 @@ simple-map-processor process operations that validate incoming data
     field-name CDATA #REQUIRED
     method CDATA #REQUIRED
     class CDATA "org.ofbiz.base.util.UtilValidate"
+>
+
+<!ELEMENT if-instance-of ( (%SimpleMethodOperations;)*, else? )>
+<!ATTLIST if-instance-of
+    map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
+    class CDATA #REQUIRED
 >
 
 <!ELEMENT if-compare ( (%SimpleMethodOperations;)*, else? )>
