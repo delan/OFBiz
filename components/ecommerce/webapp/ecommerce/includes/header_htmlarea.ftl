@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -88,7 +88,7 @@
           <#else>
               <td class="headerButtonLeft" nowrap><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonLogin}</a></td>
           </#if>
-          <td class="headerButtonLeft" nowrap><a href="<@ofbizUrl>/contactus</@ofbizUrl>" class="headerbuttontext">Contact Us</a></td>
+          <td class="headerButtonLeft" nowrap><a href="<@ofbizUrl>/contactus</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonContactUs}</a></td>
           <td class="headerButtonLeft" nowrap><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonMain}</a></td>
 
           <#if sessionAttributes.autoName?has_content>
