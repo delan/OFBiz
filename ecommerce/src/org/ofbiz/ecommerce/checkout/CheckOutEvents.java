@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/09/14 20:06:16  epabst
+ * fixed E-mail sending
+ *
  * Revision 1.10  2001/09/14 19:13:24  epabst
  * added method to ShoppingCart to make the order items
  * added event for checking if the shopping cart is empty
@@ -178,7 +181,7 @@ public class CheckOutEvents {
             order.preStoreOther(helper.makeValue("OrderContactMech", UtilMisc.toMap( "contactMechId", cart.getShippingContactMechId(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
             
             String shipmentId = helper.getNextSeqId("Shipment").toString();
-            GenericValue orderShipmentPreference = helper.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", cart.getShipmentMethodTypeId(), "carrierPartyId", cart.getCarrierPartyId(), "carrierRoleTypeId", "CARRIER" /*XXX*/, "shippingInstructions", cart.getShippingInstructions()));
+            GenericValue orderShipmentPreference = helper.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", cart.getShipmentMethodTypeId(), "carrierPartyId", cart.getCarrierPartyId(), "carrierRoleTypeId", "CARRIER" /* XXX */, "shippingInstructions", cart.getShippingInstructions()));
             orderShipmentPreference.set("maySplit", cart.getMaySplit());
             order.preStoreOther(orderShipmentPreference);
 
@@ -222,10 +225,12 @@ public class CheckOutEvents {
     }
 
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
+        final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.securityCode");
+    
         String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
         //XXX need to add secret code since no security yet
         try {
-            java.net.URL url = new java.net.URL(request.getSession().getAttribute(SiteDefs.SERVER_ROOT_URL) + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id"));
+            java.net.URL url = new java.net.URL(request.getSession().getAttribute(SiteDefs.SERVER_ROOT_URL) + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
             HttpClient httpClient = new HttpClient(url);
             String content = httpClient.get();
             request.setAttribute("confirmorder", content);
@@ -266,7 +271,6 @@ public class CheckOutEvents {
                 mail.setSubject(SiteDefs.SITE_NAME + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
                 mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
                 mail.setMessage(content);
-                //XXX mail.setLogging(false);
                 mail.send();
                 return "success";
             } catch (Exception e) {

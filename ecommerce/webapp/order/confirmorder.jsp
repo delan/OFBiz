@@ -122,6 +122,19 @@
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<% 
+   final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.securityCode");
+   String securityCode = request.getParameter("security_code");
+   if (UtilValidate.isNotEmpty(ORDER_SECURITY_CODE)) {
+       if (ORDER_SECURITY_CODE.equals(securityCode)) {
+           pageContext.setAttribute("validated", "true");
+       } 
+   } else {
+       response.getWriter().print("ERROR: Order Information is NOT Secure!  Please ask System Administrator to set 'order.confirmation.securityCode' in ecommerce.properties file<p>"); 
+   }
+%>
+    
+<ofbiz:if name="validated">
 <%
   String orderId = request.getParameter("order_id");
   GenericValue orderHeader = null;
@@ -164,6 +177,10 @@
 </ofbiz:if> <%-- Order Header --%>
 <ofbiz:unless name="orderHeader">
     <p> No order found. </p>
+</ofbiz:unless>
+</ofbiz:if>
+<ofbiz:unless name="validated">
+<font color="red">Security Error!  You do not have permission to view this page.</font><br>
 </ofbiz:unless>
   <a href="<ofbiz:url>/main</ofbiz:url>" class="buttonlinkbig">[Continue Shopping]</a>
   </body>

@@ -28,7 +28,7 @@
  *@version    1.0
  */
 %>
-<%-- FIXME add status and status history --%>
+<%-- FIXME add status history --%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
 
