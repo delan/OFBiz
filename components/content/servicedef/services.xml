@@ -1434,6 +1434,26 @@
     <attribute mode="IN" name="pageMode" optional="true" type="String"/>
   </service>
 
+  <service auth="true" engine="java" name="resetToOutlineMode" validate="true"
+        transaction-timout="72000" 
+        location="org.ofbiz.content.ContentManagementServices" invoke="resetToOutlineMode">
+    <description>Set content and kids to OUTLINE_NODE</description>
+    <attribute mode="IN" name="contentId" optional="false" type="String"/>
+  </service>
+
+  <service auth="true" engine="java" name="clearContentAssocViewCache" validate="true"
+        transaction-timout="72000" 
+        location="org.ofbiz.content.ContentManagementServices" invoke="clearContentAssocViewCache">
+    <description>Clear cache</description>
+  </service>
+
+  <service auth="true" engine="java" name="clearContentAssocDataResourceViewCache" validate="true"
+        transaction-timout="72000" 
+        location="org.ofbiz.content.ContentManagementServices" invoke="clearContentAssocDataResourceViewCache">
+    <description>Clear cache</description>
+  </service>
+
+
   <service auth="false" engine="java" name="findSubNodes" validate="true"
         transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="findSubNodes">
