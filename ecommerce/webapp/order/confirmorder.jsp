@@ -30,7 +30,8 @@
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
 <%@ page import="javax.servlet.jsp.tagext.BodyContent" %>
-<%@ page import="org.ofbiz.ecommerce.order.*" %>
+<%@ page import="org.ofbiz.commonapp.party.party.*" %>
+<%@ page import="org.ofbiz.commonapp.party.contact.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -50,10 +51,12 @@
   String shippingMethod =  null; 
   GenericValue paymentPreference = null;
   OrderReadHelper order = null;
+  GenericValue shippingLocation = null;
   if (orderHeader != null) {
       pageContext.setAttribute("orderHeader", orderHeader);   
 
       order = new OrderReadHelper(orderHeader);
+      shippingLocation = order.getShippingAddress();
       shipmentPreference = orderHeader.getRelatedOne("OrderShipmentPreference");
       shippingMethod = shipmentPreference.getString("carrierPartyId") + " " 
             + shipmentPreference.getRelatedOne("CarrierShipmentMethod").getRelatedOne("ShipmentMethodType").getString("description");
@@ -164,22 +167,40 @@
       <br>
         </td>
       </tr>
-      <tr>
+      <tr>  
         <td align="left" colspan="2"><div class="head2"><b>Order &#35;<%= orderHeader.getString("orderId")%></b></div></td>
       </tr>
       <tr>
           <td width="50%" align="left" valign="top"><div class="tabletext"><b>Will be shipped to:</b></div></td>
-          <td width="50%" align="left" valign="top"><div class="tabletext"><b>Preferences:</b></div></td>
+          <td width="50%" align="left" valign="top"><div class="tabletext"><b>Shipping Instructions:</b></div></td>
       </tr>
       <tr>
           <td align="left" valign="top"><div class="tabletext">
-        FIXME Address goes here <br>
-        FIXME Payment type FIXME Payment number (last 4 digits) FIXME expires date
+        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("toName"), "<b>To:</b> ", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("address1"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("address2"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("city"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingLocation.getString("postalCode"))%><br>
+        <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("countryGeoId"), "", "<br>")%>
+        <br>
+        <b>Will be billed to:</b> <%=paymentPreference.getRelatedOne("PaymentMethodType").getString("description")%><br>
+        <%if ("CREDIT_CARD".equals(paymentPreference.getString("paymentMethodTypeId"))) {%>
+            <%GenericValue creditCardInfo = paymentPreference.getRelatedOne("CreditCardInfo");%>
+            <%=PartyHelper.getPersonName(creditCardInfo.getRelatedOne("Party").getRelatedOne("Person"))%><br>
+            <%=creditCardInfo.getString("cardType")%>
+            <%String cardNumber = creditCardInfo.getString("cardNumber");
+              if(cardNumber != null && cardNumber.length() > 4) {%> <%=cardNumber.substring(cardNumber.length()-4)%>  <% } %>
+            <%=creditCardInfo.getString("expireDate")%>
+        <%} else {%>
+            <%--FIXME--%>
+            <%=UtilFormatOut.checkNull(paymentPreference.getString("paymentInfoId"))%>
+        <%}%>
         </div></td>
         <td align="left" valign="top">
-        <div class="tabletext"><b>Special Instructions</b><br>
+        <div class="tabletext">
         <%=shipmentPreference.getString("shippingInstructions")%></div><br>
-        <div class="tabletext"><b>Shipping Method</b><br>
+        <div class="tabletext"><b>Shipping Method:</b><br>
           <%= shipmentPreference.get("carrierPartyId")%> <%=shipmentPreference.getRelatedOne("ShipmentMethodType").get("description")%>
         </div><br>
       </td>
@@ -233,7 +254,7 @@
    </ofbiz:unless>
   </ofbiz:iterator>
     <tr>
-        <td colspan="2" rowspan="3" valign="middle" align="center" bgcolor="#99BBAA"><div class="commentary">Print this page for your records.</div></td>
+        <td colspan="2" rowspan="100" valign="middle" align="center" bgcolor="#99BBAA"><div class="commentary">Print this page for your records.</div></td>
     </tr>
     <% pageContext.setAttribute("orderAdjustmentIterator", order.getAdjustmentIterator()); %>
     <ofbiz:iterator name="orderAdjustmentObject" type="java.lang.Object" property="orderAdjustmentIterator">

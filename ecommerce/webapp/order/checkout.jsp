@@ -33,7 +33,8 @@
 
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
 <%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
-<%@ page import="org.ofbiz.ecommerce.order.OrderHelper" %>
+<%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
+<%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 
 <% pageContext.setAttribute("PageName", "checkout"); %>

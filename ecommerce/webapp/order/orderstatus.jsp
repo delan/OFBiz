@@ -35,7 +35,8 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
 
-<%@ page import="org.ofbiz.ecommerce.order.*" %>
+<%@ page import="org.ofbiz.commonapp.party.party.*" %>
+<%@ page import="org.ofbiz.commonapp.party.contact.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -109,7 +110,7 @@
           <%GenericValue userPerson = userLogin.getRelatedOne("Person");%>
           <%=UtilFormatOut.checkNull(userLogin.getString("userLoginId"))%>
           <%if(userPerson!=null){%>
-            (<%=OrderHelper.getPersonName(userPerson)%>)
+            (<%=PartyHelper.getPersonName(userPerson)%>)
           <%}%>
         </div>
       </td>
@@ -192,7 +193,7 @@
         <div class="tabletext">
           <% GenericValue billToPerson = order.getBillToPerson();
   
-            String billToPersonName = OrderHelper.getPersonName(billToPerson);
+            String billToPersonName = PartyHelper.getPersonName(billToPerson);
             if(billToPersonName != null && billToPersonName.length() > 0) { %>
             <%=billToPersonName%><br>
           <% } %>
@@ -239,12 +240,12 @@
 <%-- } else { %>
   <font color="red">ERROR: Sales Order lookup failed.</font> 
 <% } --%>
-  <form name="addOrderToCartForm" action="<%=response.encodeURL(controlPath + "/addordertocart/orderstatus?order_id=" + orderId)%>" method="GET">
+  <form name="addOrderToCartForm" action="<ofbiz:url><%="/addordertocart/orderstatus?order_id=" + orderId%></ofbiz:url>" method="GET">
   <input type="HIDDEN" name="add_all" value="false">
   <input type="HIDDEN" name="order_id" value="<%=orderId%>">
   <table border="0" cellpadding="1" width="100%"><tr><td>
     <table border="0" cellspacing="0" cellpadding="2" width="100%"><tr>
-      <td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttontext">Back to Order History</a></div></td>
+      <td width="1"><div class="button" nowrap><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Back to Order History</a></div></td>
       <td align="right">
         <table border="0" cellspacing="0" cellpadding="0"><tr>
           <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttonlink">Add All to Cart</a></div></td>
@@ -272,10 +273,10 @@
         </td>
       <%}else{%>
         <td>
-          <a href="<%=response.encodeURL(controlPath + "/details?product_id=" + orderItem.getString("productId"))%>" class="itemlink"><%=orderItem.getString("productId")%></a>
+          <a href="<ofbiz:url><%="/details?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="itemlink"><%=orderItem.getString("productId")%></a>
         </td>
         <td>
-          <a href="<%=response.encodeURL(controlPath + "/details?product_id=" + orderItem.getString("productId"))%>" class="itemlink"><%=orderItem.getString("itemDescription")%></a>
+          <a href="<ofbiz:url><%="/details?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="itemlink"><%=orderItem.getString("itemDescription")%></a>
         </td>
         <td align="right">
             <div nowrap>
@@ -296,7 +297,7 @@
         <table border="0" cellspacing="0" cellpadding="0">
         <tr>
         <td>
-        <form method="POST" action="<%=response.encodeURL(controlPath + "/additemsfromorder/orderstatus")%>" vspace="0" hspace="0" name="the<%=orderItem.getTransLineId().intValue()%>form" style=margin:0;>
+        <form method="POST" action="<ofbiz:url>/additemsfromorder/orderstatus</ofbiz:url>" vspace="0" hspace="0" name="the<%=orderItem.getTransLineId().intValue()%>form" style=margin:0;>
           <input type="hidden" name="<%="event"%>" value="<%="add_to_cart"%>">
           <input type="hidden" name="<%="order_id"%>" value="<%=orderId%>">
           <input type="hidden" name="<%=HttpRequestConstants.PRODUCT_ID%>" value="<%=orderItem.getString("productId")%>">
@@ -358,7 +359,7 @@
 
   <table border="0" cellpadding="1" width="100%"><tr><td>
     <table border="0" cellspacing="0" cellpadding="2" width="100%"><tr>
-      <td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttontext">Back to Order History</a></div></td>
+      <td width="1"><div class="button" nowrap><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Back to Order History</a></div></td>
       <td align="right">
         <table border="0" cellspacing="0" cellpadding="0"><tr>
           <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttonlink">Add All to Cart</a></div></td>

@@ -27,7 +27,6 @@ import org.ofbiz.core.util.*;
  */
 public class OrderReadHelper {
     private GenericValue orderHeader;
-    private Double orderItemTotal;
     private Double totalPrice;
     
     public OrderReadHelper(GenericValue orderHeader) {

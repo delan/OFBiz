@@ -34,7 +34,7 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
-<%@ page import="org.ofbiz.ecommerce.order.*" %>
+<%@ page import="org.ofbiz.commonapp.party.contact.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -68,7 +68,7 @@
         <tr>
           <td align=left><div class="boxhead">Order History</div></td>
           <td align=right>
-            <a href="<%=response.encodeURL(controlPath + "/main")%>" class="lightbuttontext">[Back Home]&nbsp;&nbsp;</a>
+            <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Back Home]&nbsp;&nbsp;</a>
           </td>
         </tr>
       </table>      
@@ -112,7 +112,7 @@
             <div class="tabletext"><%=orderStatusString%></div>
           </td>
           <td align=right>
-            <a href="<%=response.encodeURL(controlPath + "/orderstatus?order_id=" + orderHeader.getString("orderId"))%>" class='buttontext'>[View]</a>
+            <a href="<ofbiz:url><%="/orderstatus?order_id=" + orderHeader.getString("orderId")%></ofbiz:url>" class='buttontext'>[View]</a>
           </td>
         </tr>
     </ofbiz:iterator>
@@ -123,7 +123,7 @@
       </td>
     </tr>
   </table>
-<%-- <a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttontext">&nbsp;[Back Home]</a> --%>
+<%-- <a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">&nbsp;[Back Home]</a> --%>
 <br>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
