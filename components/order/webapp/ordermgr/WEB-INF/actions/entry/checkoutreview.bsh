@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 */
 
@@ -84,9 +84,11 @@ if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
 
 webSiteId = CatalogWorker.getWebSiteId(request);
 productStore = ProductStoreWorker.getProductStore(request);
-payToPartyId = productStore.getString("payToPartyId");
-paymentAddress =  PaymentWorker.getPaymentAddress(delegator, payToPartyId);    
-if (paymentAddress != null) context.put("paymentAddress", paymentAddress);
+if (productStore != null) {
+    payToPartyId = productStore.getString("payToPartyId");
+    paymentAddress =  PaymentWorker.getPaymentAddress(delegator, payToPartyId);    
+    if (paymentAddress != null) context.put("paymentAddress", paymentAddress);
+}
 
 billingAddress = null;
 if (paymentMethod != null) {

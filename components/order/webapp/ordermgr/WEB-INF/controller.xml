@@ -256,7 +256,8 @@
     	<response name="shipping" type="view" value="shipsetting"/>
     	<response name="options" type="view" value="optionsetting"/>
     	<response name="payment" type="view" value="billsetting"/>
-    	<response name="success" type="request" value="calcShipping"/>
+    	<response name="sales" type="request" value="calcShipping"/>
+    	<response name="po" type="view" value="confirm"/>
     	<response name="error" type="view" value="orderentry"/>    	
     </request-map>
     
@@ -348,7 +349,7 @@
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>      
         <response name="sales_order" type="request" value="checkBlackList"/>
         <response name="work_order" type="request" value="checkBlackList"/>
-        <response name="purchase_order" type="request" value="clearcart"/>
+        <response name="purchase_order" type="request" value="clearpocart"/>
         <response name="error" type="view" value="confirm"/>
     </request-map>
     <request-map uri="checkBlackList">
@@ -371,19 +372,26 @@
         <response name="success" type="request" value="clearcart"/>
         <response name="fail" type="view" value="confirm"/>
         <response name="error" type="view" value="confirm"/>
-    </request-map>    
+    </request-map>   
     <request-map uri="clearcart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
         <response name="success" type="request" value="emailorder"/>
         <response name="error" type="view" value="confirm"/>
     </request-map> 
+    <request-map uri="clearpocart">
+        <security https="true" direct-request="false"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
+        <response name="success" type="view" value="ordercomplete"/>
+        <response name="error" type="view" value="confirm"/>
+    </request-map>    
     <request-map uri="emailorder">
         <security https="true" direct-request="false"/>
         <event type="service" path="async" invoke="sendOrderConfirmation"/>
         <response name="success" type="view" value="ordercomplete"/>
         <response name="error" type="view" value="ordercomplete"/>
-    </request-map>        
+    </request-map>
+            
     
     <!-- Order Return Requests -->
     <request-map uri="returnlist">
