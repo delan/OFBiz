@@ -27,14 +27,7 @@
       <ExtendedAttributes>
         <ExtendedAttribute Name="partyId" Value="admin"/>
       </ExtendedAttributes>
-    </Participant>
-    <Participant Id="admins" Name="First Participant">
-      <ParticipantType Type="ROLE"/>
-      <Description>None</Description>
-      <ExtendedAttributes>
-        <ExtendedAttribute Name="roleTypeId" Value="ADMINS"/>
-      </ExtendedAttributes>
-    </Participant>
+    </Participant>   
     <Participant Id="user" Name="First Participant">
       <ParticipantType Type="RESOURCE"/>
       <Description>None</Description>
