@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.24 $
+ *@version    $Revision: 1.25 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -60,6 +60,61 @@ ${requestAttributes.virtualJavaScript?if_exists}
             return;
         }
         popUp("<@ofbizUrl>/detailImage?detail=" + detailImageUrl + "</@ofbizUrl>", 'detailImage', '400', '550');
+    }
+
+    function toggleAmt(toggle) {
+        if (toggle == 'Y') {
+            changeObjectVisibility("add_amount", "visible");
+        }
+
+        if (toggle == 'N') {
+            changeObjectVisibility("add_amount", "hidden");
+        }
+    }
+
+    function findIndex(name) {
+        for (i = 0; i < OPT.length; i++) {
+            if (OPT[i] == name) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function getList(name, value, src) {
+        currentFeatureIndex = findIndex(name);
+        var finalSelection = 0;
+
+        // set the drop down index for swatch selection
+        document.forms["addform"].elements[name].selectedIndex = (value*1)+1;
+
+        if (currentFeatureIndex < (OPT.length-1)) {
+            // eval the next list if there are more
+            eval("list" + OPT[currentFeatureIndex +1] + value + "()");
+
+            // set the product ID to NULL to trigger the alerts
+            document.addform.add_product_id.value = 'NULL';
+        } else {
+            // this is the final selection
+            // locate the sku
+            var sku = document.forms["addform"].elements[name].options[(value*1)+1].value;
+
+            // set the product ID
+            document.addform.add_product_id.value = sku;
+
+            // check for amount box
+            toggleAmt(checkAmtReq(sku));
+        }
+
+        if (currentFeatureIndex == 0) {
+            // set the images for the first selection
+            if (IMG[value] != null) {
+                if (document.images['mainImage'] != null) {
+                    document.images['mainImage'].src = IMG[value];
+                    detailImageUrl = DET[value];
+                }
+            }
+        }
     }
  //-->
  </script>
