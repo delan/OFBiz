@@ -46,15 +46,16 @@ control over. special thanks for Britton LaRoche for creating the first pass of
 these reports and helping to improve them.</div>
 <br>
 
-<FORM METHOD="post" NAME="list" ACTION="/ordermgr/control/orderreport.pdf" TARGET="none">   
+<FORM METHOD="post" NAME="reportlist" ACTION="/ordermgr/control/orderreport.pdf" TARGET="none">   
 <Table>
 <TR>
-<TD>From Date:         
-<INPUT TYPE="TEXT" NAME="fromDate" TABINDEX="10"  SIZE="15" MAXLENGTH="20" ALIGN="MIDDLE">
+<TD><div class="tableheadtext">From Date:</div></td>
+<td>      
+<INPUT TYPE="TEXT" NAME="fromDate" TABINDEX="10"  SIZE="22" MAXLENGTH="22" ALIGN="MIDDLE">
  <A
    TABINDEX="10"
    TARGET="_self"
-    HREF="javascript:show_calendar('document.list.fromDate', '', 0);"
+    HREF="javascript:show_calendar('document.reportlist.fromDate', '', 0);"
    onfocus="checkForChanges = true;"
    onblur="checkForChanges = true;"
  >
@@ -63,12 +64,12 @@ these reports and helping to improve them.</div>
 </TD>
 </TR>
 <TR>
-<TD>To Date: 
-<INPUT TYPE="TEXT" NAME="toDate" TABINDEX="12"  SIZE="15" MAXLENGTH="20" ALIGN="MIDDLE">
+<TD><div class="tableheadtext">To Date:</div></td> 
+<td><INPUT TYPE="TEXT" NAME="toDate" TABINDEX="12"  SIZE="22" MAXLENGTH="22" ALIGN="MIDDLE">
  <A
    TABINDEX="12"
    TARGET="_self"
-    HREF="javascript:show_calendar('document.list.toDate', '', 0);"
+    HREF="javascript:show_calendar('document.reportlist.toDate', '', 0);"
    onfocus="checkForChanges = true;"
    onblur="checkForChanges = true;"
  >
@@ -76,10 +77,8 @@ these reports and helping to improve them.</div>
  </A>
 </TD>
 </TR>
-<Table>
-
-<table width="100%" border=0 cellspacing=0 cellpadding=0>
     <tr>
+    <td><div class="tableheadtext">Report:</div></td>
     <td>
 	<SELECT NAME="groupName" tabindex="10"  CLASS="stateSelectBox">
 		<OPTION VALUE="orderStatus"></OPTION>
@@ -89,9 +88,9 @@ these reports and helping to improve them.</div>
 		<OPTION VALUE="adjustment">Order Items by Adjustment</OPTION>
 		<OPTION VALUE="itemStatus">Order Items by Status</OPTION>
 		<OPTION VALUE="product">Order Items by Product</OPTION>
-		</SELECT>
+		</SELECT>    
+      &nbsp;&nbsp;<a href="javascript:document.reportlist.submit();" class="buttontext">[Run Report]</a>
     </td>
     </tr>
 </table>
- <INPUT TYPE="submit" CLASS="button" NAME="GoReport" VALUE="Run Report">
 </form>           
