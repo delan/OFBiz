@@ -961,7 +961,6 @@
         <key-map field-name="engagementItemSeqId" rel-field-name="orderItemSeqId"/>
       </relation>
     </entity>
-
     <entity entity-name="OrderContent"
             package-name="org.ofbiz.order.order"
             title="Order Data Object Entity">
@@ -998,8 +997,6 @@
         <key-map field-name="parentTypeId" rel-field-name="orderContentTypeId"/>
       </relation>
     </entity>
-
-    
     <entity entity-name="SimpleSalesTaxLookup"
             package-name="org.ofbiz.order.order"
             title="Simple Sales Tax Lookup Entity">
