@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.commonapp.workeffort.workeffort;
-
 
 import java.util.*;
 import java.sql.Timestamp;
@@ -34,13 +32,13 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 
-
 /**
  * WorkEffortPartyAssignmentServices - Services to handle form input and other data changes.
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on December 29, 2001
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class WorkEffortPartyAssignmentServices {
 

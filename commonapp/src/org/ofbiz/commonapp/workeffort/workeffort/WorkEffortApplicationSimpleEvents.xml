@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
@@ -23,25 +22,41 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Oswin Ondarza
  * @version    $Revision$
  * @since      2.0
 -->
-
+ 
 <simple-methods>
-    <simple-method method-name="acceptAssignment" short-description="Create Work Effort">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkflowMapProcessors.xml"
-                processor-name="assignmentMap" in-map-name="parameters" out-map-name="context"/>
+
+    <simple-method method-name="initApplication" short-description="Init the application that has been requested from the WorkEffort">
+        <call-map-processor processor-name="assignmentMap" in-map-name="parameters" out-map-name="context">
+          <simple-map-processor name="assignmentMap" >
+                <process field="applicationId"><not-empty><fail-message message="Expected ApplicationId."/></not-empty>
+                <copy/>
+                </process>
+          </simple-map-processor>
+        </call-map-processor>
         <check-errors/>
-        <call-service service-name="wfAcceptAssignment" in-map-name="context">
-            <default-message>Work Effort successfully created.</default-message></call-service>
+        <call-service service-name="wfGetApplicationContext" in-map-name="context" >
+            <result-to-request result-name="applicationContext" request-name="applicationContext"/>
+        </call-service>
     </simple-method>
 
-    <simple-method method-name="acceptRoleAssignment" short-description="Accept a ROLE Assignment">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkflowMapProcessors.xml"
-                processor-name="assignmentMap" in-map-name="parameters" out-map-name="context"/>
+
+
+    <simple-method method-name="completeApplication" short-description="complete the application">
+        <call-map-processor processor-name="assignmentMap" in-map-name="parameters" out-map-name='context'>
+          <simple-map-processor name="assignmentMap" >
+                <process field="applicationId"><not-empty><fail-message message="Expected ApplicationId."/></not-empty>
+                <copy/>
+                </process>
+          </simple-map-processor>
+        </call-map-processor>
+        <field-to-field  field-name="parameters" to-map-name="context" to-field-name="result"/>
         <check-errors/>
-        <call-service service-name="wfAcceptRoleAssignment" in-map-name="context">
-            <default-message>Work Effort successfully created.</default-message></call-service>
+        <call-service service-name="wfCompleteApplication" in-map-name="context" >
+        </call-service>
     </simple-method>
+    
 </simple-methods>

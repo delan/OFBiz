@@ -205,6 +205,21 @@
                   %>
                   <%String statusId = workEffortPartyAssignment.getString("statusId");%>
                   <%StatusWorker.getStatusValidChangeToDetails(pageContext, "taskStatusDetails", statusId);%>
+                <%-- Aug 2002, Added by Manuel Soto & Oswin Ondarza
+                     support of Applications
+                  --%>
+                  <% WorkEffortApplication.isApplication(pageContext,"workEffort","isApplication");%>
+                  <ofbiz:if name="isApplication">
+                  <form name='openapp' action="<ofbiz:url>/openapplication</ofbiz:url>" method=GET style='margin: 0;'>
+                    <input type='hidden' <ofbiz:inputvalue field="workEffortId" entityAttr="workEffortPartyAssignment" fullattrs="true"/>>
+                    <input type='hidden' <ofbiz:inputvalue field="partyId" entityAttr="workEffortPartyAssignment" fullattrs="true"/>>
+                    <input type='hidden' <ofbiz:inputvalue field="roleTypeId" entityAttr="workEffortPartyAssignment" fullattrs="true"/>>
+                    <input type='hidden' <ofbiz:inputvalue field="fromDate" entityAttr="workEffortPartyAssignment" fullattrs="true"/>>
+                    </form>
+                  </ofbiz:if>
+                <%-- /Added by Manuel Soto & Oswin Ondarza
+                     support of Applications
+                  --%>
                   <form action="<ofbiz:url>/updateactivityassign</ofbiz:url>" method=POST style='margin: 0;'>
                   <table border='0' cellpadding='2' cellspacing='0'>
                     <input type='hidden' <ofbiz:inputvalue field="workEffortId" entityAttr="workEffortPartyAssignment" fullattrs="true"/>>
@@ -240,10 +255,12 @@
                           <%GenericValue wepaStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", statusId));%>
                           <%if (wepaStatusItem != null) pageContext.setAttribute("wepaStatusItem", wepaStatusItem);%>
                           <OPTION value='<ofbiz:entityfield field="statusId" attribute="wepaStatusItem" default="CAL_SENT"/>'><ofbiz:entityfield field="description" attribute="wepaStatusItem"/></OPTION>
+                          <ofbiz:unless name="isApplication">
                           <OPTION value=''>--</OPTION>
                           <ofbiz:iterator name="statusValidChangeToDetail" property="taskStatusDetails">
                             <OPTION value='<ofbiz:entityfield field="statusIdTo" attribute="statusValidChangeToDetail"/>'><ofbiz:entityfield field="description" attribute="statusValidChangeToDetail"/> (<ofbiz:entityfield field="transitionName" attribute="statusValidChangeToDetail"/>)</OPTION>
                           </ofbiz:iterator>
+                          </ofbiz:unless>
                         </SELECT>
                         <ofbiz:if name="workEffort">
                           <span class='tabletext'> - Last Updated: <ofbiz:entityfield field="statusDateTime" attribute="workEffortPartyAssignment"/></span>
@@ -275,6 +292,10 @@
                     <tr>
                       <td width='26%' align=right>
                         <input type="submit" name="Update" value="Update">
+                        <ofbiz:if name="isApplication">
+                        &nbsp;
+                        <INPUT type="button" onclick="javascript:document.openapp.submit()" value="Open Application">
+                        </ofbiz:if>
                       </td>
                       <td>&nbsp;</td>
                       <td width='74%'><div class='tabletext'>&nbsp;</div></td>

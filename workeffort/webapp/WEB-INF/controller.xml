@@ -170,6 +170,12 @@
         <response name="error" type="view" value="requestitem"/>
     </request-map>
 
+    <request-map uri="openApplication">        
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="openapplication"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    
     <request-map uri="activity"><security https="true" auth="true"/>
     	<response name="success" type="view" value="activity"/>
     </request-map>
@@ -356,11 +362,11 @@
     <view-map name="requirementlist" type="region"/>
     <view-map name="workefforts" type="region"/>
 
+    <view-map name="openapplication" page="/application/openapplication.jsp"/>
     <view-map name="task" type="region"/>
     <view-map name="activity" type="region"/>
     <view-map name="mytasks" type="region"/>
-
-
+    
     <view-map name="event" type="region"/>
     <view-map name="day" type="region"/>
     <view-map name="week" type="region"/>
