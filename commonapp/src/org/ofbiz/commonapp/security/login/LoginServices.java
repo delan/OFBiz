@@ -95,7 +95,7 @@ public class LoginServices {
                     if (userLogin.get("currentPassword") != null && 
                             (realPassword.equals(userLogin.getString("currentPassword")) || 
                              ("true".equals(UtilProperties.getPropertyValue("security", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword"))))) {
-                        Debug.logInfo("[LoginServices.userLogin] : Password Matched");
+                        Debug.logVerbose("[LoginServices.userLogin] : Password Matched");
                         
                         //reset failed login count if necessry
                         Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
