@@ -37,7 +37,7 @@
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
   boolean useValues = true;
-  if(request.getAttribute("ERROR_MESSAGE") != null) useValues = false;
+  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
   String productCategoryId = request.getParameter("PRODUCT_CATEGORY_ID");
   GenericValue category = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));

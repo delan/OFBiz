@@ -39,7 +39,7 @@
 <%
 try {
   boolean useValues = true;
-  if(request.getAttribute("ERROR_MESSAGE") != null) useValues = false;
+  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
   String productId = request.getParameter("PRODUCT_ID");
   String productIdTo = request.getParameter("PRODUCT_ID_TO");
