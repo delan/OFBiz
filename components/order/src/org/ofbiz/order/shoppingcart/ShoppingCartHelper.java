@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.14 2004/06/30 19:24:08 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.15 2004/07/01 23:42:15 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -289,41 +289,25 @@ public class ShoppingCartHelper {
      * quantity is 0, do not add
      */
     public Map addToCartBulk(String catalogId, String categoryId, Map context) {
-        Map result = null;
-        String errMsg = null;
-
-        if (categoryId == null || categoryId.length() <= 0) {
-            errMsg = UtilProperties.getMessage(resource,"cart.category_not_specified_to_add_from", this.cart.getLocale());
-            result = ServiceUtil.returnError(errMsg);
-            return result;
-        }
-
-        Collection prodCatMemberCol = null;
-
-        try {
-            prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", categoryId));
-        } catch (GenericEntityException e) {
-            Map messageMap = UtilMisc.toMap("categoryId", categoryId);
-            messageMap.put("message", e.getMessage());
-            Debug.logWarning(e.getMessage(), module);
-            errMsg = UtilProperties.getMessage(resource,"cart.could_not_get_products_in_category_cart", messageMap, this.cart.getLocale());
-            result = ServiceUtil.returnError(errMsg);
-            return result;
-        }
-
-        if (prodCatMemberCol == null) {
-            Map messageMap = UtilMisc.toMap("categoryId", categoryId);
-            errMsg = UtilProperties.getMessage(resource,"cart.could_not_get_products_in_category", messageMap, this.cart.getLocale());
-            result = ServiceUtil.returnError(errMsg);
-            return result;
-        }
-
-        // never read: String errMsg = "";
-        Iterator pcmIter = prodCatMemberCol.iterator();
-
-        while (pcmIter.hasNext()) {
-            GenericValue productCategoryMember = (GenericValue) pcmIter.next();
-            String quantStr = (String) context.get("quantity_" + productCategoryMember.getString("productId"));
+        String keyPrefix = "quantity_";
+        
+        // iterate through the context and find all keys that start with "quantity_"
+        Iterator entryIter = context.entrySet().iterator();
+        while (entryIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) entryIter.next();
+            String productId = null;
+            if (entry.getKey() instanceof String) {
+                String key = (String) entry.getKey();
+                //Debug.logInfo("Bulk Key: " + key, module);
+                if (key.startsWith(keyPrefix)) {
+                    productId = key.substring(keyPrefix.length());
+                } else {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+            String quantStr = (String) entry.getValue();
 
             if (quantStr != null && quantStr.length() > 0) {
                 double quantity = 0;
@@ -335,18 +319,17 @@ public class ShoppingCartHelper {
                 }
                 if (quantity > 0.0) {
                     try {
-                        this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), 0.00, quantity, null, null, catalogId, dispatcher);
+                        if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart [" + quantity + "] of [" + productId + "]", module);
+                        this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, dispatcher);
                     } catch (CartItemModifyException cartException) {
-                        result = ServiceUtil.returnError(cartException.getMessage());
-                        return result;
+                        return ServiceUtil.returnError(cartException.getMessage());
                     }
                 }
             }
         }
 
         //Indicate there were no non critical errors
-        result = ServiceUtil.returnSuccess();
-        return result;
+        return ServiceUtil.returnSuccess();
     }
 
     /**
