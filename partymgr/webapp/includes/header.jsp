@@ -35,12 +35,19 @@
             <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
           </ofbiz:if>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-          <ofbiz:unless name="person">
-            <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
-          </ofbiz:unless>
+
           <ofbiz:if name="person">
             <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
           </ofbiz:if>
+          <ofbiz:unless name="person">
+            <ofbiz:if name="partyGroup">
+              <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("partyGroup", "groupName", "", "", pageContext);%>!</TD>
+            </ofbiz:if>
+            <ofbiz:unless name="partyGroup">
+              <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
+            </ofbiz:unless>
+          </ofbiz:unless>
+
           <td nowrap class="headerButtonRight"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="buttontext">Find</a></td>
           <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
             <td nowrap class="headerButtonRight"><a href="<ofbiz:url>/editpartygroup?create_new=Y</ofbiz:url>" class="buttontext">New Group</a></td>
