@@ -32,22 +32,23 @@ import org.ofbiz.commonapp.party.contact.ContactMechWorker;
 userLogin = session.getAttribute("userLogin");
 security = request.getAttribute("security");
 
-paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin.getString("partyId")) 
+paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin.getString("partyId"));
 //returns the following: "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity"
-context.put("paymentMethod", paymentResults.get("paymentMethod"));
-context.put("creditCard", paymentResults.get("creditCard"));
-context.put("eftAccount", paymentResults.get("eftAccount"));
-context.put("paymentMethodId", paymentResults.get("paymentMethodId"));
-context.put("curContactMechId", paymentResults.get("curContactMechId"));
-context.put("donePage", paymentResults.get("donePage"));
-context.put("tryEntity", paymentResults.get("tryEntity"));
+prIter = paymentResults.keySet().iterator();
+while(prIter.hasNext()) {
+    thisName = prIter.next();
+    thisValue = paymentResults.get(thisName);
+    context.put(thisName, thisValue);
+}
 
 curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId")); 
 //returns the following: "curPartyContactMech", "curContactMech", "curPostalAddress", "curPartyContactMechPurposes"
-context.put("curPartyContactMech", curPostalAddressResults.get("curPartyContactMech"));
-context.put("curContactMech", curPostalAddressResults.get("curContactMech"));
-context.put("curPostalAddress", curPostalAddressResults.get("curPostalAddress"));
-context.put("curPartyContactMechPurposes", curPostalAddressResults.get("curPartyContactMechPurposes"));
+paIter = curPostalAddressResults.keySet().iterator();
+while(paIter.hasNext()) {
+    thisName = paIter.next();
+    thisValue = curPostalAddressResults.get(thisName);
+    context.put(thisName, thisValue);
+}
 
 postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId"));
 context.put("postalAddressInfos", postalAddressInfos);
@@ -59,12 +60,12 @@ tryEntity = paymentResults.get("tryEntity");
 creditCardData = paymentResults.get("creditCard");
 if (!tryEntity.booleanValue()) creditCardData = parameterMap;
 if (creditCardData == null) creditCardData = new HashMap();
-context.put("creditCardData", creditCardData);
+if (creditCardData != null) context.put("creditCardData", creditCardData);
 
 eftAccountData = paymentResults.get("eftAccount");
 if (!tryEntity.booleanValue()) eftAccountData = parameterMap;
 if (eftAccountData == null) eftAccountData = new HashMap();
-context.put("eftAccountData", eftAccountData);
+if (eftAccountData != null) context.put("eftAccountData", eftAccountData);
 
 //prepare security flag
 if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && (context.get("creditCard") != null || context.get("eftAccount") != null) && context.get("paymentMethod") != null && !userLogin.get("partyId").equals((context.get("paymentMethod")).get("partyId"))) {
