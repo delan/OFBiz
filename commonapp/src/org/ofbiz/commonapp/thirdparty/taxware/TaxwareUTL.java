@@ -206,8 +206,13 @@ public class TaxwareUTL {
         // set the address info from the value objects
         if (shipToAddress != null) {
             // set the ship to address
-            record.set("ST_COUNTRY_CODE", shipToAddress.getString("countryGeoId").equals("USA") ? "US" :
-                    shipToAddress.get("countryGeoId"));
+            if (shipToAddress.get("countryGeoId") == null) {
+                record.set("ST_COUNTRY_CODE", "US");
+            } else if (shipToAddress.getString("countryGeoId").equals("USA")) {
+                record.set("ST_COUNTRY_CODE", "US");
+            } else {
+                record.set("ST_COUNTRY_CODE", shipToAddress.get("countryGeoId"));
+            }
             record.set("ST_COUNTRY_CODE", "US");
             record.set("ST_STATE_PROVINCE", shipToAddress.get("stateProvinceGeoId"));
             record.set("ST_CITY", shipToAddress.get("city"));
@@ -239,8 +244,8 @@ public class TaxwareUTL {
         StringBuffer inBuffer = new StringBuffer();
         int result = callTaxware(outBuffer.toString(), inBuffer);
         Debug.logVerbose("Taxware Return: " + result, module);
-        if (result < 1)
-            throw new TaxwareException("Taxware processing failed");
+        if (result != 1)
+            throw new TaxwareException("Taxware processing failed (" + result + ")");
 
         Debug.logVerbose("::Return String::", module);
         Debug.logVerbose("\"" + inBuffer.toString() + "\"", module);
