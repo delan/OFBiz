@@ -26,10 +26,12 @@
 package org.ofbiz.core.taglib;
 
 import java.io.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
+import org.ofbiz.core.control.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -41,20 +43,43 @@ import org.ofbiz.core.util.*;
  */
 public class UrlTag extends BodyTagSupport {
 
+    public static final String module = UrlTag.class.getName();
+
     public int doEndTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
-        BodyContent body = getBodyContent();
-
         String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+        ServletContext context = (ServletContext) request.getAttribute("servletContext");
+        RequestHandler rh = (RequestHandler) context.getAttribute(SiteDefs.REQUEST_HANDLER);
+        RequestManager rm = rh.getRequestManager();
+
+        BodyContent body = getBodyContent();
+        String serverHost = request.getServerName();
+
         String baseURL = body.getString();
-        String newURL = controlPath + baseURL;
+        String requestUri = RequestHandler.getRequestUri(baseURL);
+
+        StringBuffer newURL = new StringBuffer();
+        boolean useHttps = UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y");
+        if (rm.requiresHttps(requestUri) && useHttps) {
+            String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+            newURL.append("https://");
+            newURL.append(serverHost);
+            if (!port.equals("443")) {
+                newURL.append(":");
+                newURL.append(port);
+            }
+        }
+
+        Debug.logVerbose("UseHTTPS: " + useHttps + " -- URI: " + requestUri + " -> " + rm.requiresHttps(requestUri), module);
+        newURL.append(controlPath);
+        newURL.append(baseURL);
 
         body.clearBody();
 
         try {
-            String encodedURL = response.encodeURL(newURL);
+            String encodedURL = response.encodeURL(newURL.toString());
             getPreviousOut().print(encodedURL);
         } catch (IOException e) {
             throw new JspException(e.getMessage());

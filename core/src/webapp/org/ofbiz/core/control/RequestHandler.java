@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -42,7 +42,7 @@ import org.ofbiz.core.view.*;
 /**
  * RequestHandler - Request Processor Object
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Dustin Caldwell
  *@created    June 28, 2001
@@ -71,13 +71,13 @@ public class RequestHandler implements Serializable {
         String cname = request.getContextPath().substring(1);
 
         /* Grab data from request object to process. */
-        String requestUri = getRequestUri(request.getPathInfo());
-        String nextView = getNextPageUri(request.getPathInfo());
+        String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
+        String nextView = RequestHandler.getNextPageUri(request.getPathInfo());
 
         /* Check for chained request. */
         if (chain != null) {
-            requestUri = getRequestUri(chain);
-            nextView = getNextPageUri(chain);
+            requestUri = RequestHandler.getRequestUri(chain);
+            nextView = RequestHandler.getNextPageUri(chain);
             Debug.logInfo("[RequestHandler]: Chain in place: requestUri=" + requestUri + " nextView=" + nextView, module);
         } else {
             // Invoke the pre-processor (but NOT in a chain)
@@ -221,7 +221,7 @@ public class RequestHandler implements Serializable {
 
     /** Returns the default error page for this request. */
     public String getDefaultErrorPage(HttpServletRequest request) {
-        String requestUri = getRequestUri(request.getPathInfo());
+        String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
         return rm.getErrorPage(requestUri);
     }
 
@@ -235,7 +235,7 @@ public class RequestHandler implements Serializable {
         return context;
     }
 
-    private String getRequestUri(String path) {
+    public static String getRequestUri(String path) {
         if (path.indexOf('/') == -1)
             return path;
         if (path.lastIndexOf('/') == 0)
@@ -244,7 +244,7 @@ public class RequestHandler implements Serializable {
         return path.substring(1, nextIndex);
     }
 
-    private String getNextPageUri(String path) {
+    public static String getNextPageUri(String path) {
         if (path.indexOf('/') == -1 || path.lastIndexOf('/') == 0)
             return null;
         int nextIndex = path.indexOf('/', 1);
