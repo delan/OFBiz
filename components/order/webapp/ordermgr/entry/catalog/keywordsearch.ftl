@@ -20,48 +20,34 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
-<div class='head1'>
-    Search Results for "${requestAttributes.keywordString?if_exists}"
-    where <#if searchOperator?default("OR") == "OR">any keyword<#else>all keywords</#if> matched
+<div class="head1">Product Search, <span class="head2">you searched for:</span></div>
+<#list searchConstraintStrings as searchConstraintString>
+    <div class="tabletext">&nbsp;<a href="<@ofbizUrl>/keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
+</#list>
+<div class="tabletext">Sorted by: ${searchSortOrderString}</div>
+<div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(searchCategory.productCategoryId)?if_exists}</@ofbizUrl>" class="buttontext">[Refine Search]</a></div>
 
-  <#assign featureIdByType = requestAttributes.featureIdByType>
-  <#if requestAttributes.featureIdByType?has_content>
-  	and where 
-    <#list featureIdByType.keySet() as productFeatureTypeId>
-      <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
-      <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
-      <#assign findProdFeatMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureId", featureIdByType[productFeatureTypeId])>
-      <#assign productFeature = delegator.findByPrimaryKeyCache("ProductFeature", findProdFeatMap)>
-      ${productFeatureType.description} = ${productFeature.description}
-      <#if productFeatureTypeId_has_next>, and </#if>
-    </#list>
-  </#if>
-  <#if searchCategory?exists>
-    in the ${searchCategory.description} category
-  </#if>
-</div>
-
-<#if !requestAttributes.searchProductList?has_content>
-  <br><div class='head2'>&nbsp;No results found.</div>
+<#if !productIds?has_content>
+  <br><div class="head2">&nbsp;No Results Found.</div>
 </#if>
 
-<#if requestAttributes.searchProductList?has_content>
+<#if productIds?has_content>
 <table border="0" width="100%" cellpadding="2">
     <tr>
       <td align=right>
         <b>
-        <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+        <#if 0 < viewIndex?int>
+          <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
-        <#if 0 < requestAttributes.listSize?int>
-          <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
+        <#if 0 < listSize?int>
+          <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
         </#if>
-        <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>      
-          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
+        <#if highIndex?int < listSize?int>      
+          | <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[Next]</a>
         </#if>
         </b>
       </td>
@@ -69,39 +55,38 @@
 </table>
 </#if>
 
-<#if requestAttributes.searchProductList?has_content>
+<#if productIds?has_content>
 <center>
-  <table width='100%' cellpadding='0' cellspacing='0'>
-    <#assign listIndex = requestAttributes.lowIndex>
-    <#list requestAttributes.searchProductList as product>
-    ${setRequestAttribute("optProductId", product.productId)}
-    ${setRequestAttribute("listIndex", listIndex)}
-      <tr><td colspan="2"><hr class='sepbar'></td></tr>
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <#assign listIndex = lowIndex>
+    <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
+      ${setRequestAttribute("optProductId", productId)}
+      ${setRequestAttribute("listIndex", productId_index)}
+      <tr><td colspan="2"><hr class="sepbar"></td></tr>
       <tr>
         <td>
           ${pages.get("/entry/catalog/productsummary.ftl")}
         </td>
       </tr>
-      <#assign listIndex = listIndex + 1>
     </#list>
   </table>
 </center>
 </#if>
 
-<#if requestAttributes.searchProductList?has_content>
+<#if productIds?has_content>
 <table border="0" width="100%" cellpadding="2">
-    <tr><td colspan="2"><hr class='sepbar'></td></tr>
+    <tr><td colspan="2"><hr class="sepbar"></td></tr>
     <tr>
       <td align=right>
         <b>
-        <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+        <#if 0 < viewIndex?int>
+          <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
-        <#if 0 < requestAttributes.listSize?int>
-          <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
+        <#if 0 < listSize?int>
+          <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
         </#if>
-        <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>      
-          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
+        <#if highIndex?int < listSize?int>      
+          | <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[Next]</a>
         </#if>
         </b>
       </td>
