@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Edit Product</property>
-    <property name="titleProperty">PageTitleEditProduct</property>
-    <property name="leftbar">/templates/leftbar.ftl</property>
-    <property name="tabButtonItem">EditProduct</property>
-    <content-action name="/product/EditProduct.bsh"/>
-</page>
