@@ -477,7 +477,7 @@ public class PartyServices {
         String partyId = (String) context.get("partyId");
         String surveyId = (String) context.get("surveyId");
         String responseId = (String) context.get("responseId");
-        String response = (String) context.get("responseMessage");
+        String response = (String) context.get("response");
         Timestamp now = UtilDateTime.nowTimestamp();
         if (partyId == null) {
             if (userLogin != null&& userLogin.get("partyId") != null)
@@ -486,7 +486,7 @@ public class PartyServices {
         if (partyId == null)
             return ServiceUtil.returnError("Could not create survey response (no partyId sent)");
 
-        Map fields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "responseId", responseId,
+        Map fields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "surveyResponseId", responseId,
                                     "surveyResponse", response, "responseDateTime", now);
         try {
             GenericValue newValue = delegator.makeValue("PartySurveyResponse", fields);
