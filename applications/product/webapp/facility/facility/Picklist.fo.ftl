@@ -60,18 +60,18 @@
             </fo:table-row>
         </fo:table-header>
         <fo:table-body>
-            <#if facilityLocationInfoList?has_content || inventoryItemInfoList?has_content>
+            <#if facilityLocationInfoList?has_content || noLocationProductInfoList?has_content>
                 <#assign rowColor = "white">
-                <#-- facilityLocationInfoList: facilityLocation, productInfoList (product, quantity, inventoryItemList, orderItemList) -->
+                <#-- facilityLocationInfoList: facilityLocation, picklistItemInfoList (picklistItem, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) -->
                 <#if facilityLocationInfoList?has_content>
                 <#list facilityLocationInfoList as facilityLocationInfo>
                     <#assign facilityLocation = facilityLocationInfo.facilityLocation>
-                    <#assign productInfoList = facilityLocationInfo.productInfoList>
-                    <#list productInfoList as productInfo>
-                        <#assign product = productInfo.product>
-                        <#assign quantity = productInfo.quantity>
-                        <#assign inventoryItemList = productInfo.inventoryItemList>
-                        <#assign orderItemList = productInfo.orderItemList>
+                    <#assign picklistItemInfoList = facilityLocationInfo.picklistItemInfoList>
+                    <#list picklistItemInfoList as picklistItemInfo>
+                        <#assign product = picklistItemInfo.product>
+                        <#assign quantity = picklistItemInfo.quantity>
+                        <#assign inventoryItemList = picklistItemInfo.inventoryItemList>
+                        <#assign orderItemList = picklistItemInfo.orderItemList>
                         <fo:table-row> <#-- TODO: set the row color -->
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <fo:block>${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</fo:block>
@@ -108,17 +108,12 @@
                     </#list>
                 </#list>
                 </#if>
-                <#if inventoryItemInfoList?has_content>
-                <#list inventoryItemInfoList as inventoryItemInfo>
-                    <#-- inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, quantity, statusItem -->
-                    <#-- for this list, only display for inventoryItems with no location since those with locations will be displayed above -->
-                    <#if !inventoryItemInfo.facilityLocation?exists>
-                        <#assign inventoryItem = inventoryItemInfo.inventoryItem>
-                        <#assign facilityLocation = inventoryItemInfo.facilityLocation?if_exists>
-                        <#assign orderItems = inventoryItemInfo.orderItems>
-                        <#assign product = inventoryItemInfo.product>
-                        <#assign quantity = inventoryItemInfo.quantity>
-                        <#assign statusItem = inventoryItemInfo.statusItem?if_exists>
+                <#-- noLocationProductInfoList: product, picklistItemInfoList (picklistItem, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) -->
+                <#if noLocationProductInfoList?has_content>
+                <#list noLocationProductInfoList as noLocationProductInfo>
+                    <#if !noLocationProductInfo.facilityLocation?exists>
+                        <#assign product = noLocationProductInfo.product>
+                        <#assign picklistItemInfoList = noLocationProductInfo.picklistItemInfoList>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#if facilityLocation?has_content>

@@ -806,8 +806,8 @@
         <!-- 
             Creates:
               1. Standard picklistInfo Map from the getPicklistSingleInfoInline simple-method (see comment there for details)
-              2. facilityLocationInfoList (facilityLocation, picklistItemInfoList (picklistItem, orderItem, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
-              3. noLocationProductInfoList (product, picklistItemInfoList (picklistItem, orderItem, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
+              2. facilityLocationInfoList (facilityLocation, picklistItemInfoList (picklistItem, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
+              3. noLocationProductInfoList (product, picklistItemInfoList (picklistItem, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
         -->
         <check-permission permission="FACILITY" action="_VIEW">
             <fail-message message="Security Error: to run getPickAndPackReportInfo you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
@@ -841,9 +841,17 @@
                     <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
                     <env-to-env env-name="picklistItemInfoTempList" to-env-name="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}"/>
                 <else>
-                    <!-- TODO: handle case where an InventoryItem is not associated with a location -->
+                    <!-- handle case where an InventoryItem is not associated with a location -->
                     <if-not-empty field-name="picklistItemInfo.orderItem.productId">
+                        <env-to-env env-name="picklistItemInfo.orderItem.productId" to-env-name="productId"/>
+                        <entity-one entity-name="Product" value-name="productByProductIdMap.${productId}" use-cache="true">
+                            <field-map env-name="productId"/>
+                        </entity-one>
                         
+                        <clear-field field-name="picklistItemInfoTempList"/>
+                        <env-to-env env-name="picklistItemInfoListByProductIdMap.${productId}" to-env-name="picklistItemInfoTempList"/>
+                        <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
+                        <env-to-env env-name="picklistItemInfoTempList" to-env-name="picklistItemInfoListByProductIdMap.${productId}"/>
                     <else>
                         <!-- Uh oh, no productId, how did this happen? -->
                         <log level="warning" message="No productId and no FacilityLocation, not showing in Picklist for PicklistItem: ${picklistItemInfo.picklistItem}"/>
@@ -854,7 +862,8 @@
             </iterate>
         </iterate>
 
-        <!-- make a inventoryItemAndLocationList from the facilityLocationByLocationSeqIdMap, which was used to guarantee uniqueness of InventoryItems -->
+        <!-- === handle the ones by FacilityLocation === -->
+        <!-- make a facilityLocationList from the facilityLocationByLocationSeqIdMap, which was used to guarantee uniqueness of FacilityLocations -->
         <iterate-map map-name="facilityLocationByLocationSeqIdMap" key-name="locationSeqId" value-name="facilityLocationList[]"/>
 
         <!-- order the facilityLocations -->
@@ -873,7 +882,24 @@
             <env-to-env env-name="facilityLocationInfo" to-env-name="facilityLocationInfoList[]"/>
         </iterate>
         
+        <!-- === handle the ones by Product === -->
+        <!-- make a productList from the productByLocationSeqIdMap, which was used to guarantee uniqueness of FacilityLocations -->
+        <iterate-map map-name="productByLocationSeqIdMap" key-name="productId" value-name="productList[]"/>
+
+        <!-- order the products -->
+        <string-to-list string="+productId" list-name="productsOrdLst"/>
+        <order-value-list list-name="productList" order-by-list-name="productsOrdLst"/>
+        
+        <!-- Now we have an ordered list of InventoryItems, create an inventoryItemAndLocationInfoList -->
+        <iterate entry-name="product" list-name="productList">
+            <clear-field field-name="productInfo"/>
+            <env-to-env env-name="product" to-env-name="productInfo.product"/>
+            <env-to-env env-name="picklistItemInfoListByProductIdMap.${product.productId}" to-env-name="productInfo.picklistItemInfoList"/>
+            <env-to-env env-name="productInfo" to-env-name="productInfoList[]"/>
+        </iterate>
+        
         <field-to-result field-name="facilityLocationInfoList"/>
+        <field-to-result field-name="noLocationProductInfoList"/>
     </simple-method>
 
     <simple-method method-name="getPicklistSingleInfoInline" short-description="getPicklistSingleInfoInline">
@@ -888,7 +914,7 @@
                - picklistBin
                - primaryOrderHeader
                - primaryOrderItemShipGroup
-               - picklistItemInfoList (picklistItem, orderItem, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) 
+               - picklistItemInfoList (picklistItem, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) 
         -->
         <!-- expects a picklist GenericValue to be in the context, and creates a picklistInfo Map -->
         <clear-field field-name="picklistRoleInfoList"/>
@@ -923,6 +949,7 @@
             <iterate entry-name="picklistItem" list-name="picklistItemList">
                 <clear-field field-name="picklistItemInfo"/>
                 <get-related-one value-name="picklistItem" relation-name="OrderItem" to-value-name="picklistItemInfo.orderItem"/>
+                <get-related-one value-name="picklistItemInfo.orderItem" relation-name="Product" to-value-name="picklistItemInfo.product"/>
                 <get-related-one value-name="picklistItem" relation-name="InventoryItemAndLocation" to-value-name="picklistItemInfo.inventoryItemAndLocation"/>
                 <get-related-one value-name="picklistItem" relation-name="OrderItemShipGrpInvRes" to-value-name="picklistItemInfo.orderItemShipGrpInvRes"/>
                 <get-related value-name="picklistItem" relation-name="ItemIssuance" list-name="picklistItemInfo.itemIssuanceList"/>
