@@ -27,7 +27,7 @@
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * copy from content component  actions/includes/findprep.bsh 1.8 
  * @author     Olivier.Heintz@nereide.biz
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
 
  * Calls Find on a dynamiqueView  to return an EntityListIterator of the
@@ -59,7 +59,8 @@ import javax.servlet.http.*;
 
 delegator = request.getAttribute("delegator");
 // field from the user query 
-Map inputFields            = UtilHttp.getParameterMap(request);
+Map inputFields = UtilHttp.getParameterMap(request);
+
 //preload the query 
 staticConditionsStr = page.getProperty("staticConditions");
 if (staticConditionsStr != null && staticConditionsStr.length() > 0) {
@@ -76,26 +77,27 @@ String showListIfSelection = page.getProperty("showListIfSelection");
 if (UtilValidate.isEmpty(showListIfSelection) || showListIfSelection.equals("Y") || (UtilValidate.isNotEmpty(hideSearch) && hideSearch.equals("Y"))) {
     context.put("showList", "Y");
 
-     // create the dynamic view entity
+    // create the dynamic view entity
     DynamicViewEntity dynamicView = new DynamicViewEntity();
 
-     // default view settings ProductionRun
-     dynamicView.addMemberEntity("WE", "WorkEffort");
-     dynamicView.addAlias("WE", "workEffortId");
-     dynamicView.addAlias("WE", "workEffortTypeId");
-     dynamicView.addAlias("WE", "currentStatusId");
-     dynamicView.addAlias("WE", "workEffortName");
-     dynamicView.addAlias("WE", "description");
-     dynamicView.addAlias("WE", "estimatedStartDate");
-    // Statut
-     dynamicView.addMemberEntity("ST", "StatusItem");
-     dynamicView.addAlias("ST", "statusDescription","description",null,null,null,null);
-     dynamicView.addViewLink("WE", "ST", Boolean.TRUE, ModelKeyMap.makeKeyMapList("currentStatusId","statusId"));
-     // Product to produce
-     dynamicView.addMemberEntity("WEGS", "WorkEffortGoodStandard");
-     dynamicView.addAlias("WEGS", "productId");
-     dynamicView.addAlias("WEGS", "estimatedQuantity");
-     dynamicView.addViewLink("WE", "WEGS", Boolean.TRUE, ModelKeyMap.makeKeyMapList("workEffortId"));
+    // default view settings ProductionRun
+    dynamicView.addMemberEntity("WE", "WorkEffort");
+    dynamicView.addAlias("WE", "workEffortId");
+    dynamicView.addAlias("WE", "workEffortTypeId");
+    dynamicView.addAlias("WE", "currentStatusId");
+    dynamicView.addAlias("WE", "workEffortName");
+    dynamicView.addAlias("WE", "description");
+    dynamicView.addAlias("WE", "estimatedStartDate");
+    dynamicView.addAlias("WE", "facilityId");
+    // Status
+    dynamicView.addMemberEntity("ST", "StatusItem");
+    dynamicView.addAlias("ST", "statusDescription","description",null,null,null,null);
+    dynamicView.addViewLink("WE", "ST", Boolean.TRUE, ModelKeyMap.makeKeyMapList("currentStatusId","statusId"));
+    // Product to produce
+    dynamicView.addMemberEntity("WEGS", "WorkEffortGoodStandard");
+    dynamicView.addAlias("WEGS", "productId");
+    dynamicView.addAlias("WEGS", "estimatedQuantity");
+    dynamicView.addViewLink("WE", "WEGS", Boolean.TRUE, ModelKeyMap.makeKeyMapList("workEffortId"));
     // fieldsToSelect
     Collection fieldsToSelect=null;
      
@@ -106,7 +108,7 @@ if (UtilValidate.isEmpty(showListIfSelection) || showListIfSelection.equals("Y")
     //HashMap normalizedFields = FindServices.prepareField((Map) inputFields,new Double(5),(Map) origValueMap);
     
     // compare the normalizedFields with the field the user can query on
-    List keys = UtilMisc.toList("workEffortId","workEffortTypeId","currentStatusId","workEffortName","estimatedStartDate") ;
+    List keys = UtilMisc.toList("workEffortId","workEffortTypeId","currentStatusId","workEffortName","estimatedStartDate", "facilityId") ;
     keys.add("productId");
     ArrayList tmpList = FindServices.createCondition(keys, normalizedFields, queryStringMap, origValueMap);
     
