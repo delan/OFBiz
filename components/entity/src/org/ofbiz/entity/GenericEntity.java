@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.16 2004/01/24 21:46:12 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.17 2004/01/24 21:51:12 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.16 $
+ *@version    $Revision: 1.17 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -784,9 +784,10 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         while (modelFields.hasNext()) {
             ModelField modelField = (ModelField) modelFields.next();
             String name = modelField.getName();
-            StringBuffer value = new StringBuffer(this.getString(name));
+            String valueStr = this.getString(name);
 
-            if (value != null) {
+            if (valueStr != null) {
+                StringBuffer value = new StringBuffer(valueStr);
                 boolean needsCdata = false;
                 
                 // check each character, if line-feed or carriage-return is found set needsCdata to true; also look for invalid characters
