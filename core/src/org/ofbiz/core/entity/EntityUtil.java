@@ -85,30 +85,28 @@ public class EntityUtil {
         Iterator iter = values.iterator();
         while(iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
-            if (isSubset(fields, value.getAllFields())) {
+            if (value.matchesFields(fields)) {
                 result.add(value);
             }//else did not match
         }
         return result;
     }
     
-    private static boolean isSubset(Map smallSet, Map largeSet) {
-        Iterator keyIter = smallSet.keySet().iterator();
-        while (keyIter.hasNext()) {
-            String key = (String) keyIter.next();
-            if (!equals(smallSet.get(key), largeSet.get(key))) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    private static boolean equals(Object a, Object b) {
-        if (a == null) {
-            return b == null;
-        } else {
-            return a.equals(b);
-        }
+    /**
+     *returns the values in the order specified
+     *
+     *@param values collection of GenericValues
+     *@param order The fields of the named entity to order the query by;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     *@return Collection of GenericValue's in the proper order
+     */
+    public static List orderBy(Collection values, List orderBy) {
+        if (values == null)  return null;
+        if (values.size() == 0) return UtilMisc.toList(values);
+
+        List result = new ArrayList(values);
+        Collections.sort(result, new OrderByComparator(orderBy));
+        return result;
     }
     
     public static Collection getRelated(String relationName, Collection values) throws GenericEntityException {
@@ -142,5 +140,65 @@ public class EntityUtil {
             result.addAll(((GenericValue) iter.next()).getRelatedByAnd(relationName, fields));
         }
         return result;
+    }
+
+    static class OrderByComparator implements Comparator
+    {
+        private String field;
+        private boolean descending;
+        private Comparator next = null;
+        
+        OrderByComparator(List orderBy) {
+            this(orderBy, 0);
+        }
+        
+        private OrderByComparator(List orderBy, int startIndex) {
+            if ((orderBy == null) || (startIndex >= orderBy.size())) throw new IllegalArgumentException("orderBy may not be empty");
+            String fieldAndDirection = (String) orderBy.get(startIndex);
+            String upper = fieldAndDirection.trim().toUpperCase();
+            if (upper.endsWith(" DESC")) {
+                this.descending = true;
+                this.field = fieldAndDirection.substring(0, fieldAndDirection.length()-5);
+            } else if (upper.endsWith(" ASC")) {
+                this.descending = false;
+                this.field = fieldAndDirection.substring(0, fieldAndDirection.length()-4);
+            } else {
+                this.descending = false;
+                this.field = fieldAndDirection;
+            }
+            if (startIndex+1 < orderBy.size()) {
+                this.next = new OrderByComparator(orderBy, startIndex+1);
+            }//else keep null
+        }
+
+        public int compare(java.lang.Object obj, java.lang.Object obj1) {
+            int result = compareAsc((GenericEntity) obj, (GenericEntity) obj1);
+            if (descending) {
+                result = -result;
+            } 
+            if ((result == 0) && (next != null)) {
+                return next.compare(obj, obj1);
+            } else {
+                return result;
+            }
+        }
+
+        private int compareAsc(GenericEntity obj, GenericEntity obj2) {
+            Object value = obj.get(field);
+            Object value2 = obj2.get(field);
+            //null is defined as the smallest possible value
+            if (value == null) return value2 == null ? 0 : -1;
+            return ((Comparable)obj).compareTo(value2);
+        }
+
+        public boolean equals(java.lang.Object obj) {
+            if ((obj != null) && (obj instanceof OrderByComparator)) {
+                OrderByComparator that = (OrderByComparator) obj;
+                return this.field.equals(that.field) && (this.descending == that.descending)
+                        && UtilValidate.areEqual(this.next, that.next);
+            } else {
+                return false;
+            }
+        }
     }
 }
