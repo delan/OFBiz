@@ -186,7 +186,10 @@ public class EntitySyncServices {
                 
                 // maintain the original timestamps when doing storage of synced data, by default with will update the timestamps to now
                 valueToStore.setIsFromEntitySync(true);
-                
+
+                // maintain the original timestamps when doing storage of synced data, by default with will update the timestamps to now
+                valueToStore.checkFks(true);
+
                 GenericValue existingValue = delegator.findByPrimaryKey(valueToStore.getPrimaryKey());
                 if (existingValue == null) {
                     delegator.create(valueToStore);
