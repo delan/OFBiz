@@ -45,7 +45,7 @@
           <TD align=left width='90%' >
             <div class='boxhead'>&nbsp;Web Tools Main Page</div>
           </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          <TD align=right width='10%'><%=delegator.getDelegatorName()%></TD>
         </tr>
       </table>
     </TD>
