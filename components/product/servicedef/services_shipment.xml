@@ -346,6 +346,8 @@
         <attribute name="productFeatureGroupId" type="String" mode="IN" optional="true"/>
         <attribute name="featurePercent" type="Double" mode="IN" optional="true"/>
         <attribute name="featurePrice" type="Double" mode="IN" optional="true"/>
+        <attribute name="oversizeUnit" type="Double" mode="IN" optional="true"/>
+        <attribute name="oversizePrice" type="Double" mode="IN" optional="true"/>
         <attribute name="wmin" type="Double" mode="IN" optional="true"/>
         <attribute name="wmax" type="Double" mode="IN" optional="true"/>
         <attribute name="wprice" type="Double" mode="IN" optional="true"/>

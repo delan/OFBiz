@@ -81,6 +81,43 @@
             <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
         </field>
         <field position="2" name="inventoryMessage"><text size="20" maxlength="255"/></field>
+        <field position="1" name="requireAmount" widget-style="selectBox" tooltip="Require the customer to enter an amount.">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        <field position="2" name="amountUomTypeId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomType" key-field-name="uomTypeId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="height"><text size="10" maxlength="20"/></field>
+        <field position="2" name="heightUomId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="width"><text size="10" maxlength="20"/></field>
+        <field position="2" name="widthUomId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="depth"><text size="10" maxlength="20"/></field>
+        <field position="2" name="depthUomId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field position="1" name="weight"><text size="10" maxlength="20"/></field>
         <field position="2" name="weightUomId">
             <drop-down allow-empty="true">

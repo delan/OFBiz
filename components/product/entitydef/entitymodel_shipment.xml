@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  */
 -->
 
@@ -175,7 +175,7 @@
       </relation>
       <relation type="one" fk-name="SHP_RCPT_USERLGN" rel-entity-name="UserLogin">
         <key-map field-name="receivedByUserLoginId" rel-field-name="userLoginId"/>
-      </relation>      
+      </relation>
     </entity>
     <entity entity-name="ShipmentReceiptRole"
             package-name="org.ofbiz.shipment.receipt"
@@ -221,7 +221,7 @@
             title="Carrier Shipment Method Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>      
+      <field name="roleTypeId" type="id-ne"></field>
       <field name="sequenceNumber" type="numeric"></field>
       <field name="carrierServiceCode" type="very-short"></field>
       <prim-key field="shipmentMethodTypeId"/>
@@ -551,6 +551,8 @@
       <field name="orderPricePercent" type="floating-point"></field>
       <field name="orderItemFlatPrice" type="currency-amount"></field>
       <field name="productFeatureGroupId" type="id"></field>
+      <field name="oversizeUnit" type="floating-point"></field>
+      <field name="oversizePrice" type="currency-amount"></field>
       <field name="featurePercent" type="floating-point"></field>
       <field name="featurePrice" type="currency-amount"></field>
       <prim-key field="shipmentCostEstimateId"/>
@@ -568,7 +570,7 @@
       <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
-      </relation>       
+      </relation>
       <relation type="one" fk-name="SHPMNT_CE_WUOM" title="Weight" rel-entity-name="Uom">
         <key-map field-name="weightUomId" rel-field-name="uomId"/>
       </relation>

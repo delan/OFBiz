@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.9 2003/11/19 06:52:16 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.10 2003/11/20 21:13:26 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.ModelService;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -198,6 +198,7 @@ public class ProductStoreWorker {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get ProductStoreSurveyAppl for store : " + productStoreId, module);
         }
+        storeSurveys = EntityUtil.filterByDate(storeSurveys);
         if (storeSurveys != null && storeSurveys.size() > 0) {
             Iterator ssi = storeSurveys.iterator();
             while (ssi.hasNext()) {
