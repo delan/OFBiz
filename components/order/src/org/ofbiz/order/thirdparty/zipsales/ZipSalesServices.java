@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.12 2004/02/12 05:07:17 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.13 2004/02/12 15:22:43 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -282,24 +282,47 @@ public class ZipSalesServices {
         // the filtered list
         List taxLookup = null;
 
-        // first filter by city
-        if (zipLookup != null && zipLookup.size() > 0) {
-            taxLookup = EntityUtil.filterByAnd(zipLookup, UtilMisc.toMap("city", city.toUpperCase()));
-        }
-
-        // no city get the main default
-        if (taxLookup == null) {
-            taxLookup = EntityUtil.filterByAnd(zipLookup, UtilMisc.toMap("generalDefault", "Y"));
-        } else {
-            // now filter the county default since we don't track counties
-            if (taxLookup != null && taxLookup.size() > 1) {
-                taxLookup = EntityUtil.filterByAnd(taxLookup, UtilMisc.toMap("countyDefault", "Y"));
+        // only do filtering if there are more then one zip code found
+        if (zipLookup != null && zipLookup.size() > 1) {
+            // first filter by city
+            List cityLookup = EntityUtil.filterByAnd(zipLookup, UtilMisc.toMap("city", city.toUpperCase()));
+            if (cityLookup != null && cityLookup.size() > 0) {
+                if (cityLookup.size() > 1) {
+                    // filter by county
+                    List countyLookup = EntityUtil.filterByAnd(taxLookup, UtilMisc.toMap("countyDefault", "Y"));
+                    if (countyLookup != null && countyLookup.size() > 0) {
+                        // use the county default
+                        taxLookup = countyLookup;
+                    } else {
+                        // no county default; just use the first city
+                        taxLookup = cityLookup;
+                    }
+                } else {
+                    // just one city found; use that one
+                    taxLookup = cityLookup;
+                }
+            } else {
+                // no city found; lookup default city
+                List defaultLookup = EntityUtil.filterByAnd(zipLookup, UtilMisc.toMap("generalDefault", "Y"));
+                if (defaultLookup != null && defaultLookup.size() > 0) {
+                    // use the default city lookup
+                    taxLookup = defaultLookup;
+                } else {
+                    // no default found; just use the first from the zip lookup
+                    taxLookup = zipLookup;
+                }
             }
+        } else {
+            // zero or 1 zip code found; use it
+            taxLookup = zipLookup;
         }
 
-        // now filter by date
+        // if we have more then one taxLookup; filer by date
         if (taxLookup != null && taxLookup.size() > 1) {
-            taxLookup = EntityUtil.filterByDate(taxLookup);
+            List dateFiltered = EntityUtil.filterByDate(taxLookup);
+            if (dateFiltered != null && dateFiltered.size() > 0) {
+                taxLookup = dateFiltered;
+            }
         }
 
         // get the first one
