@@ -13,7 +13,7 @@
   <div class="col"><a href="<ofbiz:url>/tasklist</ofbiz:url>" class="headerButtonLeft">Order&nbsp;List</a></div>
   <%}%>
   <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
-  <div class="col"><a href="<ofbiz:url>/orderlist</ofbiz:url>" class="headerButtonLeft">Find&nbsp;Orders</a></div>
+  <div class="col"><a href="<ofbiz:url>/findorders</ofbiz:url>" class="headerButtonLeft">Find&nbsp;Orders</a></div>
   <%}%>
   <%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
   <div class="col"><a href="<ofbiz:url>/orderentry?mode=SALES_ORDER</ofbiz:url>" class="headerButtonLeft">Sale&nbsp;Entry</a></div>
