@@ -8,10 +8,9 @@ margin-left: 0px;
 }
 
 .centerarea {
-margin-top: 10px;
-margin-bottom: 10px;
 margin-left: 10px;
 margin-right: 10px;
+margin-top: 10px;
 }
 
 .contentarea,.whitearea {
@@ -90,7 +89,39 @@ color: #000099;
 .apptitle {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 background-color: #000099;	
+line-height: 2;
 font-size: 8pt;
 font-weight: bold;
 color: #FFFFFF;	
 }
+
+DIV.row {  
+background-color: #B4B0AA;
+margin-top: 0; margin-right: auto; margin-bottom: 0; margin-left: auto;
+padding: 0; text-align: center;
+}
+
+DIV.col {
+border: none; float: left; margin: 0; padding: 0; width: auto;
+}
+
+DIV.col-fill {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 10px; font-weight: bold; text-decoration: none;
+background-color: #B4B0AA; color: #000099;
+margin: 0; padding: 0; border: none; float: center; width: 0;
+}
+
+DIV.col-right {
+border: none; float: right; margin: 0; padding: 0; width: auto;
+}
+
+DIV.contentarea {
+background-color: #FFFFFF;
+border: solid black 1px;
+margin-top: 10px;
+padding: 10px;
+}
+
+
+

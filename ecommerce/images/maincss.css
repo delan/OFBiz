@@ -356,6 +356,7 @@ background-color: #B4B0AA;
 border-left: solid white 1px;
 padding-right: 10px;
 padding-left: 10px;
+text-align: right;
 }
 
 .headerButtonRight:hover {
