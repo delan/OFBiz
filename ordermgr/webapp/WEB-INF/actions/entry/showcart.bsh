@@ -31,13 +31,6 @@ import org.ofbiz.commonapp.product.promo.ProductPromoWorker;
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 
-mode = session.getAttribute("mode");
-if (mode == null) {
-    mode = request.getParameter("mode");
-    session.setAttribute("mode", mode);
-}
-context.put("mode", mode);
-
 // Get the Cart and Prepare Size
 shoppingCart = ShoppingCartEvents.getCartObject(request);
 context.put("shoppingCartSize", shoppingCart.size());
@@ -49,10 +42,10 @@ if (mode != null) {
     shoppingCart.setOrderType(mode);
 }
 mode = shoppingCart.getOrderType();
-if (mode.equals("SALES_ORDER")) context.put("modeStr", "Sales");
-if (mode.equals("PURCHASE_ORDER")) context.put("modeStr", "Purchase");
+if (mode != null && mode.equals("SALES_ORDER")) context.put("modeStr", "Sales");
+if (mode != null && mode.equals("PURCHASE_ORDER")) context.put("modeStr", "Purchase");
 
-if (mode.equals("SALES_ORDER")) {
+if (mode != null && mode.equals("SALES_ORDER")) {
     // Get Cart Associated Products Data
     associatedProducts = CatalogWorker.getRandomCartProductAssoc(request, true);
     if (associatedProducts != null) 

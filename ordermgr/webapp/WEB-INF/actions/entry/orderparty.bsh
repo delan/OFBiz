@@ -24,6 +24,8 @@
  *@since      2.2
 */
 
+import org.ofbiz.commonapp.party.party.PartyWorker;
+
 partyId = request.getParameter("partyId");
 if (partyId != null) {
     session.setAttribute("orderPartyId", partyId);  
@@ -33,3 +35,14 @@ if (partyId != null) {
 if (partyId == null) session.setAttribute("orderPartyId", "_NA_");
 if (partyId != null && partyId.equals("_NA_")) partyId = null;
 context.put("partyId", partyId);  
+
+if (partyId != null) {
+    partyMap = PartyWorker.getPartyOtherValues(request, partyId, "party", "person", "partyGroup");
+    if (partyMap != null) {
+        iter = partyMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            entry = iter.next();
+            context.put(entry.getKey(), entry.getValue());
+        }
+    }
+}

@@ -97,14 +97,31 @@ function addToList() {
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform" style='margin: 0;'>
-              <input type='text' class='inputBox' name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
-              <input type='text' class='inputBox' size="5" name="quantity" value="${requestParameters.quantity?default("1")}">
+           <div class="tabletext"><b>Product Entry:</b></div>
+            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>
+              <input type='text' class='inputBox' size='20' name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
+              <input type='text' class='inputBox' size='5' name="quantity" value="${requestParameters.quantity?default("1")}">
               <input type='submit' value="Add To Order">
               <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> -->
             </form>
           </td>
         </tr>
+        <tr><td><hr class="sepbar"></td></tr>
+        <tr>
+          <td>
+           <div class="tabletext"><b>Non-Product Entry:</b></div>
+            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>
+              <select name="itemType" class="selectBox">
+                <option value="BULK_ITEM">Bulk Item</option>
+                <option value="WORK_ITEM">Work Item</option>
+              </select>
+              <input type='text' class='inputBox' size='40' name="add_product_desc" value="${requestParameters.add_product_description?if_exists}">
+              <input type='text' class='inputBox' size="5" name="quantity" value="${requestParameters.quantity?default("1")}">
+              <input type='submit' value="Add To Order">
+              <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> -->
+            </form>
+          </td>
+        </tr>        
       </table>
     </TD>
   </TR>
