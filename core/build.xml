@@ -166,7 +166,7 @@
             <src path="${src.dir}/workflow" /></javac>
         <copy todir="${build.dir}/workflow"><fileset dir="${src.dir}/workflow" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share">
+    	<javac debug="on" destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share:${build.dir}/entity">
             <src path="${src.dir}/rules" /></javac>
         <copy todir="${build.dir}/rules"><fileset dir="${src.dir}/rules" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
