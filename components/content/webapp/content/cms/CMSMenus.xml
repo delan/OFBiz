@@ -32,7 +32,7 @@
         default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN"
         default-associated-content-id="${userLogin.userLoginId}"
-        selected-menuitem-context-field-name="tabButtonItem"
+        selected-menuitem-context-field-name="currentCMSMenuItemName"
         title="" type="simple">
 
 

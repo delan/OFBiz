@@ -1183,7 +1183,9 @@
             <exclude field-name="contentIdStart"/>
         </auto-attributes>
         <attribute mode="IN" name="assocTypes" optional="true" type="List"/>
+        <attribute mode="IN" name="assocTypesString" optional="true" type="String"/>
         <attribute mode="IN" name="contentTypes" optional="true" type="List"/>
+        <attribute mode="IN" name="contentTypesString" optional="true" type="String"/>
         <attribute mode="IN" name="mapKey" optional="true" type="String"/>
         <attribute mode="IN" name="contentId" optional="true" type="String"/>
         <attribute mode="IN" name="direction" optional="true" type="String"/>
@@ -1193,6 +1195,7 @@
         <attribute mode="IN" name="thruDate" optional="true" type="Timestamp"/>
         <attribute name="nullThruDatesOnly" type="Boolean" mode="IN" optional="true"/>
         <attribute mode="IN" name="contentAssocPredicateId" optional="true" type="String"/>
+        <attribute mode="IN" name="contentIdFrom" optional="true" type="String"/>
         <attribute mode="OUT" name="entityList" optional="true" type="List"/>
         <attribute mode="OUT" name="view" optional="true" type="org.ofbiz.entity.GenericValue"/>
     </service>
@@ -1384,7 +1387,7 @@
         <attribute mode="IN" name="newTopicDescription" optional="true" type="String"/>
     </service>
 
-  <service auth="true" engine="java" name="updateSiteRoles"
+  <service name="updateSiteRoles" auth="true" engine="java" 
     location="org.ofbiz.content.ContentManagementServices" invoke="updateSiteRoles">
     <description>Update site roles</description>
     <attribute mode="IN" name="partyId" optional="true" type="String"/>
@@ -1401,7 +1404,7 @@
     <attribute mode="IN" name="blogPublisherFromDate" optional="true" type="Timestamp"/>
   </service>
 
-  <service engine="java" name="linkContentToPubPt"
+  <service name="linkContentToPubPt" engine="java" 
     location="org.ofbiz.content.content.ContentServices" invoke="linkContentToPubPt" auth="true" >
     <description>Attach content to publish point</description>
     <attribute mode="IN" name="contentId" optional="false" type="String"/>
@@ -1413,7 +1416,7 @@
     <attribute mode="IN" name="mapKey" optional="true" type="String"/>
   </service>
 
-  <service auth="true" engine="java" name="updateSiteRolesDyn" validate="false"
+  <service name="updateSiteRolesDyn" auth="true" engine="java" validate="false"
     location="org.ofbiz.content.ContentManagementServices" invoke="updateSiteRolesDyn">
     <description>Update site roles</description>
     <attribute mode="IN" name="partyId" optional="true" type="String"/>
@@ -1436,7 +1439,7 @@
         <attribute name="fieldValue0" type="String" mode="IN" optional="true"/>
     </service>
 
-  <service auth="true" engine="java" name="indexTree" validate="true"
+  <service name="indexTree" auth="true" engine="java" validate="true"
         transaction-timout="72000" 
         location="org.ofbiz.content.search.SearchServices" invoke="indexTree">
     <description>Index content under publish point</description>
@@ -1444,7 +1447,7 @@
     <attribute mode="OUT" name="badIndexList" optional="true" type="List"/>
     <attribute mode="OUT" name="goodIndexCount" optional="true" type="Integer"/>
   </service>
-  <service auth="true" engine="java" name="resequence" validate="true"
+  <service name="resequence" auth="true" engine="java" validate="true"
         transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="resequence">
     <description>Reorder sequence numbers in ContentAssoc entities for a given parent id</description>
@@ -1460,7 +1463,7 @@
     <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
   </service>
 
-  <service auth="true" engine="java" name="updatePageType" validate="true"
+  <service name="updatePageType" auth="true" engine="java" validate="true"
         transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="updatePageType">
     <description>Change contentTypeId to OUTLINE/PAGE/SUBPAGE_NODE</description>
@@ -1468,7 +1471,7 @@
     <attribute mode="IN" name="pageMode" optional="true" type="String"/>
   </service>
 
-  <service auth="true" engine="java" name="resetToOutlineMode" validate="true"
+  <service name="resetToOutlineMode" auth="true" engine="java" validate="true"
         transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="resetToOutlineMode">
     <description>Set content and kids to OUTLINE_NODE</description>
@@ -1476,20 +1479,20 @@
     <attribute mode="IN" name="pageMode" optional="true" type="String"/>
   </service>
 
-  <service auth="true" engine="java" name="clearContentAssocViewCache" validate="true"
+  <service name="clearContentAssocViewCache" auth="true" engine="java" validate="true"
         transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="clearContentAssocViewCache">
     <description>Clear cache</description>
   </service>
 
-  <service auth="true" engine="java" name="clearContentAssocDataResourceViewCache" validate="true"
+  <service name="clearContentAssocDataResourceViewCache" auth="true" engine="java" validate="true"
         transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="clearContentAssocDataResourceViewCache">
     <description>Clear cache</description>
   </service>
 
 
-  <service auth="false" engine="java" name="findSubNodes" validate="true"
+  <service name="findSubNodes" auth="false" engine="java" validate="true"
         transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="findSubNodes">
     <description>Get children of content</description>
@@ -1573,5 +1576,33 @@
         location="org.ofbiz.content.content.ContentServices" invoke="publishContent">
         <description>Change statusId to published (BLOG_PUBLISHED)</description>
         <attribute mode="IN" name="content" optional="false" type="GenericValue"/>
+    </service>
+    <!-- these three services are for use in screen widget files -->
+    <service name="getPrefixedMembers" auth="false" engine="java" transaction-timout="72000" 
+        location="org.ofbiz.content.content.ContentServices" invoke="getPrefixedMembers">
+        <description>Gets all the members of the input map that start with the prefix</description>
+        <attribute mode="IN" name="mapIn" optional="true" type="java.util.Map"/>
+        <attribute name="prefix" type="String" mode="IN" optional="false"/>
+        <attribute mode="OUT" name="mapOut" optional="true" type="java.util.Map"/>
+    </service>
+    <service name="splitString" auth="false" engine="java" transaction-timout="72000" 
+        location="org.ofbiz.content.content.ContentServices" invoke="splitString">
+        <description>Splits input string </description>
+        <attribute name="inputString" type="String" mode="IN" optional="true"/>
+        <attribute name="delimiter" type="String" mode="IN" optional="true"/>
+        <attribute mode="OUT" name="outputList" optional="true" type="java.util.List"/>
+    </service>
+    <service name="joinString" auth="false" engine="java" transaction-timout="72000" 
+        location="org.ofbiz.content.content.ContentServices" invoke="joinString">
+        <description>Splits input string </description>
+        <attribute name="inputList" type="java.util.List" mode="IN" optional="false"/>
+        <attribute name="delimiter" type="String" mode="IN" optional="true"/>
+        <attribute mode="OUT" name="outputString" optional="true" type="String"/>
+    </service>
+    <service name="urlEncodeArgs" auth="false" engine="java" transaction-timout="72000" 
+        location="org.ofbiz.content.content.ContentServices" invoke="urlEncodeArgs">
+        <description>URL encodes map</description>
+        <attribute name="mapIn" type="java.util.Map" mode="IN" optional="false"/>
+        <attribute mode="OUT" name="outputString" optional="true" type="String"/>
     </service>
 </services>

@@ -225,7 +225,7 @@
       <alias-all entity-alias="CO" />
       <alias-all entity-alias="DR" prefix="dr"/>
       <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
-      <view-link entity-alias="CA" rel-entity-alias="CO">
+      <view-link entity-alias="CA" rel-entity-alias="CO" rel-optional="true">
         <key-map field-name="contentIdTo" rel-field-name="contentId"/>
       </view-link>
       <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="true">

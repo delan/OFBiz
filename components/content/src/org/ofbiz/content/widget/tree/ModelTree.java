@@ -206,6 +206,10 @@ public class ModelTree {
     	return trail;
     }
     
+    public void setTrailList(List trailList) {
+    	this.trail = trailList;
+    }
+    
     public List getCurrentNodeTrail() {
     	return currentNodeTrail;
     }
@@ -252,6 +256,8 @@ public class ModelTree {
             context.put("rootEntityId", trail.get(0));
             context.put(pkName, trail.get(0));
             context.put("targetNodeTrail", trail);
+        } else {
+                Debug.logError("Trail value is empty.", module);
         }
         StringWriter writer = new StringWriter();
         try {

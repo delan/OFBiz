@@ -1381,6 +1381,7 @@ public class ContentPermissionServices {
         public void init(GenericDelegator delegator, String entityId, String partyId, GenericValue entity) throws GenericEntityException;
         public void initWithAncestors(GenericDelegator delegator, GenericValue entity, String partyId) throws GenericEntityException;
         public List getList();
+        public void setList(List lst);
         public String dumpAsText();
         public boolean isOwner(GenericValue entity, String targetPartyId);
     }

@@ -72,7 +72,7 @@ public class ScreenFopPdfViewHandler extends ScreenWidgetViewHandler {
             throw new ViewHandlerException("Problems with the response writer/output stream", t);
         }
         if (Debug.verboseOn()) {
-            Debug.logVerbose("XSL-FO : " + writer.toString(), module);
+           // Debug.logVerbose("XSL-FO : " + writer.toString(), module);
         }
         
         // configure logging for the FOP
@@ -84,6 +84,16 @@ public class ScreenFopPdfViewHandler extends ScreenWidgetViewHandler {
         driver.setRenderer(Driver.RENDER_PDF);
         driver.setLogger(logger);
                                         
+        /*
+        try {
+            String buf = writer.toString();
+            java.io.FileWriter fw = new java.io.FileWriter(new java.io.File("/tmp/xslfo.out"));
+            fw.write(buf.toString());
+            fw.close();
+        } catch (IOException e) {
+            throw new ViewHandlerException("Unable write to browser OutputStream", e);            
+        }                             
+        */
         // read the XSL-FO XML Document
         Document xslfo = null;
         try {

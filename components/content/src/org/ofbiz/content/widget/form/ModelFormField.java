@@ -1920,6 +1920,7 @@ public class ModelFormField {
         protected Integer maxlength;
         protected FlexibleStringExpander defaultValue;
         protected SubHyperlink subHyperlink;
+        protected boolean disabled;
 
         protected TextField() {
             super();
@@ -1957,6 +1958,8 @@ public class ModelFormField {
                         module);
                 }
             }
+            
+            this.disabled = "true".equals(element.getAttribute("disabled"));
 
             Element subHyperlinkElement = UtilXml.firstChildElement(element, "sub-hyperlink");
             if (subHyperlinkElement != null) {
@@ -1981,6 +1984,18 @@ public class ModelFormField {
         public int getSize() {
             return size;
         }
+        
+        /**
+         * @return
+         */
+        public boolean getDisabled() {
+            return this.disabled;
+        }
+        
+        public void setDisabled(boolean b) {
+            this.disabled = b;   
+        }
+
 
         /**
          * @return
@@ -2490,10 +2505,12 @@ public class ModelFormField {
 
     public static class LookupField extends TextField {
         protected String formName;
+        protected String descriptionFieldName;
 
         public LookupField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
             this.formName = element.getAttribute("target-form-name");
+            this.descriptionFieldName = element.getAttribute("description-field-name");
         }
 
         public LookupField(int fieldSource, ModelFormField modelFormField) {
@@ -2510,6 +2527,14 @@ public class ModelFormField {
 
         public void setFormName(String str) {
             this.formName = str;
+        }
+        
+        public String getDescriptionFieldName() {
+            return this.descriptionFieldName;
+        }
+
+        public void setDescriptionFieldName(String str) {
+            this.descriptionFieldName = str;
         }
     }
 

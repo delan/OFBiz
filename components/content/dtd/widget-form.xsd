@@ -154,6 +154,14 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <!-- not sure this is such a good idea
+        <xs:attribute type="xs:string" name="hidden-values-map-name">
+            <xs:annotation><xs:documentation>A map that contains hidden field name/value pairs. 
+            The reason for this is to eliminate the need to code custom forms so that auxiliary, passthru data can be sent to the server.
+            By doing it this way, more standard forms can be used.
+</xs:documentation></xs:annotation>
+        </xs:attribute>
+        -->
     </xs:attributeGroup>
     <xs:element name="alt-target">
         <xs:complexType>
@@ -558,6 +566,7 @@
         <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
         <xs:attribute type="xs:positiveInteger" name="maxlength"/>
         <xs:attribute type="xs:string" name="default-value"/>
+        <xs:attribute type="xs:string" name="description-field-name"/>
     </xs:attributeGroup>
     <xs:element name="password" substitutionGroup="AllFields">
         <xs:complexType>
@@ -630,6 +639,14 @@
         <xs:attribute type="xs:positiveInteger" name="size" default="25"/>
         <xs:attribute type="xs:positiveInteger" name="maxlength"/>
         <xs:attribute type="xs:string" name="default-value"/>
+        <xs:attribute name="disabled" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="textarea" substitutionGroup="AllFields">
         <xs:complexType>

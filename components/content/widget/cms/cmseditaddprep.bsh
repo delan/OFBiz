@@ -65,7 +65,6 @@ import javax.servlet.http.*;
 
 delegator = (GenericDelegator) request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
-paramMap = UtilHttp.getParameterMap(request);
 contentAssocDataResourceViewFrom = delegator.makeValue("ContentAssocDataResourceViewFrom", null);
 
 //singleWrapper = context.get("singleWrapper");
@@ -73,54 +72,64 @@ contentAssocDataResourceViewFrom = delegator.makeValue("ContentAssocDataResource
 //context.put("targetOperation", page.getProperty("targetOperation"));
 //context.put("entityOperation", page.getProperty("entityOperation"));
 
-previousParams = request.getAttribute("previousParams");
-if (previousParams == null) {
-    contentId = paramMap.get("contentId");
-    subContentId = paramMap.get("subContentId");
-    if (UtilValidate.isEmpty(contentId) && UtilValidate.isNotEmpty(subContentId)) {
-        contentId = subContentId;
-    }
-    paramMap.put("contentId", contentId);
+    contentId = context.get("contentId");
     
     contentAssocPK = delegator.makeValue("ContentAssoc", null);
-    contentAssocPK.setAllFields(paramMap, false, null, new Boolean(true));
+    contentAssocPK.setAllFields(context, false, "ca", new Boolean(true));
+    Debug.logInfo("in cmseditaddprep, contentAssocPK:" + contentAssocPK,"");
+        //Debug.logInfo("in cmseditaddprep, context:" + context,"");
     contentAssoc = null;
-    if (contentAssocPK.isPrimaryKey())
+    if (contentAssocPK.isPrimaryKey()) {
         contentAssoc = delegator.findByPrimaryKeyCache("ContentAssoc", contentAssocPK);
-    if (contentAssoc != null)
+    }
+    if (contentAssoc != null) {
         SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocOut", contentAssoc, contentAssocDataResourceViewFrom, new ArrayList(), Locale.getDefault());
-    else
+    } else {
+        contentAssocPK.setAllFields(context, false, "ca", null); //set all field, pk and non
         SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocOut", contentAssocPK, contentAssocDataResourceViewFrom, new ArrayList(), Locale.getDefault());
+    }
         
     Debug.logInfo("in cmseditaddprep, contentAssocDataResourceViewFrom:" + contentAssocDataResourceViewFrom,"");
-    contentIdTo = paramMap.get("contentIdTo");
-    mapKey = paramMap.get("mapKey");
+    /*
+    contentIdTo = context.get("contentIdTo");
+    mapKey = context.get("mapKey");
     contentAssocDataResourceViewFrom.put("caMapKey", mapKey);
-    contentAssocTypeId = paramMap.get("contentAssocTypeId");
+    contentAssocTypeId = context.get("contentAssocTypeId");
+    */
     
     dataResourceId = "";
     textData = "";
+    content = null;
     if (UtilValidate.isNotEmpty(contentId)) {
         content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
     
         if (content != null) {
             contentAssocDataResourceViewFrom.setAllFields(content, false, null, null);
-            dataResourceId = content.getString("dataResourceId");
-            if (UtilValidate.isNotEmpty(dataResourceId)) {
-                dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
-                SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", dataResource, contentAssocDataResourceViewFrom, new ArrayList(), Locale.getDefault());
-                templateRoot = new HashMap();
-                FreeMarkerViewHandler.prepOfbizRoot(templateRoot, request, response);
-                //txt = DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, templateRoot, null, null, null);
-                txt = DataResourceWorker.getDataResourceTextCache(dataResource, "text/html", Locale.getDefault(), templateRoot, delegator);
-
-                if (UtilValidate.isNotEmpty(txt)) {
-                    textData = UtilFormatOut.encodeXmlValue(txt);
-                }
-            }
         }
     } else {
         contentAssocDataResourceViewFrom.set("contentTypeId", "DOCUMENT");
+    }
+    
+    if (content != null) {
+       dataResourceId = content.getString("dataResourceId");
+    }
+    if (UtilValidate.isEmpty(dataResourceId)) {
+        dataResourceId = (String)context.get("drDataResourceId");
+        if (UtilValidate.isEmpty(dataResourceId)) {
+            dataResourceId = (String)context.get("dataResourceId");
+        }
+    }
+    if (UtilValidate.isNotEmpty(dataResourceId)) {
+       dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+       SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", dataResource, contentAssocDataResourceViewFrom, new ArrayList(), Locale.getDefault());
+       templateRoot = new HashMap();
+       FreeMarkerViewHandler.prepOfbizRoot(templateRoot, request, response);
+       //txt = DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, templateRoot, null, null, null);
+       txt = DataResourceWorker.getDataResourceTextCache(dataResource, "text/html", Locale.getDefault(), templateRoot, delegator);
+
+       if (UtilValidate.isNotEmpty(txt)) {
+           textData = UtilFormatOut.encodeXmlValue(txt);
+       }
     }
     Debug.logInfo("in cmseditaddprep, textData:" + textData,"");
     currentValue = new HashMap(contentAssocDataResourceViewFrom);
@@ -129,11 +138,8 @@ if (previousParams == null) {
     //singleWrapper.putInContext("currentValue", contentAssocDataResourceViewFrom);
     context.put("currentValue", currentValue);
     request.setAttribute("previousParams", currentValue);
-} else {
-    context.put("currentValue", previousParams);
-}
 
-persistAction = paramMap.get("persistAction");
+persistAction = context.get("persistAction");
 if (UtilValidate.isEmpty(persistAction))
     persistAction = "persistContent";
 context.put("persistAction", persistAction);
