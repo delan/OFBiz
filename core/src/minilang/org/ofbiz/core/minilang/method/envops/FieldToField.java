@@ -80,7 +80,7 @@ public class FieldToField extends MethodOperation {
         }
 
         if (fieldVal == null) {
-            Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
+            Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
             return true;
         }
         
