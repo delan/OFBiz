@@ -105,6 +105,7 @@
       <ofbiz:iterator name="step" property="activities">
         <% 
             List assignments = step.getRelated("WorkEffortPartyAssignment");
+			assignments = EntityUtil.filterByDate(assignments);
             Iterator assignmentIterator = assignments.iterator();
         %>
         
