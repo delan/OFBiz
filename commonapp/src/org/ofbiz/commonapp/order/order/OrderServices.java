@@ -158,25 +158,23 @@ public class OrderServices {
                 UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
                 "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
         
-        String creditCardId = (String) context.get("creditCardId");
-        if (creditCardId != null) {
+        String paymentMethodId = (String) context.get("paymentMethodId");
+        if (paymentMethodId != null) {
             toBeStored.add(delegator.makeValue("OrderPaymentPreference",
                     UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                    "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentInfoId", creditCardId)));
-        }
-        else {
+                    "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentMethodId", paymentMethodId)));
+        } else {
             //XXX CASH should not be assumed!!
             toBeStored.add(delegator.makeValue("OrderPaymentPreference",
                     UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                    "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentInfoId", creditCardId)));
+                    "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentMethodId", paymentMethodId)));
         }
         
         try {
             delegator.storeAll(toBeStored);
             result.put("orderId",orderId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        }
-        catch(GenericEntityException e) {
+        } catch(GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not create order (write error: " + e.getMessage() + ").");
         }

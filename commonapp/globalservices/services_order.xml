@@ -27,7 +27,7 @@
         <attribute name="shipmentMethodTypeId" type="String" mode="IN"/>
         <attribute name="carrierPartyId" type="String" mode="IN"/>
         <attribute name="maySplit" type="Boolean" mode="IN"/>
-        <attribute name="creditCardId" type="String" mode="IN"/>
+        <attribute name="paymentMethodId" type="String" mode="IN"/>
         <attribute name="orderId" type="String" mode="OUT"/>
     </service>
     <service name="changeOrderStatus" engine="java"
