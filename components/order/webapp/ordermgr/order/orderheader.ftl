@@ -222,6 +222,7 @@
                   <td>
                     <table width="100%" border="0" cellpadding="1" cellspacing="0">
                     <#list orderPaymentPreferences as orderPaymentPreference>
+                      <#assign oppStatusItem = orderPaymentPreference.getRelatedOne("StatusItem")>
                       <#if outputted?default("false") == "true">
                         <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       </#if>
@@ -240,7 +241,10 @@
                             <td width="5">&nbsp;</td>
                             <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE">
                               <td align="left">
-                                <div class="tabletext"><@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/></div>
+                                <div class="tabletext">
+                                  <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
+                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                </div>
                                 <#--
                                 <div class="tabletext"><@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())?if_exists}</div>
                                 <div class="tabletext">&nbsp;<#if orderPaymentPreference.authRefNum?exists>(Ref: ${orderPaymentPreference.authRefNum})</#if></div>
@@ -265,7 +269,6 @@
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
-                              <#assign oppStatusItem = orderPaymentPreference.getRelatedOne("StatusItem")>
                               <div class="tabletext">
                                 <#if creditCard?has_content>
                                   <#if creditCard.companyNameOnCard?exists>${creditCard.companyNameOnCard}<br></#if>
@@ -340,7 +343,6 @@
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
-                              <#assign oppStatusItem = orderPaymentPreference.getRelatedOne("StatusItem")>
                               <div class="tabletext">
                                 <#if giftCard?has_content>
                                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
