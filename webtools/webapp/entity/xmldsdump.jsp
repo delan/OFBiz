@@ -41,9 +41,8 @@
 <%if (tobrowser) {%>
 <%
     session.setAttribute("xmlrawdump_entitylist", entityName);
-%>
-    <br>
-    <h2>XML Export from DataSource(s)</h2>
+%>   
+    <h3>XML Export from DataSource(s)</h3>
     <div>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
     <hr>
     <%if(security.hasPermission("ENTITY_MAINT", session)) {%>
@@ -99,9 +98,8 @@
     UtilXml.writeXmlDocument(filename, document);
 */
   }
-%>
-    <br>
-    <h2>XML Export from DataSource(s)</h2>
+%>    
+    <h3>XML Export from DataSource(s)</h3>
     <div>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
     <hr>
     <%if(security.hasPermission("ENTITY_MAINT", session)) {%>
@@ -119,7 +117,7 @@
     
       <h3>Export:</h3>
       <FORM method=POST action='<ofbiz:url>/xmldsdump</ofbiz:url>'>
-        <div>Filename: <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
+        <div>Filename: <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
         <div>OR Out to Browser: <INPUT type=checkbox name='tobrowser' <%=tobrowser?"checked":""%>></div>
         <br>
         <div>Entity Names:</div>

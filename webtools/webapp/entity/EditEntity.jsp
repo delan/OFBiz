@@ -234,11 +234,11 @@ A.listtext:hover {color:red;}
 <%}%>
 
 <FORM method=POST action='<ofbiz:url>/view/EditEntity</ofbiz:url>' style='margin: 0;'>
-  <INPUT type=TEXT size='30' name='entityName'>
+  <INPUT type=TEXT class='inputBox' size='30' name='entityName'>
   <INPUT type=SUBMIT value='Edit Specified Entity'>
 </FORM>
 <FORM method=POST action='<ofbiz:url>/view/EditEntity</ofbiz:url>' style='margin: 0;'>
-  <SELECT name='entityName'>
+  <SELECT name='entityName' class='selectBox'>
     <OPTION selected>&nbsp;</OPTION>
     <%Iterator entIter1 = entSet.iterator();%>
     <%while (entIter1.hasNext()) {%>
@@ -249,8 +249,8 @@ A.listtext:hover {color:red;}
 </FORM>
 <hr>
 <FORM method=POST action='<ofbiz:url>/view/EditEntity?event=addEntity</ofbiz:url>' style='margin: 0;'>
-  Entity Name (Java style): <INPUT type=TEXT size='60' name='entityName'><br>
-  Entity Group: <INPUT type=TEXT size='60' name='entityGroup' value='org.ofbiz.commonapp'>
+  Entity Name (Java style): <INPUT type=TEXT class='inputBox' size='60' name='entityName'><br>
+  Entity Group: <INPUT type=TEXT size='60' class='inputBox' name='entityGroup' value='org.ofbiz.commonapp'>
   <INPUT type=SUBMIT value='Create Entity'>
 </FORM>
 <hr>
@@ -275,17 +275,17 @@ A.listtext:hover {color:red;}
   <%if (modelViewEntity == null) {%>
     <TR>
       <TD>Table Name</TD>
-      <TD><INPUT type=text size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.getTableName())%>'></TD>
+      <TD><INPUT type=text class='inputBox' size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.getTableName())%>'></TD>
     </TR>
   <%}%>
   <TR>
     <TD>Package Name</TD>
-    <TD><INPUT type=text size='60' name='packageName' value='<%=entity.getPackageName()%>'></TD>
+    <TD><INPUT type=text class='inputBox' size='60' name='packageName' value='<%=entity.getPackageName()%>'></TD>
   </TR>
   <TR>
     <TD>Dependent On Entity</TD>
     <TD>
-      <SELECT name='dependentOn'>
+      <SELECT name='dependentOn' class='selectBox'>
         <OPTION selected><%=entity.getDependentOn()%></OPTION>
         <OPTION></OPTION>
         <%Iterator depIter = entSet.iterator();%>
@@ -297,39 +297,39 @@ A.listtext:hover {color:red;}
   </TR>
   <TR>
     <TD>Title</TD>
-    <TD><INPUT type=text size='60' name='title' value='<%=entity.getTitle()%>'></TD>
+    <TD><INPUT type=text class='inputBox' size='60' name='title' value='<%=entity.getTitle()%>'></TD>
   </TR>
   <TR>
     <TD>Description</TD>
-    <TD><TEXTAREA cols='60' rows='5' name='description'><%=entity.getDescription()%></TEXTAREA></TD>
+    <TD><TEXTAREA cols='60' class='textAreaBox' rows='5' name='description'><%=entity.getDescription()%></TEXTAREA></TD>
   </TR>
   <TR>
     <TD>Copyright</TD>
-    <TD><INPUT type=text size='60' name='copyright' value='<%=entity.getCopyright()%>'></TD>
+    <TD><INPUT type=text class='inputBox' size='60' name='copyright' value='<%=entity.getCopyright()%>'></TD>
   </TR>
   <TR>
     <TD>Author</TD>
-    <TD><INPUT type=text size='60' name='author' value='<%=entity.getAuthor()%>'></TD>
+    <TD><INPUT type=text class='inputBox' size='60' name='author' value='<%=entity.getAuthor()%>'></TD>
   </TR>
   <TR>
     <TD>Version</TD>
-    <TD><INPUT type=text size='60' name='version' value='<%=entity.getVersion()%>'></TD>
+    <TD><INPUT type=text class='inputBox' size='60' name='version' value='<%=entity.getVersion()%>'></TD>
   </TR>
   <TR>
     <TD>Group</TD>
     <TD>
-      <INPUT type=text size='60' name='entityGroup' value='<%=UtilFormatOut.checkNull(delegator.getModelGroupReader().getEntityGroupName(entityName))%>'>
+      <INPUT type=text class='inputBox' size='60' name='entityGroup' value='<%=UtilFormatOut.checkNull(delegator.getModelGroupReader().getEntityGroupName(entityName))%>'>
       <BR>(This group is for the "<%=delegator.getDelegatorName()%>" delegator)
     </TD>
   </TR>
   <%boolean isFile = entityResourceHandler == null ? true : entityResourceHandler.isFileResource();%>
   <TR>
     <TD>Resource Loader</TD>
-    <TD><INPUT type=text size='20' name='loaderName' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLoaderName())%>'<%if(!isFile){%> disabled<%}%>></TD>
+    <TD><INPUT type=text class='inputBox' size='20' name='loaderName' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLoaderName())%>'<%if(!isFile){%> disabled<%}%>></TD>
   </TR>
   <TR>
     <TD>Location</TD>
-    <TD><INPUT type=text size='60' name='location' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLocation())%>'<%if(!isFile){%> disabled<%}%>></TD>
+    <TD><INPUT type=text class='inputBox' size='60' name='location' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLocation())%>'<%if(!isFile){%> disabled<%}%>></TD>
   </TR>
   </TABLE>
   <INPUT type=submit value='Update Entity'>
@@ -349,7 +349,7 @@ A.listtext:hover {color:red;}
         <TD>
           <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&fieldName=<%=field.getName()%>&event=updateField</ofbiz:url>' style='margin: 0;'>
             <INPUT type=CHECKBOX name='primaryKey'<%=field.getIsPk()?" checked":""%>>
-            <SELECT name='fieldType'>
+            <SELECT name='fieldType' class='selectBox'>
               <OPTION selected><%=field.getType()%></OPTION>
               <%Iterator iter = UtilMisc.toIterator(types);%>
               <%while (iter != null && iter.hasNext()){ String typeName = (String)iter.next();%>
@@ -366,8 +366,8 @@ A.listtext:hover {color:red;}
 
 <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addField</ofbiz:url>'>
   Add new field with <u>Field Name (Java style)</u> and field type.<BR>
-  <INPUT type=text size='40' maxlength='30' name='name'>
-  <SELECT name='fieldType'>
+  <INPUT type=text class='inputBox' size='40' maxlength='30' name='name'>
+  <SELECT name='fieldType' class='selectBox'>
     <%Iterator iter = UtilMisc.toIterator(types);%>
     <%while (iter != null && iter.hasNext()){ String typeName = (String)iter.next();%>
       <OPTION><%=typeName%></OPTION>
@@ -393,8 +393,8 @@ A.listtext:hover {color:red;}
 
 <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addMemberEntity</ofbiz:url>'>
   Add new member entity with <u>Entity Alias*</u> and <u>Entity Name*</u>.<BR>
-  <INPUT type=text size='10' name='alias'>
-  <SELECT name='aliasedEntityName'>
+  <INPUT type=text class='inputBox' size='10' name='alias'>
+  <SELECT name='aliasedEntityName' class='selectBox'>
     <OPTION selected>&nbsp;</OPTION>
     <%Iterator entIter = entSet.iterator();%>
     <%while (entIter.hasNext()) {%>
@@ -443,9 +443,9 @@ A.listtext:hover {color:red;}
       <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=updateRelation&relNum=<%=r%></ofbiz:url>'>
         <td align="left"><%=relation.getTitle()%><A class='listtext' href='<ofbiz:url>/view/EditEntity?entityName=<%=relation.getRelEntityName()%></ofbiz:url>'><%=relation.getRelEntityName()%></A></td>
         <td>
-          <INPUT type=TEXT name='title' value='<%=relation.getTitle()%>'>
-          <INPUT type=TEXT name='fkName' value='<%=relation.getFkName()%>' size='18' maxlength='18'>
-          <SELECT name='type'>
+          <INPUT type=TEXT class='inputBox' name='title' value='<%=relation.getTitle()%>'>
+          <INPUT type=TEXT class='inputBox' name='fkName' value='<%=relation.getFkName()%>' size='18' maxlength='18'>
+          <SELECT name='type' class='selectBox'>
             <OPTION selected><%=relation.getType()%></OPTION>
             <OPTION>&nbsp;</OPTION>
             <OPTION>one</OPTION>
@@ -467,7 +467,7 @@ A.listtext:hover {color:red;}
           <td></td>
           <td colspan='2'>
             Main:
-            <SELECT name='fieldName'>
+            <SELECT name='fieldName' class='selectBox'>
               <OPTION selected><%=keyMap.getFieldName()%></OPTION>
               <OPTION>&nbsp;</OPTION>
               <%for (int fld=0; fld<entity.getFieldsSize(); fld++) {%>
@@ -475,7 +475,7 @@ A.listtext:hover {color:red;}
               <%}%>
             </SELECT>
             Related:
-            <SELECT name='relFieldName'>
+            <SELECT name='relFieldName' class='selectBox'>
               <OPTION selected><%=keyMap.getRelFieldName()%></OPTION>
               <OPTION>&nbsp;</OPTION>
               <%for (int fld=0; fld<relEntity.getFieldsSize(); fld++) {%>
@@ -495,17 +495,17 @@ A.listtext:hover {color:red;}
 
 <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addRelation</ofbiz:url>'>
   Add new relation with <u>Title</u>, <u>FK Name</u>, <u>Related Entity Name*</u> and <u>Relation Type*</u>.<BR>
-  <INPUT type=text size='30' maxlength='30' name='title'>
-  <INPUT type=text size='20' maxlength='18' name='fkName'>
+  <INPUT type=text class='inputBox' size='30' maxlength='30' name='title'>
+  <INPUT type=text class='inputBox' size='20' maxlength='18' name='fkName'>
   <%-- <INPUT type=text size='40' maxlength='30' name='relEntityName'> --%>
-  <SELECT name='relEntityName'>
+  <SELECT name='relEntityName' class='selectBox'>
     <OPTION selected>&nbsp;</OPTION>
     <%Iterator entIter = entSet.iterator();%>
     <%while (entIter.hasNext()) {%>
       <OPTION><%=(String)entIter.next()%></OPTION>
     <%}%>
   </SELECT>
-  <SELECT name='type'>
+  <SELECT name='type' class='selectBox'>
     <OPTION>one</OPTION>
     <OPTION>one-nofk</OPTION>
     <OPTION>many</OPTION>

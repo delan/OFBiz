@@ -45,14 +45,13 @@
         type = -1;
     }
 %>
-<br>
-<h2 style='margin:0;'>Server Statistic Bins History Page</h2>
+<h3 style='margin:0;'>Server Statistic Bins History Page</h3>
 <div><a href="<ofbiz:url>/StatsSinceStart</ofbiz:url>" class='buttontext'>Stats Since Server Start</A></div>
 <div class='tabletext'>Current Time: <%=UtilDateTime.nowTimestamp().toString()%></div>
 <%if (security.hasPermission("SERVER_STATS_VIEW", session)) {%>
 <%
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
+  String rowColor1 = "viewManyTR2";
+  String rowColor2 = "viewManyTR1";
   String rowColor = "";
 %>
 
@@ -70,7 +69,7 @@
 
     <%if (binList != null) {%>
         <TABLE border='0' cellpadding='2' cellspacing='2'>
-          <TR bgcolor='CCCCFF'>
+          <TR class='viewOneTR1'>
             <TD><%=ServerHitBin.typeNames[type]%>&nbsp;ID</TD>
             <TD>Start</TD>
             <TD>Stop</TD>
@@ -87,7 +86,7 @@
             <%while(binIter.hasNext()){%>
               <%ServerHitBin bin = (ServerHitBin) binIter.next();%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-              <tr bgcolor="<%=rowColor%>">
+              <tr class="<%=rowColor%>">
                 <TD><%=bin.getId()%></TD>
                 <TD><%=bin.getStartTimeString()%></TD>
                 <TD><%=bin.getEndTimeString()%></TD>

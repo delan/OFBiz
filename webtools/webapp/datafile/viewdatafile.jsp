@@ -69,9 +69,9 @@
 
 <%if(security.hasPermission("DATAFILE_MAINT", session)) {%>
   <FORM method=POST action='<ofbiz:url>/viewdatafile</ofbiz:url>'>
-    Data Filename or URL: <INPUT name='DATAFILE_LOCATION' type=text size='60' value='<%=UtilFormatOut.checkNull(dataFileLoc)%>'> Is URL?:<INPUT type=checkbox name='DATAFILE_IS_URL' <%=dataFileIsUrl?"checked":""%>><BR>
-    Definition Filename or URL: <INPUT name='DEFINITION_LOCATION' type=text size='60' value='<%=UtilFormatOut.checkNull(definitionLoc)%>'> Is URL?:<INPUT type=checkbox name='DEFINITION_IS_URL' <%=definitionIsUrl?"checked":""%>><BR>
-    Data File Definition Name: <INPUT name='DEFINITION_NAME' type=text size='30' value='<%=UtilFormatOut.checkNull(definitionName)%>'><BR>
+    Data Filename or URL: <INPUT name='DATAFILE_LOCATION' type=text class='inputBox' size='60' value='<%=UtilFormatOut.checkNull(dataFileLoc)%>'> Is URL?:<INPUT type=checkbox name='DATAFILE_IS_URL' <%=dataFileIsUrl?"checked":""%>><BR>
+    Definition Filename or URL: <INPUT name='DEFINITION_LOCATION' class='inputBox' type=text size='60' value='<%=UtilFormatOut.checkNull(definitionLoc)%>'> Is URL?:<INPUT type=checkbox name='DEFINITION_IS_URL' <%=definitionIsUrl?"checked":""%>><BR>
+    Data File Definition Name: <INPUT name='DEFINITION_NAME' type=text class='inputBox' size='30' value='<%=UtilFormatOut.checkNull(definitionName)%>'><BR>
     <INPUT type=submit value='View'>
   </FORM>
 

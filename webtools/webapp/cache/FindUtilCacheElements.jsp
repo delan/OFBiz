@@ -38,22 +38,21 @@
 <%boolean hasUtilCacheEdit=security.hasPermission("UTIL_CACHE_EDIT", session);%>
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
 
-<br>
-<h2 style='margin:0;'>Cache Element Maintenance Page</h2>
+<h3>Cache Element Maintenance Page</h3>
 
 <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
   <%if(cacheName!=null){%>
    <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
    <%if(utilCache!=null){%>
-    <H3>&nbsp;<%=cacheName%> (<%=(new Date()).toString()%>)</H3>
+    <div class="tabletext"><b>Cache Name:</b>&nbsp;<%=cacheName%> (<%=(new Date()).toString()%>)</div>
     <a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
     <TABLE border='0' cellpadding='2' cellspacing='2'>
     <%
-      String rowColor1 = "99CCFF";
-      String rowColor2 = "CCFFFF";
+      String rowColor1 = "viewManyTR2";
+      String rowColor2 = "viewManyTR1";
       String rowColor = "";
     %>
-      <TR bgcolor='CCCCFF'>
+      <TR class='viewOneTR1'>
         <TD>Cache&nbsp;Element&nbsp;Key</TD>
         <%-- <TD>createTime</TD> --%>
         <TD>expireTime</TD>
@@ -67,7 +66,7 @@
               <%Object key = iter.next();%>
               <%UtilCache.CacheLine line = (UtilCache.CacheLine) utilCache.cacheLineTable.get(key);%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-              <tr bgcolor="<%=rowColor%>">
+              <tr class="<%=rowColor%>">
                 <TD><%=key.toString()%></TD>
                 <%--
                 <TD>
@@ -92,7 +91,7 @@
               </TR>
             <%}%>
           <%}else{%>
-              <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+              <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
                 <TD colspan="5">No UtilCache elements found.</TD>
               </TR>
           <%}%>
@@ -105,7 +104,7 @@
               <%Object key = entry.getKey();%>
               <%UtilCache.CacheLine line = (UtilCache.CacheLine) entry.getValue();%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-              <tr bgcolor="<%=rowColor%>">
+              <tr class="<%=rowColor%>">
                 <TD><%=key.toString()%></TD>
                 <TD>
                   <%long expireTime = utilCache.getExpireTime();%>
@@ -130,10 +129,10 @@
       <%}%>
     </TABLE>
    <%}else{%>
-    <H3>&nbsp;<%=cacheName%> Not Found</H3>
+    <H2>&nbsp;<%=cacheName%> Not Found</H2>
    <%}%>
   <%}else{%>
-    <H3>&nbsp;No Cache Name Specified</H3>
+    <H2>&nbsp;No Cache Name Specified</H2>
   <%}%>
   <a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
 <%}else{%>

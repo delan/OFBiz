@@ -62,8 +62,7 @@
 	if (currentCustomTimePeriod != null && "FISCAL_WEEK".equals(currentCustomTimePeriod.getString("periodTypeId"))) newPeriodTypeId = "";
 %>
 
-<br>
-<h2 style='margin:0;'>Custom Time Period Maintenance Page</h2>
+<h3 style='margin:0;'>Custom Time Period Maintenance Page</h3>
 
 <%if(security.hasPermission("PERIOD_MAINT", session)){%>
 
@@ -81,7 +80,7 @@
     <input type="hidden" name="currentCustomTimePeriodId" value="<%=UtilFormatOut.checkNull(currentCustomTimePeriodId)%>">
 	<div class='tabletext'>
 		Show Only Periods with Organization Party ID:
-		<input type="text" size="20" name="findOrganizationPartyId" value="<%=UtilFormatOut.checkNull(findOrganizationPartyId)%>">
+		<input type="text" class='inputBox' size="20" name="findOrganizationPartyId" value="<%=UtilFormatOut.checkNull(findOrganizationPartyId)%>">
 		<INPUT type=submit value='Update' style='font-size: x-small;'>
 	</div>
 </FORM>
@@ -106,7 +105,7 @@
       <input type="hidden" name="currentCustomTimePeriodId" value="<%=UtilFormatOut.checkNull(currentCustomTimePeriodId)%>">
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="customTimePeriodId"/></div></td>
     <td>
-        <select name="parentPeriodId" style='font-size: x-small;'>
+        <select name="parentPeriodId" class='selectBox'>
             <option value=''>&nbsp;</option>
             <ofbiz:iterator name="allCustomTimePeriod" property="allCustomTimePeriods">
 			    <%GenericValue allPeriodType = allCustomTimePeriod.getRelatedOneCache("PeriodType");%>
@@ -119,26 +118,26 @@
 	        [Set As Current]</a>
 	    <%}%>
     </td>
-    <td><input type=text size='12' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="organizationPartyId" fullattrs="true"/> style='font-size: x-small;'></td>
+    <td><input type=text size='12' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="organizationPartyId" fullattrs="true"/> class='inputBox'></td>
     <td>
-        <select name="periodTypeId" style='font-size: x-small;'>
+        <select name="periodTypeId" class='selectBox'>
             <ofbiz:iterator name="periodType" property="periodTypes">
                 <%boolean isDefault = currentCustomTimePeriod.getString("periodTypeId") == null ? false : currentCustomTimePeriod.getString("periodTypeId").equals(periodType.getString("periodTypeId"));%>
                 <option value='<ofbiz:entityfield attribute="periodType" field="periodTypeId"/>' <%if (isDefault) {%>selected<%}%>><ofbiz:entityfield attribute="periodType" field="description"/><%-- [<ofbiz:entityfield attribute="periodType" field="periodTypeId"/>]--%></option>
             </ofbiz:iterator>
         </select>
     </td>
-    <td><input type=text size='4' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="periodNum" fullattrs="true"/> style='font-size: x-small;'></td>
-    <td><input type=text size='10' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="periodName" fullattrs="true"/> style='font-size: x-small;'></td>
+    <td><input type=text size='4' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="periodNum" fullattrs="true"/> class='inputBox' ></td>
+    <td><input type=text size='10' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="periodName" fullattrs="true"/> class='inputBox' ></td>
     <td>
         <%boolean hasntStarted = false;%>
         <%if (currentCustomTimePeriod.getDate("fromDate") != null && UtilDateTime.nowDate().before(currentCustomTimePeriod.getDate("fromDate"))) { hasntStarted = true; }%>
-        <input type=text size='13' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="fromDate" fullattrs="true"/> style='font-size: x-small;<%if (hasntStarted) {%> color: red;<%}%>'>
+        <input type=text size='13' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="fromDate" fullattrs="true"/> class='inputBox' style='<%if (hasntStarted) {%> color: red;<%}%>'>
     </td>
     <td align="center">
         <%boolean hasExpired = false;%>
         <%if (currentCustomTimePeriod.getDate("thruDate") != null && UtilDateTime.nowDate().after(currentCustomTimePeriod.getDate("thruDate"))) { hasExpired = true; }%>
-        <input type=text size='13' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%if (hasExpired) {%> color: red;<%}%>'>
+        <input type=text size='13' <ofbiz:inputvalue entityAttr="currentCustomTimePeriod" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%> color: red;<%}%>'>
     </td>
     <td align="center"><INPUT type=submit value='Update' style='font-size: x-small;'></td>
     <td align="center">
@@ -180,7 +179,7 @@
       <input type=hidden <ofbiz:inputvalue entityAttr="customTimePeriod" field="customTimePeriodId" fullattrs="true"/>>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="customTimePeriod" field="customTimePeriodId"/></div></td>
     <td>
-        <select name="parentPeriodId" style='font-size: x-small;'>
+        <select name="parentPeriodId" class='selectBox'>
             <option value=''>&nbsp;</option>
             <ofbiz:iterator name="allCustomTimePeriod" property="allCustomTimePeriods">
 			    <%GenericValue allPeriodType = allCustomTimePeriod.getRelatedOneCache("PeriodType");%>
@@ -189,26 +188,26 @@
             </ofbiz:iterator>
         </select>
     </td>
-    <td><input type=text size='12' <ofbiz:inputvalue entityAttr="customTimePeriod" field="organizationPartyId" fullattrs="true"/> style='font-size: x-small;'></td>
+    <td><input type=text class='inputBox' size='12' <ofbiz:inputvalue entityAttr="customTimePeriod" field="organizationPartyId" fullattrs="true"/>></td>
     <td>
-        <select name="periodTypeId" style='font-size: x-small;'>
+        <select name="periodTypeId" class='selectBox'>
             <ofbiz:iterator name="periodType" property="periodTypes">
                 <%boolean isDefault = customTimePeriod.getString("periodTypeId") == null ? false : customTimePeriod.getString("periodTypeId").equals(periodType.getString("periodTypeId"));%>
                 <option value='<ofbiz:entityfield attribute="periodType" field="periodTypeId"/>' <%if (isDefault) {%>selected<%}%>><ofbiz:entityfield attribute="periodType" field="description"/><%-- [<ofbiz:entityfield attribute="periodType" field="periodTypeId"/>]--%></option>
             </ofbiz:iterator>
         </select>
     </td>
-    <td><input type=text size='4' <ofbiz:inputvalue entityAttr="customTimePeriod" field="periodNum" fullattrs="true"/> style='font-size: x-small;'></td>
-    <td><input type=text size='10' <ofbiz:inputvalue entityAttr="customTimePeriod" field="periodName" fullattrs="true"/> style='font-size: x-small;'></td>
+    <td><input type=text size='4' <ofbiz:inputvalue entityAttr="customTimePeriod" field="periodNum" fullattrs="true"/> class='inputBox' ></td>
+    <td><input type=text size='10' <ofbiz:inputvalue entityAttr="customTimePeriod" field="periodName" fullattrs="true"/> class='inputBox' ></td>
     <td>
         <%boolean hasntStarted = false;%>
         <%if (customTimePeriod.getDate("fromDate") != null && UtilDateTime.nowDate().before(customTimePeriod.getDate("fromDate"))) { hasntStarted = true; }%>
-        <input type=text size='13' <ofbiz:inputvalue entityAttr="customTimePeriod" field="fromDate" fullattrs="true"/> style='font-size: x-small;<%if (hasntStarted) {%> color: red;<%}%>'>
+        <input type=text size='13' <ofbiz:inputvalue entityAttr="customTimePeriod" field="fromDate" fullattrs="true"/> class='inputBox' style='<%if (hasntStarted) {%> color: red;<%}%>'>
     </td>
     <td align="center">
         <%boolean hasExpired = false;%>
         <%if (customTimePeriod.getDate("thruDate") != null && UtilDateTime.nowDate().after(customTimePeriod.getDate("thruDate"))) { hasExpired = true; }%>
-        <input type=text size='13' <ofbiz:inputvalue entityAttr="customTimePeriod" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%if (hasExpired) {%> color: red;<%}%>'>
+        <input type=text size='13' <ofbiz:inputvalue entityAttr="customTimePeriod" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%> color: red;<%}%>'>
     </td>
     <td align="center"><INPUT type=submit value='Update' style='font-size: x-small;'></td>
     <td align="center">
@@ -232,7 +231,7 @@
     <div class='head2'>Add Custom Time Period:</div>
     <div class='tabletext'>
         Parent Period:
-        <select name="parentPeriodId" style='font-size: x-small;'>
+        <select name="parentPeriodId" class='selectBox'>
             <option value=''>&nbsp;</option>
             <ofbiz:iterator name="allCustomTimePeriod" property="allCustomTimePeriods">
 			    <%GenericValue allPeriodType = allCustomTimePeriod.getRelatedOneCache("PeriodType");%>
@@ -242,20 +241,20 @@
         </select>
     </div>
     <div class='tabletext'>
-        Organization&nbsp;Party&nbsp;ID:&nbsp;<input type=text size='20' name='organizationPartyId' style='font-size: x-small;'>
+        Organization&nbsp;Party&nbsp;ID:&nbsp;<input type=text size='20' name='organizationPartyId' class='inputBox'>
         Period Type:
-        <select name="periodTypeId" style='font-size: x-small;'>
+        <select name="periodTypeId" class='selectBox'>
             <ofbiz:iterator name="periodType" property="periodTypes">
                 <%boolean isDefault = newPeriodTypeId == "" ? false : newPeriodTypeId.equals(periodType.getString("periodTypeId"));%>
                 <option value='<ofbiz:entityfield attribute="periodType" field="periodTypeId"/>' <%if (isDefault) {%>selected<%}%>><ofbiz:entityfield attribute="periodType" field="description"/><%-- [<ofbiz:entityfield attribute="periodType" field="periodTypeId"/>]--%></option>
             </ofbiz:iterator>
         </select>
-        Period&nbsp;Number:&nbsp;<input type=text size='4' name='periodNum' style='font-size: x-small;'>
-        Period&nbsp;Name:&nbsp;<input type=text size='10' name='periodName' style='font-size: x-small;'>
+        Period&nbsp;Number:&nbsp;<input type=text size='4' name='periodNum' class='inputBox'>
+        Period&nbsp;Name:&nbsp;<input type=text size='10' name='periodName' class='inputBox'>
     </div>
     <div class='tabletext'>
-        From&nbsp;Date:&nbsp;<input type=text size='14' name='fromDate' style='font-size: x-small;'>
-        Thru&nbsp;Date:&nbsp;<input type=text size='14' name='thruDate' style='font-size: x-small;'>
+        From&nbsp;Date:&nbsp;<input type=text size='14' name='fromDate' class='inputBox'>
+        Thru&nbsp;Date:&nbsp;<input type=text size='14' name='thruDate' class='inputBox'>
         <input type="submit" value="Add" style='font-size: x-small;'>
     </div>
 

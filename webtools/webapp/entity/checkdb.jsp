@@ -58,11 +58,11 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <H3>Check/Update Database</H3>
 
 <form method=post action='<%=response.encodeURL(controlPath + "/view/checkdb")%>'>
-  Group Name: <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  Group Name: <INPUT type=text class='inputBox' name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
   <INPUT type=submit value='Check Only'>
 </form>
 <form method=post action='<%=response.encodeURL(controlPath + "/view/checkdb?addMissing=true")%>'>
-  Group Name: <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  Group Name: <INPUT type=text class='inputBox' name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
   <INPUT type=submit value='Check and Add Missing'>
 </form>
 

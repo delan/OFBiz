@@ -38,7 +38,7 @@
   String fulltext = request.getParameter("fulltext");
 %>
 
-<h2>XML Import to DataSource(s)</h2>
+<h3>XML Import to DataSource(s)</h3>
 <div>This page can be used to import exported Entity Engine XML documents. These documents all have a root tag of "&lt;entity-engine-xml&gt;".</div>
 <hr>
 <%if(security.hasPermission("ENTITY_MAINT", session)){%>
@@ -46,12 +46,12 @@
 
   <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
     <div>Absolute Filename or URL:</div>
-    <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> Is URL?:<INPUT type=checkbox name='IS_URL' <%=isUrl?"checked":""%>>
+    <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> Is URL?:<INPUT type=checkbox name='IS_URL' <%=isUrl?"checked":""%>>
     <INPUT type=submit value='Import File'>
   </FORM>
   <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
     <div>Complete XML document (root tag: entity-engine-xml):</div>
-    <TEXTAREA rows="8" cols="85" name='fulltext'><%=UtilFormatOut.checkNull(fulltext)%></TEXTAREA>
+    <TEXTAREA class='textAreaBox' rows="8" cols="85" name='fulltext'><%=UtilFormatOut.checkNull(fulltext)%></TEXTAREA>
     <BR><INPUT type=submit value='Import Text'>
   </FORM>
   <hr>

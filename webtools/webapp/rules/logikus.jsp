@@ -83,9 +83,9 @@
   <FORM method=POST action='<ofbiz:url>/logikus</ofbiz:url>'>
     <%-- <INPUT name='program_loc' type=text size='60' value='<%=UtilFormatOut.checkNull(programLoc)%>'> Is URL?:<INPUT type=checkbox name='program_is_url' <%=programIsUrl?"checked":""%>><BR> --%>
     Program or Rule Set:<BR>
-    <TEXTAREA rows="20" cols="85" name="program"><%=programText%></TEXTAREA><BR>
+    <TEXTAREA class='textAreaBox' rows="20" cols="85" name="program"><%=programText%></TEXTAREA><BR>
     Query (for Backward Chaining):<BR>
-    <TEXTAREA rows="3" cols="85" name="query"><%=queryText%></TEXTAREA><BR>
+    <TEXTAREA class='textAreaBox' rows="3" cols="85" name="query"><%=queryText%></TEXTAREA><BR>
     All results?:<INPUT type=checkbox name='all_results' <%=allResults?"checked":""%>>
     <INPUT type=submit value='Get Result(s)'>
   </FORM>

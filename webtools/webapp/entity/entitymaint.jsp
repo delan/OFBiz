@@ -44,19 +44,19 @@
   Iterator classNamesIterator = entities.iterator();
 %>
 
-<h2 style='margin:0;'>Entity Data Maintenance</h2>
+<h3 style='margin:0;'>Entity Data Maintenance</h3>
 <%if(security.hasPermission("ENTITY_MAINT", session)){%>
 
 <%
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
+  String rowColor1 = "viewManyTR2";
+  String rowColor2 = "viewManyTR1";
   String rowColor = "";
 %>
 <TABLE cellpadding='1' cellspacing='1' border='0'>
   <TR>
     <TD valign=top>
         <TABLE cellpadding='1' cellspacing='1' border='0'>
-          <TR bgcolor='CCCCFF'>
+          <TR class='viewOneTR1'>
             <TD>Entity&nbsp;Name</TD>
             <TD>&nbsp;</TD>
             <TD>&nbsp;</TD>
@@ -66,7 +66,7 @@
         <%int colSize = entities.size()/3 + 1;%>
         <%int kIdx = 0;%>
         <%while (classNamesIterator != null && classNamesIterator.hasNext()) { ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());%>
-            <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+            <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
               <TD><div class='tabletext' style='FONT-SIZE: xx-small;'><%=entity.getEntityName()%></div></TD>
               <%if (entity instanceof ModelViewEntity) {%>
                     <TD colspan='3' align=center><div class='tabletext' style='FONT-SIZE: xx-small;'>View Entity</div></TD>
@@ -94,7 +94,7 @@
             <TD valign=top>
               <TABLE cellpadding='1' cellspacing='1' border='0'>
               <%rowColor = "";%>
-              <TR bgcolor='CCCCFF'>
+              <TR class='viewOneTR1'>
                 <TD>Entity&nbsp;Name</TD>
                 <TD>&nbsp;</TD>
                 <TD>&nbsp;</TD>

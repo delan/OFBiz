@@ -32,8 +32,8 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <%boolean hasUtilCacheEdit = security.hasPermission("UTIL_CACHE_EDIT", session);%>
-<br>
-<h2 style='margin:0;'>Cache Maintenance Page</h2>
+
+<h3 style='margin:0;'>Cache Maintenance Page</h3>
 
 <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
 
@@ -45,11 +45,11 @@
 
 <TABLE border='0' cellpadding='2' cellspacing='2'>
 <%
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
+  String rowColor1 = "viewManyTR2";
+  String rowColor2 = "viewManyTR1";
   String rowColor = "";
 %>
-  <TR bgcolor='CCCCFF'>
+  <TR class='viewOneTR1'>
     <TD>Cache&nbsp;Name</TD>
     <TD>size</TD>
     <TD>hitCount</TD>
@@ -67,7 +67,7 @@
       <%String cacheName = (String)nameIter.next();%>
       <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
       <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-      <tr bgcolor="<%=rowColor%>">
+      <tr class="<%=rowColor%>">
         <TD><%=UtilFormatOut.checkNull(utilCache.getName())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.size())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getHitCount())%></TD>

@@ -32,45 +32,45 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
-<br>
-<h2 style='margin:0;'>Cache Maintenance Edit Page</h2>
+
+<h3>Cache Maintenance Edit Page</h3>
 
 <%if(security.hasPermission("UTIL_CACHE_EDIT", session)){%>
   <%if(cacheName!=null){%>
    <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
    <%if(utilCache!=null){%>
-    <H3>&nbsp;<%=cacheName%></H3>
+    <div class="tabletext"><b>Cache Name:</b>&nbsp;<%=cacheName%></div>
     <a href='<ofbiz:url>/EditUtilCacheClear?UTIL_CACHE_NAME=<%=cacheName%></ofbiz:url>' class="buttontext">Clear this Cache</a>
     <br><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
     <form method="POST" action='<ofbiz:url>/EditUtilCacheUpdate?UTIL_CACHE_NAME=<%=cacheName%></ofbiz:url>'>
     <TABLE border='0' cellpadding='2' cellspacing='2'>
     <%
-      String rowColor1 = "99CCFF";
-      String rowColor2 = "CCFFFF";
+      String rowColor1 = "viewManyTR2";
+      String rowColor2 = "viewManyTR1";
       String rowColor = "";
     %>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
       <TD>Cache&nbsp;Name</TD>
       <TD colspan="2"><%=UtilFormatOut.checkNull(utilCache.getName())%></TD>
     </TR>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
       <TD>size</TD>
       <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.size())%></TD>
     </TR>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
       <TD>hitCount</TD>
       <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getHitCount())%></TD>
     </TR>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
       <TD>missCount</TD>
       <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCount())%></TD>
     </TR>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
       <TD>maxSize</TD>
       <TD><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></TD>
-      <TD><input type="text" size="15" maxlength="15" name="UTIL_CACHE_MAX_SIZE" value="<%=utilCache.getMaxSize()%>"></TD>
+      <TD><input type="text" class='inputBox' size="15" maxlength="15" name="UTIL_CACHE_MAX_SIZE" value="<%=utilCache.getMaxSize()%>"></TD>
     </TR>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
       <TD>expireTime(ms)</TD>
       <TD>
         <%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%>
@@ -80,20 +80,20 @@
         <%double secs=(double)exp/(1000.0);%>
         (<%=hrs+":"+mins+":"+secs%>)
       </TD>
-      <TD><input type="text" size="15" maxlength="15" name="UTIL_CACHE_EXPIRE_TIME" value="<%=utilCache.getExpireTime()%>"></TD>
+      <TD><input type="text" class='inputBox' size="15" maxlength="15" name="UTIL_CACHE_EXPIRE_TIME" value="<%=utilCache.getExpireTime()%>"></TD>
     </TR>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
 	  <%String softRefValue = (new Boolean(utilCache.getUseSoftReference())).toString();%>
       <TD>useSoftReference?</TD>
       <TD><%=softRefValue%></TD>
       <TD>
-		<select name="UTIL_CACHE_USE_SOFT_REFERENCE">
+		<select name="UTIL_CACHE_USE_SOFT_REFERENCE" class="selectBox">
 			<option <%="true".equals(softRefValue)?"selected":""%>>true</option>
 			<option <%="false".equals(softRefValue)?"selected":""%>>false</option>
 		</select>
       </TD>
     </TR>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
       <TD colspan="3"><INPUT type="submit" value="Update"></TD>
     </TR>
     </TABLE>

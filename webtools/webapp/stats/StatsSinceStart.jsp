@@ -43,22 +43,21 @@
     }
 %>
 
-<br>
-<h2 style='margin:0;'>Server Statistics Since Start Page</h2>
+<h3 style='margin:0;'>Server Statistics Since Start Page</h3>
 <div><a href="<ofbiz:url>/StatsSinceStart?clear=true</ofbiz:url>" class='buttontext'>[Clear Since Start Stats]</A>
 <a href="<ofbiz:url>/StatsSinceStart</ofbiz:url>" class='buttontext'>[Reload Page]</A></div>
 <div class='tabletext'>Current Time: <%=UtilDateTime.nowTimestamp().toString()%></div>
 <%if (security.hasPermission("SERVER_STATS_VIEW", session)) {%>
 <%
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
+  String rowColor1 = "viewManyTR2";
+  String rowColor2 = "viewManyTR1";
   String rowColor = "";
 %>
 
 <%-- REQUEST --%>
 
 <TABLE border='0' cellpadding='2' cellspacing='2'>
-  <TR bgcolor='CCCCFF'>
+  <TR class='viewOneTR1'>
     <TD>Reqest&nbsp;ID</TD>
     <TD>Start</TD>
     <TD>Stop</TD>
@@ -78,7 +77,7 @@
       <%String statsId = (String)requestIdIter.next();%>
       <%ServerHitBin bin = (ServerHitBin) ServerHitBin.requestSinceStarted.get(statsId);%>
       <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-      <tr bgcolor="<%=rowColor%>">
+      <tr class="<%=rowColor%>">
         <TD><%=bin.getId()%></TD>
         <TD><%=bin.getStartTimeString()%></TD>
         <TD><%=bin.getEndTimeString()%></TD>
@@ -101,7 +100,7 @@
 <%-- EVENT --%>
 
 <TABLE border='0' cellpadding='2' cellspacing='2'>
-  <TR bgcolor='CCCCFF'>
+  <TR class='viewOneTR1'>
     <TD>Event&nbsp;ID</TD>
     <TD>Start</TD>
     <TD>Stop</TD>
@@ -121,7 +120,7 @@
       <%String statsId = (String)eventIdIter.next();%>
       <%ServerHitBin bin = (ServerHitBin) ServerHitBin.eventSinceStarted.get(statsId);%>
       <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-      <tr bgcolor="<%=rowColor%>">
+      <tr class="<%=rowColor%>">
         <TD><%=bin.getId()%></TD>
         <TD><%=bin.getStartTimeString()%></TD>
         <TD><%=bin.getEndTimeString()%></TD>
@@ -144,7 +143,7 @@
 <%-- VIEW --%>
 
 <TABLE border='0' cellpadding='2' cellspacing='2'>
-  <TR bgcolor='CCCCFF'>
+  <TR class='viewOneTR1'>
     <TD>View&nbsp;ID</TD>
     <TD>Start</TD>
     <TD>Stop</TD>
@@ -164,7 +163,7 @@
       <%String statsId = (String)viewIdIter.next();%>
       <%ServerHitBin bin = (ServerHitBin) ServerHitBin.viewSinceStarted.get(statsId);%>
       <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-      <tr bgcolor="<%=rowColor%>">
+      <tr class="<%=rowColor%>">
         <TD><%=bin.getId()%></TD>
         <TD><%=bin.getStartTimeString()%></TD>
         <TD><%=bin.getEndTimeString()%></TD>
