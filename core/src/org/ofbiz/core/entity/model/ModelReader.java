@@ -270,6 +270,7 @@ public class ModelReader
     entity.entityName = checkNull(entityEntityName(entityElement));
     entity.tableName = checkNull(childElementValue(entityElement, "table-name"));
     entity.useCache = ("true".compareToIgnoreCase(checkNull(childElementValue(entityElement, "use-cache"))) == 0);
+    entity.packageName = checkNull(childElementValue(entityElement, "package-name"));
 
     if(utilTimer != null) utilTimer.timerString("  createModelEntity: before comments");
     if(docElementValues == null)

@@ -33,12 +33,15 @@ import org.ofbiz.core.util.*;
 
 public class ModelEntity
 {
-  /** The ejb-name of the Entity */    
+  /** The entity-name of the Entity */    
   public String entityName = "";
   /** The table-name of the Entity */  
   public String tableName = "";
   /** Use the Value object cache in the Helper? */
   public boolean useCache = false;
+
+  /** The package-name of the Entity */    
+  public String packageName = "";
 
   //Strings to go in the comment header.
   /** The title for the class JavaDoc comment */  
