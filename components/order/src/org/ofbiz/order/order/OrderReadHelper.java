@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.24 2004/07/30 16:21:31 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.25 2004/08/13 18:57:02 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
@@ -52,7 +53,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -437,6 +438,48 @@ public class OrderReadHelper {
         return OrderReadHelper.calcOrderAdjustments(getOrderHeaderAdjustments(), getOrderItemsSubTotal(), false, false, true);
     }
 
+    public Set getItemFeatureSet(GenericValue item) {
+        Set featureSet = new OrderedSet();
+        List featureAppls = null;
+        if (item.get("productId") != null) {
+            try {
+                featureAppls = item.getDelegator().findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", item.getString("productId")));
+                List filterExprs = UtilMisc.toList(new EntityExpr("productFeatureApplTypeId", EntityOperator.EQUALS, "STANDARD_FEATURE"));
+                filterExprs.add(new EntityExpr("productFeatureApplTypeId", EntityOperator.EQUALS, "REQUIRED_FEATURE"));
+                featureAppls = EntityUtil.filterByOr(featureAppls, filterExprs);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Unable to get ProductFeatureAppl for item : " + item, module);
+            }
+            if (featureAppls != null) {
+                Iterator fai = featureAppls.iterator();
+                while (fai.hasNext()) {
+                    GenericValue appl = (GenericValue) fai.next();
+                    featureSet.add(appl.getString("productFeatureId"));
+                }
+            }
+        }
+
+        // get the ADDITIONAL_FEATURE adjustments
+        List additionalFeatures = null;
+        try {
+            additionalFeatures = item.getRelatedByAnd("OrderAdjustment", UtilMisc.toMap("orderAdjustmentTypeId", "ADDITIONAL_FEATURE"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to get OrderAdjustment from item : " + item, module);
+        }
+        if (additionalFeatures != null) {
+            Iterator afi = additionalFeatures.iterator();
+            while (afi.hasNext()) {
+                GenericValue adj = (GenericValue) afi.next();
+                String featureId = adj.getString("productFeatureId");
+                if (featureId != null) {
+                    featureSet.add(featureId);
+                }
+            }
+        }
+
+        return featureSet;
+    }
+
     public Map getFeatureIdQtyMap() {
         Map featureMap = new HashMap();
         List validItems = getValidOrderItems();
@@ -552,46 +595,55 @@ public class OrderReadHelper {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
                 GenericValue item = (GenericValue) i.next();
-                GenericValue product = null;
-                try {
-                    product = item.getRelatedOne("Product");
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Problem getting Product from OrderItem; returning 0", module);
-                    return 0.00;
-                }
-                if (product != null) {
-                    if (ProductWorker.shippingApplies(product)) {
-                        Double weight = product.getDouble("weight");
-                        String isVariant = product.getString("isVariant");
-                        if (weight == null && isVariant != null && "Y".equals(isVariant)) {
-                            // get the virtual product and check its weight
-                            GenericValue virtual = null;
-                            try {
-                                List virtuals = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIENT"), UtilMisc.toList("-fromDate"));
-                                if (virtuals != null) {
-                                    virtuals = EntityUtil.filterByDate(virtuals);
-                                }
-                                virtual = EntityUtil.getFirst(virtuals);
-                            } catch (GenericEntityException e) {
-                                Debug.logError(e, "Problem getting virtual product");
-                            }
-                            if (virtual != null) {
-                                weight = virtual.getDouble("weight");
-                            }
-                        }
-
-                        if (weight != null) {
-                            shippableWeight += weight.doubleValue();
-                        }
-                    }
-                }
+                shippableWeight += this.getItemWeight(item);
             }
         }
+
         return shippableWeight;
     }
 
-    public List getShippableSizes() {
+    public double getItemWeight(GenericValue item) {
         GenericDelegator delegator = orderHeader.getDelegator();
+        double itemWeight = 0.00;
+
+        GenericValue product = null;
+        try {
+            product = item.getRelatedOne("Product");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting Product from OrderItem; returning 0", module);
+            return 0.00;
+        }
+        if (product != null) {
+            if (ProductWorker.shippingApplies(product)) {
+                Double weight = product.getDouble("weight");
+                String isVariant = product.getString("isVariant");
+                if (weight == null && isVariant != null && "Y".equals(isVariant)) {
+                    // get the virtual product and check its weight
+                    GenericValue virtual = null;
+                    try {
+                        List virtuals = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIENT"), UtilMisc.toList("-fromDate"));
+                        if (virtuals != null) {
+                            virtuals = EntityUtil.filterByDate(virtuals);
+                        }
+                        virtual = EntityUtil.getFirst(virtuals);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Problem getting virtual product");
+                    }
+                    if (virtual != null) {
+                        weight = virtual.getDouble("weight");
+                    }
+                }
+
+                if (weight != null) {
+                    itemWeight = weight.doubleValue();
+                }
+            }
+        }
+
+        return itemWeight;
+    }
+
+    public List getShippableSizes() {
         List shippableSizes = new LinkedList();
 
         List validItems = getValidOrderItems();
@@ -599,47 +651,81 @@ public class OrderReadHelper {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
                 GenericValue item = (GenericValue) i.next();
-                GenericValue product = null;
-                try {
-                    product = item.getRelatedOne("Product");
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Problem getting Product from OrderItem", module);
-                    return shippableSizes;
-                }
-                if (product != null) {
-                    if (ProductWorker.shippingApplies(product)) {
-                        Double height = product.getDouble("productHeight");
-                        Double width = product.getDouble("productWidth");
-                        Double depth = product.getDouble("productDepth");
-                        String isVariant = product.getString("isVariant");
-                        if (height == null && width == null && depth == null && isVariant != null && "Y".equals(isVariant)) {
-                            // get the virtual product and check its values
-                            GenericValue virtual = null;
-                            try {
-                                List virtuals = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIENT"), UtilMisc.toList("-fromDate"));
-                                if (virtuals != null) {
-                                    virtuals = EntityUtil.filterByDate(virtuals);
-                                }
-                                virtual = EntityUtil.getFirst(virtuals);
-                            } catch (GenericEntityException e) {
-                                Debug.logError(e, "Problem getting virtual product");
-                            }
-                            if (virtual != null) {
-                                height = virtual.getDouble("productHeight");
-                                width = virtual.getDouble("productWidth");
-                                depth = virtual.getDouble("productDepth");
-                            }
-                        }
-
-                        if (height == null) height = new Double(0);
-                        if (width == null) width = new Double(0);
-                        if (depth == null) depth = new Double(0);
-                        shippableSizes.add(new Double(height.doubleValue() * width.doubleValue() * depth.doubleValue()));
-                    }
-                }
+                shippableSizes.add(new Double(this.getItemSize(item)));
             }
         }
         return shippableSizes;
+    }
+
+    public double getItemSize(GenericValue item) {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        double size = 0;
+
+        GenericValue product = null;
+        try {
+            product = item.getRelatedOne("Product");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting Product from OrderItem", module);
+            return 0;
+        }
+        if (product != null) {
+            if (ProductWorker.shippingApplies(product)) {
+                Double height = product.getDouble("productHeight");
+                Double width = product.getDouble("productWidth");
+                Double depth = product.getDouble("productDepth");
+                String isVariant = product.getString("isVariant");
+                if (height == null && width == null && depth == null && isVariant != null && "Y".equals(isVariant)) {
+                    // get the virtual product and check its values
+                    GenericValue virtual = null;
+                    try {
+                        List virtuals = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIENT"), UtilMisc.toList("-fromDate"));
+                        if (virtuals != null) {
+                            virtuals = EntityUtil.filterByDate(virtuals);
+                        }
+                        virtual = EntityUtil.getFirst(virtuals);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Problem getting virtual product");
+                    }
+                    if (virtual != null) {
+                        height = virtual.getDouble("productHeight");
+                        width = virtual.getDouble("productWidth");
+                        depth = virtual.getDouble("productDepth");
+                    }
+                }
+
+                if (height == null) height = new Double(0);
+                if (width == null) width = new Double(0);
+                if (depth == null) depth = new Double(0);
+                size = (height.doubleValue() * width.doubleValue() * depth.doubleValue());
+            }
+        }
+
+        return size;
+    }
+
+   public List getShippableItemInfo() {
+        List shippableInfo = new LinkedList();
+
+        List validItems = getValidOrderItems();
+        if (validItems != null) {
+            Iterator i = validItems.iterator();
+            while (i.hasNext()) {
+                GenericValue item = (GenericValue) i.next();
+                shippableInfo.add(this.getItemInfoMap(item));
+            }
+        }
+
+        return shippableInfo;
+    }
+
+    public Map getItemInfoMap(GenericValue item) {
+        Map itemInfo = new HashMap();
+        itemInfo.put("productId", item.getString("productId"));
+        itemInfo.put("quantity", getOrderItemQuantity(item));
+        itemInfo.put("weight", new Double(this.getItemWeight(item)));
+        itemInfo.put("size",  new Double(this.getItemSize(item)));
+        itemInfo.put("featureSet", this.getItemFeatureSet(item));
+        return itemInfo;
     }
 
     public String getOrderEmailString() {

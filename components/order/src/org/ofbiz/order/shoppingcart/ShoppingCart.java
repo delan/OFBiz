@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.57 2004/08/01 02:22:35 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.58 2004/08/13 18:57:02 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.57 $
+ * @version    $Revision: 1.58 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -1186,6 +1186,21 @@ public class ShoppingCart implements Serializable {
             }
         }
         return shippableSizes;
+    }
+
+    /** Returns a List of shippable item info (quantity, size, weight) */
+    public List getShippableItemInfo() {
+        List itemInfo = new LinkedList();
+        Iterator i = iterator();
+
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+
+            if (item.shippingApplies()) {
+                itemInfo.add(item.getItemProductInfo());
+            }
+        }
+        return itemInfo;        
     }
 
     /** Returns the total weight in the cart. */

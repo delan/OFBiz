@@ -1,5 +1,5 @@
 /*
- * $Id: UpsServices.java,v 1.2 2004/08/12 21:33:34 ajzeneski Exp $
+ * $Id: UpsServices.java,v 1.3 2004/08/13 18:57:03 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class UpsServices {
@@ -1358,12 +1358,11 @@ public class UpsServices {
         String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
         String shippingContactMechId = (String) context.get("shippingContactMechId");
 
-        Map shippableFeatureMap = (Map) context.get("shippableFeatureMap");
-        List shippableItemSizes = (List) context.get("shippableItemSizes");
-
+        List shippableItemInfo = (List) context.get("shippableItemInfo");
         Double shippableTotal = (Double) context.get("shippableTotal");
         Double shippableQuantity = (Double) context.get("shippableQuantity");
         Double shippableWeight = (Double) context.get("shippableWeight");
+
         if (shippableTotal == null) {
             shippableTotal = new Double(0.00);
         }
@@ -1598,6 +1597,7 @@ public class UpsServices {
             resp.put("shippingEstimateAmount", firstRate);
             return resp;
         } else {
+            errorList.add("Error status code : " + responseStatusCode);
             return ServiceUtil.returnError(errorList);
         }
     }
@@ -1703,8 +1703,8 @@ public class UpsServices {
         }
         conStr = conStr + upsService;
                
-        if (Debug.verboseOn()) Debug.logVerbose("UPS Connect URL : " + conStr, module); 
-        if (Debug.verboseOn()) Debug.logVerbose("UPS XML String : " + xmlString, module);
+        //Debug.log("UPS Connect URL : " + conStr, module);
+        //Debug.log("UPS XML String : " + xmlString, module);
         
         HttpClient http = new HttpClient(conStr);
         String response = null;

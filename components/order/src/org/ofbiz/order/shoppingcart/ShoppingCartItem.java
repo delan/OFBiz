@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.32 2004/06/30 19:24:08 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.33 2004/08/13 18:57:02 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import java.sql.Timestamp;
 
@@ -40,6 +41,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
@@ -62,7 +64,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.32 $
+ * @version    $Revision: 1.33 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -776,6 +778,38 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
     }
 
+    /** Returns a Set of the item's features */
+    public Set getFeatureSet() {
+        Set featureSet = new OrderedSet();
+        GenericValue product = this.getProduct();
+        if (product != null) {
+            List featureAppls = null;
+            try {
+                featureAppls = product.getRelated("ProductFeatureAppl");
+                List filterExprs = UtilMisc.toList(new EntityExpr("productFeatureApplTypeId", EntityOperator.EQUALS, "STANDARD_FEATURE"));
+                filterExprs.add(new EntityExpr("productFeatureApplTypeId", EntityOperator.EQUALS, "REQUIRED_FEATURE"));
+                featureAppls = EntityUtil.filterByOr(featureAppls, filterExprs);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Unable to get features from product : " + product.get("productId"), module);
+            }
+            if (featureAppls != null) {
+                Iterator fai = featureAppls.iterator();
+                while (fai.hasNext()) {
+                    GenericValue appl = (GenericValue) fai.next();
+                    featureSet.add(appl.getString("productFeatureId"));
+                }
+            }
+        }
+        if (this.additionalProductFeatureAndAppls != null) {
+            Iterator aapi = this.additionalProductFeatureAndAppls.values().iterator();
+            while (aapi.hasNext()) {
+                GenericValue appl = (GenericValue) aapi.next();
+                featureSet.add(appl.getString("productFeatureId"));
+            }
+        }
+        return featureSet;
+    }
+
     /** Returns the item's size (height * width * depth) */
     public double getSize() {
         GenericValue product = getProduct();
@@ -804,6 +838,16 @@ public class ShoppingCartItem implements java.io.Serializable {
             // non-product items have 0 size
             return 0;
         }
+    }
+
+    public Map getItemProductInfo() {
+        Map itemInfo = new HashMap();
+        itemInfo.put("productId", this.getProductId());
+        itemInfo.put("quantity", new Double(this.getQuantity()));
+        itemInfo.put("weight", new Double(this.getWeight()));
+        itemInfo.put("size",  new Double(this.getSize()));
+        itemInfo.put("featureSet", this.getFeatureSet());
+        return itemInfo;
     }
 
     /** Returns the base price. */
