@@ -96,6 +96,7 @@ if (UtilValidate.isEmpty(showListIfSelection) || showListIfSelection.equals("Y")
     dynamicView.addAlias("RE", "quantity" );
     dynamicView.addAlias("RE", "productId");
     dynamicView.addAlias("RE", "requirementTypeId" );
+    dynamicView.addAlias("RE", "statusId" );
     //RequirementType
     dynamicView.addMemberEntity("RT", "RequirementType" );
     dynamicView.addAlias("RT", "description" );
@@ -122,6 +123,7 @@ if (UtilValidate.isEmpty(showListIfSelection) || showListIfSelection.equals("Y")
     keys.add("requiredByDate");
     keys.add("quantity") ;
     keys.add("requirementTypeId");
+    keys.add("statusId");
     ArrayList tmpList = FindServices.createCondition(keys, normalizedFields, queryStringMap, origValueMap);
     
     //create the entity condition
