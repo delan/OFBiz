@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.24 2004/07/31 20:10:13 ajzeneski Exp $
+ * $Id: Start.java,v 1.25 2004/07/31 21:15:16 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  * @since 2.1
  */
 public class Start implements Runnable {
@@ -165,14 +165,14 @@ public class Start implements Runnable {
         }
     }
 
-    private void loadLibs(String path) throws IOException {
+    private void loadLibs(String path, boolean recurse) throws IOException {
         File libDir = new File(path);
         if (libDir.exists()) {
             File files[] = libDir.listFiles();
             for (int i = 0; i < files.length; i++) {
                 String fileName = files[i].getName();
-                if (files[i].isDirectory() && !"CVS".equals(fileName)) {
-                    loadLibs(files[i].getCanonicalPath());
+                if (files[i].isDirectory() && !"CVS".equals(fileName) && recurse) {
+                    loadLibs(files[i].getCanonicalPath(), recurse);
                 } else if (fileName.endsWith(".jar") || fileName.endsWith(".zip")) {
                     classPath.addComponent(files[i]);
                 }
@@ -186,9 +186,12 @@ public class Start implements Runnable {
             classPath.addComponent(config.toolsJar);
         }
 
+        // load the libs from OFBIZ_HOME
+        loadLibs(config.ofbizHome, false);
+
         // load the lib directory
         if (config.baseLib != null) {
-            loadLibs(config.baseLib);
+            loadLibs(config.baseLib, true);
         }
 
         // load the ofbiz-base.jar
@@ -482,6 +485,7 @@ public class Start implements Runnable {
                 if (ofbizHome.equals(".")) {
                     ofbizHome = System.getProperty("user.dir");
                     ofbizHome = ofbizHome.replace('\\', '/');
+                    System.out.println("Set OFBIZ_HOME to - " + ofbizHome);
                 }
             }
             System.setProperty("ofbiz.home", ofbizHome);
@@ -605,6 +609,7 @@ public class Start implements Runnable {
             String javaVendor = System.getProperty("java.vendor");
             String fileSep = System.getProperty("file.separator");
             String javaHome = System.getProperty("java.home");
+            String ofbizHome = System.getProperty("ofbiz.home");
             String errorMsg = "Unable to locate tools.jar - ";
             String foundMsg = "Found tools.jar - ";
             String toolLoc = "lib" + fileSep + "tools.jar";
@@ -612,6 +617,12 @@ public class Start implements Runnable {
 
             if (javaVendor.startsWith("Apple")) {
                 // tools.jar is always available in Apple's JDK implementation
+                return null;
+            }
+
+            // check to see if it is in the OFBIZ_HOME directory
+            tj = new File(ofbizHome + fileSep + "tools.jar");
+            if (tj.exists()) {
                 return null;
             }
 
