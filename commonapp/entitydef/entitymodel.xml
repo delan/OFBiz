@@ -377,8 +377,8 @@
     <view-entity entity-name="StatusValidChangeToDetail"
             package-name="org.ofbiz.commonapp.common.status"
             title="Status Valid Change To Detail View Entity">
-      <member-entity entity-alias="SI" entity-name="StatusItem"/>
       <member-entity entity-alias="SVC" entity-name="StatusValidChange"/>
+      <member-entity entity-alias="SI" entity-name="StatusItem"/>
       <alias entity-alias="SVC" name="statusId"/>
       <alias entity-alias="SVC" name="statusIdTo"/>
       <alias entity-alias="SVC" name="conditionExpression"/>
@@ -1176,7 +1176,7 @@
     <entity entity-name="ServerHit"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Server Hit Entity">
-      <field name="visitId" type="id-long-ne"></field>
+      <field name="visitId" type="id-ne"></field>
       <field name="contentId" type="id-vlong-ne"></field>
       <field name="hitStartDateTime" type="date-time"></field>
       <field name="hitTypeId" type="id-ne"></field>
@@ -1210,9 +1210,6 @@
       </relation>
       <relation type="one" fk-name="SERVER_HIT_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
-      </relation>
-      <relation type="one" fk-name="SERVER_HIT_AGENT" rel-entity-name="UserAgent">
-        <key-map field-name="userAgentId"/>
       </relation>
       <relation type="one" fk-name="SERVER_HIT_USER" rel-entity-name="UserLogin">
         <key-map field-name="userLoginId"/>
@@ -1281,7 +1278,7 @@
       <relation type="one" fk-name="UAGENT_METHOD" rel-entity-name="UserAgentMethodType">
         <key-map field-name="userAgentMethodTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="ServerHit">
+      <relation type="many" rel-entity-name="Visit">
         <key-map field-name="userAgentId"/>
       </relation>
     </entity>
@@ -1308,12 +1305,12 @@
     <entity entity-name="Visit"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Visit Entity">
-      <field name="visitId" type="id-long-ne"></field>
+      <field name="visitId" type="id-ne"></field>
       <field name="contactMechId" type="id"></field>
       <field name="userLoginId" type="id-vlong"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
-      <field name="sessionId" type="id-long"></field>
+      <field name="sessionId" type="id-vlong"></field>
       <field name="serverIpAddress" type="id"></field>
       <field name="serverHostName" type="long-varchar"></field>
       <field name="webappName" type="short-varchar"></field>
@@ -1321,6 +1318,7 @@
       <field name="initialRequest" type="url"></field>
       <field name="initialReferrer" type="url"></field>
       <field name="initialUserAgent" type="long-varchar"></field>
+      <field name="userAgentId" type="id"></field>
       <field name="cookie" type="short-varchar"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
@@ -1333,6 +1331,9 @@
       </relation>
       <relation type="one" fk-name="VISIT_ROLE_TYPE" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="VISIT_USER_AGNT" rel-entity-name="UserAgent">
+        <key-map field-name="userAgentId"/>
       </relation>
       <relation type="one" fk-name="VISIT_PARTY_ROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>

@@ -505,8 +505,8 @@
     <view-entity entity-name="ProductFeatureAndAppl"
             package-name="org.ofbiz.commonapp.product.feature"
             title="ProductFeature And ProductFeatureAppl View Entity">
-      <member-entity entity-alias="PFA" entity-name="ProductFeatureAppl"/>
       <member-entity entity-alias="PF" entity-name="ProductFeature"/>
+      <member-entity entity-alias="PFA" entity-name="ProductFeatureAppl"/>
       <alias entity-alias="PF" name="productFeatureId"/>
       <alias entity-alias="PF" name="productFeatureTypeId"/>
       <alias entity-alias="PF" name="productFeatureCategoryId"/>
@@ -777,6 +777,27 @@
       </relation>
       <relation type="one" fk-name="INV_ITEM_STTS_SI" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryItemTempRes"
+            package-name="org.ofbiz.commonapp.product.inventory"
+            title="Inventory Item Temporary Reservation Entity">
+      <field name="visitId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="reservedDate" type="date-time"></field>
+      <prim-key field="visitId"/>
+      <prim-key field="productId"/>
+      <prim-key field="prodCatalogId"/>
+      <relation type="one" fk-name="INV_ITEM_TR_VIS" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_TR_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_TR_PCAT" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
       </relation>
     </entity>
     <entity entity-name="InventoryItemType"
@@ -1268,6 +1289,25 @@
         <key-map field-name="productId"/>
       </relation>
     </entity>
+    <entity entity-name="ProductKeywordResult"
+            package-name="org.ofbiz.commonapp.product.product"
+            title="Product Keyword Result Entity">
+      <field name="productKeywordResultId" type="id-ne"></field>
+      <field name="visitId" type="id"></field>
+      <field name="productCategoryId" type="id"></field>
+      <field name="searchString" type="short-varchar"></field>
+      <field name="intraKeywordOperator" type="very-short"></field>
+      <field name="anyPrefix" type="indicator"></field>
+      <field name="anySuffix" type="indicator"></field>
+      <field name="numResults" type="numeric"></field>
+      <prim-key field="productKeywordResultId"/>
+      <relation type="one" fk-name="PROD_KWDRES_VST" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_KWDRES_PCAT" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+    </entity>
     <entity entity-name="ProductType"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Type Entity">
@@ -1536,6 +1576,32 @@
       </relation>
       <relation type="many" rel-entity-name="FacilityTypeAttr">
         <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityCarrierShipment"
+            package-name="org.ofbiz.commonapp.product.storage"
+            title="Facility Role Type Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="shipmentMethodTypeId" type="id-ne"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="shipmentMethodTypeId"/>
+      <relation type="one" fk-name="FACILITY_CSH_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_CSH_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_CSH_STP" rel-entity-name="ShipmentMethodType">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_CSH_CSM" rel-entity-name="CarrierShipmentMethod">
+        <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
     <entity entity-name="FacilityContactMech"

@@ -46,6 +46,7 @@
   <!--  - org.ofbiz.commonapp.order.order -->
   <!--  - org.ofbiz.commonapp.order.quote -->
   <!--  - org.ofbiz.commonapp.order.request -->
+  <!--  - org.ofbiz.commonapp.order.shoppingcart -->
   <!--  - org.ofbiz.commonapp.order.shoppinglist -->
   <!-- ========================================================= -->
 
@@ -278,8 +279,8 @@
     <view-entity entity-name="OrderHeaderAndPaymentPref"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Header And Payment Preference View Entity">
-      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="PF" entity-name="OrderPaymentPreference"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <alias entity-alias="OH" name="orderId"/>
       <alias entity-alias="PF" name="orderPaymentPreferenceId"/>
       <alias entity-alias="PF" name="paymentMethodTypeId"/>
@@ -312,9 +313,9 @@
     <view-entity entity-name="OrderHeaderNoteView"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Header Note View Entity">
-      <member-entity entity-alias="ND" entity-name="NoteData"/>
-      <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
       <member-entity entity-alias="PR" entity-name="Person"/>
+      <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
+      <member-entity entity-alias="ND" entity-name="NoteData"/>
       <alias entity-alias="OD" name="orderId"/>
       <alias entity-alias="ND" name="noteId"/>
       <alias entity-alias="ND" name="noteName"/>
@@ -547,7 +548,7 @@
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" fk-name="ORDER_ITCM_INVITM" rel-entity-name="InventoryItem">
+      <relation type="one" fk-name="ORDER_ITIR_INVITM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
@@ -1274,9 +1275,9 @@
     <view-entity entity-name="CustRequestItemNoteView"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Item View Entity">
+      <member-entity entity-alias="PR" entity-name="Person"/>
       <member-entity entity-alias="CR" entity-name="CustRequestItemNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
-      <member-entity entity-alias="PR" entity-name="Person"/>
       <alias entity-alias="CR" name="custRequestId"/>
       <alias entity-alias="CR" name="custRequestItemSeqId"/>
       <alias entity-alias="ND" name="noteId"/>
@@ -1647,6 +1648,30 @@
       </relation>
       <relation type="one" fk-name="WORK_REQFL_WEFF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.order.shoppingcart -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="CartAbandonedLine"
+            package-name="org.ofbiz.commonapp.order.shoppingcart"
+            title="Order Abandoned Line Entity">
+      <field name="visitId" type="id-ne"></field>
+      <field name="cartAbandonedLineSeqId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="unitPrice" type="currency-amount"></field>
+      <field name="totalWithAdjustments" type="currency-amount"></field>
+      <field name="wasReserved" type="indicator"></field>
+      <prim-key field="visitId"/>
+      <prim-key field="cartAbandonedLineSeqId"/>
+      <relation type="one" fk-name="CART_ABLN_VST" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="one" fk-name="CART_ABLN_PRD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
       </relation>
     </entity>
 

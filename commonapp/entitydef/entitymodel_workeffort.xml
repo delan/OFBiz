@@ -533,8 +533,8 @@
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="WorkEffort Requirement View Entity">
       <member-entity entity-alias="REQ" entity-name="Requirement"/>
-      <member-entity entity-alias="WRF" entity-name="WorkRequirementFulfillment"/>
       <member-entity entity-alias="WEF" entity-name="WorkEffort"/>
+      <member-entity entity-alias="WRF" entity-name="WorkRequirementFulfillment"/>
       <alias entity-alias="WRF" name="requirementId"/>
       <alias entity-alias="WRF" name="workEffortId"/>
       <alias entity-alias="WEF" name="workEffortTypeId"/>
@@ -700,8 +700,8 @@
     <view-entity entity-name="WorkEffortAndPartyAssign"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment Entity">
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <alias entity-alias="WE" name="workEffortId"/>
       <alias entity-alias="WE" name="workEffortTypeId"/>
       <alias entity-alias="WE" name="workEffortParentId"/>
@@ -1006,8 +1006,8 @@
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment By Group Entity">
       <description>Also includes PartyRelationship Link so that a groupPartyId can be specified to find all PartyAssignments for all groups a party is in</description>
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <member-entity entity-alias="PREL" entity-name="PartyRelationship"/>
       <alias entity-alias="WE" name="workEffortId"/>
       <alias entity-alias="WE" name="workEffortTypeId"/>
@@ -1086,9 +1086,9 @@
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment By Role Entity">
       <description>Also includes PartyRole Link so that if a partyId is specified it will find all PartyAssignments for all roles a party is in; does not link on the partyId of the PartyAssignment</description>
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
-      <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <member-entity entity-alias="WE" entity-name="WorkEffort"/>
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <alias entity-alias="WE" name="workEffortId"/>
       <alias entity-alias="WE" name="workEffortTypeId"/>
       <alias entity-alias="WE" name="currentStatusId"/>
