@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * Recurrence Rule Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RecurrenceRule {
@@ -143,15 +143,7 @@ public class RecurrenceRule {
         byMonthList = StringUtil.split(rule.getString("byMonthList"), ",");
         bySetPosList = StringUtil.split(rule.getString("bySetPosList"), ",");
     }
-
-    /** 
-     * Gets the current date/time.
-     *@return long Timestamp of the current date/time
-     */
-    private long now() {
-        return System.currentTimeMillis();
-    }
-
+    
     // Checks for a valid frequency property.
     private boolean checkFreq(String freq) {
         if (freq == null)
