@@ -51,7 +51,7 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
 
     public HtmlTreeExpandCollapseRenderer() {}
 
-    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast, List subNodeValues) throws IOException {
+    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException {
 
     	String pathString = buildPathString(node.getModelTree(), depth);
         context.put("nodePathString", pathString);
@@ -81,7 +81,7 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
             currentNodeTrail = new ArrayList();
         }
         */
-        boolean hasChildren = node.hasChildren(context, subNodeValues);
+        boolean hasChildren = node.hasChildren(context);
             Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
 
         // check to see if this node needs to be expanded.
