@@ -104,6 +104,8 @@
       <field name="runStatusId" type="id-ne"></field>
       <field name="beginningSynchTime" type="date-time"></field>
       <field name="lastSuccessfulSynchTime" type="date-time"></field>
+      <field name="lastCandidateEndTime" type="date-time"></field>
+      <field name="lastSplitStartTime" type="numeric"></field>
       <field name="toCreateInserted" type="numeric"></field>
       <field name="toCreateUpdated" type="numeric"></field>
       <field name="toCreateNotUpdated" type="numeric"></field>

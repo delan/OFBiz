@@ -70,6 +70,7 @@ public class EntitySyncContext {
 
     public GenericDelegator delegator;
     public LocalDispatcher dispatcher;
+    public Map context;
 
     public GenericValue userLogin;
     
@@ -111,11 +112,17 @@ public class EntitySyncContext {
     long perSplitMaxItems = 0;
     long splitStartTime = 0;
 
-    long startingTimeMillis = System.currentTimeMillis();
-    
     public EntitySyncContext(DispatchContext dctx, Map context) throws GeneralServiceException {
-        this.delegator = dctx.getDelegator();
+        this.context = context;
         this.dispatcher = dctx.getDispatcher();
+
+        this.delegator = dctx.getDelegator();
+        // what to do with the delegatorName? this is the delegatorName to use in this service...
+        String delegatorName = (String) context.get("delegatorName");
+        if (UtilValidate.isNotEmpty(delegatorName)) {
+            this.delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        }
+
 
         this.userLogin = (GenericValue) context.get("userLogin");
         
@@ -143,6 +150,8 @@ public class EntitySyncContext {
             this.currentRunStartTime = getCurrentRunStartTime(lastSuccessfulSynchTime, entityModelToUseList, delegator);
             this.setCurrentRunEndTime();
             
+            // this is mostly for the pull side... will always be null for at the beginning of a push process, to be filled in later
+            this.startDate = (Timestamp) context.get("startDate");
         } catch (GenericEntityException e) {
             throw new GeneralServiceException("Error initializing EntitySync Context", e);
         }
@@ -150,11 +159,6 @@ public class EntitySyncContext {
     
     public boolean hasMoreTimeToSync() {
         return currentRunStartTime.before(syncEndStamp);
-    }
-    
-    public void setCurrentRunTimesForNextBlock() {
-        this.currentRunStartTime = this.currentRunEndTime;
-        setCurrentRunEndTime();
     }
     
     protected void setCurrentRunEndTime() {
@@ -168,11 +172,20 @@ public class EntitySyncContext {
         this.splitStartTime = System.currentTimeMillis();
     }
     
+    protected static long getSplitMillis(GenericValue entitySync) {
+        long splitMillis = defaultSyncSplitMillis;
+        Long syncSplitMillis = entitySync.getLong("syncSplitMillis");
+        if (syncSplitMillis != null) {
+            splitMillis = syncSplitMillis.longValue();
+        }
+        return splitMillis;
+    }
+    
     /** create history record, target service should run in own tx */
     public void createInitialHistory() throws GeneralServiceException {
         String errorMsg = "Not running EntitySync [" + entitySyncId + "], could not create EntitySyncHistory";
         try {
-            Map initialHistoryRes = dispatcher.runSync("createEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "beginningSynchTime", currentRunStartTime, "userLogin", userLogin));
+            Map initialHistoryRes = dispatcher.runSync("createEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "beginningSynchTime", this.currentRunStartTime, "lastCandidateEndTime", this.currentRunEndTime, "userLogin", userLogin));
             if (ServiceUtil.isError(initialHistoryRes)) {
                 List errorList = new LinkedList();
                 saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher, userLogin);
@@ -182,32 +195,6 @@ public class EntitySyncContext {
         } catch (GenericServiceException e) {
             throw new GeneralServiceException(errorMsg, e);
         }
-    }
-    
-    public void runPushStartRunning() throws GeneralServiceException {
-        if (UtilValidate.isEmpty(targetServiceName)) {
-            throw new GeneralServiceException("Not running EntitySync [" + entitySyncId + "], no targetServiceName is specified, where do we send the data?");
-        }
-        
-        // check to see if this sync is already running, if so return error
-        if ("ESR_RUNNING".equals(entitySync.getString("runStatusId"))) {
-            throw new GeneralServiceException("Not running EntitySync [" + entitySyncId + "], an instance is already running.");
-        }
-        
-        String markErrorMsg = "Could not start Entity Sync service, could not mark as running";
-        try {
-            // not running, get started NOW
-            // set running status on entity sync, run in its own tx
-            Map startEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "userLogin", userLogin));
-            if (ModelService.RESPOND_ERROR.equals(startEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
-                throw new GeneralServiceException(markErrorMsg, null, null, startEntitySyncRes, null);
-            }
-        } catch (GenericServiceException e) {
-            throw new GeneralServiceException(markErrorMsg, e);
-        }
-        
-        // finally create the initial history record
-        this.createInitialHistory();
     }
     
     public ArrayList assembleValuesToCreate() throws GeneralServiceException {
@@ -320,79 +307,46 @@ public class EntitySyncContext {
         return keysToRemove;
     }
     
-    public void updateTotalsForSplit(long totalRowsToCreateCur, long totalRowsToStoreCur, long totalRowsToRemoveCur) {
-        this.totalRowsPerSplit = totalRowsToCreateCur + totalRowsToStoreCur + totalRowsToRemoveCur;
-        
-        if (this.totalRowsPerSplit < this.perSplitMinItems) {
-            this.perSplitMinItems = this.totalRowsPerSplit;
-        }
-        if (this.totalRowsPerSplit > this.perSplitMaxItems) {
-            this.perSplitMaxItems = this.totalRowsPerSplit;
-        }
-
-        this.totalRowsToCreate += totalRowsToCreateCur;
-        this.totalRowsToStore += totalRowsToStoreCur;
-        this.totalRowsToRemove += totalRowsToRemoveCur;
-    }
-    
-    public void runPushSendData(ArrayList valuesToCreate, ArrayList valuesToStore, List keysToRemove) throws GeneralServiceException {
-        // call service named on EntitySync, IFF there is actually data to send over
-        if (totalRowsPerSplit > 0) {
-            Map targetServiceMap = UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToCreate", valuesToCreate, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin);
-            if (UtilValidate.isNotEmpty(targetDelegatorName)) {
-                targetServiceMap.put("delegatorName", targetDelegatorName);
-            }
-            String serviceErrorMsg = "Error running EntitySync [" + entitySyncId + "], call to store service [" + targetServiceName + "] failed.";
-            try {
-                Map remoteStoreResult = dispatcher.runSync(targetServiceName, targetServiceMap);
-                if (ServiceUtil.isError(remoteStoreResult)) {
-                    List errorList = new LinkedList();
-                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_OTHER_ERROR", errorList, dispatcher, userLogin);
-                    throw new GeneralServiceException(serviceErrorMsg, errorList, null, remoteStoreResult, null);
-                }
-                
-                totalStoreCalls++;
-                
-                long toCreateInsertedCur = remoteStoreResult.get("toCreateInserted") == null ? 0 : ((Long) remoteStoreResult.get("toCreateInserted")).longValue();
-                long toCreateUpdatedCur = remoteStoreResult.get("toCreateUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toCreateUpdated")).longValue();
-                long toCreateNotUpdatedCur = remoteStoreResult.get("toCreateNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toCreateNotUpdated")).longValue();
-                long toStoreInsertedCur = remoteStoreResult.get("toStoreInserted") == null ? 0 : ((Long) remoteStoreResult.get("toStoreInserted")).longValue();
-                long toStoreUpdatedCur = remoteStoreResult.get("toStoreUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toStoreUpdated")).longValue();
-                long toStoreNotUpdatedCur = remoteStoreResult.get("toStoreNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toStoreNotUpdated")).longValue();
-                long toRemoveDeletedCur = remoteStoreResult.get("toRemoveDeleted") == null ? 0 : ((Long) remoteStoreResult.get("toRemoveDeleted")).longValue();
-                long toRemoveAlreadyDeletedCur = remoteStoreResult.get("toRemoveAlreadyDeleted") == null ? 0 : ((Long) remoteStoreResult.get("toRemoveAlreadyDeleted")).longValue();
-                
-                toCreateInserted += toCreateInsertedCur;
-                toCreateUpdated += toCreateUpdatedCur;
-                toCreateNotUpdated += toCreateNotUpdatedCur;
-                toStoreInserted += toStoreInsertedCur;
-                toStoreUpdated += toStoreUpdatedCur;
-                toStoreNotUpdated += toStoreNotUpdatedCur;
-                toRemoveDeleted += toRemoveDeletedCur;
-                toRemoveAlreadyDeleted += toRemoveAlreadyDeletedCur;
-            } catch (GenericServiceException e) {
-                throw new GeneralServiceException(serviceErrorMsg, e);
-            }
-        }
-
-        long splitTotalTime = System.currentTimeMillis() - splitStartTime;
-        if (splitTotalTime < perSplitMinMillis) {
-            perSplitMinMillis = splitTotalTime;
-        }
-        if (splitTotalTime > perSplitMaxMillis) {
-            perSplitMaxMillis = splitTotalTime;
-        }
-    }
-    
     public void saveResultsReportedFromDataStore() throws GeneralServiceException {
         try {
-            long runningTimeMillis = System.currentTimeMillis() - startingTimeMillis;
+            long runningTimeMillis = System.currentTimeMillis() - startDate.getTime();
+
+            this.currentRunStartTime = this.currentRunEndTime;
+            setCurrentRunEndTime();
+
+            // get the total for this split
+            long splitTotalTime = System.currentTimeMillis() - this.splitStartTime;
+            if (splitTotalTime < this.perSplitMinMillis) {
+                this.perSplitMinMillis = splitTotalTime;
+            }
+            if (splitTotalTime > this.perSplitMaxMillis) {
+                this.perSplitMaxMillis = splitTotalTime;
+            }
             
+            // start the timer for the next split
+            setSplitStartTime();
+
+            // total the rows saved so far, and gather some info about them before saving
+            this.totalRowsPerSplit = this.toCreateInserted + this.toCreateNotUpdated + this.toCreateUpdated +
+                    this.toStoreInserted + this.toStoreNotUpdated + this.toStoreUpdated +
+                    this.toRemoveAlreadyDeleted + this.toRemoveDeleted;
+            if (this.totalRowsPerSplit < this.perSplitMinItems) {
+                this.perSplitMinItems = this.totalRowsPerSplit;
+            }
+            if (this.totalRowsPerSplit > this.perSplitMaxItems) {
+                this.perSplitMaxItems = this.totalRowsPerSplit;
+            }
+            this.totalRowsToCreate += this.toCreateInserted + this.toCreateNotUpdated + this.toCreateUpdated;
+            this.totalRowsToStore += this.toStoreInserted + this.toStoreNotUpdated + this.toStoreUpdated;
+            this.totalRowsToRemove += this.toRemoveAlreadyDeleted + this.toRemoveDeleted;
+
             // store latest result on EntitySync, ie update lastSuccessfulSynchTime, should run in own tx
-            Map updateEsRunResult = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "lastSuccessfulSynchTime", currentRunEndTime, "userLogin", userLogin));
+            Map updateEsRunResult = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "lastSuccessfulSynchTime", this.currentRunStartTime, "userLogin", userLogin));
 
             // store result of service call on history with results so far, should run in own tx
-            Map updateHistoryMap = UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "lastSuccessfulSynchTime", currentRunEndTime);
+            Map updateHistoryMap = UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, 
+                    "lastSuccessfulSynchTime", this.currentRunStartTime, "lastCandidateEndTime", this.currentRunEndTime, 
+                    "lastSplitStartTime", new Long(this.splitStartTime));
             updateHistoryMap.put("toCreateInserted", new Long(toCreateInserted));
             updateHistoryMap.put("toCreateUpdated", new Long(toCreateUpdated));
             updateHistoryMap.put("toCreateNotUpdated", new Long(toCreateNotUpdated));
@@ -475,15 +429,6 @@ public class EntitySyncContext {
         if (Debug.infoOn()) Debug.logInfo("Finished runEntitySync: totalRows=" + totalRows + ", totalRowsToCreate=" + totalRowsToCreate + ", totalRowsToStore=" + totalRowsToStore + ", totalRowsToRemove=" + totalRowsToRemove, module);
     }
 
-    protected static long getSplitMillis(GenericValue entitySync) {
-        long splitMillis = defaultSyncSplitMillis;
-        Long syncSplitMillis = entitySync.getLong("syncSplitMillis");
-        if (syncSplitMillis != null) {
-            splitMillis = syncSplitMillis.longValue();
-        }
-        return splitMillis;
-    }
-    
     /** prepare a list of all entities we want to synchronize: remove all view-entities and all entities that don't match the patterns attached to this EntitySync */
     protected static List makeEntityModelToUseList(GenericDelegator delegator, GenericValue entitySync) throws GenericEntityException {
         List entityModelToUseList = new LinkedList();
@@ -602,4 +547,143 @@ public class EntitySyncContext {
             }
         }
     }
+
+    // ======================== PUSH Methods ========================
+    // ======================== PUSH Methods ========================
+    public void runPushStartRunning() throws GeneralServiceException {
+        if (UtilValidate.isEmpty(targetServiceName)) {
+            throw new GeneralServiceException("Not running EntitySync [" + entitySyncId + "], no targetServiceName is specified, where do we send the data?");
+        }
+        
+        // check to see if this sync is already running, if so return error
+        if ("ESR_RUNNING".equals(entitySync.getString("runStatusId"))) {
+            throw new GeneralServiceException("Not running EntitySync [" + entitySyncId + "], an instance is already running.");
+        }
+        
+        String markErrorMsg = "Could not start Entity Sync service, could not mark as running";
+        try {
+            // not running, get started NOW
+            // set running status on entity sync, run in its own tx
+            Map startEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "userLogin", userLogin));
+            if (ModelService.RESPOND_ERROR.equals(startEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
+                throw new GeneralServiceException(markErrorMsg, null, null, startEntitySyncRes, null);
+            }
+        } catch (GenericServiceException e) {
+            throw new GeneralServiceException(markErrorMsg, e);
+        }
+        
+        // finally create the initial history record
+        this.createInitialHistory();
+    }
+    
+    public void runPushSendData(ArrayList valuesToCreate, ArrayList valuesToStore, List keysToRemove) throws GeneralServiceException {
+        // call service named on EntitySync, IFF there is actually data to send over
+        if (totalRowsPerSplit > 0) {
+            Map targetServiceMap = UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToCreate", valuesToCreate, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin);
+            if (UtilValidate.isNotEmpty(targetDelegatorName)) {
+                targetServiceMap.put("delegatorName", targetDelegatorName);
+            }
+            String serviceErrorMsg = "Error running EntitySync [" + entitySyncId + "], call to store service [" + targetServiceName + "] failed.";
+            try {
+                Map remoteStoreResult = dispatcher.runSync(targetServiceName, targetServiceMap);
+                if (ServiceUtil.isError(remoteStoreResult)) {
+                    List errorList = new LinkedList();
+                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_OTHER_ERROR", errorList, dispatcher, userLogin);
+                    throw new GeneralServiceException(serviceErrorMsg, errorList, null, remoteStoreResult, null);
+                }
+                
+                this.totalStoreCalls++;
+                
+                long toCreateInsertedCur = remoteStoreResult.get("toCreateInserted") == null ? 0 : ((Long) remoteStoreResult.get("toCreateInserted")).longValue();
+                long toCreateUpdatedCur = remoteStoreResult.get("toCreateUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toCreateUpdated")).longValue();
+                long toCreateNotUpdatedCur = remoteStoreResult.get("toCreateNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toCreateNotUpdated")).longValue();
+                long toStoreInsertedCur = remoteStoreResult.get("toStoreInserted") == null ? 0 : ((Long) remoteStoreResult.get("toStoreInserted")).longValue();
+                long toStoreUpdatedCur = remoteStoreResult.get("toStoreUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toStoreUpdated")).longValue();
+                long toStoreNotUpdatedCur = remoteStoreResult.get("toStoreNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toStoreNotUpdated")).longValue();
+                long toRemoveDeletedCur = remoteStoreResult.get("toRemoveDeleted") == null ? 0 : ((Long) remoteStoreResult.get("toRemoveDeleted")).longValue();
+                long toRemoveAlreadyDeletedCur = remoteStoreResult.get("toRemoveAlreadyDeleted") == null ? 0 : ((Long) remoteStoreResult.get("toRemoveAlreadyDeleted")).longValue();
+                
+                this.toCreateInserted += toCreateInsertedCur;
+                this.toCreateUpdated += toCreateUpdatedCur;
+                this.toCreateNotUpdated += toCreateNotUpdatedCur;
+                this.toStoreInserted += toStoreInsertedCur;
+                this.toStoreUpdated += toStoreUpdatedCur;
+                this.toStoreNotUpdated += toStoreNotUpdatedCur;
+                this.toRemoveDeleted += toRemoveDeletedCur;
+                this.toRemoveAlreadyDeleted += toRemoveAlreadyDeletedCur;
+            } catch (GenericServiceException e) {
+                throw new GeneralServiceException(serviceErrorMsg, e);
+            }
+        }
+    }
+    
+    // ======================== PULL Methods ========================
+    public void runPullStartOrRestoreSavedResults() throws GeneralServiceException {
+        // if EntitySync.statusId is ESR_RUNNING, make sure startDate matches EntitySync.lastHistoryStartDate; or return error
+        if ("ESR_RUNNING".equals(entitySync.getString("runStatusId")) && this.startDate == null) {
+            throw new GeneralServiceException("Not running EntitySync [" + entitySyncId + "], an instance is already running and no startDate for the current run was passed.");
+        }
+        
+        if (this.startDate == null) {
+            // get it started!
+            String markErrorMsg = "Could not start Entity Sync service, could not mark as running";
+            try {
+                // not running, get started NOW
+                // set running status on entity sync, run in its own tx
+                Map startEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "userLogin", userLogin));
+                if (ModelService.RESPOND_ERROR.equals(startEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
+                    throw new GeneralServiceException(markErrorMsg, null, null, startEntitySyncRes, null);
+                }
+            } catch (GenericServiceException e) {
+                throw new GeneralServiceException(markErrorMsg, e);
+            }
+            
+            // finally create the initial history record
+            this.createInitialHistory();
+            this.setSplitStartTime();
+        } else {
+            try {
+                // set the latest values from the EntitySyncHistory, based on the values on the EntitySync
+                GenericValue entitySyncHistory = delegator.findByPrimaryKey("EntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate));
+                this.toCreateInserted = UtilMisc.toLong(entitySyncHistory.getLong("toCreateInserted"));
+                this.toCreateUpdated = UtilMisc.toLong(entitySyncHistory.getLong("toCreateUpdated"));
+                this.toCreateNotUpdated = UtilMisc.toLong(entitySyncHistory.getLong("toCreateNotUpdated"));
+
+                this.toStoreInserted = UtilMisc.toLong(entitySyncHistory.getLong("toStoreInserted"));
+                this.toStoreUpdated = UtilMisc.toLong(entitySyncHistory.getLong("toStoreUpdated"));
+                this.toStoreNotUpdated = UtilMisc.toLong(entitySyncHistory.getLong("toStoreNotUpdated"));
+
+                this.toRemoveDeleted = UtilMisc.toLong(entitySyncHistory.getLong("toRemoveDeleted"));
+                this.toRemoveAlreadyDeleted = UtilMisc.toLong(entitySyncHistory.getLong("toRemoveAlreadyDeleted"));
+
+                this.totalStoreCalls = UtilMisc.toLong(entitySyncHistory.getLong("totalStoreCalls"));
+                this.totalSplits = UtilMisc.toLong(entitySyncHistory.getLong("totalSplits"));
+                this.totalRowsToCreate = UtilMisc.toLong(entitySyncHistory.getLong("totalRowsToCreate"));
+                this.totalRowsToStore = UtilMisc.toLong(entitySyncHistory.getLong("totalRowsToStore"));
+                this.totalRowsToRemove = UtilMisc.toLong(entitySyncHistory.getLong("totalRowsToRemove"));
+
+                this.perSplitMinMillis = UtilMisc.toLong(entitySyncHistory.getLong("perSplitMinMillis"));
+                this.perSplitMaxMillis = UtilMisc.toLong(entitySyncHistory.getLong("perSplitMaxMillis"));
+                this.perSplitMinItems = UtilMisc.toLong(entitySyncHistory.getLong("perSplitMinItems"));
+                this.perSplitMaxItems = UtilMisc.toLong(entitySyncHistory.getLong("perSplitMaxItems"));
+
+                this.splitStartTime = UtilMisc.toLong(entitySyncHistory.getLong("lastSplitStartTime"));
+            } catch (GenericEntityException e) {
+                throw new GeneralServiceException("Error getting existing EntitySyncHistory values", e);
+            }
+            
+            // got the previous values, now add to them with the values from the context...
+            this.toCreateInserted += UtilMisc.toLong(this.context.get("toCreateInserted"));
+            this.toCreateUpdated += UtilMisc.toLong(this.context.get("toCreateUpdated"));
+            this.toCreateNotUpdated += UtilMisc.toLong(this.context.get("toCreateNotUpdated"));
+            this.toStoreInserted += UtilMisc.toLong(this.context.get("toStoreInserted"));
+            this.toStoreUpdated += UtilMisc.toLong(this.context.get("toStoreUpdated"));
+            this.toStoreNotUpdated += UtilMisc.toLong(this.context.get("toStoreNotUpdated"));
+            this.toRemoveDeleted += UtilMisc.toLong(this.context.get("toRemoveDeleted"));
+            this.toRemoveAlreadyDeleted += UtilMisc.toLong(this.context.get("toRemoveAlreadyDeleted"));
+            
+            this.totalStoreCalls++;
+        }
+    }
 }
+
