@@ -113,7 +113,7 @@
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/UpdateProductAttribute</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/EditFeatureCategoryFeatures</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productId" value="<%=productId%>">
   <div class='head2'>Add ProductFeature from Category:</div>
   <br>

@@ -84,14 +84,24 @@
 <form method="POST" action="<ofbiz:url>/CreateFeatureCategory</ofbiz:url>" style='margin: 0;'>
   <div class='head2'>Create a Product Feature Category:</div>
   <br>
-  <div class='tabletext'>Description: <input type=text size='30' name='description' value=''></div>
-  <div class='tabletext'>Parent Category: <select name='parentCategoryId' size=1>
-    <option value=''>&nbsp;</option>
-    <ofbiz:iterator name="productFeatureCategory" property="productFeatureCategories">
-      <option value='<%=productFeatureCategory.getString("productFeatureCategoryId")%>'><%=productFeatureCategory.getString("description")%> [<%=productFeatureCategory.getString("productFeatureCategoryId")%>]</option>
-    </ofbiz:iterator>
-  </select></div>
-  <input type="submit" value="Create">
+  <table>
+    <tr>
+      <td><div class='tabletext'>Description:</div></td>
+      <td><input type=text size='30' name='description' value=''></td>
+    </tr>
+    <tr>
+      <td><div class='tabletext'>Parent Category:</div></td>
+      <td><select name='parentCategoryId' size=1>
+        <option value=''>&nbsp;</option>
+        <ofbiz:iterator name="productFeatureCategory" property="productFeatureCategories">
+          <option value='<%=productFeatureCategory.getString("productFeatureCategoryId")%>'><%=productFeatureCategory.getString("description")%> [<%=productFeatureCategory.getString("productFeatureCategoryId")%>]</option>
+        </ofbiz:iterator>
+      </select></td>
+    </tr>
+    <tr>
+      <td colspan='2'><input type="submit" value="Create"></td>
+    </tr>
+  </table>
 </form>
 <br>
 
