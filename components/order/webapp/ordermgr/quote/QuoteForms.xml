@@ -39,21 +39,6 @@
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
         <field name="description"><hidden/></field>
-        <!--
-        <field name="productId">
-            <lookup target-form-name="LookupProduct"/>
-        </field>
-        
-        <field name="partyIdTo">
-            <lookup target-form-name="LookupPartyGroup"/>
-        </field>
-        <field name="roleTypeIdFrom"><hidden/></field>
-        <field name="roleTypeIdTo"><hidden/></field>
-        <field name="agreementDate"><hidden/></field>
-        <field name="description"><hidden/></field>
-        <field name="textData"><hidden/></field>
-        <field name="thruDate"><hidden/></field>
-        -->
         <field name="submitButton" title="Find" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -75,17 +60,6 @@
         <field name="quoteTypeId">
             <display-entity entity-name="QuoteType"/>
         </field>
-        <!--
-        <field name="roleTypeIdFrom"><hidden/></field>
-        <field name="roleTypeIdTo">
-            <display-entity entity-name="RoleType" key-field-name="roleTypeId"/>
-        </field>
-        <field name="agreementDate"><hidden/></field>
-        <field name="textData"><hidden/></field>
-        <field name="cancelLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="cancelAgreement?agreementId=${agreementId}" description="[${uiLabelMap.CommonCancel}]" also-hidden="false"/>
-        </field>
-        -->
     </form>
     <form name="EditQuote" type="single"
             target="updateQuote" title="" default-map-name="quote"
@@ -101,27 +75,6 @@
         <field name="partyId">
             <lookup target-form-name="LookupPartyGroup"/>
         </field>
-        <!--
-        <field name="productId">
-            <lookup target-form-name="LookupProduct"/>
-        </field>
-        <field name="partyIdFrom">
-            <lookup target-form-name="LookupPartyGroup"/>
-        </field>
-        <field name="roleTypeIdFrom">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
-            </drop-down>
-        </field>
-        <field name="roleTypeIdTo">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
-            </drop-down>
-        </field>
-        <field name="partyIdTo">
-            <lookup target-form-name="LookupPartyGroup"/>
-        </field>
-        -->
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -141,11 +94,6 @@
         <field name="uomId"><hidden/></field>
         <field name="custRequestId"><display description="${custRequestId} - ${custRequestItemSeqId}"/></field>
         <field name="custRequestItemSeqId"><hidden/></field>
-        <!--
-        <field name="agreementItemTypeId">
-            <display-entity entity-name="AgreementItemType"/>
-        </field>
-        -->
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeQuoteItem?quoteItemSeqId=${quoteItemSeqId}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
         </field>
@@ -180,23 +128,6 @@
                 </entity-options>
             </drop-down>
         </field>
-
-        <!--
-        <field name="agreementId"><hidden/></field>
-        <field name="agreementItemSeqId"><display/></field>
-        <field name="agreementItemTypeId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="AgreementItemType" key-field-name="agreementItemTypeId"/>
-            </drop-down>
-        </field>
-        <field name="currencyUomId">
-            <drop-down allow-empty="true">
-                <entity-options description="${uomId} - ${description}" entity-name="Uom" key-field-name="uomId">
-                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        -->
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -207,16 +138,6 @@
             target="" paginate-target="ListQuoteAttributes" title="" type="list">
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="display"/>
         <field name="quoteId"><hidden/></field>
-        <!--
-        <field name="agreementId"><hidden/></field>
-        <field name="agreementItemSeqId"><hidden/></field>
-        <field name="agreementTermId" title="Edit" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${agreementTermId}" target="EditAgreementTerm?agreementTermId=${agreementTermId}&amp;agreementId=${agreementId}"/>
-        </field>
-        <field name="termTypeId">
-            <display-entity entity-name="TermType"/>
-        </field>
-        -->
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="removeQuoteAttribute?attrName=${attrName}&amp;quoteId=${quoteId}" description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
         </field>
@@ -227,16 +148,6 @@
         <alt-target use-when="quoteAttribute==null" target="createQuoteAttribute"/>
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
-        <!--
-        <field name="agreementTermId"><display/></field>
-        <field name="termTypeId">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="TermType" description="${description}"/>
-            </drop-down>
-        </field>
-        <field name="agreementId"><hidden/></field>
-        <field name="agreementItemSeqId"><hidden/></field>
-        -->
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
