@@ -203,7 +203,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             updateOutput = false;
         }
 
-        appWin.requestFocus();
+        appFrame.requestFocus();
         this.lockScreenButton(this);
         //this.requestFocus();
 
