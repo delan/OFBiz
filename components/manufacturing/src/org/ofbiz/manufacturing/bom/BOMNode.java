@@ -395,6 +395,32 @@ public class BOMNode {
         }
     }
 
+    public void getProductsInPackages(ArrayList arr, double quantity, int depth, boolean excludeWIPs) {
+        // Now we set the depth and quantity of the current node
+        // in this breakdown.
+        this.depth = depth;
+        //this.quantity = Math.floor(quantity * quantityMultiplier / scrapFactor + 0.5);
+        this.quantity = quantity * quantityMultiplier * scrapFactor;
+        // First of all we visit the current node.
+        if (this.getProduct().getString("shipmentBoxTypeId") != null) {
+            arr.add(this);
+        } else {
+            GenericValue oneChild = null;
+            BOMNode oneChildNode = null;
+            depth++;
+            for (int i = 0; i < children.size(); i++) {
+                oneChild = (GenericValue)children.get(i);
+                oneChildNode = (BOMNode)childrenNodes.get(i);
+                if (excludeWIPs && "WIP".equals(oneChildNode.getProduct().getString("productTypeId"))) {
+                    continue;
+                }
+                if (oneChildNode != null) {
+                    oneChildNode.getProductsInPackages(arr, this.quantity, depth, excludeWIPs);
+                }
+            }
+        }
+    }
+
     public void sumQuantity(HashMap nodes) {
         // First of all, we try to fetch a node with the same partId
         BOMNode sameNode = (BOMNode)nodes.get(product.getString("productId"));
