@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.6 2004/02/02 12:37:08 jonesde Exp $
+ * $Id: SQLProcessor.java,v 1.7 2004/02/05 09:49:33 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
+import java.sql.*;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
@@ -37,6 +39,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDataSourceException;
@@ -48,7 +51,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * SQLProcessor - provides utitlity functions to ease database access
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class SQLProcessor {
@@ -75,6 +78,8 @@ public class SQLProcessor {
 
     // / The database resources to be used
     private ResultSet _rs = null;
+    
+    private ResultSetMetaData _rsmd = null;
 
     // / The SQL String used. Use for debugging only
     private String _sql;
@@ -87,7 +92,10 @@ public class SQLProcessor {
 
     // / true in case the connection shall be closed.
     private boolean _bDeleteConnection = false;
-
+    
+    private Map _needClobWorkAroundWrite = null;
+    private Map _needBlobWorkAroundWrite = null;
+    
     /**
      * Construct an object based on the helper/datasource
      *
@@ -113,6 +121,23 @@ public class SQLProcessor {
         if (_connection != null) {
             _manualTX = false;
         }
+    }
+    
+    ResultSetMetaData getResultSetMetaData() {
+        if (_rsmd == null) {
+            // try the ResultSet, if not null, or try the PreparedStatement, also if not null
+            try {
+                if (_rs != null) {
+                    _rsmd = _rs.getMetaData();
+                } else if (_ps != null) {
+                    _rsmd = _ps.getMetaData();
+                }
+            } catch (SQLException sqle2) {
+                Debug.logWarning("[SQLProcessor.rollback]: SQL Exception while rolling back insert. Error was:" + sqle2, module);
+                Debug.logWarning(sqle2, module);
+            }
+        }
+        return _rsmd;
     }
 
     /**
@@ -498,11 +523,20 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(String field) throws SQLException {
-        if (field != null)
-            _ps.setString(_ind, field);
-        else
+        //ResultSetMetaData rsmd = this.getResultSetMetaData();
+        //this doesn't seem to work, query not yet parsed: int colType = rsmd.getColumnType(_ind);
+        if (field != null) {
+            //if (field.length() > 4000) {
+                //Clob clb = new Cl
+                // doesn't work with Oracle drivers, need the funky work-around: _ps.setCharacterStream(_ind, new StringReader(field), field.length());
+                //_needClobWorkAroundWrite.put(new Integer(_ind), field);
+                //_ps.setString(_ind, " ");
+            //} else {
+                _ps.setString(_ind, field);
+            //}
+        } else {
             _ps.setNull(_ind, Types.VARCHAR);
-
+        }
         _ind++;
     }
 
