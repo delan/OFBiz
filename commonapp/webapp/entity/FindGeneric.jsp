@@ -41,7 +41,7 @@
 <%@ include file="/includes/onecolumn.jsp" %>
 
 <%String entityName=request.getParameter("entityName");%>
-<%ModelReader reader = helper.getModelReader();%>
+<%ModelReader reader = delegator.getModelReader();%>
 <%ModelEntity entity = reader.getModelEntity(entityName);%>
 
 <%boolean hasViewPermission=security.hasEntityPermission(entity.tableName, "_VIEW", session);%>
@@ -104,7 +104,7 @@
 
     if("true".equals(find))
     {
-      resultCol = helper.findByAnd(findByEntity.entityName, findByEntity.getAllFields(), null);
+      resultCol = delegator.findByAnd(findByEntity.entityName, findByEntity.getAllFields(), null);
       if(resultCol != null) resultArray = resultCol.toArray();
     }
     else

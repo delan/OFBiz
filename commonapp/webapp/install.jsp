@@ -8,7 +8,7 @@
 <%@ include file="/includes/onecolumn.jsp" %> 
 
 <%
-  String serverName = helper.getServerName();
+  String serverName = delegator.getServerName();
   String paths = UtilProperties.getPropertyValue("servers", serverName + ".sql.load.paths");
   
   ArrayList fileList = new ArrayList();
@@ -62,7 +62,7 @@
     <%}else{%>
       <LI><DIV class='tabletext'>No SQL Files found.</DIV>
     <%}%>
-    <%int genRowsChanged = generateData(helper);%>
+    <%int genRowsChanged = generateData(delegator);%>
      <%totalRowsChanged += genRowsChanged;%>
     <LI><DIV class='tabletext'>Loaded <%=genRowsChanged%> rows for generated entity granularity security settings (<%=totalRowsChanged%> total rows so far)</DIV>
   </UL>
@@ -151,31 +151,31 @@
     return rowsChanged;
   }
 
-  int generateData(GenericHelper helper)
+  int generateData(GenericDelegator delegator)
   {
     int rowsChanged = 0;
-    ModelReader reader = helper.getModelReader();
+    ModelReader reader = delegator.getModelReader();
     Collection entityCol = reader.getEntityNames();
     Iterator classNamesIterator = entityCol.iterator();
     while(classNamesIterator != null && classNamesIterator.hasNext()) { 
       ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());
-      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_ADMIN", "description", "Permission to Administer a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_ADMIN", "description", "Permission to Administer a " + entity.entityName + " entity.")) != null) rowsChanged++;
       else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating ADMIN SecurityPermission"; errorMessages.add(errorMsg); }
-      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_VIEW", "description", "Permission to View a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_VIEW", "description", "Permission to View a " + entity.entityName + " entity.")) != null) rowsChanged++;
       else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating VIEW SecurityPermission"; errorMessages.add(errorMsg); }
-      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_CREATE", "description", "Permission to Create a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_CREATE", "description", "Permission to Create a " + entity.entityName + " entity.")) != null) rowsChanged++;
       else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating CREATE SecurityPermission"; errorMessages.add(errorMsg); }
-      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_UPDATE", "description", "Permission to Update a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_UPDATE", "description", "Permission to Update a " + entity.entityName + " entity.")) != null) rowsChanged++;
       else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating UPDATE SecurityPermission"; errorMessages.add(errorMsg); }
-      if(helper.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_DELETE", "description", "Permission to Delete a " + entity.entityName + " entity.")) != null) rowsChanged++;
+      if(delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", entity.tableName + "_DELETE", "description", "Permission to Delete a " + entity.entityName + " entity.")) != null) rowsChanged++;
       else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating DELETE SecurityPermission"; errorMessages.add(errorMsg); }
 
-      if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", entity.tableName + "_ADMIN")) != null) rowsChanged++;
+      if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", entity.tableName + "_ADMIN")) != null) rowsChanged++;
       else { String errorMsg = "[install.generateData]: Generated Data Load error for entity \"" + entity.tableName + "\" creating FULLADMIN SecurityGroupPermission"; errorMessages.add(errorMsg); }
-      //if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_VIEW")) != null) rowsChanged++;
-      //if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_CREATE")) != null) rowsChanged++;
-      //if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_UPDATE")) != null) rowsChanged++;
-      //if(helper.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_DELETE")) != null) rowsChanged++;
+      //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_VIEW")) != null) rowsChanged++;
+      //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_CREATE")) != null) rowsChanged++;
+      //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_UPDATE")) != null) rowsChanged++;
+      //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", entity.tableName + "_DELETE")) != null) rowsChanged++;
     }
 
     return rowsChanged;

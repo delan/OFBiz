@@ -30,15 +30,15 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
-<jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <%
   String entityName = request.getParameter("entityName");
-  ModelReader reader = helper.getModelReader();
+  ModelReader reader = delegator.getModelReader();
   ModelEntity entity = reader.getModelEntity(entityName);
   TreeSet entSet = new TreeSet(reader.getEntityNames());
-  Collection typesCol = reader.getFieldTypeNames();
+  Collection typesCol = delegator.getEntityFieldTypeNames(entity);
   TreeSet types = new TreeSet(typesCol);
   String errorMsg = "";
 

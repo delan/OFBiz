@@ -34,35 +34,35 @@
 <fieldtypemodel>
   <!-- ===================== field-type-def ==================== -->
    <!-- General Types -->    
-    <field-type-def><type>blob</type><sql-type>OBJECT</sql-type><java-type>java.lang.Object</java-type></field-type-def>
-    <field-type-def><type>comment</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>currency-amount</type><sql-type>DOUBLE</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
-    <field-type-def><type>date-time</type><sql-type>TIMESTAMP</sql-type><java-type>java.sql.Timestamp</java-type></field-type-def>
-    <field-type-def><type>date</type><sql-type>DATE</sql-type><java-type>java.sql.Date</java-type></field-type-def>
-    <field-type-def><type>time</type><sql-type>TIME</sql-type><java-type>java.sql.Time</java-type></field-type-def>
-    <field-type-def><type>description</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>floating-point</type><sql-type>DOUBLE</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
-    <field-type-def><type>id</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>id-long</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>id-vlong</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>indicator</type><sql-type>CHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>long-varchar</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>name</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>numeric</type><sql-type>BIGINT</sql-type><java-type>Long</java-type><validate>isSignedLong</validate></field-type-def>
-    <field-type-def><type>short-varchar</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>value</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>very-long</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>very-short</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def type="blob" sql-type="OBJECT" java-type="java.lang.Object"></field-type-def>
+    <field-type-def type="comment" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="currency-amount" sql-type="DOUBLE" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
+    <field-type-def type="date-time" sql-type="TIMESTAMP" java-type="java.sql.Timestamp"></field-type-def>
+    <field-type-def type="date" sql-type="DATE" java-type="java.sql.Date"></field-type-def>
+    <field-type-def type="time" sql-type="TIME" java-type="java.sql.Time"></field-type-def>
+    <field-type-def type="description" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="floating-point" sql-type="DOUBLE" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
+    <field-type-def type="id" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="id-long" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="id-vlong" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="indicator" sql-type="CHAR" java-type="String"></field-type-def>
+    <field-type-def type="long-varchar" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="name" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="numeric" sql-type="BIGINT" java-type="Long"><validate name="isSignedLong" /></field-type-def>
+    <field-type-def type="short-varchar" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="value" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="very-long" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="very-short" sql-type="VARCHAR" java-type="String"></field-type-def>
 	
    <!-- Specialized Types -->
-    <field-type-def><type>credit-card-number</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isAnyCard</validate></field-type-def>
-    <field-type-def><type>credit-card-date</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isDateAfterToday</validate></field-type-def>
-    <field-type-def><type>email</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isEmail</validate></field-type-def>
-    <field-type-def><type>url</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
-    <field-type-def><type>id-ne</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
-    <field-type-def><type>id-long-ne</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
-    <field-type-def><type>id-vlong-ne</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
-    <field-type-def><type>tel-number</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isInternationalPhoneNumber</validate></field-type-def>
+    <field-type-def type="credit-card-number" sql-type="VARCHAR" java-type="String"><validate name="isAnyCard" /></field-type-def>
+    <field-type-def type="credit-card-date" sql-type="VARCHAR" java-type="String"><validate name="isDateAfterToday" /></field-type-def>
+    <field-type-def type="email" sql-type="VARCHAR" java-type="String"><validate name="isEmail" /></field-type-def>
+    <field-type-def type="url" sql-type="VARCHAR" java-type="String"></field-type-def>
+    <field-type-def type="id-ne" sql-type="VARCHAR" java-type="String"><validate name="isNotEmpty" /></field-type-def>
+    <field-type-def type="id-long-ne" sql-type="VARCHAR" java-type="String"><validate name="isNotEmpty" /></field-type-def>
+    <field-type-def type="id-vlong-ne" sql-type="VARCHAR" java-type="String"><validate name="isNotEmpty" /></field-type-def>
+    <field-type-def type="tel-number" sql-type="VARCHAR" java-type="String"><validate name="isInternationalPhoneNumber" /></field-type-def>
 
 </fieldtypemodel>
 

@@ -32,8 +32,6 @@ import org.ofbiz.core.entity.model.*;
  *@version    1.0
  */
 public class GenericValue extends GenericEntity {
-  /** Reference to an instance of GenericHelper used to do some basic operations on this entity value. If null various methods in this class will fail. This is automatically set by the GenericHelper implementations for all GenericValue objects instantiated through them. You may set this manually for objects you instantiate manually, but it is optional. */
-  public transient GenericHelper helper = null;
   /** Hashtable to cache various related entity collections */
   public transient Map relatedCache = null;
   /** Hashtable to cache various related cardinality one entity collections */
@@ -48,22 +46,24 @@ public class GenericValue extends GenericEntity {
   /** Creates new GenericValue from existing GenericValue */
   public GenericValue(GenericPK primaryKey) { super(primaryKey); }
   
-  public GenericValue create() { return helper.create(this); }
-  public void store() { helper.store(this); }
-  public void remove() { helper.removeByPrimaryKey(getPrimaryKey()); }
-  public void refresh() { helper.refresh(this); }
+  public GenericValue create() throws GenericEntityException { return delegator.create(this); }
+  public void store() throws GenericEntityException { delegator.store(this); }
+  public void remove() throws GenericEntityException { delegator.removeByPrimaryKey(getPrimaryKey()); }
+  public void refresh() throws GenericEntityException { delegator.refresh(this); }
   
   /** Get the named Related Entity for the GenericValue from the persistent store
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    *@return Collection of GenericValue instances as specified in the relation definition
    */
-  public Collection getRelated(String relationName) { return helper.getRelated(relationName, this); }
+  public Collection getRelated(String relationName) throws GenericEntityException { 
+    return delegator.getRelated(relationName, this); 
+  }
   /** Get the named Related Entity for the GenericValue from the persistent
    *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    *@return Collection of GenericValue instances as specified in the relation definition
    */
-  public Collection getRelatedCache(String relationName) {
+  public Collection getRelatedCache(String relationName) throws GenericEntityException {
     return getRelatedEmbeddedCache(relationName);
   }
   /** Get the named Related Entity for the GenericValue from the persistent
@@ -72,7 +72,7 @@ public class GenericValue extends GenericEntity {
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    *@return Collection of GenericValue instances as specified in the relation definition
    */
-  public Collection getRelatedEmbeddedCache(String relationName) {
+  public Collection getRelatedEmbeddedCache(String relationName) throws GenericEntityException {
     if(relatedCache == null) relatedCache = new Hashtable();
     Collection col = (Collection)relatedCache.get(relationName);
     if(col == null) {
@@ -86,13 +86,15 @@ public class GenericValue extends GenericEntity {
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    *@return Collection of GenericValue instances as specified in the relation definition
    */
-  public GenericValue getRelatedOne(String relationName) { return helper.getRelatedOne(relationName, this); }
+  public GenericValue getRelatedOne(String relationName) throws GenericEntityException {
+    return delegator.getRelatedOne(relationName, this); 
+  }
   /** Get the named Related Entity for the GenericValue from the persistent
    *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    *@return Collection of GenericValue instances as specified in the relation definition
    */
-  public GenericValue getRelatedOneCache(String relationName) {
+  public GenericValue getRelatedOneCache(String relationName) throws GenericEntityException {
     return getRelatedOneEmbeddedCache(relationName);
   }
   /** Get the named Related Entity for the GenericValue from the persistent
@@ -101,7 +103,7 @@ public class GenericValue extends GenericEntity {
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    *@return Collection of GenericValue instances as specified in the relation definition
    */
-  public GenericValue getRelatedOneEmbeddedCache(String relationName) {
+  public GenericValue getRelatedOneEmbeddedCache(String relationName) throws GenericEntityException {
     if(relatedOneCache == null) relatedOneCache = new Hashtable();
     GenericValue value = (GenericValue)relatedOneCache.get(relationName);
     if(value == null) {
@@ -114,7 +116,9 @@ public class GenericValue extends GenericEntity {
   /** Remove the named Related Entity for the GenericValue from the persistent store
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    */
-  public void removeRelated(String relationName) { helper.removeRelated(relationName, this); }
+  public void removeRelated(String relationName) throws GenericEntityException {
+    delegator.removeRelated(relationName, this); 
+  }
   /** PreStore the Entity instance so that on the next create or update, this will be updated in the same transaction
    *@param entity GenericValue instance that will be set or created if modified
    */
@@ -127,9 +131,4 @@ public class GenericValue extends GenericEntity {
     if(otherToStore == null) otherToStore = new LinkedList();
     return otherToStore;
   }
-  
-  /** Get the GenericHelper implementation instance that created this value object and that is repsonsible for it.
-   *@return GenericHelper object
-   */
-  public GenericHelper getHelper() { return helper; }
 }

@@ -34,11 +34,11 @@ import org.ofbiz.core.util.*;
 public class SequenceUtil
 {
   Map sequences = new Hashtable();
-  String serverName;
+  String helperName;
 
-  public SequenceUtil(String serverName)
+  public SequenceUtil(String helperName)
   {
-    this.serverName = serverName;
+    this.helperName = helperName;
   }
   
   public Long getNextSeqId(String seqName)
@@ -46,7 +46,7 @@ public class SequenceUtil
     SequenceBank bank = (SequenceBank)sequences.get(seqName);
     if(bank == null)
     {
-      bank = new SequenceBank(seqName, serverName);
+      bank = new SequenceBank(seqName, helperName);
       sequences.put(seqName, bank);
     }
     return bank.getNextSeqId();
@@ -63,12 +63,12 @@ public class SequenceUtil
     long curSeqId;
     long maxSeqId;
     String seqName;
-    String serverName;
+    String helperName;
     
-    public SequenceBank(String seqName, String serverName)
+    public SequenceBank(String seqName, String helperName)
     {
       this.seqName = seqName;
-      this.serverName = serverName;
+      this.helperName = helperName;
       curSeqId = 0;
       maxSeqId = 0;
       fillBank();
@@ -110,7 +110,7 @@ public class SequenceUtil
       Connection connection = null; 
       Statement stmt = null;
       ResultSet rs = null;
-      try { connection = ConnectionFactory.getConnection(serverName); }
+      try { connection = ConnectionFactory.getConnection(helperName); }
       catch (SQLException sqle) { Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
 
       String sql = null;

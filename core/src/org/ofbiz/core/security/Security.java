@@ -36,19 +36,15 @@ import org.ofbiz.core.entity.*;
  */
 public class Security
 {
-  GenericHelper helper = null;
+  GenericDelegator delegator = null;
 
-  public Security()
+  public Security(GenericDelegator delegator)
   {
-    this.helper = GenericHelperFactory.getDefaultHelper();
-  }
-  public Security(GenericHelper helper)
-  {
-    this.helper = helper;
+    this.delegator = delegator;
   }
   
-  public GenericHelper getHelper() { return helper; }
-  public void setHelper(GenericHelper helper) { this.helper = helper; }
+  public GenericDelegator getDelegator() { return delegator; }
+  public void setDelegator(GenericDelegator delegator) { this.delegator = delegator; }
   
   /** Hashtable to cache a Collection of UserLoginSecurityGroup entities for each UserLogin, by userLoginId.
    */  
@@ -62,14 +58,15 @@ public class Security
   
   /** Uses userLoginSecurityGroupByUserLoginId cache to speed up the finding of the userLogin's security group list.
    * @param userLoginId The userLoginId to find security groups by
-   * @return An iterator made from the Collection either cached or retrieved from the database through the UserLoginSecurityGroup Helper.
+   * @return An iterator made from the Collection either cached or retrieved from the database through the UserLoginSecurityGroup Delegator.
    */  
   public Iterator findUserLoginSecurityGroupByUserLoginId(String userLoginId)
   {
     Collection collection = (Collection)userLoginSecurityGroupByUserLoginId.get(userLoginId);
     if(collection == null) 
     {
-      collection = helper.findByAnd("UserLoginSecurityGroup", UtilMisc.toMap("userLoginId", userLoginId), null);
+      try { collection = delegator.findByAnd("UserLoginSecurityGroup", UtilMisc.toMap("userLoginId", userLoginId), null); }
+      catch(GenericEntityException e) { Debug.logWarning(e); }
       //make an empty collection to speed up the case where a userLogin belongs to no security groups
       if(collection == null) collection = new LinkedList();
       userLoginSecurityGroupByUserLoginId.put(userLoginId, collection);
@@ -86,12 +83,18 @@ public class Security
    */  
   public boolean securityGroupPermissionExists(String groupId, String permission)
   {
-    GenericPK securityGroupPermissionPK = helper.makePK("SecurityGroupPermission", UtilMisc.toMap("groupId", groupId, "permissionId", permission));
+    GenericPK securityGroupPermissionPK = delegator.makePK("SecurityGroupPermission", UtilMisc.toMap("groupId", groupId, "permissionId", permission));
     Boolean exists = (Boolean)securityGroupPermissionCache.get(securityGroupPermissionPK);
     if(exists == null)
     {
-      if(helper.findByPrimaryKey(securityGroupPermissionPK) != null) exists = new Boolean(true);
-      else exists = new Boolean(false);
+      try { 
+        if(delegator.findByPrimaryKey(securityGroupPermissionPK) != null) exists = new Boolean(true); 
+        else exists = new Boolean(false);
+      }
+      catch(GenericEntityException e) { 
+        exists = new Boolean(false);
+        Debug.logWarning(e); 
+      }
       securityGroupPermissionCache.put(securityGroupPermissionPK, exists);
     }
     return exists.booleanValue();

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/08/25 17:29:11  azeneski
+ * Started migrating Debug.log to Debug.logInfo and Debug.logError
+ *
  * Revision 1.4  2001/08/25 01:42:01  azeneski
  * Seperated event processing, now is found totally in EventHandler.java
  * Updated all classes which deal with events to use to new handler.
@@ -30,7 +33,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.servlet.ServletContext;
 
-import org.ofbiz.core.entity.GenericHelper;
+import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.util.ConfigXMLReader;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
@@ -65,7 +68,7 @@ public class JobManager {
     
     protected ServletContext context;
     protected JobScheduler js;
-    protected GenericHelper helper;
+    protected GenericDelegator delegator;
     protected SortedSet queue;
     
     /** Create a new empty JobManager. */
@@ -74,9 +77,9 @@ public class JobManager {
     }
     
     /** Creates a new JobManager Object. Will look for the XML scheduler file in the ServletContext. */
-    public JobManager(ServletContext context, GenericHelper helper) {
+    public JobManager(ServletContext context, GenericDelegator delegator) {
         this.context = context;
-        this.helper = helper;
+        this.delegator = delegator;
         HashMap config = null;
         String configFileUrl = null;
         try {
@@ -92,8 +95,8 @@ public class JobManager {
     }
     
     /** Creates a new JobManager object, using the HashMap of jobs to schedule. */
-    public JobManager(HashMap config, GenericHelper helper) {
-        this.helper = helper;
+    public JobManager(HashMap config, GenericDelegator delegator) {
+        this.delegator = delegator;
         init(config);
     }
     

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/13 18:32:55  epabst
+ * format credit card uniformly
+ *
  * Revision 1.1  2001/09/12 17:14:33  epabst
  * added helpers
  *
@@ -42,14 +45,21 @@ public class ContactHelper {
     public static Collection getContactMech(GenericValue party, String contactMechTypeId, boolean includeOld) {
         Collection result = new LinkedList();
         Date now = new java.util.Date();
-        Iterator partyContactMechIter = party.getRelated("PartyContactMech").iterator();
-        while (partyContactMechIter.hasNext()) {
+        Iterator partyContactMechIter = null;
+        try { partyContactMechIter = UtilMisc.toIterator(party.getRelated("PartyContactMech")); }
+        catch(GenericEntityException e) { Debug.logWarning(e); partyContactMechIter = null; }
+        
+        while(partyContactMechIter != null && partyContactMechIter.hasNext()) {
             GenericValue partyContactMech = (GenericValue) partyContactMechIter.next();
-            if (includeOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(now)) {
-                GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
-                if (contactMechTypeId == null || contactMechTypeId.equals(contactMech.get("contactMechTypeId"))) {
-                    result.add(contactMech);
-                }//else wrong type
+            if(includeOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(now)) {
+                GenericValue contactMech = null;
+                try { contactMech = partyContactMech.getRelatedOne("ContactMech"); }
+                catch(GenericEntityException e) { Debug.logWarning(e); contactMech = null; }
+                if(contactMech != null) {
+                  if(contactMechTypeId == null || contactMechTypeId.equals(contactMech.get("contactMechTypeId"))) {
+                      result.add(contactMech);
+                  }//else wrong type
+                }
             }//else old and includeOld is false
         }
         return result;

@@ -29,7 +29,7 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
-<jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <%
@@ -38,7 +38,7 @@
   if("true".equalsIgnoreCase(addMissingStr)) addMissing = true;
   
   Collection messages = new LinkedList();
-  GenericDAO dao = GenericDAO.getGenericDAO(helper.getServerName());
+  GenericDAO dao = GenericDAO.getGenericDAO(delegator.getServerName());
   dao.checkDb(messages, addMissing);
   Iterator miter = messages.iterator();
 %>

@@ -95,6 +95,28 @@ public class ModelUtil
     return fieldName;
   }
 
+  /** Converts a Java variable name to a database name.
+   * The naming conventions used to allow for this are as follows: a database name (table or column) is in all capital letters, and the words are separated by an underscore (for example: NEAT_ENTITY_NAME or RANDOM_FIELD_NAME); a Java name (ejb or field) is in all lower case letters, except the letter at the beginning of each word (for example: NeatEntityName or RandomFieldName). The convention of using a capital letter at the beginning of a class name in Java, or a lower-case letter for the beginning of a variable name in Java is also used along with the Java name convention above.
+   * @param javaName The Java variable name
+   * @return The database name
+   */  
+  public static String javaNameToDbName(String javaName)
+  {
+    if(javaName == null) return null;
+    if(javaName.length() <= 0) return "";
+    StringBuffer dbName = new StringBuffer();
+    dbName.append(Character.toUpperCase(javaName.charAt(0)));
+    int namePos = 1;
+    while(namePos < javaName.length()) {
+      char curChar = javaName.charAt(namePos);
+      if(Character.isUpperCase(curChar)) dbName.append('_');
+      dbName.append(Character.toUpperCase(curChar));
+      namePos++;
+    }
+    
+    return dbName.toString();
+  }
+
   /** Converts a package name to a path by replacing all '.' characters with the File.separatorChar character. Is therefore platform independent.
    * @param The package name.
    * @return The path name corresponding to the specified package name.

@@ -52,24 +52,24 @@ public class GenericWebEvent {
     String entityName = request.getParameter("entityName");
     if(entityName == null || entityName.length() <= 0) {
       request.setAttribute("ERROR_MESSAGE", "The entityName was not specified, but is required.");
-      Debug.logWarning("[updateGeneric] The entityName was not specified, but is required.");
+      Debug.logWarning("[GenericWebEvent.updateGeneric] The entityName was not specified, but is required.");
       return "error";
     }
     
     Security security = (Security)request.getAttribute("security");
-    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     if(security == null) {
       request.setAttribute("ERROR_MESSAGE", "The security object was not found in the request, please check the control servlet init.");
       Debug.logWarning("[updateGeneric] The security object was not found in the request, please check the control servlet init.");
       return "error";
     }
-    if(helper == null) {
-      request.setAttribute("ERROR_MESSAGE", "The helper object was not found in the request, please check the control servlet init.");
-      Debug.logWarning("[updateGeneric] The helper object was not found in the request, please check the control servlet init.");
+    if(delegator == null) {
+      request.setAttribute("ERROR_MESSAGE", "The delegator object was not found in the request, please check the control servlet init.");
+      Debug.logWarning("[updateGeneric] The delegator object was not found in the request, please check the control servlet init.");
       return "error";
     }
 
-    ModelReader reader = helper.getModelReader();
+    ModelReader reader = delegator.getModelReader();
     ModelEntity entity = reader.getModelEntity(entityName);
     
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -91,7 +91,9 @@ public class GenericWebEvent {
     //get the primary key parameters...
     for(int fnum=0; fnum<entity.pks.size(); fnum++) {
       ModelField field = (ModelField)entity.pks.get(fnum);
-      ModelFieldType type = field.modelFieldType;
+      ModelFieldType type = null;
+      try { type = delegator.getEntityFieldType(entity, field.type); }
+      catch(GenericEntityException e) { Debug.logWarning(e); errMsg += "<li> Fatal error: field type \"" + field.type + "\" not found"; }
       if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")) {
         String fvalDate = request.getParameter(field.name + "_DATE");
         String fvalTime = request.getParameter(field.name + "_TIME");
@@ -119,14 +121,22 @@ public class GenericWebEvent {
     if(updateMode.equals("DELETE")) {
       //Remove associated/dependent entries from other tables here
       //Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
-      helper.removeByPrimaryKey(findByEntity.getPrimaryKey());
+      try { delegator.removeByPrimaryKey(findByEntity.getPrimaryKey()); }
+      catch(GenericEntityException e) { 
+        Debug.logWarning(e); 
+        request.setAttribute("ERROR_MESSAGE", "Delete failed (write error)");
+        return "error";
+      }
+
       return "success";
     }
     
     //get the non-primary key parameters
     for(int fnum=0; fnum<entity.nopks.size(); fnum++) {
       ModelField field = (ModelField)entity.nopks.get(fnum);
-      ModelFieldType type = field.modelFieldType;
+      ModelFieldType type = null;
+      try { type = delegator.getEntityFieldType(entity, field.type); }
+      catch(GenericEntityException e) { Debug.logWarning(e); errMsg += "<li> Fatal error: field type \"" + field.type + "\" not found"; }
       if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")) {
         String fvalDate = request.getParameter(field.name + "_DATE");
         String fvalTime = request.getParameter(field.name + "_TIME");
@@ -151,11 +161,19 @@ public class GenericWebEvent {
     }
     
     //if the updateMode is CREATE, check to see if an entity with the specified primary key already exists
-    if(updateMode.compareTo("CREATE") == 0)
-      if(helper.findByPrimaryKey(findByEntity.getPrimaryKey()) != null) {
+    if(updateMode.equals("CREATE")) {
+      GenericValue tempEntity = null;
+      try { tempEntity = delegator.findByPrimaryKey(findByEntity.getPrimaryKey()); }
+      catch(GenericEntityException e) { 
+        Debug.logWarning(e); 
+        request.setAttribute("ERROR_MESSAGE", "Create failed while checking if exists (read error)");
+        return "error";
+      }
+      if(tempEntity != null) {
         errMsg = errMsg + "<li>" + entity.entityName + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.";
         Debug.logWarning("[updateGeneric] " + entity.entityName + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.");
       }
+    }
     
     //Validate parameters...
     for(int fnum=0; fnum<entity.fields.size(); fnum++) {
@@ -210,18 +228,21 @@ public class GenericWebEvent {
     }
     
     if(updateMode.equals("CREATE")) {
-      GenericValue value = helper.create(findByEntity.entityName, findByEntity.fields);
+      GenericValue value;
+      try { value = delegator.create(findByEntity.entityName, findByEntity.fields); }
+      catch(GenericEntityException e) { Debug.logWarning(e); value = null; }
       if(value == null) {
         request.setAttribute("ERROR_MESSAGE", "Creation of " + entity.entityName + " failed for entity: " + findByEntity.toString());
-        return "success";
+        return "error";
       }
     }
     else if(updateMode.equals("UPDATE")) {
-      GenericValue value = helper.makeValue(findByEntity.entityName, findByEntity.fields);
+      GenericValue value = delegator.makeValue(findByEntity.entityName, findByEntity.fields);
       try { value.store(); }
-      catch(Exception e) {
+      catch(GenericEntityException e) {
+        Debug.logWarning(e);
         request.setAttribute("ERROR_MESSAGE", "Update of " + entity.entityName + " failed for value: " + value.toString());
-        return "success";
+        return "error";
       }
     }
     else {

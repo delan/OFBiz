@@ -26,18 +26,19 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
+ *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    May 15, 2001
  *@version    1.0
  */
 
 public class ModelEntity {
+  /** The ModelReader that created this Entity */
+  public ModelReader modelReader = null;
+  
   /** The entity-name of the Entity */
   public String entityName = "";
   /** The table-name of the Entity */
   public String tableName = "";
-  /** Use the Value object cache in the Helper? */
-  public boolean useCache = false;
   
   /** The package-name of the Entity */
   public String packageName = "";
@@ -65,6 +66,8 @@ public class ModelEntity {
   
   /** Default Constructor */
   public ModelEntity() { }
+  
+  public ModelReader getModelReader() { return modelReader; }
   
   public void updatePkLists() {
     pks = new Vector();

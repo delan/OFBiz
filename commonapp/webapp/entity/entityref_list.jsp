@@ -28,13 +28,13 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
-<jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <% 
   String search = null;
-  //GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-  ModelReader reader = helper.getModelReader();
+  //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
+  ModelReader reader = delegator.getModelReader();
   Collection ec = reader.getEntityNames();
   TreeSet entities = new TreeSet(ec);
   search = (String) request.getParameter("search");

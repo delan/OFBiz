@@ -41,7 +41,7 @@
 <%@ include file="/includes/onecolumn.jsp" %>
 
 <%String entityName = request.getParameter("entityName");%>
-<%ModelReader reader = helper.getModelReader();%>
+<%ModelReader reader = delegator.getModelReader();%>
 <%ModelEntity entity = reader.getModelEntity(entityName);%>
 
 <%boolean hasViewPermission=security.hasEntityPermission(entity.tableName, "_VIEW", session);%>
@@ -85,7 +85,7 @@
   }
   curFindString = UtilFormatOut.encodeQuery(curFindString);
 
-  GenericValue value = helper.findByPrimaryKey(findByPK);
+  GenericValue value = delegator.findByPrimaryKey(findByPK);
   if(value == null) useValue = false;
 %>
 
@@ -423,7 +423,7 @@ function ShowTab(lname)
 <%-- Start ModelRelation for <%=relation.relatedEjbName%>, type: one --%>
 <%if(value != null){%>
   <%if(security.hasEntityPermission(relatedEntity.tableName, "_VIEW", session)){%>
-    <%-- GenericValue valueRelated = helper.findByPrimaryKey(value.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.entityName) + ".get", "()")%>); --%>
+    <%-- GenericValue valueRelated = delegator.findByPrimaryKey(value.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.entityName) + ".get", "()")%>); --%>
     <%Iterator tempIter = UtilMisc.toIterator(value.getRelated(relation.title + relatedEntity.entityName));%>
     <%GenericValue valueRelated = null;%>
     <%if(tempIter != null && tempIter.hasNext()) valueRelated = (GenericValue)tempIter.next();%>
@@ -495,7 +495,7 @@ function ShowTab(lname)
 
 <%if(value != null){%>
   <%if(security.hasEntityPermission(relatedEntity.tableName, "_VIEW", session)){%>    
-    <%-- Iterator relatedIterator = UtilMisc.toIterator(helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>(value.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.entityName) + ".get", "()")%>)); --%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(delegator.findBy<%=relation.keyMapRelatedUpperString("And","")%>(value.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.entityName) + ".get", "()")%>)); --%>
     <%Iterator relatedIterator = UtilMisc.toIterator(value.getRelated(relation.title + relatedEntity.entityName));%>
   <DIV id=area<%=relIndex+1%> style="VISIBILITY: <%=(relIndex==0?"visible":"hidden")%>; POSITION: absolute" width="100%">
     <div class=areaheader>

@@ -37,15 +37,5 @@ public interface GenericRemote extends EJBObject
   public GenericValue getValueObject() throws RemoteException;
   /** Set the values in the value object for this Generic Entity. */
   public void setValueObject(GenericValue genericValue) throws RemoteException;
-
-  /** Get the named Related Entity for the GenericValue from the persistent store
-   *@param relationName String containing the relation name as specified in the entity XML definition file
-   *@return Collection of GenericValue instances as specified in the relation definition
-   */
-  public Collection getRelated(String relationName) throws RemoteException;
-  /** Remove the named Related Entity for the GenericValue from the persistent store
-   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
-   */
-  public void removeRelated(String relationName) throws RemoteException;
 }
 

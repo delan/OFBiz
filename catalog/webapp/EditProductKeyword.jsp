@@ -36,7 +36,7 @@
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
   String productId = request.getParameter("PRODUCT_ID");
-  GenericValue product = helper.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 %>
 
 <div class="head1">Edit Keywords for Product with ID "<%=productId%>"</div>

@@ -41,7 +41,7 @@
   if(fileType == null || fileType.length() <= 0) fileType="small";
 
   String productId = request.getParameter("PRODUCT_ID");
-  GenericValue product = helper.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
   if(product != null) {
 %>
     <%

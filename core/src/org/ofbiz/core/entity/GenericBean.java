@@ -48,17 +48,6 @@ public class GenericBean extends GenericEntity implements EntityBean
    */
   public GenericValue getValueObject() { return new GenericValue(modelEntity, fields); }
 
-  /** Get the named Related Entity for the GenericValue from the persistent store
-   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
-   *@return Collection of GenericValue instances as specified in the relation definition
-   */
-  public Collection getRelated(String relationName) { return genericDAO.selectRelated(relationName, this); }
-
-  /** Remove the named Related Entity for the GenericValue from the persistent store
-   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
-   */
-  public void removeRelated(String relationName) { genericDAO.deleteRelated(relationName, this); }
-
   /** Find a Generic Entity by its Primary Key
    *@param primaryKey The primary key to find by.
    *@return The GenericValue corresponding to the primaryKey
@@ -70,15 +59,6 @@ public class GenericBean extends GenericEntity implements EntityBean
     if(!genericDAO.select(genericValue)) throw new ObjectNotFoundException("GenericValue not found with primary key: " + primaryKey.toString());
     return primaryKey;
   }
-  /** Finds all Generic entities
-   *@param entityName The Name of the Entity as defined in the entity XML file
-   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
-   *@return    Collection containing all Generic entities
-   */
-  public Collection ejbFindAll(String entityName, List orderBy) throws FinderException
-  {
-    return entitiesToPKs(genericDAO.selectByAnd(entityName, null, orderBy));
-  }
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
@@ -87,7 +67,8 @@ public class GenericBean extends GenericEntity implements EntityBean
    */
   public Collection ejbFindByAnd(String entityName, Map fields, List orderBy) throws FinderException
   {
-    return entitiesToPKs(genericDAO.selectByAnd(entityName, fields, orderBy));
+    ModelEntity modelEntity = modelReader.getModelEntity(entityName);
+    return entitiesToPKs(genericDAO.selectByAnd(modelEntity, fields, orderBy));
   }
   private Collection entitiesToPKs(Collection col)
   {

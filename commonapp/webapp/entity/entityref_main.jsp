@@ -28,12 +28,12 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
-<jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 
 <% 
   String search = null;
-  //GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-  ModelReader reader = helper.getModelReader();
+  //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
+  ModelReader reader = delegator.getModelReader();
   Map packages = new HashMap();
   TreeSet packageNames = new TreeSet();
 
@@ -123,7 +123,7 @@
   for(int y = 0; y < entity.fields.size(); y++)
   {
     ModelField field = (ModelField) entity.fields.elementAt(y);	
-    ModelFieldType type = reader.getModelFieldType(field.type);
+    ModelFieldType type = delegator.getEntityFieldType(entity, field.type);
     String javaName = new String();
     javaName = field.isPk ? "<div style=\"color: red;\">" + field.name + "</div>" : field.name;
     if(ufields.contains(field.name))

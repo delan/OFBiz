@@ -1,9 +1,11 @@
-package org.ofbiz.core.util;
+package org.ofbiz.core.entity;
 
 import java.util.*;
 import java.sql.*;
 import javax.sql.*;
 import javax.naming.*;
+
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> ConnectionFactory.java
@@ -34,9 +36,9 @@ import javax.naming.*;
 public class ConnectionFactory
 {
   static Map dsCache = new Hashtable();
-  public static Connection getConnection(String serverName) throws SQLException
+  public static Connection getConnection(String helperName) throws SQLException
   {
-    String jndiName = UtilProperties.getPropertyValue("servers", serverName + ".jdbc.jndi.name");
+    String jndiName = UtilProperties.getPropertyValue("servers", helperName + ".jdbc.jndi.name");
     if(jndiName != null)
     {
       DataSource ds;
@@ -65,7 +67,7 @@ public class ConnectionFactory
     catch ( Exception ex ) { usingPoolMan = false; }
    
     if ( usingPoolMan ) {
-        String poolManName = UtilProperties.getPropertyValue("servers", serverName + ".jdbc.poolman");
+        String poolManName = UtilProperties.getPropertyValue("servers", helperName + ".jdbc.poolman");
         //Debug.logInfo("Attempting to connect to '"+poolManName+"'");
         Connection con = DriverManager.getConnection("jdbc:poolman://" + poolManName);
         if ( con != null ) {
@@ -76,12 +78,12 @@ public class ConnectionFactory
     }
     
     // Default to plain JDBC.
-    String driverClassName = UtilProperties.getPropertyValue("servers", serverName + ".jdbc.driver");
+    String driverClassName = UtilProperties.getPropertyValue("servers", helperName + ".jdbc.driver");
     try { Class.forName(driverClassName); }
     catch(ClassNotFoundException cnfe) { Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n"); Debug.logWarning(cnfe); return null; }
-    return DriverManager.getConnection(UtilProperties.getPropertyValue("servers", serverName + ".jdbc.uri"),
-                                       UtilProperties.getPropertyValue("servers", serverName + ".jdbc.username"),
-                                       UtilProperties.getPropertyValue("servers", serverName + ".jdbc.password"));
+    return DriverManager.getConnection(UtilProperties.getPropertyValue("servers", helperName + ".jdbc.uri"),
+                                       UtilProperties.getPropertyValue("servers", helperName + ".jdbc.username"),
+                                       UtilProperties.getPropertyValue("servers", helperName + ".jdbc.password"));
   }
 }
 

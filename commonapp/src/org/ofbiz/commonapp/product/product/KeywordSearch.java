@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/11 09:41:29  jonesde
+ * Cleaned up induceKeywords function, removed unneeded helper parameter.
+ *
  * Revision 1.2  2001/09/11 00:00:08  jonesde
  * Removed unnecessary throws statement.
  *
@@ -62,11 +65,14 @@ import org.ofbiz.core.util.*;
 public class KeywordSearch {  
   /** Does a product search by keyword using the PRODUCT_KEYWORD table.
    *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
-   *@param serverName The name of the server to get a connection to
+   *@param delegator The delegator to look up the name of the helper/server to get a connection to
    *@return Collection of productId Strings
    */
-  public static Collection productsByKeywords(String keywordsString, String serverName) {
-    if(serverName == null) return null;
+  public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator) {
+    if(delegator == null) return null;
+    String helperName = null;
+    helperName = delegator.getEntityHelperName("ProductKeyword");
+    
     Collection pbkCollection = new LinkedList();
     
     String keywords[] = makeKeywordList(keywordsString);
@@ -79,7 +85,7 @@ public class KeywordSearch {
     PreparedStatement statement = null;
     ResultSet resultSet = null;
     try {
-      connection = ConnectionFactory.getConnection(serverName);
+      connection = ConnectionFactory.getConnection(helperName);
       statement = connection.prepareStatement(sql);
       
       for(int i=0; i<params.size(); i++) {
@@ -178,8 +184,8 @@ public class KeywordSearch {
   public static void induceKeywords(GenericValue product)
   {
     if(product == null) return;
-    GenericHelper helper = product.getHelper();
-    if(helper == null) return;
+    GenericDelegator delegator = product.getDelegator();
+    if(delegator == null) return;
 
     Collection keywords = new TreeSet();
     keywords.add(product.getString("productId").toLowerCase());
@@ -209,7 +215,7 @@ public class KeywordSearch {
     while(kiter.hasNext())
     {
       String keyword = (String)kiter.next();
-      try { helper.create("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword)); }
+      try { delegator.create("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword)); }
       catch(Exception e) {}
     }
   }

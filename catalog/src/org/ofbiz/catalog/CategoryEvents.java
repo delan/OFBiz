@@ -43,7 +43,7 @@ public class CategoryEvents {
    */
   public static String updateCategory(HttpServletRequest request, HttpServletResponse response) {
     String errMsg = "";
-    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     Security security = (Security)request.getAttribute("security");
 
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -65,7 +65,7 @@ public class CategoryEvents {
     /* DEJ 01-09-11: Don't allow a delete for now, probably don't ever want to delete, just 
      * remove all tables associating/relating the category to other things...
     if(updateMode.equals("DELETE")) {
-      GenericValue delCategory = helper.findByPrimaryKey("Category", UtilMisc.toMap("productCategoryId", productCategoryId));
+      GenericValue delCategory = delegator.findByPrimaryKey("Category", UtilMisc.toMap("productCategoryId", productCategoryId));
       if(delCategory != null) {
         //Remove associated/dependent entries from other tables here
         delCategory.removeRelated("ProductCategoryMember");
@@ -92,16 +92,18 @@ public class CategoryEvents {
       return "error";
     }
 
-    GenericValue category = helper.makeValue("ProductCategory", null);
+    GenericValue category = delegator.makeValue("ProductCategory", null);
     category.set("productCategoryId", productCategoryId);
     category.set("primaryParentCategoryId", primaryParentCategoryId);
     category.set("description", description);
     category.set("categoryImageUrl", categoryImageUrl);
     
-    category.preStoreOther(helper.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", primaryParentCategoryId)));
+    category.preStoreOther(delegator.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", primaryParentCategoryId)));
     
     if(updateMode.equals("CREATE")) {
-      GenericValue newCategory = helper.create(category);
+      GenericValue newCategory = null;
+      try { newCategory = delegator.create(category); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newCategory = null; }
       if(newCategory == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create category (write error)");
         return "error";
@@ -109,7 +111,7 @@ public class CategoryEvents {
     }
     else if(updateMode.equals("UPDATE")) {
       try { category.store(); }
-      catch(Exception e) {
+      catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not update category (write error)");
         Debug.logWarning("[CategoryEvents.updateCategory] Could not update category (write error); message: " + e.getMessage());
         return "error";
@@ -130,7 +132,7 @@ public class CategoryEvents {
    */
   public static String updateProductCategoryMember(HttpServletRequest request, HttpServletResponse response) {
     String errMsg = "";
-    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     Security security = (Security)request.getAttribute("security");
 
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -158,25 +160,31 @@ public class CategoryEvents {
     }
         
     if(updateMode.equals("CREATE")) {
-      GenericValue productCategoryMember = helper.makeValue("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId));
-      if(helper.findByPrimaryKey(productCategoryMember.getPrimaryKey()) != null) {
+      GenericValue productCategoryMember = delegator.makeValue("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId));
+      GenericValue dummyValue = null;
+      try { dummyValue = delegator.findByPrimaryKey(productCategoryMember.getPrimaryKey()); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); dummyValue = null; }
+      if(dummyValue != null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (already exists)");
         return "error";
       }
-      productCategoryMember = productCategoryMember.create();
+      try { productCategoryMember = productCategoryMember.create(); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryMember = null; }
       if(productCategoryMember == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (write error)");
         return "error";
       }
     }
     else if(updateMode.equals("DELETE")) {
-      GenericValue productCategoryMember = helper.findByPrimaryKey("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId));
+      GenericValue productCategoryMember = null;
+      try { productCategoryMember = delegator.findByPrimaryKey("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId)); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryMember = null; }
       if(productCategoryMember == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");
         return "error";
       }
       try { productCategoryMember.remove(); }
-      catch(Exception e) {
+      catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");
         Debug.logWarning("[ProductEvents.updateProductCategoryMember] Could not remove product-category (write error); message: " + e.getMessage());
         return "error";
@@ -197,7 +205,7 @@ public class CategoryEvents {
    */
   public static String updateProductCategoryRollup(HttpServletRequest request, HttpServletResponse response) {
     String errMsg = "";
-    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     Security security = (Security)request.getAttribute("security");
 
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -225,27 +233,33 @@ public class CategoryEvents {
     }
         
     if(updateMode.equals("CREATE")) {
-      GenericValue productCategoryRollup = helper.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", parentProductCategoryId));
-      if(helper.findByPrimaryKey(productCategoryRollup.getPrimaryKey()) != null) {
+      GenericValue productCategoryRollup = delegator.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", parentProductCategoryId));
+      GenericValue dummyValue = null;
+      try { dummyValue = delegator.findByPrimaryKey(productCategoryRollup.getPrimaryKey()); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); dummyValue = null; }
+      if(dummyValue != null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (already exists)");
         return "error";
       }
-      helper.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
-      productCategoryRollup = productCategoryRollup.create();
+      delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
+      try { productCategoryRollup = productCategoryRollup.create(); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryRollup = null; }
       if(productCategoryRollup == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (write error)");
         return "error";
       }
     }
     else if(updateMode.equals("DELETE")) {
-      GenericValue productCategoryRollup = helper.findByPrimaryKey("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", parentProductCategoryId));
+      GenericValue productCategoryRollup = null;
+      try { productCategoryRollup = delegator.findByPrimaryKey("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", parentProductCategoryId)); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryRollup = null; }
       if(productCategoryRollup == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");
         return "error";
       }
-      helper.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
+      delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
       try { productCategoryRollup.remove(); }
-      catch(Exception e) {
+      catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");
         Debug.logWarning("[ProductEvents.updateProductCategoryRollup] Could not remove product-category (write error); message: " + e.getMessage());
         return "error";

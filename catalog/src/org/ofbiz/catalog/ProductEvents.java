@@ -46,7 +46,7 @@ public class ProductEvents {
    */
   public static String updateProduct(HttpServletRequest request, HttpServletResponse response) {
     String errMsg = "";
-    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     Security security = (Security)request.getAttribute("security");
 
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -68,7 +68,7 @@ public class ProductEvents {
     /* DEJ 01-09-10: Don't allow a delete for now, probably don't ever want to delete, just 
      * remove from category(ies) and set discontinuation dates
     if(updateMode.equals("DELETE")) {
-      GenericValue delProduct = helper.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+      GenericValue delProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
       if(delProduct != null) {
         //Remove associated/dependent entries from other tables here
         delProduct.removeRelated("ProductCategoryMember");
@@ -156,7 +156,7 @@ public class ProductEvents {
       return "error";
     }
 
-    GenericValue product = helper.makeValue("Product", null);
+    GenericValue product = delegator.makeValue("Product", null);
     product.set("productId", productId);
     product.set("primaryProductCategoryId", primaryProductCategoryId);
     product.set("manufacturerPartyId", manufacturerPartyId);
@@ -178,7 +178,9 @@ public class ProductEvents {
     product.set("showInSearch", showInSearch);
     
     if(updateMode.equals("CREATE")) {
-      GenericValue newProduct = helper.create(product);
+      GenericValue newProduct = null;
+      try { newProduct = delegator.create(product); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newProduct = null; }
       if(newProduct == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product (write error)");
         return "error";
@@ -187,7 +189,7 @@ public class ProductEvents {
     }
     else if(updateMode.equals("UPDATE")) {
       try { product.store(); }
-      catch(Exception e) {
+      catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not update product (write error)");
         Debug.logWarning("[ProductEvents.updateProduct] Could not update product (write error); message: " + e.getMessage());
         return "error";
@@ -209,7 +211,7 @@ public class ProductEvents {
    */
   public static String updateProductKeyword(HttpServletRequest request, HttpServletResponse response) {
     String errMsg = "";
-    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     Security security = (Security)request.getAttribute("security");
 
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -237,25 +239,33 @@ public class ProductEvents {
     }
     
     if(updateMode.equals("CREATE")) {
-      GenericValue productKeyword = helper.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
-      if(helper.findByPrimaryKey(productKeyword.getPrimaryKey()) != null) {
+      GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
+      GenericValue newValue = null;
+      try { newValue = delegator.findByPrimaryKey(productKeyword.getPrimaryKey()); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newValue = null; }
+      
+      if(newValue != null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-keyword entry (already exists)");
         return "error";
       }
-      productKeyword = productKeyword.create();
+
+      try { productKeyword = productKeyword.create(); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productKeyword = null; }
       if(productKeyword == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-keyword entry (write error)");
         return "error";
       }
     }
     else if(updateMode.equals("DELETE")) {
-      GenericValue productKeyword = helper.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
+      GenericValue productKeyword = null;
+      try { productKeyword = delegator.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword)); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productKeyword = null; }
       if(productKeyword == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (does not exist)");
         return "error";
       }
       try { productKeyword.remove(); }
-      catch(Exception e) {
+      catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (write error)");
         Debug.logWarning("[ProductEvents.updateProductKeyword] Could not remove product-keyword (write error); message: " + e.getMessage());
         return "error";
@@ -276,7 +286,7 @@ public class ProductEvents {
    */
   public static String updateProductKeywords(HttpServletRequest request, HttpServletResponse response) {
     String errMsg = "";
-    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     Security security = (Security)request.getAttribute("security");
 
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -298,7 +308,9 @@ public class ProductEvents {
       return "error";
     }
     
-    GenericValue product = helper.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+    GenericValue product = null;
+    try { product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)); }
+    catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); product = null; }
     if(product == null) {
       request.setAttribute("ERROR_MESSAGE", "Product with ID \"" + productId + "\", not found; cannot update keywords.");
       return "error";
@@ -309,7 +321,7 @@ public class ProductEvents {
     }
     else if(updateMode.equals("DELETE")) {
       try { product.removeRelated("ProductKeyword"); }
-      catch(Exception e) {
+      catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-keywords (write error)");
         Debug.logWarning("[ProductEvents.updateProductKeywords] Could not remove product-keywords (write error); message: " + e.getMessage());
         return "error";
@@ -330,7 +342,7 @@ public class ProductEvents {
    */
   public static String updateAllKeywords(HttpServletRequest request, HttpServletResponse response) {
     String errMsg = "";
-    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     Security security = (Security)request.getAttribute("security");
 
     String updateMode = "CREATE";
@@ -340,7 +352,10 @@ public class ProductEvents {
       return "error";
     }
 
-    Iterator iterator = UtilMisc.toIterator(helper.findAll("Product", null));
+    Iterator iterator = null;
+    try { iterator = UtilMisc.toIterator(delegator.findAll("Product", null)); }
+    catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); iterator = null; }
+    
     int numProds = 0;
     while(iterator != null && iterator.hasNext()) {
       GenericValue product = (GenericValue)iterator.next();

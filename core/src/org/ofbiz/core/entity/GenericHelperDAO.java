@@ -31,38 +31,23 @@ import org.ofbiz.core.entity.model.*;
  *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
-public class GenericHelperDAO extends GenericHelperAbstract {
+public class GenericHelperDAO implements GenericHelper {
   GenericDAO genericDAO;
+  String helperName;
   
-  public GenericHelperDAO(String serverName) {
-    this.serverName = serverName;
-    
-    genericDAO = GenericDAO.getGenericDAO(serverName);
-    primaryKeyCache = new UtilCache("FindByPrimaryKeyDAO-" + serverName);
-    allCache = new UtilCache("FindAllDAO-" + serverName);
-    andCache = new UtilCache("FindByAndDAO-" + serverName);
-    
-    modelReader = ModelReader.getModelReader(serverName);
+  public GenericHelperDAO(String helperName) {
+    this.helperName = helperName;    
+    genericDAO = GenericDAO.getGenericDAO(helperName);
   }
-  
-  /** Creates a Entity in the form of a GenericValue and write it to the database
-   *@return GenericValue instance containing the new instance
-   */
-  public GenericValue create(String entityName, Map fields) {
-    if(entityName == null || fields == null) { return null; }
-    GenericValue genericValue = new GenericValue(modelReader.getModelEntity(entityName), fields);
-    if(!genericDAO.insert(genericValue)) return null;
-    genericValue.helper = this;
-    return genericValue;
-  }
-  
+
+  public String getHelperName() { return helperName; }
+
   /** Creates a Entity in the form of a GenericValue and write it to the database
    *@return GenericValue instance containing the new instance
    */
   public GenericValue create(GenericValue value) {
     if(value == null) { return null; }
     if(!genericDAO.insert(value)) return null;
-    value.helper = this;
     return value;
   }
   
@@ -73,7 +58,6 @@ public class GenericHelperDAO extends GenericHelperAbstract {
     if(primaryKey == null) { return null; }
     GenericValue genericValue = new GenericValue(primaryKey);
     if(!genericDAO.insert(genericValue)) return null;
-    genericValue.helper = this;
     return genericValue;
   }
   
@@ -85,7 +69,6 @@ public class GenericHelperDAO extends GenericHelperAbstract {
     if(primaryKey == null) { return null; }
     GenericValue genericValue = new GenericValue(primaryKey);
     if(!genericDAO.select(genericValue)) return null;
-    genericValue.helper = this;
     return genericValue;
   }
   
@@ -95,7 +78,6 @@ public class GenericHelperDAO extends GenericHelperAbstract {
   public void removeByPrimaryKey(GenericPK primaryKey) {
     if(primaryKey == null) return;
     Debug.logInfo("Removing GenericPK: " + primaryKey.toString());
-    this.clearCacheLine(primaryKey);
     try { genericDAO.delete(primaryKey); }
     catch(Exception e) { Debug.logWarning(e); }
   }
@@ -106,11 +88,8 @@ public class GenericHelperDAO extends GenericHelperAbstract {
    *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
    *@return Collection of GenericValue instances that match the query
    */
-  public Collection findByAnd(String entityName, Map fields, List orderBy) {
-    Collection collection = null;
-    collection = genericDAO.selectByAnd(entityName, fields, orderBy);
-    absorbCollection(collection);
-    return collection;
+  public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) {
+    return genericDAO.selectByAnd(modelEntity, fields, orderBy);
   }
   
   /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
@@ -118,11 +97,10 @@ public class GenericHelperDAO extends GenericHelperAbstract {
    *@param fields The fields of the named entity to query by with their corresponging values
    *@return Collection of GenericValue instances that match the query
    */
-  public void removeByAnd(String entityName, Map fields) {
-    if(entityName == null || fields == null) { return; }
-    Iterator iterator = UtilMisc.toIterator(findByAnd(entityName, fields, null));
+  public void removeByAnd(ModelEntity modelEntity, Map fields) {
+    if(modelEntity == null || fields == null) { return; }
+    Iterator iterator = UtilMisc.toIterator(findByAnd(modelEntity, fields, null));
     
-    this.clearCacheLine(entityName, fields);
     while(iterator != null && iterator.hasNext()) {
       GenericValue generic = (GenericValue)iterator.next();
       Debug.logInfo("Removing GenericValue: " + generic.toString());
@@ -136,27 +114,6 @@ public class GenericHelperDAO extends GenericHelperAbstract {
    */
   public void store(GenericValue value) {
     if(value == null) { return; }
-    this.clearCacheLine(value.getPrimaryKey());
     if(!genericDAO.update(value)) Debug.logError("[GenericHelperDAO.store] Could not store GenericValue: " + value.toString());
-    value.helper = this;
-  }
-  
-  /** Get the named Related Entity for the GenericValue from the persistent store
-   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
-   *@param value GenericValue instance containing the entity
-   *@return Collection of GenericValue instances as specified in the relation definition
-   */
-  public Collection getRelated(String relationName, GenericValue value) {
-    Collection col = genericDAO.selectRelated(relationName, value);
-    absorbCollection(col);
-    return col;
-  }
-  
-  /** Remove the named Related Entity for the GenericValue from the persistent store
-   * @param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
-   * @param value GenericValue instance containing the entity
-   */
-  public void removeRelated(String relationName, GenericValue value) {
-    genericDAO.deleteRelated(relationName, value);
   }
 }

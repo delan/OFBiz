@@ -39,17 +39,17 @@
   if(request.getAttribute("ERROR_MESSAGE") != null) useValues = false;
 
   String productId = request.getParameter("PRODUCT_ID");
-  GenericValue product = helper.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
   if(product == null) useValues = false;
 
-  Collection categoryCol = helper.findAll("ProductCategory", null);
+  Collection categoryCol = delegator.findAll("ProductCategory", null);
 
   GenericValue primaryProductCategory = null;
   String primProdCatIdParam = request.getParameter("PRIMARY_PRODUCT_CATEGORY_ID");
   if(product != null && useValues)
     primaryProductCategory = product.getRelatedOne("PrimaryProductCategory");
   else if(primProdCatIdParam != null && primProdCatIdParam.length() > 0)
-    primaryProductCategory = helper.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primProdCatIdParam));
+    primaryProductCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primProdCatIdParam));
 %>
 
 <div class="head1">Edit Product with ID "<%=productId%>"</div>

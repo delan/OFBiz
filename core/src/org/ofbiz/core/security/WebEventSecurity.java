@@ -95,7 +95,7 @@ public class WebEventSecurity
     String username = request.getParameter("USERNAME");
     String password = request.getParameter("PASSWORD");
 
-    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
 
     if(username == null || username.length() <= 0)
     {
@@ -107,17 +107,21 @@ public class WebEventSecurity
     }
     else
     {
-      GenericValue userLogin = helper.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
+      GenericValue userLogin = null;
+      try { userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username)); }
+      catch(GenericEntityException e) { Debug.logWarning(e); }
       if(userLogin != null)
       {
         if(password.compareTo(userLogin.getString("currentPassword")) == 0)
         {
           request.getSession().setAttribute(SiteDefs.USER_LOGIN, userLogin);
-          helper.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username, 
-                                                           "fromDate", UtilDateTime.nowTimestamp(), 
-                                                           "password", password, 
-                                                           "partyId", userLogin.get("partyId"), 
-                                                           "referrerUrl", "NotYetImplemented"));
+          try { delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username, 
+                                                     "fromDate", UtilDateTime.nowTimestamp(), 
+                                                     "password", password, 
+                                                     "partyId", userLogin.get("partyId"), 
+                                                     "referrerUrl", "NotYetImplemented"));
+          }
+          catch(GenericEntityException e) { Debug.logWarning(e); }
         }
         else
         {

@@ -36,7 +36,7 @@
 <%@ include file="/includes/onecolumn.jsp" %> 
 
 <%
-  ModelReader reader = helper.getModelReader();
+  ModelReader reader = delegator.getModelReader();
   Collection ec = reader.getEntityNames();
   TreeSet entities = new TreeSet(ec);
   Iterator classNamesIterator = entities.iterator();

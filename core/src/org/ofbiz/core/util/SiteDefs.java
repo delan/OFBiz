@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2001/09/14 20:04:57  epabst
+ * updated Site name
+ *
  * Revision 1.12  2001/09/14 19:06:05  epabst
  * created new session attribute called SiteDefs.SERVER_ROOT_URL that contains something like:
  * "http://myserver.com:1234"
@@ -82,8 +85,8 @@ public final class SiteDefs {
     public static final String LOGIN_REQUEST_URI = "login";
     public static final String LOGOUT_REQUEST_URI = "logout";
  
-    /** Required context init parameter to specify the entity server name as defined in servers.properties */
-    public static final String ENTITY_SERVER_NAME = "entityServerName";
+    /** Required context init parameter to specify the entity delegator name as defined in servers.properties */
+    public static final String ENTITY_DELEGATOR_NAME = "entityDelegatorName";
 
     /** Required context init parameter to locate site specific configuration */
     public static final String SITE_CONFIG = "siteConfigurationFile";
