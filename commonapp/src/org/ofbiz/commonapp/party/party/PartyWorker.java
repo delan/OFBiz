@@ -38,6 +38,8 @@ import org.ofbiz.core.util.*;
  */
 public class PartyWorker {
     
+    public static String module = PartyWorker.class.getName();
+    
     public static void getPartyOtherValues(PageContext pageContext, String partyId, String partyAttr, String personAttr, String partyGroupAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
@@ -47,7 +49,7 @@ public class PartyWorker {
             if (party != null)
                 pageContext.setAttribute(partyAttr, party);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, "Problems getting Party entity", module);
         }
 
         try {
@@ -56,7 +58,7 @@ public class PartyWorker {
             if (person != null)
                 pageContext.setAttribute(personAttr, person);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, "Problems getting Person entity", module);
         }
 
         try {
@@ -65,7 +67,7 @@ public class PartyWorker {
             if (partyGroup != null)
                 pageContext.setAttribute(partyGroupAttr, partyGroup);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, "Problems getting PartyGroup entity", module);
         }
     }
 }

@@ -150,7 +150,7 @@
           <ofbiz:if name="lookupGroup">
             <% GenericValue party = (GenericValue) pageContext.getAttribute("party"); %>
             <% GenericValue lookupPartyType = party.getRelatedOneCache("PartyType"); %>
-            <% pageContext.setAttribute("groupType", lookupPartyType); %>
+            <% if (lookupPartyType != null) pageContext.setAttribute("groupType", lookupPartyType); %>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;Party Group Information</div>
             </td>
