@@ -113,6 +113,7 @@
     location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
         <attribute name="partyId" type="String" mode="IN"/>
+		<attribute name="affiliateId" type="String" mode="IN" optional="true"/>
         <attribute name="distributorId" type="String" mode="IN" optional="true"/>
         <attribute name="orderItems" type="java.util.List" mode="IN"/>
         <attribute name="shippingInstructions" type="String" mode="IN"/>

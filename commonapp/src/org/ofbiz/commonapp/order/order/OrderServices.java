@@ -138,9 +138,16 @@ public class OrderServices {
             "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
         }
         
+        // set the affiliate
+        String affiliateId = (String) context.get("affiliateId");
+        if ( UtilValidate.isNotEmpty(affiliateId) ) {
+            toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
+                   "orderId", orderId, "partyId", affiliateId, "roleTypeId", "AFFILIATE")));
+        }
+        
         // set the distributor
         String distributorId = (String) context.get("distributorId");
-        if (UtilValidate.isNotEmpty(distributorId)) {
+        if ( UtilValidate.isNotEmpty(distributorId) ) {
             toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
                     "orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
         }

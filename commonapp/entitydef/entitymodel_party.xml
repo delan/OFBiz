@@ -870,6 +870,8 @@
       <field name="siteType" type="comment"></field>
       <field name="sitePageViews" type="comment"></field>
       <field name="siteVisitors" type="comment"></field>	
+	  <field name="dateTimeCreated" type="date-time"></field>
+	  <field name="dateTimeApproved" type="date-time"></field>
       <prim-key field="partyId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
