@@ -210,7 +210,14 @@ public class EntityListIterator implements ListIterator {
         }
     }
 
-    /** PLEASE NOTE: Because of the nature of the JDBC ResultSet interface this method can be very inefficient; it is much better to just use next() until it returns null */
+    /** 
+     * PLEASE NOTE: Because of the nature of the JDBC ResultSet interface this method can be very inefficient; it is much better to just use next() until it returns null
+     * For example, you could use the following to iterate through the results in an EntityListIterator:
+     * 
+     *      GenericValue nextValue = null;
+     *      while ((nextValue = (GenericValue) this.next()) != null) { ... }
+     * 
+     */
     public boolean hasNext() {
         try {
             if (resultSet.isLast() || resultSet.isAfterLast()) {
@@ -264,7 +271,13 @@ public class EntityListIterator implements ListIterator {
         }
     }
 
-    /** Moves the cursor to the next position and returns the GenericValue object for that position; if there is no next, returns null */
+    /** Moves the cursor to the next position and returns the GenericValue object for that position; if there is no next, returns null
+     * For example, you could use the following to iterate through the results in an EntityListIterator:
+     * 
+     *      GenericValue nextValue = null;
+     *      while ((nextValue = (GenericValue) this.next()) != null) { ... }
+     * 
+     */
     public Object next() {
         try {
             if (resultSet.next()) {
