@@ -22,22 +22,20 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.job;
 
-
 import java.util.*;
+
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * JobInvoker
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @created    March 3, 2002
- * @version    1.2
+ * @version    $Revision$
  */
 public class JobInvoker implements Runnable {
 
@@ -45,12 +43,12 @@ public class JobInvoker implements Runnable {
     public static final long THREAD_TTL = 10800000;
     public static final int WAIT_TIME = 750;
 
-    private JobPoller jp;
-    private Thread thread;
-    private Date created;
-    private int count;
-    private int wait;
-    private boolean run;
+    private JobPoller jp = null;
+    private Thread thread = null;
+    private Date created = null;
+    private int count = 0;
+    private int wait = 0;
+    private boolean run = false;
 
     public JobInvoker(JobPoller jp) {
         this(jp, WAIT_TIME);
@@ -69,13 +67,14 @@ public class JobInvoker implements Runnable {
         if (Debug.verboseOn()) Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);
         thread.start();
     }
+    
+    protected JobInvoker() {}
 
     /**
      * Tells the thread to stop after the next job.
      */
     public void stop() {
-        run = false;
-        //removed to solve hanging thread issue: notify();
+        run = false;        
     }
 
     /**
