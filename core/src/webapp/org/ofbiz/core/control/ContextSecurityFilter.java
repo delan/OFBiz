@@ -72,7 +72,7 @@ public class ContextSecurityFilter implements Filter {
             allowList.add("/");    // No path is allowed.
             allowList.add("");      // No path is allowed.
 
-            Debug.logVerbose("[Request]: " + httpRequest.getRequestURI());
+            Debug.logVerbose("[Request]: " + httpRequest.getRequestURI(), module);
 
             String requestPath = httpRequest.getServletPath();
             if (requestPath == null) requestPath = "";

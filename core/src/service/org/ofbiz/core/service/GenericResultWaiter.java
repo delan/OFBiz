@@ -38,6 +38,8 @@ import org.ofbiz.core.util.*;
  */
 public class GenericResultWaiter implements GenericRequester {
 
+    public static final String module = GenericResultWaiter.class.getName();
+
     boolean completed = false;
     Map result = null;
 
@@ -47,6 +49,8 @@ public class GenericResultWaiter implements GenericRequester {
     public synchronized void receiveResult(Map result) {
         this.result = result;
         completed = true;
+        notify();
+        Debug.logVerbose("Received Result (" + completed + ") -- " + result, module);
     }
 
     public synchronized boolean isCompleted() {
@@ -64,9 +68,11 @@ public class GenericResultWaiter implements GenericRequester {
     }
 
     public synchronized Map waitForResult(long milliseconds) {
+        Debug.logVerbose("Waiting for results...", module);
         while (!isCompleted()) {
             try {
                 this.wait(milliseconds);
+                Debug.logVerbose("Waiting...", module);
             } catch (java.lang.InterruptedException e) {
                 Debug.logError(e);
             }

@@ -57,35 +57,49 @@ public class WorkflowEngine implements GenericEngine {
         this.loader = loader;
     }
 
-    /** Run the service synchronously and return the result
-     * @param context Map of name, value pairs composing the context
-     * @return Map of name, value pairs composing the result
+    /**
+     * Run the service synchronously and return the result.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @return Map of name, value pairs composing the result.
+     * @throws GenericServiceException
      */
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         GenericResultWaiter waiter = new GenericResultWaiter();
-        runAsync(modelService, context, waiter);
+        runAsync(modelService, context, waiter, false);
         return waiter.waitForResult();
     }
 
-    /** Run the service synchronously and IGNORE the result
-     * @param context Map of name, value pairs composing the context
+    /**
+     * Run the service synchronously and IGNORE the result.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @throws GenericServiceException
      */
     public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
-        runAsync(modelService, context, null);
+        runAsync(modelService, context, null, false);
     }
 
-    /** Run the service asynchronously and IGNORE the result
-     * @param context Map of name, value pairs composing the context
+    /**
+     * Run the service asynchronously and IGNORE the result.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @param persist True for store/run; False for run. (Ignored)
+     * @throws GenericServiceException
      */
-    public void runAsync(ModelService modelService, Map context) throws GenericServiceException {
-        runAsync(modelService, context, null);
+    public void runAsync(ModelService modelService, Map context, boolean persist) throws GenericServiceException {
+        runAsync(modelService, context, null, persist);
     }
 
-    /** Run the service asynchronously, passing an instance of GenericRequester that will receive the result
-     * @param context Map of name, value pairs composing the context
-     * @param requester Object implementing GenericRequester interface which will receive the result
+    /**
+     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @param requester Object implementing GenericRequester interface which will receive the result.
+     * @param persist True for store/run; False for run. (Ignored)
+     * @throws GenericServiceException
      */
-    public void runAsync(ModelService modelService, Map context, GenericRequester requester)
+    public void runAsync(ModelService modelService, Map context, GenericRequester requester, boolean persist)
             throws GenericServiceException {
         // Build the requester
         WfRequester req = null;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -33,26 +33,24 @@ import org.ofbiz.core.util.*;
  * JobScheduler
  *
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @created    November 15, 2001
- * @version    1.0
+ * @created    March 3, 2002
+ * @version    1.2
  */
 public class JobScheduler implements Runnable {
 
     public static final String module = JobScheduler.class.getName();
     public static final int MIN_THREADS = 1;
     public static final int MAX_THREADS = 15;
-    public static final int THREAD_INCR = 3;
-    public static final int MAX_USAGE = 50;
-    public static final long MAX_TTL = 18000;
-
+    public static final int MAX_JOBS = 3;
+    public static final long MAX_TTL = 18000000;
 
     protected JobManager jm;
-    protected Thread thread;
-    protected long sleep;
     protected boolean isRunning;
-    protected SortedSet queue;
-    protected List pool;
-    protected int totalThreads;
+    protected Thread thread;
+    protected LinkedList pool;
+    protected LinkedList run;
+    protected TreeSet queue;
+    protected long sleep;
 
     /**
      * Creates a new JobScheduler
@@ -61,9 +59,9 @@ public class JobScheduler implements Runnable {
     public JobScheduler(JobManager jm) {
         this.jm = jm;
         this.queue = new TreeSet();
+        this.run = new LinkedList();
         this.sleep = -1;
         this.isRunning = true;
-        this.totalThreads = 0;
         this.pool = createThreadPool();
 
         // start the thread
@@ -99,7 +97,7 @@ public class JobScheduler implements Runnable {
     /**
      * Clears the job queue
      */
-    public synchronized void clearJobs() {
+    public void clearJobs() {
         this.sleep = -1;
         queue = new TreeSet();
     }
@@ -118,7 +116,7 @@ public class JobScheduler implements Runnable {
         }
     }
 
-    private synchronized void updateDelay(long sleep) {
+    private void updateDelay(long sleep) {
         this.sleep = sleep;
         notify();
     }
@@ -158,37 +156,7 @@ public class JobScheduler implements Runnable {
 
         Job firstJob = (Job) queue.first();
         queue.remove(firstJob);
-
-        // Get a thread from the pool and invoke the service
-        JobInvoker invoker = getInvoker();
-        while (invoker == null) {
-            long now = new Date().getTime();
-            if (now > timeout)
-                throw new RuntimeException("Timeout waiting for invoker thread.");
-            invoker = getInvoker();
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        }
-
-        // invoke the job
-        invoker.invoke(this, firstJob);
-
-        // Re-schedule the job if it repeats.
-        firstJob.rescheduleJob();
-        if (firstJob.getRuntime() > 0) {
-            boolean queued = false;
-            while (!queued) {
-                try {
-                    queueJob(firstJob);
-                    queued = true;
-                } catch (JobSchedulerException e) {
-                    firstJob.adjustSeqNum();
-                }
-            }
-        }
+        queueNow(firstJob);
 
         // If the queue is not empty, check the status of the next job.
         if (!queue.isEmpty()) {
@@ -205,17 +173,57 @@ public class JobScheduler implements Runnable {
     /**
      * Stops the JobScheduler
      */
-    public synchronized void stop() {
+    public void stop() {
         isRunning = false;
         Debug.logInfo("JobScheduler: Shutting down...", module);
         notify();
     }
 
     /**
-     * Returns an Iterator of the job queue
+     * Returns an Iterator of the job scheduled queue
      */
-    public synchronized Iterator iterator() {
+    public Iterator iterator() {
         return queue.iterator();
+    }
+
+    /**
+     * Returns the next job to run
+     */
+    public synchronized Job next() {
+        if (run.size() > 0)
+            return (Job) run.removeFirst();
+        return null;
+    }
+
+    /**
+     * Adds a job to the RUN queue
+     */
+    public synchronized void queueNow(Job job) {
+        run.add(job);
+        Debug.logVerbose("New run queue size: " + run.size(), module);
+        if (run.size() > pool.size() && pool.size() < maxThreads()) {
+            int calcSize = (run.size() / jobsPerThread()) - (pool.size());
+            int addSize = calcSize > maxThreads() ? maxThreads() : calcSize;
+            for (int i = 0; i < addSize; i++) {
+                JobInvoker iv = new JobInvoker(this, threadWaitTime());
+                pool.add(iv);
+            }
+        }
+    }
+
+    /**
+     * Removes a thread from the pool.
+     * @param JobInvoker The invoker to remove.
+     */
+    public synchronized void removeThread(JobInvoker invoker) {
+        pool.remove(invoker);
+        invoker.stop();
+        if (pool.size() < minThreads()) {
+            for (int i = 0; i < minThreads() - pool.size(); i++) {
+                JobInvoker iv = new JobInvoker(this, threadWaitTime());
+                pool.add(iv);
+            }
+        }
     }
 
     /**
@@ -226,79 +234,54 @@ public class JobScheduler implements Runnable {
     }
 
     // Creates the invoker pool
-    private List createThreadPool() {
-        putInvoker(getInvoker());
-        Debug.logInfo("JobScheduler: Created invoker thread pool (" + pool.size() + ")", module);
-        return pool;
+    private LinkedList createThreadPool() {
+        LinkedList threadPool = new LinkedList();
+        while (threadPool.size() < minThreads()) {
+            JobInvoker iv = new JobInvoker(this, threadWaitTime());
+            threadPool.add(iv);
+        }
+
+        return threadPool;
     }
 
-    /**
-     * Gets a JobInvoker thread from the thread pool.
-     * @return An invoker thread.
-     */
-    public JobInvoker getInvoker() {
-        int min = MIN_THREADS;
+    private int maxThreads() {
         int max = MAX_THREADS;
+        try {
+            max = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.max"));
+        } catch (NumberFormatException nfe) {
+           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+        }
+        return max;
+    }
+
+    private int minThreads() {
+        int min = MIN_THREADS;
         try {
             min = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.min"));
-            max = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.max"));
         } catch (NumberFormatException nfe) {
-            Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
         }
-        boolean added = true;
-        while (totalThreads < min && added) {
-            JobInvoker iv = new JobInvoker();
-            added = putInvoker(iv);
-            totalThreads++;
-        }
-        if (pool.size() < min && totalThreads < max) {
-            for (int i = 0; i < THREAD_INCR; i++) {
-                JobInvoker iv = new JobInvoker();
-                putInvoker(iv);
-            }
-        }
-
-        if (pool.size() == 0 && totalThreads == max)
-            return null;
-
-        return (JobInvoker) pool.remove(0);
+        return min;
     }
 
-    /**
-     * Puts a JobInvoker thread back into the pool.
-     * @return Returns 'true' if the invoker was added back to the pool.
-     */
-    public boolean putInvoker(JobInvoker invoker) {
-        // default values
-        int max = MAX_THREADS;
-        int maxUse = MAX_USAGE;
-        long maxTime = MAX_TTL;
-
-        // get values from properties file
+    private int jobsPerThread() {
+        int jobs = MAX_JOBS;
         try {
-            max = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.max"));
-            maxUse = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.utl"));
-            maxTime = Long.parseLong(UtilProperties.getPropertyValue("servicesengine", "pool.thread.ttl"));
+            jobs = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.jobs"));
         } catch (NumberFormatException nfe) {
-            Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
         }
+        return jobs;
+    }
 
-        if (pool == null)
-            pool = new ArrayList();
-
-        long now = new Date().getTime();
-        long then = invoker.getTime();
-        long diff = now - then;
-        long invokerTime = diff / 1000;
-
-        Debug.logVerbose("Invoker Ct: " + invoker.getUsage() + " Time: " + invokerTime + " Now: " + now + " Then: " + then + " Diff: " + diff, module);
-        if (max > totalThreads && (maxUse <= 0 || maxUse > invoker.getUsage()) && (maxTime <= 0 || maxTime > invokerTime)) {
-            pool.add(invoker);
-            return true;
-        } else {
-            totalThreads--;
-            return false;
+    private int threadWaitTime() {
+        int wait = JobInvoker.WAIT_TIME;
+        try {
+            wait = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.wait"));
+        } catch (NumberFormatException nfe) {
+           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
         }
+        return wait;
     }
 }
 

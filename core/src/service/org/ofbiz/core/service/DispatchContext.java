@@ -25,6 +25,7 @@
 
 package org.ofbiz.core.service;
 
+import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -39,17 +40,18 @@ import org.ofbiz.core.security.*;
  *@created    November 8, 2001
  *@version    1.0
  */
-public class DispatchContext {
+public class DispatchContext implements Serializable{
 
     public static final String module = DispatchContext.class.getName();
 
     protected static final String GLOBAL_KEY = "global.services";
     protected static UtilCache modelService = new UtilCache("ModelServices", 0, 0);
-    protected String name;
-    protected Map attributes;
-    protected Collection readers;
+
+    protected transient LocalDispatcher dispatcher;
     protected ClassLoader loader;
-    protected LocalDispatcher dispatcher;
+    protected Collection readers;
+    protected Map attributes;
+    protected String name;
 
     /** Creates new DispatchContext
      *@param readers a collection of reader URLs
@@ -152,7 +154,7 @@ public class DispatchContext {
         return retVal;
     }
 
-    /** Gets the LocalDispatcher used to create this context
+    /** Gets the LocalDispatcher used with this context
      *@return LocalDispatcher that was used to create this context
      */
     public LocalDispatcher getDispatcher() {

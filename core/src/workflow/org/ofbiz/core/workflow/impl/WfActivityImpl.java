@@ -500,13 +500,17 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         Iterator i = tools.iterator();
         while (i.hasNext()) {
             GenericValue thisTool = (GenericValue) i.next();
+            String serviceName = null;
             String toolId = thisTool.getString("toolId");
             String params = thisTool.getString("actualParameters");
             String extend = thisTool.getString("extendedAttributes");
-            waiters.add(this.runService(toolId, params, extend));
+            Map extendedAttr =  StringUtil.strToMap(extend);
+            if (extendedAttr != null && extendedAttr.containsKey("serviceName"))
+                serviceName = (String) extendedAttr.get("serviceName");
+            serviceName = serviceName != null ? serviceName : toolId;
+            waiters.add(this.runService(serviceName, params, extend));
         }
 
-        Debug.logVerbose("Waiting for services to complete.", module);
         while (waiters.size() > 0) {
             Iterator wi = waiters.iterator();
             Collection remove = new ArrayList();
@@ -685,7 +689,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         GenericResultWaiter waiter = new GenericResultWaiter();
         Debug.logVerbose("[WfActivity.runService] : Invoking the service.", module);
         try {
-            getDispatcher().runAsync(getServiceLoader(), service, ctx, waiter);
+            getDispatcher().runAsync(getServiceLoader(), service, ctx, waiter, false);
         } catch (GenericServiceException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -705,7 +709,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         // setup some internal buffer parameters
         if (context.containsKey("runAsUser")) {
             GenericValue userLogin = getUserLogin((String) context.get("userLogin"));
-            context.put("userLogin", userLogin);
+            actualContext.put("userLogin", userLogin);
         }
         context.put("workEffortId", runtimeKey());
 

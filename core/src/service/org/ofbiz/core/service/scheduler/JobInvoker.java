@@ -1,7 +1,7 @@
 /*
  * $Id$ 
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -33,60 +33,53 @@ import org.ofbiz.core.util.*;
  * JobInvoker
  *
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @created    November 15, 2001
- * @version    1.0
+ * @created    March 3, 2002
+ * @version    1.2
  */
 public class JobInvoker implements Runnable {
 
     public static final String module = JobInvoker.class.getName();
+    public static final long THREAD_TTL = 10800000;
+    public static final int WAIT_TIME = 750;
 
-    private Thread thread;
     private JobScheduler js;
-    private Job job;
+    private Thread thread;
     private Date created;
     private int count;
-    private String name;
+    private int wait;
+    private boolean run;
 
-    public JobInvoker() {
+    public JobInvoker(JobScheduler js) {
+        this(js, WAIT_TIME);
+    }
+
+    public JobInvoker(JobScheduler js, int wait) {
         this.created = new Date();
+        this.run = true;
         this.count = 0;
+        this.js = js;
+        this.wait = wait;
 
         // get a new thread
         thread = new Thread(this);
-        name = thread.getName();
         thread.setDaemon(false);
-    }
-
-    /**
-     * Invoke a job.
-     */
-    public void invoke(JobScheduler js, Job job) {
-        if (job == null)
-            throw new IllegalArgumentException("Cannot invoke null job");
-        if (js == null)
-            throw new IllegalArgumentException("Invalid scheduler");
-        this.job = job;
-        this.js = js;
-        long runtime = job.getRuntime();
-        Debug.logVerbose("JobInvoker: Invoking -- " + runtime, module);
+        Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);
         thread.start();
     }
 
     /**
-     * Set this thread up for future use.
-     * @return This thread.
+     * Tells the thread to stop after the next job.
      */
-    public JobInvoker release() {
-        Debug.logVerbose("JobInvoker: Releasing thread back to the pool.", module);
-        // reset the reused variables
-        job = null;
-        js = null;
-        count++;
+    public void stop() {
+        run = false;
+        notify();
+    }
 
-        // get a fresh thread
-        thread = new Thread(this, name);
-        thread.setDaemon(false);
-        return this;
+    /**
+     * Wakes up this thread.
+     */
+    public void wakeUp() {
+        notifyAll();
     }
 
     /**
@@ -98,28 +91,50 @@ public class JobInvoker implements Runnable {
     }
 
     /**
-     * Gets the Date object when this thread was created.
-     * @returns Date when this was created.
+     * Gets the time when this thread was created.
+     * @returns Time in milliseconds when this was created.
      */
     public long getTime() {
         return created.getTime();
     }
 
-    public void run() {
-        Debug.logInfo("JobInvoker: Thread (" + thread.getName() + ") Running...", module);
-        ServiceDispatcher dispatcher = js.getManager().getDispatcher();
-        Map result = null;
-        try {
-            DispatchContext ctx = dispatcher.getLocalContext(job.getLoader());
-            ModelService service = ctx.getModelService(job.getService());
-            result = dispatcher.runSync(job.getLoader(),service,job.getContext());
+    public synchronized void run() {
+        while (run) {
+            Job job = js.next();
+            if (job == null) {
+                try {
+                    wait(wait);
+                } catch (InterruptedException ie) {
+                   ie.printStackTrace();
+                   stop();
+                }
+            } else {
+                Debug.logVerbose("Invoker: " + thread.getName() + " executing job -- " + job.getJobName(), module);
+                job.exec();
+                Debug.logVerbose("Invoker: " + thread.getName() + " finished executing job -- " + job.getJobName(), module);
+                try {
+                    JobManager jm = js.getManager();
+                    jm.scheduleJob(job);
+                } catch (JobSchedulerException je) {
+                    Debug.logVerbose(je.getMessage(), module);
+                }
+                count++;
+                Debug.logVerbose("Invoker: " + thread.getName() + " (" + count + ") total.", module);
+            }
+            long diff = (new Date().getTime() - this.getTime());
+            if (getTTL() > 0 && diff > getTTL())
+                js.removeThread(this);
         }
-        catch ( GenericServiceException e ) {
-            e.printStackTrace();
-        }
-        Debug.logInfo("JobInvoker: Finished invocation.", module);
-        job.receiveNotice(result);
-        js.putInvoker(release());
+        Debug.logVerbose("Invoker: " + thread.getName() + " dead -- " + UtilDateTime.nowTimestamp(), module);
     }
 
+    private long getTTL() {
+        long ttl = THREAD_TTL;
+        try {
+            ttl = Long.parseLong(UtilProperties.getPropertyValue("servicesengine", "pool.thread.ttl"));
+        } catch (NumberFormatException nfe) {
+           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+        }
+        return ttl;
+    }
 }

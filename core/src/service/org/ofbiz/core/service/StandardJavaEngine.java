@@ -23,7 +23,6 @@
  *
  */
 
-
 package org.ofbiz.core.service;
 
 import java.util.*;
@@ -45,20 +44,24 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         super(dispatcher);
     }
 
-    /** Run the service synchronously and IGNORE the result
-     * @param context Map of name, value pairs composing the context
+    /**
+     * Run the service synchronously and IGNORE the result.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @throws GenericServiceException
      */
-    public void runSyncIgnore(ModelService modelService,
-                              Map context) throws GenericServiceException {
+    public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
         Map result = runSync(modelService, context);
     }
 
-    /** Run the service synchronously and return the result
-     * @param context Map of name, value pairs composing the context
-     * @return Map of name, value pairs composing the result
+    /**
+     * Run the service synchronously and return the result.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @return Map of name, value pairs composing the result.
+     * @throws GenericServiceException
      */
-    public Map runSync(ModelService modelService,
-                       Map context) throws GenericServiceException {
+    public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService, context);
         if (result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result");
@@ -66,8 +69,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
     }
 
     // Invoke the static java method service.
-    private Object serviceInvoker(ModelService modelService,
-                                  Map context) throws GenericServiceException {
+    private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
         // static java service methods should be: public Map methodName(DispatchContext dctx, Map context)
         DispatchContext dctx = dispatcher.getLocalContext(loader);
         Class[] paramTypes = new Class[]{DispatchContext.class, Map.class};

@@ -1,5 +1,26 @@
 /*
  * $Id$
+ *
+ * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package org.ofbiz.core.service;
@@ -13,27 +34,7 @@ import bsh.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> BeanShell Script Service Engine
- * <p><b>Description:</b> None
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * BeanShell Script Service Engine
  *
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @created    November 28, 2001
@@ -43,21 +44,27 @@ public final class BeanShellEngine extends GenericAsyncEngine {
 
     public static UtilCache beanShellCache = new UtilCache("BeanShellScripts", 0, 0);
 
-    /** Creates new BeanShellEngine */
     public BeanShellEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
 
-    /** Run the service synchronously and IGNORE the result
-     * @param context Map of name, value pairs composing the context
+    /**
+     * Run the service synchronously and IGNORE the result.
+     * @param modelService Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @throws GenericServiceException
      */
     public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
         Map result = runSync(modelService, context);
     }
 
-    /** Run the service synchronously and return the result
-     * @param context Map of name, value pairs composing the context
-     * @return Map of name, value pairs composing the result
+    /**
+     * Run the service synchronously and return the result.
+     * @param service Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @return Map of name, value pairs composing the result.
+     * @throws ServiceAuthException
+     * @throws GenericServiceException
      */
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService, context);

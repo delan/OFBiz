@@ -58,9 +58,10 @@ public class ServiceDispatcher {
             this.security = new Security(delegator);
     }
 
-    /** Returns a pre-registered instance of the ServiceDispatcher associated with this delegator.
-     *@param delegator the local delegator
-     *@return A reference to this global ServiceDispatcher
+    /**
+     * Returns a pre-registered instance of the ServiceDispatcher associated with this delegator.
+     * @param delegator the local delegator
+     * @return A reference to this global ServiceDispatcher
      */
     public static ServiceDispatcher getInstance(String name, GenericDelegator delegator) {
         ServiceDispatcher sd = getInstance(null, null, delegator);
@@ -69,11 +70,12 @@ public class ServiceDispatcher {
         return sd;
     }
 
-    /** Returns an instance of the ServiceDispatcher associated with this delegator and registers the loader.
-     *@param name the local dispatcher
-     *@param loader classloader of the local dispatcher
-     *@param delegator the local delegator
-     *@return A reference to this global ServiceDispatcher
+    /**
+     * Returns an instance of the ServiceDispatcher associated with this delegator and registers the loader.
+     * @param name the local dispatcher
+     * @param loader classloader of the local dispatcher
+     * @param delegator the local delegator
+     * @return A reference to this global ServiceDispatcher
      */
     public static ServiceDispatcher getInstance(String name, DispatchContext context, GenericDelegator delegator) {
         ServiceDispatcher sd = null;
@@ -92,9 +94,10 @@ public class ServiceDispatcher {
         return sd;
     }
 
-    /** Registers the loader with this ServiceDispatcher
-     *@param name the local dispatcher
-     *@param loader the classloader of the local dispatcher
+    /**
+     * Registers the loader with this ServiceDispatcher
+     * @param name the local dispatcher
+     * @param loader the classloader of the local dispatcher
      */
     public void register(String name, DispatchContext context) {
         Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " +
@@ -102,9 +105,14 @@ public class ServiceDispatcher {
         this.localContext.put(name, context);
     }
 
-    /** Run the service synchronously and return the result
-     *@param context Map of name, value pairs composing the context
-     *@return Map of name, value pairs composing the result
+    /**
+     * Run the service synchronously and return the result.
+     * @param localName Name of the context to use.
+     * @param service Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @return Map of name, value pairs composing the result.
+     * @throws ServiceAuthException
+     * @throws GenericServiceException
      */
     public Map runSync(String localName, ModelService service, Map context)
             throws ServiceAuthException, GenericServiceException {
@@ -139,8 +147,13 @@ public class ServiceDispatcher {
         return result;
     }
 
-    /** Run the service synchronously and IGNORE the result
-     *@param context Map of name, value pairs composing the context
+    /**
+     * Run the service synchronously and IGNORE the result.
+     * @param localName Name of the context to use.
+     * @param service Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @throws ServiceAuthException
+     * @throws GenericServiceException
      */
     public void runSyncIgnore(String localName, ModelService service, Map context)
             throws ServiceAuthException, GenericServiceException {
@@ -166,39 +179,17 @@ public class ServiceDispatcher {
         engine.runSyncIgnore(service, context);
     }
 
-    /** Run the service asynchronously, passing an instance of GenericRequester that will receive the result
-     *@param context Map of name, value pairs composing the context
-     *@param requester Object implementing GenericRequester interface which will receive the result
+    /**
+     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
+     * @param localName Name of the context to use.
+     * @param service Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @param requester Object implementing GenericRequester interface which will receive the result.
+     * @param persist True for store/run; False for run.
+     * @throws ServiceAuthException
+     * @throws GenericServiceException
      */
-    public void runAsync(String localName, ModelService service, Map context, GenericRequester requester)
-            throws ServiceAuthException,
-            GenericServiceException {
-        context = checkAuth(localName, context);
-        Object userLogin = context.get("userLogin");
-        if (service.auth && userLogin == null)
-            throw new ServiceAuthException("User authorization is required for this service");
-        GenericEngine engine = getGenericEngine(service.engineName);
-        engine.setLoader(localName);
-
-        // validate the context
-        if (service.validate) {
-            try {
-                service.validate(context, ModelService.IN_PARAM);
-            } catch (ServiceValidationException e) {
-                throw new GenericServiceException("Context (in runAsync) does not match expected requirements: ", e);
-            }
-        }
-
-        Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
-                "] (" + service.engineName + ")", module);
-
-        engine.runAsync(service, context, requester);
-    }
-
-    /** Run the service asynchronously and IGNORE the result
-     *@param context Map of name, value pairs composing the context
-     */
-    public void runAsync(String localName, ModelService service, Map context)
+    public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist)
             throws ServiceAuthException, GenericServiceException {
         context = checkAuth(localName, context);
         Object userLogin = context.get("userLogin");
@@ -219,40 +210,78 @@ public class ServiceDispatcher {
         Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
                 "] (" + service.engineName + ")", module);
 
-        engine.runAsync(service, context);
+        engine.runAsync(service, context, requester, persist);
     }
 
-    /** Gets the GenericEngine instance that corresponds to the given name
-     *@param engineName Name of the engine
-     *@return GenericEngine instance that corresponds to the engineName
+    /**
+     * Run the service asynchronously and IGNORE the result.
+     * @param localName Name of the context to use.
+     * @param service Service model object.
+     * @param context Map of name, value pairs composing the context.
+     * @param persist True for store/run; False for run.
+     * @throws ServiceAuthException
+     * @throws GenericServiceException
+     */
+    public void runAsync(String localName, ModelService service, Map context, boolean persist)
+            throws ServiceAuthException, GenericServiceException {
+        context = checkAuth(localName, context);
+        Object userLogin = context.get("userLogin");
+        if (service.auth && userLogin == null)
+            throw new ServiceAuthException("User authorization is required for this service");
+        GenericEngine engine = getGenericEngine(service.engineName);
+        engine.setLoader(localName);
+
+        // validate the context
+        if (service.validate) {
+            try {
+                service.validate(context, ModelService.IN_PARAM);
+            } catch (ServiceValidationException e) {
+                throw new GenericServiceException("Context (in runAsync) does not match expected requirements: ", e);
+            }
+        }
+
+        Debug.logVerbose("[ServiceDispatcher.runAsync] : invoking service [" + service.location + "/" + service.invoke +
+                "] (" + service.engineName + ")", module);
+
+        engine.runAsync(service, context, persist);
+    }
+
+    /**
+     * Gets the GenericEngine instance that corresponds to the given name
+     * @param engineName Name of the engine
+     * @return GenericEngine instance that corresponds to the engineName
      */
     public GenericEngine getGenericEngine(String engineName) throws GenericServiceException {
         return GenericEngineFactory.getGenericEngine(engineName, this);
     }
 
-    /** Gets the JobManager associated with this dispatcher
-     *@return JobManager that is associated with this dispatcher
+    /**
+     * Gets the JobManager associated with this dispatcher
+     * @return JobManager that is associated with this dispatcher
      */
     public JobManager getJobManager() {
         return this.jm;
     }
 
-    /** Gets the GenericDelegator associated with this dispatcher
-     *@return GenericDelegator associated with this dispatcher
+    /**
+     * Gets the GenericDelegator associated with this dispatcher
+     * @return GenericDelegator associated with this dispatcher
      */
     public GenericDelegator getDelegator() {
         return this.delegator;
     }
 
-    /** Gets the Security object associated with this dispatcher
-     *@return Security object associated with this dispatcher
+    /**
+     * Gets the Security object associated with this dispatcher
+     * @return Security object associated with this dispatcher
      */
     public Security getSecurity() {
         return this.security;
     }
 
-    /** Gets the local dispatcher from a name
-     *@param String name of the loader to find.
+    /**
+     * Gets the local dispatcher from a name
+     * @param String name of the loader to find.
      */
     public DispatchContext getLocalContext(String name) {
         if (localContext.containsKey(name))
@@ -260,9 +289,10 @@ public class ServiceDispatcher {
         return null;
     }
 
-    /** Test if this dispatcher instance contains the local context.
-     *@param String name of the local context
-     *@returns True if the local context is found in this dispatcher.
+    /**
+     * Test if this dispatcher instance contains the local context.
+     * @param String name of the local context
+     * @returns True if the local context is found in this dispatcher.
      */
     public boolean containsContext(String name) {
         return localContext.containsKey(name);
