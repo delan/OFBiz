@@ -1,5 +1,5 @@
 /*
- * $Id: MapComparator.java,v 1.2 2003/11/30 18:02:16 jonesde Exp $
+ * $Id: MapComparator.java,v 1.3 2004/04/11 08:28:08 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,7 +23,6 @@
  */
 package org.ofbiz.base.util;
 
-import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +33,7 @@ import java.util.Map;
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class MapComparator implements Comparator {

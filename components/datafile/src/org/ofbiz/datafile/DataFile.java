@@ -1,5 +1,5 @@
 /*
- * $Id: DataFile.java,v 1.2 2003/12/03 05:12:10 jonesde Exp $
+ * $Id: DataFile.java,v 1.3 2004/04/11 08:28:19 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,6 @@
 package org.ofbiz.datafile;
 
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -33,12 +32,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import org.ofbiz.base.util.Debug;
 
@@ -47,7 +44,7 @@ import org.ofbiz.base.util.Debug;
  *  DataFile main class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MenuFactory.java,v 1.1 2004/03/15 22:06:16 byersa Exp $
+ * $Id: MenuFactory.java,v 1.2 2004/04/11 08:28:18 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,14 +42,13 @@ import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import org.ofbiz.base.util.Debug;
 
 
 /**
  * Widget Library - Menu factory class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class MenuFactory {

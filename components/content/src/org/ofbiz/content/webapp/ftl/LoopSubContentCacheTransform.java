@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.5 2004/03/24 16:04:21 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.6 2004/04/11 08:28:15 jonesde Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -19,13 +19,13 @@ package org.ofbiz.content.webapp.ftl;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
@@ -39,25 +39,17 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.MiniLangException;
-import org.ofbiz.minilang.MiniLangException;
-import org.ofbiz.minilang.SimpleMapProcessor;
-
 
 import freemarker.template.Environment;
-import freemarker.template.SimpleHash;
-import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 import freemarker.template.TransformControl;
-import freemarker.template.TemplateModelException;
-
-//import com.clarkware.profiler.Profiler;
-import java.io.*;
 
 /**
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {

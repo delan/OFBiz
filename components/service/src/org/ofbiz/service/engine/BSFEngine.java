@@ -1,5 +1,5 @@
 /*
- * $Id: BSFEngine.java,v 1.2 2003/12/18 02:13:03 ajzeneski Exp $
+ * $Id: BSFEngine.java,v 1.3 2004/04/11 08:28:23 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,19 +25,16 @@
 package org.ofbiz.service.engine;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceDispatcher;
 
 import com.ibm.bsf.BSFException;
 import com.ibm.bsf.BSFManager;
@@ -46,7 +43,7 @@ import com.ibm.bsf.BSFManager;
  * BSF Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class BSFEngine extends GenericAsyncEngine {

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRendererImage.java,v 1.3 2004/04/02 17:09:33 byersa Exp $
+ * $Id: HtmlMenuRendererImage.java,v 1.4 2004/04/11 08:28:18 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,34 +23,23 @@
  */
 package org.ofbiz.content.widget.html;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Locale;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.content.webapp.control.RequestHandler;
-import org.ofbiz.content.webapp.taglib.ContentUrlTag;
-import org.ofbiz.content.widget.menu.MenuStringRenderer;
-import org.ofbiz.content.widget.menu.ModelMenu;
-import org.ofbiz.content.widget.menu.ModelMenuItem;
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.content.ContentManagementWorker;
+import org.ofbiz.content.widget.menu.ModelMenuItem;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 
 /**
  * Widget Library - HTML Menu Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 

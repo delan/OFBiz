@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.5 2004/04/11 02:54:42 byersa Exp $
+ * $Id: ModelMenuItem.java,v 1.6 2004/04/11 08:28:19 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,48 +23,26 @@
  */
 package org.ofbiz.content.widget.menu;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.FlexibleMapAccessor;
 import org.ofbiz.base.util.FlexibleStringExpander;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.model.ModelEntity;
-import org.ofbiz.entity.model.ModelField;
-import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelParam;
-import org.ofbiz.service.ModelService;
+import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget.MenuParamInfo;
 import org.w3c.dom.Element;
-
-import bsh.EvalError;
-import bsh.Interpreter;
 
 /**
  * Widget Library - Form model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class ModelMenuItem {

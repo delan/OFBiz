@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.5 2004/04/11 02:54:41 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.6 2004/04/11 08:28:17 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,37 +26,35 @@ package org.ofbiz.content.widget.html;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.security.Security;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.content.ContentPermissionServices;
+import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
-import org.ofbiz.content.content.ContentPermissionServices;
-import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.security.Security;
 
 /**
  * Widget Library - HTML Menu Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {

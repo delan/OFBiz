@@ -22,23 +22,10 @@
 	<classpathentry kind="src" path="components/webtools/src"/>
 	<classpathentry kind="src" path="components/rules/src"/>
 	<classpathentry kind="src" path="components/datafile/src"/>
-	<classpathentry kind="lib" path="components/entity/lib/jotm/carol.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jotm/commons-cli.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jotm/jonas_timer.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jotm/jotm_iiop_stubs.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jotm/jotm_jrmp_stubs.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jotm/jotm.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jotm/objectweb-datasource.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jotm/xapool.jar"/>
 	<classpathentry kind="lib" path="base/lib/xerces.jar"/>
 	<classpathentry kind="lib" path="base/lib/activation.jar"/>
 	<classpathentry kind="lib" path="base/lib/mail.jar"/>
-	<classpathentry kind="lib" path="base/lib/jetty/ant.jar"/>
 	<classpathentry kind="lib" path="base/lib/logging/commons-logging.jar"/>
-	<classpathentry kind="lib" path="base/lib/jetty/jasper-compiler.jar"/>
-	<classpathentry kind="lib" path="base/lib/jetty/jasper-runtime.jar"/>
-	<classpathentry kind="lib" path="base/lib/jetty/javax.servlet.jar"/>
-	<classpathentry kind="lib" path="base/lib/jetty/org.mortbay.jetty.jar"/>
 	<classpathentry kind="lib" path="base/lib/logging/log4j.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/bsh.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/js.jar"/>
@@ -82,11 +69,26 @@
 	<classpathentry kind="lib" path="components/minerva/lib/oswego-concurrent.jar"/>
 	<classpathentry kind="lib" path="components/minerva/lib/jta_1.0.1.jar"/>
 	<classpathentry kind="lib" path="components/minerva/lib/jdbc2_0-stdext.jar"/>
-	<classpathentry kind="var" path="JRE_SRC"/>
 	<classpathentry kind="lib" path="components/content/lib/commons-fileupload.jar"/>
 	<classpathentry kind="lib" path="components/service/lib/commons-discovery.jar"/>
 	<classpathentry kind="lib" path="components/service/lib/axis-ant.jar"/>
 	<classpathentry kind="lib" path="components/accounting/lib/cybersource/icswssecurity.jar"/>
 	<classpathentry kind="lib" path="components/accounting/lib/cybersource/icswsclients.jar"/>
+	<classpathentry kind="lib" path="components/jetty/lib/ant.jar"/>
+	<classpathentry kind="lib" path="components/jotm/lib/carol.jar"/>
+	<classpathentry kind="lib" path="components/jotm/lib/xapool.jar"/>
+	<classpathentry kind="lib" path="components/jotm/lib/objectweb-datasource.jar"/>
+	<classpathentry kind="lib" path="components/jotm/lib/jotm.jar"/>
+	<classpathentry kind="lib" path="components/jotm/lib/jotm_jrmp_stubs.jar"/>
+	<classpathentry kind="lib" path="components/jotm/lib/jotm_iiop_stubs.jar"/>
+	<classpathentry kind="lib" path="components/jotm/lib/jonas_timer.jar"/>
+	<classpathentry kind="lib" path="components/jetty/lib/org.mortbay.jmx.jar"/>
+	<classpathentry kind="lib" path="components/jetty/lib/org.mortbay.jetty.jar"/>
+	<classpathentry kind="lib" path="components/jetty/lib/jmxtools.jar"/>
+	<classpathentry kind="lib" path="components/jetty/lib/jmxri.jar"/>
+	<classpathentry kind="lib" path="components/jetty/lib/jasper-runtime.jar"/>
+	<classpathentry kind="lib" path="components/jetty/lib/jasper-compiler.jar"/>
+	<classpathentry kind="lib" path="base/lib/servlet.jar"/>
+	<classpathentry kind="lib" path="base/lib/scripting/jython.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
