@@ -65,7 +65,7 @@ public class SymbolRootNode extends SymbolNode {
   }
   /**
    * A root node maintains its children in an array instead of
-   * a Vector, to be faster.
+   * a ArrayList, to be faster.
    */
   protected SymbolNode findChildWithChar(char c) {
     return children[c];

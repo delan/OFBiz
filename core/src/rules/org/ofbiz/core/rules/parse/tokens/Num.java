@@ -50,10 +50,10 @@ public class Num extends Terminal {
    * Create a set with one random number (between 0 and
    * 100).
    */
-  public Vector randomExpansion(int maxDepth, int depth) {
+  public List randomExpansion(int maxDepth, int depth) {
     double d = Math.floor(1000.0 * Math.random()) / 10;
-    Vector v = new Vector();
-    v.addElement(Double.toString(d));
+    List v = new ArrayList();
+    v.add(Double.toString(d));
     return v;
   }
   /**
@@ -66,7 +66,7 @@ public class Num extends Terminal {
    *
    * @see Parser#toString()
    */
-  public String unvisitedString(Vector visited) {
+  public String unvisitedString(List visited) {
     return "Num";
   }
 }

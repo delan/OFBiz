@@ -79,7 +79,7 @@ public class SpecificChar extends Terminal {
    * @return   string   a textual description of this parser
    * @see Parser#toString()
    */
-  public String unvisitedString(Vector visited) {
+  public String unvisitedString(List visited) {
     return character.toString();
   }
 }

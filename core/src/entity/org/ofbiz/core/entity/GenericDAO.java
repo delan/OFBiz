@@ -138,7 +138,7 @@ public class GenericDAO {
         }
     }
     
-    private void singleInsert(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws GenericEntityException {
+    private void singleInsert(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
             throw new GenericNotImplementedException("Operation insert not supported yet for view entities");
         }
@@ -156,7 +156,7 @@ public class GenericDAO {
             ps = connection.prepareStatement(sql);
             
             for (int i = 0; i < fieldsToSave.size(); i++) {
-                ModelField curField = (ModelField) fieldsToSave.elementAt(i);
+                ModelField curField = (ModelField) fieldsToSave.get(i);
 
                 setValue(ps, i + 1, curField, entity);
             }
@@ -194,7 +194,7 @@ public class GenericDAO {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
         //we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
-        Vector partialFields = new Vector();
+        List partialFields = new ArrayList();
         Collection keys = entity.getAllKeys();
 
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
@@ -207,7 +207,7 @@ public class GenericDAO {
         customUpdate(entity, modelEntity, partialFields);
     }
     
-    private void customUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave) throws GenericEntityException {
+    private void customUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave) throws GenericEntityException {
         boolean manualTX = true;
         Connection connection = null;
 
@@ -266,7 +266,7 @@ public class GenericDAO {
         }
     }
     
-    private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws GenericEntityException {
+    private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation update not supported yet for view entities");
         }
@@ -305,7 +305,7 @@ public class GenericDAO {
             
             int ind = 1;
             for (int i = 0; i < fieldsToSave.size(); i++) {
-                ModelField curField = (ModelField) fieldsToSave.elementAt(i);
+                ModelField curField = (ModelField) fieldsToSave.get(i);
 
                 setValue(ps, ind, curField, entity);
                 ind++;
@@ -550,7 +550,7 @@ public class GenericDAO {
         }
         
         //we don't want to select ALL fields, just the nonpk fields that are in the passed GenericEntity
-        Vector partialFields = new Vector();
+        List partialFields = new ArrayList();
 
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
             ModelField curField = modelEntity.getNopk(fi);
@@ -586,7 +586,7 @@ public class GenericDAO {
             
             if (rs.next()) {
                 for (int j = 0; j < partialFields.size(); j++) {
-                    ModelField curField = (ModelField) partialFields.elementAt(j);
+                    ModelField curField = (ModelField) partialFields.get(j);
 
                     getValue(rs, j + 1, curField, entity);
                 }
@@ -638,9 +638,9 @@ public class GenericDAO {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
         
-        //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
-        Vector whereFields = new Vector();
-        Vector selectFields = new Vector();
+        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
+        List whereFields = new ArrayList();
+        List selectFields = new ArrayList();
 
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
@@ -682,7 +682,7 @@ public class GenericDAO {
             if (fields != null && fields.size() > 0) {
                 int ind = 1;
                 for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.elementAt(i);
+                    ModelField curField = (ModelField) whereFields.get(i);
 
                     //for where clause variables only setValue if not null...
                     if (dummyValue.get(curField.getName()) != null) {
@@ -698,7 +698,7 @@ public class GenericDAO {
                 GenericValue value = new GenericValue(dummyValue);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.elementAt(j);
+                    ModelField curField = (ModelField) selectFields.get(j);
 
                     getValue(rs, j + 1, curField, value);
                 }
@@ -749,9 +749,9 @@ public class GenericDAO {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
         
-        //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
-        Vector whereFields = new Vector();
-        Vector selectFields = new Vector();
+        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
+        List whereFields = new ArrayList();
+        List selectFields = new ArrayList();
 
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
@@ -793,7 +793,7 @@ public class GenericDAO {
             if (fields != null && fields.size() > 0) {
                 int ind = 1;
                 for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.elementAt(i);
+                    ModelField curField = (ModelField) whereFields.get(i);
 
                     //for where clause variables only setValue if not null...
                     if (dummyValue.get(curField.getName()) != null) {
@@ -809,7 +809,7 @@ public class GenericDAO {
                 GenericValue value = new GenericValue(dummyValue);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.elementAt(j);
+                    ModelField curField = (ModelField) selectFields.get(j);
 
                     getValue(rs, j + 1, curField, value);
                 }
@@ -862,8 +862,8 @@ public class GenericDAO {
             throw new GenericDataSourceException("Unable to establish a connection with the database.", sqle);
         }
         
-        //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
-        Vector selectFields = modelEntity.getFieldsCopy();
+        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
+        List selectFields = modelEntity.getFieldsCopy();
         
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
 
@@ -947,7 +947,7 @@ public class GenericDAO {
                 GenericValue value = new GenericValue(modelEntity);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.elementAt(j);
+                    ModelField curField = (ModelField) selectFields.get(j);
 
                     getValue(rs, j + 1, curField, value);
                 }
@@ -1000,8 +1000,8 @@ public class GenericDAO {
             throw new GenericDataSourceException("Unable to establish a connection with the database.", sqle);
         }
         
-        //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
-        Vector selectFields = modelEntity.getFieldsCopy();
+        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
+        List selectFields = modelEntity.getFieldsCopy();
         
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
 
@@ -1086,7 +1086,7 @@ public class GenericDAO {
                 GenericValue value = new GenericValue(modelEntity);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.elementAt(j);
+                    ModelField curField = (ModelField) selectFields.get(j);
 
                     getValue(rs, j + 1, curField, value);
                 }
@@ -1140,9 +1140,9 @@ public class GenericDAO {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
         
-        //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
-        Vector whereFields = new Vector();
-        Vector selectFields = new Vector();
+        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
+        List whereFields = new ArrayList();
+        List selectFields = new ArrayList();
 
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
@@ -1181,7 +1181,7 @@ public class GenericDAO {
             if (fields != null && fields.size() > 0) {
                 dummyValue = new GenericValue(modelEntity, fields);
                 for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.elementAt(i);
+                    ModelField curField = (ModelField) whereFields.get(i);
 
                     setValue(ps, i + 1, curField, dummyValue);
                 }
@@ -1194,7 +1194,7 @@ public class GenericDAO {
                 GenericValue value = new GenericValue(dummyValue);
 
                 for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.elementAt(j);
+                    ModelField curField = (ModelField) selectFields.get(j);
 
                     getValue(rs, j + 1, curField, value);
                 }
@@ -1256,7 +1256,7 @@ public class GenericDAO {
         
         String test = "";
         
-        Vector whereTables = new Vector();
+        List whereTables = new ArrayList();
         
         try {
             connection = getConnection();
@@ -1296,8 +1296,8 @@ public class GenericDAO {
         }
         from.append(whereTables.get(ix));
         
-        Vector whereFields = new Vector();
-        Vector selectFields = new Vector();
+        List whereFields = new ArrayList();
+        List selectFields = new ArrayList();
 
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
@@ -1339,7 +1339,7 @@ public class GenericDAO {
             if (fields != null && fields.size() > 0) {
                 dummyValue = new GenericValue(modelEntity, fields);
                 for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.elementAt(i);
+                    ModelField curField = (ModelField) whereFields.get(i);
 
                     setValue(ps, i + 1, curField, dummyValue);
                 }
@@ -1352,7 +1352,7 @@ public class GenericDAO {
                 GenericValue value = new GenericValue(dummyValue);
                 
                 for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.elementAt(j);
+                    ModelField curField = (ModelField) selectFields.get(j);
 
                     getValue(rs, j + 1, curField, value);
                 }
@@ -1548,8 +1548,8 @@ public class GenericDAO {
         
         PreparedStatement ps = null;
         
-        //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
-        Vector whereFields = new Vector();
+        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
+        List whereFields = new ArrayList();
 
         if (fields != null || fields.size() > 0) {
             Set keys = fields.keySet();
@@ -1574,7 +1574,7 @@ public class GenericDAO {
             if (fields != null || fields.size() > 0) {
                 int ind = 1;
                 for (int i = 0; i < whereFields.size(); i++) {
-                    ModelField curField = (ModelField) whereFields.elementAt(i);
+                    ModelField curField = (ModelField) whereFields.get(i);
 
                     //for where clause variables only setValue if not null...
                     if (dummyValue.get(curField.getName()) != null) {
@@ -1698,7 +1698,7 @@ public class GenericDAO {
     }
     
     /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
-    protected String makeWhereStringAnd(Vector modelFields, GenericEntity entity) {
+    protected String makeWhereStringAnd(List modelFields, GenericEntity entity) {
         StringBuffer returnString = new StringBuffer("");
 
         if (modelFields.size() < 1) {
@@ -1708,7 +1708,7 @@ public class GenericDAO {
         int i = 0;
 
         for (; i < modelFields.size() - 1; i++) {
-            ModelField modelField = (ModelField) modelFields.elementAt(i);
+            ModelField modelField = (ModelField) modelFields.get(i);
 
             returnString.append(modelField.getColName());
             if (entity.get(modelField.getName()) != null)
@@ -1716,7 +1716,7 @@ public class GenericDAO {
             else
                 returnString.append(" IS NULL AND ");
         }
-        ModelField modelField2 = (ModelField) modelFields.elementAt(i);
+        ModelField modelField2 = (ModelField) modelFields.get(i);
 
         returnString.append(modelField2.getColName());
         if (entity.get(modelField2.getName()) != null)
@@ -1726,7 +1726,7 @@ public class GenericDAO {
         return returnString.toString();
     }
     
-    protected String makeWhereClauseAnd(ModelEntity modelEntity, Vector modelFields, GenericEntity entity) {
+    protected String makeWhereClauseAnd(ModelEntity modelEntity, List modelFields, GenericEntity entity) {
         StringBuffer whereString = new StringBuffer("");
 
         if (modelFields != null && modelFields.size() > 0) {
@@ -1747,7 +1747,7 @@ public class GenericDAO {
             return "";
     }
     
-    protected String makeWhereStringOr(Vector modelFields, GenericEntity entity) {
+    protected String makeWhereStringOr(List modelFields, GenericEntity entity) {
         StringBuffer returnString = new StringBuffer("");
 
         if (modelFields.size() < 1) {
@@ -1757,7 +1757,7 @@ public class GenericDAO {
         int i = 0;
 
         for (; i < modelFields.size() - 1; i++) {
-            ModelField modelField = (ModelField) modelFields.elementAt(i);
+            ModelField modelField = (ModelField) modelFields.get(i);
 
             returnString.append(modelField.getColName());
             if (entity.get(modelField.getName()) != null)
@@ -1765,7 +1765,7 @@ public class GenericDAO {
             else
                 returnString.append(" IS NULL OR ");
         }
-        ModelField modelField2 = (ModelField) modelFields.elementAt(i);
+        ModelField modelField2 = (ModelField) modelFields.get(i);
 
         returnString.append(modelField2.getColName());
         if (entity.get(modelField2.getName()) != null)
@@ -1775,7 +1775,7 @@ public class GenericDAO {
         return returnString.toString();
     }
     
-    protected String makeWhereClauseOr(ModelEntity modelEntity, Vector modelFields, GenericEntity entity) {
+    protected String makeWhereClauseOr(ModelEntity modelEntity, List modelFields, GenericEntity entity) {
         StringBuffer whereString = new StringBuffer("");
 
         if (modelFields != null && modelFields.size() > 0) {

@@ -56,7 +56,7 @@ public class ModelRelation {
     protected String relEntityName = "";
 
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
-    protected Vector keyMaps = new Vector();
+    protected List keyMaps = new ArrayList();
 
     /** the main entity of this relation */
     protected ModelEntity mainEntity = null;
@@ -147,7 +147,7 @@ public class ModelRelation {
     /** Find a KeyMap with the specified fieldName */
     public ModelKeyMap findKeyMap(String fieldName) {
         for (int i = 0; i < keyMaps.size(); i++) {
-            ModelKeyMap keyMap = (ModelKeyMap) keyMaps.elementAt(i);
+            ModelKeyMap keyMap = (ModelKeyMap) keyMaps.get(i);
 
             if (keyMap.fieldName.equals(fieldName)) return keyMap;
         }
@@ -157,7 +157,7 @@ public class ModelRelation {
     /** Find a KeyMap with the specified relFieldName */
     public ModelKeyMap findKeyMapByRelated(String relFieldName) {
         for (int i = 0; i < keyMaps.size(); i++) {
-            ModelKeyMap keyMap = (ModelKeyMap) keyMaps.elementAt(i);
+            ModelKeyMap keyMap = (ModelKeyMap) keyMaps.get(i);
 
             if (keyMap.relFieldName.equals(relFieldName)) return keyMap;
         }
@@ -174,9 +174,9 @@ public class ModelRelation {
         int i = 0;
 
         for (; i < keyMaps.size() - 1; i++) {
-            returnString = returnString + ((ModelKeyMap) keyMaps.elementAt(i)).fieldName + separator;
+            returnString = returnString + ((ModelKeyMap) keyMaps.get(i)).fieldName + separator;
         }
-        returnString = returnString + ((ModelKeyMap) keyMaps.elementAt(i)).fieldName + afterLast;
+        returnString = returnString + ((ModelKeyMap) keyMaps.get(i)).fieldName + afterLast;
         return returnString;
     }
 
@@ -190,9 +190,9 @@ public class ModelRelation {
         int i = 0;
 
         for (; i < keyMaps.size() - 1; i++) {
-            returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).fieldName) + separator;
+            returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).fieldName) + separator;
         }
-        returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).fieldName) + afterLast;
+        returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).fieldName) + afterLast;
         return returnString;
     }
 
@@ -206,9 +206,9 @@ public class ModelRelation {
         int i = 0;
 
         for (; i < keyMaps.size() - 1; i++) {
-            returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).relFieldName) + separator;
+            returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).relFieldName) + separator;
         }
-        returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).relFieldName) + afterLast;
+        returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).relFieldName) + afterLast;
         return returnString;
     }
 
@@ -219,9 +219,9 @@ public class ModelRelation {
 
      int i = 0;
      for(; i < keyMaps.size() - 1; i++) {
-     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).colName + separator;
+     returnString = returnString + ((ModelKeyMap)keyMaps.get(i)).colName + separator;
      }
-     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).colName + afterLast;
+     returnString = returnString + ((ModelKeyMap)keyMaps.get(i)).colName + afterLast;
      return returnString;
      }
      */
@@ -233,9 +233,9 @@ public class ModelRelation {
 
      int i = 0;
      for(; i < keyMaps.size() - 1; i++) {
-     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).relColName + separator;
+     returnString = returnString + ((ModelKeyMap)keyMaps.get(i)).relColName + separator;
      }
-     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).relColName + afterLast;
+     returnString = returnString + ((ModelKeyMap)keyMaps.get(i)).relColName + afterLast;
      return returnString;
      }
      */

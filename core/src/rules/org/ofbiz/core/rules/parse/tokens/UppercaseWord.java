@@ -58,7 +58,7 @@ public class UppercaseWord extends Word {
    * Create a set with one random uppercase word (with 3
    * to 7 characters).
    */
-  public Vector randomExpansion(int maxDepth, int depth) {
+  public List randomExpansion(int maxDepth, int depth) {
     int n = (int) (5.0 * Math.random()) + 3;
     
     char[] letters = new char[n];
@@ -67,8 +67,8 @@ public class UppercaseWord extends Word {
       letters[i] = (char) c;
     }
     
-    Vector v = new Vector();
-    v.addElement(new String(letters));
+    List v = new ArrayList();
+    v.add(new String(letters));
     return v;
   }
   /**
@@ -81,7 +81,7 @@ public class UppercaseWord extends Word {
    *
    * @see ProductionRule#toString()
    */
-  public String unvisitedString(java.util.Vector visited) {
+  public String unvisitedString(List visited) {
     return "Word";
   }
 }

@@ -512,7 +512,7 @@ public class DatabaseUtil {
 
         while (tableNamesIter.hasNext()) {
             String tableName = (String) tableNamesIter.next();
-            Vector colList = (Vector) colInfo.get(tableName);
+            List colList = (ArrayList) colInfo.get(tableName);
             
             ModelEntity newEntity = new ModelEntity(tableName, colList, modelFieldTypeReader);
 
@@ -733,7 +733,7 @@ public class DatabaseUtil {
                     List tableColInfo = (List) colInfo.get(ccInfo.tableName);
 
                     if (tableColInfo == null) {
-                        tableColInfo = new Vector();
+                        tableColInfo = new ArrayList();
                         colInfo.put(ccInfo.tableName, tableColInfo);
                     }
                     tableColInfo.add(ccInfo);

@@ -40,7 +40,7 @@ import java.util.*;
 
 public class Unification {
   public static final Unification empty = new Unification();
-  Vector vector;
+  List vector;
   /**
    * Creates an empty unification.
    */
@@ -65,7 +65,7 @@ public class Unification {
    */
   public Unification addVariable(Variable v) {
     if (!vector().contains(v)) {
-      vector.addElement(v);
+      vector.add(v);
     }
     return this;
   }
@@ -88,7 +88,7 @@ public class Unification {
    * @return the variables in this unification.
    */
   public Enumeration elements() {
-    return vector().elements();
+    return Collections.enumeration(vector());
   }
   /**
    * Returns the number of variables in this unification.
@@ -149,14 +149,14 @@ public class Unification {
    * @return   variable   the variable at the indicated index
    */
   protected Variable variableAt(int i) {
-    return (Variable) vector().elementAt(i);
+    return (Variable) vector().get(i);
   }
   /**
    * lazy-initialize this unification's vector
    */
-  protected Vector vector() {
+  protected List vector() {
     if (vector == null) {
-      vector = new Vector();
+      vector = new ArrayList();
     }
     return vector;
   }

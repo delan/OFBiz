@@ -106,13 +106,12 @@ public class TokenStringSource {
    * cache to null if the source is out of tokens.
    */
   protected void loadCache() {
-    Vector tokenVector = nextVector();
+    List tokenVector = nextVector();
     if (tokenVector.isEmpty()) {
       cachedTokenString = null;
     }
     else {
-      Token tokens[] = new Token[tokenVector.size()];
-      tokenVector.copyInto(tokens);
+      Token tokens[] = (Token[]) tokenVector.toArray();
       cachedTokenString = new TokenString(tokens);
     }
   }
@@ -144,14 +143,14 @@ public class TokenStringSource {
     return returnTokenString;
   }
   /**
-   * Returns a Vector of the tokens in the source up to either
+   * Returns a List of the tokens in the source up to either
    * the delimiter or the end of the source.
    *
-   * @return   a Vector of the tokens in the source up to either
+   * @return   a List of the tokens in the source up to either
    *           the delimiter or the end of the source.
    */
-  protected Vector nextVector() {
-    Vector v = new Vector();
+  protected List nextVector() {
+    List v = new ArrayList();
     try {
       while (true) {
         Token tok = tokenizer.nextToken();
@@ -160,7 +159,7 @@ public class TokenStringSource {
           
           break;
         }
-        v.addElement(tok);
+        v.add(tok);
       }
     }
     catch(IOException e) {

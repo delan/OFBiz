@@ -83,17 +83,17 @@ public class ModelEntity implements Comparable {
     /** The version for documentation purposes */
     protected String version = "";
 
-    /** A Vector of the Field objects for the Entity */
-    protected Vector fields = new Vector();
+    /** A List of the Field objects for the Entity */
+    protected List fields = new ArrayList();
 
-    /** A Vector of the Field objects for the Entity, one for each Primary Key */
-    protected Vector pks = new Vector();
+    /** A List of the Field objects for the Entity, one for each Primary Key */
+    protected List pks = new ArrayList();
 
-    /** A Vector of the Field objects for the Entity, one for each NON Primary Key */
-    protected Vector nopks = new Vector();
+    /** A List of the Field objects for the Entity, one for each NON Primary Key */
+    protected List nopks = new ArrayList();
 
     /** relations defining relationships between this entity and other entities */
-    protected Vector relations = new Vector();
+    protected List relations = new ArrayList();
 
     /** An indicator to specify if this entity requires locking for updates */
     protected boolean doLock = false;
@@ -134,9 +134,9 @@ public class ModelEntity implements Comparable {
         }
 
         //now that we have the pks and the fields, make the nopks vector
-        this.nopks = new Vector();
+        this.nopks = new ArrayList();
         for (int ind = 0; ind < this.fields.size(); ind++) {
-            ModelField field = (ModelField) this.fields.elementAt(ind);
+            ModelField field = (ModelField) this.fields.get(ind);
 
             if (!field.isPk) this.nopks.add(field);
         }
@@ -146,7 +146,7 @@ public class ModelEntity implements Comparable {
     }
 
     /** DB Names Constructor */
-    public ModelEntity(String tableName, Vector colList, ModelFieldTypeReader modelFieldTypeReader) {
+    public ModelEntity(String tableName, List colList, ModelFieldTypeReader modelFieldTypeReader) {
         this.tableName = tableName.toUpperCase();
         this.entityName = ModelUtil.dbNameToClassName(this.tableName);
         Iterator columns = colList.iterator();
@@ -308,8 +308,8 @@ public class ModelEntity implements Comparable {
     }
 
     public void updatePkLists() {
-        pks = new Vector();
-        nopks = new Vector();
+        pks = new ArrayList();
+        nopks = new ArrayList();
         for (int i = 0; i < fields.size(); i++) {
             ModelField field = (ModelField) fields.get(i);
 
@@ -354,8 +354,8 @@ public class ModelEntity implements Comparable {
         return this.pks.iterator();
     }
 
-    public Vector getPksCopy() {
-        return new Vector(this.pks);
+    public List getPksCopy() {
+        return new ArrayList(this.pks);
     }
 
     public int getNopksSize() {
@@ -370,8 +370,8 @@ public class ModelEntity implements Comparable {
         return this.nopks.iterator();
     }
 
-    public Vector getNopksCopy() {
-        return new Vector(this.nopks);
+    public List getNopksCopy() {
+        return new ArrayList(this.nopks);
     }
 
     public int getFieldsSize() {
@@ -386,8 +386,8 @@ public class ModelEntity implements Comparable {
         return this.fields.iterator();
     }
 
-    public Vector getFieldsCopy() {
-        return new Vector(this.fields);
+    public List getFieldsCopy() {
+        return new ArrayList(this.fields);
     }
 
     public ModelField getField(String fieldName) {
@@ -430,7 +430,7 @@ public class ModelEntity implements Comparable {
         for (int i = 0; i < fields.size(); i++) {
             field = (ModelField) fields.get(i);
             if (field.name.equals(fieldName)) {
-                fields.removeElementAt(i);
+                fields.remove(i);
                 if (field.isPk)
                     pks.remove(field);
                 else
@@ -453,8 +453,8 @@ public class ModelEntity implements Comparable {
         return getFieldNamesFromFieldVector(nopks);
     }
 
-    public List getFieldNamesFromFieldVector(Vector modelFields) {
-        List nameList = new Vector(modelFields.size());
+    public List getFieldNamesFromFieldVector(List modelFields) {
+        List nameList = new ArrayList(modelFields.size());
 
         if (modelFields == null || modelFields.size() <= 0) return nameList;
         for (int i = 0; i < modelFields.size(); i++) {
@@ -495,11 +495,11 @@ public class ModelEntity implements Comparable {
         return (ModelRelation) this.relations.remove(index);
     }
 
-    public String nameString(Vector flds) {
+    public String nameString(List flds) {
         return nameString(flds, ", ", "");
     }
 
-    public String nameString(Vector flds, String separator, String afterLast) {
+    public String nameString(List flds, String separator, String afterLast) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -509,13 +509,13 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ((ModelField) flds.elementAt(i)).name + separator;
+            returnString = returnString + ((ModelField) flds.get(i)).name + separator;
         }
-        returnString = returnString + ((ModelField) flds.elementAt(i)).name + afterLast;
+        returnString = returnString + ((ModelField) flds.get(i)).name + afterLast;
         return returnString;
     }
 
-    public String typeNameString(Vector flds) {
+    public String typeNameString(List flds) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -525,9 +525,9 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ((ModelField) flds.elementAt(i)).type + " " + ((ModelField) flds.elementAt(i)).name + ", ";
+            returnString = returnString + ((ModelField) flds.get(i)).type + " " + ((ModelField) flds.get(i)).name + ", ";
         }
-        returnString = returnString + ((ModelField) flds.elementAt(i)).type + " " + ((ModelField) flds.elementAt(i)).name;
+        returnString = returnString + ((ModelField) flds.get(i)).type + " " + ((ModelField) flds.get(i)).name;
         return returnString;
     }
 
@@ -559,15 +559,15 @@ public class ModelEntity implements Comparable {
         return fieldsStringList(fields, "null", ", ", false, true);
     }
 
-    public String fieldsStringList(Vector flds, String eachString, String separator) {
+    public String fieldsStringList(List flds, String eachString, String separator) {
         return fieldsStringList(flds, eachString, separator, false, false);
     }
 
-    public String fieldsStringList(Vector flds, String eachString, String separator, boolean appendIndex) {
+    public String fieldsStringList(List flds, String eachString, String separator, boolean appendIndex) {
         return fieldsStringList(flds, eachString, separator, appendIndex, false);
     }
 
-    public String fieldsStringList(Vector flds, String eachString, String separator, boolean appendIndex, boolean onlyNonPK) {
+    public String fieldsStringList(List flds, String eachString, String separator, boolean appendIndex, boolean onlyNonPK) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -577,7 +577,7 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size(); i++) {
-            if (onlyNonPK && ((ModelField) flds.elementAt(i)).isPk) continue;
+            if (onlyNonPK && ((ModelField) flds.get(i)).isPk) continue;
             returnString = returnString + eachString;
             if (appendIndex) returnString = returnString + (i + 1);
             if (i < flds.size() - 1) returnString = returnString + separator;
@@ -585,11 +585,11 @@ public class ModelEntity implements Comparable {
         return returnString;
     }
 
-    public String colNameString(Vector flds) {
+    public String colNameString(List flds) {
         return colNameString(flds, ", ", "");
     }
 
-    public String colNameString(Vector flds, String separator, String afterLast) {
+    public String colNameString(List flds, String separator, String afterLast) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -599,17 +599,17 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ((ModelField) flds.elementAt(i)).colName + separator;
+            returnString = returnString + ((ModelField) flds.get(i)).colName + separator;
         }
-        returnString = returnString + ((ModelField) flds.elementAt(i)).colName + afterLast;
+        returnString = returnString + ((ModelField) flds.get(i)).colName + afterLast;
         return returnString;
     }
 
-    public String classNameString(Vector flds) {
+    public String classNameString(List flds) {
         return classNameString(flds, ", ", "");
     }
 
-    public String classNameString(Vector flds, String separator, String afterLast) {
+    public String classNameString(List flds, String separator, String afterLast) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -619,13 +619,13 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ModelUtil.upperFirstChar(((ModelField) flds.elementAt(i)).name) + separator;
+            returnString = returnString + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + separator;
         }
-        returnString = returnString + ModelUtil.upperFirstChar(((ModelField) flds.elementAt(i)).name) + afterLast;
+        returnString = returnString + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + afterLast;
         return returnString;
     }
 
-    public String finderQueryString(Vector flds) {
+    public String finderQueryString(List flds) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -634,13 +634,13 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ((ModelField) flds.elementAt(i)).colName + " like {" + i + "} AND ";
+            returnString = returnString + ((ModelField) flds.get(i)).colName + " like {" + i + "} AND ";
         }
-        returnString = returnString + ((ModelField) flds.elementAt(i)).colName + " like {" + i + "}";
+        returnString = returnString + ((ModelField) flds.get(i)).colName + " like {" + i + "}";
         return returnString;
     }
 
-    public String httpArgList(Vector flds) {
+    public String httpArgList(List flds) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -649,13 +649,13 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ((ModelField) flds.elementAt(i)).name + " + \"&\" + ";
+            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ((ModelField) flds.get(i)).name + " + \"&\" + ";
         }
-        returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ((ModelField) flds.elementAt(i)).name;
+        returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ((ModelField) flds.get(i)).name;
         return returnString;
     }
 
-    public String httpArgListFromClass(Vector flds) {
+    public String httpArgListFromClass(List flds) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -665,13 +665,13 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.elementAt(i)).name) + "() + \"&\" + ";
+            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + "() + \"&\" + ";
         }
-        returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.elementAt(i)).name) + "()";
+        returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + "()";
         return returnString;
     }
 
-    public String httpArgListFromClass(Vector flds, String entityNameSuffix) {
+    public String httpArgListFromClass(List flds, String entityNameSuffix) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -681,13 +681,13 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + entityNameSuffix + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.elementAt(i)).name) + "() + \"&\" + ";
+            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + entityNameSuffix + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + "() + \"&\" + ";
         }
-        returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + entityNameSuffix + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.elementAt(i)).name) + "()";
+        returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + entityNameSuffix + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + "()";
         return returnString;
     }
 
-    public String httpRelationArgList(Vector flds, ModelRelation relation) {
+    public String httpRelationArgList(List flds, ModelRelation relation) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -697,19 +697,19 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name);
+            ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.get(i)).name);
 
             if (keyMap != null)
-                returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
+                returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
             else
-                Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.elementAt(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
+                Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.get(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
         }
-        ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name);
+        ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.get(i)).name);
 
         if (keyMap != null)
-            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "()";
+            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "()";
         else
-            Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.elementAt(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
+            Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.get(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
         return returnString;
     }
 
@@ -720,16 +720,16 @@ public class ModelEntity implements Comparable {
 
      int i = 0;
      for(; i < relation.keyMaps.size() - 1; i++) {
-     ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.elementAt(i);
+     ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
      if(keyMap != null)
      returnString = returnString + "\"" + tableName + "_" + keyMap.relColName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
      }
-     ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.elementAt(i);
+     ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
      returnString = returnString + "\"" + tableName + "_" + keyMap.relColName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "()";
      return returnString;
      }
      */
-    public String typeNameStringRelatedNoMapped(Vector flds, ModelRelation relation) {
+    public String typeNameStringRelatedNoMapped(List flds, ModelRelation relation) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -738,19 +738,19 @@ public class ModelEntity implements Comparable {
 
         int i = 0;
 
-        if (relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name) == null)
-            returnString = returnString + ((ModelField) flds.elementAt(i)).type + " " + ((ModelField) flds.elementAt(i)).name;
+        if (relation.findKeyMapByRelated(((ModelField) flds.get(i)).name) == null)
+            returnString = returnString + ((ModelField) flds.get(i)).type + " " + ((ModelField) flds.get(i)).name;
         i++;
         for (; i < flds.size(); i++) {
-            if (relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name) == null) {
+            if (relation.findKeyMapByRelated(((ModelField) flds.get(i)).name) == null) {
                 if (returnString.length() > 0) returnString = returnString + ", ";
-                returnString = returnString + ((ModelField) flds.elementAt(i)).type + " " + ((ModelField) flds.elementAt(i)).name;
+                returnString = returnString + ((ModelField) flds.get(i)).type + " " + ((ModelField) flds.get(i)).name;
             }
         }
         return returnString;
     }
 
-    public String typeNameStringRelatedAndMain(Vector flds, ModelRelation relation) {
+    public String typeNameStringRelatedAndMain(List flds, ModelRelation relation) {
         String returnString = "";
 
         if (flds.size() < 1) {
@@ -760,19 +760,19 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name);
+            ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.get(i)).name);
 
             if (keyMap != null)
                 returnString = returnString + keyMap.fieldName + ", ";
             else
-                returnString = returnString + ((ModelField) flds.elementAt(i)).name + ", ";
+                returnString = returnString + ((ModelField) flds.get(i)).name + ", ";
         }
-        ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.elementAt(i)).name);
+        ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.get(i)).name);
 
         if (keyMap != null)
             returnString = returnString + keyMap.fieldName;
         else
-            returnString = returnString + ((ModelField) flds.elementAt(i)).name;
+            returnString = returnString + ((ModelField) flds.get(i)).name;
         return returnString;
     }
 

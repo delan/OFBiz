@@ -41,7 +41,7 @@ public class ProgramEnumerator implements AxiomEnumeration {
    *
    */
   public ProgramEnumerator(Program p) {
-    e = p.axioms.elements();
+    e = Collections.enumeration(p.axioms);
   }
   /**
    * Tests if this enumeration contains more axioms.

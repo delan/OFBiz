@@ -144,7 +144,7 @@ public class DataFile {
         if (locationInfo == null)
             locationInfo = "unknown";
 
-        records = new Vector();
+        records = new ArrayList();
         Stack parentStack = new Stack();
 
         if (ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {

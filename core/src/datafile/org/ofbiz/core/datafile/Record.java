@@ -46,7 +46,7 @@ public class Record implements Serializable {
     protected transient ModelRecord modelRecord;
 
     protected Record parentRecord = null;
-    protected List childRecords = new Vector();
+    protected List childRecords = new ArrayList();
 
     /** Creates new Record */
     protected Record(ModelRecord modelRecord) {

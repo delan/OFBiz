@@ -363,7 +363,7 @@ public class ModelReader {
 
     public ModelField findModelField(ModelEntity entity, String fieldName) {
         for (int i = 0; i < entity.fields.size(); i++) {
-            ModelField field = (ModelField) entity.fields.elementAt(i);
+            ModelField field = (ModelField) entity.fields.get(i);
 
             if (field.name.compareTo(fieldName) == 0) {
                 return field;

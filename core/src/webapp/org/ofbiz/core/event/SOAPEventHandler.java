@@ -107,7 +107,7 @@ public class SOAPEventHandler implements EventHandler {
             sendError(response, e);
             throw new EventHandlerException("Cannot get the envelope", e);
         }
-        Vector bodies = null;
+        List bodies = null;
         try {
             bodies = reqEnv.getBodyElements();
         } catch (AxisFault e) {
@@ -124,7 +124,7 @@ public class SOAPEventHandler implements EventHandler {
             if (o instanceof RPCElement) {
                 RPCElement body = (RPCElement) o;
                 String serviceName = body.getMethodName();
-                Vector params = null;
+                List params = null;
                 try {
                     params = body.getParams();
                 } catch (Exception e) {

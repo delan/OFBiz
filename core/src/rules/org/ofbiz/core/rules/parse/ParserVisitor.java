@@ -38,38 +38,36 @@ public abstract class ParserVisitor {
   /**
    * Visit an alternation.
    *
-   * @param   Alternation   the parser to visit
-   * @param   Vector   a collection of previously visited parsers
+   * @param   a   the parser to visit
+   * @param   visited   a collection of previously visited parsers
    */
-  public abstract void visitAlternation(
-  Alternation a, Vector visited);
+  public abstract void visitAlternation(Alternation a, List visited);
   /**
    * Visit an empty parser.
    *
-   * @param   Empty   the parser to visit
-   * @param   Vector   a collection of previously visited parsers
+   * @param   e   the parser to visit
+   * @param   visited   a collection of previously visited parsers
    */
-  public abstract void visitEmpty(Empty e, Vector visited);
+  public abstract void visitEmpty(Empty e, List visited);
   /**
    * Visit a repetition.
    *
-   * @param   Repetition   the parser to visit
-   * @param   Vector   a collection of previously visited parsers
+   * @param   r   the parser to visit
+   * @param   visited   a collection of previously visited parsers
    */
-  public abstract void visitRepetition(
-  Repetition r, Vector visited);
+  public abstract void visitRepetition(Repetition r, List visited);
   /**
    * Visit a sequence.
    *
-   * @param   Sequence   the parser to visit
-   * @param   Vector   a collection of previously visited parsers
+   * @param   s   the parser to visit
+   * @param   visited   a collection of previously visited parsers
    */
-  public abstract void visitSequence(Sequence s, Vector visited);
+  public abstract void visitSequence(Sequence s, List visited);
   /**
    * Visit a terminal.
    *
-   * @param   Terminal   the parser to visit
-   * @param   Vector   a collection of previously visited parsers
+   * @param   t   the parser to visit
+   * @param   visited   a collection of previously visited parsers
    */
-  public abstract void visitTerminal(Terminal t, Vector visited);
+  public abstract void visitTerminal(Terminal t, List visited);
 }

@@ -48,10 +48,9 @@ public class ListWithTailAssembler extends Assembler {
     
     Token fence = new Token('[');
     
-    Vector termVector = elementsAbove(a, fence);
+    List termVector = elementsAbove(a, fence);
     Term[] termsToLast =
-    StructureWithTermsAssembler.vectorReversedIntoTerms(
-    termVector);
+    StructureWithTermsAssembler.vectorReversedIntoTerms(termVector);
     
     a.push(Structure.list(termsToLast, tail));
   }

@@ -52,7 +52,7 @@ public class QuotedString extends Terminal {
    * Create a set with one random quoted string (with 2 to
    * 6 characters).
    */
-  public Vector randomExpansion(int maxDepth, int depth) {
+  public List randomExpansion(int maxDepth, int depth) {
     int n = (int) (5.0 * Math.random());
     
     char[] letters = new char[n + 2];
@@ -64,8 +64,8 @@ public class QuotedString extends Terminal {
       letters[i + 1] = (char) c;
     }
     
-    Vector v = new Vector();
-    v.addElement(new String(letters));
+    List v = new ArrayList();
+    v.add(new String(letters));
     return v;
   }
   /**
@@ -78,7 +78,7 @@ public class QuotedString extends Terminal {
    *
    * @see Parser#toString()
    */
-  public String unvisitedString(Vector visited) {
+  public String unvisitedString(List visited) {
     return "QuotedString";
   }
 }

@@ -71,7 +71,7 @@ public class Literal extends Terminal {
    *
    * @see Parser#toString()
    */
-  public String unvisitedString(Vector visited) {
+  public String unvisitedString(List visited) {
     return literal.toString();
   }
 }

@@ -60,7 +60,7 @@ public class ModelField {
     protected boolean isPk = false;
 
     /** validators to be called when an update is done */
-    protected Vector validators = new Vector();
+    protected List validators = new ArrayList();
 
     /** Default Constructor */
     public ModelField() {}

@@ -59,18 +59,18 @@ public abstract class Assembler {
    * @param   object   the fence, a marker of where to stop
    *                   popping the stack
    *
-   * @return   Vector   the elements above the specified fence
+   * @return   List   the elements above the specified fence
    *
    */
-  public static Vector elementsAbove(Assembly a, Object fence) {
-    Vector items = new Vector();
+  public static List elementsAbove(Assembly a, Object fence) {
+    List items = new ArrayList();
     
     while (!a.stackIsEmpty()) {
       Object top = a.pop();
       if (top.equals(fence)) {
         break;
       }
-      items.addElement(top);
+      items.add(top);
     }
     return items;
   }

@@ -52,11 +52,11 @@ public class Sequence extends CollectionParser {
    * Accept a "visitor" and a collection of previously visited
    * parsers.
    *
-   * @param   ParserVisitor   the visitor to accept
+   * @param   pv   the visitor to accept
    *
-   * @param   Vector   a collection of previously visited parsers
+   * @param   visited   a collection of previously visited parsers
    */
-  public void accept(ParserVisitor pv, Vector visited) {
+  public void accept(ParserVisitor pv, List visited) {
     pv.visitSequence(this, visited);
   }
   /**
@@ -64,15 +64,15 @@ public class Sequence extends CollectionParser {
    * sequence against all of them, and returns a new set
    * of the assemblies that result from the matches.
    *
-   * @return   a Vector of assemblies that result from
+   * @return   a List of assemblies that result from
    *           matching against a beginning set of assemblies
    *
-   * @param   Vector   a vector of assemblies to match against
+   * @param   in   a vector of assemblies to match against
    *
    */
-  public Vector match(Vector in) {
-    Vector out = in;
-    Enumeration e = subparsers.elements();
+  public List match(List in) {
+    List out = in;
+    Enumeration e = Collections.enumeration(subparsers);
     while (e.hasMoreElements()) {
       Parser p = (Parser) e.nextElement();
       out = p.matchAndAssemble(out);
@@ -86,15 +86,15 @@ public class Sequence extends CollectionParser {
    * Create a random expansion for each parser in this
    * sequence and return a collection of all these expansions.
    */
-  protected Vector randomExpansion(int maxDepth, int depth) {
-    Vector v = new Vector();
-    Enumeration e = subparsers.elements();
+  protected List randomExpansion(int maxDepth, int depth) {
+    List v = new ArrayList();
+    Enumeration e = Collections.enumeration(subparsers);
     while (e.hasMoreElements()) {
       Parser p = (Parser) e.nextElement();
-      Vector w = p.randomExpansion(maxDepth, depth++);
-      Enumeration f = w.elements();
+      List w = p.randomExpansion(maxDepth, depth++);
+      Enumeration f = Collections.enumeration(w);
       while (f.hasMoreElements()) {
-        v.addElement(f.nextElement());
+        v.add(f.nextElement());
       }
     }
     return v;

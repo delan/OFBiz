@@ -57,7 +57,7 @@ public class LowercaseWord extends Word {
   /**
    *
    */
-  public Vector randomExpansion(int maxDepth, int depth) {
+  public List randomExpansion(int maxDepth, int depth) {
     int n = (int) (5.0 * Math.random()) + 3;
     
     char[] letters = new char[n];
@@ -66,8 +66,8 @@ public class LowercaseWord extends Word {
       letters[i] = (char) c;
     }
     
-    Vector v = new Vector();
-    v.addElement(new String(letters));
+    List v = new ArrayList();
+    v.add(new String(letters));
     return v;
   }
   /**
@@ -80,7 +80,7 @@ public class LowercaseWord extends Word {
    *
    * @see ProductionRule#toString()
    */
-  public String unvisitedString(java.util.Vector visited) {
+  public String unvisitedString(List visited) {
     return "word";
   }
 }

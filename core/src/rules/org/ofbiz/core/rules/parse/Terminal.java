@@ -61,11 +61,11 @@ public class Terminal extends Parser {
    * Accept a "visitor" and a collection of previously visited
    * parsers.
    *
-   * @param   ParserVisitor   the visitor to accept
+   * @param   pv   the visitor to accept
    *
-   * @param   Vector   a collection of previously visited parsers
+   * @param   visited   a collection of previously visited parsers
    */
-  public void accept(ParserVisitor pv, Vector visited) {
+  public void accept(ParserVisitor pv, List visited) {
     pv.visitTerminal(this, visited);
   }
   /**
@@ -82,20 +82,20 @@ public class Terminal extends Parser {
    * collection of the assemblies that result from the
    * matches.
    *
-   * @return   a Vector of assemblies that result from
+   * @return   a List of assemblies that result from
    *           matching against a beginning set of assemblies
    *
-   * @param   Vector   a vector of assemblies to match against
+   * @param   in   a vector of assemblies to match against
    *
    */
-  public Vector match(Vector in) {
-    Vector out = new Vector();
-    Enumeration e = in.elements();
+  public List match(List in) {
+    List out = new ArrayList();
+    Enumeration e = Collections.enumeration(in);
     while (e.hasMoreElements()) {
       Assembly a = (Assembly) e.nextElement();
       Assembly b = matchOneAssembly(a);
       if (b != null) {
-        out.addElement(b);
+        out.add(b);
       }
     }
     return out;
@@ -146,9 +146,9 @@ public class Terminal extends Parser {
    * string representation of itself. (Most subclasses
    * override this.)
    */
-  public Vector randomExpansion(int maxDepth, int depth) {
-    Vector v = new Vector();
-    v.addElement(this.toString());
+  public List randomExpansion(int maxDepth, int depth) {
+    List v = new ArrayList();
+    v.add(this.toString());
     return v;
   }
   /**
@@ -168,7 +168,7 @@ public class Terminal extends Parser {
   /**
    * Returns a textual description of this parser.
    */
-  protected String unvisitedString(Vector visited) {
+  protected String unvisitedString(List visited) {
     return "any";
   }
 }

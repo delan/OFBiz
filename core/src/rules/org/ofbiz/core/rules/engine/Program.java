@@ -34,7 +34,7 @@ import java.util.*;
  */
 
 public class Program implements AxiomSource {
-  protected Vector axioms = new Vector();
+  protected List axioms = new ArrayList();
   /**
    * Create a new program with no axioms.
    */
@@ -54,7 +54,7 @@ public class Program implements AxiomSource {
    * @param Axiom the axiom to add.
    */
   public void addAxiom(Axiom a) {
-    axioms.addElement(a);
+    axioms.add(a);
   }
   /**
    * Appends all the axioms of another source to this one.
@@ -91,7 +91,7 @@ public class Program implements AxiomSource {
   public String toString() {
     StringBuffer buf = new StringBuffer();
     boolean haveShownALine = false;
-    Enumeration e = axioms.elements();
+    Enumeration e = Collections.enumeration(axioms);
     while (e.hasMoreElements()) {
       if (haveShownALine) {
         buf.append("\n");

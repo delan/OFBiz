@@ -47,10 +47,10 @@ public class Letter extends Terminal {
   /**
    * Create a set with one random letter.
    */
-  public Vector randomExpansion(int maxDepth, int depth) {
+  public List randomExpansion(int maxDepth, int depth) {
     char c = (char) (26.0 * Math.random() + 'a');
-    Vector v = new Vector();
-    v.addElement(new String(new char[]{c}));
+    List v = new ArrayList();
+    v.add(new String(new char[]{c}));
     return v;
   }
   /**
@@ -61,7 +61,7 @@ public class Letter extends Terminal {
    * @return   string   a textual description of this parser
    * @see Parser#toString()
    */
-  public String unvisitedString(Vector visited) {
+  public String unvisitedString(List visited) {
     return "L";
   }
 }

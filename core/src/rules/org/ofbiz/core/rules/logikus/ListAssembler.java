@@ -50,7 +50,7 @@ public class ListAssembler extends Assembler {
    */
   public void workOn(Assembly a) {
     Token fence = new Token('[');
-    Vector termVector = elementsAbove(a, fence);
+    List termVector = elementsAbove(a, fence);
     Term[] termArray =
     StructureWithTermsAssembler.vectorReversedIntoTerms(
     termVector);

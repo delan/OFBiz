@@ -56,7 +56,7 @@ public class ModelFieldType {
     protected String sqlType = null;
 
     /** validators to be called when an update is done */
-    protected Vector validators = new Vector();
+    protected List validators = new ArrayList();
 
     /** Default Constructor */
     public ModelFieldType() {}
@@ -92,7 +92,7 @@ public class ModelFieldType {
     }
 
     /** validators to be called when an update is done */
-    public Vector getValidators() {
+    public List getValidators() {
         return this.validators;
     }
 

@@ -55,7 +55,7 @@ public class ModelDataFile {
     public String description = "";
 
     /** List of record definitions for the file */
-    public List records = new Vector();
+    public List records = new ArrayList();
 
     ModelRecord getModelRecord(String recordName) {
         for (int i = 0; i < records.size(); i++) {

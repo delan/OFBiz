@@ -76,21 +76,20 @@ public class TokenString {
    *            tokens
    */
   public TokenString(Tokenizer t) {
-    Vector v = new Vector();
+    List v = new ArrayList();
     try {
       while (true) {
         Token tok = t.nextToken();
         if (tok.ttype() == Token.TT_EOF) {
           break;
         }
-        v.addElement(tok);
+        v.add(tok);
       };
     } catch (IOException e) {
       throw new InternalError(
       "Problem tokenizing string: " + e);
     }
-    tokens = new Token[v.size()];
-    v.copyInto(tokens);
+    tokens = (Token[]) v.toArray();
   }
   /**
    * Returns the number of tokens in this tokenString.

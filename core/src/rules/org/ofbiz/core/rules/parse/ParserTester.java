@@ -57,9 +57,9 @@ public abstract class ParserTester {
     logTestString(s);
     Assembly a = assembly(s);
     a.setTarget(freshTarget());
-    Vector in = new Vector();
-    in.addElement(a);
-    Vector out = completeMatches(p.match(in));
+    List in = new ArrayList();
+    in.add(a);
+    List out = completeMatches(p.match(in));
     if (out.size() != 1) {
       logProblemFound(s, out.size());
       return true;
@@ -71,18 +71,18 @@ public abstract class ParserTester {
    * filtering for assemblies that have been completely
    * matched.
    *
-   * @param   Vector   a collection of partially or completely
+   * @param   in   a collection of partially or completely
    *                   matched assemblies
    *
    * @return   a collection of completely matched assemblies
    */
-  public static Vector completeMatches(Vector in) {
-    Vector out = new Vector();
-    Enumeration e = in.elements();
+  public static List completeMatches(List in) {
+    List out = new ArrayList();
+    Enumeration e = Collections.enumeration(in);
     while (e.hasMoreElements()) {
       Assembly a = (Assembly) e.nextElement();
       if (!a.hasMoreElements()) {
-        out.addElement(a);
+        out.add(a);
       }
     }
     return out;

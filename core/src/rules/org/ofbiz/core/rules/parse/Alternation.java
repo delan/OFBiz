@@ -52,11 +52,11 @@ public class Alternation extends CollectionParser {
    * Accept a "visitor" and a collection of previously visited
    * parsers.
    *
-   * @param   ParserVisitor   the visitor to accept
+   * @param   pv   the visitor to accept
    *
-   * @param   Vector   a collection of previously visited parsers
+   * @param   visited   a collection of previously visited parsers
    */
-  public void accept(ParserVisitor pv, Vector visited) {
+  public void accept(ParserVisitor pv, List visited) {
     pv.visitAlternation(this, visited);
   }
   /**
@@ -64,15 +64,15 @@ public class Alternation extends CollectionParser {
    * alternation against all of them, and returns a new set
    * of the assemblies that result from the matches.
    *
-   * @return   a Vector of assemblies that result from
+   * @return   a List of assemblies that result from
    *           matching against a beginning set of assemblies
    *
-   * @param   Vector   a vector of assemblies to match against
+   * @param   in   a vector of assemblies to match against
    *
    */
-  public Vector match(Vector in) {
-    Vector out = new Vector();
-    Enumeration e = subparsers.elements();
+  public List match(List in) {
+    List out = new ArrayList();
+    Enumeration e = Collections.enumeration(subparsers);
     while (e.hasMoreElements()) {
       Parser p = (Parser) e.nextElement();
       add(out, p.matchAndAssemble(in));
@@ -83,43 +83,43 @@ public class Alternation extends CollectionParser {
    * Create a random collection of elements that correspond to
    * this alternation.
    */
-  protected Vector randomExpansion(int maxDepth, int depth) {
+  protected List randomExpansion(int maxDepth, int depth) {
     if (depth >= maxDepth) {
       return randomSettle(maxDepth, depth);
     }
     double n = (double) subparsers.size();
     int i = (int) (n * Math.random());
-    Parser j = (Parser) subparsers.elementAt(i);
+    Parser j = (Parser) subparsers.get(i);
     return j.randomExpansion(maxDepth, depth++);
   }
   /**
    * This method is similar to randomExpansion, but it will
    * pick a terminal if one is available.
    */
-  protected Vector randomSettle(int maxDepth, int depth) {
+  protected List randomSettle(int maxDepth, int depth) {
     
     // which alternatives are terminals?
     
-    Vector terms = new Vector();
-    Enumeration e = subparsers.elements();
+    List terms = new ArrayList();
+    Enumeration e = Collections.enumeration(subparsers);
     while (e.hasMoreElements()) {
       Parser j = (Parser) e.nextElement();
       if (j instanceof Terminal) {
-        terms.addElement(j);
+        terms.add(j);
       }
     }
     
     // pick one of the terminals or, if there are no
     // terminals, pick any subparser
     
-    Vector which = terms;
+    List which = terms;
     if (terms.isEmpty()) {
       which = subparsers;
     }
     
     double n = (double) which.size();
     int i = (int) (n * Math.random());
-    Parser p = (Parser) which.elementAt(i);
+    Parser p = (Parser) which.get(i);
     return p.randomExpansion(maxDepth, depth++);
   }
   /**

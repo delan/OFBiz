@@ -79,11 +79,11 @@ public class Repetition extends Parser {
    * Accept a "visitor" and a collection of previously visited
    * parsers.
    *
-   * @param   ParserVisitor   the visitor to accept
+   * @param   pv   the visitor to accept
    *
-   * @param   Vector   a collection of previously visited parsers
+   * @param   visited   a collection of previously visited parsers
    */
-  public void accept(ParserVisitor pv, Vector visited) {
+  public void accept(ParserVisitor pv, List visited) {
     pv.visitRepetition(this, visited);
   }
   /**
@@ -104,21 +104,21 @@ public class Repetition extends Parser {
    * </code> against <code>{^aaab}</code> results in <code>
    * {^aaab, a^aab, aa^ab, aaa^b}</code>.
    *
-   * @return   a Vector of assemblies that result from
+   * @return   a List of assemblies that result from
    *           matching against a beginning set of assemblies
    *
-   * @param   Vector   a vector of assemblies to match against
+   * @param   in   a vector of assemblies to match against
    *
    */
-  public Vector match(Vector in) {
+  public List match(List in) {
     if (preAssembler != null) {
-      Enumeration e = in.elements();
+      Enumeration e = Collections.enumeration(in);
       while (e.hasMoreElements()) {
         preAssembler.workOn((Assembly) e.nextElement());
       }
     }
-    Vector out = elementClone(in);
-    Vector s = in; // a working state
+    List out = elementClone(in);
+    List s = in; // a working state
     while (!s.isEmpty()) {
       s = subparser.matchAndAssemble(s);
       add(out, s);
@@ -129,18 +129,18 @@ public class Repetition extends Parser {
    * Create a collection of random elements that correspond to
    * this repetition.
    */
-  protected Vector randomExpansion(int maxDepth, int depth) {
-    Vector v = new Vector();
+  protected List randomExpansion(int maxDepth, int depth) {
+    List v = new ArrayList();
     if (depth >= maxDepth) {
       return v;
     }
     
     int n = (int) (EXPWIDTH * Math.random());
     for (int j = 0; j < n; j++) {
-      Vector w = subparser.randomExpansion(maxDepth, depth++);
-      Enumeration e = w.elements();
+      List w = subparser.randomExpansion(maxDepth, depth++);
+      Enumeration e = Collections.enumeration(w);
       while (e.hasMoreElements()) {
-        v.addElement(e.nextElement());
+        v.add(e.nextElement());
       }
     }
     return v;
@@ -160,7 +160,7 @@ public class Repetition extends Parser {
   /**
    * Returns a textual description of this parser.
    */
-  protected String unvisitedString(Vector visited) {
+  protected String unvisitedString(List visited) {
     return subparser.toString(visited) + "*";
   }
 }

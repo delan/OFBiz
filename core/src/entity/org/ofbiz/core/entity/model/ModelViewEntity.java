@@ -52,10 +52,10 @@ public class ModelViewEntity extends ModelEntity {
     protected Map memberModelEntities = null;
 
     /** List of aliases with information in addition to what is in the standard field list */
-    protected Vector aliases = new Vector();
+    protected List aliases = new ArrayList();
 
     /** List of view links to define how entities are connected (or "joined") */
-    protected Vector viewLinks = new Vector();
+    protected List viewLinks = new ArrayList();
 
     public ModelViewEntity(ModelReader reader, Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
         this.modelReader = reader;
@@ -151,8 +151,8 @@ public class ModelViewEntity extends ModelEntity {
         return this.aliases.iterator();
     }
 
-    public Vector getAliasesCopy() {
-        return new Vector(this.aliases);
+    public List getAliasesCopy() {
+        return new ArrayList(this.aliases);
     }
 
     /** List of view links to define how entities are connected (or "joined") */
@@ -168,8 +168,8 @@ public class ModelViewEntity extends ModelEntity {
         return this.viewLinks.iterator();
     }
 
-    public Vector getViewLinksCopy() {
-        return new Vector(this.viewLinks);
+    public List getViewLinksCopy() {
+        return new ArrayList(this.viewLinks);
     }
 
     public void populateFields(Map entityCache) {
@@ -265,7 +265,7 @@ public class ModelViewEntity extends ModelEntity {
     public class ModelViewLink {
         protected String entityAlias = "";
         protected String relEntityAlias = "";
-        protected Vector keyMaps = new Vector();
+        protected List keyMaps = new ArrayList();
 
         public ModelViewLink() {}
 
@@ -289,8 +289,8 @@ public class ModelViewEntity extends ModelEntity {
             return this.keyMaps.iterator();
         }
 
-        public Vector getKeyMapsCopy() {
-            return new Vector(this.keyMaps);
+        public List getKeyMapsCopy() {
+            return new ArrayList(this.keyMaps);
         }
     }
 }

@@ -69,7 +69,7 @@ import java.io.*;
  */
 public class SymbolNode {
   protected char myChar;
-  protected Vector children = new Vector(); // of Node
+  protected List children = new ArrayList(); // of Node
   protected boolean valid = false;
   protected SymbolNode parent;
   /**
@@ -125,7 +125,7 @@ public class SymbolNode {
     SymbolNode n = findChildWithChar(c);
     if (n == null) {
       n = new SymbolNode(this, c);
-      children.addElement(n);
+      children.add(n);
     }
     return n;
   }
@@ -133,7 +133,7 @@ public class SymbolNode {
    * Find a child with the given character.
    */
   protected SymbolNode findChildWithChar(char c) {
-    Enumeration e = children.elements();
+    Enumeration e = Collections.enumeration(children);
     while (e.hasMoreElements()) {
       SymbolNode n = (SymbolNode) e.nextElement();
       if (n.myChar == c) {

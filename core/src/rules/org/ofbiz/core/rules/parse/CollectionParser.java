@@ -37,7 +37,7 @@ public abstract class CollectionParser extends Parser {
   /**
    * the parsers this parser is a collection of
    */
-  protected Vector subparsers = new Vector();
+  protected List subparsers = new ArrayList();
   /**
    * Supports subclass constructors with no arguments.
    */
@@ -59,15 +59,15 @@ public abstract class CollectionParser extends Parser {
    * @return   this
    */
   public CollectionParser add(Parser e) {
-    subparsers.addElement(e);
+    subparsers.add(e);
     return this;
   }
   /**
    * Return this parser's subparsers.
    *
-   * @return   Vector   this parser's subparsers
+   * @return   List   this parser's subparsers
    */
-  public Vector getSubparsers() {
+  public List getSubparsers() {
     return subparsers;
   }
   /**
@@ -80,10 +80,10 @@ public abstract class CollectionParser extends Parser {
   /**
    * Returns a textual description of this parser.
    */
-  protected String unvisitedString(Vector visited) {
+  protected String unvisitedString(List visited) {
     StringBuffer buf = new StringBuffer("<");
     boolean needSeparator = false;
-    Enumeration e = subparsers.elements();
+    Enumeration e = Collections.enumeration(subparsers);
     while (e.hasMoreElements()) {
       if (needSeparator) {
         buf.append(toStringSeparator());

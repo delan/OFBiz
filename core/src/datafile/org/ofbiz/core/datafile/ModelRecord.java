@@ -60,10 +60,10 @@ public class ModelRecord {
     public String limit = "";
 
     public ModelRecord parentRecord = null;
-    public List childRecords = new Vector();
+    public List childRecords = new ArrayList();
 
     /** List of the fields that compose this record */
-    public List fields = new Vector();
+    public List fields = new ArrayList();
 
     ModelField getModelField(String fieldName) {
         for (int i = 0; i < fields.size(); i++) {

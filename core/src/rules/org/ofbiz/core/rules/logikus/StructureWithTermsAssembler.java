@@ -40,14 +40,14 @@ public class StructureWithTermsAssembler extends Assembler {
     /**
      * Reverse a vector into an array of terms.
      *
-     * @param   Vector   the vector to reverse
+     * @param   v   the vector to reverse
      * @return   Term[]   the vector, reversed
      */
-    public static Term[] vectorReversedIntoTerms(Vector v) {
+    public static Term[] vectorReversedIntoTerms(List v) {
         int size = v.size();
         Term[] terms = new Term[size];
         for (int i = 0; i < size; i++) {
-            terms[size - 1 - i] = (Term) v.elementAt(i);
+            terms[size - 1 - i] = (Term) v.get(i);
         }
         return terms;
     }
@@ -66,7 +66,7 @@ public class StructureWithTermsAssembler extends Assembler {
      * @param  Assembly  the assembly to work on
      */
     public void workOn(Assembly a) {
-        Vector termVector = elementsAbove(a, new Token('('));
+        List termVector = elementsAbove(a, new Token('('));
         Term[] termArray = vectorReversedIntoTerms(termVector);
         Token t = (Token) a.pop();
         a.push(new Structure(t.value(), termArray));

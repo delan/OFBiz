@@ -46,7 +46,7 @@ public class AxiomAssembler extends Assembler {
     Stack s = a.getStack();
     Structure[] sa = new Structure[s.size()];
     for (int i = 0; i < s.size(); i++) {
-      sa[i] = (Structure) s.elementAt(i);
+      sa[i] = (Structure) s.get(i);
     }
     s.removeAllElements();
     a.push(new Rule(sa));
