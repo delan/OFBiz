@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2002/01/03 03:05:54  jonesde
+ * Added new Proc and SimpleEvents XML file, removed old WorkEffortProcessors file
+ *
  * Revision 1.12  2002/01/02 23:44:27  jonesde
  * Using compare-field for begin-end date validation
  *
@@ -124,12 +127,12 @@ public class WorkEffortEvents {
         List messages = new LinkedList();
         
         //Map strings = request.getParameterMap();
-        Map strings = UtilMisc.getParameterMap(request);
+        Map parameters = UtilMisc.getParameterMap(request);
 
         try {
-            StringProcessor.runStringProcessor("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcUpdate.xml", strings, context, messages);
+            SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcUpdate.xml", parameters, context, messages);
         } catch (MiniLangException e) {
-            messages.add("Error running StringProcessor: " + e.toString());
+            messages.add("Error running SimpleMapProcessor: " + e.toString());
         }
         
         if (messages.size() > 0) {

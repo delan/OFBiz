@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE string-processor PUBLIC "-//OFBiz//DTD String Processor//EN" "http://www.ofbiz.org/dtds/string-processor.dtd">
+<!DOCTYPE simple-map-processor PUBLIC "-//OFBiz//DTD Simple Map Processor//EN" "http://www.ofbiz.org/dtds/simple-map-processor.dtd">
 
 <!--
  * <p><b>Title:</b> WorkEffortProcessor
@@ -28,38 +28,38 @@
  * @version 1.0
  * Created on January 1, 2001
  -->
-<string-processor>
-    <string-process field="workEffortId"><copy replace="false"/></string-process>
-    <string-process field="workEffortTypeId"><copy/></string-process>
-    <string-process field="universalId"><copy/></string-process>
-    <string-process field="scopeEnumId"><copy/></string-process>
-    <string-process field="currentStatusId"><copy/><not-empty><fail-message message="Status is missing."/></not-empty></string-process>
-    <string-process field="priority"><convert type="Long"><fail-message message="Priority is not a valid whole number."/></convert></string-process>
-    <string-process field="workEffortName"><copy/><not-empty><fail-message message="Name is missing."/></not-empty></string-process>
-    <string-process field="description"><copy/></string-process>
-    <string-process field="locationDesc"><copy/></string-process>
-    <string-process field="estimatedStartDate">
+<simple-map-processor>
+    <process field="workEffortId"><copy replace="false"/></process>
+    <process field="workEffortTypeId"><copy/></process>
+    <process field="universalId"><copy/></process>
+    <process field="scopeEnumId"><copy/></process>
+    <process field="currentStatusId"><copy/><not-empty><fail-message message="Status is missing."/></not-empty></process>
+    <process field="priority"><convert type="Long"><fail-message message="Priority is not a valid whole number."/></convert></process>
+    <process field="workEffortName"><copy/><not-empty><fail-message message="Name is missing."/></not-empty></process>
+    <process field="description"><copy/></process>
+    <process field="locationDesc"><copy/></process>
+    <process field="estimatedStartDate">
         <compare-field field="estimatedCompletionDate" operator="greater-equals" type="Timestamp"><fail-message message="Estimated End date/time cannot be BEFORE Start date/time."/></compare-field>
-        <convert type="Timestamp"><fail-message message="Estimated Start Date is not a valid Date-Time."/></convert></string-process>
-    <string-process field="estimatedCompletionDate"><convert type="Timestamp">
-        <fail-message message="Estimated Completion Date is not a valid Date-Time."/></convert></string-process>
-    <string-process field="actualStartDate">
+        <convert type="Timestamp"><fail-message message="Estimated Start Date is not a valid Date-Time."/></convert></process>
+    <process field="estimatedCompletionDate"><convert type="Timestamp">
+        <fail-message message="Estimated Completion Date is not a valid Date-Time."/></convert></process>
+    <process field="actualStartDate">
         <compare-field field="actualCompletionDate" operator="greater-equals" type="Timestamp"><fail-message message="Actual End date/time cannot be BEFORE Start date/time."/></compare-field>
-        <convert type="Timestamp"><fail-message message="Actual Start Date is not a valid Date-Time."/></convert></string-process>
-    <string-process field="actualCompletionDate"><convert type="Timestamp">
-        <fail-message message="Actual Completion Date is not a valid Date-Time."/></convert></string-process>
-    <string-process field="estimatedMilliSeconds"><convert type="Double">
-        <fail-message message="Estimated Milli-seconds is not a valid number."/></convert></string-process>
-    <string-process field="actualMilliSeconds"><convert type="Double">
-        <fail-message message="Actual Milli-seconds is not a valid number."/></convert></string-process>
-    <string-process field="totalMilliSecondsAllowed"><convert type="Double">
-        <fail-message message="Total Milli-seconds Allowed is not a valid number."/></convert></string-process>
-    <string-process field="totalMoneyAllowed"><convert type="Double">
-        <fail-message message="Total Money Allowed is not a valid number."/></convert></string-process>
-    <string-process field="timeTransparency"><convert type="Double">
-        <fail-message message="Time Transparency is not a valid whole number."/></convert></string-process>
-    <string-process field="moneyUomId"><copy/></string-process>
-    <string-process field="specialTerms"><copy/></string-process>
-    <string-process field="timeTransparency"><copy/></string-process>
-    <string-process field="infoUrl"><copy/></string-process>
-</string-processor>
+        <convert type="Timestamp"><fail-message message="Actual Start Date is not a valid Date-Time."/></convert></process>
+    <process field="actualCompletionDate"><convert type="Timestamp">
+        <fail-message message="Actual Completion Date is not a valid Date-Time."/></convert></process>
+    <process field="estimatedMilliSeconds"><convert type="Double">
+        <fail-message message="Estimated Milli-seconds is not a valid number."/></convert></process>
+    <process field="actualMilliSeconds"><convert type="Double">
+        <fail-message message="Actual Milli-seconds is not a valid number."/></convert></process>
+    <process field="totalMilliSecondsAllowed"><convert type="Double">
+        <fail-message message="Total Milli-seconds Allowed is not a valid number."/></convert></process>
+    <process field="totalMoneyAllowed"><convert type="Double">
+        <fail-message message="Total Money Allowed is not a valid number."/></convert></process>
+    <process field="timeTransparency"><convert type="Double">
+        <fail-message message="Time Transparency is not a valid whole number."/></convert></process>
+    <process field="moneyUomId"><copy/></process>
+    <process field="specialTerms"><copy/></process>
+    <process field="timeTransparency"><copy/></process>
+    <process field="infoUrl"><copy/></process>
+</simple-map-processor>

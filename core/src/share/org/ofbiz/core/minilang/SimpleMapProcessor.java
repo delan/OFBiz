@@ -10,7 +10,7 @@ import org.apache.oro.text.regex.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> StringProcessor Mini Language
+ * <p><b>Title:</b> SimpleMapProcessor Mini Language
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -36,40 +36,40 @@ import org.ofbiz.core.util.*;
  *@created    December 29, 2001
  *@version    1.0
  */
-public class StringProcessor {
-    protected static UtilCache stringProcessors = new UtilCache("StringProcessors", 0, 0);
+public class SimpleMapProcessor {
+    protected static UtilCache simpleMapProcessors = new UtilCache("SimpleMapProcessors", 0, 0);
     
-    public static void runStringProcessor(String xmlResource, Map strings, Map results, List messages) throws MiniLangException {
-        runStringProcessor(xmlResource, strings, results, messages, null);
+    public static void runSimpleMapProcessor(String xmlResource, Map strings, Map results, List messages) throws MiniLangException {
+        runSimpleMapProcessor(xmlResource, strings, results, messages, null);
     }
 
-    public static void runStringProcessor(String xmlResource, Map strings, Map results, List messages, Class contextClass) throws MiniLangException {
+    public static void runSimpleMapProcessor(String xmlResource, Map strings, Map results, List messages, Class contextClass) throws MiniLangException {
         URL xmlURL = UtilURL.fromResource(contextClass, xmlResource);
         if (xmlURL == null) {
-            throw new MiniLangException("Could not find StringProcessor XML document in resource: " + xmlResource);
+            throw new MiniLangException("Could not find SimpleMapProcessor XML document in resource: " + xmlResource);
         }
                     
-        runStringProcessor(xmlURL, strings, results, messages, contextClass);
+        runSimpleMapProcessor(xmlURL, strings, results, messages, contextClass);
     }
 
-    public static void runStringProcessor(URL xmlURL, Map strings, Map results, List messages, Class contextClass) throws MiniLangException {
-        List stringProcesses = getStringProcesses(xmlURL);
-        if (stringProcesses != null && stringProcesses.size() > 0) {
-            Iterator strPrsIter = stringProcesses.iterator();
+    public static void runSimpleMapProcessor(URL xmlURL, Map strings, Map results, List messages, Class contextClass) throws MiniLangException {
+        List simpleMapProcesses = getSimpleMapProcesses(xmlURL);
+        if (simpleMapProcesses != null && simpleMapProcesses.size() > 0) {
+            Iterator strPrsIter = simpleMapProcesses.iterator();
             while (strPrsIter.hasNext()) {
-                StringProcess stringProcess = (StringProcess) strPrsIter.next();
-                stringProcess.exec(strings, results, messages, contextClass);
+                SimpleMapProcess simpleMapProcess = (SimpleMapProcess) strPrsIter.next();
+                simpleMapProcess.exec(strings, results, messages, contextClass);
             }
         }
     }
 
-    protected static List getStringProcesses(URL xmlURL) throws MiniLangException {
-        List stringProcesses = (List) stringProcessors.get(xmlURL);
-        if (stringProcesses == null) {
-            synchronized (StringProcessor.class) {
-                stringProcesses = (List) stringProcessors.get(xmlURL);
-                if (stringProcesses == null) {
-                    stringProcesses = new LinkedList();
+    protected static List getSimpleMapProcesses(URL xmlURL) throws MiniLangException {
+        List simpleMapProcesses = (List) simpleMapProcessors.get(xmlURL);
+        if (simpleMapProcesses == null) {
+            synchronized (SimpleMapProcessor.class) {
+                simpleMapProcesses = (List) simpleMapProcessors.get(xmlURL);
+                if (simpleMapProcesses == null) {
+                    simpleMapProcesses = new LinkedList();
                     
                     //read in the file
                     Document document = null;
@@ -84,36 +84,36 @@ public class StringProcessor {
                     }
                     
                     if (document == null) {
-                        throw new MiniLangException("Could not find StringProcessor XML document: " + xmlURL.toString());
+                        throw new MiniLangException("Could not find SimpleMapProcessor XML document: " + xmlURL.toString());
                     }
                     
                     Element rootElement = document.getDocumentElement();
-                    List stringProcessElements = UtilXml.childElementList(rootElement, "string-process");
+                    List simpleMapProcessElements = UtilXml.childElementList(rootElement, "process");
                     
-                    Iterator strProcIter = stringProcessElements.iterator();
+                    Iterator strProcIter = simpleMapProcessElements.iterator();
                     while (strProcIter.hasNext()) {
-                        Element stringProcessElement = (Element) strProcIter.next();
-                        StringProcessor.StringProcess strProc = new StringProcessor.StringProcess(stringProcessElement);
-                        stringProcesses.add(strProc);
+                        Element simpleMapProcessElement = (Element) strProcIter.next();
+                        SimpleMapProcessor.SimpleMapProcess strProc = new SimpleMapProcessor.SimpleMapProcess(simpleMapProcessElement);
+                        simpleMapProcesses.add(strProc);
                     }
                     
                     //put it in the cache
-                    stringProcessors.put(xmlURL, stringProcesses);
+                    simpleMapProcessors.put(xmlURL, simpleMapProcesses);
                 }
             }
         }
         
-        return stringProcesses;
+        return simpleMapProcesses;
     }
     
     /** A complete string process for a given field; contains multiple string operations */
-    public static class StringProcess {
-        List stringOperations = new LinkedList();
+    public static class SimpleMapProcess {
+        List simpleMapOperations = new LinkedList();
         String field = "";
         
-        public StringProcess(Element stringProcessElement) {
-            this.field = stringProcessElement.getAttribute("field");
-            readOperations(stringProcessElement);
+        public SimpleMapProcess(Element simpleMapProcessElement) {
+            this.field = simpleMapProcessElement.getAttribute("field");
+            readOperations(simpleMapProcessElement);
         }
         
         public String getFieldName() {
@@ -121,36 +121,36 @@ public class StringProcessor {
         }
         
         public void exec(Map strings, Map results, List messages, Class contextClass) {
-            Iterator strOpsIter = stringOperations.iterator();
+            Iterator strOpsIter = simpleMapOperations.iterator();
             while (strOpsIter.hasNext()) {
-                StringOperation stringOperation = (StringOperation) strOpsIter.next();
-                stringOperation.exec(strings, results, messages, contextClass);
+                SimpleMapOperation simpleMapOperation = (SimpleMapOperation) strOpsIter.next();
+                simpleMapOperation.exec(strings, results, messages, contextClass);
             }
         }
         
-        void readOperations(Element stringProcessElement) {
-            List operationElements = UtilXml.childElementList(stringProcessElement, null);
+        void readOperations(Element simpleMapProcessElement) {
+            List operationElements = UtilXml.childElementList(simpleMapProcessElement, null);
             if (operationElements != null && operationElements.size() > 0) {
                 Iterator operElemIter = operationElements.iterator();
                 while (operElemIter.hasNext()) {
                     Element curOperElem = (Element) operElemIter.next();
                     String nodeName = curOperElem.getNodeName();
                     if ("validate-method".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.ValidateMethod(curOperElem, this));
+                        simpleMapOperations.add(new SimpleMapProcessor.ValidateMethod(curOperElem, this));
                     } else if ("compare".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.Compare(curOperElem, this));
+                        simpleMapOperations.add(new SimpleMapProcessor.Compare(curOperElem, this));
                     } else if ("compare-field".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.CompareField(curOperElem, this));
+                        simpleMapOperations.add(new SimpleMapProcessor.CompareField(curOperElem, this));
                     } else if ("regexp".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.Regexp(curOperElem, this));
+                        simpleMapOperations.add(new SimpleMapProcessor.Regexp(curOperElem, this));
                     } else if ("not-empty".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.NotEmpty(curOperElem, this));
+                        simpleMapOperations.add(new SimpleMapProcessor.NotEmpty(curOperElem, this));
                     } else if ("copy".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.Copy(curOperElem, this));
+                        simpleMapOperations.add(new SimpleMapProcessor.Copy(curOperElem, this));
                     } else if ("convert".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.Convert(curOperElem, this));
+                        simpleMapOperations.add(new SimpleMapProcessor.Convert(curOperElem, this));
                     } else {
-                        Debug.logWarning("[StringProcessor.StringProcess.readOperations] Operation element \"" + nodeName + "\" no recognized");
+                        Debug.logWarning("[SimpleMapProcessor.SimpleMapProcess.readOperations] Operation element \"" + nodeName + "\" no recognized");
                     }
                 }
             }
@@ -159,14 +159,14 @@ public class StringProcessor {
     }
     
     /** A single string operation, does the specified operation on the given field */
-    public static abstract class StringOperation {
+    public static abstract class SimpleMapOperation {
         String message = null;
         String propertyResource = null;
         boolean isProperty = false;
-        StringProcess stringProcess;
+        SimpleMapProcess simpleMapProcess;
         String fieldName;
         
-        public StringOperation(Element element, StringProcess stringProcess) {
+        public SimpleMapOperation(Element element, SimpleMapProcess simpleMapProcess) {
             Element failMessage = UtilXml.firstChildElement(element, "fail-message");
             Element failProperty = UtilXml.firstChildElement(element, "fail-property");
             if (failMessage != null) {
@@ -178,8 +178,8 @@ public class StringProcessor {
                 this.isProperty = true;
             }
             
-            this.stringProcess = stringProcess;
-            this.fieldName = stringProcess.getFieldName();
+            this.simpleMapProcess = simpleMapProcess;
+            this.fieldName = simpleMapProcess.getFieldName();
         }
         
         public abstract void exec(Map strings, Map results, List messages, Class contextClass);
@@ -187,29 +187,29 @@ public class StringProcessor {
         public void addMessage(List messages, Class contextClass) {
             if (!isProperty && message != null) {
                 messages.add(message);
-                //Debug.logInfo("[StringOperation.addMessage] Adding message: " + message);
+                //Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
             } else if (isProperty && propertyResource != null && message != null) {
                 String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(contextClass, propertyResource), message);
                 messages.add(propMsg);
-                //Debug.logInfo("[StringOperation.addMessage] Adding property message: " + propMsg);
+                //Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
             } else {
                 messages.add("String Processing error occurred, but no message was found, sorry.");
-                //Debug.logInfo("[StringOperation.addMessage] ERROR: No message found");
+                //Debug.logInfo("[SimpleMapOperation.addMessage] ERROR: No message found");
             }
         }
     }
     
     /* ==================================================================== */
-    /* All of the StringOperations...
+    /* All of the SimpleMapOperations...
     /* ==================================================================== */
 
     /** A string operation that calls a validation method */
-    public static class ValidateMethod extends StringOperation {
+    public static class ValidateMethod extends SimpleMapOperation {
         String methodName;
         String className;
         
-        public ValidateMethod(Element element, StringProcess stringProcess) {
-            super(element, stringProcess);
+        public ValidateMethod(Element element, SimpleMapProcess simpleMapProcess) {
+            super(element, simpleMapProcess);
             this.methodName = element.getAttribute("method");
             this.className = element.getAttribute("class");
         }
@@ -256,13 +256,13 @@ public class StringProcessor {
         }
     }
 
-    public static abstract class BaseCompare extends StringOperation {
+    public static abstract class BaseCompare extends SimpleMapOperation {
         String operator;
         String type;
         String format;
 
-        public BaseCompare(Element element, StringProcess stringProcess) {
-            super(element, stringProcess);
+        public BaseCompare(Element element, SimpleMapProcess simpleMapProcess) {
+            super(element, simpleMapProcess);
             this.operator = element.getAttribute("operator");
             this.type = element.getAttribute("type");
             this.format = element.getAttribute("format");
@@ -368,8 +368,8 @@ public class StringProcessor {
     public static class Compare extends BaseCompare {
         String value;
         
-        public Compare(Element element, StringProcess stringProcess) {
-            super(element, stringProcess);
+        public Compare(Element element, SimpleMapProcess simpleMapProcess) {
+            super(element, simpleMapProcess);
             this.value = element.getAttribute("value");
         }
         
@@ -386,8 +386,8 @@ public class StringProcessor {
     public static class CompareField extends BaseCompare {
         String compareName;
         
-        public CompareField(Element element, StringProcess stringProcess) {
-            super(element, stringProcess);
+        public CompareField(Element element, SimpleMapProcess simpleMapProcess) {
+            super(element, simpleMapProcess);
             this.compareName = element.getAttribute("field");
         }
         
@@ -402,14 +402,14 @@ public class StringProcessor {
         }
     }
 
-    public static class Regexp extends StringOperation {
+    public static class Regexp extends SimpleMapOperation {
         static PatternMatcher matcher = new Perl5Matcher();
         static PatternCompiler compiler = new Perl5Compiler();
         Pattern pattern = null;
         String expr;
         
-        public Regexp(Element element, StringProcess stringProcess) {
-            super(element, stringProcess);
+        public Regexp(Element element, SimpleMapProcess simpleMapProcess) {
+            super(element, simpleMapProcess);
             expr = element.getAttribute("expr");
             try {
                 pattern = compiler.compile(expr);
@@ -432,9 +432,9 @@ public class StringProcessor {
         }
     }
 
-    public static class NotEmpty extends StringOperation {
-        public NotEmpty(Element element, StringProcess stringProcess) {
-            super(element, stringProcess);
+    public static class NotEmpty extends SimpleMapOperation {
+        public NotEmpty(Element element, SimpleMapProcess simpleMapProcess) {
+            super(element, simpleMapProcess);
         }
         
         public void exec(Map strings, Map results, List messages, Class contextClass) {
@@ -446,12 +446,12 @@ public class StringProcessor {
         }
     }
 
-    public static class Copy extends StringOperation {
+    public static class Copy extends SimpleMapOperation {
         boolean replace = true;
         String toField;
         
-        public Copy(Element element, StringProcess stringProcess) {
-            super(element, stringProcess);
+        public Copy(Element element, SimpleMapProcess simpleMapProcess) {
+            super(element, simpleMapProcess);
             toField = element.getAttribute("to-field");
             if (this.toField == null || this.toField.length() == 0) {
                 this.toField = this.fieldName;
@@ -468,26 +468,26 @@ public class StringProcessor {
             
             if (replace) {
                 results.put(toField, fieldValue);
-                //Debug.logInfo("[StringProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
+                //Debug.logInfo("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
             } else {
                 if (results.containsKey(toField)) {
                     //do nothing
                 } else {
                     results.put(toField, fieldValue);
-                    //Debug.logInfo("[StringProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
+                    //Debug.logInfo("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
                 }
             }
         }
     }
 
-    public static class Convert extends StringOperation {
+    public static class Convert extends SimpleMapOperation {
         String toField;
         String type;
         boolean replace = true;
         String format;
         
-        public Convert(Element element, StringProcess stringProcess) {
-            super(element, stringProcess);
+        public Convert(Element element, SimpleMapProcess simpleMapProcess) {
+            super(element, simpleMapProcess);
             this.toField = element.getAttribute("to-field");
             if (this.toField == null || this.toField.length() == 0) {
                 this.toField = this.fieldName;
@@ -593,13 +593,13 @@ public class StringProcessor {
             
             if (replace) {
                 results.put(toField, fieldObject);
-                //Debug.logInfo("[StringProcessor.Converted.exec] Put converted value \"" + fieldObject + "\" in field \"" + toField + "\"");
+                //Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + fieldObject + "\" in field \"" + toField + "\"");
             } else {
                 if (results.containsKey(toField)) {
                     //do nothing
                 } else {
                     results.put(toField, fieldObject);
-                    //Debug.logInfo("[StringProcessor.Converted.exec] Put converted value \"" + fieldObject + "\" in field \"" + toField + "\"");
+                    //Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + fieldObject + "\" in field \"" + toField + "\"");
                 }
             }
         }

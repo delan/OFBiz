@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE string-processor PUBLIC "-//OFBiz//DTD String Processor//EN" "http://www.ofbiz.org/dtds/string-processor.dtd">
+<!DOCTYPE simple-map-processor PUBLIC "-//OFBiz//DTD Simple Map Processor//EN" "http://www.ofbiz.org/dtds/simple-map-processor.dtd">
 
 <!--
  * <p><b>Title:</b> WorkEffortProcessor
@@ -28,6 +28,6 @@
  * @version 1.0
  * Created on January 1, 2001
  -->
-<string-processor>
-    <string-process field="workEffortId"><copy replace="false"/></string-process>
-</string-processor>
+<simple-map-processor>
+    <process field="workEffortId"><copy replace="false"/></process>
+</simple-map-processor>
