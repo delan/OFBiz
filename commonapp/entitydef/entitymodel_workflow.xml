@@ -497,6 +497,7 @@
       <field name="participantId" type="id-ne"></field>
       <field name="participantName" type="name"></field>
       <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="participantTypeId" type="id"></field>	
       <prim-key field="participantId" />
@@ -514,6 +515,13 @@
       </relation>
       <relation type="one" rel-entity-name="Person">
         <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyRole">
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowParticipantList" 
