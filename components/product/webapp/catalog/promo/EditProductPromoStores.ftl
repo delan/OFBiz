@@ -21,20 +21,14 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
 <#if hasPermission>
-    <#if productPromoId?has_content>
-        <div class="tabContainer">
-        <a href="<@ofbizUrl>/EditProductPromo?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButton">Promo</a>
-        <a href="<@ofbizUrl>/EditProductPromoRules?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButton">Rules</a>
-        <a href="<@ofbizUrl>/EditProductPromoStores?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButtonSelected">Stores</a>
-        </div>
-   </#if>
+${pages.get("/promo/PromoTabBar.ftl")}
     
-    <div class="head1">Catalogs <span class="head2">for <#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if> [ID:${productPromoId?if_exists}]</span></div>
+    <div class="head1">Stores <span class="head2">for <#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if> [ID:${productPromoId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[New ProductPromo]</a>
     
     <br>
@@ -55,7 +49,7 @@
             <td><a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="buttontext"><#if productStore?exists>${(productStore.storeName)?if_exists}</#if>[${productStorePromoAppl.productStoreId}]</a></td>
             <#assign hasntStarted = false>
             <#if (productStorePromoAppl.getTimestamp("fromDate"))?exists && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
-            <td><div class="tabletext" <#if hasntStarted>style="color: red;"></#if>${productStorePromoAppl.fromDate?if_exists}</div></td>
+            <td><div class="tabletext" <#if hasntStarted>style="color: red;"</#if>>${productStorePromoAppl.fromDate?if_exists}</div></td>
             <td align="center">
                 <#assign hasExpired = false>
                 <#if (productStorePromoAppl.getTimestamp("thruDate"))?exists && nowTimestamp.after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
@@ -81,7 +75,7 @@
         <input type="hidden" name="productPromoId" value="${productPromoId}">
         <input type="hidden" name="tryEntity" value="true">
         
-        <div class="head2">Add Catalog Promo (select Store, enter optional From Date):</div>
+        <div class="head2">Add Store Promo (select Store, enter optional From Date):</div>
         <br>
         <select name="productStoreId" class="selectBox">
         <#list productStores as productStore>

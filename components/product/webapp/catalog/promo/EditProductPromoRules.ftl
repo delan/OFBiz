@@ -21,18 +21,12 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
 <#if hasPermission>
-    <#if productPromoId?has_content>
-        <div class="tabContainer">
-        <a href="<@ofbizUrl>/EditProductPromo?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButton">Promo</a>
-        <a href="<@ofbizUrl>/EditProductPromoRules?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButtonSelected">Rules</a>
-        <a href="<@ofbizUrl>/EditProductPromoStores?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButton">Stores</a>
-        </div>
-    </#if>
+${pages.get("/promo/PromoTabBar.ftl")}
     
     <div class="head1">Rules <span class="head2">for <#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if> [ID:${productPromoId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[New ProductPromo]</a>

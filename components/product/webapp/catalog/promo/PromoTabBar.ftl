@@ -20,17 +20,17 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.1 $
  *@since      2.2
 -->
 
-<#if hasPermission>
-${pages.get("/promo/PromoTabBar.ftl")}
-    <div class="head1">Promotion&nbsp;<span class='head2'><#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if>[${(productPromo.productPromoId)?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[New ProductPromo]</a>
+<#assign unselectedClassName = "tabButton">
+<#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
-    ${productPromoFormWrapper.renderFormString()}
-<#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
-</#if>
+<#if productPromoId?has_content>
+    <div class='tabContainer'>
+        <a href="<@ofbizUrl>/EditProductPromo?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.EditProductPromo?default(unselectedClassName)}">Promo</a>
+        <a href="<@ofbizUrl>/EditProductPromoRules?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.EditProductPromoRules?default(unselectedClassName)}">Rules</a>
+        <a href="<@ofbizUrl>/EditProductPromoStores?productPromoId=${productPromoId}</@ofbizUrl>" class="${selectedClassMap.EditProductPromoStores?default(unselectedClassName)}">Stores</a>
+    </div>
+</#if>   

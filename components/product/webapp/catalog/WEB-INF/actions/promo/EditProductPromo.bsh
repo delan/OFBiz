@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
@@ -29,6 +29,7 @@ import java.util.*;
 import java.io.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.content.widget.html.*;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
@@ -41,10 +42,14 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
 productPromoId = request.getParameter("productPromoId");
 productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
 
-context.put("productPromoId", productPromoId);
-
 if(productPromo == null) {
   tryEntity = false;
-} else {
-  context.put("productPromo", productPromo);
 }
+
+HtmlFormWrapper productPromoFormWrapper = new HtmlFormWrapper("/promo/PromoForms.xml", "EditProductPromo", request, response);
+productPromoFormWrapper.putInContext("productPromoId", productPromoId);
+productPromoFormWrapper.putInContext("productPromo", productPromo);
+
+context.put("productPromoId", productPromoId);
+context.put("productPromo", productPromo);
+context.put("productPromoFormWrapper", productPromoFormWrapper);

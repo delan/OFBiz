@@ -4,5 +4,6 @@
     <property name="title">Edit Product Promo Rules</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">promos</property>    
+    <property name="tabButtonItem">EditProductPromoRules</property>
     <content-action name="/promo/EditProductPromoRules.bsh"/>
 </page>

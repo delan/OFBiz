@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  */
 -->
 
@@ -1911,9 +1911,11 @@
             title="Product Promotion Entity">
       <field name="productPromoId" type="id-ne"></field>
       <field name="promoName" type="name"></field>
-      <field name="promoCode" type="short-varchar"></field>
       <field name="promoText" type="description"></field>
-      <field name="singleUse" type="indicator"></field>
+      <field name="userEntered" type="indicator"></field>
+      <field name="showToCustomer" type="indicator"></field>
+      <field name="useLimitPerOrder" type="numeric"></field>
+      <field name="useLimitPerCustomer" type="numeric"></field>
       <prim-key field="productPromoId"/>
       <relation type="many" rel-entity-name="ProductPromoRule">
         <key-map field-name="productPromoId"/>
@@ -2011,36 +2013,6 @@
       <relation type="many" rel-entity-name="ProductPromoCond">
         <key-map field-name="productPromoId"/>
         <key-map field-name="productPromoRuleId"/>
-      </relation>
-    </entity>
-    <entity entity-name="ProductPromoUsage"
-            package-name="org.ofbiz.product.promo"
-            title="Product Promotion Usage Entity">
-      <field name="productPromoUsageId" type="id-ne"></field>
-      <field name="productPromoId" type="id-ne"></field>
-      <field name="productPromoRuleId" type="id"></field>
-      <field name="orderId" type="id"></field>
-      <field name="orderItemSeqId" type="id"></field>
-      <field name="orderAdjustmentId" type="id"></field>
-      <field name="partyId" type="id"></field>
-      <field name="usageDateTime" type="date-time"></field>
-      <prim-key field="productPromoUsageId"/>
-      <relation type="one" fk-name="PROD_PRUSG" rel-entity-name="ProductPromo">
-        <key-map field-name="productPromoId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="ProductPromoRule">
-        <key-map field-name="productPromoId"/>
-        <key-map field-name="productPromoRuleId"/>
-      </relation>
-      <relation type="one" fk-name="PROD_PRUSG_OHEAD" rel-entity-name="OrderHeader">
-        <key-map field-name="orderId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="OrderItem">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
-      <relation type="one" fk-name="PROD_PRUSG_PARTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
       </relation>
     </entity>
 
