@@ -31,10 +31,12 @@ import java.net.URL;
  * URL Utilities - Simple Class for flexibly working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UtilURL {
+
+    public static final String module = UtilURL.class.getName();
 
     public static URL fromClass(Class contextClass) {
         String resourceName = contextClass.getName();
@@ -112,6 +114,10 @@ public class UtilURL {
 
     public static URL fromOfbizHomePath(String filename) {
         String ofbizHome = System.getProperty("ofbiz.home");
+        if (ofbizHome == null) {
+            Debug.logWarning("No ofbiz.home property set in environment", module);
+            return null;
+        }
         String newFilename = ofbizHome;
         if (!newFilename.endsWith("/") && !newFilename.startsWith("/")) {
             newFilename = newFilename + "/";
