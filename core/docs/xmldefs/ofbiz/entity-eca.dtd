@@ -33,7 +33,7 @@
 <!ELEMENT eca ( (condition | condition-field)*, action+ )>
 <!ATTLIST eca
     entity CDATA #REQUIRED
-    operation ( create | store | remove | find ) #REQUIRED
+    operation ( create | store | remove | find | create-store | create-remove | store-remove | create-store-remove | any ) #REQUIRED
     event ( validate | run | return ) #REQUIRED
     run-on-error ( true | false ) "false"
 >
@@ -63,7 +63,10 @@
     result-to-value ( true | false ) "true"
     ignore-error ( true | false ) "true"
     persist ( true | false ) "false"
+    value-attr CDATA #IMPLIED
 >
+<!-- if value-attr is specified the generic value object corresponding to the entity in question will be passed
+    to the action service -->
 
 <!--
 <entity-eca>
