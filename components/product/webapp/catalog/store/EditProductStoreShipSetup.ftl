@@ -1,27 +1,27 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -32,19 +32,19 @@ function setAssocFields(select) {
     var opt = select.options[index];
     var optStr = opt.value;
     var optLen = optStr.length;
-    
+
     var shipmentMethodTypeId = "";
     var sequenceNumber = "";
     var roleTypeId = "";
     var partyId = "";
     var delIdx = 1;
-    
-    for (i=0; i<optLen; i++) {        
+
+    for (i=0; i<optLen; i++) {
         if (optStr[i] == '|') {
-            delIdx++;           
+            delIdx++;
         } else {
             if (delIdx == 1) {
-                partyId = partyId + optStr[i];              
+                partyId = partyId + optStr[i];
             } else if (delIdx == 2) {
                 roleTypeId = roleTypeId + optStr[i];
             } else if (delIdx == 3) {
@@ -53,15 +53,15 @@ function setAssocFields(select) {
                 sequenceNumber = sequenceNumber + optStr[i];
             }
         }
-    }   
-        
+    }
+
     document.addscarr.roleTypeId.value = roleTypeId;
     document.addscarr.partyId.value = partyId;
     document.addscarr.shipmentMethodTypeId.value = shipmentMethodTypeId;
     document.addscarr.sequenceNumber.value = sequenceNumber;
 }
 // -->
-</script>   
+</script>
 
 <#if hasPermission>
   ${pages.get("/store/ProductStoreTabBar.ftl")}
@@ -77,8 +77,8 @@ function setAssocFields(select) {
     <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductViewEstimates}]</a>
   </#if>
   <br>
-  <br>   
-  
+  <br>
+
   <#if !requestParameters.createNew?exists && !requestParameters.newShipMethod?exists>
     <table border="1" cellpadding="2" cellspacing="0" width="100%">
       <tr>
@@ -86,7 +86,7 @@ function setAssocFields(select) {
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductMethod}</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.CommonTo}</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductParty}</div></td>
-        <td nowrap><div class="tableheadtext">${uiLabelMap.ProductRole}</div></td>      
+        <td nowrap><div class="tableheadtext">${uiLabelMap.ProductRole}</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductBase}%</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductBasePrc}</div></td>
         <td nowrap><div class="tableheadtext">${uiLabelMap.ProductItemPrc}</div></td>
@@ -95,36 +95,36 @@ function setAssocFields(select) {
       <#list estimates as estimate>
         <#assign weightValue = estimate.getRelatedOne("WeightQuantityBreak")?if_exists>
         <#assign quantityValue = estimate.getRelatedOne("QuantityQuantityBreak")?if_exists>
-        <#assign priceValue = estimate.getRelatedOne("PriceQuantityBreak")?if_exists>                             
+        <#assign priceValue = estimate.getRelatedOne("PriceQuantityBreak")?if_exists>
         <tr>
           <td><div class="tabletext">${estimate.shipmentCostEstimateId}</div></td>
-          <td><div class="tabletext">${estimate.shipmentMethodTypeId}&nbsp;(${estimate.carrierPartyId})</div></td>       
+          <td><div class="tabletext">${estimate.shipmentMethodTypeId}&nbsp;(${estimate.carrierPartyId})</div></td>
           <td><div class="tabletext">${estimate.geoIdTo?default("All")}</div></td>
           <td><div class="tabletext">${estimate.partyId?default("All")}</div></td>
-          <td><div class="tabletext">${estimate.roleTypeId?default("All")}</div></td>        
+          <td><div class="tabletext">${estimate.roleTypeId?default("All")}</div></td>
           <td><div class="tabletext">${estimate.orderPricePercent?default(0)?string.number}%</div></td>
           <td><div class="tabletext">${estimate.orderFlatPrice?default(0)?string.currency}</div></td>
           <td><div class="tabletext">${estimate.orderItemFlatPrice?default(0)?string.currency}</div></td>
           <td align="center">
-            <div class="tabletext"><#if security.hasEntityPermission("SHIPRATE", "_DELETE", session)><a href="<@ofbizUrl>/storeRemoveShipRate?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a></div>     
+            <div class="tabletext"><#if security.hasEntityPermission("SHIPRATE", "_DELETE", session)><a href="<@ofbizUrl>/storeRemoveShipRate?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a></div>
           </td>
         </tr>
       </#list>
     </table>
   </#if>
-  
+
   <#if shipEstimate?has_content>
     <#assign estimate = shipEstimate>
     <#assign weightValue = estimate.getRelatedOne("WeightQuantityBreak")?if_exists>
     <#assign quantityValue = estimate.getRelatedOne("QuantityQuantityBreak")?if_exists>
-    <#assign priceValue = estimate.getRelatedOne("PriceQuantityBreak")?if_exists>  
+    <#assign priceValue = estimate.getRelatedOne("PriceQuantityBreak")?if_exists>
     <br>
       <table cellspacing="2" cellpadding="2">
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductShipmentMethod}</span></td>
           <td><span class="tabletext">${estimate.shipmentMethodTypeId}&nbsp;(${estimate.carrierPartyId})</span></td>
           <td>&nbsp;</td>
-        </tr>    
+        </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFromGeo}</span></td>
           <td><span class="tabletext">${estimate.geoIdFrom?default("All")}</span></td>
@@ -153,7 +153,7 @@ function setAssocFields(select) {
             <span class="tabletext"> - ${uiLabelMap.ProductShipamountOrderTotalPercent}</span>
           </td>
           <td>&nbsp;</td>
-        </tr>                          
+        </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFlatBasePrice}</span></td>
           <td>
@@ -192,6 +192,23 @@ function setAssocFields(select) {
           <td>
             <span class="tabletext">${estimate.featurePrice?default(0)?string.currency}</span>
             <span class="tabletext"> - shipamount : shipamount + (price * total feature(s) applied)</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr><td colspan="3"><hr class="sepbar"></td></tr>
+        <tr>
+          <td align='right'><span class="tableheadtext">Oversize Unit</span></td>
+          <td>
+            <span class="tabletext">${estimate.oversizeUnit?default("N/A")}</span>
+            <span class="tabletext"> - Each product (height + width + depth) >= this amount</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td align='right'><span class="tableheadtext">Oversize Surcharge</span></td>
+          <td>
+            <span class="tabletext">${estimate.oversizePrice?default(0)?string.currency}</span>
+            <span class="tabletext"> - shipamount : shipamount + (# oversize products * surcharge)</span>
           </td>
           <td>&nbsp;</td>
         </tr>
@@ -250,7 +267,7 @@ function setAssocFields(select) {
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductMinMaxSpan}</span></td>
           <td><span class="tabletext">${priceValue.fromQuantity?if_exists}-${priceValue.thruQuantity?if_exists}</span></td>
           <td>&nbsp;</td>
-        </tr>        
+        </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductPerUnitPrice}</span></td>
           <td>
@@ -258,13 +275,13 @@ function setAssocFields(select) {
             <span class="tabletext"> - ${uiLabelMap.ProductOnlyAppliesWithinSpan}</span>
           </td>
           <td>&nbsp;</td>
-        </tr>                          
-      </table>               
+        </tr>
+      </table>
   </#if>
-            
+
   <#if requestParameters.createNew?exists>
-    <div class="head2">${uiLabelMap.ProductNewShipmentEstimate} :</div>    
-    <form name="addform" method="post" action="<@ofbizUrl>/storeCreateShipRate</@ofbizUrl>">    
+    <div class="head2">${uiLabelMap.ProductNewShipmentEstimate} :</div>
+    <form name="addform" method="post" action="<@ofbizUrl>/storeCreateShipRate</@ofbizUrl>">
       <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
       <input type="hidden" name="productStoreId" value="${productStoreId}">
       <table cellspacing="2" cellpadding="2">
@@ -275,10 +292,10 @@ function setAssocFields(select) {
               <#list storeShipMethods as shipmentMethod>
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.shipmentMethodTypeId}">${shipmentMethod.description} (${shipmentMethod.partyId})</option>
               </#list>
-            </select>            
+            </select>
           </td>
           <td>&nbsp;</td>
-        </tr>    
+        </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFromGeo}</span></td>
           <td>
@@ -321,7 +338,7 @@ function setAssocFields(select) {
             <span class="tabletext">${uiLabelMap.ProductShipamountOrderTotalPercent}</span>
           </td>
           <td>&nbsp;</td>
-        </tr>                          
+        </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFlatBasePrice}</span></td>
           <td>
@@ -365,13 +382,30 @@ function setAssocFields(select) {
         </tr>
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
         <tr>
+          <td align='right'><span class="tableheadtext">Oversize Unit</span></td>
+          <td>
+            <input type="text" class="inputBox" name="oversizeUnit" value="" size="5">
+            <span class="tabletext">Each product (height + width + depth) >= this amount</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td align='right'><span class="tableheadtext">Oversize Surcharge</span></td>
+          <td>
+            <input type="text" class="inputBox" name="oversizePrice" value="0.00" size="5">
+            <span class="tabletext">shipamount : shipamount + (# oversize products * surcharge)</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr><td colspan="3"><hr class="sepbar"></td></tr>
+        <tr>
           <td colspan="1"><span class="tableheadtext">${uiLabelMap.ProductWeight}</span></td>
           <td colspan="2"><span class="tabletext">${uiLabelMap.ProductMinMax}</span></td>
         </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductMinMaxSpan}</span></td>
           <td>
-            <input type="text" class="inputBox" name="wmin" size="4"> - <input type="text" class="inputBox" name="wmax" size="4">            
+            <input type="text" class="inputBox" name="wmin" size="4"> - <input type="text" class="inputBox" name="wmax" size="4">
           </td>
           <td>&nbsp;</td>
         </tr>
@@ -429,10 +463,10 @@ function setAssocFields(select) {
           <td colspan="2"><span class="tabletext">${uiLabelMap.ProductMinMax}</span></td>
         <tr>
         <tr>
-          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductMinMaxSpan}</span></td>          
+          <td align='right'><span class="tableheadtext">${uiLabelMap.ProductMinMaxSpan}</span></td>
           <td><input type="text" class="inputBox" name="pmin" size="4"> - <input type="text" class="inputBox" name="pmax" size="4"></td>
           <td>&nbsp;</td>
-        </tr>        
+        </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductPerUnitPrice}</span></td>
           <td>
@@ -440,17 +474,17 @@ function setAssocFields(select) {
             <span class="tabletext">${uiLabelMap.ProductOnlyAppliesWithinSpan}</span>
           </td>
           <td>&nbsp;</td>
-        </tr> 
-        
+        </tr>
+
         <tr>
           <td colspan="3">
             <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
           </td>
-        </tr>               
-      </table>                                                               
+        </tr>
+      </table>
     </form>
-  </#if> 
-  
+  </#if>
+
   <#if requestParameters.newShipMethod?exists>
     <div class="head2">${uiLabelMap.ProductStoreShipmentMethodAssociations}</div>
     <table border="1" cellpadding="2" cellspacing="0" width="100%">
@@ -476,7 +510,7 @@ function setAssocFields(select) {
             <input type="hidden" name="productStoreId" value="${meth.productStoreId}">
             <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
             <input type="hidden" name="newShipMethod" value="Y">
-            <tr> 
+            <tr>
               <td><span class="tabletext">${meth.description}</span></td>
               <td><span class="tabletext">${meth.partyId}</span></td>
               <td><span class="tabletext">${meth.roleTypeId}</span></td>
@@ -496,10 +530,10 @@ function setAssocFields(select) {
         </#list>
       </#if>
     </table>
-    <br>           
-    <table cellspacing="2" cellpadding="2">      
+    <br>
+    <table cellspacing="2" cellpadding="2">
       <form name="addscarr" method="post" action="<@ofbizUrl>/storeCreateShipMeth</@ofbizUrl>">
-        <input type="hidden" name="viewProductStoreId" value="${productStoreId}">        
+        <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
         <input type="hidden" name="productStoreId" value="${productStoreId}">
         <input type="hidden" name="shipmentMethodTypeId">
@@ -507,13 +541,13 @@ function setAssocFields(select) {
         <input type="hidden" name="partyId">
         <tr>
           <td align="right"><span class="tableheadtext">${uiLabelMap.ProductCarrierShipmentMethod}</span></td>
-          <td>            
+          <td>
             <select class="selectBox" name="carrierShipmentString" onChange="javascript:setAssocFields(this);">
               <option>${uiLabelMap.ProductSelectOne}</option>
               <#list shipmentMethods as shipmentMethod>
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.roleTypeId}|${shipmentMethod.shipmentMethodTypeId}|${shipmentMethod.sequenceNumber?default(1)}">${shipmentMethod.description} (${shipmentMethod.partyId}/${shipmentMethod.roleTypeId})</option>
               </#list>
-            </select> *                           
+            </select> *
           </td>
         </tr>
         <tr>
@@ -552,15 +586,15 @@ function setAssocFields(select) {
           </td>
         </tr>
         <tr>
-          <td>            
+          <td>
             <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
           </td>
-        </tr>       
+        </tr>
       </form>
-    </table> 
-    <br>    
-    
-    <div class="head2">${uiLabelMap.ProductShipmentMethodType} :</div>                
+    </table>
+    <br>
+
+    <div class="head2">${uiLabelMap.ProductShipmentMethodType} :</div>
     <table cellspacing="2" cellpadding="2">
       <form name="editmeth" method="post" action="<@ofbizUrl>/EditProductStoreShipSetup</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
@@ -576,14 +610,14 @@ function setAssocFields(select) {
             <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonEdit}">
           </td>
         </tr>
-      </form>   
+      </form>
       <#if shipmentMethodType?has_content>
         <#assign webRequest = "/updateShipmentMethodType">
         <#assign buttonText =uiLabelMap.CommonUpdate>
       <#else>
         <#assign webRequest = "/createShipmentMethodType">
         <#assign buttonText = uiLabelMap.CommonCreate>
-      </#if> 
+      </#if>
       <form name="addmeth" method="post" action="<@ofbizUrl>${webRequest}</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <input type="hidden" name="newShipMethod" value="Y">
@@ -603,16 +637,16 @@ function setAssocFields(select) {
           <td><input type="text" class="inputBox" name="description" size="30" value="${shipmentMethodType.description?if_exists}"> *</td>
         </tr>
         <tr>
-          <td>           
+          <td>
             <input type="submit" class="smallSubmit" value="${buttonText}">
           </td>
-        </tr>       
+        </tr>
       </form>
-    </table> 
-    
+    </table>
+
     <br>
-     
-    <div class="head2">${uiLabelMap.ProductCarrierShipmentMethod} :</div>          
+
+    <div class="head2">${uiLabelMap.ProductCarrierShipmentMethod} :</div>
     <table cellspacing="2" cellpadding="2">
       <form name="editcarr" method="post" action="<@ofbizUrl>/EditProductStoreShipSetup</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
@@ -635,7 +669,7 @@ function setAssocFields(select) {
       <#else>
         <#assign webRequest = "/createCarrierShipmentMethod">
         <#assign buttonText = uiLabelMap.CommonCreate>
-      </#if> 
+      </#if>
       <form name="addcarr" method="post" action="<@ofbizUrl>${webRequest}</@ofbizUrl>">
         <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
         <#if carrierShipmentMethod?has_content>
@@ -672,7 +706,7 @@ function setAssocFields(select) {
               </select> *
             </#if>
           </td>
-        </tr> 
+        </tr>
         <tr>
           <td align="right"><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
           <td>
@@ -683,26 +717,26 @@ function setAssocFields(select) {
               <input type="text" class="inputBox" name="partyId" size="20" value="${carrierShipmentMethod.partyId?if_exists}"> *
             </#if>
           </td>
-        </tr>                      
+        </tr>
         <tr>
           <td align="right"><span class="tableheadtext">${uiLabelMap.ProductCarrierServiceCode}</span></td>
           <td><input type="text" class="inputBox" name="carrierServiceCode" size="20" value="${carrierShipmentMethod.carrierServiceCode?if_exists}"></td>
-        </tr>                 
+        </tr>
         <tr>
           <td align="right"><span class="tableheadtext">${uiLabelMap.ProductSequence} #</span></td>
           <td>
             <input type="text" class="inputBox" name="sequenceNumber" size="5" value="${carrierShipmentMethod.sequenceNumber?if_exists}">
             <span class="tabletext">${uiLabelMap.ProductUsedForDisplayOrdering}</span>
           </td>
-        </tr>       
+        </tr>
         <tr>
-          <td>            
+          <td>
             <input type="submit" class="smallSubmit" value="${buttonText}">
           </td>
-        </tr>       
+        </tr>
       </form>
     </table>
-  </#if>        
+  </#if>
 <#else>
   <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

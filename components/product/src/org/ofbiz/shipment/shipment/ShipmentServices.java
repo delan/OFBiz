@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentServices.java,v 1.2 2003/11/17 01:38:32 ajzeneski Exp $
+ * $Id: ShipmentServices.java,v 1.3 2003/11/20 21:13:26 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,12 +41,12 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * ShipmentServices
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ShipmentServices {
-    
+
     public static final String module = ShipmentServices.class.getName();
 
     public static Map createShipmentEstimate(DispatchContext dctx, Map context) {
@@ -59,7 +59,7 @@ public class ShipmentServices {
 
         // Create the basic entity.
         GenericValue estimate = delegator.makeValue("ShipmentCostEstimate", null);
-        
+
         estimate.set("shipmentCostEstimateId", delegator.getNextSeqId("ShipmentCostEstimate").toString());
         estimate.set("shipmentMethodTypeId", shipMethodSplit.get(1));
         estimate.set("carrierPartyId", shipMethodSplit.get(0));
@@ -73,6 +73,8 @@ public class ShipmentServices {
         estimate.set("orderFlatPrice", context.get("flatPrice"));
         estimate.set("orderItemFlatPrice", context.get("flatItemPrice"));
         estimate.set("productFeatureGroupId", context.get("productFeatureGroupId"));
+        estimate.set("oversizeUnit", context.get("oversizeUnit"));
+        estimate.set("oversizePrice", context.get("oversizePrice"));
         estimate.set("featurePercent", context.get("featurePercent"));
         estimate.set("featurePrice", context.get("featurePrice"));
         storeAll.add(estimate);
@@ -124,8 +126,8 @@ public class ShipmentServices {
         return ServiceUtil.returnSuccess();
     }
 
-    private static boolean applyQuantityBreak(Map context, Map result, List storeAll, GenericDelegator delegator, 
-    		GenericValue estimate, String prefix, String breakType, String breakTypeString) {                                                                                            
+    private static boolean applyQuantityBreak(Map context, Map result, List storeAll, GenericDelegator delegator,
+    		GenericValue estimate, String prefix, String breakType, String breakTypeString) {
         Double min = (Double) context.get(prefix + "min");
         Double max = (Double) context.get(prefix + "max");
         if (min != null || max != null) {
