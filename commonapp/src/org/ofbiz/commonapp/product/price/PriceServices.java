@@ -64,9 +64,17 @@ public class PriceServices {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         
         boolean isSale = false;
+        List orderItemPriceInfos = new LinkedList();
+        
         GenericValue product = (GenericValue) context.get("product");
         String productId = product.getString("productId");
         String prodCatalogId = (String) context.get("prodCatalogId");
+
+        //if currency uom is null, assume CUR_USD (USD: American Dollar) for now
+        String currencyUomId = (String) context.get("currencyUomId");
+        if (currencyUomId == null || currencyUomId.length() == 0) {
+            currencyUomId = "CUR_USD";
+        }
 
         //if this product is variant, find the virtual product and apply checks to it as well
         String virtualProductId = null;
@@ -94,9 +102,6 @@ public class PriceServices {
         Double quantityDbl = (Double) context.get("quantity");
         if (quantityDbl == null) quantityDbl = new Double(1.0);
         double quantity = quantityDbl.doubleValue();
-        
-        List orderItemPriceInfos = new LinkedList();
-        
         double defaultPrice = product.get("defaultPrice") != null ? product.getDouble("defaultPrice").doubleValue() : 0;
         
         Double listPriceDbl = product.getDouble("listPrice");
@@ -115,6 +120,8 @@ public class PriceServices {
             }
             
             result.put("price", new Double(defaultPrice));
+            result.put("defaultPrice", new Double(defaultPrice));
+            result.put("averageCost", product.get("averageCostPrice"));
         } else {
             try {
                 //get some of the base values to calculate with
@@ -394,6 +401,9 @@ public class PriceServices {
                 Debug.logInfo("Final Calculated price: " + price + ", rules: " + totalRules + ", conds: " + totalConds + ", actions: " + totalActions, module);
                 
                 result.put("price", new Double(price));
+                result.put("listPrice", new Double(listPrice));
+                result.put("defaultPrice", new Double(defaultPrice));
+                result.put("averageCost", new Double(averageCostPrice));
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting rules from the database while calculating price", module);
                 return ServiceUtil.returnError("Error getting rules from the database while calculating price: " + e.toString());

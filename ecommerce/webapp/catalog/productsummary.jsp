@@ -26,8 +26,14 @@
           <div class="tabletext">
             <nobr>
               <b><%EntityField.run("product", "productId", pageContext);%></b>,
-              <b>Your price: <font color="#006633"><ofbiz:field attribute="price" type="currency"/></font></b>
-              (Reg. <%EntityField.run("product", "listPrice", pageContext);%>)
+                <%if (pageContext.getAttribute("listPrice") != null && pageContext.getAttribute("price") != null && 
+                        ((Double) pageContext.getAttribute("price")).doubleValue() < ((Double) pageContext.getAttribute("listPrice")).doubleValue()) {%>
+                    List price: <span class='basePrice'><ofbiz:field attribute="listPrice" type="currency"/></span>
+                <%}%>
+                <b>
+                    <ofbiz:if name="isSale" type="Boolean"><span class='salePrice'>On Sale!</span></ofbiz:if>
+                    Your price: <span class='<ofbiz:if name="isSale" type="Boolean">salePrice</ofbiz:if><ofbiz:unless name="isSale" type="Boolean">normalPrice</ofbiz:unless>'><ofbiz:field attribute="price" type="currency"/></span>
+                </b>
             </nobr>
           </div>
       </td>

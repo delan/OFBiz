@@ -15,7 +15,7 @@
   <div class='tabletext'>
     <b>
       <%EntityField.run("miniProduct", "productId", pageContext);%>,
-      <font color="#006633"><ofbiz:field attribute="price" type="currency"/></font>
+      <span class='<ofbiz:if name="isSale" type="Boolean">salePrice</ofbiz:if><ofbiz:unless name="isSale" type="Boolean">normalPrice</ofbiz:unless>'><ofbiz:field attribute="price" type="currency"/></span>
     </b>
   </div>
   <%GenericValue miniProd = (GenericValue) pageContext.getAttribute("miniProduct");%>

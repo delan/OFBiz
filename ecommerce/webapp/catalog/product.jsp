@@ -262,14 +262,30 @@
         <div class="head2"><%EntityField.run("product", "productName", pageContext);%></div>
         <div class="tabletext"><%EntityField.run("product", "description", pageContext);%></div>
         <div class="tabletext"><b><%EntityField.run("product", "productId", pageContext);%></b></div>
-        <div class="tabletext"><b>Your price: <font color="#126544"><ofbiz:field attribute="price" type="currency"/></font></b>
-           (Reg. <%EntityField.run("product", "listPrice", pageContext);%>)</div>
-            <%if (product.get("quantityIncluded") != null && product.getDouble("quantityIncluded").doubleValue() != 0) {%>
-                <div class="tabletext">Size:
-                  <%EntityField.run("product", "quantityIncluded", pageContext);%>
-                  <%EntityField.run("product", "quantityUomId", pageContext);%>
-                </div>
-            <%}%>
+        <%-- for prices:
+                - if price < listPrice, show
+                - if price < defaultPrice and defaultPrice < listPrice, show default
+                - if isSale show price with salePrice style and print "On Sale!"
+        --%>
+        <%if (pageContext.getAttribute("listPrice") != null && pageContext.getAttribute("price") != null && 
+                ((Double) pageContext.getAttribute("price")).doubleValue() < ((Double) pageContext.getAttribute("listPrice")).doubleValue()) {%>
+            <div class="tabletext">List price: <span class='basePrice'><ofbiz:field attribute="listPrice" type="currency"/></span></div>
+        <%}%>
+        <%if (pageContext.getAttribute("listPrice") != null && pageContext.getAttribute("defaultPrice") != null && pageContext.getAttribute("price") != null && 
+                ((Double) pageContext.getAttribute("price")).doubleValue() < ((Double) pageContext.getAttribute("defaultPrice")).doubleValue() &&
+                ((Double) pageContext.getAttribute("defaultPrice")).doubleValue() < ((Double) pageContext.getAttribute("listPrice")).doubleValue()) {%>
+            <div class="tabletext">Regular price: <span class='basePrice'><ofbiz:field attribute="defaultPrice" type="currency"/></span></div>
+        <%}%>
+        <div class="tabletext"><b>
+            <ofbiz:if name="isSale" type="Boolean"><span class='salePrice'>On Sale!</span></ofbiz:if>
+            Your price: <span class='<ofbiz:if name="isSale" type="Boolean">salePrice</ofbiz:if><ofbiz:unless name="isSale" type="Boolean">normalPrice</ofbiz:unless>'><ofbiz:field attribute="price" type="currency"/></span>
+        </b></div>
+        <%if (product.get("quantityIncluded") != null && product.getDouble("quantityIncluded").doubleValue() != 0) {%>
+            <div class="tabletext">Size:
+              <%EntityField.run("product", "quantityIncluded", pageContext);%>
+              <%EntityField.run("product", "quantityUomId", pageContext);%>
+            </div>
+        <%}%>
         </div>
         <%if (product.get("piecesIncluded") != null && product.getLong("piecesIncluded").longValue() != 0) {%>
             <ofbiz:entityfield attribute="product" field="piecesIncluded" prefix="<div class='tabletext'>Pieces: " suffix="</div>"/>
@@ -278,7 +294,7 @@
         <p>&nbsp;</p>
 
         <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="addform" style='margin: 0;'>
-
+        <%boolean inStock = true;%>
           <%-- ================= --%>
           <%-- Variant Selection --%>
           <%-- ================= --%>
@@ -301,6 +317,7 @@
                 <input type='hidden' name="product_id" value='<%EntityField.run("product", "productId", pageContext);%>'>
                 <input type='hidden' name="add_product_id" value='NULL'>
                 <div class='tabletext'><b>This item is out of stock.</b></div>
+                <%inStock = false;%>
               </ofbiz:unless>
           <%} else {%>
             <input type='hidden' name="product_id" value='<%EntityField.run("product", "productId", pageContext);%>'>
@@ -308,6 +325,7 @@
 
             <%if (!CatalogWorker.isCatalogInventoryAvailable(request, productId, 1.0)) {%>
                 <div class='tabletext'><b>This item is out of stock.</b></div>
+                <%inStock = false;%>
             <%}%>
           <%}%>
           <%-- ======================== --%>
@@ -323,8 +341,10 @@
               <%-- check to see if salesDiscontinuationDate has passed --%>
               <div class='tabletext' style='color: red;'>This product is no longer available for sale.</div>
           <%} else {%>
-              <a href="javascript:addItem()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
-              <input type="text" size="5" name="quantity" value="1">
+              <%if (inStock) {%>
+                  <a href="javascript:addItem()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
+                  <input type="text" size="5" name="quantity" value="1">
+              <%}%>
 
               <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
           <%}%>

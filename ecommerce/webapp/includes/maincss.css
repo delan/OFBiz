@@ -62,3 +62,7 @@
   .viewManyTR2 {background-color: #CCFFCC; FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif;}
 
   .editInputBox {background-color: white; FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+
+  .basePrice {FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif; color: black;}
+  .normalPrice {FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif; color: green;}
+  .salePrice {FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif; color: red;}
