@@ -68,7 +68,7 @@
 
         <property name="xerces.jar"    value="${env.CATALINA_HOME}/lib/xerces.jar:${env.CATALINA_HOME}/common/lib/xerces.jar" />
         
-        <property name="tyrex.jar"    value="${env.CATALINA_HOME}/common/lib/tyrex-0.9.7.0.jar" />
+        <property name="tyrex.jar"    value="${env.CATALINA_HOME}/common/lib/tyrex-0.9.8.5.jar" />
 
         <property name="log4j.jar"     value="../lib/log4j.jar"/>
 		<property name="bsh.jar"       value="../lib/bsh-1.2b3.jar"/>
