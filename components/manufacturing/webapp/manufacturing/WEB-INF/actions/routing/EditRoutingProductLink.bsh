@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -84,14 +84,12 @@ EntityExpr expStatus = new EntityExpr("statusId", EntityOperator.EQUALS, "ROU_PR
 if (!byProduct.equals("null")) {
     EntityExpr expProduct = new EntityExpr("productId", EntityOperator.EQUALS, byProduct);
     EntityConditionList ecl = new EntityConditionList(UtilMisc.toList(expStatus, expProduct), EntityOperator.AND);
-    EntityListIterator eli = delegator.findListIteratorByCondition(dynamicViewEntity, ecl, null, null, null, null);
-    allRoutingProductLinks = eli.getCompleteList();
+    allRoutingProductLinks = delegator.findByCondition(dynamicViewEntity, ecl, null, null, null, null);
     productName = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", byProduct)).getString("productName");
 } else {
     EntityExpr expRouting = new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId);
     EntityConditionList ecl = new EntityConditionList(UtilMisc.toList(expStatus, expRouting), EntityOperator.AND);
-    EntityListIterator eli = delegator.findListIteratorByCondition(dynamicViewEntity, ecl, null, null, null, null);
-    allRoutingProductLinks = eli.getCompleteList();
+    allRoutingProductLinks = delegator.findByCondition(dynamicViewEntity, ecl, null, null, null, null);
     workEffortName = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId)).getString("workEffortName");
 }
 
@@ -141,6 +139,4 @@ if (!byProduct.equals("null")) {
     addRoutingProductLinkWrapper.putInContext("productId", null);
 }
 context.put("addRoutingProductLinkWrapper", addRoutingProductLinkWrapper);
-
-
 

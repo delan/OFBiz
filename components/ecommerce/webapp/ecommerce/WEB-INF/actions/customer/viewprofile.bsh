@@ -81,11 +81,9 @@ if (userLogin != null) {
     exprs = UtilMisc.toList(new EntityExpr("partyIdTo", EntityOperator.EQUALS, partyId));
     exprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "COM_READ"));
     condition = new EntityConditionList(exprs, EntityOperator.AND);
-    eli = delegator.findListIteratorByCondition("CommunicationEvent", condition, null, null, orderBy, findOpts);
-    messages = eli.getCompleteList();
+    messages = delegator.findByCondition("CommunicationEvent", condition, null, null, orderBy, findOpts);
     context.put("messages", messages);
     context.put("profileMessages", true);
-    eli.close();
 
     partyContent = delegator.findByAnd("ContentRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "OWNER"));
     partyContent = EntityUtil.filterByDate(partyContent);

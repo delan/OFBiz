@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  */
 
@@ -31,6 +31,8 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.model.*;
 import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.transaction.*;
+
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 import org.ofbiz.content.webapp.control.*;
@@ -355,31 +357,48 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
             fieldsToSelect.add("infoString");
         }
 
-        // set distinct on so we only get one row per order
-        EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
 
-        // using list iterator
-        EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
-
-        // get the indexes for the partial list
-        lowIndex = (((viewIndex - 1) * viewSize) + 1);
-        highIndex = viewIndex * viewSize;
-
-        // get the partial list for this page
-        partyList = pli.getPartialList(lowIndex, viewSize);
-        if (partyList == null) {
-            partyList = new ArrayList();
+            // set distinct on so we only get one row per order
+            EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+            // using list iterator
+            EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
+    
+            // get the indexes for the partial list
+            lowIndex = (((viewIndex - 1) * viewSize) + 1);
+            highIndex = viewIndex * viewSize;
+    
+            // get the partial list for this page
+            partyList = pli.getPartialList(lowIndex, viewSize);
+            if (partyList == null) {
+                partyList = new ArrayList();
+            }
+    
+            // attempt to get the full size
+            pli.last();
+            partyListSize = pli.currentIndex();
+            if (highIndex > partyListSize) {
+                highIndex = partyListSize;
+            }
+    
+            // close the list iterator
+            pli.close();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        // attempt to get the full size
-        pli.last();
-        partyListSize = pli.currentIndex();
-        if (highIndex > partyListSize) {
-            highIndex = partyListSize;
-        }
-
-        // close the list iterator
-        pli.close();
     } else {
         partyList = new ArrayList();
         partyListSize = 0;
