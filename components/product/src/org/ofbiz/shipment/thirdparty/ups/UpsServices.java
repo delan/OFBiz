@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class UpsServices {
@@ -1556,8 +1556,7 @@ public class UpsServices {
         Iterator i = packages.iterator();
         while (i.hasNext()) {
             Map packageMap = (Map) i.next();
-            double packageWeight = calcPackageWeight(packageMap, shippableItemInfo, 0);
-            Debug.log("Package Weight : " + packageWeight, module);
+            double packageWeight = calcPackageWeight(packageMap, shippableItemInfo, 0);          
 
             // package info
             Element packageElement = UtilXml.addChildElement(shipmentElement, "Package", requestDoc);
@@ -1578,40 +1577,50 @@ public class UpsServices {
             Iterator sii = shippableItemInfo.iterator();
             while (sii.hasNext()) {
                 Map itemInfo = (Map) sii.next();
-                double quantity = ((Double) itemInfo.get("quantity")).doubleValue();
-                double weight = ((Double) itemInfo.get("weight")).doubleValue();
+                long pieces = ((Long) itemInfo.get("piecesIncluded")).longValue();
+                double totalQuantity = ((Double) itemInfo.get("quantity")).doubleValue();
+                double totalWeight = ((Double) itemInfo.get("weight")).doubleValue();
                 String productId = (String) itemInfo.get("productId");
 
-                for (int i = 1; i <= quantity; i++) {
-                    if (weight >= maxWeight) {
-                        Map newPackage = new HashMap();
-                        newPackage.put(productId, new Double(1));
-                        packages.add(newPackage);
-                    } else {
-                        // create the first package
-                        if (packages.size() == 0) {
-                            packages.add(new HashMap());
-                        }
+                // sanity check
+                if (pieces < 1) {
+                    pieces = 1; // can NEVER be less than one
+                }
+                double weight = totalWeight / pieces;
 
-                        // package loop
-                        int packageSize = packages.size();
-                        boolean addedToPackage = false;
-                        for (int pi = 0; pi < packageSize; pi++) {
-                            if (!addedToPackage) {
-                                Map packageMap = (Map) packages.get(pi);
-                                double packageWeight = calcPackageWeight(packageMap, shippableItemInfo, weight);
-                                if (packageWeight <= maxWeight) {
-                                    Double qtyD = (Double) packageMap.get(productId);
-                                    double qty = qtyD == null ? 0 : qtyD.doubleValue();                                    
-                                    packageMap.put(productId, new Double(++qty));
-                                    addedToPackage = true;
+                for (int z = 1; z <= totalQuantity; z++) {
+                    double partialQty = pieces > 1 ? 1.000 / pieces : 1;
+                    for (long x = 0; x < pieces; x++) {
+                        if (weight >= maxWeight) {
+                            Map newPackage = new HashMap();
+                            newPackage.put(productId, new Double(partialQty));
+                            packages.add(newPackage);
+                        } else {
+                            // create the first package
+                            if (packages.size() == 0) {
+                                packages.add(new HashMap());
+                            }
+
+                            // package loop
+                            int packageSize = packages.size();
+                            boolean addedToPackage = false;
+                            for (int pi = 0; pi < packageSize; pi++) {
+                                if (!addedToPackage) {
+                                    Map packageMap = (Map) packages.get(pi);
+                                    double packageWeight = calcPackageWeight(packageMap, shippableItemInfo, weight);
+                                    if (packageWeight <= maxWeight) {
+                                        Double qtyD = (Double) packageMap.get(productId);
+                                        double qty = qtyD == null ? 0 : qtyD.doubleValue();
+                                        packageMap.put(productId, new Double(qty + partialQty));
+                                        addedToPackage = true;
+                                    }
                                 }
                             }
-                        }
-                        if (!addedToPackage) {
-                            Map packageMap = new HashMap();
-                            packageMap.put(productId, new Double(1));
-                            packages.add(packageMap);
+                            if (!addedToPackage) {
+                                Map packageMap = new HashMap();
+                                packageMap.put(productId, new Double(partialQty));
+                                packages.add(packageMap);
+                            }
                         }
                     }
                 }
