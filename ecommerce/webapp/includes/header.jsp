@@ -77,7 +77,7 @@ function mClk(src){
               }
             }
 
-            String loginUrl = controlPath + "/checkLogin/" + UtilFormatOut.checkNull((String)session.getAttribute(SiteDefs.CURRENT_VIEW));
+            String loginUrl = controlPath + "/checkLogin/" + UtilFormatOut.checkNull((String)request.getAttribute(SiteDefs.CURRENT_VIEW));
             if(queryString != null) loginUrl = loginUrl  + "?" + UtilFormatOut.checkNull(queryString);
           %>
           <%if(userLogin==null){%>

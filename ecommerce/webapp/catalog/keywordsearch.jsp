@@ -20,6 +20,7 @@
 <ofbiz:unless name="searchProductList">
   <br><div class='head2'>&nbsp;No results found.</div>
 </ofbiz:unless>
+
 <ofbiz:if name="searchProductList">
 <table border="0" width="100%" cellpadding="2">
     <tr>
@@ -42,15 +43,37 @@
 
 <center>
   <table>
+    <%int listIndex = lowIndex.intValue();%>
     <ofbiz:iterator name="product" property="searchProductList">
       <tr>
         <td>
-          <a href="<ofbiz:url>/product?product_id=<%= product.getString("productId") %></ofbiz:url>"><%= product.getString("name") %> : <%= product.getString("description") %></a>
+          <%@ include file="/catalog/productsummary.jsp" %>
         </td>
       </tr>
+      <%listIndex++;%>
     </ofbiz:iterator>
   </table>
 </center>
+
+<ofbiz:if name="searchProductList">
+<table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if(viewIndex.intValue() > 0){%>
+          <a href="<%=response.encodeURL(controlPath + "/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1))%>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if(listSize.intValue() > 0){%>
+          <%=lowIndex%> - <%=highIndex%> of <%=listSize%>
+        <%}%>
+        <%if(listSize.intValue() > highIndex.intValue()){%>
+          | <a href="<%=response.encodeURL(controlPath + "/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1))%>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+</table>
+</ofbiz:if>
 
 <%@ include file="/includes/rightcolumn.jsp" %> 
 <%@ include file="/includes/footer.jsp" %>

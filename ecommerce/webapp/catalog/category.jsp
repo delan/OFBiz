@@ -7,15 +7,15 @@
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
 <%
-	// Get a list of all available categories.
-	org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,"categoryList",request.getParameter("category_id"));
-	// Get a list of all available products.
-	org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedProducts(pageContext,"productList",request.getParameter("category_id"));
+  // Get a list of all available categories.
+  org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,"curCategoryList",request.getParameter("category_id"));
+  // Get a list of all available products.
+  org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedProducts(pageContext,"productList",request.getParameter("category_id"));
 %>
 
-<br><br>
+<br>
 
-<ofbiz:if name="categoryList">
+<ofbiz:if name="curCategoryList">
   <hr>
   <b>Categories:</b>
   <hr>
@@ -24,12 +24,12 @@
 
 <center>
   <table>
-    <ofbiz:iterator name="category" property="categoryList">
+    <ofbiz:iterator name="category" property="curCategoryList">
       <tr>
-	    <td>
+        <td>
           <a href="<ofbiz:url>/category?category_id=<%= category.getString("productCategoryId") %></ofbiz:url>"><%= category.getString("description") %></a>
         </td>
-	  </tr>
+      </tr>
     </ofbiz:iterator>
   </table>
 </center>
@@ -43,12 +43,14 @@
 
 <center>
   <table>
+    <%int listIndex = 1;%>
     <ofbiz:iterator name="product" property="productList">
       <tr>
-	    <td>
-          <a href="<ofbiz:url>/product?product_id=<%= product.getString("productId") %></ofbiz:url>"><%= product.getString("name") %> : <%= product.getString("description") %></a>
+        <td>
+          <%@ include file="/catalog/productsummary.jsp" %>
         </td>
-	  </tr>
+      </tr>
+      <%listIndex++;%>
     </ofbiz:iterator>
   </table>
 </center>
