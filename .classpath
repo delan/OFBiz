@@ -83,5 +83,9 @@
     <classpathentry kind="lib" path="components/entity/lib/commons-dbcp.jar"/>
     <classpathentry kind="var" path="JCE_LIB"/>
     <classpathentry kind="var" path="JCOMM_LIB"/>
+    <classpathentry kind="lib" path="components/content/lib/batik.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/commons-beanutils.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/commons-digester.jar"/>
+    <classpathentry kind="lib" path="components/content/lib/fop.jar"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>
