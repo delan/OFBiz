@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.7 2003/11/19 19:31:03 ajzeneski Exp $
+ * $Id: RequestHandler.java,v 1.8 2003/11/20 08:13:18 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -83,7 +83,7 @@ public class RequestHandler implements Serializable {
     }
 
     public void doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
-        GenericValue userLogin, GenericDelegator delegator) throws RequestHandlerException {
+            GenericValue userLogin, GenericDelegator delegator) throws RequestHandlerException {
 
         String eventType = null;
         String eventPath = null;
@@ -99,7 +99,11 @@ public class RequestHandler implements Serializable {
         // Check for chained request.
         if (chain != null) {
             requestUri = RequestHandler.getRequestUri(chain);
-            nextView = RequestHandler.getNextPageUri(chain);
+            if (request.getAttribute("_POST_CHAIN_VIEW_") != null) {
+                nextView = (String) request.getAttribute("_POST_CHAIN_VIEW_");
+            } else {
+                nextView = RequestHandler.getNextPageUri(chain);
+            }
             if (Debug.infoOn()) Debug.logInfo("[RequestHandler]: Chain in place: requestUri=" + requestUri + " nextView=" + nextView, module);
         } else {
             // Check to make sure we are allowed to access this request directly. (Also checks if this request is defined.)
@@ -150,10 +154,11 @@ public class RequestHandler implements Serializable {
 
                         try {
                             String returnString = this.runEvent(request, response, eType, ePath, eMeth);                            
-                            if (returnString != null && !returnString.equalsIgnoreCase("success"))
+                            if (returnString != null && !returnString.equalsIgnoreCase("success")) {
                                 throw new EventHandlerException("First-Visit event did not return 'success'.");
-                        else if (returnString == null)
-                            nextView = "none:";
+                            } else if (returnString == null) {
+                                nextView = "none:";
+                            }
                         } catch (EventHandlerException e) {
                             Debug.logError(e, module);
                         }
@@ -173,10 +178,11 @@ public class RequestHandler implements Serializable {
                     String eMeth = (String) eventMap.get(ConfigXMLReader.EVENT_METHOD);
                     try {
                         String returnString = this.runEvent(request, response, eType, ePath, eMeth);                        
-                        if (returnString != null && !returnString.equalsIgnoreCase("success"))
+                        if (returnString != null && !returnString.equalsIgnoreCase("success")) {
                             throw new EventHandlerException("Pre-Processor event did not return 'success'.");
-                        else if (returnString == null)
+                        } else if (returnString == null) {
                             nextView = "none:";
+                        }
                     } catch (EventHandlerException e) {
                         Debug.logError(e, module);
                     }
@@ -220,10 +226,6 @@ public class RequestHandler implements Serializable {
                 requestUri = "checkLogin";
             }
         }
-
-        // Make sure we have a default 'success' view
-        if (nextView == null) nextView = requestManager.getViewName(requestUri);
-        if (Debug.verboseOn()) Debug.logVerbose("[Current View]: " + nextView, module);
 
         // Invoke the defined event (unless login failed)
         if (eventReturnString == null) {
@@ -273,6 +275,19 @@ public class RequestHandler implements Serializable {
             if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
             doRequest(request, response, previousRequest, userLogin, delegator);
         }
+
+        String successView = requestManager.getViewName(requestUri);
+        if ("success".equals(eventReturnString) && successView.startsWith("request:")) {
+            // chains will override any url defined views; but we will save the view for the very end
+            if (nextView != null) {
+                request.setAttribute("_POST_CHAIN_VIEW_", nextView);
+            }
+            nextView = successView;
+        }
+
+        // Make sure we have some sort of response to go to
+        if (nextView == null) nextView = successView;
+        if (Debug.verboseOn()) Debug.logVerbose("[Current View]: " + nextView, module);
 
         // Handle the responses - chains/views
         else if (nextView != null && nextView.startsWith("request:")) {
@@ -401,8 +416,7 @@ public class RequestHandler implements Serializable {
         return nextPage;
     }
 
-    private void callRedirect(String url, HttpServletRequest req, HttpServletResponse resp)
-        throws RequestHandlerException {
+    private void callRedirect(String url, HttpServletRequest req, HttpServletResponse resp) throws RequestHandlerException {
         if (Debug.infoOn()) Debug.logInfo("[Sending redirect]: " + url, module);
         try {
             resp.sendRedirect(url);
@@ -413,8 +427,7 @@ public class RequestHandler implements Serializable {
         }
     }
     
-    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp)
-        throws RequestHandlerException {
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp) throws RequestHandlerException {
         GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
         GenericDelegator delegator = (GenericDelegator) req.getAttribute("delegator");
         // workaraound if we are in the root webapp
