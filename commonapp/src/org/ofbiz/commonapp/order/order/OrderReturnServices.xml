@@ -73,17 +73,17 @@
         <string-to-list string="-returnItemSeqId" list-name="orderBy"/>
         <find-by-and entity-name="ReturnItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
         <if-empty field-name="currentItems">
-            <string-to-field string="00001" field-name="returnItemSeqId" map-name="newEntity"/>                        
+            <string-to-field string="1" field-name="returnItemSeqId" map-name="newEntity"/>                        
         <else>
            <first-from-list entry-name="newestItem" list-name="currentItems"/>
            <calculate field-name="returnItemSeqId" map-name="newEntity" type="Integer">
                <calcop field-name="returnItemSeqId" map-name="newestItem" operator="add">
                    <number value="1"/>
                </calcop>
-           </calculate>
-           <to-string field-name="returnItemSeqId" map-name="newEntity" numeric-padding="5"/>           
-        </else>
-        </if-empty>        
+           </calculate>           
+        </else>        
+        </if-empty>
+        <to-string field-name="returnItemSeqId" map-name="newEntity" numeric-padding="5"/>
         
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-result field-name="returnItemSeqId" map-name="newEntity"/>
