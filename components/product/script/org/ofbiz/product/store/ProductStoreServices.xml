@@ -341,7 +341,7 @@
         <!-- if prodCatalog is set to not reserve inventory, break here -->
         <if-compare value="N" operator="equals" field-name="productStore.reserveInventory">
             <!-- note: if not set, defaults to yes, reserve inventory -->
-            <log level="verbose" message="ProductStore with id ${productStoreId}, is set to NOT reserve inventory, not reserving inventory"/>
+            <log level="verbose" message="ProductStore with id ${productStore.productStoreId}, is set to NOT reserve inventory, not reserving inventory"/>
             <return response-code="success"/>
         </if-compare>
 
@@ -399,6 +399,10 @@
                     <clear-field field-name="availableToPromiseTotal"/>
                 </if-empty>                
             </iterate>
+            <!-- didn't find anything? couldn't reserve the quantity so return the whole thing... -->
+            <if-empty field-name="quantityNotReserved">
+                <env-to-env env-name="parameters.quantity" to-env-name="quantityNotReserved"/>
+            </if-empty>
         </else>
         </if-compare>
 
