@@ -36,7 +36,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.ofbiz-component">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="depends-on">
         <xs:complexType>
@@ -44,7 +44,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.depends-on">
-        <xs:attribute name="component-name" use="required"/>
+        <xs:attribute type="xs:string" name="component-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="resource-loader">
         <xs:complexType>
@@ -52,7 +52,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.resource-loader">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute name="type" default="component">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -63,8 +63,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="prepend-env"/>
-        <xs:attribute name="prefix"/>
+        <xs:attribute type="xs:string" name="prepend-env"/>
+        <xs:attribute type="xs:string" name="prefix"/>
     </xs:attributeGroup>
     <xs:element name="classpath">
         <xs:complexType>
@@ -80,7 +80,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="location" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="entity-resource">
         <xs:complexType>
@@ -98,9 +98,9 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="reader-name" use="required"/>
-        <xs:attribute name="loader" use="required"/>
-        <xs:attribute name="location" use="required"/>
+        <xs:attribute type="xs:string" name="reader-name" use="required"/>
+        <xs:attribute type="xs:string" name="loader" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="service-resource">
         <xs:complexType>
@@ -117,8 +117,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="loader" use="required"/>
-        <xs:attribute name="location" use="required"/>
+        <xs:attribute type="xs:string" name="loader" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="webapp">
         <xs:complexType>
@@ -130,12 +130,12 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.webapp">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="title"/>
-        <xs:attribute name="server" use="required"/>
-        <xs:attribute name="location" use="required"/>
-        <xs:attribute name="mount-point"/>
-        <xs:attribute name="base-permission"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="title"/>
+        <xs:attribute type="xs:string" name="server" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
+        <xs:attribute type="xs:string" name="mount-point"/>
+        <xs:attribute type="xs:string" name="base-permission"/>
         <xs:attribute name="app-bar-display" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -151,7 +151,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.virtual-host">
-        <xs:attribute name="host-name" use="required"/>
+        <xs:attribute type="xs:string" name="host-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="init-param">
         <xs:complexType>
@@ -159,8 +159,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.init-param">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="value" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="value" use="required"/>
     </xs:attributeGroup>
 </xs:schema>
 <!--

@@ -36,11 +36,11 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.jndi-server">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="context-provider-url"/>
-        <xs:attribute name="initial-context-factory"/>
-        <xs:attribute name="url-pkg-prefixes"/>
-        <xs:attribute name="security-principal"/>
-        <xs:attribute name="security-credentials"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="context-provider-url"/>
+        <xs:attribute type="xs:string" name="initial-context-factory"/>
+        <xs:attribute type="xs:string" name="url-pkg-prefixes"/>
+        <xs:attribute type="xs:string" name="security-principal"/>
+        <xs:attribute type="xs:string" name="security-credentials"/>
     </xs:attributeGroup>
 </xs:schema>
