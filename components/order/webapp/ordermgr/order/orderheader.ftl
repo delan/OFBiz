@@ -173,7 +173,7 @@
                             <#assign payment = payments[0]>
                           </#if>
                           <#if creditCard?has_content>
-                            <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")>
+                            <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")?if_exists>
                           </#if>
                           <tr>
                             <td align="right" valign="top" width="15%">
@@ -224,7 +224,7 @@
                         <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
                           <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                           <#if eftAccount?has_content>
-                            <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress")>
+                            <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress")?if_exists>
                           </#if>
                           <tr>
                             <td align="right" valign="top" width="15%">
