@@ -74,7 +74,7 @@ if (shipment != null) {
                     // ---
                     orderReadHelper = null;
                     if (orderReaders.containsKey(orderId)) {
-                        orderReadHelper = (OrderReadHelper)orderReaders.get(shipmentPackageComponent.getString("orderId"));
+                        orderReadHelper = (OrderReadHelper)orderReaders.get(orderId);
                     } else {
                         orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
                         orderReadHelper = new OrderReadHelper(orderHeader);
