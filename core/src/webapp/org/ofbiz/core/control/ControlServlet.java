@@ -223,9 +223,14 @@ public class ControlServlet extends HttpServlet {
             //use this request parameter to avoid infinite looping on errors in the error page...
             if (request.getAttribute("_ERROR_OCCURRED_") == null) {
                 request.setAttribute("_ERROR_OCCURRED_", new Boolean(true));
-                if (rd != null) rd.forward(request, response);
+                if (rd != null) rd.include(request, response);
             } else {
-                response.getWriter().print("ERROR in error page, avoiding infinite loop, but here is the text just in case it helps you: " + request.getAttribute(SiteDefs.ERROR_MESSAGE));
+                String errorMessage = "ERROR in error page, avoiding infinite loop, but here is the text just in case it helps you: " + request.getAttribute(SiteDefs.ERROR_MESSAGE);
+                if (UtilJ2eeCompat.useOutputStreamNotWriter(getServletContext())) {
+                    response.getOutputStream().print(errorMessage);
+                } else {
+                    response.getWriter().print(errorMessage);
+                }
             }
         }
 
