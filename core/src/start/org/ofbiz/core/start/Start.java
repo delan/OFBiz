@@ -263,7 +263,9 @@ class Configuration {
         }        
     }
     
-    protected void setConfig(String config) throws IOException {                 
+    protected void setConfig(String config) throws IOException {   
+        serverClass = System.getProperty("server.class");
+        configFile = System.getProperty("config.file");              
         ofbizHome = System.getProperty("ofbiz.home");
         jettyHome = System.getProperty("jetty.home");
         javaHome = System.getProperty("java.home");
@@ -274,7 +276,8 @@ class Configuration {
         InputStream propsStream = getClass().getClassLoader().getResourceAsStream(config);
         Properties props = new Properties();
         props.load(propsStream); 
-        
+                
+        // grab default home paths if not on command line            
         if (ofbizHome == null)
             ofbizHome = props.getProperty("ofbiz.home", ".");                
         if (jettyHome == null)
@@ -288,9 +291,18 @@ class Configuration {
             ofbizHome = ofbizHome.replace('\\', '/');
         }
         
+        // set the home fields
         System.setProperty("ofbiz.home", ofbizHome);
         System.setProperty("jetty.home", jettyHome);
         System.setProperty("java.home", javaHome);
+        
+        // grab server class if not on command line
+        if (serverClass == null)        
+            serverClass = props.getProperty("server.class", "org.mortbay.jetty.Server.class");
+        
+        // grab the config file if not on command line
+        if (configFile == null)  
+            configFile = props.getProperty("config.file", ofbizHome + "/setup/jetty/etc/ofbiz.xml");                
         
         // set the property to tell Log4J to use debug.properties
         String log4jConfig = System.getProperty("log4j.configuration");
@@ -298,17 +310,17 @@ class Configuration {
             log4jConfig = props.getProperty("log4j.configuration");
         }
         
+        // build a default log4j configuration based on ofbizHome
         if (log4jConfig == null) {
             log4jConfig = "file://" + ofbizHome + "/commonapp/etc/debug.properties";
         }
+        
+        // set the log4j configuration property so we don't pick up one inside jars by mistake
         System.setProperty("log4j.configuration", log4jConfig);
         
         // set the property to tell Jetty to use 2.4 SessionListeners
         System.setProperty("org.mortbay.jetty.servlet.AbstractSessionManager.24SessionDestroyed", "true");
-                
-        serverClass = props.getProperty("server.class", "org.mortbay.jetty.Server.class");  
-        configFile = props.getProperty("config.file", ofbizHome + "/setup/jetty/etc/ofbiz.xml");   
-                
+                          
         // get the lib dir prefix names
         String prefixNames = props.getProperty("library.configs");
         StringTokenizer st = new StringTokenizer(prefixNames, ",");
@@ -373,12 +385,26 @@ class Configuration {
             }
         }  
         
-        // get the admin server info        
-        String serverHost = props.getProperty("ofbiz.admin.host");
+        // get the admin server info 
+        String serverHost = System.getProperty("ofbiz.admin.host");
+        if (serverHost == null)       
+            serverHost = props.getProperty("ofbiz.admin.host", "127.0.0.1");
+                        
+        String adminPortStr = System.getProperty("ofbiz.admin.port");
+        if (adminPortStr == null)
+            adminPortStr = props.getProperty("ofbiz.admin.port", "10523");
+
+        // set the admin key
+        adminKey = System.getProperty("ofbiz.admin.key");
+        if (adminKey == null)
+            adminKey = props.getProperty("ofbiz.admin.key", "NA");
+                     
+        // create the host InetAddress   
         adminAddr = InetAddress.getByName(serverHost);
-        adminKey = props.getProperty("ofbiz.admin.key");
+        
+        // parse the port number
         try {        
-            adminPort = Integer.parseInt(props.getProperty("ofbiz.admin.port", "10523"));
+            adminPort = Integer.parseInt(adminPortStr);
         } catch (Exception e) {
             adminPort = 10523;
         }
