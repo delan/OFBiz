@@ -68,7 +68,6 @@
       <process field="caContentAssocPredicateId"><copy to-field="contentAssocPredicateId" replace="true" set-if-null="false" /></process>
       <process field="caDataSourceId"><copy to-field="dataSourceId" replace="true" set-if-null="false" /></process>
       <process field="caSequenceNum"><copy to-field="sequenceNum" replace="true" set-if-null="false" /></process>
-      <process field="mapKey"><copy to-field="mapKey" replace="true" set-if-null="false" /></process>
       <process field="caMapKey"><copy to-field="mapKey" replace="true" set-if-null="false" /></process>
       <process field="caUpperCoordinate"><copy to-field="upperCoordinate" replace="true" set-if-null="false" /></process>
       <process field="caLeftCoordinate"><copy to-field="leftCoordinate" replace="true" set-if-null="false" /></process>
