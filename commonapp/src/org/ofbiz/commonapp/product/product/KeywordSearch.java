@@ -44,8 +44,22 @@ public class KeywordSearch {
      *@return Collection of productId Strings
      */
     public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId) {
-        if (delegator == null)
+        return productsByKeywords(keywordsString, delegator, categoryId, false, false, "AND");
+    }
+    
+    /** Does a product search by keyword using the PRODUCT_KEYWORD table.
+     *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
+     *@param delegator The delegator to look up the name of the helper/server to get a connection to
+     *@param categoryId If not null the list of products will be restricted to those in this category
+     *@param anyPrefix If true use a wildcard to allow any prefix to each keyword
+     *@param anySuffix If true use a wildcard to allow any suffix to each keyword
+     *@param intraKeywordOperator The operator to use inbetween the keywords, usually "AND" or "OR"
+     *@return Collection of productId Strings
+     */
+    public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
+        if (delegator == null) {
             return null;
+        }
         String helperName = null;
         helperName = delegator.getEntityHelperName("ProductKeyword");
         boolean useCategory = (categoryId != null && categoryId.length() > 0) ? true : false;
@@ -53,13 +67,19 @@ public class KeywordSearch {
         Collection pbkCollection = new LinkedList();
 
         String keywords[] = makeKeywordList(keywordsString);
-        List keywordList = fixKeywords(keywords);
-        List params = new LinkedList();
-        String sql = getSearchSQL(keywordList, params, useCategory);
-        if (sql == null)
+        List keywordList = fixKeywords(keywords, false, false);
+        if (keywordList.size() == 0) {
             return null;
-        if (useCategory)
+        }
+        
+        List params = new LinkedList();
+        String sql = getSearchSQL(keywordList, params, useCategory, "AND");
+        if (sql == null) {
+            return null;
+        }
+        if (useCategory) {
             params.add(categoryId);
+        }
 
         Connection connection = null;
         PreparedStatement statement = null;
@@ -112,9 +132,7 @@ public class KeywordSearch {
         LinkedList list = new LinkedList();
         String curToken;
         while (tokenizer.hasMoreTokens()) {
-            curToken = tokenizer.nextToken().toLowerCase();
-            curToken = curToken.replace('*', '%');
-            curToken = curToken.replace('?', '_');
+            curToken = tokenizer.nextToken();
             list.add(curToken);
         }
         String[] keywords = new String[list.size()];
@@ -122,22 +140,38 @@ public class KeywordSearch {
         return keywords;
     }
 
-    protected static List fixKeywords(String keywords[]) {
-        if (keywords == null)
+    protected static List fixKeywords(String keywords[], boolean anyPrefix, boolean anySuffix) {
+        if (keywords == null) {
             return null;
+        }
         List list = new LinkedList();
         String str = null;
-        for (int i = 0; i < keywords.length; i++)
-            if ((str = keywords[i]) != null && !list.contains(str))
-                list.add(str);
+        for (int i = 0; i < keywords.length; i++) {
+            if ((str = keywords[i]) != null) {
+                //do some cleanup, and replace wildcards
+                str = str.replace('*', '%');
+                str = str.replace('?', '_');
+                str = str.toLowerCase();
+
+                StringBuffer strSb = new StringBuffer();
+                if (anyPrefix) strSb.append('%');
+                strSb.append(str);
+                if (anySuffix) strSb.append('%');
+                str = strSb.toString();
+                
+                if(!list.contains(str)) {
+                    list.add(str);
+                }
+            }
+        }
 
         return list;
     }
 
-    protected static String getSearchSQL(List keywords, List params, boolean useCategory) {
+    protected static String getSearchSQL(List keywords, List params, boolean useCategory, String intraKeywordOperator) {
         if (keywords == null || keywords.size() <= 0)
             return null;
-        String sql = "";
+        StringBuffer sql = new StringBuffer();
         Iterator keywordIter = keywords.iterator();
 
         //EXAMPLE:
@@ -147,43 +181,67 @@ public class KeywordSearch {
         //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3, PRODUCT_CATEGORY_MEMBER PCM
         //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo'
 
-        String select = null;
+        StringBuffer select = null;
         if (useCategory) {
-            select = "SELECT DISTINCT P1.PRODUCT_ID, PCM.SEQUENCE_NUM FROM ";
+            select = new StringBuffer("SELECT DISTINCT P1.PRODUCT_ID, PCM.SEQUENCE_NUM FROM ");
         } else {
-            select = "SELECT DISTINCT P1.PRODUCT_ID FROM ";
+            select = new StringBuffer("SELECT DISTINCT P1.PRODUCT_ID FROM ");
         }
-        String join = " WHERE ";
-        String where = " ";
+        StringBuffer join = new StringBuffer(" WHERE ");
+        StringBuffer where = new StringBuffer(" (");
 
         int i = 1;
         while (keywordIter.hasNext()) {
             String keyword = (String) keywordIter.next();
             String comparator = "=";
-            if (keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0)
+            if (keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0) {
                 comparator = " LIKE ";
+            }
             params.add(keyword);
             if (i == 1) {
-                select += ("PRODUCT_KEYWORD P" + i);
-                where += (" P" + i + ".KEYWORD" + comparator + "? ");
+                select.append("PRODUCT_KEYWORD P");
+                select.append(i);
+
+                where.append(" P");
+                where.append(i);
+                where.append(".KEYWORD");
+                where.append(comparator);
+                where.append("? ");
             } else {
-                select += (", PRODUCT_KEYWORD P" + i + " ");
-                join += ("P" + (i - 1) + ".PRODUCT_ID=P" + i + ".PRODUCT_ID AND ");
-                where += ("AND P" + i + ".KEYWORD" + comparator + "? ");
+                select.append(", PRODUCT_KEYWORD P");
+                select.append(i);
+                select.append(" ");
+                
+                join.append("P");
+                join.append(i - 1);
+                join.append(".PRODUCT_ID=P");
+                join.append(i);
+                join.append(".PRODUCT_ID AND ");
+                
+                where.append(intraKeywordOperator);
+                where.append(" P");
+                where.append(i);
+                where.append(".KEYWORD");
+                where.append(comparator);
+                where.append("? ");
             }
             i++;
         }
+        where.append(") ");
+        
         if (useCategory) {
-            select += ", PRODUCT_CATEGORY_MEMBER PCM";
-            where += " AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=?";
+            select.append(", PRODUCT_CATEGORY_MEMBER PCM");
+            where.append(" AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=?");
         }
-        sql = select + join + where;
+        sql.append(select.toString());
+        sql.append(join.toString());
+        sql.append(where.toString());
         if (useCategory) {
-            sql += " ORDER BY PCM.SEQUENCE_NUM";
+            sql.append(" ORDER BY PCM.SEQUENCE_NUM");
         }
 
-        Debug.logInfo("[KeywordSearch] sql=" + sql);
-        return sql;
+        Debug.logInfo("[KeywordSearch] sql=" + sql.toString());
+        return sql.toString();
     }
 
     public static String tokens = ";: ,.!?\t\"\'\r\n()[]{}*%<>";
