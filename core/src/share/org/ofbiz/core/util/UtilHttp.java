@@ -263,7 +263,13 @@ public class UtilHttp {
         InputStream in = new ByteArrayInputStream(bytes);
         
         // stream the content
-        streamContent(out, in, bytes.length);
+        try {
+            streamContent(out, in, bytes.length);
+        } catch (IOException e) {
+            in.close();
+            out.close();
+            throw e;
+        }
         
         // close the input stream
         in.close();
@@ -285,8 +291,13 @@ public class UtilHttp {
         }
         
         // stream the content
-        OutputStream out = response.getOutputStream();        
-        streamContent(out, in, length);
+        OutputStream out = response.getOutputStream();
+        try {       
+            streamContent(out, in, length);
+        } catch (IOException e) {
+            out.close();
+            throw e;
+        }
         
         // close the servlet output stream
         out.flush();
