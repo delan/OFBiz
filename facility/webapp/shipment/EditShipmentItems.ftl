@@ -84,7 +84,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 			</select>
 			</div>
 		</td>
-		<td><div class="tabletext"><input name="quantity" size="5" value="0"/></div></td>
+		<td><div class="tabletext"><input name="quantity" size="5" value="0" class="inputBox"/></div></td>
 		<td colspan="2"><div class="tabletext">&nbsp;</div></td>
 		<td><a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()" class="buttontext">Add</a></td>
 		</form>
@@ -94,9 +94,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<form action="<@ofbizUrl>/createShipmentItem</@ofbizUrl>" name="createShipmentItemForm">
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
 	<td><div class="tabletext">New Item:</div></td>
-	<td colspan="2"><div class="tabletext">ProductID:<input name="productId" size="15" maxlength="20"/></div></td>
-	<td><div class="tabletext"><input name="quantity" size="5" value="0"/></div></td>
-	<td colspan="2"><div class="tabletext">Description:<input name="shipmentContentDescription" size="30" maxlength="255"/></div></td>
+	<td colspan="2"><div class="tabletext">ProductID:<input name="productId" size="15" maxlength="20" class="inputBox"/></div></td>
+	<td><div class="tabletext"><input name="quantity" size="5" value="0" class="inputBox"/></div></td>
+	<td colspan="2"><div class="tabletext">Description:<input name="shipmentContentDescription" size="30" maxlength="255" class="inputBox"/></div></td>
 	<td><a href="javascript:document.createShipmentItemForm.submit()" class="buttontext">Create</a></td>
 	</form>
 </tr>

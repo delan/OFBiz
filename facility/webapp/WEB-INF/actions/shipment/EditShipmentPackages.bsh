@@ -42,17 +42,20 @@ if (shipmentPackages != null && shipmentPackages.size() > 0) {
 	    shipmentPackageData = new HashMap();
 	    shipmentPackageData.put("shipmentPackage", shipmentPackage);
 	    shipmentPackageData.put("shipmentPackageContents", shipmentPackage.getRelated("ShipmentPackageContent"));
+	    shipmentPackageData.put("shipmentPackageRouteSegs", shipmentPackage.getRelated("ShipmentPackageRouteSeg"));
 	    shipmentPackageData.put("weightUom", shipmentPackage.getRelatedOne("WeightUom"));
 	    shipmentPackageDatas.add(shipmentPackageData);
 	}
 }
 
 shipmentItems = shipment.getRelated("ShipmentItem", null, UtilMisc.toList("shipmentItemSeqId"));
+shipmentRouteSegments = shipment.getRelated("ShipmentRouteSegment", null, UtilMisc.toList("shipmentRouteSegmentId"));
 weightUoms = delegator.findByAnd("Uom", UtilMisc.toMap("uomTypeId", "WEIGHT_MEASURE"), UtilMisc.toList("description"));
 
 context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);
 context.put("shipmentPackageDatas", shipmentPackageDatas);
 context.put("shipmentItems", shipmentItems);
+context.put("shipmentRouteSegments", shipmentRouteSegments);
 context.put("weightUoms", weightUoms);
 

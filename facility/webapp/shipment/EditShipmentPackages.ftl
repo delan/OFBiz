@@ -31,24 +31,22 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<tr>
 		<td><div class="tableheadtext">Package#</div></td>
 		<td><div class="tableheadtext">Created</div></td>
-		<td><div class="tableheadtext">TrackingCode</div></td>
-		<td><div class="tableheadtext">Box#</div></td>
-		<td colspan="2"><div class="tableheadtext">Weight</div></td>
+		<td><div class="tableheadtext">&nbsp;</div></td>
+		<td><div class="tableheadtext">&nbsp;</div></td>
 		<td><div class="tableheadtext">&nbsp;</div></td>
 		<td><div class="tableheadtext">&nbsp;</div></td>
 	</tr>
 <#list shipmentPackageDatas as shipmentPackageData>
 	<#assign shipmentPackage = shipmentPackageData.shipmentPackage>
-	<#assign shipmentPackageContents = shipmentPackageData.shipmentPackageContents>
+	<#assign shipmentPackageContents = shipmentPackageData.shipmentPackageContents?if_exists>
+	<#assign shipmentPackageRouteSegs = shipmentPackageData.shipmentPackageRouteSegs?if_exists>
 	<#assign weightUom = shipmentPackageData.weightUom?if_exists>
 	<form action="<@ofbizUrl>/updateShipmentPackage</@ofbizUrl>" name="updateShipmentPackageForm${shipmentPackageData_index}">
 	<tr>
 		<td><div class="tabletext">${shipmentPackage.shipmentPackageSeqId}</div></td>
 		<td><div class="tabletext">${(shipmentPackage.dateCreated.toString())?if_exists}</div></td>
-		<td><input type="text" size="15" name="trackingCode" value="${shipmentPackage.trackingCode?if_exists}"/></td>
-		<td><input type="text" size="5" name="boxNumber" value="${shipmentPackage.boxNumber?if_exists}"/></td>
-		<td><input type="text" size="5" name="weight" value="${shipmentPackage.weight?if_exists}"/></td>
-		<td>
+		<td><span class="tabletext">Weight:</span><input type="text" size="5" name="weight" value="${shipmentPackage.weight?if_exists}" class="inputBox"/></td>
+		<td><span class="tabletext">WeightUnit:</span>
 			<select name="weightUomId" class="selectBox">
 				<#if weightUom?has_content>
 					<option value="${weightUom.uomId}">${weightUom.description}</option>
@@ -70,9 +68,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 			<td><div class="tabletext">&nbsp;</div></td>
 			<td><div class="tabletext">Item:${shipmentPackageContent.shipmentItemSeqId}</div></td>
 			<td><div class="tabletext">Quantity:${shipmentPackageContent.quantity?if_exists}</div></td>
-			<td colspan="3"><div class="tabletext">&nbsp;</div></td>
-			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackageContent?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
 			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackageContent?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
 		</tr>
 	</#list>
 	<tr>
@@ -89,9 +87,41 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 			</select>
 			</div>
 		</td>
-		<td><div class="tabletext">Quantity:<input name="quantity" size="5" value="0"/></div></td>
-		<td colspan="3"><div class="tabletext">&nbsp;</div></td>
+		<td><div class="tabletext">Quantity:<input name="quantity" size="5" value="0" class="inputBox"/></div></td>
+		<td><div class="tabletext">&nbsp;</div></td>
 		<td><a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="buttontext">Add</a></td>
+		<td><div class="tabletext">&nbsp;</div></td>
+		</form>
+	</tr>
+	<#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
+		<form action="<@ofbizUrl>/updateShipmentPackageRouteSeg</@ofbizUrl>" name="updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}">
+		<tr>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext">RouteSegment:${shipmentPackageRouteSeg.shipmentRouteSegmentId}</div></td>
+			<td><span class="tabletext">Track#:</span><input type="text" size="15" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
+			<td><span class="tabletext">Box#:</span><input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber?if_exists}" class="inputBox"/></td>
+			<td><a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="buttontext">Update</a></td>
+			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackageRouteSeg?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+		</tr>
+		</form>
+	</#list>
+	<tr>
+		<form action="<@ofbizUrl>/createShipmentPackageRouteSeg</@ofbizUrl>" name="createShipmentPackageRouteSegForm${shipmentPackageData_index}">
+		<input type="hidden" name="shipmentId" value="${shipmentId}"/>
+		<input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
+		<td><div class="tabletext">&nbsp;</div></td>
+		<td>
+			<div class="tabletext">Add to Route Segment:
+			<select name="shipmentRouteSegmentId" class="selectBox">
+				<#list shipmentRouteSegments as shipmentRouteSegment>
+					<option>${shipmentRouteSegment.shipmentRouteSegmentId}</option>
+				</#list>
+			</select>
+			</div>
+		</td>
+		<td><span class="tabletext">Track#:</span><input type="text" size="15" name="trackingCode" class="inputBox"/></td>
+		<td><span class="tabletext">Box#:</span><input type="text" size="5" name="boxNumber" class="inputBox"/></td>
+		<td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="buttontext">Add</a></td>
 		<td><div class="tabletext">&nbsp;</div></td>
 		</form>
 	</tr>
@@ -101,10 +131,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<tr>
 		<td><div class="tabletext">New Package:</div></td>
 		<td><div class="tabletext">&nbsp;</div></td>
-		<td><input type="text" size="15" name="trackingCode"/></td>
-		<td><input type="text" size="5" name="boxNumber"/></td>
-		<td><input type="text" size="5" name="weight"/></td>
-		<td>
+		<td><span class="tabletext">Weight:</span><input type="text" size="5" name="weight" class="inputBox"/></td>
+		<td><span class="tabletext">WeightUnit:</span>
 			<select name="weightUomId" class="selectBox">
 				<#list weightUoms as weightUomOption>
 					<option value="${weightUomOption.uomId}">${weightUomOption.description} [${weightUomOption.abbreviation}]</option>
