@@ -7,7 +7,7 @@
     <version>1.0</version>
 
     <!-- Test services -->
-    <service name="testScv" engine="java" export="true"
+    <service name="testScv" engine="java" export="true" validate="false"
             location="org.ofbiz.commonapp.common.CommonServices" invoke="testService">
         <description>Test service</description>
         <attribute name="message" type="String" mode="IN" optional="true"/>
