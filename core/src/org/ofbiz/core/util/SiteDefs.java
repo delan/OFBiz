@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/17 08:51:37  jonesde
+ * Updated for auth implementation & small fixes.
+ *
  * Revision 1.2  2001/07/16 22:31:06  azeneski
  * Moved multi-site support to be handled by the webapp.
  *
@@ -55,14 +58,17 @@ public final class SiteDefs {
     
     /** Used in session object to determine if a previous request is waiting */
     public static final String PREVIOUS_REQUEST = "_PREVIOUS_REQUEST_";
+    /** Used in session object to store previous parameters */
+    public static final String PREVIOUS_PARAMS = "_PREVIOUS_PARAMS_";
     
     /** Used in request object to pass around the web path */
     public static final String CONTROL_PATH = "_CONTROL_PATH_";
+    /** Used in request object to pass around the final view of the current request */
+    public static final String CURRENT_VIEW = "_CURRENT_VIEW_";
     
     /** Used in request/session object to denote error messages */
     public static final String ERROR_MESSAGE = "_ERROR_MESSAGE_";
     
     /** Used in servlet context to store the request handler */
-    public static final String REQUEST_HANDLER = "_REQUEST_HANDLER_";
-    
+    public static final String REQUEST_HANDLER = "_REQUEST_HANDLER_";   
 }

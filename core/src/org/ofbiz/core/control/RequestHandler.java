@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/07/17 08:51:37  jonesde
+ * Updated for auth implementation & small fixes.
+ *
  * Revision 1.3  2001/07/17 03:45:09  azeneski
  * Changed request and view config to NOT use the leading '/'. All request and
  * view mappings should now leave be 'request' instead of '/request'.
@@ -130,9 +133,9 @@ public class RequestHandler implements Serializable {
         String eventReturn = rm.getRequestAttribute(requestUri,eventReturnString);
         Debug.log("Event Qualified: " + eventReturn);
         
-        if ( eventReturn != null ) 
-            nextView = eventReturn;
-                
+        if(eventReturn != null && !"success".equalsIgnoreCase(eventReturnString)) nextView = eventReturn;
+        Debug.log("Next View after eventReturn: " + nextView);
+        
         /** Check for a chain request. */
         if ( nextView != null && nextView.indexOf(':') != -1 ) {
             String type = nextView.substring(0,nextView.indexOf(':'));
@@ -142,10 +145,14 @@ public class RequestHandler implements Serializable {
         }
                     
         /** Get the next view. */
-        if ( !chainRequest ) {
+        if ( !chainRequest ) {          
             String tempView = nextView;
             if(tempView != null && tempView.charAt(0) == '/') tempView = tempView.substring(1);
             Debug.log("Getting View Map: " + tempView);
+            
+            /* Before mapping the view, set a session attribute so we know where we are */
+            request.getSession().setAttribute(SiteDefs.CURRENT_VIEW, tempView);
+            
             tempView = rm.getViewPage(tempView);
             nextPage = tempView != null ? tempView : nextView;
             Debug.log("Mapped To: " + nextPage);
@@ -163,18 +170,16 @@ public class RequestHandler implements Serializable {
             nextPage = doRequest(request,response,nextView);
         }
 
-        /** If previous request exists, do that now... */
-        if ( requestUri.equals(SiteDefs.LOGIN_REQUEST_URI) )
+        /** If previous request exists, and a login just succeeded, do that now... */
+        if(requestUri.equals(SiteDefs.LOGIN_REQUEST_URI) && "success".equalsIgnoreCase(eventReturnString))
         {
           String previousRequest = (String) request.getSession().getAttribute(SiteDefs.PREVIOUS_REQUEST);
           if ( previousRequest != null ) 
           {
             request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
-            //here we need to display nothing, and request that the browser forward to a new request, which was the previous request
-            Debug.log("Requesting Browser Forward to Previous Request: " + previousRequest);
-            try { response.sendRedirect(previousRequest); }
-            catch(java.io.IOException ioe) { throw new RequestHandlerException("RequestHandler: Unable to forward to Previous Request"); }
-            return null;
+            //here we need to display nothing, and do the previous request
+            Debug.log("Doing Previous Request: " + previousRequest);
+            nextPage = doRequest(request, response, previousRequest);
           }
         }
             
