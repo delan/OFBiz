@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.1 2003/08/17 10:51:03 jonesde Exp $
+ * $Id: LoginEvents.java,v 1.2 2003/08/20 18:13:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
 package org.ofbiz.securityext.login;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -32,13 +33,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.FlexibleStringExpander;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.party.contact.ContactHelper;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -51,7 +57,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -291,23 +297,20 @@ public class LoginEvents {
      * @param request The HTTPRequest object for the current request
      * @param response The HTTPResponse object for the current request
      * @return String specifying the exit status of this event
-     */
-    /* TODO: this needs to be moved to the catalog stuff, or moved and some variation of it left here
+     */    
     public static String forgotPassword(HttpServletRequest request, HttpServletResponse response) {
         if ((UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT"))) || (UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT.x")))) {
             return showPasswordHint(request, response);
         } else {
             return emailPassword(request, response);
         }
-    }
-    */
+    }   
 
     /** Show the password hint for the userLoginId specified in the request object.
      *@param request The HTTPRequest object for the current request
      *@param response The HTTPResponse object for the current request
      *@return String specifying the exit status of this event
-     */
-    /* TODO: this needs to be moved to the catalog stuff, or moved and some variation of it left here
+     */    
     public static String showPasswordHint(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
@@ -346,8 +349,7 @@ public class LoginEvents {
 
         request.setAttribute("_EVENT_MESSAGE_", "The Password Hint is: " + passwordHint);
         return "success";
-    }
-    */
+    }   
 
     /**
      *  Email the password for the userLoginId specified in the request object.
@@ -355,8 +357,7 @@ public class LoginEvents {
      * @param request The HTTPRequest object for the current request
      * @param response The HTTPResponse object for the current request
      * @return String specifying the exit status of this event
-     */
-    /* TODO: this needs to be moved to the catalog stuff, or moved and some variation of it left here
+     */  
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -500,8 +501,7 @@ public class LoginEvents {
             request.setAttribute("_EVENT_MESSAGE_", "Your password has been sent to you.  Please check your Email.");
         }
         return "success";
-    }
-    */
+    }  
 
     protected static String getAutoLoginCookieName(HttpServletRequest request) {
         return UtilHttp.getApplicationName(request) + ".autoUserLoginId";

@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Security Extensions Build Script.
- *  $Id: build.xml,v 1.4 2003/08/19 19:33:18 ajzeneski Exp $
+ *  $Id: build.xml,v 1.5 2003/08/20 18:13:59 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Security Extensions" default="jar" basedir=".">
@@ -51,6 +51,8 @@
             <fileset dir="../../components/service/lib" includes="*.jar"/>
             <fileset dir="../../components/service/build/lib" includes="*.jar"/>
             <fileset dir="../../components/content/build/lib" includes="*.jar"/>
+            <fileset dir="../../components/party/build/lib" includes="*.jar"/>
+            <fileset dir="../../components/product/build/lib" includes="*.jar"/>
         </path>
     </target>
     
