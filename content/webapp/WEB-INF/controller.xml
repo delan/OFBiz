@@ -10,6 +10,7 @@
     <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
+    <handler name="bsf" type="request" class="org.ofbiz.core.event.BsfEventHandler"/>
 
     <handler name="jpublish" type="view" class="org.ofbiz.core.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
@@ -491,11 +492,13 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.ftl" type="jpublish"/>
     <view-map name="login" page="/login.ftl" type="jpublish"/>
+    
     <view-map name="FindWebSite" page="/website/FindWebSite.ftl" type="jpublish"/>
     <view-map name="EditWebSite" page="/website/EditWebSite.ftl" type="jpublish"/>
     <view-map name="EditWebSiteEmail" page="/website/EditWebSiteEmail.ftl" type="jpublish"/>
     <view-map name="EditWebSiteParties" page="/website/EditWebSiteParties.ftl" type="jpublish"/>
     <view-map name="EditWebSiteProdCatalogs" page="/website/EditWebSiteProdCatalogs.ftl" type="jpublish"/>
+    
     <view-map name="RedirectContent" page="/content/RedirectContent.ftl" type="none"/>
     <view-map name="EditContentType" page="/content/EditContentType.ftl" type="jpublish"/>
     <view-map name="EditContentAssocType" page="/content/EditContentAssocType.ftl" type="jpublish"/>
@@ -503,6 +506,7 @@
     <view-map name="EditContentPurposeType" page="/content/EditContentPurposeType.ftl" type="jpublish"/>
     <view-map name="EditContentTypeAttr" page="/content/EditContentTypeAttr.ftl" type="jpublish"/>
     <view-map name="EditContentAssocPredicate" page="/content/EditContentAssocPredicate.ftl" type="jpublish"/>
+    
     <view-map name="EditDataResourceType" page="/data/EditDataResourceType.ftl" type="jpublish"/>
     <view-map name="EditDataResourceTypeAttr" page="/data/EditDataResourceTypeAttr.ftl" type="jpublish"/>
     <view-map name="EditDataCategory" page="/data/EditDataCategory.ftl" type="jpublish"/>
