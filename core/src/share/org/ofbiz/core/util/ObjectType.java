@@ -5,6 +5,7 @@
 package org.ofbiz.core.util;
 
 import java.text.*;
+import java.util.Locale;
 
 /**
  * <p><b>Title:</b> ObjectType
@@ -161,9 +162,10 @@ public class ObjectType {
      * Time, Timestamp; 
      * @param obj Object to convert
      * @param type Name of type to convert to
-     * @param format Optional format string for Timestamps, etc.
+     * @param format Optional (can be null) format string for Date, Time, Timestamp
+     * @param locale Optional (can be null) Locale for formatting and parsing Double, Float, Long, Integer
      */
-    public static Object simpleTypeConvert(Object obj, String type, String format) throws GeneralException {
+    public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
         if (obj == null)
             return null;
         
@@ -176,7 +178,7 @@ public class ObjectType {
                 format = "yyyy-MM-dd HH:mm:ss";
             }
         }
-
+        
         String fromType = null;
         if (obj instanceof java.lang.String) {
             fromType = "String";
@@ -188,7 +190,9 @@ public class ObjectType {
                 return null;
             if ("Double".equals(type)) {
                 try {
-                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    NumberFormat nf = null;
+                    if (locale == null) nf = NumberFormat.getNumberInstance();
+                    else nf = NumberFormat.getNumberInstance(locale);
                     Number tempNum = nf.parse(str);
                     return new Double(tempNum.doubleValue());
                 } catch (ParseException e) {
@@ -196,7 +200,9 @@ public class ObjectType {
                 }
             } else if ("Float".equals(type)) {
                 try {
-                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    NumberFormat nf = null;
+                    if (locale == null) nf = NumberFormat.getNumberInstance();
+                    else nf = NumberFormat.getNumberInstance(locale);
                     Number tempNum = nf.parse(str);
                     return new Float(tempNum.floatValue());
                 } catch (ParseException e) {
@@ -204,7 +210,9 @@ public class ObjectType {
                 }
             } else if ("Long".equals(type)) {
                 try {
-                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    NumberFormat nf = null;
+                    if (locale == null) nf = NumberFormat.getNumberInstance();
+                    else nf = NumberFormat.getNumberInstance(locale);
                     nf.setMaximumFractionDigits(0);
                     Number tempNum = nf.parse(str);
                     return new Long(tempNum.longValue());
@@ -213,7 +221,9 @@ public class ObjectType {
                 }
             } else if ("Integer".equals(type)) {
                 try {
-                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    NumberFormat nf = null;
+                    if (locale == null) nf = NumberFormat.getNumberInstance();
+                    else nf = NumberFormat.getNumberInstance(locale);
                     nf.setMaximumFractionDigits(0);
                     Number tempNum = nf.parse(str);
                     return new Integer(tempNum.intValue());
@@ -249,44 +259,125 @@ public class ObjectType {
             }
         } else if (obj instanceof java.lang.Double) {
             fromType = "Double";
+            Double dbl = (Double) obj;
             if ("String".equals(type)) {
-                //use format string to print
-                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+                NumberFormat nf = null;
+                if (locale == null) nf = NumberFormat.getNumberInstance();
+                else nf = NumberFormat.getNumberInstance(locale);
+                return nf.format(dbl.doubleValue());
             } else if ("Double".equals(type)) {
                 return obj;
             } else if ("Float".equals(type)) {
-                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+                return new Float(dbl.floatValue());
             } else if ("Long".equals(type)) {
-                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+                return new Long(Math.round(dbl.doubleValue()));
             } else if ("Integer".equals(type)) {
-                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
-            } else if ("Date".equals(type)) {
-                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
-            } else if ("Time".equals(type)) {
-                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
-            } else if ("Timestamp".equals(type)) {
-                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+                return new Integer((int)Math.round(dbl.doubleValue()));
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
         } else if (obj instanceof java.lang.Float) {
             fromType = "Float";
-            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            Float flt = (Float) obj;
+            if ("String".equals(type)) {
+                NumberFormat nf = null;
+                if (locale == null) nf = NumberFormat.getNumberInstance();
+                else nf = NumberFormat.getNumberInstance(locale);
+                return nf.format(flt.doubleValue());
+            } else if ("Double".equals(type)) {
+                return new Double(flt.doubleValue());
+            } else if ("Float".equals(type)) {
+                return obj;
+            } else if ("Long".equals(type)) {
+                return new Long(Math.round(flt.doubleValue()));
+            } else if ("Integer".equals(type)) {
+                return new Integer((int)Math.round(flt.doubleValue()));
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
         } else if (obj instanceof java.lang.Long) {
             fromType = "Long";
-            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            Long lng = (Long) obj;
+            if ("String".equals(type)) {
+                NumberFormat nf = null;
+                if (locale == null) nf = NumberFormat.getNumberInstance();
+                else nf = NumberFormat.getNumberInstance(locale);
+                return nf.format(lng.longValue());
+            } else if ("Double".equals(type)) {
+                return new Double(lng.doubleValue());
+            } else if ("Float".equals(type)) {
+                return new Float(lng.floatValue());
+            } else if ("Long".equals(type)) {
+                return obj;
+            } else if ("Integer".equals(type)) {
+                return new Integer(lng.intValue());
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
         } else if (obj instanceof java.lang.Integer) {
             fromType = "Integer";
-            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            Integer intgr = (Integer) obj;
+            if ("String".equals(type)) {
+                NumberFormat nf = null;
+                if (locale == null) nf = NumberFormat.getNumberInstance();
+                else nf = NumberFormat.getNumberInstance(locale);
+                return nf.format(intgr.longValue());
+            } else if ("Double".equals(type)) {
+                return new Double(intgr.doubleValue());
+            } else if ("Float".equals(type)) {
+                return new Float(intgr.floatValue());
+            } else if ("Long".equals(type)) {
+                return new Long(intgr.longValue());
+            } else if ("Integer".equals(type)) {
+                return obj;
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
         } else if (obj instanceof java.sql.Date) {
             fromType = "Date";
-            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            java.sql.Date dte = (java.sql.Date) obj;
+            if ("String".equals(type)) {
+                SimpleDateFormat sdf = new SimpleDateFormat(format);
+                return sdf.format(new java.util.Date(dte.getTime()));
+            } else if ("Date".equals(type)) {
+                return obj;
+            } else if ("Time".equals(type)) {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            } else if ("Timestamp".equals(type)) {
+                return new java.sql.Timestamp(dte.getTime());
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
         } else if (obj instanceof java.sql.Time) {
             fromType = "Time";
-            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            java.sql.Time tme = (java.sql.Time) obj;
+            if ("String".equals(type)) {
+                SimpleDateFormat sdf = new SimpleDateFormat(format);
+                return sdf.format(new java.util.Date(tme.getTime()));
+            } else if ("Date".equals(type)) {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            } else if ("Time".equals(type)) {
+                return obj;
+            } else if ("Timestamp".equals(type)) {
+                return new java.sql.Timestamp(tme.getTime());
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
         } else if (obj instanceof java.sql.Timestamp) {
             fromType = "Timestamp";
-            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            java.sql.Timestamp tme = (java.sql.Timestamp) obj;
+            if ("String".equals(type)) {
+                SimpleDateFormat sdf = new SimpleDateFormat(format);
+                return sdf.format(new java.util.Date(tme.getTime()));
+            } else if ("Date".equals(type)) {
+                return new java.sql.Date(tme.getTime());
+            } else if ("Time".equals(type)) {
+                return new java.sql.Time(tme.getTime());
+            } else if ("Timestamp".equals(type)) {
+                return obj;
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
         } else {
             throw new GeneralException("Conversion from " + obj.getClass().getName() + " to " + type + " not currently supported");
         }
