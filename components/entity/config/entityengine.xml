@@ -136,6 +136,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <datasource name="localpostgres"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             schema-name="public"
+            result-fetch-size="50"
             field-type-name="postgres72"
             check-on-start="true"
             add-missing-on-start="true"

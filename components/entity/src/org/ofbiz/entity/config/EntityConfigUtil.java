@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConfigUtil.java,v 1.5 2003/08/20 23:00:53 jonesde Exp $
+ * $Id: EntityConfigUtil.java,v 1.6 2004/04/20 17:31:30 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class EntityConfigUtil {
@@ -396,6 +396,7 @@ public class EntityConfigUtil {
         public boolean checkFkIndicesOnStart = false;
         public boolean usePkConstraintNames = true;
         public int constraintNameClipLength = 30;
+        public int resultFetchSize = -1;
         public String fkStyle = null;
         public boolean useFkInitiallyDeferred = true;
         public boolean useIndices = true;
@@ -447,6 +448,11 @@ public class EntityConfigUtil {
                     constraintNameClipLength = Integer.parseInt(datasourceElement.getAttribute("constraint-name-clip-length"));
                 } catch (Exception e) {
                     Debug.logError("Could not parse constraint-name-clip-length value for datasource with name " + this.name + ", using default value of 30", module);
+                }
+                try {
+                    resultFetchSize = Integer.parseInt(datasourceElement.getAttribute("result-fetch-size"));
+                } catch (Exception e) {
+                    Debug.logWarning("Could not parse result-fetch-size value for datasource with name " + this.name + ", using JDBC driver default value", module);
                 }
                 fkStyle = datasourceElement.getAttribute("fk-style");
                 // anything but true is false
