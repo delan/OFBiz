@@ -628,48 +628,6 @@ public class GenericDAO {
         }
     }
 
-    public List selectByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
-        if (modelEntity == null) {
-            return null;
-        }
-        if (expressions == null) {
-            return null;
-        }
-
-        EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.AND);
-        EntityListIterator entityListIterator = null;
-
-        try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
-            return entityListIterator.getCompleteList();
-        } finally {
-            if (entityListIterator != null) {
-                entityListIterator.close();
-            }
-        }
-    }
-
-    public List selectByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
-        if (modelEntity == null) {
-            return null;
-        }
-        if (expressions == null) {
-            return null;
-        }
-
-        EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.OR);
-        EntityListIterator entityListIterator = null;
-
-        try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
-            return entityListIterator.getCompleteList();
-        } finally {
-            if (entityListIterator != null) {
-                entityListIterator.close();
-            }
-        }
-    }
-
     public List selectByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
             return null;
@@ -742,6 +700,7 @@ public class GenericDAO {
         return list;
     }
 
+    /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
     public List selectByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
             return null;
@@ -990,6 +949,7 @@ public class GenericDAO {
 
         return list;
     }
+     */
 
     /* ====================================================================== */
 

@@ -134,17 +134,15 @@ public class GenericHelperDAO implements GenericHelper {
         return genericDAO.selectByAnd(modelEntity, fields, orderBy);
     }
 
-    public List findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
-        return genericDAO.selectByAnd(modelEntity, expressions, orderBy);
-    }
-
     public List findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByLike(modelEntity, fields, orderBy);
     }
 
+    /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
     public List findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByClause(modelEntity, entityClauses, fields, orderBy);
     }
+     */
 
     /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
@@ -154,10 +152,6 @@ public class GenericHelperDAO implements GenericHelper {
      */
     public List findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByOr(modelEntity, fields, orderBy);
-    }
-
-    public List findByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
-        return genericDAO.selectByOr(modelEntity, expressions, orderBy);
     }
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.

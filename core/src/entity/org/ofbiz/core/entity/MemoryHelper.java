@@ -24,7 +24,6 @@
 
 package org.ofbiz.core.entity;
 
-import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.jdbc.SqlJdbcUtil;
 import org.ofbiz.core.entity.model.ModelEntity;
 import org.ofbiz.core.entity.model.ModelRelation;
@@ -311,9 +310,11 @@ public class MemoryHelper implements GenericHelper {
         return null;
     }
 
+    /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
     public List findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
         return null;
     }
+    */
 
     public List findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         HashMap entityCache = (HashMap) cache.get(modelEntity.getEntityName());

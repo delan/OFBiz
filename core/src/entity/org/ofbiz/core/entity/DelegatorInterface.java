@@ -136,9 +136,10 @@ public interface DelegatorInterface {
 
     List findByLike(String entityName, Map fields, List orderBy) throws GenericEntityException;
 
+    /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
     List findByClause(String entityName, List entityClauses, Map fields) throws GenericEntityException;
-
     List findByClause(String entityName, List entityClauses, Map fields, List orderBy) throws GenericEntityException;
+     */
 
     List findByCondition(String entityName, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException;
 

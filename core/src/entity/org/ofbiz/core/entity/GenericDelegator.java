@@ -853,16 +853,8 @@ public class GenericDelegator implements DelegatorInterface {
      *@return List of GenericValue instances that match the query
      */
     public List findByAnd(String entityName, List expressions) throws GenericEntityException {
-        return findByAnd(entityName, expressions, null);
-    }
-
-    /** Finds Generic Entity records by all of the specified expressions (ie: combined using OR)
-     *@param entityName The Name of the Entity as defined in the entity XML file
-     *@param expressions The expressions to use for the lookup, each consisting of at least a field name, an EntityOperator, and a value to compare to
-     *@return List of GenericValue instances that match the query
-     */
-    public List findByOr(String entityName, List expressions) throws GenericEntityException {
-        return findByOr(entityName, expressions, null);
+        EntityConditionList ecl = new EntityConditionList(expressions, EntityOperator.AND);
+        return findByCondition(entityName, ecl, null, null);
     }
 
     /** Finds Generic Entity records by all of the specified expressions (ie: combined using AND)
@@ -872,16 +864,18 @@ public class GenericDelegator implements DelegatorInterface {
      *@return List of GenericValue instances that match the query
      */
     public List findByAnd(String entityName, List expressions, List orderBy) throws GenericEntityException {
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        return findByAnd(modelEntity, expressions, orderBy);
+        EntityConditionList ecl = new EntityConditionList(expressions, EntityOperator.AND);
+        return findByCondition(entityName, ecl, null, orderBy);
     }
 
-    protected List findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
-        GenericHelper helper = getEntityHelper(modelEntity);
-        List list = helper.findByAnd(modelEntity, expressions, orderBy);
-        absorbList(list);
-        return list;
+    /** Finds Generic Entity records by all of the specified expressions (ie: combined using OR)
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param expressions The expressions to use for the lookup, each consisting of at least a field name, an EntityOperator, and a value to compare to
+     *@return List of GenericValue instances that match the query
+     */
+    public List findByOr(String entityName, List expressions) throws GenericEntityException {
+        EntityConditionList ecl = new EntityConditionList(expressions, EntityOperator.OR);
+        return findByCondition(entityName, ecl, null, null);
     }
 
     /** Finds Generic Entity records by all of the specified expressions (ie: combined using OR)
@@ -891,13 +885,8 @@ public class GenericDelegator implements DelegatorInterface {
      *@return List of GenericValue instances that match the query
      */
     public List findByOr(String entityName, List expressions, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(entityName);
-        List list = null;
-        list = helper.findByOr(modelEntity, expressions, orderBy);
-        absorbList(list);
-        return list;
+        EntityConditionList ecl = new EntityConditionList(expressions, EntityOperator.OR);
+        return findByCondition(entityName, ecl, null, orderBy);
     }
 
     public List findByLike(String entityName, Map fields) throws GenericEntityException {
@@ -914,6 +903,7 @@ public class GenericDelegator implements DelegatorInterface {
         return list;
     }
 
+/* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
     public List findByClause(String entityName, List entityClauses, Map fields) throws GenericEntityException {
         return findByClause(entityName, entityClauses, fields, null);
     }
@@ -934,6 +924,7 @@ public class GenericDelegator implements DelegatorInterface {
         absorbList(list);
         return list;
     }
+*/
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param entityName The Name of the Entity as defined in the entity model XML file
