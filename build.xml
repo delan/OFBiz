@@ -194,8 +194,17 @@
 
     <target name="copy-apis">
         <mkdir dir="${site.dir}/api"/>
-        <copy todir="${site.dir}/api">
-            <fileset dir="${basedir}" includes="**/build/javadocs/**"/>
+        <mkdir dir="${site.dir}/api/base"/>
+        <mkdir dir="${site.dir}/api/framework"/>
+        <mkdir dir="${site.dir}/api/applications"/>
+        <copy todir="${site.dir}/api/base">
+            <fileset dir="${basedir}/base" includes="**/build/javadocs/**"/>
+        </copy>
+        <copy todir="${site.dir}/api/framework">
+            <fileset dir="${basedir}/framework" includes="**/build/javadocs/**"/>
+        </copy>
+        <copy todir="${site.dir}/api/applications">
+            <fileset dir="${basedir}/applications" includes="**/build/javadocs/**"/>
         </copy>
     </target>
 
