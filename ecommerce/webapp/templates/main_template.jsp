@@ -1,5 +1,5 @@
 
-<%@ page import="org.ofbiz.commonapp.product.catalog.*"%>
+<%@ page import="org.ofbiz.commonapp.product.catalog.*,org.ofbiz.core.util.*,org.ofbiz.core.stats.*"%>
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ taglib uri='ofbizTags' prefix='ofbiz' %>
 <%@ taglib uri='regions' prefix='region' %>
@@ -24,6 +24,18 @@
 </head>
 <body>
 <region:render section='header'/>
+
+<% if (UtilCache.validKey("AppletSessions", session.getId())) { %>
+<!-- begin applet -->
+<applet code="ControlApplet.class" codebase="/images/" width="0" height="0" alt="">
+  <param name="sessionId" value="<%=session.getId()%>">
+  <param name="visitId" value="<%=VisitHandler.getVisitId(session)%>">
+  <param name="serverUrl" value="<%=serverRoot%>">
+  <param name="currentPage" value="<%=request.getRequestURL().toString()%>">  
+  <param name="debug" value="true">
+</applet>
+<!-- end applet -->
+<% } %>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
