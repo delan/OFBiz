@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2001/09/19 08:32:02  jonesde
+ * Initial checkin of refactored entity engine.
+ *
  * Revision 1.13  2001/09/14 20:04:57  epabst
  * updated Site name
  *
@@ -133,5 +136,8 @@ public final class SiteDefs {
     public static final String CLIENT_USER_AGENT = "_CLIENT_USER_AGENT_";
     public static final String CLIENT_REQUEST = "_CLIENT_REQUEST_";
     public static final String CLIENT_LOCALE = "_CLIENT_LOCALE_";
+    
+    /** Request attribute used to store the filesystem path of the Context Root. */
+    public static final String CONTEXT_ROOT = "_CONTEXT_ROOT_";
     
 }

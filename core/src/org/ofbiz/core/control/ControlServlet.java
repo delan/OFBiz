@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2001/09/21 19:38:50  jonesde
+ * Updated settings to work with PoolMan & Tomcat 4, the current default config
+ * Includes updated JNDIContextFactory and default datasource get through JNDI
+ *
  * Revision 1.17  2001/09/19 08:32:01  jonesde
  * Initial checkin of refactored entity engine.
  *
@@ -182,6 +186,9 @@ public class ControlServlet extends HttpServlet {
     Security security = (Security)getServletContext().getAttribute("security");
     if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
     request.setAttribute("security", security);
+    
+    // for use in Events the filesystem path of context root.
+    request.setAttribute(SiteDefs.CONTEXT_ROOT,getServletContext().getRealPath("/"));
     
     try {
       nextPage = getRequestHandler().doRequest(request,response, null);
