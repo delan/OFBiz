@@ -49,6 +49,7 @@ public class InputValueTag extends TagSupport {
     private String entityAttr = null;
     private String tryEntityAttr = null;
     private String defaultStr = "";
+    private String fullattrsStr = null;
 
     public String getField() {
         return field;
@@ -85,16 +86,31 @@ public class InputValueTag extends TagSupport {
         this.defaultStr = defaultStr;
     }
 
+    public String getFullattrs() {
+        return fullattrsStr;
+    }
+    public void setFullattrs(String fullattrsStr) {
+        this.fullattrsStr = fullattrsStr;
+    }
+
     public int doStartTag() throws JspTagException {
         String inputValue = null;
-        String paramValue = null;
         boolean tryEntity = true;
+        boolean fullattrs = false;
 
+        String paramName = param;
+        if (paramName == null || paramName.length() == 0)
+            paramName = field;
+        
         Boolean tempBool = null;
         if (tryEntityAttr != null) 
             tempBool = (Boolean) pageContext.getAttribute(tryEntityAttr);
         if (tempBool != null)
             tryEntity = tempBool.booleanValue();
+
+        //if anything but true, it will be false, ie default is false
+        fullattrs = "true".equals(fullattrsStr);
+        
         if (tryEntity) {
             Object entTemp = pageContext.getAttribute(entityAttr);
             if (entTemp != null) {
@@ -113,17 +129,24 @@ public class InputValueTag extends TagSupport {
         }
         //if nothing found in entity, or if not checked, try a parameter
         if (inputValue == null) {
-            inputValue = pageContext.getRequest().getParameter(param);
+            inputValue = pageContext.getRequest().getParameter(paramName);
         }
+        
         if (inputValue == null || inputValue.length() == 0)
             inputValue = defaultStr;
         
-        //reset optionals
+        //reset optionals so tag instance can be reused
         defaultStr = "";
         tryEntityAttr = null;
+        param = null;
+        fullattrsStr = null;
 
         try {
-            pageContext.getOut().print(inputValue);
+            if (fullattrs) {
+                pageContext.getOut().print("name='" + paramName + "' value='" + inputValue + "'");
+            } else {
+                pageContext.getOut().print(inputValue);
+            }
         } catch (IOException e) {
             throw new JspTagException(e.getMessage());
         }
@@ -131,4 +154,3 @@ public class InputValueTag extends TagSupport {
         return (SKIP_BODY);
     }
 }
-
