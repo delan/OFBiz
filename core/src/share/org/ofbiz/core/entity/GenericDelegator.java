@@ -273,6 +273,7 @@ public class GenericDelegator {
     GenericHelper helper = getEntityHelper(value.getModelEntity());
     value = helper.create(value);
     if(value != null) value.setDelegator(this);
+    value.otherToStore = null;
     return value;
   }
   

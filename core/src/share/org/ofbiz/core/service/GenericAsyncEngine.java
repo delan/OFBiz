@@ -88,9 +88,10 @@ public abstract class GenericAsyncEngine implements GenericEngine {
             String infoId = dispatcher.getDelegator().getNextSeqId("RecurrenceInfo").toString();
             GenericValue info = dispatcher.getDelegator().makeValue("RecurrenceInfo",UtilMisc.toMap("recurrenceInfoId",infoId));
             info.set("recurrenceRuleId",ruleId);
+            info.set("startDateTime",new java.sql.Timestamp(RecurrenceUtil.now()));
             rule.set("frequency","DAILY");
-            rule.set("interval",new Integer(1));
-            rule.set("count",new Integer(1));
+            rule.set("intervalNumber",new Long(1));
+            rule.set("countNumber",new Long(1));
             info.preStoreOther(rule);
             // Create the job info
             String jobName = new String(new Long((new Date().getTime())).toString());

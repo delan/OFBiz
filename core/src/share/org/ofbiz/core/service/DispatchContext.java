@@ -6,6 +6,7 @@ package org.ofbiz.core.service;
 
 import java.net.*;
 import java.util.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Dispatcher Context
@@ -41,15 +42,16 @@ public class DispatchContext {
     protected Collection readers;
     protected ClassLoader loader;
     
-    /** Creates new DispatchContext 
+    /** Creates new DispatchContext
      *@param readers a collection of reader URLs
      *@param loader the classloader to use for dispatched services
      */
     public DispatchContext(Collection readers, ClassLoader loader) {
         this.readers = readers;
         this.loader = loader;
+        this.modelServices = new HashMap();
         this.attributes = new HashMap();
-        this.addReaders(readers);        
+        this.addReaders(readers);
     }
     
     /** Returns the service attribute for the given name, or null if there is no attribute by that name.
@@ -69,15 +71,15 @@ public class DispatchContext {
     public void setAttribute(String name, Object object) {
         attributes.put(name,object);
     }
-     
+    
     /** Gets the classloader of this context
      *@return ClassLoader of the context
      */
     public ClassLoader getClassLoader() {
         return this.loader;
     }
-
-   /** Gets the GenericServiceModel instance that corresponds to given the name
+    
+    /** Gets the GenericServiceModel instance that corresponds to given the name
      *@param serviceName Name of the service
      *@return GenericServiceModel that corresponds to the serviceName
      */
@@ -86,9 +88,10 @@ public class DispatchContext {
             throw new GenericServiceException("Illegal service name.");
         return (ModelService)modelServices.get(serviceName);
     }
-        
-    public void addReaders(Collection readerURLs) {
-        if(readerURLs == null) return;
+    
+    private void addReaders(Collection readerURLs) {
+        if ( readerURLs == null )
+            return;
         Iterator urlIter = readerURLs.iterator();
         while(urlIter.hasNext()) {
             URL readerURL = (URL)urlIter.next();
@@ -96,10 +99,16 @@ public class DispatchContext {
         }
     }
     
-    public void addReader(URL readerURL) {
+    private void addReader(URL readerURL) {
+        if ( readerURL == null )
+            return;
         ModelServiceReader reader = ModelServiceReader.getModelServiceReader(readerURL);
-        modelServices.putAll(reader.getModelServices());
+        if ( reader == null )
+            return;
+        Map serviceMap = reader.getModelServices();
+        if ( serviceMap == null )
+            return;
+        else
+            modelServices.putAll(serviceMap);
     }
-    
-    
 }

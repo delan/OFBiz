@@ -82,6 +82,7 @@ public class Job implements Comparable, Serializable {
         if ( recurrence == null )
             return;
         runtime = recurrence.next();
+        Debug.logInfo("[Job.updateRuntime] : " + runtime);
     }
     
     /** Returns the name of the service associated with this job. */
@@ -118,22 +119,29 @@ public class Job implements Comparable, Serializable {
     }
     
     /** Receives notification when this Job is running. */
-    public void receiveNotice(Map result) {
-        Date stamp = new Date();
-        int runCount = job.getInteger("runCount").intValue();
-        runCount++;
-        job.set("lastRuntime",stamp);
-        job.set("runCount", new Integer(runCount));
+    public void receiveNotice(Map result) {        
+        if ( result != null && requester != null ) {
+            requester.receiveResult(result);
+        }
+        Debug.logInfo("[Job.receiveNotice] : Next Runtime: " + runtime);
+        // This would be a good place to log async transactions.
+    }
+    
+    /** Re-Schedules the job for the next recurrence */
+    public void rescheduleJob() {
+        long runCount = 1;
+        if ( job.get("runCount") != null )
+            runCount = job.getLong("runCount").longValue() + 1;        
+        job.set("lastRuntime",new java.sql.Timestamp(RecurrenceUtil.now()));
+        job.set("runCount", new Long(runCount));
         try {            
             recurrence.incrementCurrentCount();
             job.store();
         }
-        catch ( GenericEntityException gee ) {
+        catch ( GenericEntityException gee ) {            
             gee.printStackTrace();
-        }       
-        if ( result != null && requester != null ) {
-            requester.receiveResult(result);
-        }
+        }    
+        updateRuntime();
     }
     
     /** Returns the name of this Job. */
@@ -170,6 +178,13 @@ public class Job implements Comparable, Serializable {
             return false;
         else
             return job.getBoolean("isRepeated").booleanValue();
+    }
+    
+    /** Returns true if this job is still valid. */
+    public boolean isValid() {
+        if ( runtime > 0 )
+            return true;
+        return false;
     }
     
     /** Evaluates if this Job is equal to another Job. */

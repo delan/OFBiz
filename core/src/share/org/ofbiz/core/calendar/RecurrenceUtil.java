@@ -54,6 +54,8 @@ public class RecurrenceUtil {
     /** Returns a List of parsed date strings. */
     public static List parseDateList(List dateList) {
         List newList = new ArrayList();
+        if ( dateList == null )
+            return newList;
         Iterator i = dateList.iterator();
         while ( i.hasNext() )
             newList.add(parseDate((String)i.next()));

@@ -90,9 +90,9 @@ public class RecurrenceRule {
         String freq = rule.getString("frequency");
         if ( !checkFreq(freq) )
             throw new RecurrenceRuleException("Recurrence FREQUENCY is a required parameter.");
-        if ( rule.get("untilDateTime") != null && rule.getInteger("countNumber").intValue() > 0 )
+        if ( rule.get("untilDateTime") != null && rule.getLong("countNumber").longValue() > 0 )
             throw new RecurrenceRuleException("Recurrence cannot have both UNTIL and COUNT properties.");
-        if ( rule.getInteger("intervalNumber").intValue() < 1 )
+        if ( rule.getLong("intervalNumber").longValue() < 1 )
             throw new RecurrenceRuleException("Recurrence INTERVAL must be a positive integer.");
         
         // Initialize the byXXX lists
@@ -149,9 +149,9 @@ public class RecurrenceRule {
     }
     
     /** Get the number of times this recurrence will run. */
-    public int getCount() {
+    public long getCount() {
         if ( rule.get("countNumber") != null )
-            return rule.getInteger("countNumber").intValue();
+            return rule.getLong("countNumber").longValue();
         return 0;
     }
     
@@ -195,7 +195,7 @@ public class RecurrenceRule {
      *@param currentCount The total number of times the recurrence has run.
      *@returns The next recurrence as a long.
      */
-    public long next(long startTime, long fromTime, int currentCount)  {
+    public long next(long startTime, long fromTime, long currentCount)  {
         // Set up the values
         if ( startTime == 0 )
             startTime = RecurrenceUtil.now();

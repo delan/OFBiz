@@ -73,7 +73,8 @@ public class JobManager {
                     Job thisJob = addJob((GenericValue)i.next(),null); // fix the context
                 }
                 catch ( JobSchedulerException e ) {
-                    Debug.logError(e,"[JobManager.loadJobs] : Cannot add job to queue.");
+                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    // e.printStackTrace();
                 }
             }
         }        
@@ -90,15 +91,20 @@ public class JobManager {
         
         // Queue the job with the scheduler.
         // This can be modified to queue several schedulers.
-        boolean queued = false;
-        while (!queued) {
-            if ( !js.containsJob(job) ) {
-                js.queueJob(job);        
-                queued = true;
+        if ( job.isValid() ) {
+            boolean queued = false;
+            while (!queued) {
+                if ( !js.containsJob(job) ) {
+                    js.queueJob(job);        
+                    queued = true;
+                }
+                else {
+                    job.adjustSeqNum();
+                }
             }
-            else {
-                job.adjustSeqNum();
-            }
+        }
+        else {
+            throw new JobSchedulerException("Job is not valid or has expired.");
         }
         return job;
     }

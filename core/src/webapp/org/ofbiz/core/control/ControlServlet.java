@@ -5,6 +5,7 @@
 package org.ofbiz.core.control;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 import java.lang.reflect.*;
 import javax.servlet.*;
@@ -151,11 +152,46 @@ public class ControlServlet extends HttpServlet {
                 Debug.logError("[ControlServlet.init] ERROR: delegator not defined.");
                 return null;
             }
-            Collection readers = null; // TODO get the readers from the Servlet INIT PARAM
-            dispatcher = new LocalDispatcher("NAME",delegator,readers);            
+            Collection readers = null; 
+            String readerFiles = getServletContext().getInitParameter("serviceReaderUrls");            
+            if ( readerFiles != null ) {                
+                readers = new ArrayList();
+                List readerList = StringUtil.split(readerFiles,";");                
+                Iterator i = readerList.iterator();
+                while ( i.hasNext() ) {                    
+                    try {
+                        String name = (String) i.next();                        
+                        URL readerURL = getServletContext().getResource(name);
+                        if ( readerURL != null )
+                            readers.add(readerURL);                
+                    }
+                    catch ( NullPointerException npe ) {
+                        Debug.logInfo("[ControlServlet.init] ERROR: Null pointer exception thrown.");
+                    }
+                    catch ( MalformedURLException e ) {
+                        Debug.logError(e,"[ControlServlet.init] ERROR: cannot get URL from String.");
+                    }                    
+                }
+            }            
+            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(),delegator,readers);            
             getServletContext().setAttribute("dispatcher",dispatcher);
             if ( dispatcher == null )
                 Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.");
+            
+            /*
+            else { // DEMO - TESTING THE SERVICES FRAMEWORK
+                Map context1 = UtilMisc.toMap("message","this is a test sync service message");
+                Map context2 = UtilMisc.toMap("message","this is a test async service message"); 
+                try {
+                    dispatcher.runSyncIgnore("testSvc",context1);
+                    dispatcher.runAsync("testSvc",context2);
+                }
+                catch( GenericServiceException e ) {
+                    Debug.logError(e,"Service Threw Exception:::"+e.getMessage());
+                }
+            } // END TEST
+            */
+            
         }
         return dispatcher;
     }

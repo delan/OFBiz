@@ -129,7 +129,7 @@ public class JobScheduler implements Runnable {
         new JobInvoker(firstJob,jm.getDispatcher());
         
         // Re-schedule the job if it repeats.
-        firstJob.updateRuntime();
+        firstJob.rescheduleJob();        
         if ( firstJob.getRuntime() > 0 ) {
             boolean queued = false;
             while (!queued) {

@@ -54,7 +54,10 @@ public class RecurrenceInfo {
     
     /** Initializes the rules for this RecurrenceInfo object. */
     public void init() throws RecurrenceInfoException {
-        
+                
+        if ( info.get("startDateTime") == null )
+            throw new RecurrenceInfoException("Recurrence startDateTime cannot be null.");
+                
         // Get start date
         long startTime = info.getTimestamp("startDateTime").getTime();
         if ( startTime > 0 ) {
@@ -62,12 +65,12 @@ public class RecurrenceInfo {
             startTime += (nanos/1000000);
         }
         else
-            throw new RecurrenceInfoException("Recurrence's must have a start date.");
+            throw new RecurrenceInfoException("Recurrence startDateTime must have a value.");
         startDate = new Date(startTime);
-        
+                
         // Get the recurrence rules objects
         try {
-            Collection c = info.getRelated("RecurrenceRules");
+            Collection c = info.getRelated("RecurrenceRule");
             Iterator i = c.iterator();
             rRulesList = new ArrayList();
             while ( i.hasNext() )
@@ -79,10 +82,10 @@ public class RecurrenceInfo {
         catch ( RecurrenceRuleException rre ) {
             throw new RecurrenceInfoException("Illegal rule format.");
         }
-        
+                
         // Get the exception rules objects
         try {
-            Collection c = info.getRelated("ExceptionRecurrenceRules");
+            Collection c = info.getRelated("ExceptionRecurrenceRule");
             Iterator i = c.iterator();
             eRulesList = new ArrayList();
             while ( i.hasNext() )
@@ -94,12 +97,12 @@ public class RecurrenceInfo {
         catch ( RecurrenceRuleException rre ) {
             throw new RecurrenceInfoException("Illegal rule format.");
         }
-        
+                
         // Get the recurrence date list
         rDateList = RecurrenceUtil.parseDateList(StringUtil.split(info.getString("recurrenceDateTimes"),","));
         // Get the exception date list
         eDateList = RecurrenceUtil.parseDateList(StringUtil.split(info.getString("exceptionDateTimes"),","));
-        
+                
         // Sort the lists.
         Collections.sort(rDateList);
         Collections.sort(eDateList);
@@ -141,19 +144,17 @@ public class RecurrenceInfo {
     }
     
     /** Returns the current count of this recurrence. */
-    public int getCurrentCount() {
-        int count = 0;
-        count = info.getInteger("recurrenceCount").intValue();
-        return count;
+    public long getCurrentCount() {
+        if ( info.get("recurrenceCount" ) != null )
+            return info.getLong("recurrenceCount").longValue();
+        return 0;        
     }
     
     /** Increments the current count of this recurrence. */
-    public void incrementCurrentCount() throws GenericEntityException {
-        int count = getCurrentCount();
-        count++;
-        Integer countInt = new Integer(count);
-        info.set("recurrenceCount",countInt);
-        info.store();
+    public void incrementCurrentCount() throws GenericEntityException {       
+        Long count = new Long(getCurrentCount() + 1);                
+        info.set("recurrenceCount",count);
+        info.store();                
     }
     
     /** Returns the first recurrence. */
@@ -174,8 +175,8 @@ public class RecurrenceInfo {
     
     /** Returns the next recurrence from the specified time. */
     public long next(long fromTime)  {
-        // Check for the first recurrence
-        if ( fromTime == 0 || fromTime == startDate.getTime() )
+        // Check for the first recurrence (StartTime is always the first recurrence)
+        if ( getCurrentCount() == 0 || fromTime == 0 || fromTime == startDate.getTime() )
             return first();
         
         // Check the rules and date list

@@ -35,29 +35,34 @@ import org.ofbiz.core.util.*;
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author Andy Zeneski (jaz@zsolv.com)
+ * @author David E. Jones (jonesde@ofbiz.org)
  * @created May 15, 2001
  * @version 1.0
  */
 
 public class ModelServiceReader {
-    public static Map readers = new Hashtable();
+    public static Map readers = new HashMap();
     
     public URL readerURL = null;
     public Map modelServices =  null;
     
     public static ModelServiceReader getModelServiceReader(URL readerURL) {
-        ModelServiceReader reader = (ModelServiceReader)readers.get(readerURL);
+        ModelServiceReader reader = null;
+        if ( readers.containsKey(readerURL) )
+            reader = (ModelServiceReader)readers.get(readerURL);
         if(reader == null) { //don't want to block here
             synchronized(ModelServiceReader.class) {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader)readers.get(readerURL);
                 if(reader == null) {
+                    Debug.logInfo("[ModelServiceReader.getModelServiceReader] : creating reader.");
                     reader = new ModelServiceReader(readerURL);
                     readers.put(readerURL, reader);
                 }
             }
         }
+        Debug.logInfo("[ModelServiceReader.getModelServiceReader] : returning reader.");
         return reader;
     }
     
@@ -109,7 +114,7 @@ public class ModelServiceReader {
                                     //utilTimer.timerString("  After modelServices.put -- " + i + " --");
                                     Debug.logInfo("-- getModelService: #" + i + " Loaded service: " + serviceName);
                                 }
-                                else Debug.logWarning("-- -- ENTITYGEN ERROR:getModelService: Could not create service for serviceName: " + serviceName);
+                                else Debug.logWarning("-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " + serviceName);
                                 
                             }
                         } while((curChild = curChild.getNextSibling()) != null);
@@ -149,37 +154,36 @@ public class ModelServiceReader {
         return ec.keySet();
     }
     
-    ModelService createModelService(Element serviceElement) {
+    protected ModelService createModelService(Element serviceElement) {
         ModelService service = new ModelService();
         
         service.name = checkEmpty(serviceElement.getAttribute("name"));
-        service.engineName = checkEmpty(serviceElement.getAttribute("engine-name"));
+        service.engineName = checkEmpty(serviceElement.getAttribute("engine"));
         service.location = checkEmpty(serviceElement.getAttribute("location"));
         service.invoke = checkEmpty(serviceElement.getAttribute("invoke"));
         
         service.contextInfo = new HashMap();
-        createAttrDefs(serviceElement, "context-info", service.contextInfo);
         service.resultInfo = new HashMap();
-        createAttrDefs(serviceElement, "result-info", service.resultInfo);
         
+        createAttrDefs(serviceElement, "attribute", service.contextInfo,service.resultInfo);                
         return service;
     }
     
-    void createAttrDefs(Element baseElement, String parentNodeName, Map attrMap) {
-        NodeList tempList = baseElement.getElementsByTagName(parentNodeName);
-        Element tempElement = (Element)tempList.item(0);
-        if(tempElement != null) {
-            NodeList attrDefList = tempElement.getElementsByTagName("attr-def");
-            for(int i=0; i<attrDefList.getLength(); i++) {
-                Element attrDefElement = (Element)attrDefList.item(i);
-                String name = checkEmpty(attrDefElement.getAttribute("name"));
-                String type = checkEmpty(attrDefElement.getAttribute("type"));
-                attrMap.put(name, type);
-            }
+    protected void createAttrDefs(Element baseElement, String parentNodeName, Map contextMap, Map resultMap) {
+        NodeList attrList = baseElement.getElementsByTagName(parentNodeName);
+        for ( int i = 0; i < attrList.getLength(); i++ ) {
+            Element attribute = (Element) attrList.item(i);
+            String name = checkEmpty(attribute.getAttribute("name"));
+            String type = checkEmpty(attribute.getAttribute("type"));
+            String mode = checkEmpty(attribute.getAttribute("mode"));
+            if ( mode.equals("IN") || mode.equals("INOUT") )
+                contextMap.put(name,type);
+            if ( mode.equals("OUT") || mode.equals("INOUT") )
+                resultMap.put(name,type);
         }
     }
-    
-    String childElementValue(Element element, String childElementName) {
+     
+    protected String childElementValue(Element element, String childElementName) {
         if(element == null || childElementName == null) return null;
         //get the value of the first element with the given name
         Node node = element.getFirstChild();
@@ -194,31 +198,31 @@ public class ModelServiceReader {
         return null;
     }
     
-    String elementValue(Element element) {
+    protected String elementValue(Element element) {
         Node textNode = element.getFirstChild();
         if(textNode == null) return null;
         //should be of type text
         return textNode.getNodeValue();
     }
     
-    String checkEmpty(String string) {
+    protected String checkEmpty(String string) {
         if(string != null && string.length() > 0) return string;
         else return "";
     }
     
-    String checkEmpty(String string1, String string2) {
+    protected String checkEmpty(String string1, String string2) {
         if(string1 != null && string1.length() > 0) return string1;
         else if(string2 != null && string2.length() > 0) return string2;
         else return "";
     }
-    String checkEmpty(String string1, String string2, String string3) {
+    protected String checkEmpty(String string1, String string2, String string3) {
         if(string1 != null && string1.length() > 0) return string1;
         else if(string2 != null && string2.length() > 0) return string2;
         else if(string3 != null && string3.length() > 0) return string3;
         else return "";
     }
     
-    Document getDocument(URL url) {
+    protected Document getDocument(URL url) {
         if(url == null) return null;
         Document document = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

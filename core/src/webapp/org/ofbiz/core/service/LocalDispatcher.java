@@ -46,6 +46,7 @@ public class LocalDispatcher {
         this.name = name;        
         ctx = new DispatchContext(readerURLs,this.getClass().getClassLoader());
         dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
+        Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name);
     }
     
     /** Run the service synchronously and return the result
