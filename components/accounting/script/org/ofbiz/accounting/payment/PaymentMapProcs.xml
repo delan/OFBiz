@@ -41,7 +41,8 @@
       <in-field field="expYear"/>
     </make-in-string>
     <process field="partyId"><copy/></process>
-    <process field="nameOnCard"><copy/><not-empty><fail-message message="Name on Card is missing"/></not-empty></process>
+    <process field="firstNameOnCard"><copy/><not-empty><fail-message message="First Name on Card is missing"/></not-empty></process>
+    <process field="lastNameOnCard"><copy/><not-empty><fail-message message="Last Name on Card is missing"/></not-empty></process>
     <process field="companyNameOnCard"><copy/></process>
     <process field="cardType"><copy/><not-empty><fail-message message="Card Type is missing"/></not-empty></process>
     <process field="cardNumber"><copy/></process>
