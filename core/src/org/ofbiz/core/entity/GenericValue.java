@@ -33,7 +33,10 @@ import org.ofbiz.core.entity.model.*;
  */
 public class GenericValue extends GenericEntity
 {
+  /** Reference to an instance of GenericHelper used to do some basic operations on this entity value. If null various methods in this class will fail. This is automatically set by the GenericHelper implementations for all GenericValue objects instantiated through them. You may set this manually for objects you instantiate manually, but it is optional. */
   public transient GenericHelper helper = null;
+  /** Map to store related entities that will be updated if modified when this entity is stored; populated with preStoreRelated(String, Collection) */
+  public Map relatedToStore = new HashMap();
   
   /** Creates new GenericValue */
   public GenericValue(String entityName) { super(entityName); }
@@ -46,4 +49,19 @@ public class GenericValue extends GenericEntity
   
   public void store() { helper.store(this); }
   public void remove() { helper.removeByPrimaryKey(getPrimaryKey()); }
+  
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelated(String relationName) { return helper.getRelated(relationName, this); }
+  /** Remove the named Related Entity for the GenericValue from the persistent store
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   */
+  public void removeRelated(String relationName) { helper.removeRelated(relationName, this); }
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param entities Collection of GenericValue instances corresponding to the named relation that will be set or created if modified
+   */
+  public void preStoreRelated(String relationName, Collection entities) { relatedToStore.put(relationName, entities); }
 }

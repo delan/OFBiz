@@ -64,6 +64,28 @@ public class ModelEntity
   /** Default Constructor */  
   public ModelEntity() { }
 
+  public ModelField getField(String fieldName)
+  {
+    if(fieldName == null) return null;
+    for(int i=0; i<fields.size(); i++)
+    {
+      ModelField field = (ModelField)fields.get(i);
+      if(field.name.equals(fieldName)) return field;
+    }
+    return null;
+  }
+  
+  public ModelRelation getRelation(String relationName)
+  {
+    if(relationName == null) return null;
+    for(int i=0; i<relations.size(); i++)
+    {
+      ModelRelation relation = (ModelRelation)relations.get(i);
+      if(relationName.equals(relation.title + relation.relEntityName)) return relation;
+    }
+    return null;
+  }
+  
   public String nameString(Vector flds) { return nameString(flds, ", ", ""); }
   public String nameString(Vector flds, String separator, String afterLast)
   {

@@ -237,8 +237,8 @@ public class GenericHelperEJB implements GenericHelper
     return col;
   }
   
-  /** Store the Entity from the GenericValue to the database
-   *@param GenericValue instance containing the entity
+  /** Store the Entity from the GenericValue to the persistent store
+   *@param value GenericValue instance containing the entity
    */
   public void store(GenericValue value)
   {
@@ -249,4 +249,36 @@ public class GenericHelperEJB implements GenericHelper
     try { remote.setValueObject(value); }
     catch(java.rmi.RemoteException re) { Debug.logError(re); }
   }  
+  
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param value GenericValue instance containing the entity
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelated(String relationName, GenericValue value)
+  {
+    GenericRemote remote = null;
+    Collection collection = null;
+    try { remote = (GenericRemote)MyNarrow.narrow(genericHome.findByPrimaryKey(value.getPrimaryKey()), GenericRemote.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
+    try { collection = remote.getRelated(relationName); }
+    catch(java.rmi.RemoteException re) { Debug.logError(re); }
+    return collection;
+  }  
+  
+  /** Remove the named Related Entity for the GenericValue from the persistent store
+   * @param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   * @param value GenericValue instance containing the entity
+   */
+  public void removeRelated(String relationName, GenericValue value)
+  {
+    GenericRemote remote = null;
+    try { remote = (GenericRemote)MyNarrow.narrow(genericHome.findByPrimaryKey(value.getPrimaryKey()), GenericRemote.class); }
+    catch(ObjectNotFoundException onfe) { }
+    catch(Exception fe) { Debug.logError(fe); }
+    try { remote.removeRelated(relationName); }
+    catch(java.rmi.RemoteException re) { Debug.logError(re); }
+  }
+  
 }

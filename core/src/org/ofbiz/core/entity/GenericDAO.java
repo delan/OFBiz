@@ -467,6 +467,59 @@ public class GenericDAO
     return collection;
   }
   
+  public Collection selectRelated(String relationName, GenericEntity value)
+  {
+    Collection collection = null;
+    ModelEntity entity = value.getModelEntity();
+    ModelRelation relation = entity.getRelation(relationName);
+    ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
+
+    if(relation.type.equalsIgnoreCase("one"))
+    {
+      //public <%=relatedEntity.ejbName%> get<%=relation.relationTitle%><%=relatedEntity.ejbName%>() { return <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=relation.keyMapString(", ", "")%>); }
+    }
+    else if(relation.type.equalsIgnoreCase("many"))
+    {
+      //public Collection get<%=relation.relationTitle%><%=relatedEntity.ejbName%>s() { return <%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>(<%=relation.keyMapString(", ", "")%>); }
+    }
+    return collection;
+  }  
+    
+  public boolean storeRelated(String relationName, GenericEntity value, Collection entities)
+  {
+    ModelEntity entity = value.getModelEntity();
+    ModelRelation relation = entity.getRelation(relationName);
+    ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
+
+    //if entity exists, update, else insert
+    if(relation.type.equalsIgnoreCase("one"))
+    {
+      //public <%=relatedEntity.ejbName%> get<%=relation.relationTitle%><%=relatedEntity.ejbName%>() { return <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=relation.keyMapString(", ", "")%>); }
+    }
+    else if(relation.type.equalsIgnoreCase("many"))
+    {
+      //public Collection get<%=relation.relationTitle%><%=relatedEntity.ejbName%>s() { return <%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>(<%=relation.keyMapString(", ", "")%>); }
+    }
+    return false;
+  }  
+    
+  public boolean deleteRelated(String relationName, GenericEntity value)
+  {
+    ModelEntity entity = value.getModelEntity();
+    ModelRelation relation = entity.getRelation(relationName);
+    ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
+
+    if(relation.type.equalsIgnoreCase("one"))
+    {
+      //public void remove<%=relation.relationTitle%><%=relatedEntity.ejbName%>() { <%=relatedEntity.ejbName%>Helper.removeByPrimaryKey(<%=relation.keyMapString(", ", "")%>); }
+    }
+    else if(relation.type.equalsIgnoreCase("many"))
+    {
+      //public void remove<%=relation.relationTitle%><%=relatedEntity.ejbName%>s() { <%=relatedEntity.ejbName%>Helper.removeBy<%=relation.keyMapRelatedUpperString("And","")%>(<%=relation.keyMapString(", ", "")%>); }
+    }
+    return false;
+  }  
+    
   public void getValue(ResultSet rs, ModelField curField, GenericEntity entity) throws SQLException
   {
     ModelFieldType mft = ModelReader.getModelFieldType(curField.type);

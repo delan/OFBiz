@@ -43,6 +43,20 @@ public class GenericBean extends GenericEntity implements EntityBean
   public void setValueObject(GenericValue valueObject)
   {
     this.setNonPKFields(valueObject.getAllFields());
+
+    //also store valueObject.relatedToStore related entities
+    if(valueObject.relatedToStore != null)
+    {
+      Iterator entries = valueObject.relatedToStore.entrySet().iterator();
+      Map.Entry anEntry = null;
+      while(entries != null && entries.hasNext())
+      {
+        anEntry = (Map.Entry)entries.next();
+        String relationName = (String)anEntry.getKey();
+        Collection entities = (Collection)anEntry.getValue();
+        dao.storeRelated(relationName, this, entities);
+      }
+    }
   }
 
   /** Gets the ValueObject attribute of the GenericBean object
@@ -51,6 +65,23 @@ public class GenericBean extends GenericEntity implements EntityBean
   public GenericValue getValueObject()
   {
     return new GenericValue(entityName, fields);
+  }
+
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelated(String relationName) 
+  {     
+    return dao.selectRelated(relationName, this);
+  }
+
+  /** Remove the named Related Entity for the GenericValue from the persistent store
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   */
+  public void removeRelated(String relationName) 
+  { 
+    dao.deleteRelated(relationName, this); 
   }
 
   public GenericPK ejbCreate(GenericPK primaryKey) throws CreateException { return ejbCreate(primaryKey.entityName, primaryKey.fields); }
@@ -92,8 +123,8 @@ public class GenericBean extends GenericEntity implements EntityBean
 
   /** Called when the entity bean is stored. */
   public void ejbStore()
-  { 
-    if(!dao.update(this)) {}
+  {
+    if(this.isModified()) { if(!dao.update(this)) {} }
     modified = false; 
   }
 

@@ -146,13 +146,45 @@ public class GenericHelperDAO implements GenericHelper
     }
   }
   
-  /** Store the Entity from the GenericValue to the database
-   *@param GenericValue instance containing the entity
+  /** Store the Entity from the GenericValue to the persistent store
+   *@param value GenericValue instance containing the entity
    */
   public void store(GenericValue value)
   {
     if(value == null) { return; }
     if(!genericDAO.update(value)) Debug.logError("[GenericHelperDAO.store] Could not store GenericValue: " + value.toString());
     value.helper = this;
+    //also store valueObject.relatedToStore related entities
+    if(value.relatedToStore != null)
+    {
+      Iterator entries = value.relatedToStore.entrySet().iterator();
+      Map.Entry anEntry = null;
+      while(entries != null && entries.hasNext())
+      {
+        anEntry = (Map.Entry)entries.next();
+        String relationName = (String)anEntry.getKey();
+        Collection entities = (Collection)anEntry.getValue();
+        genericDAO.storeRelated(relationName, value, entities);
+      }
+    }
   }
+  
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param value GenericValue instance containing the entity
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelated(String relationName, GenericValue value)
+  {
+    return genericDAO.selectRelated(relationName, value);;
+  }  
+  
+  /** Remove the named Related Entity for the GenericValue from the persistent store
+   * @param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   * @param value GenericValue instance containing the entity
+   */
+  public void removeRelated(String relationName, GenericValue value)
+  {
+    genericDAO.deleteRelated(relationName, value);
+  }  
 }

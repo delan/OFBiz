@@ -154,7 +154,7 @@ public class GenericEntity implements Serializable
    */
   public int hashCode()
   {
-    return entityName.hashCode() + fields.hashCode();
+    return entityName.hashCode()>>1 + fields.hashCode()>>1;
   }
 
   /** Creates a String for the entity, overrides the default toString
