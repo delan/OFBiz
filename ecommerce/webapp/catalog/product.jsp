@@ -29,6 +29,8 @@
 
 <ofbiz:if name="product">
     <ofbiz:object name="product" property="product" />
+    <% productId = product.getString("productId"); %>
+    <% pageContext.setAttribute("product_id", productId); %>
     <% String productTypeId = product.getString("productTypeId"); %>
     <% Map featureTypes = new HashMap(); %>
     <% List featureOrder = null; %>
