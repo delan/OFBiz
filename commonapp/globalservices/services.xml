@@ -79,4 +79,16 @@
         <attribute name="note" type="String" mode="IN"/>
         <attribute name="noteId" type="String" mode="OUT"/>
     </service>
+
+    <service name="updateDebugLevel" engine="java"
+            location="org.ofbiz.commonapp.common.CommonServices" invoke="setDebugLevels">
+        <description>Sets/Updates cached debugging levels</description>
+        <attribute name="verbose" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="timing" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="info" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="important" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="warning" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="error" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="fatal" type="Boolean" mode="IN" optional="true"/>
+    </service>
 </services>
