@@ -85,9 +85,9 @@
 
   <#if additionalPartyType?exists && additionalPartyType != "">
     <#if additionalPartyType == "Person">
-      <#assign lookupPartyView="lookupPerson">
+      <#assign lookupPartyView="LookupPerson">
     <#else>
-      <#assign lookupPartyView="lookupPartyGroup">
+      <#assign lookupPartyView="LookupPartyGroup">
     </#if>
   <tr>
     <td><div class="tableheadtext">2) ${uiLabelMap.PartyFindParty} :</div></td>
