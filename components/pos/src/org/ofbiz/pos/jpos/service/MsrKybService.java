@@ -32,7 +32,6 @@ import jpos.events.ErrorEvent;
 
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
 import org.ofbiz.pos.adaptor.KeyboardReceiver;
-import org.ofbiz.base.util.Debug;
 
 /**
  * 
@@ -52,8 +51,8 @@ public class MsrKybService extends BaseService implements jpos.services.MSRServi
     protected String surname = new String();
     protected String suffix = new String();
 
-    protected String[] accountNumber = new String[0];
-    protected String[] expireDate = new String[0];
+    protected String[] accountNumber = new String[2];
+    protected String[] expireDate = new String[2];
     protected String serviceCode = new String();
 
     protected byte[] track1DiscretionaryData = new byte[0];
@@ -194,8 +193,8 @@ public class MsrKybService extends BaseService implements jpos.services.MSRServi
         this.surname = new String();
         this.suffix = new String();
         this.serviceCode = new String();
-        this.accountNumber = new String[0];
-        this.expireDate = new String[0];
+        this.accountNumber = new String[2];
+        this.expireDate = new String[2];
         this.track1Data = new byte[0];
         this.track2Data = new byte[0];
         this.track3Data = new byte[0];
@@ -278,7 +277,7 @@ public class MsrKybService extends BaseService implements jpos.services.MSRServi
             String tr2ExpDate = track2.substring((track2.indexOf("=") + 1), track2.indexOf("=") + 5);
             String tr2OptData = track2.substring(track2.indexOf("=") + 5, track2.length() - 2);
             String tr2EndChar = track2.substring(track2.length() - 2, track2.length() - 1);
-            String tr2LrcCode = track2.substring(track2.length() - 1, track2.length());            
+            String tr2LrcCode = track2.substring(track2.length() - 1, track2.length());
 
             // see if we need to remove the sentinels
             if (this.sendSentinels) {
