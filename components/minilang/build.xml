@@ -20,8 +20,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.4 2003/08/18 01:00:23 ajzeneski Exp $
+ *  This is the Open for Business MiniLang Build Script.
+ *  $Id: build.xml,v 1.5 2003/08/19 01:48:15 jonesde Exp $
 -->
 
 <project name="OFBiz - MiniLang Component" default="jar" basedir=".">
@@ -105,7 +105,7 @@
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs">
-        <javadoc packagenames="org.ofbiz.service.*" 
+        <javadoc packagenames="org.ofbiz.minilang.*" 
                  classpathref="local.class.path"
                  destdir="${build.dir}/javadocs" 
                  Windowtitle="Open for Business - ${desc}">
