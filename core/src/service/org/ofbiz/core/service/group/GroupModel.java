@@ -158,7 +158,7 @@ public class GroupModel {
             }
         }
         if (result == null) 
-            throw new GenericServiceException("All services failed to run; none availabel.");
+            throw new GenericServiceException("All services failed to run; none available.");
         return result;
     }            
 }
