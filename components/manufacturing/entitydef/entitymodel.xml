@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  */
 -->
 
@@ -52,25 +52,22 @@
   <!-- org.ofbiz.manufacturing.bom -->
   <!-- ========================================================= -->
 
-    <entity entity-name="ProductPartRule"
+    <entity entity-name="ProductManufacturingRule"
             package-name="org.ofbiz.manufacturing.bom"
             title="Product To Part Rule Entity"
             author="Jacopo Cappellato">
-      <field name="productId" type="id-ne"></field>
-      <field name="partIdFor" type="id-ne"></field>
-      <field name="partIdIn" type="id-ne"></field>
-      <field name="ruleSeqId" type="id-ne"></field>
+      <field name="ruleId" type="id-ne"></field>
+      <field name="productId" type="id"></field>
+      <field name="productIdFor" type="id"></field>
+      <field name="productIdIn" type="id-ne"></field>
+      <field name="ruleSeqId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
-      <field name="partIdInSubst" type="id"></field>
+      <field name="productIdInSubst" type="id"></field>
       <field name="productFeature" type="id"></field>
       <field name="ruleOperator" type="id"></field>
       <field name="description" type="description"></field>
       <field name="thruDate" type="date-time"></field>
-      <prim-key field="productId"/>
-      <prim-key field="partIdFor"/>
-      <prim-key field="partIdIn"/>
-      <prim-key field="ruleSeqId"/>
-      <prim-key field="fromDate"/>
+      <prim-key field="ruleId"/>
       <!-- FIXME: relations are missing -->
     </entity>
 
