@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/12/23 10:10:41  jonesde
+ * Fixed problem with updating credit card info
+ *
  * Revision 1.2  2001/12/23 06:29:42  jonesde
  * Replaced preStoreOther stuff with storeAll
  *
@@ -61,7 +64,7 @@ public class ContactEvents {
         String errMsg = "";
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        if(userLogin == null) { request.setAttribute("ERROR_MESSAGE", "<li>ERROR: User not logged in, cannot update contact info. Please contact customer service."); return "error"; }
+        if(userLogin == null) { request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: User not logged in, cannot update contact info. Please contact customer service."); return "error"; }
         String partyId = userLogin.getString("partyId");
         
         String updateMode = request.getParameter("UPDATE_MODE");
@@ -71,9 +74,9 @@ public class ContactEvents {
             Collection toBeStored = new LinkedList();
             
             String contactMechTypeId = request.getParameter("CONTACT_MECH_TYPE_ID");
-            if(contactMechTypeId == null) { errMsg = "<li>ERROR: Could not create new contact info, type not specified. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+            if(contactMechTypeId == null) { errMsg = "<li>ERROR: Could not create new contact info, type not specified. Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
             
-            Long newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+            Long newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
             GenericValue tempContactMech = delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", contactMechTypeId));
             toBeStored.add(tempContactMech);
             
@@ -102,7 +105,7 @@ public class ContactEvents {
                 if(!UtilValidate.isNotEmpty(postalCode)) errMsg += "<li>Zip/Postal Code missing.";
                 if(errMsg.length() > 0) {
                     errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                    request.setAttribute("ERROR_MESSAGE", errMsg);
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                     return "error";
                 }
                 
@@ -129,7 +132,7 @@ public class ContactEvents {
                 if(!UtilValidate.isEmail(infoString)) errMsg += "<li>" + UtilValidate.isEmailMsg;
                 if(errMsg.length() > 0) {
                     errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                    request.setAttribute("ERROR_MESSAGE", errMsg);
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                     return "error";
                 }
                 tempContactMech.set("infoString", infoString);
@@ -155,7 +158,7 @@ public class ContactEvents {
                 delegator.storeAll(toBeStored);
             } catch(GenericEntityException e) {
                 errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.";
-                request.setAttribute("ERROR_MESSAGE", errMsg);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                 return "error";
             }
             request.setAttribute("CONTACT_MECH_ID", newCmId.toString());
@@ -173,21 +176,21 @@ public class ContactEvents {
                 Debug.logWarning(e.getMessage()); partyContactMech = null;
             }
             if(partyContactMech == null) {
-                request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete contact info (read failure or not found: party-contact mech) . Please contact customer service.");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete contact info (read failure or not found: party-contact mech) . Please contact customer service.");
                 return "error";
             }
             partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
             try {
                 partyContactMech.store();
             } catch(GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete contact info (write failure) . Please contact customer service.");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete contact info (write failure) . Please contact customer service.");
                 return "error";
             }
         } else if("UPDATE".equals(updateMode)) {
             Collection toBeStored = new LinkedList();
             
             boolean isModified = false;
-            Long newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not change contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+            Long newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not change contact info (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
             
             String contactMechId = request.getParameter("CONTACT_MECH_ID");
             GenericValue contactMech = null;
@@ -203,11 +206,11 @@ public class ContactEvents {
                 Debug.logWarning(e.getMessage()); partyContactMech = null;
             }
             if(contactMech == null) {
-                request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not find specified contact info (read error). Please contact customer service.");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not find specified contact info (read error). Please contact customer service.");
                 return "error";
             }
             if(partyContactMech == null) {
-                request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Logged in user cannot update specified contact info because it does not belong to the user. Please contact customer service.");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Logged in user cannot update specified contact info because it does not belong to the user. Please contact customer service.");
                 return "error";
             }
             toBeStored.add(partyContactMech);
@@ -234,7 +237,7 @@ public class ContactEvents {
                 if(!UtilValidate.isNotEmpty(postalCode)) errMsg += "<li>Zip/Postal Code missing.";
                 if(errMsg.length() > 0) {
                     errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                    request.setAttribute("ERROR_MESSAGE", errMsg);
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                     return "error";
                 }
                 
@@ -280,7 +283,7 @@ public class ContactEvents {
                 if(!UtilValidate.isEmail(infoString)) errMsg += "<li>" + UtilValidate.isEmailMsg;
                 if(errMsg.length() > 0) {
                     errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                    request.setAttribute("ERROR_MESSAGE", errMsg);
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                     return "error";
                 }
                 newContactMech.set("infoString", infoString);
@@ -315,7 +318,7 @@ public class ContactEvents {
                     }
                 } catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
-                    request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
                     return "error";
                 }
                 
@@ -329,7 +332,7 @@ public class ContactEvents {
                     delegator.storeAll(toBeStored);
                 } catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
-                    request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
                     return "error";
                 }
                 request.setAttribute("CONTACT_MECH_ID", newCmId.toString());
@@ -339,13 +342,13 @@ public class ContactEvents {
                 if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0) {
                     try {
                         if(delegator.create("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", cmId, "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)) == null) {
-                            request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
+                            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
                             return "error";
                         }
                     }
                     catch(GenericEntityException e) {
                         Debug.logWarning(e.getMessage());
-                        request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
+                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
                         return "error";
                     }
                 }
@@ -354,11 +357,11 @@ public class ContactEvents {
             
         } else {
             errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service.";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         
-        request.setAttribute("EVENT_MESSAGE", "Contact Information Updated.");
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Contact Information Updated.");
         return "success";
     }
     
@@ -371,12 +374,12 @@ public class ContactEvents {
         String errMsg = "";
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot add purpose to contact mechanism. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot add purpose to contact mechanism. Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
         String partyId = userLogin.getString("partyId");
         
         String contactMechId = request.getParameter("CONTACT_MECH_ID");
         String contactMechPurposeTypeId = request.getParameter("CONTACT_MECH_PURPOSE_TYPE_ID");
-        if(contactMechPurposeTypeId == null || contactMechPurposeTypeId.length() <= 0) { errMsg = "<li>ERROR: Purpose type not specified, cannot add purpose to contact mechanism. Please try again."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        if(contactMechPurposeTypeId == null || contactMechPurposeTypeId.length() <= 0) { errMsg = "<li>ERROR: Purpose type not specified, cannot add purpose to contact mechanism. Please try again."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
         
         
         GenericValue tempVal = null;
@@ -387,7 +390,7 @@ public class ContactEvents {
         
         if(tempVal != null) {
             //exists already with valid date, show warning
-            request.setAttribute("ERROR_MESSAGE", "<li>Could not create new purpose, a purpose with that type already exists.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Could not create new purpose, a purpose with that type already exists.");
             return "error";
         } else {
             //no entry with a valid date range exists, create new with open thruDate
@@ -395,12 +398,12 @@ public class ContactEvents {
             try {
                 if(delegator.create(newPartyContactMechPurpose) == null) {
                     errMsg = "<li>ERROR: Could not add purpose to contact mechanism (write failure). Please contact customer service.";
-                    request.setAttribute("ERROR_MESSAGE", errMsg);
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                     return "error";
                 }
             } catch(GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
-                request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not add purpose to contact mechanism (write failure). Please contact customer service.");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not add purpose to contact mechanism (write failure). Please contact customer service.");
                 return "error";
             }
         }
@@ -416,19 +419,19 @@ public class ContactEvents {
         String errMsg = "";
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot delete contact mechanism purpose. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot delete contact mechanism purpose. Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
         String partyId = userLogin.getString("partyId");
         
         String contactMechId = request.getParameter("CONTACT_MECH_ID");
         String contactMechPurposeTypeId = request.getParameter("CONTACT_MECH_PURPOSE_TYPE_ID");
-        if(contactMechPurposeTypeId == null || contactMechPurposeTypeId.length() <= 0) { errMsg = "<li>ERROR: Purpose type not specified, cannot delete purpose from contact mechanism. Please try again."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        if(contactMechPurposeTypeId == null || contactMechPurposeTypeId.length() <= 0) { errMsg = "<li>ERROR: Purpose type not specified, cannot delete purpose from contact mechanism. Please try again."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
         
         String fromDateStr = request.getParameter("FROM_DATE");
         Timestamp fromDate = null;
         try {
             fromDate = Timestamp.valueOf(fromDateStr);
         } catch(Exception e) {
-            request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete purpose from contact mechanism, from date \"" + fromDateStr + "\" was not valid. Please contact customer service.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete purpose from contact mechanism, from date \"" + fromDateStr + "\" was not valid. Please contact customer service.");
             return "error";
         }
         
@@ -437,12 +440,12 @@ public class ContactEvents {
             pcmp = delegator.findByPrimaryKey("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", fromDate));
             if(pcmp == null) {
                 errMsg = "<li>ERROR: Could not delete purpose from contact mechanism (record not found). Please contact customer service.";
-                request.setAttribute("ERROR_MESSAGE", errMsg);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                 return "error";
             }
         } catch(GenericEntityException e) {
             Debug.logWarning(e.getMessage());
-            request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete purpose from contact mechanism (read failure). Please contact customer service.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete purpose from contact mechanism (read failure). Please contact customer service.");
             return "error";
         }
         
@@ -451,7 +454,7 @@ public class ContactEvents {
             pcmp.store();
         } catch(GenericEntityException e) {
             Debug.logWarning(e.getMessage());
-            request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete purpose from contact mechanism (write failure) . Please contact customer service.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete purpose from contact mechanism (write failure) . Please contact customer service.");
             return "error";
         }
         return "success";
@@ -468,7 +471,7 @@ public class ContactEvents {
         String errMsg = "";
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot update credit card info. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot update credit card info. Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
         String partyId = userLogin.getString("partyId");
         
         String updateMode = request.getParameter("UPDATE_MODE");
@@ -498,7 +501,7 @@ public class ContactEvents {
             if(!UtilValidate.isDateAfterToday(expireDate)) errMsg += "<li>The expiration date " + expireDate + " is before today.";
             if(errMsg.length() > 0) {
                 errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                request.setAttribute("ERROR_MESSAGE", errMsg);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                 return "error";
             }
             
@@ -513,7 +516,7 @@ public class ContactEvents {
             else newCc = delegator.makeValue("CreditCardInfo", null);
             toBeStored.add(newCc);
             
-            Long newCcId = delegator.getNextSeqId("CreditCardInfo"); if(newCcId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+            Long newCcId = delegator.getNextSeqId("CreditCardInfo"); if(newCcId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
             newCc.set("partyId", partyId);
             newCc.set("nameOnCard", nameOnCard);
             newCc.set("companyNameOnCard", companyNameOnCard);
@@ -569,7 +572,7 @@ public class ContactEvents {
                     delegator.storeAll(toBeStored);
                 } catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
-                    request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not add credit card (write failure). Please contact customer service.");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not add credit card (write failure). Please contact customer service.");
                     return "error";
                 }
             }
@@ -583,7 +586,7 @@ public class ContactEvents {
             catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); creditCardInfo = null; }
             
             if(creditCardInfo == null) {
-                request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not find credit card info to delete (read failure). Please contact customer service.");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not find credit card info to delete (read failure). Please contact customer service.");
                 return "error";
             }
             
@@ -592,16 +595,16 @@ public class ContactEvents {
                 creditCardInfo.store(); 
             } catch(GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
-                request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete credit card info (write failure). Please contact customer service.");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete credit card info (write failure). Please contact customer service.");
                 return "error";
             }
         } else {
             errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service.";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         
-        request.setAttribute("EVENT_MESSAGE", "Credit Card Information Updated.");
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Credit Card Information Updated.");
         return "success";
     }
 }

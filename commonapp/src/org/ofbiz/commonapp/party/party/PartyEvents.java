@@ -1,6 +1,9 @@
 /*
  * $Id$
- * $Log$ 
+ * $Log$
+ * Revision 1.1  2001/10/19 16:44:42  azeneski
+ * Moved Party/ContactMech/Login events to more appropiate packages.
+ * 
  */
 
 package org.ofbiz.commonapp.party.party;
@@ -54,7 +57,7 @@ public class PartyEvents {
         String errMsg = "";
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot update credit card info. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot update credit card info. Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
         String partyId = userLogin.getString("partyId");
         
         String updateMode = request.getParameter("UPDATE_MODE");
@@ -111,7 +114,7 @@ public class PartyEvents {
             if(!UtilValidate.isNotEmpty(lastName)) errMsg += "<li>Last Name missing.";
             if(errMsg.length() > 0) {
                 errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                request.setAttribute("ERROR_MESSAGE", errMsg);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
                 return "error";
             }
             
@@ -147,13 +150,13 @@ public class PartyEvents {
             if(doCreate) {
                 try {
                     if(delegator.create(person) == null) {
-                        request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not add person info (write failure). Please contact customer service.");
+                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not add person info (write failure). Please contact customer service.");
                         return "error";
                     }
                 }
                 catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
-                    request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not add person info (write failure). Please contact customer service.");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not add person info (write failure). Please contact customer service.");
                     return "error";
                 }
             }
@@ -161,7 +164,7 @@ public class PartyEvents {
                 try { person.store(); }
                 catch(GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
-                    request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could update personal information (write failure). Please contact customer service.");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could update personal information (write failure). Please contact customer service.");
                     return "error";
                 }
             }
@@ -172,19 +175,19 @@ public class PartyEvents {
       if(person != null)
       {
         try { person.remove(); }
-        catch(Exception e) { errMsg = "<li>ERROR: Could not delete personal information (write failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        catch(Exception e) { errMsg = "<li>ERROR: Could not delete personal information (write failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
       }
        */
-            request.setAttribute("ERROR_MESSAGE", "ERROR: Deletion of person object not allowed.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Deletion of person object not allowed.");
             return "error";
         }
         else {
             errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service.";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         
-        request.setAttribute("EVENT_MESSAGE", "Personal Information Updated.");
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Personal Information Updated.");
         return "success";
     }
     

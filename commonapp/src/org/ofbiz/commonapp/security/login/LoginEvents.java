@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/10/19 16:44:42  azeneski
+ * Moved Party/ContactMech/Login events to more appropiate packages.
+ *
  */
 
 package org.ofbiz.commonapp.security.login;
@@ -125,7 +128,7 @@ public class LoginEvents {
         
         if(errMsg.length() > 0) {
             errMsg = "<b>The following error occured:</b><br>" + errMsg;
-            request.getSession().setAttribute("ERROR_MESSAGE", errMsg);
+            request.getSession().setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         return "success";
@@ -159,7 +162,7 @@ public class LoginEvents {
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        if(userLogin == null) { request.setAttribute("ERROR_MESSAGE", "<li>ERROR: User not logged in, cannot update password. Please contact customer service."); return "error"; }
+        if(userLogin == null) { request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: User not logged in, cannot update password. Please contact customer service."); return "error"; }
         
         String password = request.getParameter("OLD_PASSWORD");
         String newPassword = request.getParameter("NEW_PASSWORD");
@@ -168,26 +171,26 @@ public class LoginEvents {
         
         if(!UtilValidate.isNotEmpty(password)) {
             //the password was incomplete
-            request.setAttribute("ERROR_MESSAGE", "<li>The password was empty, please re-enter.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The password was empty, please re-enter.");
             return "error";
         }
         
         if(!password.equals(userLogin.getString("currentPassword"))) {
             //password was NOT correct, send back to changepassword page with an error
-            request.setAttribute("ERROR_MESSAGE", "<li>Old Password was not correct, please re-enter.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Old Password was not correct, please re-enter.");
             return "error";
         }
         
         String errMsg = setPassword(userLogin, newPassword, confirmPassword, passwordHint);
         if (UtilValidate.isNotEmpty(errMsg)) {
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         
         try { userLogin.store(); }
-        catch(Exception e) { request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change password (write failure). Please contact customer service."); return "error"; }
+        catch(Exception e) { request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change password (write failure). Please contact customer service."); return "error"; }
         
-        request.setAttribute("EVENT_MESSAGE", "Password Changed.");
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Password Changed.");
         return "success";
     }
     
@@ -216,7 +219,7 @@ public class LoginEvents {
         
         if(!UtilValidate.isNotEmpty(userLoginId)) {
             //the password was incomplete
-            request.setAttribute("ERROR_MESSAGE", "<li>The Username was empty, please re-enter.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was empty, please re-enter.");
             return "error";
         }
         
@@ -226,18 +229,18 @@ public class LoginEvents {
         } catch (GenericEntityException gee) { Debug.logWarning(gee); }
         if (supposedUserLogin == null) {
             //the Username was not found
-            request.setAttribute("ERROR_MESSAGE", "<li>The Username was not found, please re-enter.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was not found, please re-enter.");
             return "error";
         }
         
         String passwordHint = supposedUserLogin .getString("passwordHint");
         if (!UtilValidate.isNotEmpty(passwordHint)) {
             //the Username was not found
-            request.setAttribute("ERROR_MESSAGE", "<li>No password hint was specified, try having the password emailed instead.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No password hint was specified, try having the password emailed instead.");
             return "error";
         }
         
-        request.setAttribute("EVENT_MESSAGE", "The Password Hint is: " + passwordHint);
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "The Password Hint is: " + passwordHint);
         return "success";
     }
     
@@ -259,7 +262,7 @@ public class LoginEvents {
         
         if(!UtilValidate.isNotEmpty(userLoginId)) {
             //the password was incomplete
-            request.setAttribute("ERROR_MESSAGE", "<li>The Username was empty, please re-enter.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was empty, please re-enter.");
             return "error";
         }
         
@@ -269,7 +272,7 @@ public class LoginEvents {
         } catch (GenericEntityException gee) { Debug.logWarning(gee); }
         if (supposedUserLogin == null) {
             //the Username was not found
-            request.setAttribute("ERROR_MESSAGE", "<li>The Username was not found, please re-enter.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was not found, please re-enter.");
             return "error";
         }
         
@@ -288,7 +291,7 @@ public class LoginEvents {
         
         if (!UtilValidate.isNotEmpty(emails.toString())) {
             //the Username was not found
-            request.setAttribute("ERROR_MESSAGE", "<li>No Primary Email Address has been set, please contact ustomer service.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No Primary Email Address has been set, please contact ustomer service.");
             return "error";
         }
         
@@ -310,7 +313,7 @@ public class LoginEvents {
             return "error";
         }
         
-        request.setAttribute("EVENT_MESSAGE", "Your password has been sent to you.  Please check your Email.");
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Your password has been sent to you.  Please check your Email.");
         return "success";
     }
     
