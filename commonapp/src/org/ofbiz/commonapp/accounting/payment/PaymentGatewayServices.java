@@ -141,7 +141,7 @@ public class PaymentGatewayServices {
 
             GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethod.getString("paymentMethodTypeId"));
             String serviceName = paymentSettings != null && paymentSettings.get("paymentService") != null ? paymentSettings.getString("paymentService") : null;
-            String configUrl = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;
+            String paymentConfig = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;
             Map processContext = new HashMap();
             
             if (serviceName == null) {
@@ -151,7 +151,7 @@ public class PaymentGatewayServices {
 
             processContext.put("orderId", orderId);
             processContext.put("orderItems", orh.getOrderItems());
-            processContext.put("configUrl", configUrl);
+            processContext.put("paymentConfig", paymentConfig);
             processContext.put("processAmount", processAmount);
             processContext.put("contactPerson", contactPerson);
             processContext.put("contactEmail", contactEmail);
