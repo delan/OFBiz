@@ -39,8 +39,13 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <group-map group-name="org.ofbiz" datasource-name="localpostgres"/>
     </delegator>
 
+    <!-- need to at least define a name for the components to use -->
     <entity-model-reader name="main"/>
+    
+    <!-- need to at least define a name for the components to use -->
     <entity-group-reader name="main"/>
+    
+    <!-- need to at least define a name for the components to use -->
     <entity-eca-reader name="main"/>
 
     <field-type name="hsql" loader="fieldfile" location="fieldtypehsql.xml"/>
@@ -68,7 +73,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
      * Serializable (default)
     -->
     <datasource name="localhsql"
-            helper-class="org.ofbiz.entity.GenericHelperDAO"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="hsql"
             check-on-start="true"
             add-missing-on-start="true"
@@ -93,7 +98,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     </datasource>
 
     <datasource name="localcloudscape"
-            helper-class="org.ofbiz.entity.GenericHelperDAO"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="cloudscape"
             check-on-start="true"
             add-missing-on-start="true">
@@ -109,7 +114,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     </datasource>
 
     <datasource name="localmysql"
-            helper-class="org.ofbiz.entity.GenericHelperDAO"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="mysql"
             check-on-start="true"
             add-missing-on-start="true"
@@ -127,7 +132,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     </datasource>
 
     <datasource name="localpostgres"
-            helper-class="org.ofbiz.entity.GenericHelperDAO"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="postgres72"
             check-on-start="true"
             add-missing-on-start="true"
@@ -151,7 +156,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     </datasource>
 
     <datasource name="localoracle"
-            helper-class="org.ofbiz.entity.GenericHelperDAO"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="oracle"
             check-on-start="true"
             add-missing-on-start="true"
@@ -169,7 +174,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     </datasource>
 
     <datasource name="localsapdb"
-            helper-class="org.ofbiz.entity.GenericHelperDAO"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="sapdb"
             check-on-start="true"
             add-missing-on-start="true"
@@ -193,7 +198,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     </datasource>
 
     <datasource name="localfirebird"
-            helper-class="org.ofbiz.entity.GenericHelperDAO"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="firebird"
             check-on-start="false"
             add-missing-on-start="false"
@@ -211,7 +216,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     </datasource>
 
     <datasource name="localmssql"
-            helper-class="org.ofbiz.entity.GenericHelperDAO"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="mssql"
             check-on-start="true"
             add-missing-on-start="true"
@@ -229,7 +234,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     </datasource>
      
     <datasource name="localp6spy"
-            helper-class="org.ofbiz.entity.GenericHelperDAO"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="oracle"
             check-on-start="true"
             add-missing-on-start="true">

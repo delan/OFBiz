@@ -1,5 +1,5 @@
 /*
- * $Id: JotmFactory.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
+ * $Id: JotmFactory.java,v 1.3 2003/08/18 03:15:08 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.entity.transaction;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
@@ -42,7 +43,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  * JotmFactory - Central source for JOTM JTA objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class JotmFactory implements TransactionFactoryInterface {
@@ -90,7 +91,7 @@ public class JotmFactory implements TransactionFactoryInterface {
     public Connection getConnection(String helperName) throws SQLException, GenericEntityException {
         EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
-        if (datasourceInfo.inlineJdbcElement != null) {
+        if (datasourceInfo != null && datasourceInfo.inlineJdbcElement != null) {
             // Use JOTM (xapool.jar) connection pooling
             try {
                 Connection con = JotmConnectionFactory.getConnection(helperName, datasourceInfo.inlineJdbcElement);
@@ -101,7 +102,7 @@ public class JotmFactory implements TransactionFactoryInterface {
         
             Connection otherCon = ConnectionFactory.tryGenericConnectionSources(helperName, datasourceInfo.inlineJdbcElement);
             return otherCon;
-        } else {
+        } else {            
             Debug.logError("JOTM is the configured transaction manager but no inline-jdbc element was specified in the " + helperName + " datasource. Please check your configuration", module);
             return null;
         }

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.2 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.3 2003/08/18 03:15:10 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -75,7 +75,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -103,7 +103,7 @@ public class GenericDelegator implements DelegatorInterface {
     protected DistributedCacheClear distributedCacheClear = null;
 
     protected EntityEcaHandler entityEcaHandler = null;
-    public static final String ECA_HANDLER_CLASS_NAME = "org.ofbiz.core.extentity.eca.DelegatorEcaHandler";
+    public static final String ECA_HANDLER_CLASS_NAME = "org.ofbiz.entityext.eca.DelegatorEcaHandler";
 
     protected SequenceUtil sequencer = null;
 

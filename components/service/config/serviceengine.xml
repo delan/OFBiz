@@ -11,7 +11,7 @@
                  jobs="3"
                  min-threads="5"
                  max-threads="20"
-                 poll-enabled="true"
+                 poll-enabled="false"
                  poll-db-millis="20000"/>
 
     <!-- Service Engine Configuration -->
@@ -28,43 +28,7 @@
     <engine name="simple" class="org.ofbiz.minilang.SimpleServiceEngine"/>
     <engine name="soap" class="org.ofbiz.service.engine.SOAPClientEngine"/>
     <engine name="workflow" class="org.ofbiz.workflow.WorkflowEngine"/>    
-       
-    <!-- Resource Loader Configuration -->
-    <resource-loader name="mainfile" class="org.ofbiz.base.config.FileLoader"
-            prepend-env="ofbiz.home" prefix="/commonapp/globalservices/"/>
-    <resource-loader name="maincp" class="org.ofbiz.base.config.ClasspathLoader"/>
-    <resource-loader name="mainurl" class="org.ofbiz.base.config.UrlLoader"/>
-
-    <!-- Service definition files -->
-    <global-services loader="mainfile" location="services_test.xml"/>
-    <global-services loader="mainfile" location="services_accounting.xml"/>
-    <global-services loader="mainfile" location="services_content.xml"/>
-    <global-services loader="mainfile" location="services_common.xml"/>
-    <global-services loader="mainfile" location="services_marketing.xml"/>
-    <global-services loader="mainfile" location="services_order.xml"/>
-    <global-services loader="mainfile" location="services_party.xml"/>
-    <global-services loader="mainfile" location="services_product.xml"/>
-    <global-services loader="mainfile" location="services_project.xml"/>
-    <global-services loader="mainfile" location="services_security.xml"/>
-    <global-services loader="mainfile" location="services_shipment.xml"/>
-    <global-services loader="mainfile" location="services_workeffort.xml"/>
-    <global-services loader="mainfile" location="services_workflow.xml"/>
-
-    <!-- Service-Group definition files -->
-    <service-groups loader="mainfile" location="groups_test.xml"/> 
-    <service-groups loader="mainfile" location="groups_accounting.xml"/>   
-    <service-groups loader="mainfile" location="groups_common.xml"/>   
-    <service-groups loader="mainfile" location="groups_shipment.xml"/>
-    
-	<!-- ECA definition files -->
-    <service-ecas loader="mainfile" location="secas_test.xml"/>
-    <service-ecas loader="mainfile" location="secas_accounting.xml"/>  
-    <service-ecas loader="mainfile" location="secas_order.xml"/>  
-    <service-ecas loader="mainfile" location="secas_party.xml"/> 
-    <service-ecas loader="mainfile" location="secas_product.xml"/>
-    <service-ecas loader="mainfile" location="secas_shipment.xml"/>
-    <service-ecas loader="mainfile" location="secas_workeffort.xml"/>
-    
+           
     <!-- JMS Service Queue/Topic Configuration -->
     <!--
     <jms-service name="serviceMessenger" send-mode="all">

@@ -1,5 +1,5 @@
 /*
- * $Id: DBCPConnectionFactory.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: DBCPConnectionFactory.java,v 1.2 2003/08/18 03:15:08 ajzeneski Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -23,28 +23,30 @@
  */
 package org.ofbiz.entity.transaction;
 
-import java.util.*;
-import java.sql.*;
-import javax.sql.*;
-import org.w3c.dom.Element;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.ofbiz.entity.*;
-import org.ofbiz.base.util.*;
+import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.DriverManagerConnectionFactory;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
-import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool.impl.GenericObjectPool;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericEntityException;
+import org.w3c.dom.Element;
 
 /**
  * DBCP ConnectionFactory - central source for JDBC connections from DBCP
  *
- * This is currently non transactional as DBCP doesn't seem to support transactional datasources yet (DBCP 1.0).
+ * This is currently non transactional as DBCP doesn't seem to support 
+ * transactional datasources yet (DBCP 1.0).
  *
- * @author <a href="mailto:mike@atlassian.com">Mike Cannon-Brookes</a>
- * @version 1.0
- * Created on Dec 18, 2001, 5:03 PM
+ * @author     <a href="mailto:mike@atlassian.com">Mike Cannon-Brookes</a>
+ * @version    $Revision: 1.2 $
+ * @since      2.0
  */
 public class DBCPConnectionFactory {
 
