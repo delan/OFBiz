@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.26 2004/07/19 02:41:37 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.27 2004/07/27 06:08:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -398,6 +398,10 @@ public class CheckOutHelper {
         return result;
     }
 
+    public Map createOrder(GenericValue userLogin) {
+        return createOrder(userLogin, null, null, null, false, null, null);
+    }
+
     // Create order event - uses createOrder service for processing
     public Map createOrder(GenericValue userLogin, String distributorId, String affiliateId,
             List trackingCodeOrders, boolean areOrderItemsExploded, String visitId, String webSiteId) {
@@ -525,13 +529,20 @@ public class CheckOutHelper {
     }
 
     public void calcAndAddTax() throws GeneralException {
+        calcAndAddTax(null);
+    }
+
+    public void calcAndAddTax(GenericValue shipAddress) throws GeneralException {
         if (!"SALES_ORDER".equals(cart.getOrderType())) {
             return;
         }
+
+        String productStoreId = cart.getProductStoreId();
         List items = this.cart.makeOrderItems();
         List adjs = this.cart.makeAllAdjustments();
-        GenericValue shipAddress = this.cart.getShippingAddress();
-        String productStoreId = cart.getProductStoreId();
+        if (shipAddress == null) {
+            shipAddress = this.cart.getShippingAddress();
+        }
 
         if (shipAddress == null) {
             throw new GeneralException("Shipping address is not set in the shopping cart.");
@@ -730,21 +741,21 @@ public class CheckOutHelper {
                     return ServiceUtil.returnError(ERROR_MESSAGE);
                 }
             }
-        } else if (paymentMethodTypeIds.contains("EXT_COD") || paymentMethodTypeIds.contains("EXT_BILLACT")) {
+        } else if (paymentMethodTypeIds.contains("CASH") || paymentMethodTypeIds.contains("EXT_COD") || paymentMethodTypeIds.contains("EXT_BILLACT")) {
             boolean hasOther = false;
             boolean validAmount = false;
 
             Iterator pmti = paymentMethodTypeIds.iterator();
             while (pmti.hasNext()) {
                 String type = (String) pmti.next();
-                if (!"EXT_COD".equals(type) && !"EXT_BILLACT".equals(type)) {
+                if (!"CASH".equals(type) && !"EXT_COD".equals(type) && !"EXT_BILLACT".equals(type)) {
                     hasOther = true;
                     break;
                 }
             }
 
             if (!hasOther) {
-                if (!paymentMethodTypeIds.contains("EXT_COD")) {
+                if (!paymentMethodTypeIds.contains("CASH") && !paymentMethodTypeIds.contains("EXT_COD")) {
                     // only billing account, make sure we have enough to cover
                     String billingAccountId = cart.getBillingAccountId();
                     double billAcctCredit = this.availableAccountBalance(billingAccountId);
