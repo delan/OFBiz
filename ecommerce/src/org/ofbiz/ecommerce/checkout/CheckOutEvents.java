@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2001/09/20 22:47:36  jonesde
+ * Fixed illegal use of getRelatedOne
+ *
  * Revision 1.16  2001/09/19 08:42:08  jonesde
  * Initial checkin of refactored entity engine.
  *
@@ -78,6 +81,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.ecommerce.shoppingcart.*;
+import org.ofbiz.ecommerce.distributor.*;
 
 /**
  * <p><b>Title:</b> CheckOutEvents.java
@@ -216,6 +220,13 @@ public class CheckOutEvents {
         "partyId", userLogin.get("partyId"),
         "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
       }
+      String distributorId = DistributorEvents.getDistributorId(request);
+      if (UtilValidate.isNotEmpty(distributorId)) {
+          order.preStoreOther(delegator.makeValue("OrderRole", UtilMisc.toMap(
+            "orderId", orderId,
+            "partyId", distributorId,
+            "roleTypeId", "DISTRIBUTOR")));
+      } 
       
       order.preStoreOther(delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(), "statusId", "Requested", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
       
