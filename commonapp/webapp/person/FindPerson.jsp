@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue May 22 23:54:50 MDT 2001
+ *@created    Mon May 28 22:00:33 MDT 2001
  *@version    1.0
  */
 %>
@@ -41,7 +41,7 @@
 
 <%pageContext.setAttribute("PageName", "FindPerson"); %>
 
-<%@ include file="/includes/header.jsp" %> 
+<%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 
 <%boolean hasViewPermission=Security.hasEntityPermission("PERSON", "_VIEW", session);%>
@@ -97,7 +97,7 @@
 
     else if(searchType.compareTo("LastName") == 0) personCollection = PersonHelper.findByLastName(searchParam1);
 
-    else if(searchType.compareTo("FirstNameAndLastName") == 0) personCollection = PersonHelper.findByFirstNameAndLastName(searchParam1,searchParam2);
+    else if(searchType.compareTo("FirstNameAndLastName") == 0) personCollection = PersonHelper.findByFirstNameAndLastName(searchParam1, searchParam2);
 
     else if(searchType.compareTo("HomePhone") == 0) personCollection = PersonHelper.findByHomePhone(searchParam1);
 
@@ -129,7 +129,7 @@
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
-    <form method="post" action="FindPerson.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindPerson.jsp")%>" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
@@ -146,7 +146,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">FirstName: </td>
-    <form method="post" action="FindPerson.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindPerson.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="FirstName">
 
@@ -161,7 +161,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">LastName: </td>
-    <form method="post" action="FindPerson.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindPerson.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="LastName">
 
@@ -176,7 +176,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">FirstName and LastName: </td>
-    <form method="post" action="FindPerson.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindPerson.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="FirstNameAndLastName">
 
@@ -192,7 +192,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">HomePhone: </td>
-    <form method="post" action="FindPerson.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindPerson.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="HomePhone">
 
@@ -207,7 +207,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">Email: </td>
-    <form method="post" action="FindPerson.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindPerson.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="Email">
 
@@ -221,7 +221,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">Display All: </td>
-    <form method="post" action="FindPerson.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindPerson.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="all">
       </td>
@@ -234,7 +234,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>Persons found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="EditPerson.jsp" class="buttontext">[Create Person]</a>
+  <a href="<%=response.encodeURL("EditPerson.jsp")%>" class="buttontext">[Create Person]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -242,13 +242,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="FindPerson.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex-1%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL("FindPerson.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="FindPerson.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex+1%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL("FindPerson.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -259,12 +259,24 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr bgcolor="<%=rowColorResultHeader%>">
   
-      <td><div class="tabletext"><b><nobr>Username</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>First Name</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>Last Name</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>Home Phone</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>Email</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>State</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>USERNAME</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PASSWORD</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>FIRST_NAME</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>MIDDLE_NAME</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>LAST_NAME</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>TITLE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>SUFFIX</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>HOME_PHONE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>WORK_PHONE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>FAX</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>EMAIL</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>HOME_STREET1</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>HOME_STREET2</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>HOME_CITY</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>HOME_COUNTY</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>HOME_STATE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>HOME_COUNTRY</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>HOME_POSTAL_CODE</nobr></b></div></td>
       <td>&nbsp;</td>
       <%if(hasUpdatePermission){%>
         <td>&nbsp;</td>
@@ -297,7 +309,23 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td>
         <div class="tabletext">
     
+      <%=UtilFormatOut.checkNull(person.getPassword())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+    
       <%=UtilFormatOut.checkNull(person.getFirstName())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getMiddleName())%>
     
         &nbsp;</div>
       </td>
@@ -309,6 +337,23 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     
         &nbsp;</div>
       </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getTitle())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getSuffix())%>
+    
+        &nbsp;</div>
+      </td>
+  
       <td>
         <div class="tabletext">
     
@@ -316,6 +361,23 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     
         &nbsp;</div>
       </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getWorkPhone())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getFax())%>
+    
+        &nbsp;</div>
+      </td>
+  
       <td>
         <div class="tabletext">
     
@@ -323,6 +385,39 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     
         &nbsp;</div>
       </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getHomeStreet1())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getHomeStreet2())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getHomeCity())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getHomeCounty())%>
+    
+        &nbsp;</div>
+      </td>
+  
       <td>
         <div class="tabletext">
     
@@ -330,17 +425,34 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     
         &nbsp;</div>
       </td>
+  
       <td>
-        <a href="ViewPerson.jsp?PERSON_USERNAME=<%=person.getUsername()%>" class="buttontext">[View]</a>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getHomeCountry())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(person.getHomePostalCode())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <a href="<%=response.encodeURL("ViewPerson.jsp?" + "PERSON_USERNAME=" + person.getUsername())%>" class="buttontext">[View]</a>
       </td>
       <%if(hasUpdatePermission){%>
         <td>
-          <a href="EditPerson.jsp?PERSON_USERNAME=<%=person.getUsername()%>" class="buttontext">[Edit]</a>
+          <a href="<%=response.encodeURL("EditPerson.jsp?" + "PERSON_USERNAME=" + person.getUsername())%>" class="buttontext">[Edit]</a>
         </td>
       <%}%>
       <%if(hasDeletePermission){%>
         <td>
-          <a href="FindPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&PERSON_USERNAME=<%=person.getUsername()%>&<%=curFindString%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL("FindPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&" + "PERSON_USERNAME=" + person.getUsername() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -360,26 +472,26 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 </table>
 
 <table border="0" width="100%" cellpadding="2">
-<%if(arraySize > 0){%>
-  <tr bgcolor="<%=rowColorResultIndex%>">
-    <td align="left">
-      <b>
-      <% if(viewIndex > 0) { %>
-      <a href="FindPerson.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex-1%>" class="buttontext">[Previous]</a> |
-      <% } %>
-      <% if(arraySize > 0) { %>
-      <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
-      <% } %>
-      <% if(arraySize>highIndex) { %>
-      | <a href="FindPerson.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex+1%>" class="buttontext">[Next]</a>
-      <% } %>
-      </b>
-    </td>
-  </tr>
-<%}%>
+<% if(arraySize > 0) { %>
+    <tr bgcolor="<%=rowColorResultIndex%>">
+      <td align="left">
+        <b>
+        <% if(viewIndex > 0) { %>
+          <a href="<%=response.encodeURL("FindPerson.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+        <% } %>
+        <% if(arraySize > 0) { %>
+          <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
+        <% } %>
+        <% if(arraySize>highIndex) { %>
+          | <a href="<%=response.encodeURL("FindPerson.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+        <% } %>
+        </b>
+      </td>
+    </tr>
+<% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="EditPerson.jsp" class="buttontext">[Create Person]</a>
+  <a href="<%=response.encodeURL("EditPerson.jsp")%>" class="buttontext">[Create Person]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (PERSON_ADMIN, or PERSON_VIEW needed).</h3>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 12:49:59 MDT 2001
+ *@created    Mon May 28 22:00:55 MDT 2001
  *@version    1.0
  */
 %>
@@ -63,21 +63,21 @@
   PersonAttribute personAttribute = PersonAttributeHelper.findByPrimaryKey(username, name);
 %>
 
-<a href="FindPersonAttribute.jsp" class="buttontext">[Find PersonAttribute]</a>
+<a href="<%=response.encodeURL("FindPersonAttribute.jsp")%>" class="buttontext">[Find PersonAttribute]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonAttribute.jsp" class="buttontext">[Create PersonAttribute]</a>
+  <a href="<%=response.encodeURL("EditPersonAttribute.jsp")%>" class="buttontext">[Create PersonAttribute]</a>
 <%}%>
 <%if(personAttribute != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditPersonAttribute.jsp?WEBEVENT=UPDATE_PERSON_ATTRIBUTE&UPDATE_MODE=DELETE&PERSON_ATTRIBUTE_USERNAME=<%=username%>&PERSON_ATTRIBUTE_NAME=<%=name%>" class="buttontext">[Delete this PersonAttribute]</a>
+    <a href="<%=response.encodeURL("EditPersonAttribute.jsp?WEBEVENT=UPDATE_PERSON_ATTRIBUTE&UPDATE_MODE=DELETE&" + "PERSON_ATTRIBUTE_USERNAME=" + username + "&" + "PERSON_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[Delete this PersonAttribute]</a>
   <%}%>
 <%}%>
 <%if(username != null && name != null){%>
-  <a href="ViewPersonAttribute.jsp?PERSON_ATTRIBUTE_USERNAME=<%=username%>&PERSON_ATTRIBUTE_NAME=<%=name%>" class="buttontext">[View PersonAttribute Details]</a>
+  <a href="<%=response.encodeURL("ViewPersonAttribute.jsp?" + "PERSON_ATTRIBUTE_USERNAME=" + username + "&" + "PERSON_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[View PersonAttribute Details]</a>
 <%}%>
 <br>
 
-<form action="EditPersonAttribute.jsp" method="POST" name="updateForm">
+<form action="<%=response.encodeURL("EditPersonAttribute.jsp")%>" method="POST" name="updateForm">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(personAttribute == null){%>
@@ -191,17 +191,17 @@
 </table>
 </form>
 
-<a href="FindPersonAttribute.jsp" class="buttontext">[Find PersonAttribute]</a>
+<a href="<%=response.encodeURL("FindPersonAttribute.jsp")%>" class="buttontext">[Find PersonAttribute]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonAttribute.jsp" class="buttontext">[Create PersonAttribute]</a>
+  <a href="<%=response.encodeURL("EditPersonAttribute.jsp")%>" class="buttontext">[Create PersonAttribute]</a>
 <%}%>
 <%if(personAttribute != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditPersonAttribute.jsp?WEBEVENT=UPDATE_PERSON_ATTRIBUTE&UPDATE_MODE=DELETE&PERSON_ATTRIBUTE_USERNAME=<%=username%>&PERSON_ATTRIBUTE_NAME=<%=name%>" class="buttontext">[Delete this PersonAttribute]</a>
+    <a href="<%=response.encodeURL("EditPersonAttribute.jsp?WEBEVENT=UPDATE_PERSON_ATTRIBUTE&UPDATE_MODE=DELETE&" + "PERSON_ATTRIBUTE_USERNAME=" + username + "&" + "PERSON_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[Delete this PersonAttribute]</a>
   <%}%>
 <%}%>
 <%if(username != null && name != null){%>
-  <a href="ViewPersonAttribute.jsp?PERSON_ATTRIBUTE_USERNAME=<%=username%>&PERSON_ATTRIBUTE_NAME=<%=name%>" class="buttontext">[View PersonAttribute Details]</a>
+  <a href="<%=response.encodeURL("ViewPersonAttribute.jsp?" + "PERSON_ATTRIBUTE_USERNAME=" + username + "&" + "PERSON_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[View PersonAttribute Details]</a>
 <%}%>
 <br>
 <%}else{%>
@@ -210,3 +210,4 @@
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
+

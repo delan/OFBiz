@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:35:55 MDT 2001
+ *@created    Mon May 28 22:02:45 MDT 2001
  *@version    1.0
  */
 %>
@@ -61,21 +61,21 @@
   SecurityGroup securityGroup = SecurityGroupHelper.findByPrimaryKey(groupId);
 %>
 
-<a href="FindSecurityGroup.jsp" class="buttontext">[Find SecurityGroup]</a>
+<a href="<%=response.encodeURL("FindSecurityGroup.jsp")%>" class="buttontext">[Find SecurityGroup]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityGroup.jsp" class="buttontext">[Create SecurityGroup]</a>
+  <a href="<%=response.encodeURL("EditSecurityGroup.jsp")%>" class="buttontext">[Create SecurityGroup]</a>
 <%}%>
 <%if(securityGroup != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditSecurityGroup.jsp?WEBEVENT=UPDATE_SECURITY_GROUP&UPDATE_MODE=DELETE&SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[Delete this SecurityGroup]</a>
+    <a href="<%=response.encodeURL("EditSecurityGroup.jsp?WEBEVENT=UPDATE_SECURITY_GROUP&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Delete this SecurityGroup]</a>
   <%}%>
 <%}%>
 <%if(groupId != null){%>
-  <a href="ViewSecurityGroup.jsp?SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[View SecurityGroup Details]</a>
+  <a href="<%=response.encodeURL("ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[View SecurityGroup Details]</a>
 <%}%>
 <br>
 
-<form action="EditSecurityGroup.jsp" method="POST" name="updateForm">
+<form action="<%=response.encodeURL("EditSecurityGroup.jsp")%>" method="POST" name="updateForm">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(securityGroup == null){%>
@@ -164,17 +164,17 @@
 </table>
 </form>
 
-<a href="FindSecurityGroup.jsp" class="buttontext">[Find SecurityGroup]</a>
+<a href="<%=response.encodeURL("FindSecurityGroup.jsp")%>" class="buttontext">[Find SecurityGroup]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityGroup.jsp" class="buttontext">[Create SecurityGroup]</a>
+  <a href="<%=response.encodeURL("EditSecurityGroup.jsp")%>" class="buttontext">[Create SecurityGroup]</a>
 <%}%>
 <%if(securityGroup != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditSecurityGroup.jsp?WEBEVENT=UPDATE_SECURITY_GROUP&UPDATE_MODE=DELETE&SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[Delete this SecurityGroup]</a>
+    <a href="<%=response.encodeURL("EditSecurityGroup.jsp?WEBEVENT=UPDATE_SECURITY_GROUP&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Delete this SecurityGroup]</a>
   <%}%>
 <%}%>
 <%if(groupId != null){%>
-  <a href="ViewSecurityGroup.jsp?SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[View SecurityGroup Details]</a>
+  <a href="<%=response.encodeURL("ViewSecurityGroup.jsp?" + "SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[View SecurityGroup Details]</a>
 <%}%>
 <br>
 <%}else{%>
@@ -183,3 +183,4 @@
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
+

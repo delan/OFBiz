@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 12:50:53 MDT 2001
+ *@created    Fri May 25 14:26:03 MDT 2001
  *@version    1.0
  */
 %>
@@ -61,18 +61,18 @@
   PersonType personType = PersonTypeHelper.findByPrimaryKey(typeId);
 %>
 
-<a href="FindPersonType.jsp" class="buttontext">[Find PersonType]</a>
+<a href="<%=response.encodeURL("FindPersonType.jsp")%>" class="buttontext">[Find PersonType]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonType.jsp" class="buttontext">[Create PersonType]</a>
+  <a href="<%=response.encodeURL("EditPersonType.jsp")%>" class="buttontext">[Create PersonType]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(personType != null){%>
-    <a href="EditPersonType.jsp?WEBEVENT=UPDATE_PERSON_TYPE&UPDATE_MODE=DELETE&PERSON_TYPE_TYPE_ID=<%=typeId%>" class="buttontext">[Delete this PersonType]</a>
+<%if(personType != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditPersonType.jsp?WEBEVENT=UPDATE_PERSON_TYPE&UPDATE_MODE=DELETE&" + "PERSON_TYPE_TYPE_ID=" + typeId)%>" class="buttontext">[Delete this PersonType]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(typeId != null){%>
-    <a href="EditpersonType.jsp?PERSON_TYPE_TYPE_ID=<%=typeId%>" class="buttontext">[Edit PersonType]</a>
+    <a href="<%=response.encodeURL("EditPersonType.jsp?" + "PERSON_TYPE_TYPE_ID=" + typeId)%>" class="buttontext">[Edit PersonType]</a>
   <%}%>
 <%}%>
 
@@ -106,18 +106,18 @@
 <%} //end if personType == null %>
 </table>
 
-<a href="FindPersonType.jsp" class="buttontext">[Find PersonType]</a>
+<a href="<%=response.encodeURL("FindPersonType.jsp")%>" class="buttontext">[Find PersonType]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonType.jsp" class="buttontext">[Create PersonType]</a>
+  <a href="<%=response.encodeURL("EditPersonType.jsp")%>" class="buttontext">[Create PersonType]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(personType != null){%>
-    <a href="EditPersonType.jsp?WEBEVENT=UPDATE_PERSON_TYPE&UPDATE_MODE=DELETE&PERSON_TYPE_TYPE_ID=<%=typeId%>" class="buttontext">[Delete this PersonType]</a>
+<%if(personType != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditPersonType.jsp?WEBEVENT=UPDATE_PERSON_TYPE&UPDATE_MODE=DELETE&" + "PERSON_TYPE_TYPE_ID=" + typeId)%>" class="buttontext">[Delete this PersonType]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(typeId != null){%>
-    <a href="EditpersonType.jsp?PERSON_TYPE_TYPE_ID=<%=typeId%>" class="buttontext">[Edit PersonType]</a>
+    <a href="<%=response.encodeURL("EditPersonType.jsp?" + "PERSON_TYPE_TYPE_ID=" + typeId)%>" class="buttontext">[Edit PersonType]</a>
   <%}%>
 <%}%>
 <br>

@@ -24,12 +24,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue May 22 23:55:00 MDT 2001
+ *@created    Mon May 28 21:59:02 MDT 2001
  *@version    1.0
  */
 %>
 
-<%@ page import="org.ofbiz.commonapp.person.*" %> 
+<%@ page import="org.ofbiz.commonapp.person.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.commonapp.common.*" %>
 <%@ page import="org.ofbiz.commonapp.webevent.*" %>
@@ -61,21 +61,21 @@
   Person person = PersonHelper.findByPrimaryKey(username);
 %>
 
-<a href="FindPerson.jsp" class="buttontext">[Find Person]</a>
+<a href="<%=response.encodeURL("FindPerson.jsp")%>" class="buttontext">[Find Person]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPerson.jsp" class="buttontext">[Create Person]</a>
+  <a href="<%=response.encodeURL("EditPerson.jsp")%>" class="buttontext">[Create Person]</a>
 <%}%>
 <%if(person != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&PERSON_USERNAME=<%=username%>" class="buttontext">[Delete this Person]</a>
+    <a href="<%=response.encodeURL("EditPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&" + "PERSON_USERNAME=" + username)%>" class="buttontext">[Delete this Person]</a>
   <%}%>
 <%}%>
 <%if(username != null){%>
-  <a href="ViewPerson.jsp?PERSON_USERNAME=<%=username%>" class="buttontext">[View Person Details]</a>
+  <a href="<%=response.encodeURL("ViewPerson.jsp?" + "PERSON_USERNAME=" + username)%>" class="buttontext">[View Person Details]</a>
 <%}%>
 <br>
 
-<form action="EditPerson.jsp" method="POST" name="updateForm">
+<form action="<%=response.encodeURL("EditPerson.jsp")%>" method="POST" name="updateForm">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(person == null){%>
@@ -340,17 +340,17 @@
 </table>
 </form>
 
-<a href="FindPerson.jsp" class="buttontext">[Find Person]</a>
+<a href="<%=response.encodeURL("FindPerson.jsp")%>" class="buttontext">[Find Person]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPerson.jsp" class="buttontext">[Create Person]</a>
+  <a href="<%=response.encodeURL("EditPerson.jsp")%>" class="buttontext">[Create Person]</a>
 <%}%>
 <%if(person != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&PERSON_USERNAME=<%=username%>" class="buttontext">[Delete this Person]</a>
+    <a href="<%=response.encodeURL("EditPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&" + "PERSON_USERNAME=" + username)%>" class="buttontext">[Delete this Person]</a>
   <%}%>
 <%}%>
 <%if(username != null){%>
-  <a href="ViewPerson.jsp?PERSON_USERNAME=<%=username%>" class="buttontext">[View Person Details]</a>
+  <a href="<%=response.encodeURL("ViewPerson.jsp?" + "PERSON_USERNAME=" + username)%>" class="buttontext">[View Person Details]</a>
 <%}%>
 <br>
 <%}else{%>
@@ -359,3 +359,4 @@
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
+

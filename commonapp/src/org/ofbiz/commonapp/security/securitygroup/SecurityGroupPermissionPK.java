@@ -27,10 +27,9 @@ import java.io.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:31:23 MDT 2001
+ *@created    Mon May 28 21:33:43 MDT 2001
  *@version    1.0
  */
-
 public class SecurityGroupPermissionPK implements Serializable
 {
 
@@ -68,10 +67,10 @@ public class SecurityGroupPermissionPK implements Serializable
   }
 
   /**
-   *  Description of the Method
+   *  Determines the equality of two SecurityGroupPermissionPK objects, overrides the default equals
    *
-   *@param  obj  Description of Field
-   *@return      Description of the Returned Value
+   *@param  obj  The object (SecurityGroupPermissionPK) to compare this two
+   *@return      boolean stating if the two objects are equal
    */
   public boolean equals(Object obj)
   {
@@ -88,12 +87,22 @@ public class SecurityGroupPermissionPK implements Serializable
   }
 
   /**
-   *  Description of the Method
+   *  Creates a hashCode for the combined primary keys, using the default String hashCode, overrides the default hashCode
    *
-   *@return    Description of the Returned Value
+   *@return    Hashcode corresponding to this primary key
    */
   public int hashCode()
   {
-    return (groupId + permissionId).hashCode();
+    return (groupId + "::" + permissionId).hashCode();
+  }
+
+  /**
+   *  Creates a String for the combined primary keys, overrides the default toString
+   *
+   *@return    String corresponding to this primary key
+   */
+  public String toString()
+  {
+    return groupId + "::" + permissionId;
   }
 }

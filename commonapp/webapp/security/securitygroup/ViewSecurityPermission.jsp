@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:37:06 MDT 2001
+ *@created    Fri May 25 14:28:46 MDT 2001
  *@version    1.0
  */
 %>
@@ -61,18 +61,18 @@
   SecurityPermission securityPermission = SecurityPermissionHelper.findByPrimaryKey(permissionId);
 %>
 
-<a href="FindSecurityPermission.jsp" class="buttontext">[Find SecurityPermission]</a>
+<a href="<%=response.encodeURL("FindSecurityPermission.jsp")%>" class="buttontext">[Find SecurityPermission]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityPermission.jsp" class="buttontext">[Create SecurityPermission]</a>
+  <a href="<%=response.encodeURL("EditSecurityPermission.jsp")%>" class="buttontext">[Create SecurityPermission]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(securityPermission != null){%>
-    <a href="EditSecurityPermission.jsp?WEBEVENT=UPDATE_SECURITY_PERMISSION&UPDATE_MODE=DELETE&SECURITY_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Delete this SecurityPermission]</a>
+<%if(securityPermission != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditSecurityPermission.jsp?WEBEVENT=UPDATE_SECURITY_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityPermission]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(permissionId != null){%>
-    <a href="EditsecurityPermission.jsp?SECURITY_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Edit SecurityPermission]</a>
+    <a href="<%=response.encodeURL("EditSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Edit SecurityPermission]</a>
   <%}%>
 <%}%>
 
@@ -106,18 +106,18 @@
 <%} //end if securityPermission == null %>
 </table>
 
-<a href="FindSecurityPermission.jsp" class="buttontext">[Find SecurityPermission]</a>
+<a href="<%=response.encodeURL("FindSecurityPermission.jsp")%>" class="buttontext">[Find SecurityPermission]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityPermission.jsp" class="buttontext">[Create SecurityPermission]</a>
+  <a href="<%=response.encodeURL("EditSecurityPermission.jsp")%>" class="buttontext">[Create SecurityPermission]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(securityPermission != null){%>
-    <a href="EditSecurityPermission.jsp?WEBEVENT=UPDATE_SECURITY_PERMISSION&UPDATE_MODE=DELETE&SECURITY_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Delete this SecurityPermission]</a>
+<%if(securityPermission != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditSecurityPermission.jsp?WEBEVENT=UPDATE_SECURITY_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityPermission]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(permissionId != null){%>
-    <a href="EditsecurityPermission.jsp?SECURITY_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Edit SecurityPermission]</a>
+    <a href="<%=response.encodeURL("EditSecurityPermission.jsp?" + "SECURITY_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Edit SecurityPermission]</a>
   <%}%>
 <%}%>
 <br>

@@ -27,10 +27,9 @@ import java.io.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 12:49:28 MDT 2001
+ *@created    Mon May 28 21:34:51 MDT 2001
  *@version    1.0
  */
-
 public class PersonAttributePK implements Serializable
 {
 
@@ -68,10 +67,10 @@ public class PersonAttributePK implements Serializable
   }
 
   /**
-   *  Description of the Method
+   *  Determines the equality of two PersonAttributePK objects, overrides the default equals
    *
-   *@param  obj  Description of Field
-   *@return      Description of the Returned Value
+   *@param  obj  The object (PersonAttributePK) to compare this two
+   *@return      boolean stating if the two objects are equal
    */
   public boolean equals(Object obj)
   {
@@ -88,12 +87,22 @@ public class PersonAttributePK implements Serializable
   }
 
   /**
-   *  Description of the Method
+   *  Creates a hashCode for the combined primary keys, using the default String hashCode, overrides the default hashCode
    *
-   *@return    Description of the Returned Value
+   *@return    Hashcode corresponding to this primary key
    */
   public int hashCode()
   {
-    return (username + name).hashCode();
+    return (username + "::" + name).hashCode();
+  }
+
+  /**
+   *  Creates a String for the combined primary keys, overrides the default toString
+   *
+   *@return    String corresponding to this primary key
+   */
+  public String toString()
+  {
+    return username + "::" + name;
   }
 }

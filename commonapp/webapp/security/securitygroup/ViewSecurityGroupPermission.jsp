@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:32:54 MDT 2001
+ *@created    Fri May 25 14:29:14 MDT 2001
  *@version    1.0
  */
 %>
@@ -63,18 +63,18 @@
   SecurityGroupPermission securityGroupPermission = SecurityGroupPermissionHelper.findByPrimaryKey(groupId, permissionId);
 %>
 
-<a href="FindSecurityGroupPermission.jsp" class="buttontext">[Find SecurityGroupPermission]</a>
+<a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" class="buttontext">[Find SecurityGroupPermission]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityGroupPermission.jsp" class="buttontext">[Create SecurityGroupPermission]</a>
+  <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" class="buttontext">[Create SecurityGroupPermission]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(securityGroupPermission != null){%>
-    <a href="EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&SECURITY_GROUP_PERMISSION_GROUP_ID=<%=groupId%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
+<%if(securityGroupPermission != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(groupId != null && permissionId != null){%>
-    <a href="EditsecurityGroupPermission.jsp?SECURITY_GROUP_PERMISSION_GROUP_ID=<%=groupId%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Edit SecurityGroupPermission]</a>
+    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Edit SecurityGroupPermission]</a>
   <%}%>
 <%}%>
 
@@ -108,18 +108,18 @@
 <%} //end if securityGroupPermission == null %>
 </table>
 
-<a href="FindSecurityGroupPermission.jsp" class="buttontext">[Find SecurityGroupPermission]</a>
+<a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" class="buttontext">[Find SecurityGroupPermission]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityGroupPermission.jsp" class="buttontext">[Create SecurityGroupPermission]</a>
+  <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" class="buttontext">[Create SecurityGroupPermission]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(securityGroupPermission != null){%>
-    <a href="EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&SECURITY_GROUP_PERMISSION_GROUP_ID=<%=groupId%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
+<%if(securityGroupPermission != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(groupId != null && permissionId != null){%>
-    <a href="EditsecurityGroupPermission.jsp?SECURITY_GROUP_PERMISSION_GROUP_ID=<%=groupId%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Edit SecurityGroupPermission]</a>
+    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Edit SecurityGroupPermission]</a>
   <%}%>
 <%}%>
 <br>

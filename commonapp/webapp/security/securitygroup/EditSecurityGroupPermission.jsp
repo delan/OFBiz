@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:32:04 MDT 2001
+ *@created    Mon May 28 22:03:55 MDT 2001
  *@version    1.0
  */
 %>
@@ -63,21 +63,21 @@
   SecurityGroupPermission securityGroupPermission = SecurityGroupPermissionHelper.findByPrimaryKey(groupId, permissionId);
 %>
 
-<a href="FindSecurityGroupPermission.jsp" class="buttontext">[Find SecurityGroupPermission]</a>
+<a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" class="buttontext">[Find SecurityGroupPermission]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityGroupPermission.jsp" class="buttontext">[Create SecurityGroupPermission]</a>
+  <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" class="buttontext">[Create SecurityGroupPermission]</a>
 <%}%>
 <%if(securityGroupPermission != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&SECURITY_GROUP_PERMISSION_GROUP_ID=<%=groupId%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
+    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
   <%}%>
 <%}%>
 <%if(groupId != null && permissionId != null){%>
-  <a href="ViewSecurityGroupPermission.jsp?SECURITY_GROUP_PERMISSION_GROUP_ID=<%=groupId%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[View SecurityGroupPermission Details]</a>
+  <a href="<%=response.encodeURL("ViewSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[View SecurityGroupPermission Details]</a>
 <%}%>
 <br>
 
-<form action="EditSecurityGroupPermission.jsp" method="POST" name="updateForm">
+<form action="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" method="POST" name="updateForm">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(securityGroupPermission == null){%>
@@ -180,17 +180,17 @@
 </table>
 </form>
 
-<a href="FindSecurityGroupPermission.jsp" class="buttontext">[Find SecurityGroupPermission]</a>
+<a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" class="buttontext">[Find SecurityGroupPermission]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityGroupPermission.jsp" class="buttontext">[Create SecurityGroupPermission]</a>
+  <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" class="buttontext">[Create SecurityGroupPermission]</a>
 <%}%>
 <%if(securityGroupPermission != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&SECURITY_GROUP_PERMISSION_GROUP_ID=<%=groupId%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
+    <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[Delete this SecurityGroupPermission]</a>
   <%}%>
 <%}%>
 <%if(groupId != null && permissionId != null){%>
-  <a href="ViewSecurityGroupPermission.jsp?SECURITY_GROUP_PERMISSION_GROUP_ID=<%=groupId%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=permissionId%>" class="buttontext">[View SecurityGroupPermission Details]</a>
+  <a href="<%=response.encodeURL("ViewSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + groupId + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + permissionId)%>" class="buttontext">[View SecurityGroupPermission Details]</a>
 <%}%>
 <br>
 <%}else{%>
@@ -199,3 +199,4 @@
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
+

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 12:52:44 MDT 2001
+ *@created    Mon May 28 22:01:53 MDT 2001
  *@version    1.0
  */
 %>
@@ -63,21 +63,21 @@
   PersonTypeAttribute personTypeAttribute = PersonTypeAttributeHelper.findByPrimaryKey(typeId, name);
 %>
 
-<a href="FindPersonTypeAttribute.jsp" class="buttontext">[Find PersonTypeAttribute]</a>
+<a href="<%=response.encodeURL("FindPersonTypeAttribute.jsp")%>" class="buttontext">[Find PersonTypeAttribute]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonTypeAttribute.jsp" class="buttontext">[Create PersonTypeAttribute]</a>
+  <a href="<%=response.encodeURL("EditPersonTypeAttribute.jsp")%>" class="buttontext">[Create PersonTypeAttribute]</a>
 <%}%>
 <%if(personTypeAttribute != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditPersonTypeAttribute.jsp?WEBEVENT=UPDATE_PERSON_TYPE_ATTRIBUTE&UPDATE_MODE=DELETE&PERSON_TYPE_ATTRIBUTE_TYPE_ID=<%=typeId%>&PERSON_TYPE_ATTRIBUTE_NAME=<%=name%>" class="buttontext">[Delete this PersonTypeAttribute]</a>
+    <a href="<%=response.encodeURL("EditPersonTypeAttribute.jsp?WEBEVENT=UPDATE_PERSON_TYPE_ATTRIBUTE&UPDATE_MODE=DELETE&" + "PERSON_TYPE_ATTRIBUTE_TYPE_ID=" + typeId + "&" + "PERSON_TYPE_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[Delete this PersonTypeAttribute]</a>
   <%}%>
 <%}%>
 <%if(typeId != null && name != null){%>
-  <a href="ViewPersonTypeAttribute.jsp?PERSON_TYPE_ATTRIBUTE_TYPE_ID=<%=typeId%>&PERSON_TYPE_ATTRIBUTE_NAME=<%=name%>" class="buttontext">[View PersonTypeAttribute Details]</a>
+  <a href="<%=response.encodeURL("ViewPersonTypeAttribute.jsp?" + "PERSON_TYPE_ATTRIBUTE_TYPE_ID=" + typeId + "&" + "PERSON_TYPE_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[View PersonTypeAttribute Details]</a>
 <%}%>
 <br>
 
-<form action="EditPersonTypeAttribute.jsp" method="POST" name="updateForm">
+<form action="<%=response.encodeURL("EditPersonTypeAttribute.jsp")%>" method="POST" name="updateForm">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(personTypeAttribute == null){%>
@@ -180,17 +180,17 @@
 </table>
 </form>
 
-<a href="FindPersonTypeAttribute.jsp" class="buttontext">[Find PersonTypeAttribute]</a>
+<a href="<%=response.encodeURL("FindPersonTypeAttribute.jsp")%>" class="buttontext">[Find PersonTypeAttribute]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonTypeAttribute.jsp" class="buttontext">[Create PersonTypeAttribute]</a>
+  <a href="<%=response.encodeURL("EditPersonTypeAttribute.jsp")%>" class="buttontext">[Create PersonTypeAttribute]</a>
 <%}%>
 <%if(personTypeAttribute != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditPersonTypeAttribute.jsp?WEBEVENT=UPDATE_PERSON_TYPE_ATTRIBUTE&UPDATE_MODE=DELETE&PERSON_TYPE_ATTRIBUTE_TYPE_ID=<%=typeId%>&PERSON_TYPE_ATTRIBUTE_NAME=<%=name%>" class="buttontext">[Delete this PersonTypeAttribute]</a>
+    <a href="<%=response.encodeURL("EditPersonTypeAttribute.jsp?WEBEVENT=UPDATE_PERSON_TYPE_ATTRIBUTE&UPDATE_MODE=DELETE&" + "PERSON_TYPE_ATTRIBUTE_TYPE_ID=" + typeId + "&" + "PERSON_TYPE_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[Delete this PersonTypeAttribute]</a>
   <%}%>
 <%}%>
 <%if(typeId != null && name != null){%>
-  <a href="ViewPersonTypeAttribute.jsp?PERSON_TYPE_ATTRIBUTE_TYPE_ID=<%=typeId%>&PERSON_TYPE_ATTRIBUTE_NAME=<%=name%>" class="buttontext">[View PersonTypeAttribute Details]</a>
+  <a href="<%=response.encodeURL("ViewPersonTypeAttribute.jsp?" + "PERSON_TYPE_ATTRIBUTE_TYPE_ID=" + typeId + "&" + "PERSON_TYPE_ATTRIBUTE_NAME=" + name)%>" class="buttontext">[View PersonTypeAttribute Details]</a>
 <%}%>
 <br>
 <%}else{%>
@@ -199,3 +199,4 @@
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
+

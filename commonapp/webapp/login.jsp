@@ -45,11 +45,11 @@
  
   <table width="100%" border="1" cellpadding="3" cellspacing="0">
     <tr>
-      <form method="POST" action="<%=nextPageUrl%>" name="loginform">
+      <form method="POST" action="<%=response.encodeURL(nextPageUrl)%>" name="loginform">
         <input type="hidden" name="WEBPREEVENT" value="login">
         <td><b>Registered&nbsp;User</b></td>
         <td> 
-          Username: <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("PERSON_USERNAME"))%>" size="20">
+          Username: <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20">
           <br>
           Password: <input type="password" name="PASSWORD" value="" size="20">
         </td>
@@ -57,7 +57,7 @@
       </form>
     </tr>
     <tr>
-      <form method="POST" action="person/RequestPerson.jsp">
+      <form method="POST" action="<%=response.encodeURL("person/RequestPerson.jsp")%>">
         <td><b>New&nbsp;User</b></td>
         <td>You may create a new account here:</td>
         <td><input type="submit" value="Create"></td>
@@ -66,7 +66,7 @@
   </table>
 <script language="JavaScript">
 <!--
-  document.loginform.PERSON_USERNAME.focus();
+  document.loginform.USERNAME.focus();
 //-->
 </script>
 

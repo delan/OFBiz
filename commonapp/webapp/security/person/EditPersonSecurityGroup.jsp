@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:33:15 MDT 2001
+ *@created    Mon May 28 22:04:26 MDT 2001
  *@version    1.0
  */
 %>
@@ -63,21 +63,21 @@
   PersonSecurityGroup personSecurityGroup = PersonSecurityGroupHelper.findByPrimaryKey(username, groupId);
 %>
 
-<a href="FindPersonSecurityGroup.jsp" class="buttontext">[Find PersonSecurityGroup]</a>
+<a href="<%=response.encodeURL("FindPersonSecurityGroup.jsp")%>" class="buttontext">[Find PersonSecurityGroup]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonSecurityGroup.jsp" class="buttontext">[Create PersonSecurityGroup]</a>
+  <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp")%>" class="buttontext">[Create PersonSecurityGroup]</a>
 <%}%>
 <%if(personSecurityGroup != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditPersonSecurityGroup.jsp?WEBEVENT=UPDATE_PERSON_SECURITY_GROUP&UPDATE_MODE=DELETE&PERSON_SECURITY_GROUP_USERNAME=<%=username%>&PERSON_SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[Delete this PersonSecurityGroup]</a>
+    <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp?WEBEVENT=UPDATE_PERSON_SECURITY_GROUP&UPDATE_MODE=DELETE&" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Delete this PersonSecurityGroup]</a>
   <%}%>
 <%}%>
 <%if(username != null && groupId != null){%>
-  <a href="ViewPersonSecurityGroup.jsp?PERSON_SECURITY_GROUP_USERNAME=<%=username%>&PERSON_SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[View PersonSecurityGroup Details]</a>
+  <a href="<%=response.encodeURL("ViewPersonSecurityGroup.jsp?" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[View PersonSecurityGroup Details]</a>
 <%}%>
 <br>
 
-<form action="EditPersonSecurityGroup.jsp" method="POST" name="updateForm">
+<form action="<%=response.encodeURL("EditPersonSecurityGroup.jsp")%>" method="POST" name="updateForm">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(personSecurityGroup == null){%>
@@ -180,17 +180,17 @@
 </table>
 </form>
 
-<a href="FindPersonSecurityGroup.jsp" class="buttontext">[Find PersonSecurityGroup]</a>
+<a href="<%=response.encodeURL("FindPersonSecurityGroup.jsp")%>" class="buttontext">[Find PersonSecurityGroup]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonSecurityGroup.jsp" class="buttontext">[Create PersonSecurityGroup]</a>
+  <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp")%>" class="buttontext">[Create PersonSecurityGroup]</a>
 <%}%>
 <%if(personSecurityGroup != null){%>
   <%if(hasDeletePermission){%>
-    <a href="EditPersonSecurityGroup.jsp?WEBEVENT=UPDATE_PERSON_SECURITY_GROUP&UPDATE_MODE=DELETE&PERSON_SECURITY_GROUP_USERNAME=<%=username%>&PERSON_SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[Delete this PersonSecurityGroup]</a>
+    <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp?WEBEVENT=UPDATE_PERSON_SECURITY_GROUP&UPDATE_MODE=DELETE&" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Delete this PersonSecurityGroup]</a>
   <%}%>
 <%}%>
 <%if(username != null && groupId != null){%>
-  <a href="ViewPersonSecurityGroup.jsp?PERSON_SECURITY_GROUP_USERNAME=<%=username%>&PERSON_SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[View PersonSecurityGroup Details]</a>
+  <a href="<%=response.encodeURL("ViewPersonSecurityGroup.jsp?" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[View PersonSecurityGroup Details]</a>
 <%}%>
 <br>
 <%}else{%>
@@ -199,3 +199,4 @@
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
+

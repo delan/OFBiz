@@ -59,13 +59,13 @@ function mClk(src){
 
       String loginUrl = request.getRequestURI() + "?" + queryString;
     %>
-    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="/commonapp/main.jsp" class="buttontext">Main</a></td>
+    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL("/commonapp/main.jsp")%>" class="buttontext">Main</a></td>
     <%if(headerPerson==null){%>
-      <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=loginUrl%>" class="buttontext">Login</a></td>
+      <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(loginUrl)%>" class="buttontext">Login</a></td>
     <%}else{%>
-      <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="/commonapp/main.jsp?WEBPREEVENT=logout" class="buttontext">Logout</a></td>
+      <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL("/commonapp/main.jsp?WEBPREEVENT=logout")%>" class="buttontext">Logout</a></td>
     <%}%>
     <TD bgcolor="#cccc99" width="90%">&nbsp;</TD>
-    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-left:solid white 2px;padding-right:10px;padding-left:10px;"><a href="/commonapp/sitemap.jsp" class="buttontext">Site&nbsp;Map</a></td>
+    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-left:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL("/commonapp/sitemap.jsp")%>" class="buttontext">Site&nbsp;Map</a></td>
   </TR>
 </TABLE>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:32:44 MDT 2001
+ *@created    Mon May 28 22:04:01 MDT 2001
  *@version    1.0
  */
 %>
@@ -100,7 +100,7 @@
     else if(searchType.compareTo("primaryKey") == 0)
     {
       securityGroupPermissionCollection = new LinkedList();
-      SecurityGroupPermission securityGroupPermissionTemp = SecurityGroupPermissionHelper.findByPrimaryKey(searchParam1,searchParam2);
+      SecurityGroupPermission securityGroupPermissionTemp = SecurityGroupPermissionHelper.findByPrimaryKey(searchParam1, searchParam2);
       if(securityGroupPermissionTemp != null) securityGroupPermissionCollection.add(securityGroupPermissionTemp);
     }
     if(securityGroupPermissionCollection != null) securityGroupPermissionArray = securityGroupPermissionCollection.toArray();
@@ -123,7 +123,7 @@
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
-    <form method="post" action="FindSecurityGroupPermission.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
@@ -141,7 +141,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">GroupId: </td>
-    <form method="post" action="FindSecurityGroupPermission.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="GroupId">
 
@@ -156,7 +156,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">PermissionId: </td>
-    <form method="post" action="FindSecurityGroupPermission.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="PermissionId">
 
@@ -170,7 +170,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">Display All: </td>
-    <form method="post" action="FindSecurityGroupPermission.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="all">
       </td>
@@ -183,7 +183,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>SecurityGroupPermissions found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityGroupPermission.jsp" class="buttontext">[Create SecurityGroupPermission]</a>
+  <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" class="buttontext">[Create SecurityGroupPermission]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -191,13 +191,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="FindSecurityGroupPermission.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex-1%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="FindSecurityGroupPermission.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex+1%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -248,16 +248,16 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       </td>
   
       <td>
-        <a href="ViewSecurityGroupPermission.jsp?SECURITY_GROUP_PERMISSION_GROUP_ID=<%=securityGroupPermission.getGroupId()%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=securityGroupPermission.getPermissionId()%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL("ViewSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermission.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[View]</a>
       </td>
       <%if(hasUpdatePermission){%>
         <td>
-          <a href="EditSecurityGroupPermission.jsp?SECURITY_GROUP_PERMISSION_GROUP_ID=<%=securityGroupPermission.getGroupId()%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=securityGroupPermission.getPermissionId()%>" class="buttontext">[Edit]</a>
+          <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp?" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermission.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Edit]</a>
         </td>
       <%}%>
       <%if(hasDeletePermission){%>
         <td>
-          <a href="FindSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&SECURITY_GROUP_PERMISSION_GROUP_ID=<%=securityGroupPermission.getGroupId()%>&SECURITY_GROUP_PERMISSION_PERMISSION_ID=<%=securityGroupPermission.getPermissionId()%>&<%=curFindString%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp?WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermission.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -277,26 +277,26 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 </table>
 
 <table border="0" width="100%" cellpadding="2">
-<%if(arraySize > 0){%>
-  <tr bgcolor="<%=rowColorResultIndex%>">
-    <td align="left">
-      <b>
-      <% if(viewIndex > 0) { %>
-      <a href="FindSecurityGroupPermission.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex-1%>" class="buttontext">[Previous]</a> |
-      <% } %>
-      <% if(arraySize > 0) { %>
-      <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
-      <% } %>
-      <% if(arraySize>highIndex) { %>
-      | <a href="FindSecurityGroupPermission.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex+1%>" class="buttontext">[Next]</a>
-      <% } %>
-      </b>
-    </td>
-  </tr>
-<%}%>
+<% if(arraySize > 0) { %>
+    <tr bgcolor="<%=rowColorResultIndex%>">
+      <td align="left">
+        <b>
+        <% if(viewIndex > 0) { %>
+          <a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+        <% } %>
+        <% if(arraySize > 0) { %>
+          <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
+        <% } %>
+        <% if(arraySize>highIndex) { %>
+          | <a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+        <% } %>
+        </b>
+      </td>
+    </tr>
+<% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="EditSecurityGroupPermission.jsp" class="buttontext">[Create SecurityGroupPermission]</a>
+  <a href="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" class="buttontext">[Create SecurityGroupPermission]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (SECURITY_GROUP_PERMISSION_ADMIN, or SECURITY_GROUP_PERMISSION_VIEW needed).</h3>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue May 22 23:57:27 MDT 2001
+ *@created    Fri May 25 09:52:06 MDT 2001
  *@version    1.0
  */
 %>
@@ -40,7 +40,7 @@
 
 <%pageContext.setAttribute("PageName", "EditPerson"); %>
 
-<%@ include file="/includes/header.jsp" %> 
+<%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 
 <%boolean hasViewPermission=Security.hasEntityPermission("PERSON", "_VIEW", session);%>
@@ -61,18 +61,18 @@
   Person person = PersonHelper.findByPrimaryKey(username);
 %>
 
-<a href="FindPerson.jsp" class="buttontext">[Find Person]</a>
+<a href="<%=response.encodeURL("FindPerson.jsp")%>" class="buttontext">[Find Person]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPerson.jsp" class="buttontext">[Create Person]</a>
+  <a href="<%=response.encodeURL("EditPerson.jsp")%>" class="buttontext">[Create Person]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(person != null){%>
-    <a href="EditPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&PERSON_USERNAME=<%=username%>" class="buttontext">[Delete this Person]</a>
+<%if(person != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&" + "PERSON_USERNAME=" + username)%>" class="buttontext">[Delete this Person]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(username != null){%>
-    <a href="Editperson.jsp?PERSON_USERNAME=<%=username%>" class="buttontext">[Edit Person]</a>
+    <a href="<%=response.encodeURL("EditPerson.jsp?" + "PERSON_USERNAME=" + username)%>" class="buttontext">[Edit Person]</a>
   <%}%>
 <%}%>
 
@@ -266,18 +266,18 @@
 <%} //end if person == null %>
 </table>
 
-<a href="FindPerson.jsp" class="buttontext">[Find Person]</a>
+<a href="<%=response.encodeURL("FindPerson.jsp")%>" class="buttontext">[Find Person]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPerson.jsp" class="buttontext">[Create Person]</a>
+  <a href="<%=response.encodeURL("EditPerson.jsp")%>" class="buttontext">[Create Person]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(person != null){%>
-    <a href="EditPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&PERSON_USERNAME=<%=username%>" class="buttontext">[Delete this Person]</a>
+<%if(person != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditPerson.jsp?WEBEVENT=UPDATE_PERSON&UPDATE_MODE=DELETE&" + "PERSON_USERNAME=" + username)%>" class="buttontext">[Delete this Person]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(username != null){%>
-    <a href="Editperson.jsp?PERSON_USERNAME=<%=username%>" class="buttontext">[Edit Person]</a>
+    <a href="<%=response.encodeURL("EditPerson.jsp?" + "PERSON_USERNAME=" + username)%>" class="buttontext">[Edit Person]</a>
   <%}%>
 <%}%>
 <br>

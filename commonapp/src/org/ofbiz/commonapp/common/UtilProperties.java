@@ -33,7 +33,7 @@ public class UtilProperties
 {
   /** An instance of the generic cache for storing the ResourceBundle corresponding to each properties file
    */  
-  static public UtilCache resCache = new UtilCache(0, 60*1000*60);  //60 minute expireTime
+  static public UtilCache resCache = new UtilCache("UtilPropertiesCache");
 
   /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
    * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
@@ -81,7 +81,7 @@ public class UtilProperties
     if(resource == null || resource.length() <= 0) return "";
     if(name == null || name.length() <= 0) return "";
     ResourceBundle res = (ResourceBundle)resCache.get(resource);
-    if(res == null || resCache.hasExpired(resource)) 
+    if(res == null)
     {
       res = ResourceBundle.getBundle(resource);
       resCache.put(resource, res);

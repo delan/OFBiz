@@ -38,6 +38,53 @@ import org.ofbiz.commonapp.security.securitygroup.*;
  */
 public class Security
 {
+  /** Hashtable to cache a Collection of PersonSecurityGroup entities for each Person, by username.
+   */  
+  public static UtilCache personSecurityGroupByUsername = new UtilCache("PersonSecurityGroupByUsername");
+
+  /** Hashtable to cache whether or not a certain SecurityGroupPermission row exists or not.
+   * For each SecurityGroupPermissionPK there is a Boolean in the cache specifying whether or not it exists.
+   * In this way the cache speeds things up whether or not the user has a permission.
+   */  
+  public static UtilCache securityGroupPermissionCache = new UtilCache("SecurityGroupPermissionCache");
+  
+  /** Uses personSecurityGroupByUsername cache to speed up the finding of the person's security group list.
+   * @param username The username to find security groups by
+   * @return An iterator made from the Collection either cached or retrieved from the database through the PersonSecurityGroup Helper.
+   */  
+  public static Iterator findPersonSecurityGroupByUsername(String username)
+  {
+    Collection collection = (Collection)personSecurityGroupByUsername.get(username);
+    if(collection == null) 
+    {
+      collection = PersonSecurityGroupHelper.findByUsername(username);
+      //make an empty collection to speed up the case where a person belongs to no security groups
+      if(collection == null) collection = new LinkedList();
+      personSecurityGroupByUsername.put(username, collection);
+    }
+    return collection.iterator();
+  }
+  
+  /** Finds whether or not a SecurityGroupPermission row exists given a groupId and permission.
+   * Uses the securityGroupPermissionCache to speed this up.
+   * The groupId,permission pair is cached instead of the username,permission pair to keep the cache small and to make it more changeable.
+   * @param groupId The ID of the group
+   * @param permission The name of the permission
+   * @return boolean specifying whether or not a SecurityGroupPermission row exists
+   */  
+  public static boolean securityGroupPermissionExists(String groupId, String permission)
+  {
+    SecurityGroupPermissionPK securityGroupPermissionPK = new SecurityGroupPermissionPK(groupId, permission);
+    Boolean exists = (Boolean)securityGroupPermissionCache.get(securityGroupPermissionPK);
+    if(exists == null)
+    {
+      if(SecurityGroupPermissionHelper.findByPrimaryKey(securityGroupPermissionPK) != null) exists = new Boolean(true);
+      else exists = new Boolean(false);
+      securityGroupPermissionCache.put(securityGroupPermissionPK, exists);
+    }
+    return exists.booleanValue();
+  }
+  
   /** Checks to see if the currently logged in person has the passed permission.
    * @param permission Name of the permission to check.
    * @param session The current HTTP session, contains the logged in person as an attribute.
@@ -49,20 +96,13 @@ public class Security
     Person person = (Person)session.getAttribute("PERSON");
     if(person == null) return false;
 
-    //--For some strange reason the finder here is not working, just have to fix it later
-    //Collection collection = PersonSecurityGroupHelper.findByUsernameAndPermissionId(person.getUsername(), permission);
-    //if(collection != null && collection.size() > 0) return true;
-
-    //Slow, but working method
-    Iterator iterator = PersonSecurityGroupHelper.findByUsernameIterator(person.getUsername());
+    Iterator iterator = findPersonSecurityGroupByUsername(person.getUsername());
     PersonSecurityGroup personSecurityGroup = null;
-    SecurityGroupPermission securityGroupPermission = null;
 
     while(iterator.hasNext())
     {
       personSecurityGroup = (PersonSecurityGroup)iterator.next();
-      securityGroupPermission = SecurityGroupPermissionHelper.findByPrimaryKey(personSecurityGroup.getGroupId(), permission);
-      if(securityGroupPermission != null) return true;
+      if(securityGroupPermissionExists(personSecurityGroup.getGroupId(), permission)) return true;
     }
 
     return false;
@@ -80,29 +120,19 @@ public class Security
     Person person = (Person)session.getAttribute("PERSON");
     if(person == null) return false;
 
-    System.out.println("hasEntityPermission: entity=" + entity + ", action=" + action);
-    //--For some strange reason the finder here is not working, just have to fix it later
-    //Collection collection = PersonSecurityGroupHelper.findByUsernameAndPermissionId(person.getUsername(), entity + "_ADMIN");
-    //if(collection != null && collection.size() > 0) return true;
-    //collection = PersonSecurityGroupHelper.findByUsernameAndPermissionId(person.getUsername(), entity + action);
-    //if(collection != null && collection.size() > 0) return true;
-    
-    //Slow, but working method
-    Iterator iterator = PersonSecurityGroupHelper.findByUsernameIterator(person.getUsername());
+    //System.out.println("hasEntityPermission: entity=" + entity + ", action=" + action);
+    Iterator iterator = findPersonSecurityGroupByUsername(person.getUsername());
     PersonSecurityGroup personSecurityGroup = null;
-    SecurityGroupPermission securityGroupPermission = null;
 
     while(iterator.hasNext())
     {
       personSecurityGroup = (PersonSecurityGroup)iterator.next();
       
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
-        System.out.println("hasEntityPermission: personSecurityGroup=" + personSecurityGroup.toString());
+      //if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("hasEntityPermission: personSecurityGroup=" + personSecurityGroup.toString());
 
-      securityGroupPermission = SecurityGroupPermissionHelper.findByPrimaryKey(personSecurityGroup.getGroupId(), entity + "_ADMIN");
-      if(securityGroupPermission != null) return true;
-      securityGroupPermission = SecurityGroupPermissionHelper.findByPrimaryKey(personSecurityGroup.getGroupId(), entity + action);
-      if(securityGroupPermission != null) return true;
+      //always try _ADMIN first so that it will cache first, keeping the cache smaller
+      if(securityGroupPermissionExists(personSecurityGroup.getGroupId(), entity + "_ADMIN")) return true;
+      if(securityGroupPermissionExists(personSecurityGroup.getGroupId(), entity + action)) return true;
     }
 
     return false;

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 02:33:38 MDT 2001
+ *@created    Fri May 25 14:29:47 MDT 2001
  *@version    1.0
  */
 %>
@@ -63,18 +63,18 @@
   PersonSecurityGroup personSecurityGroup = PersonSecurityGroupHelper.findByPrimaryKey(username, groupId);
 %>
 
-<a href="FindPersonSecurityGroup.jsp" class="buttontext">[Find PersonSecurityGroup]</a>
+<a href="<%=response.encodeURL("FindPersonSecurityGroup.jsp")%>" class="buttontext">[Find PersonSecurityGroup]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonSecurityGroup.jsp" class="buttontext">[Create PersonSecurityGroup]</a>
+  <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp")%>" class="buttontext">[Create PersonSecurityGroup]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(personSecurityGroup != null){%>
-    <a href="EditPersonSecurityGroup.jsp?WEBEVENT=UPDATE_PERSON_SECURITY_GROUP&UPDATE_MODE=DELETE&PERSON_SECURITY_GROUP_USERNAME=<%=username%>&PERSON_SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[Delete this PersonSecurityGroup]</a>
+<%if(personSecurityGroup != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp?WEBEVENT=UPDATE_PERSON_SECURITY_GROUP&UPDATE_MODE=DELETE&" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Delete this PersonSecurityGroup]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(username != null && groupId != null){%>
-    <a href="EditpersonSecurityGroup.jsp?PERSON_SECURITY_GROUP_USERNAME=<%=username%>&PERSON_SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[Edit PersonSecurityGroup]</a>
+    <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp?" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Edit PersonSecurityGroup]</a>
   <%}%>
 <%}%>
 
@@ -108,18 +108,18 @@
 <%} //end if personSecurityGroup == null %>
 </table>
 
-<a href="FindPersonSecurityGroup.jsp" class="buttontext">[Find PersonSecurityGroup]</a>
+<a href="<%=response.encodeURL("FindPersonSecurityGroup.jsp")%>" class="buttontext">[Find PersonSecurityGroup]</a>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonSecurityGroup.jsp" class="buttontext">[Create PersonSecurityGroup]</a>
+  <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp")%>" class="buttontext">[Create PersonSecurityGroup]</a>
 <%}%>
-<%if(hasDeletePermission){%>
-  <%if(personSecurityGroup != null){%>
-    <a href="EditPersonSecurityGroup.jsp?WEBEVENT=UPDATE_PERSON_SECURITY_GROUP&UPDATE_MODE=DELETE&PERSON_SECURITY_GROUP_USERNAME=<%=username%>&PERSON_SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[Delete this PersonSecurityGroup]</a>
+<%if(personSecurityGroup != null){%>
+  <%if(hasDeletePermission){%>
+    <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp?WEBEVENT=UPDATE_PERSON_SECURITY_GROUP&UPDATE_MODE=DELETE&" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Delete this PersonSecurityGroup]</a>
   <%}%>
 <%}%>
 <%if(hasUpdatePermission){%>
   <%if(username != null && groupId != null){%>
-    <a href="EditpersonSecurityGroup.jsp?PERSON_SECURITY_GROUP_USERNAME=<%=username%>&PERSON_SECURITY_GROUP_GROUP_ID=<%=groupId%>" class="buttontext">[Edit PersonSecurityGroup]</a>
+    <a href="<%=response.encodeURL("EditPersonSecurityGroup.jsp?" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId)%>" class="buttontext">[Edit PersonSecurityGroup]</a>
   <%}%>
 <%}%>
 <br>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed May 23 12:50:46 MDT 2001
+ *@created    Mon May 28 22:01:34 MDT 2001
  *@version    1.0
  */
 %>
@@ -119,7 +119,7 @@
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
-    <form method="post" action="FindPersonType.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindPersonType.jsp")%>" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
@@ -135,7 +135,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">Display All: </td>
-    <form method="post" action="FindPersonType.jsp" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindPersonType.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="all">
       </td>
@@ -148,7 +148,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>PersonTypes found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonType.jsp" class="buttontext">[Create PersonType]</a>
+  <a href="<%=response.encodeURL("EditPersonType.jsp")%>" class="buttontext">[Create PersonType]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -156,13 +156,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="FindPersonType.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex-1%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL("FindPersonType.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="FindPersonType.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex+1%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL("FindPersonType.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -213,16 +213,16 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       </td>
   
       <td>
-        <a href="ViewPersonType.jsp?PERSON_TYPE_TYPE_ID=<%=personType.getTypeId()%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL("ViewPersonType.jsp?" + "PERSON_TYPE_TYPE_ID=" + personType.getTypeId())%>" class="buttontext">[View]</a>
       </td>
       <%if(hasUpdatePermission){%>
         <td>
-          <a href="EditPersonType.jsp?PERSON_TYPE_TYPE_ID=<%=personType.getTypeId()%>" class="buttontext">[Edit]</a>
+          <a href="<%=response.encodeURL("EditPersonType.jsp?" + "PERSON_TYPE_TYPE_ID=" + personType.getTypeId())%>" class="buttontext">[Edit]</a>
         </td>
       <%}%>
       <%if(hasDeletePermission){%>
         <td>
-          <a href="FindPersonType.jsp?WEBEVENT=UPDATE_PERSON_TYPE&UPDATE_MODE=DELETE&PERSON_TYPE_TYPE_ID=<%=personType.getTypeId()%>&<%=curFindString%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL("FindPersonType.jsp?WEBEVENT=UPDATE_PERSON_TYPE&UPDATE_MODE=DELETE&" + "PERSON_TYPE_TYPE_ID=" + personType.getTypeId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -242,26 +242,26 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 </table>
 
 <table border="0" width="100%" cellpadding="2">
-<%if(arraySize > 0){%>
-  <tr bgcolor="<%=rowColorResultIndex%>">
-    <td align="left">
-      <b>
-      <% if(viewIndex > 0) { %>
-      <a href="FindPersonType.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex-1%>" class="buttontext">[Previous]</a> |
-      <% } %>
-      <% if(arraySize > 0) { %>
-      <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
-      <% } %>
-      <% if(arraySize>highIndex) { %>
-      | <a href="FindPersonType.jsp?<%=curFindString%>&VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex+1%>" class="buttontext">[Next]</a>
-      <% } %>
-      </b>
-    </td>
-  </tr>
-<%}%>
+<% if(arraySize > 0) { %>
+    <tr bgcolor="<%=rowColorResultIndex%>">
+      <td align="left">
+        <b>
+        <% if(viewIndex > 0) { %>
+          <a href="<%=response.encodeURL("FindPersonType.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+        <% } %>
+        <% if(arraySize > 0) { %>
+          <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
+        <% } %>
+        <% if(arraySize>highIndex) { %>
+          | <a href="<%=response.encodeURL("FindPersonType.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+        <% } %>
+        </b>
+      </td>
+    </tr>
+<% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="EditPersonType.jsp" class="buttontext">[Create PersonType]</a>
+  <a href="<%=response.encodeURL("EditPersonType.jsp")%>" class="buttontext">[Create PersonType]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (PERSON_TYPE_ADMIN, or PERSON_TYPE_VIEW needed).</h3>
