@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchEvents.java,v 1.2 2004/01/06 07:14:00 jonesde Exp $
+ * $Id: ProductSearchEvents.java,v 1.3 2004/01/24 18:23:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  * Product Search Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ProductSearchEvents {
@@ -73,14 +73,12 @@ public class ProductSearchEvents {
         try {
             boolean beganTransaction = TransactionUtil.begin();
             try {
-                
                 int numRemoved = 0;
                 GenericValue searchResultView = null;
                 while ((searchResultView = (GenericValue) eli.next()) != null) {
                     String productId = searchResultView.getString("productId");
                     numRemoved += delegator.removeByAnd("ProductCategoryMember", UtilMisc.toMap("productCategoryId", productCategoryId, "productId", productId )) ;
                 }
-                
                 eli.close();
                 TransactionUtil.commit(beganTransaction);
                 request.setAttribute("_EVENT_MESSAGE_", "removed " + numRemoved + " items.");
@@ -114,7 +112,7 @@ public class ProductSearchEvents {
        try {
            thruDate = Timestamp.valueOf(thruDateStr); 
        } catch (RuntimeException e) {
-           String errMsg = "Error casting date to timestamp: " + e.toString();
+           String errMsg = "The thruDate is not formatted properly: " + e.toString();
            Debug.logError(e, errMsg, module);
            request.setAttribute("_ERROR_MESSAGE_", errMsg);
            return "error";
@@ -176,7 +174,15 @@ public class ProductSearchEvents {
    public static String searchAddToCategory(HttpServletRequest request, HttpServletResponse response) {
        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
        String productCategoryId = request.getParameter("SE_SEARCH_CATEGORY_ID");
-       String fromDate = request.getParameter("fromDate");
+       String fromDateStr = request.getParameter("fromDate");
+       Timestamp fromDate = null;
+
+       try {
+           fromDate = Timestamp.valueOf(fromDateStr);
+        } catch (RuntimeException e) {
+            request.setAttribute("_ERROR_MESSAGE_", "The fromDate was not formatted properly: " + e.toString());
+            return "error";
+        }
        
        EntityListIterator eli = getProductSearchResults(request);
        if (eli == null) {
