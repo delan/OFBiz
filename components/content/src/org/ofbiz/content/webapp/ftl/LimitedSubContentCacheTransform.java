@@ -1,5 +1,5 @@
 /*
- * $Id: LimitedSubContentCacheTransform.java,v 1.2 2004/07/06 16:45:00 byersa Exp $
+ * $Id: LimitedSubContentCacheTransform.java,v 1.3 2004/07/07 08:46:05 jonesde Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -19,22 +19,19 @@ package org.ofbiz.content.webapp.ftl;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.lang.Math;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.content.ContentServicesComplex;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
@@ -51,7 +48,7 @@ import freemarker.template.TransformControl;
  * LimitedSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.0
  */
 public class LimitedSubContentCacheTransform implements TemplateTransformModel {
@@ -192,7 +189,7 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
                 
                 //if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndexInteger , "");
                 if (Debug.infoOn()) Debug.logInfo("in limited, returnLimit(2):" + returnLimit , "");
-                if (Debug.infoOn()) Debug.logInfo("in limited, pickedEntityIds(2):" + pickedEntityIds , "");
+                if (Debug.verboseOn()) Debug.logVerbose("in limited, pickedEntityIds(2):" + pickedEntityIds , "");
                 boolean inProgress = false;
                 if (pickedEntityIds.size() < returnLimit) {
                     inProgress = getNextMatchingEntity(templateRoot, delegator, env);
@@ -285,7 +282,7 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
 
         GenericValue pickEntity = null;
         List lst = (List)templateRoot.get("entityList");
-        if (Debug.infoOn()) Debug.logInfo("in limited, lst:" + lst , "");
+        if (Debug.verboseOn()) Debug.logVerbose("in limited, lst:" + lst , "");
 
         while (pickEntity == null && lst.size() > 0) {
             double randomValue = Math.random();
