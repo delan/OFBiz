@@ -24,7 +24,7 @@
 
 <h2 align="center">The Open For Business Project - Release Notes</h2>
  
-<div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class='contenttext'>Written By: David E. Jones <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>, Andy Zeneski <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
 
 <h3>Table of Contents</h3>
 <ul>
@@ -56,8 +56,9 @@ of new features and a major refactoring and cleanup of the ecommerce application
 refactoring and cleanup was part of our move away from JSPs and toward a new presentation view
 architecture using JPublish, FreeMarker, and BeanShell. As with all components used/included in OFBiz 
 these tools are freely available open source projects with active and accessible development and user
-communities. The introduction of this new architecture is the reason for the 2.1.0 verion number
-instead of going through the 2.0.X series.</p>
+communities. Because of all of the new features including this new architecture, this release will not
+be a maintenance release following the 2.0.x series, but rather a new minor release starting the 2.1.x
+series.</p>
 
 <p class='contenttext'>All of the ecommerce webapp has been changed from the old JSP/Regions 
 architecture to the new JPublish/FreeMarker/BeanShell architecture. The ControlServlet and events
@@ -73,14 +74,18 @@ difficulties that Tyrex brings with it.</p>
 <p class='contenttext'>This release is the first that includes our new recommended open source
 platform which now consists of Jetty and JOTM instead of Tomcat and Tyrex. Jetty makes deployment
 of OFBiz much easier than it was under Tomcat because there is no longer a need to copy the nearly
-100 jar libraries and configuration files into the app server directory as was necessary with Tomcat.</p>
+100 jar libraries and configuration files into the app server directory as was necessary with Tomcat.
+In addition to moving to Jetty, we are also introducing the new ofbiz.jar startup program. This new
+executable jar embeds Jetty/JOTM with OFBiz, auto-sets all classpath and required settings. By running
+java -jar ofbiz.jar from the root OFBiz directory will fully start OFBiz in a cross-platfrom way.</p>
 
 <h4>New Features & Improvements</h4>
 <p class='contenttext'>New features and improvements include:</p>
 <ul>
     <li class='contenttext'>e-Commerce related</li>
     <ul>
-    	<li class='contenttext'>product and category URLs are now search engine friendly</li>
+    	<li class='contenttext'>product and category URLs are now search engine spyder friendly</li>
+    	<li class='contenttext'>meta keywords and descriptions on categories and products for better search engine ranking</li>
     	<li class='contenttext'>advanced search now available which includes parametric search based on ProductFeatures</li>
     	<li class='contenttext'>can now use advanced search for searching in any category, not just the search categories for the catalog</li>
     	<li class='contenttext'>much easier to customize and change the look &amp; feel with the new FreeMarker templates 
@@ -89,8 +94,9 @@ of OFBiz much easier than it was under Tomcat because there is no longer a need 
         <li class='contenttext'>invoices are now created once a product is shipped; if a credit card is used
         to pay the invoice will be immediately marked paid, but invoices are always created so that
         current and future accounting functionality will be consistently used</li>
-        <li class='contenttext'>enhanced shipping calculation so that specific tax information in the database can 
+        <li class='contenttext'>enhanced tax calculation so that specific tax information in the database can 
         be effective dated; this makes it easy to allow for blackout dates for specific tax categories</li>
+        <li class='contenttext'>added customer product reviews; now customers can rate and review products</li>
     </ul>
     <li class='contenttext'>Catalog &amp; Facility related</li>
     <ul>
@@ -102,12 +108,24 @@ of OFBiz much easier than it was under Tomcat because there is no longer a need 
     	for parametric search, cleaner product creation, etc.</li>
     	<li class='contenttext'>special categories can now be associated with catalogs to limit which
     	products can be viewed and purchased for that catalog</li>
+    	<li class='contenttext'>Products and Categories no longer require the ID to be passed; if no ID is 
+    	passed when the record is created, a sequenced value will be used</li>
     </ul>
     <li class='contenttext'>Accounting related</li>
     <ul>
     	<li class='contenttext'>added billing account administration</li>
-    	<li class='contenttext'>added invoice administration</li>
+    	<li class='contenttext'>began invoice administration</li>
     </ul>
+    <li class='contenttext'>Party Manager related</li>
+    <ul>
+        <li class='contenttext'>added visit tracking screens; shows all visits and includes tracking of all hits during a visit</li>
+        <li class='contenttext'>party group enhancements; viewprofile can now notice different types of party groups</li>
+    </ul>
+    <li class='contenttext'>Misc</li>
+    <ul>    	
+        <li class='contenttext'>new look and feel for all admin applications</li>
+        <li class='contenttext'>added new secure way of doing auto-login between applications</li>
+    </ul>    
     <li class='contenttext'>Core Framework Related</li>
     <ul>
     	<li class='contenttext'>MiniLang simple-method</li>
@@ -135,7 +153,18 @@ of OFBiz much easier than it was under Tomcat because there is no longer a need 
             <li class='contenttext'>added Entity ECA rule definitions (like the Sevice Engine ECA rules), began implementation</li>
             <li class='contenttext'>added index declarations for entities, with unique index option</li>
             <li class='contenttext'>added support for schemas; overrides the JDBC username if specified; necessary for databases like the new Postgres that don't default the same way as Oracle, etc</li>
+            <li class='contenttext'>added page to WebTools to test the performance of the DB/JDBC Driver/JTA through the entity engine</li>
+            <li class='contenttext'>refactor of the entityengine.xml configuration file (see new DTD)</li>
         </ul>
+        <li class='contenttext'>Workflow Engine</li>
+        <ul>
+            <li class='contenttext'>fixed bug in the completeAllAssignment feature; now actually works</li>
+            <li class='contenttext'>added new TransitionCondition interface for building complex conditions</li>
+            <li class='contenttext'>create a ServiceCondition implementation of the TransitionCondition interface; this allows calling a service for condition evaluation rather then using BSH</li>
+        </ul>
+        <li class='contenttext'>Other Core Related</li>
+        <ul>
+            <li class='contenttext'>added new start package which when built creates an executable ofbiz.jar which uses Jetty/JOTM and will auto-set classpath and all default options; this should allow running of OFBiz on Windows 2000/98 and other platforms which were having troubles setting the classpaths</li>
     </ul>
 </ul>
 <br>
