@@ -44,6 +44,7 @@ public class JavaEventHandler implements EventHandler {
 
     private String eventPath = null;
     private String eventMethod = null;
+    private Map eventClassMap = new HashMap();
     private Class eventClass = null;
 
     /** Initialize the required parameters
@@ -53,10 +54,17 @@ public class JavaEventHandler implements EventHandler {
     public void initialize(String eventPath, String eventMethod) {
         this.eventPath = eventPath;
         this.eventMethod = eventMethod;
-        try {
-            this.eventClass = Class.forName(eventPath);
-        } catch (ClassNotFoundException e) {
-            Debug.logError(e, "Error loading class with name: " + eventPath + ", will not be able to run event...");
+        
+        this.eventClass = (Class) this.eventClassMap.get(eventPath);
+        if (this.eventClass == null) {
+            try {
+                this.eventClass = Class.forName(eventPath);
+            } catch (ClassNotFoundException e) {
+                Debug.logError(e, "Error loading class with name: " + eventPath + ", will not be able to run event...");
+            }
+            if (this.eventClass != null) {
+                eventClassMap.put(eventPath, this.eventClass);
+            }
         }
         Debug.logVerbose("[Set path/method]: " + eventPath + " / " + eventMethod, module);
     }
