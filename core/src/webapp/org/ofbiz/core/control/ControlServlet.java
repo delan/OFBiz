@@ -78,7 +78,8 @@ public class ControlServlet extends HttpServlet {
         UtilTimer timer = null;
         if (Debug.timingOn()) {
             timer = new UtilTimer();
-            Debug.logTiming(timer.timerString("[" + rname + "] Servlet Starting, doing setup"), module);
+            timer.setLog(true);
+            timer.timerString("[" + rname + "] Servlet Starting, doing setup", module);
         }
 
         HttpSession session = request.getSession(true);
@@ -121,7 +122,7 @@ public class ControlServlet extends HttpServlet {
         // for use in Events the filesystem path of context root.
         request.setAttribute(SiteDefs.CONTEXT_ROOT,getServletContext().getRealPath("/"));
         
-        if (Debug.timingOn()) Debug.logTiming(timer.timerString("[" + rname + "] Setup done, doing Event(s)"), module);
+        if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s)", module);
         
         try {
             nextPage = getRequestHandler().doRequest(request,response, null);
@@ -133,14 +134,14 @@ public class ControlServlet extends HttpServlet {
         
         // Forward to the JSP
         Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage, module);
-        if (Debug.timingOn()) Debug.logTiming(timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage), module);
+        if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
         if(nextPage != null) {
             RequestDispatcher rd = request.getRequestDispatcher(nextPage);
             if(rd != null) rd.forward(request,response);
         }
 
-        if (Debug.timingOn()) Debug.logTiming(timer.timerString("[" + rname + "] Done rendering page, Servlet Finished"), module);
+        if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
     }
     
     private RequestHandler getRequestHandler() {
