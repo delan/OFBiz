@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.1 2003/10/25 04:15:19 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.2 2003/10/25 08:19:16 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -41,7 +41,7 @@ import org.ofbiz.product.product.ProductSearch.*;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ProductSearchSession {
@@ -60,6 +60,12 @@ public class ProductSearchSession {
         }
         
         // make sure the view allow category is included
+        productSearchConstraintList = ensureViewAllowConstraint(productSearchConstraintList, prodCatalogId, delegator);
+        ResultSortOrder resultSortOrder = getResultSortOrder(session);
+        return ProductSearch.searchProducts(productSearchConstraintList, resultSortOrder, delegator, visitId);
+    }
+    
+    public static List ensureViewAllowConstraint(List productSearchConstraintList, String prodCatalogId, GenericDelegator delegator) {
         String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, prodCatalogId);
         if (UtilValidate.isNotEmpty(viewProductCategoryId)) {
             ProductSearchConstraint viewAllowConstraint = new CategoryConstraint(viewProductCategoryId, true);
@@ -69,13 +75,16 @@ public class ProductSearchSession {
                 productSearchConstraintList.add(viewAllowConstraint);
             }
         }
-        
+        return productSearchConstraintList;
+    }
+    
+    public static ResultSortOrder getResultSortOrder(HttpSession session) {
         ResultSortOrder resultSortOrder = (ResultSortOrder) session.getAttribute(ProductSearchSession.PRODUCT_SEARCH_SORT_ORDER);
         if (resultSortOrder == null) {
             resultSortOrder = new SortKeywordRelevancy();
             searchSetSortOrder(resultSortOrder, session);
         }
-        return ProductSearch.searchProducts(productSearchConstraintList, resultSortOrder, delegator, visitId);
+        return resultSortOrder;
     }
     
     public static void searchClear(HttpSession session) {
@@ -200,9 +209,6 @@ public class ProductSearchSession {
             }
         }
 
-        // ========== Do the actual search
-        List productIds = searchDo(session, delegator, prodCatalogId);
-
         // ========== Create View Indexes
         int viewIndex = 0;
         int viewSize = 20;
@@ -230,16 +236,39 @@ public class ProductSearchSession {
             viewSize = 20;
         }
 
-        if (productIds != null) {
-            listSize = productIds.size();
-        }
-
         lowIndex = viewIndex * viewSize;
         highIndex = (viewIndex + 1) * viewSize;
+        
+        // setup resultOffset and maxResults, noting that resultOffset is 1 based, not zero based as these numbers
+        Integer resultOffset = new Integer(lowIndex + 1);
+        Integer maxResults = new Integer(viewSize);
+        
+        // ========== Do the actual search
+        ArrayList productIds = null;
+        String visitId = VisitHandler.getVisitId(session);
+        List productSearchConstraintList = (List) session.getAttribute(ProductSearchSession.PRODUCT_SEARCH_CONSTRAINT_LIST);
+        // if no constraints, don't do a search...
+        if (productSearchConstraintList != null && productSearchConstraintList.size() > 0) {
+            productSearchConstraintList = ensureViewAllowConstraint(productSearchConstraintList, prodCatalogId, delegator);
+            ResultSortOrder resultSortOrder = getResultSortOrder(session);
+
+            ProductSearchContext productSearchContext = new ProductSearchContext(delegator, visitId);
+            productSearchContext.addProductSearchConstraints(productSearchConstraintList);
+            productSearchContext.setResultSortOrder(resultSortOrder);
+            productSearchContext.setResultOffset(resultOffset);
+            productSearchContext.setMaxResults(maxResults);
+
+            productIds = productSearchContext.doSearch();
+            
+            Integer totalResults = productSearchContext.getTotalResults();
+            if (totalResults != null) {
+                listSize = totalResults.intValue();
+            }
+        }
+        
         if (listSize < highIndex) {
             highIndex = listSize;
         }
-
 
         // ========== Setup other display info
         GenericValue searchCategory = null;
@@ -262,7 +291,6 @@ public class ProductSearchSession {
         result.put("listSize", new Integer(listSize));
         result.put("lowIndex", new Integer(lowIndex));
         result.put("highIndex", new Integer(highIndex));
-        result.put("searchOperator", searchOperator);
         result.put("searchCategory", searchCategory);
         result.put("searchConstraintStrings", searchConstraintStrings);
         result.put("searchSortOrderString", searchSortOrderString);
