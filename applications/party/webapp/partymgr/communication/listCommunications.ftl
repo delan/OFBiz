@@ -28,50 +28,15 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign locale = requestAttributes.locale>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
+
 <#-- Main Heading -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="left">
-      <#if lookupPerson?has_content || lookupGroup?has_content>
-        <div class="head1">${uiLabelMap.PartyCommunicationsWith}
-          <#if lookupPerson?exists>
-            ${lookupPerson.personalTitle?if_exists}
-            ${lookupPerson.firstName?if_exists}
-            ${lookupPerson.middleName?if_exists}
-            ${lookupPerson.lastName?if_exists}
-            ${lookupPerson.suffix?if_exists}
-          <#else>
-            <#if lookupGroup?exists>
-              ${lookupGroup.groupName?default(uiLabelMap.PartyNoNameGroup)}
-            <#else>
-              "${uiLabelMap.PartyNewUser}"
-            </#if>
-          </#if>
-        </div>
-      <#else>
-        <div class="head1">Pending Communications</div>
-      </#if>
-    </td>
-    <#if lookupPerson?has_content || lookupGroup?has_content>
-      <td align="right">
-	    <div class="tabContainer">
-          <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyProfile}</a>
-          <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyVendor}</a>
-          <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRoles}</a>
-          <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
-          <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyCommunications}</a>
-        </div>
-      </td>
-    </#if>
-  </tr>
-  <#if partyId?exists>
-    <tr>
-      <td colspan="2" align="right" nowrap>
-        <a href="<@ofbizUrl>/viewCommunicationEvent?partyIdFrom=${partyId}&partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
-      </td>
-    </tr>
-  </#if>
-</table>
+<#include "../party/ProfileTabBar.ftl"/>
+
+<#if partyId?exists>
+<div style="text-align: right;">
+    <a href="<@ofbizUrl>/viewCommunicationEvent?partyIdFrom=${partyId}&partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
+</div>
+</#if>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -26,40 +26,11 @@
  * since 2.2
  */
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if hasViewPermission>
 
 <#-- Main Heading -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="left">
-      <div class="head1">${uiLabelMap.PartyTheProfileOf}
-        <#if lookupPerson?exists>
-          ${lookupPerson.personalTitle?if_exists}
-          ${lookupPerson.firstName?if_exists}
-          ${lookupPerson.middleName?if_exists}
-          ${lookupPerson.lastName?if_exists}
-          ${lookupPerson.suffix?if_exists}
-        <#else>
-          <#if lookupGroup?exists>
-            ${lookupGroup.groupName?default(uiLabelMap.PartyNoNameGroup)}
-          <#else>
-          "${uiLabelMap.PartyNewUser}"
-          </#if>
-        </#if>
-      </div>
-    </td>
-    <td align="right">
-	  <div class="tabContainer">
-        <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyProfile}</a>
-        <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyVendor}</a>
-        <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRoles}</a>
-        <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
-        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyCommunications}</a>
-      </div>
-    </td>
-  </tr>  
-</table>
+<#include "ProfileTabBar.ftl"/>
 
 <br>
 <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">

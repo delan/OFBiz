@@ -87,6 +87,7 @@
       <a href="<ofbiz:url>/viewroles?partyId=<%=partyId%></ofbiz:url>" class="tabButton">Role(s)</a>
       <a href="<ofbiz:url>/viewrelationships?partyId=<%=partyId%></ofbiz:url>" class="tabButtonSelected">Relationships</a>
       <a href="<ofbiz:url>/viewcommunications?partyId=<%=partyId%></ofbiz:url>" class="tabButton">Communications</a>
+      <a href="<ofbiz:url>/editShoppingList?partyId=<%=partyId%></ofbiz:url>" class="tabButton">Shopping Lists</a>
       </div>
     </td>
   </tr>
