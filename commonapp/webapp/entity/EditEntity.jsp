@@ -39,6 +39,8 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   String entityName = request.getParameter("entityName");
   ModelReader reader = delegator.getModelReader();
   ModelEntity entity = reader.getModelEntity(entityName);
+  ModelViewEntity modelViewEntity = null;
+  if(entity instanceof ModelViewEntity) modelViewEntity = (ModelViewEntity)entity;
   TreeSet entSet = new TreeSet(reader.getEntityNames());
   String errorMsg = "";
 
@@ -242,11 +244,13 @@ The following errors occurred:
 <A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>'>Reload Current Entity: <%=entityName%></A><BR>
 <BR>
 Entity Name: <%=entityName%><br>
-Column Name: <%=entity.tableName%><br>
+Column Name: <%=(modelViewEntity == null)?entity.tableName:"What column name? This is a VIEW Entity."%><br>
 
 <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateEntity")%>' style='margin: 0;'>
-  <INPUT type=text size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.tableName)%>'> (Table Name)
-  <BR>
+  <%if(modelViewEntity == null) {%>
+    <INPUT type=text size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.tableName)%>'> (Table Name)
+    <BR>
+  <%}%>
   <INPUT type=text size='60' name='packageName' value='<%=entity.packageName%>'> (Package Name)
   <BR>
   <SELECT name='dependentOn'>
@@ -278,7 +282,9 @@ Column Name: <%=entity.tableName%><br>
   <BR>
   <INPUT type=submit value='Update Entity'>
 </FORM>
-<BR>
+
+<HR>
+<%if(modelViewEntity == null) {%>
 <B>FIELDS</B>
   <TABLE border='1' cellpadding='2' cellspacing='0'>
     <TR><TD>Field Name</TD><TD>Column Name (Length)</TD><TD>Field Type</TD><TD>&nbsp;</TD><TD>&nbsp;</TD></TR>
@@ -317,7 +323,11 @@ Column Name: <%=entity.tableName%><br>
   </SELECT>
   <INPUT type=submit value='Create'>
 </FORM>
+<%}else{%>
+<div>ERROR: Alias editing not yet implemented for view entities, try again later (or just edit the XML by hand, and not at the same time you are editing here...)</div>
+<%}%>
 <HR>
+
 <B>RELATIONS</B>
   <TABLE border='1' cellpadding='2' cellspacing='0'>
   <%for(int r=0; r<entity.relations.size(); r++){%>
