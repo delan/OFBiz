@@ -57,32 +57,77 @@ public class CSPaymentServices {
         String paymentMethodId = (String) context.get("paymentMethodId");
 
         // Create a new ICSClient using the cybersource properties found on global classpath.
-        ICSClient client = new ICSClient(UtilProperties.getProperties("cybersource.properties");
         ICSClientRequest request = null;
+        ICSClient client = null;
+        ICSReply reply = null;
+
         try {
-            buildAuthRequest(client, delegator, orderId, paymentMethodId);
-        } catch (GeneralException e) {
-            e.printStackTrace();
+            client = new ICSClient(UtilProperties.getProperties("cybersource.properties"));
+            request = buildAuthRequest(client, delegator, orderId, paymentMethodId);
+            if (client == null)
+                throw new GeneralException("ICS returned a null client.");
+        } catch (ICSException ie) {
+            ie.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + e.getMessage() + ").");
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
+            return result;
+        } catch (GenericEntityException gee) {
+            gee.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
+            return result;
+        } catch (GeneralException ge) {
+            ge.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: GeneralException (" + ge.getMessage() + ").");
             return result;
         }
 
+        StringBuffer apps = new StringBuffer();
+        boolean fraudScore = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "fraudScore", "Y");
+        boolean enableDAV = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableDAV", "Y");
+        boolean autoBill = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "autoBill", "Y");
+        boolean disableAVS = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "disableAVS", "Y");
+        boolean enableRetry = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableRetry", "Y");
+
+        String defCur = UtilProperties.getPropertyValue("cybersource.properties", "defaultCurrency", "USD");
+        String timeout = UtilProperties.getPropertyValue("cybersource.properties", "timeout", "90");
+        String retryWait = UtilProperties.getPropertyValue("cybersource.properties", "retryWait", "90");
+
+        apps.append("ics_auth");
+        if (fraudScore)
+            apps.append(",ics_score");
+        if (enableDAV)
+            apps.append(",ics_dav");
+        if (autoBill)
+            apps.append(",ics_bill");
+
         // Basic Info
         request.setMerchantID(client.getMerchantID());
+        request.addApplication(apps.toString());
         request.setMerchantRefNo(orderId);
-        request.setCurrency("USD");  // todo read the props for default or use supplied currency.
-        request.addApplication("ics_auth");
+        request.setDisableAVS(disableAVS);
+        request.setRetryStart(retryWait);
+        request.setTimeout(timeout);
+        request.setRetryEnabled(enableRetry ? "yes" : "no");
+        request.setCurrency((currency == null ? defCur : currency));
 
         Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
         Debug.logVerbose("[REQ]: " + request, module);
         Debug.logVerbose("---- End Request ----", module);
 
-        ICSReply reply = client.send(request);
+        try {
+            reply = client.send(request);
+        } catch (ICSException ie) {
+            ie.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
+            return result;
+        }
 
         Debug.logVerbose("---- CyberSource Response ----", module);
         Debug.logVerbose("[RES]: " + reply, module);
-        Debug.logVerbose("---- End Request ----", module);
+        Debug.logVerbose("---- End Reply ----", module);
 
         return processResult(reply, result);
     }
@@ -116,26 +161,26 @@ public class CSPaymentServices {
     }
 
     private static ICSClientRequest buildAuthRequest(ICSClient client, GenericDelegator delegator,
-                                                     String orderId, String paymentMethodId) throws GeneralException {
+                                                     String orderId, String paymentMethodId) throws GenericEntityException, GeneralException, ICSException {
         GenericValue orderHeader = null;
         GenericValue paymentMethod = null;
         GenericValue creditCard = null;
         GenericValue billingAddress = null;
         Collection adjustments = null;
-        try {
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-            adjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderId));
-            paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
 
-            if (paymentMethod.get("paymentMethodTypeId") != null &&
-                    !paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD"))
-                throw new GenericEntityException("Payment method is not a credit card.");
+        orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        adjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderId));
+        paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
 
-            creditCard = paymentMethod.getRelatedOne("CreditCard");
-            billingAddress = creditCard.getRelatedOne("PostalAddress");
-        } catch (GenericEntityException e) {
-            throw new GeneralException("Error getting order information", e);
-        }
+        if (paymentMethod.get("paymentMethodTypeId") != null &&
+                !paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD"))
+            throw new GeneralException("Payment method is not a credit card.");
+
+        creditCard = paymentMethod.getRelatedOne("CreditCard");
+        billingAddress = creditCard.getRelatedOne("PostalAddress");
+
+        if (billingAddress == null || creditCard == null)
+            throw new GeneralException("Null billing or payment information");
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         Collection orderItems = orh.getOrderItems();
@@ -159,8 +204,8 @@ public class CSPaymentServices {
         // Payment Info
         List expDateList = StringUtil.split(creditCard.getString("expireDate"), "/");
         request.setCustomerCreditCardNumber(creditCard.getString("cardNumber"));
-        request.setCustomerCreditCardExpirationMonth((String)expDateList.get(0));
-        request.setCustomerCreditCardExpirationYear((String)expDateList.get(1));
+        request.setCustomerCreditCardExpirationMonth((String) expDateList.get(0));
+        request.setCustomerCreditCardExpirationYear((String) expDateList.get(1));
 
         // Payment Contact Info
         request.setBillAddress1(billingAddress.getString("address1"));
@@ -172,21 +217,42 @@ public class CSPaymentServices {
         if (billingAddress.get("stateProvinceGeoId") != null)
             request.setBillState(billingAddress.getString("stateProvinceGeoId"));
 
+        // Order Shipping Information
+        GenericValue shippingAddress = orh.getShippingAddress();
+        request.setShipToAddress1(shippingAddress.getString("address1"));
+        if (shippingAddress.get("address2") != null)
+            request.setShipToAddress2(shippingAddress.getString("address2"));
+        request.setShipToCity(shippingAddress.getString("city"));
+        request.setShipToCountry(shippingAddress.getString("countryGeoId"));
+        request.setShipToZip(shippingAddress.getString("postalCode"));
+        if (shippingAddress.get("stateProvinceGeoId") != null)
+            request.setShipToState(shippingAddress.getString("stateProvinceGeoId"));
+
         // Create the offers (one for each line item)
         Iterator itemIterator = orderItems.iterator();
         while (itemIterator.hasNext()) {
             ICSClientOffer offer = new ICSClientOffer();
             GenericValue item = (GenericValue) itemIterator.next();
-            GenericValue product = null;
-            try {
-                product = item.getRelatedOne("Product");
-            } catch (GenericEntityException e) {
-                e.printStackTrace();
-            }
+            GenericValue product = item.getRelatedOne("Product");
+
             offer.setProductName(product.getString("productName"));
             offer.setMerchantProductSKU(product.getString("productId"));
-            offer.setAmount(item.getString("unitPrice"));
-            offer.setQuantity(item.getString("quantity"));
+
+            // Get the quantity and price to do some testing.
+            Double quantity = item.getDouble("quantity");
+            Double price = item.getDouble("unitPrice");
+
+            // Test quantity if INT pass as is; if not do the math and pass price w/ qty 1
+            long roundQ = Math.round(quantity.doubleValue());
+            Double rounded = new Double(new Long(roundQ).toString());
+            if (rounded.doubleValue() != quantity.doubleValue()) {
+                offer.setAmount((price.doubleValue() * quantity.doubleValue()));
+                offer.setQuantity(1);
+            } else {
+                offer.setAmount(price.doubleValue());
+                offer.setQuantity(quantity.intValue());
+            }
+
             //offer.setProductCode("electronic_software");
             //offer.setPackerCode("portland10");
 
