@@ -189,7 +189,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @return Map
      */
     public Map getInitialContext() {
-           return initialContext;
+        return initialContext;
     }
 
     /**
@@ -243,10 +243,26 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
                     
     private void buildInitialContext() throws WfException {
-        initialContext = new HashMap();
-        Collection dataFields = null;
+        GenericDelegator delegator = processDef.getDelegator();
+        this.initialContext = new HashMap();
+        List dataFields = new ArrayList();
         try {
-            dataFields = processDef.getRelated("WorkflowDataField");
+            // make fields
+            Map fields = new HashMap();
+            fields.put("packageId", processDef.get("packageId"));
+            fields.put("packageVersion", processDef.get("packageVersion"));
+            
+            // first get all package fields
+            fields.put("processId", "_NA_");
+            fields.put("processVersion", "_NA_");            
+            List data1 = delegator.findByAnd("WorkflowDataField", fields);
+            dataFields.add(fields);
+            
+            // now get all process fields
+            fields.put("processId", processDef.get("processId"));
+            fields.put("processVersion", processDef.get("processVersion"));
+            List data2 = delegator.findByAnd("WorkflowDataField", fields);
+            dataFields.add(fields);                
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }

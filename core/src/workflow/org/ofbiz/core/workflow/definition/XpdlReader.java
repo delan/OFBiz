@@ -883,7 +883,7 @@ public class XpdlReader {
         transitionValue.set("fromActivityId", transitionElement.getAttribute("From"));
         transitionValue.set("toActivityId", transitionElement.getAttribute("To"));
 
-        if (transitionElement.getAttribute("Loop") != null)
+        if (transitionElement.getAttribute("Loop") != null && transitionElement.getAttribute("Loop").length() > 0)
             transitionValue.set("loopTypeEnumId", "WTL_" + transitionElement.getAttribute("Loop"));
         else
             transitionValue.set("loopTypeEnumId", "WTL_NOLOOP");

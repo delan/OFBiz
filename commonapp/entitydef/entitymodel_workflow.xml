@@ -361,7 +361,7 @@
         <key-map field-name="packageId"/>
         <key-map field-name="packageVersion"/>
       </relation>
-      <relation type="one" fk-name="WFLW_DFLD_PROC" rel-entity-name="WorkflowProcess">
+      <relation type="one-nofk" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId"/>
         <key-map field-name="packageVersion"/>
         <key-map field-name="processId"/>
@@ -761,7 +761,7 @@
         <key-map field-name="processVersion"/>
         <key-map field-name="activityId"/>
       </relation>
-      <relation type="one" fk-name="WFLW_TSRF_TRANS" rel-entity-name="WorkflowTransition">
+      <relation type="one-nofk" rel-entity-name="WorkflowTransition">
         <key-map field-name="packageId"/>
         <key-map field-name="packageVersion"/>
         <key-map field-name="processId"/>
