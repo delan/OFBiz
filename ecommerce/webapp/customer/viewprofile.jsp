@@ -46,6 +46,7 @@
 %>
 <%EntityField entityField = new EntityField(pageContext);%>
 
+<br>
 <ofbiz:if name="party">
 <%-- Main Heading --%>
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
@@ -245,7 +246,7 @@
             </td>
             <td align="right" valign="top" width="1%">
               <div><a href='<ofbiz:url>/deleteContactMech/viewprofile?contactMechId=<%entityField.run("contactMech", "contactMechId");%></ofbiz:url>' class="buttontext">
-              [Delete]</a>&nbsp;&nbsp;</div>
+              [Expire]</a>&nbsp;&nbsp;</div>
             </td>
           </tr>
       </ofbiz:iterator>
@@ -326,7 +327,7 @@
                               <%}%>
                               <td align="right" valign="top" width='1%'>
                                 <div><a href='<ofbiz:url>/deletePaymentMethod/viewprofile?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
-                                [Delete]</a></div>
+                                [Expire]</a></div>
                               </td>
                             </tr>
                         </ofbiz:iterator>
