@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 */
 
@@ -28,6 +28,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.service.*;
 import org.ofbiz.product.catalog.*;
+import org.ofbiz.product.store.*;
 
 String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
     keySet = map.keySet();
@@ -112,6 +113,9 @@ if (product != null) {
     priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
     request.setAttribute("priceMap", priceMap);
     
+    productStore = ProductStoreWorker.getProductStore(request);
+    productStoreId = productStore.getString("productStoreId");
+
     // get the product review(s)
     reviews = product.getRelated("ProductReview", null, UtilMisc.toList("-postedDateTime"));
     request.setAttribute("productReviews", reviews);
@@ -121,7 +125,7 @@ if (product != null) {
         featureMap = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId));
         featureSet = featureMap.get("featureSet");
         if (featureSet != null && featureSet.size() > 0) {
-            variantTreeMap = dispatcher.runSync("getProductVariantTree", UtilMisc.toMap("productId", productId, "featureOrder", featureSet, "prodCatalogId", catalogId));
+            variantTreeMap = dispatcher.runSync("getProductVariantTree", UtilMisc.toMap("productId", productId, "featureOrder", featureSet, "productStoreId", productStoreId));
             variantTree = variantTreeMap.get("variantTree");
             imageMap = variantTreeMap.get("variantSample");                        
             request.setAttribute("variantTree", variantTree);
