@@ -2,22 +2,30 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="java.util.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*"%>
 <%@ page import="org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.product.product.*"%>
-
+<%try {%>
 <%-- ====================================================== --%>
 <%-- Special Variant Code                                   --%>
 <%-- ====================================================== --%>
 <ofbiz:service name="getProductFeatureSet">
     <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
 </ofbiz:service>
-<ofbiz:service name="getProductVariantTree">
-    <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
-    <ofbiz:param name='featureOrder' attribute='featureSet'/>
-</ofbiz:service>
+<ofbiz:if name='featureSet' size='0'>
+    <ofbiz:service name="getProductVariantTree">
+        <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
+        <ofbiz:param name='featureOrder' attribute='featureSet'/>
+    </ofbiz:service>
+</ofbiz:if>
 
 <%
-  List featureOrder = new LinkedList((Collection) pageContext.getAttribute("featureSet"));
+  Collection featureSetCol = (Collection) pageContext.getAttribute("featureSet");
+  List featureOrder = new LinkedList();
+  if (featureSetCol != null) {
+    featureOrder.addAll(featureSetCol);
+  }
   Map variantTree = (Map) pageContext.getAttribute("variantTree");
+  if (variantTree == null) variantTree = new HashMap();
   Map imageMap = (Map) pageContext.getAttribute("variantSample");
+  if (imageMap == null) imageMap = new HashMap();
   Set imageSet = imageMap.keySet();
   Debug.logInfo("Setup variables: " + featureOrder + " / " + variantTree + " / " + imageMap);
 %>
@@ -61,100 +69,101 @@
     }
 %>
 
-<script language="JavaScript">
-<!--
-var IMG = new Array(<%=variantTree.size()%>);
-var OPT = new Array(<%=featureOrder.size()%>);
-<% for (int li = 0; li < featureOrder.size(); li++) { %>
-  OPT[<%=li%>] = "<%=featureOrder.get(li)%>";
-<% } %>
+<%if (variantTree.size() > 0 && featureOrder.size() > 0) {%>
+    <script language="JavaScript">
+    <!--
+    var IMG = new Array(<%=variantTree.size()%>);
+    var OPT = new Array(<%=featureOrder.size()%>);
+    <% for (int li = 0; li < featureOrder.size(); li++) { %>
+      OPT[<%=li%>] = "<%=featureOrder.get(li)%>";
+    <% } %>
 
-<%-- Build the top level --%>
-<% String topLevelName = (String) featureOrder.get(0);%>
-function list<%=topLevelName%>() {
-     document.forms["addform"].elements["<%=topLevelName%>"].options.length = 1;
-     document.forms["addform"].elements["<%=topLevelName%>"].options[0] = new Option("<%=topLevelName%>","",true,true);
-  <%
-    if (variantTree != null) {
-        Set vTreeKeySet = variantTree.keySet();
-        Iterator vti = vTreeKeySet.iterator();
-        int counter = 0;
-        while (vti.hasNext()) {
-            Object key = vti.next();
-            Object value = variantTree.get(key);
-            String opt = null;
-            if (featureOrder.size() == 1)
-                opt = ((String) ((List)value).iterator().next());
-            else
-                opt = "" + counter;
+    <%-- Build the top level --%>
+    <% String topLevelName = (String) featureOrder.get(0);%>
+    function list<%=topLevelName%>() {
+         document.forms["addform"].elements["<%=topLevelName%>"].options.length = 1;
+         document.forms["addform"].elements["<%=topLevelName%>"].options[0] = new Option("<%=topLevelName%>","",true,true);
+      <%
+        if (variantTree != null) {
+            Set vTreeKeySet = variantTree.keySet();
+            Iterator vti = vTreeKeySet.iterator();
+            int counter = 0;
+            while (vti.hasNext()) {
+                Object key = vti.next();
+                Object value = variantTree.get(key);
+                String opt = null;
+                if (featureOrder.size() == 1)
+                    opt = ((String) ((List)value).iterator().next());
+                else
+                    opt = "" + counter;
 
-  %>
-     document.forms["addform"].elements["<%=topLevelName%>"].options[<%=counter+1%>] = new Option("<%=key%>","<%=opt%>");
-     IMG[<%=counter%>] = "<%=((GenericValue) imageMap.get(key)).getString("largeImageUrl")%>";
-  <%
-            counter++;
+      %>
+         document.forms["addform"].elements["<%=topLevelName%>"].options[<%=counter+1%>] = new Option("<%=key%>","<%=opt%>");
+         IMG[<%=counter%>] = "<%=((GenericValue) imageMap.get(key)).getString("largeImageUrl")%>";
+      <%
+                counter++;
+            }
         }
+      %>
     }
-  %>
-}
 
-<%-- Start of Dyno-Gen --%>
-<%
-  if (variantTree != null) {
-    Set topLevelKeys = variantTree.keySet();
-    Iterator tli = topLevelKeys.iterator();
-    int topLevelKeysCt=0;
-    while (tli.hasNext()) {
-        String cnt = "" + topLevelKeysCt;
-%>
-<%=buildNext((Map)variantTree.get(tli.next()), featureOrder, (String)featureOrder.get(1), cnt)%>
-<%
-        topLevelKeysCt++;
+    <%-- Start of Dyno-Gen --%>
+    <%
+      if (variantTree != null) {
+        Set topLevelKeys = variantTree.keySet();
+        Iterator tli = topLevelKeys.iterator();
+        int topLevelKeysCt=0;
+        while (tli.hasNext()) {
+            String cnt = "" + topLevelKeysCt;
+    %>
+    <%=buildNext((Map)variantTree.get(tli.next()), featureOrder, (String)featureOrder.get(1), cnt)%>
+    <%
+            topLevelKeysCt++;
+        }
+      }
+    %>
+    <%-- End of Dynamic Gen --%>
+
+    function findIndex(name) {
+      for (i=0; i<OPT.length; i++) {
+        if (OPT[i] == name) {
+          return i;
+        }
+      }
+      return -1;
     }
-  }
-%>
-<%-- End of Dynamic Gen --%>
 
-function findIndex(name) {
-  for (i=0; i<OPT.length; i++) {
-    if (OPT[i] == name) {
-      return i;
+    function getList(name, value) {
+      currentOrderIndex = findIndex(name);
+      if (currentOrderIndex < 0 || value == "")
+        return;
+      if (currentOrderIndex < (OPT.length - 1)) {
+        if (IMG[value] != null) {
+          document.images['mainImage'].src = IMG[value];
+          document.addform.<%=topLevelName%>.selectedIndex = (value*1)+1;
+        }
+        eval("list" + OPT[currentOrderIndex+1] + value + "()");
+        document.addform.add_product_id.value = 'NULL';
+      } else {
+        document.addform.add_product_id.value = value;
+      }
     }
-  }
-  return -1;
-}
 
-function getList(name, value) {
-  currentOrderIndex = findIndex(name);
-  if (currentOrderIndex < 0 || value == "")
-    return;
-  if (currentOrderIndex < (OPT.length - 1)) {
-    if (IMG[value] != null) {
-      document.images['mainImage'].src = IMG[value];
-      document.addform.<%=topLevelName%>.selectedIndex = (value*1)+1;
+    function addItem() {
+      if (document.addform.add_product_id.value == 'NULL') {
+        alert("Please enter all the required information.");
+        return;
+      } else {
+        document.addform.submit();
+      }
     }
-    eval("list" + OPT[currentOrderIndex+1] + value + "()");
-    document.addform.add_product_id.value = 'NULL';
-  } else {
-    document.addform.add_product_id.value = value;
-  }
-}
-    
-function addItem() {
-  if (document.addform.add_product_id.value == 'NULL') {
-    alert("Please enter all the required information.");
-    return;
-  } else {
-    document.addform.submit();
-  }
-}
 
-//-->
-</script>
+    //-->
+    </script>
+<%}%>
 <%-- ====================================================== --%>
 <%-- End Special Variant Code                                   --%>
 <%-- ====================================================== --%>
-
 <%
   // Get the value object of the request product id.
   ProductWorker.getProduct(pageContext,"productValue",request.getParameter("product_id"));
@@ -224,7 +233,9 @@ function addItem() {
 
           <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
         </form>
-        <script language="JavaScript">eval("list" + "<%=featureOrder.get(0)%>" + "()");</script>
+        <%if (featureOrder.size() > 0) {%>
+            <script language="JavaScript">eval("list" + "<%=featureOrder.get(0)%>" + "()");</script>
+        <%}%>
         <br>
         
         <%-- =============== --%>
@@ -373,3 +384,4 @@ function addItem() {
 
   </table>
 </ofbiz:if>
+<%}catch (Exception e) {Debug.log(e);}%>
