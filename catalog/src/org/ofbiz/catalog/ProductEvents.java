@@ -177,6 +177,10 @@ public class ProductEvents {
     product.set("taxable", taxable);
     product.set("showInSearch", showInSearch);
     
+    if(UtilValidate.isNotEmpty(primaryProductCategoryId)) {
+      product.preStoreOther(delegator.makeValue("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", primaryProductCategoryId)));
+    }
+
     if(updateMode.equals("CREATE")) {
       GenericValue newProduct = null;
       try { newProduct = delegator.create(product); }

@@ -98,7 +98,9 @@ public class CategoryEvents {
     category.set("description", description);
     category.set("categoryImageUrl", categoryImageUrl);
     
-    category.preStoreOther(delegator.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", primaryParentCategoryId)));
+    if(UtilValidate.isNotEmpty(primaryParentCategoryId)) {
+      category.preStoreOther(delegator.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", primaryParentCategoryId)));
+    }
     
     if(updateMode.equals("CREATE")) {
       GenericValue newCategory = null;

@@ -52,7 +52,7 @@
     primaryParentCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primParentCatIdParam));
 %>
 
-<div class="head1">Edit Product Category with ID "<%=productCategoryId%>"</div>
+<div class="head1">Edit Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
 <a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[Create New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
   <a href="/ecommerce/control/category?PRODUCT_CATEGORY_ID=<%=productCategoryId%>" class="buttontext">[View Category Page]</a>
@@ -61,7 +61,7 @@
 <table border="1">
 <%if(category == null){%>
   <%if(productCategoryId != null){%>
-    <h3>Could not find Product Category with ID "<%=productCategoryId%>".</h3>
+    <h3>Could not find Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>".</h3>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
       <td>Product Category ID</td>
