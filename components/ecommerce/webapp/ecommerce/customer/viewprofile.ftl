@@ -519,14 +519,14 @@ ${pages.get("/customer/messagelist.ftl")}
                   <#assign mimeType = content.getRelatedOne("MimeType")>
                   <#assign status = content.getRelatedOne("StatusItem")>
                   <tr>
-                    <td><a href="/content/control/img?imgId=${content.dataResourceId}" class="buttontext">${content.contentId}</a>
+                    <td><a href="/content/control/img/~imgId=${content.dataResourceId}/~${content.contentName}" class="buttontext">${content.contentId}</a>
                     <td><div class="tabletext">${content.contentName?if_exists}</div></td>
                     <td><div class="tabletext">${contentType.description?if_exists}</div></td>
                     <td><div class="tabletext">${mimeType.description?if_exists}</div></td>
                     <td><div class="tabletext">${status.description?if_exists}</div></td>
                     <td><div class="tabletext">${contentRole.fromDate?if_exists}</div></td>
                     <td align="right">
-                      <a href="/content/control/img?imgId=${content.dataResourceId}" class="buttontext">[View]</a>
+                      <a href="/content/control/img/~imgId=${content.dataResourceId}/~${content.contentName}" class="buttontext">[View]</a>
                       <a href="<@ofbizUrl>/removePartyAsset?contentId=${contentRole.contentId}&partyId=${contentRole.partyId}&roleTypeId=${contentRole.roleTypeId}</@ofbizUrl>" class="buttontext">[Remove]</a>
                     </td>
                   </tr>
