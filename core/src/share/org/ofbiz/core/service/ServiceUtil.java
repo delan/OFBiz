@@ -42,15 +42,20 @@ public class ServiceUtil {
     public static Map returnError(String errorMessage) {
         Map result = new HashMap();
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-        result.put(ModelService.ERROR_MESSAGE, errorMessage);
+        if (errorMessage != null) result.put(ModelService.ERROR_MESSAGE, errorMessage);
         return result;
     }
     
     /** A small routine used all over to improve code efficiency, make a result map with the message and the success response code */
     public static Map returnSuccess(String successMessage) {
+        return returnMessage(ModelService.RESPOND_SUCCESS, successMessage);
+    }
+    
+    /** A small routine to make a result map with the message and the response code */
+    public static Map returnMessage(String code, String message) {
         Map result = new HashMap();
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        result.put(ModelService.SUCCESS_MESSAGE, successMessage);
+        if (code != null) result.put(ModelService.RESPONSE_MESSAGE, code);
+        if (message != null) result.put(ModelService.SUCCESS_MESSAGE, message);
         return result;
     }
     
