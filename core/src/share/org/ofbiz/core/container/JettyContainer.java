@@ -210,11 +210,11 @@ class Log4jSink implements LogSink {
         return _options;
     }
        
-    public  void start() throws Exception {
+    public void start() throws Exception {
         _started=true;
     }
        
-    public  void stop() {    
+    public void stop() {    
         _started=false;
     }
    
@@ -222,7 +222,7 @@ class Log4jSink implements LogSink {
         return _started;
     }
        
-    public  void log(String tag, Object msg, Frame frame, long time) {    
+    public void log(String tag, Object msg, Frame frame, long time) {    
         String method = frame.getMethod();
         int lb = method.indexOf('(');
         int ld = (lb > 0) ? method.lastIndexOf('.', lb) : method.lastIndexOf('.');
@@ -245,11 +245,10 @@ class Log4jSink implements LogSink {
             return;
         }
 
-        log.log("org.mortbay.util.Log4jSink", priority, "" + msg, null);
+        log.log("jetty.log4jSink", priority, "" + msg, null);
     }
     
-    public  synchronized void log(String s) {
+    public synchronized void log(String s) {
         Logger.getRootLogger().log("jetty.log4jSink", Priority.INFO, s, null);
-    }
-    
+    }    
 }
