@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
 -->
 
@@ -432,5 +432,82 @@
         <field-to-field field-name="noteId" map-name="newEntity" to-map-name="newWorkEffortNote"/>
         <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="newWorkEffortNote"/>
         <create-value value-name="newWorkEffortNote"/>
+    </simple-method>
+
+    <simple-method method-name="createWorkEffortAssoc" short-description="Create a WorkEffort association">
+        <make-value value-name="lookupPKMap" entity-name="WorkEffortAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <if-empty field-name="fromDate" map-name="lookupPKMap">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="lookupPKMap"/>
+        </if-empty>        
+        <find-by-primary-key entity-name="WorkEffortAssoc" map-name="lookupPKMap" value-name="newEntity"/>
+        <if-not-empty field-name="workEffortIdFrom" map-name="newEntity">
+            <add-error>
+                <fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortAssocIdAlreadyExist"/>
+            </add-error>
+            <check-errors/>
+        <else>
+            <make-value value-name="newEntity" entity-name="WorkEffortAssoc"/>  
+            <set-pk-fields map-name="parameters" value-name="newEntity"/>  
+            <if-empty field-name="sequenceNum" map-name="newEntity">
+                <calculate field-name="sequenceNum" map-name="newEntity" type="Long"><number value="0"/></calculate>
+	     </if-empty>        
+            <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+            <create-value value-name="newEntity"/>
+        </else>
+        </if-not-empty>
+    </simple-method>
+    <simple-method method-name="updateWorkEffortAssoc" short-description="Update a WorkEffort association">
+        <make-value value-name="lookupPKMap" entity-name="WorkEffortAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WorkEffortAssoc" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeWorkEffortAssoc" short-description="Remove a WorkEffort association">
+        <make-value value-name="lookupPKMap" entity-name="WorkEffortAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WorkEffortAssoc" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <if-not-empty map-name="lookedUpValue" field-name="workEffortIdFrom">
+            <remove-value value-name="lookedUpValue"/>
+        </if-not-empty>
+    </simple-method>
+
+    <simple-method method-name="createWorkEffortGoodStandard" short-description="Create a link between a WorkEffort and a Product">
+        <make-value value-name="lookupPKMap" entity-name="WorkEffortGoodStandard"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WorkEffortGoodStandard" map-name="lookupPKMap" value-name="newEntity"/>
+        <if-not-empty field-name="workEffortIdFrom" map-name="newEntity">
+            <add-error>
+                <fail-property resource="WorkEffortUiLabels" property="WorkEffortWorkEffortGoodStandardAlreadyExist"/>
+            </add-error>
+            <check-errors/>
+        <else>
+            <make-value value-name="newEntity" entity-name="WorkEffortGoodStandard"/>  
+            <set-pk-fields map-name="parameters" value-name="newEntity"/>  
+            <if-empty field-name="fromDate" map-name="newEntity">
+                <now-timestamp-to-env env-name="nowTimestamp"/>
+                <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+            </if-empty>        
+            <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+            <create-value value-name="newEntity"/>
+        </else>
+        </if-not-empty>
+    </simple-method>
+    <simple-method method-name="updateWorkEffortGoodStandard" short-description="Update a link between a WorkEffort and a Product">
+        <make-value value-name="lookupPKMap" entity-name="WorkEffortGoodStandard"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WorkEffortGoodStandard" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeWorkEffortGoodStandard" short-description="Remove a link between a WorkEffort and a Product">
+        <make-value value-name="lookupPKMap" entity-name="WorkEffortGoodStandard"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WorkEffortGoodStandard" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <if-not-empty map-name="lookedUpValue" field-name="workEffortId">
+            <remove-value value-name="lookedUpValue"/>
+        </if-not-empty>
     </simple-method>
 </simple-methods>

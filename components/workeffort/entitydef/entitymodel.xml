@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  */
 -->
 
@@ -717,9 +717,12 @@
       <field name="workEffortIdTo" type="id-ne"></field>
       <field name="workEffortAssocTypeId" type="id-ne"></field>
       <field name="sequenceNum" type="numeric"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <prim-key field="workEffortIdFrom"/>
       <prim-key field="workEffortIdTo"/>
       <prim-key field="workEffortAssocTypeId"/>
+      <prim-key field="fromDate"/>
       <relation type="one" fk-name="WK_EFFRTASSC_TYP" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId"/>
       </relation>
@@ -730,6 +733,7 @@
         <key-map field-name="workEffortIdFrom"/>
         <key-map field-name="workEffortIdTo"/>
         <key-map field-name="workEffortAssocTypeId"/>
+        <key-map field-name="fromDate"/>
       </relation>
       <relation type="one" fk-name="WK_EFFRTASSC_FWE" title="From" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortIdFrom" rel-field-name="workEffortId"/>
@@ -738,12 +742,29 @@
         <key-map field-name="workEffortIdTo" rel-field-name="workEffortId"/>
       </relation>
     </entity>
+    <view-entity entity-name="WorkEffortAssocView"
+            package-name="org.ofbiz.workeffort.workeffort"
+            title="Work Effort Association Entity with Name">
+      <member-entity entity-alias="WA" entity-name="WorkEffortAssoc"/>
+      <member-entity entity-alias="WETO" entity-name="WorkEffort"/>
+      <alias-all entity-alias="WA"/>
+      <alias entity-alias="WETO" name="workEffortToName" field="workEffortName"/>
+      <alias entity-alias="WETO" name="workEffortToSetup" field="estimatedSetupMillis"/>
+      <alias entity-alias="WETO" name="workEffortToRun" field="estimatedMilliSeconds"/>
+      <view-link entity-alias="WA" rel-entity-alias="WETO">
+        <key-map field-name="workEffortIdTo" rel-field-name="workEffortId"/>
+      </view-link>
+      <relation type="one-nofk" fk-name="WK_EFFRTASSV_FWE" title="From" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortIdFrom" rel-field-name="workEffortId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="WorkEffortAssocAttribute"
             package-name="org.ofbiz.workeffort.workeffort"
             title="Work Effort Association Attribute Entity">
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
       <field name="workEffortAssocTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>
       <prim-key field="workEffortIdFrom"/>
@@ -754,6 +775,7 @@
         <key-map field-name="workEffortIdFrom"/>
         <key-map field-name="workEffortIdTo"/>
         <key-map field-name="workEffortAssocTypeId"/>
+        <key-map field-name="fromDate"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAssocTypeAttr">
         <key-map field-name="attrName"/>
@@ -910,15 +932,22 @@
             title="Work Effort Good Standard Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
       <field name="estimatedQuantity" type="floating-point"></field>
       <field name="estimatedCost" type="currency-amount"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="productId"/>
+      <prim-key field="fromDate"/>
       <relation type="one" fk-name="WKEFF_GDSTD_WEFF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
       <relation type="one" fk-name="WKEFF_GDSTD_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_GDSTD_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="WorkEffortInventoryAssign"
@@ -926,6 +955,7 @@
             title="Work Effort Inventory Assignment Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
       <prim-key field="workEffortId"/>
       <prim-key field="inventoryItemId"/>
@@ -934,6 +964,9 @@
       </relation>
       <relation type="one" fk-name="WKEFF_INVAS_INVIT" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_INVAS_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="WorkEffortInventoryProduced"
@@ -1197,7 +1230,8 @@
     </entity>
     <entity entity-name="WorkEffortPurposeType"
             package-name="org.ofbiz.workeffort.workeffort"
-            title="Work Effort Purpose Type Entity">
+            title="Work Effort Purpose Type Entity"
+            default-resource-name="WorkEffortEntityLabels">
       <field name="workEffortPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="workEffortPurposeTypeId"/>
