@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.37 2004/06/28 16:54:53 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.38 2004/06/28 20:18:31 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.37 $
+ * @version    $Revision: 1.38 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -1613,6 +1613,7 @@ public class PaymentGatewayServices {
             result.put("authResult", new Boolean(true));
         if (processAmount != null && processAmount.doubleValue() < 100.00)
             result.put("authResult", new Boolean(false));
+            result.put("customerRespMsgs", UtilMisc.toList("Sorry this processor requires at least a $100.00 purchase."));
         if (processAmount == null)
             result.put("authResult", null);
 
