@@ -137,7 +137,7 @@
 </ofbiz:if>
 
 <script language='JavaScript'>
-    function setLineFromDate(line) { eval('document.lineForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
+    function setLineThruDate(line) { eval('document.lineForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
 </script>
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
@@ -170,7 +170,7 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
             <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/><%if (hasExpired) {%> style='color: red;'<%}%>>
-            <a href='#' onclick='setLineFromDate("<%=line%>")' class='buttontext'>[Now]</a>
+            <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/>>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/>>
             <INPUT type=submit value='Update'>

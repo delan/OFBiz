@@ -73,6 +73,9 @@
 <%if(productId!=null && product!=null){%>
 <p class="head2">Product-Category Member Maintenance</p>
 
+<script language='JavaScript'>
+    function setLineThruDate(line) { eval('document.lineForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
+</script>
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Category ID</b></div></td>
@@ -81,7 +84,9 @@
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence&nbsp;&amp;&nbsp;Quantity</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
+<%int line = 0;%>
 <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers">
+  <%line++;%>
   <%GenericValue category = productCategoryMember.getRelatedOne("ProductCategory");%>
   <tr valign="middle">
     <td><a href='<ofbiz:url>/EditCategory?productCategoryId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></a></td>
@@ -96,11 +101,12 @@
     <td align="center">
         <%boolean hasExpired = false;%>
         <%if (productCategoryMember.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryMember.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <FORM method=POST action='<ofbiz:url>/updateProductToCategory</ofbiz:url>'>
+        <FORM method=POST action='<ofbiz:url>/updateProductToCategory</ofbiz:url>' name='lineForm<%=line%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
             <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/><%if (hasExpired) {%> style='color: red;'<%}%>>
+            <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/>>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/>>
             <INPUT type=submit value='Update'>
