@@ -1,5 +1,5 @@
 /*
- * $Id: ModelField.java,v 1.5 2004/07/07 05:17:16 doogie Exp $
+ * $Id: ModelField.java,v 1.6 2004/07/07 05:20:06 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Field model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ModelField extends ModelChild {
@@ -161,5 +161,19 @@ public class ModelField extends ModelChild {
 
     public String removeValidator(int index) {
         return (String) this.validators.remove(index);
+    }
+
+    public boolean equals(Object obj) {
+        if (obj.getClass() != getClass()) return false;
+        ModelField other = (ModelField) obj;
+        return other.getName().equals(getName()) && other.getModelEntity() == getModelEntity();
+    }
+
+    public int hashCode() {
+        return getModelEntity().hashCode() ^ getName().hashCode();
+    }
+
+    public String toString() {
+        return getModelEntity() + "@" + getName();
     }
 }
