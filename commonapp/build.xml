@@ -73,7 +73,7 @@
         <property name="tyrex.jar"     value="${extlib.dir}/common/tyrex-1.0.jar" />
         <property name="log4j.jar"     value="${extlib.dir}/common/log4j.jar"/>
 
-	    <property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b3.jar"/>
+	    <property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b6.jar"/>
         <property name="axis.jar"      value="${extlib.dir}/share/axis.jar"/>
         <property name="clutil.jar"    value="${extlib.dir}/share/clutil.jar" />
         <property name="wsdl4j.jar"    value="${extlib.dir}/share/wsdl4j.jar" />
@@ -134,9 +134,9 @@
     <target name="classes" depends="prepare">
         <javac debug="on" deprecation="on" srcdir="${src.dir}" classpath="${classpath}" destdir="${build.dir}/jar">
             <!-- exclude the payment processor packages; comment if you have libs -->
-            <exclude name="org/ofbiz/commonapp/thirdparty/cybersource/**" />
+            <!-- <exclude name="org/ofbiz/commonapp/thirdparty/cybersource/**" /> -->
             <exclude name="org/ofbiz/commonapp/thirdparty/verisign/**" />
-            <exclude name="org/ofbiz/commonapp/thirdparty/taxware/**" />
+            <!-- <exclude name="org/ofbiz/commonapp/thirdparty/taxware/**" /> -->
         </javac>
         <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
         <copy todir="${build.dir}/jar">
