@@ -168,7 +168,7 @@ public class GenericHelperDAO implements GenericHelper {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue objects representing the result
      */
-    public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+    public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         return genericDAO.selectByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
     }
     
@@ -179,7 +179,7 @@ public class GenericHelperDAO implements GenericHelper {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
-    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         return genericDAO.selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
     }
     

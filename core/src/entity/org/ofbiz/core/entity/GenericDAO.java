@@ -405,7 +405,6 @@ public class GenericDAO {
             return null;
         }
         
-        TreeSet fieldsToSelect = new TreeSet(modelEntity.getAllFieldNames());
         EntityCondition entityCondition = null;
         if (fields != null) {
             entityCondition = new EntityFieldMap(fields, EntityOperator.AND);
@@ -413,7 +412,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, modelEntity.getAllFieldNames(), orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -427,7 +426,6 @@ public class GenericDAO {
             return null;
         }
 
-        TreeSet fieldsToSelect = new TreeSet(modelEntity.getAllFieldNames());
         EntityCondition entityCondition = null;
         if (fields != null) {
             entityCondition = new EntityFieldMap(fields, EntityOperator.OR);
@@ -435,7 +433,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, modelEntity.getAllFieldNames(), orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -452,12 +450,10 @@ public class GenericDAO {
             return null;
         }
 
-        TreeSet fieldsToSelect = new TreeSet(modelEntity.getAllFieldNames());
         EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.AND);
-
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, modelEntity.getAllFieldNames(), orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -474,12 +470,10 @@ public class GenericDAO {
             return null;
         }
 
-        TreeSet fieldsToSelect = new TreeSet(modelEntity.getAllFieldNames());
         EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.OR);
-
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, modelEntity.getAllFieldNames(), orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -808,7 +802,7 @@ public class GenericDAO {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue objects representing the result
      */
-    public Collection selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+    public Collection selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         EntityListIterator entityListIterator = null;
         try {
             entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
@@ -827,11 +821,11 @@ public class GenericDAO {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
-    public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+    public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         return this.selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
     }
     
-    public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy, boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency) throws GenericEntityException {
+    public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy, boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency) throws GenericEntityException {
         if (modelEntity == null) {
             return null;
         }
@@ -847,7 +841,7 @@ public class GenericDAO {
         List selectFields = new ArrayList();
         
         if (fieldsToSelect != null && fieldsToSelect.size() > 0) {
-            Set tempKeys = new TreeSet(fieldsToSelect);
+            Set tempKeys = new HashSet(fieldsToSelect);
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
 

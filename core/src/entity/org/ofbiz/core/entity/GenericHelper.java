@@ -106,7 +106,7 @@ public interface GenericHelper {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue objects representing the result
      */
-    public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException;
+    public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException;
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
@@ -115,7 +115,7 @@ public interface GenericHelper {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
-    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException;
+    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException;
     
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
