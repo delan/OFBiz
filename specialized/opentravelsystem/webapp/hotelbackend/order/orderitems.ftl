@@ -84,13 +84,12 @@
                             ${orderItem.itemDescription?if_exists}
                           </#if>
                         </div>
-                        <#if productId?exists>
+                        <#--if productId?exists>
                           <div class="tabletext">
-                          http://localhost:8080/hotelfrontend/control/product/~product_id=HDS-RoomPromo
                             <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext" target="_blank">[${uiLabelMap.ProductCatalog}]</a>
                             <a href="<@ofbizUrl>product?product_id=${productId}</@ofbizUrl>" class="buttontext" target="_blank">[${uiLabelMap.EcommerceEcommerce}]</a>
                           </div>
-                        </#if>
+                        </#if-->
                       </td>
 
                       <#-- now show status details per line item -->
@@ -320,10 +319,10 @@
                     <#list workEfforts as workEffort>
                       <tr>
                         <td align="right" colspan="2">
-                          <div class="tabletext" style="font-size: xx-small;">
+                          <#--div class="tabletext" style="font-size: xx-small;">
                             <b><i>Production Run</i>:</b>
                             <a target="manufacturing" href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${workEffort.workEffortId}</a>
-                          </div>
+                          </div-->
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main_left</template>
-    <property name="title">Shopping Cart</property>
-    <property name="title-property">PageTitleShoppingCart</property>
-    <property name="headerItem">Shopping Cart</property>
-    <content-action name="/cart/showcart.bsh"/>
-    <content-action name="/cart/showpromotext.bsh"/>
-</page>

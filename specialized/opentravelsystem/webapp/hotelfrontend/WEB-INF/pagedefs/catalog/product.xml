@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main_lr</template>
-    <property name="title">Product Page</property>
-    <property name="title-property">PageTitleProductPage</property>
-    <page-action name="/catalog/product.bsh"/>
-</page>
