@@ -24,10 +24,10 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.dtd,v 1.2 2003/08/16 22:57:35 jonesde Exp $
+ *  $Id: ofbiz-component.dtd,v 1.3 2003/08/16 23:22:02 jonesde Exp $
 -->
 
-<!ELEMENT ofbiz-component ( depends-on*, resource-loader+, classpath*, entity-resource*, service-resource*, webapp* )>
+<!ELEMENT ofbiz-component ( depends-on*, resource-loader*, classpath*, entity-resource*, service-resource*, webapp* )>
 <!ATTLIST ofbiz-component 
     name CDATA #REQUIRED
 >
@@ -48,7 +48,6 @@
 <!ELEMENT classpath EMPTY>
 <!ATTLIST classpath
     type ( jar | dir ) #REQUIRED
-    loader CDATA #REQUIRED
     location CDATA #REQUIRED
 >
 
@@ -71,7 +70,6 @@
     name CDATA #REQUIRED
     title CDATA #IMPLIED
     server CDATA #REQUIRED
-    loader CDATA #REQUIRED
     location CDATA #REQUIRED
     mount-point CDATA #IMPLIED
 >
@@ -84,8 +82,8 @@
     <resource-loader name="maincp" type="classpath"/>
     <resource-loader name="mainurl" type="url"/>
 
-    <classpath type="jar" loader="maincomponent" location="lib/product.jar"/>
-    <classpath type="dir" loader="maincomponent" location="classes"/>
+    <classpath type="jar" location="lib/product.jar"/>
+    <classpath type="dir" location="classes"/>
 
     <entity-resource type="model" reader-name="main" loader="maincomponent" location="entity/entitymodel.xml"/>
     <entity-resource type="group" reader-name="main" loader="maincomponent" location="entity/entitygroup.xml"/>
@@ -95,6 +93,6 @@
     <service-resource type="group" loader="maincomponent" location="service/groups_test.xml"/>
     <service-resource type="eca" loader="maincomponent" location="service/secas_test.xml"/>
 
-	<webapp name="webtools" title="WebTools" server="default" loader="maincomponent" location="webtools" mount-point="/webtools"/>
+	<webapp name="webtools" title="WebTools" server="default" location="webtools" mount-point="/webtools"/>
 </ofbiz-component> 
 -->

@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.2 2003/08/16 23:08:19 jonesde Exp $
+ * $Id: ComponentConfig.java,v 1.3 2003/08/16 23:22:03 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ComponentConfig {
@@ -358,12 +358,15 @@ public class ComponentConfig {
     	}
     }
 
-    public static class ClasspathInfo extends ResourceInfo {
+    public static class ClasspathInfo {
+        public ComponentConfig componentConfig;
         public String type;
+        public String location;
 
         public ClasspathInfo(ComponentConfig componentConfig, Element element) {
-            super(componentConfig, element);
+            this.componentConfig = componentConfig;
             this.type = element.getAttribute("type");
+            this.location = element.getAttribute("location");
         }
     }
 
@@ -387,18 +390,21 @@ public class ComponentConfig {
         }
     }
 
-    public static class WebappInfo extends ResourceInfo {
+    public static class WebappInfo {
+        public ComponentConfig componentConfig;
         public String name;
         public String title;
         public String server;
         public String mountPoint;
+        public String location;
 
         public WebappInfo(ComponentConfig componentConfig, Element element) {
-            super(componentConfig, element);
+            this.componentConfig = componentConfig;
             this.name = element.getAttribute("name");
             this.title = element.getAttribute("title");
             this.server = element.getAttribute("server");
             this.mountPoint = element.getAttribute("mount-point");
+            this.location = element.getAttribute("location");
             
             // default title is name w/ upper-cased first letter
             if (UtilValidate.isEmpty(this.title)) {                
