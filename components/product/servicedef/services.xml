@@ -463,7 +463,6 @@
         <description>Create an ProductPromoCategory</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="productPromoActionSeqId" mode="OUT"/>
     </service>
     <service name="updateProductPromoCategory" default-entity-name="ProductPromoCategory" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="updateProductPromoCategory" auth="true">
