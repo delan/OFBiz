@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.8 2003/12/05 20:42:51 byersa Exp $
+ * $Id: ModelFormField.java,v 1.9 2004/02/21 23:58:04 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -406,6 +406,9 @@ public class ModelFormField {
         } else if ("display".equals(defaultFieldType)) {
             ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
             this.setFieldInfo(displayField);
+        } else if ("hidden".equals(defaultFieldType)) {
+        	ModelFormField.HiddenField hiddenField = new ModelFormField.HiddenField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
+        	this.setFieldInfo(hiddenField);
         } else {
             if ("id".equals(modelField.getType()) || "id-ne".equals(modelField.getType())) {
                 ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
