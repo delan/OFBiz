@@ -411,4 +411,86 @@
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
+    <!-- Product Category Content Forms  -->
+    
+      <form name="AddCategoryContentAssoc" type="single"
+            target="addContentToCategory" title="Add ProductCategoryContent (select Content Id, enter From Date):"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProductCategoryContent"/>
+        <field name="productCategoryId" map-name="productCategory"><hidden/></field>
+        <field name="prodCatContentTypeId" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductCategoryContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="PrepareAddCategoryContentAssoc" type="single"
+            target="prepareAddContentToCategory" title="Add ProductCategoryContent (select Content Id, enter From Date):"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProductCategoryContent"/>
+        <field name="contentId"><ignored/></field>
+        <field name="useDaysLimit"><ignored/></field>
+        <field name="useCountLimit"><ignored/></field>
+        <field name="purchaseThruDate"><ignored/></field>
+        <field name="purchaseFromDate"><ignored/></field>
+        <field name="fromDate"><ignored/></field>
+        <field name="thruDate"><ignored/></field>
+        <field name="productCategoryId" map-name="productCategory"><hidden/></field>
+        <field name="prodCatContentTypeId" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductCategoryContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- <field name="description"><text size="40"/></field> -->
+        <field name="submitButton" title="Prepare Create" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdateCategoryContentAssoc" type="list"
+            target="updateContentToCategory" title="" list-name="categoryContentDatas"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <!-- each entry in the list will be a Map with the entries: categoryContent and content -->
+        <auto-fields-service service-name="updateCategoryContent" map-name="productCategoryContent"/>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="contentId" title="Content [ID]" widget-style="buttontext">
+            <hyperlink target="EditCategoryContentContent?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}"
+                description="${content.description} [${categoryContent.contentId}]"/>
+        </field>
+        <field name="prodCatContentTypeId" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductCategoryContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeContentFromCategory?productCategoryId=${categoryContent.productCategoryId}&amp;contentId=${categoryContent.contentId}&amp;prodCatContentTypeId=${categoryContent.prodCatContentTypeId}&amp;fromDate=${categoryContent.fromDate}"
+                description="[Delete]" also-hidden="false"/>
+        </field>
+    </form>
+     <form name="EditCategoryContentSimpleText" type="single"
+            target="updateSimpleTextContentForCategory" title="Update Simple Text Content for Category"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="contentId==null" target="createSimpleTextContentForCategory"/>
+        <auto-fields-entity entity-name="ProductCategoryContent" map-name="categoryContentData"/>
+        <field name="description" map-name="content"><text size="40"/></field>
+        <field name="localeString" map-name="content"><text size="40"/></field>
+        <field use-when="contentId == null" name="contentId"><ignored/></field>
+        <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="categoryContentData" ><display/></field>
+        <field name="text" map-name="textData" widget-style="textAreaBox" ><textarea cols="60" rows="7"/></field>
+        <field name="textDataResourceId" map-name="textData"><hidden/></field>
+        <field name="useDaysLimit"><hidden/></field>
+        <field name="useCountLimit"><hidden/></field>
+        <field name="purchaseThruDate"><hidden/></field>
+        <field name="purchaseFromDate"><hidden/></field>
+        <field name="productCategoryId"><hidden/></field>
+        <field name="prodCatContentTypeId"><hidden/></field>
+        <field use-when="contentId == null" name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
 </forms>

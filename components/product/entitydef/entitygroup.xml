@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.27 $
+ *@version    $Revision: 1.28 $
  */
 -->
 
@@ -49,6 +49,9 @@
     <entity-group group="org.ofbiz" entity="ProductCategory" />
     <entity-group group="org.ofbiz" entity="ProductCategoryAndMember" />
     <entity-group group="org.ofbiz" entity="ProductCategoryAttribute" />
+    <entity-group group="org.ofbiz" entity="ProductCategoryContent" />
+    <entity-group group="org.ofbiz" entity="ProductCategoryContentAndInfo" />
+    <entity-group group="org.ofbiz" entity="ProductCategoryContentType" />    
     <entity-group group="org.ofbiz" entity="ProductCategoryMember" />
     <entity-group group="org.ofbiz" entity="ProductCategoryMemberAndRole" />
     <entity-group group="org.ofbiz" entity="ProductCategoryRole" />

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel )
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -89,7 +89,7 @@ ${productCategory.description?if_exists}
       </select>
     </td>
   </tr>
-
+<#--
   <tr>
     <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductDescription}</div></td>
     <td>&nbsp;</td>
@@ -100,7 +100,7 @@ ${productCategory.description?if_exists}
     <td>&nbsp;</td>
     <td width="74%"><textarea cols="60" rows="3" name="longDescription" maxlength="2000" class="textAreaBox"><#if productCategory?has_content>${productCategory.longDescription?if_exists}</#if></textarea></td>
   </tr>
-
+-->
 <#if productCategoryId?has_content> 
     <SCRIPT language="JavaScript">
     function insertImageName(type,ext) {

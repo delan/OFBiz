@@ -138,6 +138,9 @@
   <ProductCategoryType description="Mix and Match" hasTable="N" parentTypeId="" productCategoryTypeId="MIXMATCH_CATEGORY"/>
   <ProductCategoryType description="Cross Sell" hasTable="N" parentTypeId="" productCategoryTypeId="CROSS_SELL_CATEGORY"/>
 
+  <ProductCategoryContentType description="Description" hasTable="N" parentTypeId="" prodCatContentTypeId="DESCRIPTION"/>
+  <ProductCategoryContentType description="Description - Long" hasTable="N" parentTypeId="" prodCatContentTypeId="LONG_DESCRIPTION"/>
+
   <ProductContentType description="Digital Download" hasTable="N" parentTypeId="" productContentTypeId="DIGITAL_DOWNLOAD"/>
   <ProductContentType description="Fulfillment Email" hasTable="N" parentTypeId="" productContentTypeId="FULFILLMENT_EMAIL"/>
   <ProductContentType description="Fulfillment External (Async)" hasTable="N" parentTypeId="" productContentTypeId="FULFILLMENT_EXTASYNC"/>
