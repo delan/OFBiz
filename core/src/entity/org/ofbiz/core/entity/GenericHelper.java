@@ -106,16 +106,40 @@ public interface GenericHelper {
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue objects representing the result
      */
-    public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException;
+    public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
+            Collection fieldsToSelect, List orderBy) throws GenericEntityException;
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param entityCondition The EntityCondition object that specifies how to constrain this query
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
+     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
+     *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
-    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException;
+    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
+            Collection fieldsToSelect, List orderBy) throws GenericEntityException;
+    
+    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
+     *@param entityCondition The EntityCondition object that specifies how to constrain this query
+     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@param specifyTypeAndConcur If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify 
+     *      how the results will be used; if false the default values for the JDBC driver will be used
+     *@param resultSetType Specified how the ResultSet will be traversed. Available values: ResultSet.TYPE_FORWARD_ONLY, 
+     *      ResultSet.TYPE_SCROLL_INSENSITIVE or ResultSet.TYPE_SCROLL_SENSITIVE. See the java.sql.ResultSet JavaDoc for 
+     *      more information. If you want it to be fast, use the common default: ResultSet.TYPE_FORWARD_ONLY.
+     *@param resultSetConcurrency Specifies whether or not the ResultSet can be updated. Available values: 
+     *      ResultSet.CONCUR_READ_ONLY or ResultSet.CONCUR_UPDATABLE. Should pretty much always be 
+     *      ResultSet.CONCUR_READ_ONLY with the Entity Engine.
+     *@param distinct Specifies whether the values returned should be filtered to remove duplicate values.
+     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
+     *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
+     */
+    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
+            Collection fieldsToSelect, List orderBy, boolean specifyTypeAndConcur, int resultSetType, 
+            int resultSetConcurrency, boolean distinct) throws GenericEntityException;
     
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
