@@ -196,6 +196,7 @@
       </relation>
       <relation type="one" fk-name="PCATRLE_PTYRLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="PCATRLE_CATALOG" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
