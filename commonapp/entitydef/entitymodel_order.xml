@@ -1314,6 +1314,10 @@
         <key-map field-name="returnId"/>
         <key-map field-name="returnItemSeqId"/>
       </relation>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="returnId"/>
+        <key-map field-name="returnItemSeqId"/>
+      </relation>      
       <relation type="many" rel-entity-name="OrderItemInventoryRes">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
