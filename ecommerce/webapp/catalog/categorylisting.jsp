@@ -1,6 +1,8 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 
 <ofbiz:object name="viewIndex" property="viewIndex" type='java.lang.Integer' />
 <ofbiz:object name="viewSize" property="viewSize" type='java.lang.Integer' />
@@ -39,7 +41,7 @@
                         %>
                         <%if (hasQuantities) {%>
                             <form method="POST" action="<ofbiz:url>/addCategoryDefaults<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="thecategoryform" style='margin: 0;'>
-                              <input type='hidden' name='add_category_id' value='<%entityField.run("listingCategory", "productCategoryId");%>'>
+                              <input type='hidden' name='add_category_id' value='<%EntityField.run("listingCategory", "productCategoryId", pageContext);%>'>
                               <%=UtilFormatOut.ifNotEmpty(request.getParameter("product_id"), "<input type='hidden' name='product_id' value='", "'>")%>
                               <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
                               <%=UtilFormatOut.ifNotEmpty(request.getParameter("VIEW_INDEX"), "<input type='hidden' name='VIEW_INDEX' value='", "'>")%>
@@ -58,8 +60,8 @@
             <tr>
                 <td align="left" valign="top" width="0">
                     <div class="tabletext">
-                        <%entityField.run("listingCategory", "categoryImageUrl", "<img src='", "' vspace='5' hspace='5' border='1' height='100' align=left>");%>
-                        <%entityField.run("listingCategory", "longDescription");%>
+                        <%EntityField.run("listingCategory", "categoryImageUrl", "<img src='", "' vspace='5' hspace='5' border='1' height='100' align=left>", pageContext);%>
+                        <%EntityField.run("listingCategory", "longDescription", pageContext);%>
                     </div>
                 </td>
             </tr>

@@ -1,11 +1,14 @@
-<%@ page import="org.ofbiz.ecommerce.catalog.*" %>
-<%Collection catalogCol = CatalogWorker.getCatalogIdsAvailable(pageContext); pageContext.setAttribute("catalogCol", catalogCol);%>
+<%@ page import="java.util.*, org.ofbiz.ecommerce.catalog.*, org.ofbiz.core.pseudotag.*" %>
+
+<%String catalogId = CatalogWorker.getCurrentCatalogId(pageContext);%>
+<%Collection catalogCol = CatalogWorker.getCatalogIdsAvailable(pageContext);%>
+<%pageContext.setAttribute("catalogCol", catalogCol);%>
 <%if(catalogCol.size() > 0) {%>
   <BR>
-  <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+  <TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
     <TR>
       <TD width='100%'>
-        <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+        <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
           <tr>
             <td valign=middle align=center>
               <div class="boxhead"><%=CatalogWorker.getCatalogName(pageContext, CatalogWorker.getCurrentCatalogId(pageContext))%></div>
@@ -16,7 +19,7 @@
     </TR>
     <TR>
       <TD width='100%'>
-        <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
           <tr>
             <td align=center>
               <form name="choosecatalogform" method="POST" action="<ofbiz:url>/main</ofbiz:url>" style='margin: 0;'>

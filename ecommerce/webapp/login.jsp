@@ -28,11 +28,7 @@
  */
 %>
 
-<%pageContext.setAttribute("PageName", "Log In");%>
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
-<%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
+<%String previousParams=(String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 
 <br>
 <div class="head1">Log&nbsp;In</div>
@@ -41,13 +37,13 @@
   <tr>
     <td width='50%' valign=top>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign=middle align=center>
-      <div class="boxhead">Registered&nbsp;User</div>
+            <div class="boxhead">Registered&nbsp;User</div>
           </td>
         </tr>
       </table>
@@ -55,14 +51,14 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
-      <form method="POST" action="<ofbiz:url>/login<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="loginform" style='margin: 0;'>
-        <div align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
-        <div align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
-        <div align=center><input type="submit" value="Login"></div>
-      </form>
+              <form method="POST" action="<ofbiz:url>/login<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="loginform" style='margin: 0;'>
+                <div align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
+                <div align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
+                <div align=center><input type="submit" value="Login"></div>
+              </form>
           </td>
         </tr>
       </table>
@@ -70,10 +66,10 @@
   </TR>
 </TABLE>
 <BR>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign=middle align=center>
       <div class="boxhead">Forgot&nbsp;Your&nbsp;Password?</div>
@@ -84,7 +80,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
       <form method="POST" action="<ofbiz:url>/forgotpassword<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="forgotpassword" style='margin: 0;'>
@@ -102,10 +98,10 @@
     <td>&nbsp;&nbsp;&nbsp;</td>
     <td width='50%' valign=top>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
         <tr>
           <td valign=middle align=center>
       <div class="boxhead">New&nbsp;User</div>
@@ -116,7 +112,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
         <tr>
           <td>
           <form method="POST" action="<ofbiz:url>/newcustomer</ofbiz:url>" style='margin: 0;'>
@@ -141,6 +137,3 @@
   document.loginform.USERNAME.focus();
 //-->
 </script>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

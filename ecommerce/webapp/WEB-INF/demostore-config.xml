@@ -6,10 +6,13 @@
     <owner>The Open For Business Project (c) 2001 </owner>
     <errorpage>/error/error.jsp</errorpage>
 
-    <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
-    <handler name="soap" class="org.ofbiz.core.event.SOAPEventHandler"/>
-    <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
-    <handler name="simple" class="org.ofbiz.core.event.SimpleEventHandler"/>
+    <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
+    <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
+    <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
+
+    <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
+    <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
 
     <!-- Events to run on every request before security (chains exempt) -->
     <preprocessor>
@@ -388,7 +391,7 @@
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->
-    <view-map name="main" page="/main.jsp"/>
+    <view-map name="main" type="region"/>
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="login" page="/login.jsp"/>
     <view-map name="showcart" page="/cart/showcart.jsp"/>

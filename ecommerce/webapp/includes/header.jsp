@@ -1,12 +1,8 @@
 
-<html>
-<head>
-
-<title><%=companyName%>: <%=pageName%></title>
-
-<%-- <link rel="stylesheet" href="<%=controlPath + "/view/includes/maincss.css"%>" type="text/css"> --%>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/includes/maincss.css" type="text/css">
-<%-- <%@ include file="/includes/maincss.jsp"%> --%>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="java.util.*" %>
 
 <script language="javascript">
 function mOvr(src,clrOver){ 
@@ -26,33 +22,19 @@ function mClk(src){
 		src.children.tags('A')[0].click();
 }
 </script>
-</head>
 
-<body <%=UtilFormatOut.ifNotEmpty(bodyTopMargin,"topmargin='","'")%> <%=UtilFormatOut.ifNotEmpty(bodyLeftMargin,"leftmargin='","'")%> <%=UtilFormatOut.ifNotEmpty(bodyRightMargin,"rightmargin='","'")%> <%=UtilFormatOut.ifNotEmpty(bodyMarginHeight,"marginheight='","'")%> <%=UtilFormatOut.ifNotEmpty(bodyMarginWidth,"marginwidth='","'")%>>
-
-<TABLE border=0 width='100%' cellpadding='<%=headerBoxBorderWidth%>' cellspacing='0' bgcolor='<%=headerBoxBorderColor%>'>
+<TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "headerBoxBorderWidth", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "headerBoxBorderColor", pageContext);%>'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding='<%=headerBoxTopPadding%>' cellspacing="0" bgcolor="<%=headerBoxTopColor%>">
+      <table width="100%" border="0" cellpadding='<%EntityField.run("layoutSettings", "headerBoxTopPadding", pageContext);%>' cellspacing="0" bgcolor="<%EntityField.run("layoutSettings", "headerBoxTopColor", pageContext);%>">
         <tr>
-          <%if(headerImageUrl != null && headerImageUrl.length() > 0) {%>
-            <TD align=left width='1%'>
-              <IMG height='50' src='<%=headerImageUrl%>' alt='<%=companyName%>'>
-            </TD>
-          <%}%>
-          <TD align=left width='98%' <%=UtilFormatOut.ifNotEmpty(headerMiddleBackgroundUrl,"background='","'")%>>
-            <%if(headerShowCompanyText) {%>
-              <%if(companyName != null && companyName.length() > 0) {%>
-                <div class='headerCompanyName'><%=companyName%></div>
-              <%}%>
-              <%if(companySubtitle != null && companySubtitle.length() > 0) {%>
-                <div class='headerCompanySubtitle'><%=companySubtitle%></div>
-              <%}%>
-            <%}else{%>
+          <%EntityField.run("layoutSettings", "headerImageUrl", "<TD align=left width='1%'><IMG height='50' src='", "'></TD>", pageContext);%>
+          <TD align=left width='98%' <%EntityField.run("layoutSettings", "headerMiddleBackgroundUrl", "background='", "'", pageContext);%>>
+              <%EntityField.run("layoutSettings", "companyName", "<div class='headerCompanyName'>", "</div>", pageContext);%>
+              <%EntityField.run("layoutSettings", "companySubtitle", "<div class='headerCompanySubtitle'>", "</div>", pageContext);%>
               &nbsp;
-            <%}%>
           </TD>
-          <TD align=right width='1%' nowrap <%=UtilFormatOut.ifNotEmpty(headerRightBackgroundUrl,"background='","'")%>>
+          <TD align=right width='1%' nowrap <%EntityField.run("layoutSettings", "headerRightBackgroundUrl", "background='", "'", pageContext);%>>
             <%@ include file="/cart/microcart.jsp"%>
           </td>
         </tr>
@@ -61,7 +43,7 @@ function mClk(src){
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding='<%=headerBoxBottomPadding%>' cellspacing=0 bgcolor='<%=headerBoxBottomColor%>'>
+      <table width='100%' border=0 cellpadding='<%EntityField.run("layoutSettings", "headerBoxBottomPadding", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>'>
         <tr>
           <%
             String queryString = null;
@@ -76,29 +58,31 @@ function mClk(src){
               }
             }
 
-            String loginUrl = controlPath + "/checkLogin/" + UtilFormatOut.checkNull((String)request.getAttribute(SiteDefs.CURRENT_VIEW));
+            String loginUrl = "/checkLogin/" + UtilFormatOut.checkNull((String)request.getAttribute(SiteDefs.CURRENT_VIEW));
             if(queryString != null) loginUrl = loginUrl  + "?" + UtilFormatOut.checkNull(queryString);
           %>
-          <%if(userLogin==null){%>
-            <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<%=response.encodeURL(loginUrl)%>" class="buttontext">Login</a></td>
-          <%}else{%>
-            <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
-          <%}%>
-          <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-          <%-- <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/catalog?catalog_id=<%=UtilProperties.getPropertyValue(application.getResource("/WEB-INF/ecommerce.properties"), "catalog.id.default")%></ofbiz:url>" class="buttontext">Catalog</a></td> --%>
-          <%if(person==null){%>
-            <TD bgcolor="<%=headerBoxBottomColor%>" width="90%" align=center class='headerCenter'>Welcome!</TD>
-          <%}else{%>
-            <TD bgcolor="<%=headerBoxBottomColor%>" width="90%" align=center class='headerCenter'>Welcome<%=UtilFormatOut.ifNotEmpty(person.getString("firstName"),"&nbsp;","")%><%=UtilFormatOut.ifNotEmpty(person.getString("lastName"),"&nbsp;","")%>!</TD>
-          <%}%>
+          <ofbiz:unless name="userLogin">
+            <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonLeft"><a href='<ofbiz:url><%=loginUrl%></ofbiz:url>' class='buttontext'>Login</a></td>
+          </ofbiz:unless>
+          <ofbiz:if name="userLogin">
+            <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
+          </ofbiz:if>
+          <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
+          <%-- <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/catalog?catalog_id=<%=UtilProperties.getPropertyValue(application.getResource("/WEB-INF/ecommerce.properties"), "catalog.id.default")%></ofbiz:url>" class="buttontext">Catalog</a></td> --%>
+          <ofbiz:unless name="person">
+            <TD bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' width="90%" align=center class='headerCenter'>Welcome!</TD>
+          </ofbiz:unless>
+          <ofbiz:if name="person">
+            <TD bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
+          </ofbiz:if>
           <%if(CatalogWorker.getCatalogQuickaddUse(pageContext)) {%>
-            <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/quickadd</ofbiz:url>" class="buttontext">Quick&nbsp;Add</a></td>
+            <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/quickadd</ofbiz:url>" class="buttontext">Quick&nbsp;Add</a></td>
           <%}%>
-          <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Order&nbsp;History</a></td>
-          <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">Profile</a></td>
-          <%-- <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="buttontext">ViewCart</a></td> --%>
-          <%-- <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="buttontext">CheckOut</a></td> --%>
-          <%-- <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/sitemap</ofbiz:url>" class="buttontext">Site&nbsp;Map</a></td> --%>
+          <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Order&nbsp;History</a></td>
+          <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">Profile</a></td>
+          <%-- <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="buttontext">ViewCart</a></td> --%>
+          <%-- <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="buttontext">CheckOut</a></td> --%>
+          <%-- <td bgcolor='<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>' onmouseover='mOvr(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColorAlt", pageContext);%>');' onmouseout='mOut(this,'<%EntityField.run("layoutSettings", "headerBoxBottomColor", pageContext);%>');' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/sitemap</ofbiz:url>" class="buttontext">Site&nbsp;Map</a></td> --%>
         </TR>
       </TABLE>
     </TD>
