@@ -1,5 +1,5 @@
 /*
- * $Id: UtilDateTime.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: UtilDateTime.java,v 1.2 2004/03/25 20:20:58 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import java.util.Date;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:johan@ibibi.com">Johan Isacsson</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class UtilDateTime {
@@ -42,18 +42,21 @@ public class UtilDateTime {
      * @return Timestamp for right now
      */
     public static java.sql.Timestamp nowTimestamp() {
-        return new java.sql.Timestamp(System.currentTimeMillis());
+        return getTimestamp(System.currentTimeMillis());
     }
 
-    /** 
+    public static java.sql.Timestamp getTimestamp(long time) {
+        return new java.sql.Timestamp(time);
+    }
+    /**
      * Return a string formatted as yyyyMMddHHmmss      
      * @return String formatted for right now
      */
     public static String nowDateString() {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
         return df.format(new Date());
-    }                    
-    
+    }
+
     /** Return a Date for right now
      * @return Date for right now
      */
