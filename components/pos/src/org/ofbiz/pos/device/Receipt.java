@@ -294,9 +294,13 @@ public class Receipt extends GenericDevice implements DialogCallback {
     private void printInfo(String template, PosTransaction trans, int type) {
         Map expandMap = this.makeCodeExpandMap(trans, type);
         String toPrint = FlexibleStringExpander.expandString(template, expandMap);
-        String[] lines = toPrint.split("\\n");
-        for (int i = 0; i < lines.length; i++) {
-            this.println(lines[i]);
+        if (toPrint.indexOf("\n") > -1) {
+            String[] lines = toPrint.split("\\n");
+            for (int i = 0; i < lines.length; i++) {
+                this.println(lines[i]);
+            }
+        } else {
+            this.println(toPrint);
         }
     }
 
@@ -314,7 +318,7 @@ public class Receipt extends GenericDevice implements DialogCallback {
             expandMap.put("quantity", padString((String) expandMap.get("quantity"), qtyLength[type], false));
             expandMap.put("adjustments", padString((String) expandMap.get("adjustments"), priceLength[type], false));
             String toPrint = FlexibleStringExpander.expandString(loopStr, expandMap);
-            if (toPrint.indexOf("\\n") > -1) {
+            if (toPrint.indexOf("\n") > -1) {
                 String[] lines = toPrint.split("\\n");
                 for (int x = 0; x < lines.length; x++) {
                     this.println(lines[x]);
@@ -339,10 +343,11 @@ public class Receipt extends GenericDevice implements DialogCallback {
         expandMap.putAll(payInfo);
         // adjust the padding
         expandMap.put("authInfoString", padString((String) expandMap.get("authInfoString"), infoLength[type], false));
-        expandMap.put("infoString", padString((String) expandMap.get("infoString"), infoLength[type], false));
+        expandMap.put("nameOnCard", padString((String) expandMap.get("nameOnCard"), infoLength[type], false));
+        expandMap.put("cardInfo", padString((String) expandMap.get("cardInfo"), infoLength[type], false));
         expandMap.put("amount", padString((String) expandMap.get("amount"), priceLength[type], false));
         String toPrint = FlexibleStringExpander.expandString(template, expandMap);
-        if (toPrint.indexOf("\\n") > -1) {
+        if (toPrint.indexOf("\n") > -1) {
             String[] lines = toPrint.split("\\n");
             for (int x = 0; x < lines.length; x++) {
                 this.println(lines[x]);
