@@ -457,12 +457,12 @@
                 <field-to-env field-name="${question.surveyQuestionId}" map-name="currentAnswers" env-name="responseAnswer"/>
             </if-not-empty>
 
-            <if-empty field-name="responseAnswer">
+            <if-compare-field field-name="surveyQuestionId" map-name="responseAnswer"  operator="not-equals" to-field-name="surveyQuestionId" to-map-name="question">
                 <make-value value-name="responseAnswer" entity-name="SurveyResponseAnswer"/>
                 <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="responseAnswer"/>
                 <field-to-field field-name="surveyQuestionId" map-name="question" to-map-name="responseAnswer"/>
                 <create-value value-name="responseAnswer"/>
-            </if-empty>
+            </if-compare-field>
 
             <if-not-empty field-name="${question.surveyQuestionId}" map-name="answers">
                 <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="BOOLEAN">

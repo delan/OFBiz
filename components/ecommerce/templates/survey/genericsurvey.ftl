@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      3.0
 -->
 
@@ -44,7 +44,6 @@
 <input type="hidden" name="surveyId" value="${survey.surveyId}">
 
 <div class="head2">${survey.description?if_exists}</div>
-<div class="head2">Last Response ID : ${surveyResponseId?if_exists}</div>
 <br>
 
 <table border="0" cellpadding="2" cellspacing="0">
@@ -59,16 +58,12 @@
       <#assign answer = surveyAnswers.get(question.surveyQuestionId)?if_exists>
     </#if>
 
-
-
-
-
     <tr>
       <#-- seperator options -->
       <#if question.surveyQuestionTypeId == "SEPERATOR_TEXT">
-        <td colspan="3"><div class="tabletext">${question.question?if_exists}</div></td>
+        <td colspan="4"><div class="tabletext">${question.question?if_exists}</div></td>
       <#elseif question.surveyQuestionTypeId == "SEPERATOR_LINE">
-        <td colspan="3"><hr class="sepbar"></td>
+        <td colspan="4"><hr class="sepbar"></td>
       <#else>
         <#-- standard question options -->
         <td align='right'><div class="tabletext">${question.question?if_exists}</div></td>
@@ -81,29 +76,29 @@
               <option <#if "N" == selectedOption>SELECTED</#if>>N</option>
             </select>
           <#elseif question.surveyQuestionTypeId == "TEXTAREA">
-            <textarea class="textAreaBox" cols="40" rows="5" name="answers_${question.surveyQuestionId}">${answer.textResponse?if_exists}</textarea>
+            <textarea class="textAreaBox" cols="40" rows="5" name="answers_${question.surveyQuestionId}">${(answer.textResponse)?if_exists}</textarea>
           <#elseif question.surveyQuestionTypeId == "TEXT_SHORT">
-            <input type="text" size="15" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.textResponse?if_exists}">
+            <input type="text" size="15" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "TEXT_LONG">
-            <input type="text" size="35" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.textResponse?if_exists}">
+            <input type="text" size="35" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "EMAIL">
-            <input type="text" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.textResponse?if_exists}">
+            <input type="text" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "URL">
-            <input type="text" size="40" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.textResponse?if_exists}">
+            <input type="text" size="40" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "DATE">
-            <input type="text" size="12" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.textResponse?if_exists}">
+            <input type="text" size="12" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "CREDIT_CARD">
-            <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.textResponse?if_exists}">
+            <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "GIFT_CARD">
-            <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.textResponse?if_exists}">
+            <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "NUMBER_CURRENCY">
-            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.currencyResponse?if_exists}">
+            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.currencyResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
-            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.floatResponse?if_exists}">
+            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.floatResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">
-            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.numericResponse?if_exists}">
+            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.numericResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "PASSWORD">
-            <input type="password" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${answer.textResponse?if_exists}">
+            <input type="password" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "OPTION">
             <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
             <#assign selectedOption = answer.surveyOptionSeqId?default("_NA_")>
@@ -119,6 +114,8 @@
           <#else>
             <div class="tabletext">Unsupported question type : ${question.surveyQuestionTypeId}</div>
           </#if>
+        </td>
+        <td>
           <#if question.requiredField?default("N") == "Y">
             <span class="tabletext">*</span>
           <#else>

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreSurveyWrapper.java,v 1.2 2003/12/05 22:56:28 ajzeneski Exp $
+ * $Id: ProductStoreSurveyWrapper.java,v 1.3 2003/12/06 00:04:50 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Map;
  * Product Store Survey Wrapper
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ProductStoreSurveyWrapper extends SurveyWrapper {
@@ -55,5 +55,6 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
         } else {
             throw new IllegalArgumentException("Required parameter productStoreSurveyAppl missing");
         }
+        this.checkParameters();
     }
 }
