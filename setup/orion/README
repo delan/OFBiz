@@ -1,4 +1,6 @@
 
+This configuration is for Orion 1.5.2, 1.5.3, 1.5.4, and 1.6.0.
+
 The Orion configuration has been updated quite a bit so that it references 
 the OFBiz JAR files in place where they are built by Ant. It also uses the
 Orion Connection Pool and Transaction Manager.
