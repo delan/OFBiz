@@ -441,8 +441,10 @@
         <log level="info" message="Sending generic notification email (if all info is in place): ${sendEmailMap}"/>
         <if>
             <condition>
-                <not><if-empty field-name="sendTo" map-name="sendEmailMap"/></not>
-                <not><if-empty field-name="sendFrom" map-name="sendEmailMap"/></not>
+                <and>
+	                <not><if-empty field-name="sendTo" map-name="sendEmailMap"/></not>
+	                <not><if-empty field-name="sendFrom" map-name="sendEmailMap"/></not>
+                </and>
             </condition>
             <then>
                 <call-service service-name="sendGenericNotificationEmail" in-map-name="sendEmailMap"/>
@@ -524,6 +526,10 @@
         <now-timestamp-to-env env-name="newEntity.dateCreated"/>
         
         <create-value value-name="newEntity"/>
+
+		<field-to-env map-name="newEntity" env-name="shipmentId"/>
+		<field-to-env map-name="newEntity" env-name="shipmentPackageSeqId"/>
+        <call-simple-method method-name="ensurePackageRouteSeg"/>
     </simple-method>
     <simple-method method-name="updateShipmentPackage" short-description="Update ShipmentPackage">
         <check-permission permission="FACILITY" action="_UPDATE">
@@ -538,6 +544,10 @@
         <find-by-primary-key entity-name="ShipmentPackage" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
+        
+		<field-to-env map-name="lookedUpValue" env-name="shipmentId"/>
+		<field-to-env map-name="lookedUpValue" env-name="shipmentPackageSeqId"/>
+        <call-simple-method method-name="ensurePackageRouteSeg"/>
     </simple-method>
     <simple-method method-name="deleteShipmentPackage" short-description="Delete ShipmentPackage">
         <check-permission permission="FACILITY" action="_DELETE">
@@ -551,6 +561,20 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShipmentPackage" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="ensurePackageRouteSeg" short-description="Ensure ShipmentPackageRouteSeg exists for all RouteSegments for this Package">
+        <env-to-field env-name="shipmentId" map-name="lookupRouteSegmentsMap"/>
+        <find-by-and entity-name="ShipmentRouteSegment" map-name="lookupRouteSegmentsMap" list-name="shipmentRouteSegments"/>
+        <iterate entry-name="shipmentRouteSegment" list-name="shipmentRouteSegments">
+	        <env-to-field env-name="shipmentId" map-name="checkShipmentPackageRouteSegMap"/>
+	        <env-to-field env-name="shipmentPackageSeqId" map-name="checkShipmentPackageRouteSegMap"/>
+            <field-to-field field-name="shipmentRouteSegmentId" map-name="shipmentRouteSegment" to-map-name="checkShipmentPackageRouteSegMap"/>
+            <find-by-primary-key entity-name="ShipmentPackageRouteSeg" map-name="checkShipmentPackageRouteSegMap" value-name="checkShipmentPackageRouteSeg"/>
+            <if-empty field-name="checkShipmentPackageRouteSeg">
+                <call-service service-name="createShipmentPackageRouteSeg" in-map-name="checkShipmentPackageRouteSegMap">
+                </call-service>
+            </if-empty>
+        </iterate>
     </simple-method>
 
     <!-- ShipmentPackageContent services -->
@@ -692,6 +716,10 @@
         <field-to-result field-name="shipmentRouteSegmentId" map-name="newEntity" result-name="shipmentRouteSegmentId"/>
         
         <create-value value-name="newEntity"/>
+
+		<field-to-env map-name="newEntity" env-name="shipmentId"/>
+		<field-to-env map-name="newEntity" env-name="shipmentRouteSegmentId"/>
+        <call-simple-method method-name="ensureRouteSegPackage"/>
     </simple-method>
     <simple-method method-name="updateShipmentRouteSegment" short-description="Update ShipmentRouteSegment">
         <check-permission permission="FACILITY" action="_UPDATE">
@@ -706,6 +734,10 @@
         <find-by-primary-key entity-name="ShipmentRouteSegment" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
+
+		<field-to-env map-name="lookedUpValue" env-name="shipmentId"/>
+		<field-to-env map-name="lookedUpValue" env-name="shipmentRouteSegmentId"/>
+        <call-simple-method method-name="ensureRouteSegPackage"/>
     </simple-method>
     <simple-method method-name="deleteShipmentRouteSegment" short-description="Delete ShipmentRouteSegment">
         <check-permission permission="FACILITY" action="_DELETE">
@@ -719,6 +751,20 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShipmentRouteSegment" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="ensureRouteSegPackage" short-description="Ensure ShipmentPackageRouteSeg exists for all Packages for this RouteSegment">
+        <env-to-field env-name="shipmentId" map-name="lookupPackagesMap"/>
+        <find-by-and entity-name="ShipmentPackage" map-name="lookupPackagesMap" list-name="shipmentPackages"/>
+        <iterate entry-name="shipmentPackage" list-name="shipmentPackages">
+	        <env-to-field env-name="shipmentId" map-name="checkShipmentPackageRouteSegMap"/>
+	        <env-to-field env-name="shipmentRouteSegmentId" map-name="checkShipmentPackageRouteSegMap"/>
+            <field-to-field field-name="shipmentPackageSeqId" map-name="shipmentPackage" to-map-name="checkShipmentPackageRouteSegMap"/>
+            <find-by-primary-key entity-name="ShipmentPackageRouteSeg" map-name="checkShipmentPackageRouteSegMap" value-name="checkShipmentPackageRouteSeg"/>
+            <if-empty field-name="checkShipmentPackageRouteSeg">
+                <call-service service-name="createShipmentPackageRouteSeg" in-map-name="checkShipmentPackageRouteSegMap">
+                </call-service>
+            </if-empty>
+        </iterate>
     </simple-method>
 
     <!-- Check the Status of a Shipment to see if it can be changed - meant to be called in-line -->
