@@ -61,8 +61,8 @@
             <div class="boxhead">&nbsp;Personal Information</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editperson</@ofbizUrl>" class="lightbuttontext">
-            [<#if person?exists>Update<#else>Create</#if>]</a>&nbsp;&nbsp;
+            <a href="<@ofbizUrl>/editperson</@ofbizUrl>" class="submenutextright">
+            <#if person?exists>Update<#else>Create</#if></a>
           </td>
         </tr>
       </table>
@@ -121,8 +121,7 @@
             <div class="boxhead">&nbsp;Contact Information</div>
           </td>
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editcontactmech</@ofbizUrl>" class="lightbuttontext">
-              [Create New]</a>&nbsp;&nbsp;
+              <a href="<@ofbizUrl>/editcontactmech</@ofbizUrl>" class="submenutextright">Create New</a>
           </td>
         </tr>
       </table>
@@ -252,10 +251,7 @@
             <div class="boxhead">&nbsp;Payment Method Information</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editcreditcard</@ofbizUrl>" class="lightbuttontext">
-            [Create New Credit Card]</a>&nbsp;
-            <a href="<@ofbizUrl>/editeftaccount</@ofbizUrl>" class="lightbuttontext">
-            [Create New EFT Account]</a>&nbsp;&nbsp;
+            <a href="<@ofbizUrl>/editcreditcard</@ofbizUrl>" class="submenutext">Create New Credit Card</a><a href="<@ofbizUrl>/editeftaccount</@ofbizUrl>" class="submenutextright">Create New EFT Account</a>
           </td>
         </tr>
       </table>
@@ -335,7 +331,7 @@
             <div class="boxhead">&nbsp;User Name & Password</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/changepassword</@ofbizUrl>" class="lightbuttontext">[Change Password]</a>&nbsp;&nbsp;
+            <a href="<@ofbizUrl>/changepassword</@ofbizUrl>" class="submenutextright">Change Password</a>
           </td>
         </tr>
       </table>

@@ -33,7 +33,7 @@
             <div class="boxhead">&nbsp;Shopping Lists</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/createEmptyShoppingList</@ofbizUrl>" class="lightbuttontext">[Create New]</a>
+            <a href="<@ofbizUrl>/createEmptyShoppingList</@ofbizUrl>" class="submenutextright">Create New</a>
           </td>
         </tr>
       </table>
@@ -83,7 +83,7 @@
             <div class="boxhead">&nbsp;Shopping List Detail - ${shoppingList.listName}</div>
           </td>  
           <td valign="middle" align="right">
-            <a href="javascript:document.updateList.submit();" class="lightbuttontext">[Save]</a>            
+            <a href="javascript:document.updateList.submit();" class="submenutextright">Save</a>            
           </td>
         </tr>
       </table>
@@ -174,7 +174,7 @@
             <div class="boxhead">&nbsp;Child Shopping Lists - ${shoppingList.listName}</div>
           </td>  
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="lightbuttontext">[Add This List And Child List(s) To Cart]</a>
+              <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="submenutextright">Add This List And Child List(s) To Cart</a>
           </td>
         </tr>
       </table>
@@ -236,7 +236,7 @@
             <div class="boxhead">&nbsp;Shopping List Items - ${shoppingList.listName}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="lightbuttontext">[Add This List To Cart]</a>
+            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutextright">Add This List To Cart</a>
           </td>
         </tr>
       </table>

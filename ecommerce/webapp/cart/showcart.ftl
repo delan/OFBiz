@@ -78,15 +78,7 @@ function addToList() {
             <div class="boxhead">&nbsp;Quick Add</div>
           </td>
           <td valign="middle" align="right">
-            <div class='lightbuttontextdisabled'>
-              <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
-              <a href="<@ofbizUrl>/editShoppingList</@ofbizUrl>" class="lightbuttontext">[Shopping&nbsp;Lists]</a>
-              <#if (shoppingCartSize > 0)>
-                <a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="lightbuttontext">[Checkout]</a>
-              <#else>
-                [Checkout]
-              </#if>
-            </div>
+            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="submenutext">Continue&nbsp;Shopping</a><#if (shoppingCartSize > 0)><a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="submenutextright">Checkout</a><#else><span class="submenutextrightdisabled">Checkout</span></#if>
           </td>
         </tr>
       </table>
@@ -128,11 +120,9 @@ function addToList() {
             <div class='lightbuttontextdisabled'>
               <#--<a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>-->
               <#if (shoppingCartSize > 0)>
-                <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
-                <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
-                <a href="javascript:removeSelected();" class="lightbuttontext">[Remove Selected]</a>
+                <a href="javascript:document.cartform.submit()" class="submenutext">Recalculate&nbsp;Cart</a><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">Empty&nbsp;Cart</a><a href="javascript:removeSelected();" class="submenutextright">Remove Selected</a>
               <#else>
-                [Recalculate&nbsp;Cart] [Empty&nbsp;Cart] [Remove Selected]
+                <span class="submenutextdisabled">Recalculate&nbsp;Cart</span><span class="submenutextdisabled">Empty&nbsp;Cart</span><span class="submenutextrightdisabled">Remove Selected</span>
               </#if>
             </div>
           </td>

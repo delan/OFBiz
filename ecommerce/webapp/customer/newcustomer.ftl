@@ -281,10 +281,7 @@
         <tr>
           <td valign="middle" align="left">
             <div class='boxhead'>&nbsp;Username and Password</div>
-          </td>
-          <td>
-            &nbsp;
-          </td>
+          </td>          
         </tr>
       </table>
     </TD>
