@@ -41,7 +41,6 @@
         <property name="doc.dir"        value="docs" />
         <property name="build.dir"      value="build" />
         <property name="pkg-dist.name"  value="${name}-pkg" />
-        <property name="tccored.dir"    value="${env.TOMCAT_HOME}/lib" />
 		
         <!-- Classpath setting -->
         <property name="extlib.dir"        value="../lib" />
