@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.2
 -->
 
@@ -58,7 +58,7 @@
                           <#list orderHeaderStatuses as orderHeaderStatus>
                             <#assign loopStatusItem = orderHeaderStatus.getRelatedOne("StatusItem")>
                             <div class="tabletext">
-                              ${loopStatusItem.description} - ${orderHeaderStatus.statusDatetime.toString()}
+                              ${loopStatusItem.description} - ${orderHeaderStatus.statusDatetime?default("0000-00-00 00:00:00")?string}
                             </div>
                           </#list>
                         </#if>
@@ -167,12 +167,12 @@
                         </#if>
                       <#else>
                         <#if paymentMethod.paymentMethodTypeId?if_exists == "CREDIT_CARD">
-                          <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
+                          <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")?if_exists>
                           <#assign payments = orderPaymentPreference.getRelated("Payment")>
                           <#if payments?has_content>
                             <#assign payment = payments[0]>
                           </#if>
-                          <#if creditCard?exists>
+                          <#if creditCard?has_content>
                             <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")>
                           </#if>
                           <tr>
@@ -183,16 +183,20 @@
                             <td align="left" valign="top" width="80%">
                               <#assign oppStatusItem = orderPaymentPreference.getRelatedOne("StatusItem")>
                               <div class="tabletext">
-                                ${creditCard.nameOnCard?if_exists}<br>
-                                <#if creditCard.companyNameOnCard?exists>${creditCard.companyNameOnCard}<br></#if>
-                                <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
-                                  ${creditCard.cardType}
-                                  ${creditCard.cardNumber}
-                                  ${creditCard.expireDate}
-                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                <#if creditCard?has_content>
+                                  ${creditCard.nameOnCard?if_exists}<br>
+                                  <#if creditCard.companyNameOnCard?exists>${creditCard.companyNameOnCard}<br></#if>
+                                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
+                                    ${creditCard.cardType}
+                                    ${creditCard.cardNumber}
+                                    ${creditCard.expireDate}
+                                    &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                  <#else>
+                                    ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                    &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                  </#if>
                                 <#else>
-                                  ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
-                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                  Information not available
                                 </#if>
                               </div>
                               <#-- TODO: add transaction history
@@ -213,7 +217,7 @@
                           </tr>
                         <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
                           <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
-                          <#if eftAccount?exists>
+                          <#if eftAccount?has_content>
                             <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress")>
                           </#if>
                           <tr>
@@ -223,10 +227,14 @@
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
-                                ${eftAccount.nameOnAccount?if_exists}<br>
-                                <#if eftAccount.companyNameOnAccount?exists>${eftAccount.companyNameOnAccount}<br></#if>
-                                Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
-                                Account#: ${eftAccount.accountNumber}
+                                <#if eftAccount?has_content>
+                                  ${eftAccount.nameOnAccount?if_exists}<br>
+                                  <#if eftAccount.companyNameOnAccount?exists>${eftAccount.companyNameOnAccount}<br></#if>
+                                  Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                                  Account#: ${eftAccount.accountNumber}
+                                <#else>
+                                  Information not available
+                                </#if>
                               </div>
                             </td>
                           </tr>
@@ -243,27 +251,31 @@
                             <td align="left" valign="top" width="80%">
                               <#assign oppStatusItem = orderPaymentPreference.getRelatedOne("StatusItem")>
                               <div class="tabletext">
-                                <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
-                                  ${giftCard.cardNumber?default("N/A")} [${giftCard.pinNumber?default("N/A")}]
-                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
-                                <#else>
-                                  <#if giftCard?has_content && giftCard.cardNumber?has_content>
-                                    <#assign giftCardNumber = "">
-                                    <#assign pcardNumber = giftCard.cardNumber>
-                                    <#if pcardNumber?has_content>
-                                      <#assign psize = pcardNumber?length - 4>
-                                      <#if 0 < psize>
-                                        <#list 0 .. psize-1 as foo>
-                                          <#assign giftCardNumber = giftCardNumber + "*">
-                                        </#list>
-                                        <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
-                                      <#else>
-                                        <#assign giftCardNumber = pcardNumber>
+                                <#if giftCard?has_content>
+                                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
+                                    ${giftCard.cardNumber?default("N/A")} [${giftCard.pinNumber?default("N/A")}]
+                                    &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                  <#else>
+                                    <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                                      <#assign giftCardNumber = "">
+                                      <#assign pcardNumber = giftCard.cardNumber>
+                                      <#if pcardNumber?has_content>
+                                        <#assign psize = pcardNumber?length - 4>
+                                        <#if 0 < psize>
+                                          <#list 0 .. psize-1 as foo>
+                                            <#assign giftCardNumber = giftCardNumber + "*">
+                                          </#list>
+                                          <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
+                                        <#else>
+                                          <#assign giftCardNumber = pcardNumber>
+                                        </#if>
                                       </#if>
                                     </#if>
+                                    ${giftCardNumber?default("N/A")}
+                                    &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
                                   </#if>
-                                  ${giftCardNumber?default("N/A")}
-                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
+                                <#else>
+                                  Information not available
                                 </#if>
                               </div>
                             </td>
@@ -487,7 +499,9 @@
                       <td align="left" valign="top" width="80%">
                         <#if carrierPartyId?has_content || shipmentMethodType?has_content>
                           <div class="tabletext">
-                            ${carrierPartyId?if_exists}
+                            <#if carrierPartyId != "_NA_">
+                              ${carrierPartyId?if_exists}
+                            </#if>
                             ${shipmentMethodType.description?default("")}
                           </div>
                         </#if>
