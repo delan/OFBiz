@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.5 2003/08/26 14:05:36 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.6 2003/11/16 19:07:13 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -93,7 +93,7 @@ public class ProductStoreWorker {
         }
         
         if (anyServiceType) {
-            if  (storePayment == null) {
+            if (storePayment == null) {
                 try {
                     List storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId));
                     storePayment = EntityUtil.getFirst(storePayments);
@@ -102,7 +102,7 @@ public class ProductStoreWorker {
                 }
             }
             
-            if  (storePayment == null) {
+            if (storePayment == null) {
                 try {
                     List storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId));
                     storePayment = EntityUtil.getFirst(storePayments);
