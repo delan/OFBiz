@@ -1,10 +1,11 @@
+<%@ page import="org.ofbiz.core.util.SiteDefs" %>
 <html>
 <head>
 <title>Open For Business Message</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
-<% String ERROR_MSG = (String) request.getAttribute("ERROR_MSG"); %>
+<% String ERROR_MSG = (String) request.getAttribute(SiteDefs.ERROR_MESSAGE); %>
 
 <body bgcolor="#FFFFFF">
 <div align="center"><br>
