@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -59,14 +59,14 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <input type=hidden name="productId" value="${(productFeatureAndAppl.productId)?if_exists}">
                 <input type=hidden value="${(productFeatureAndAppl.productFeatureId)?if_exists}">
                 <input type=hidden name="fromDate" value="${(productFeatureAndAppl.fromDate)?if_exists}">
-                <td><div class='tabletext'>${(productFeatureAndAppl.description)?if_exists}></div></td>
+                <td><div class='tabletext'>${(productFeatureAndAppl.description)?if_exists}</div></td>
                 <td><div class='tabletext'>${(productFeatureAndAppl.productFeatureTypeId)?if_exists}</div></td>                
                 <td><a href='<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}&productId=${(productFeatureAndAppl.productId)?if_exists}</@ofbizUrl>' class='buttontext'>
                     ${(curProductFeatureCategory.description)?if_exists}
                     [${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}]</a></td>
                 <#assign hasntStarted = false>
                 <#if (productFeatureAndAppl.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
-                <td><div class='tabletext'<#if hasntStarted> style='color: red;'</#if>>${(productFeatureAndAppl.fromDate)?if_exists}></div></td>
+                <td><div class='tabletext'<#if hasntStarted> style='color: red;'</#if>>${(productFeatureAndAppl.fromDate)?if_exists}</div></td>
                 <td>
                     <#assign hasExpired = false>
                     <#if (productFeatureAndAppl.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
@@ -76,7 +76,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <input type=text size='5' name='sequenceNum' value='${(productFeatureAndAppl.sequenceNum)?if_exists}' class='inputBox'>
                 <select class='selectBox' name='productFeatureApplTypeId' size=1>
                     <#if (productFeatureAndAppl.productFeatureApplTypeId)?exists>
-                        <option value='${(productFeatureAndAppl.productFeatureApplTypeId)?if_exists}'><#if curProductFeatureApplTyp?exists> ${(curProductFeatureApplType.description)?if_exists} <#else> [${productFeatureAndAppl.productFeatureApplTypeId}]</#if></option>
+                        <option value='${(productFeatureAndAppl.productFeatureApplTypeId)?if_exists}'><#if curProductFeatureApplType?exists> ${(curProductFeatureApplType.description)?if_exists} <#else> [${productFeatureAndAppl.productFeatureApplTypeId}]</#if></option>
                         <option value='${productFeatureAndAppl.productFeatureApplTypeId}'> </option>
                     </#if>
                     <#list productFeatureApplTypes as productFeatureApplType>
