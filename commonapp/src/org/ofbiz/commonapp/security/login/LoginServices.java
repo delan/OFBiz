@@ -216,8 +216,10 @@ public class LoginServices {
     }
 
     public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List errorMessageList, boolean adminUser) {
-        if ((currentPassword == null && !adminUser) || (!adminUser && userLogin != null && currentPassword != null && !currentPassword.equals(userLogin.getString("currentPassword"))))
+        if ((currentPassword == null) || 
+            (!adminUser && userLogin != null && currentPassword != null && !currentPassword.equals(userLogin.getString("currentPassword")))) {
             errorMessageList.add("Old Password was not correct, please re-enter.");
+        }
 
         if (!UtilValidate.isNotEmpty(newPassword) || !UtilValidate.isNotEmpty(newPasswordVerify)) {
             errorMessageList.add("Password or verify password missing.");
