@@ -1,5 +1,5 @@
 /*
- * $Id: ProductionRunServices.java,v 1.5 2004/05/09 21:13:58 holivier Exp $
+ * $Id: ProductionRunServices.java,v 1.6 2004/05/15 13:21:18 jacopo Exp $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.manufacturing.techdata.TechDataServices;
  * Services for Production Run maintenance
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ProductionRunServices {
@@ -122,22 +122,41 @@ public class ProductionRunServices {
 		String statusId = "PRUN_CREATED";
 		GenericValue routing = null, product = null;
 		List workEffortProducts = null, productBoms = null, routingTaskAssocs = null ;
-
 		try {
 			workEffortProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("productId", productId,"workEffortId",workEffortId));
 			routing = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId",workEffortId));
 			product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 // TODO: sort by seq and filter by date, pour ne prendre que les composants valide à la date de lancement de l'OF
-			productBoms = product.getRelatedByAnd("MainProductAssoc",UtilMisc.toMap("productAssocTypeId","MANUF_COMPONENT"));
+               // The following line has been commented out because the product components will be obtained 
+               // calling the getManufacturingComponents service.
+               //productBoms = product.getRelatedByAnd("MainProductAssoc",UtilMisc.toMap("productAssocTypeId","MANUF_COMPONENT"));
 // TODO:   filter by date, pour ne prendre que les opérations valide à la date de lancement de l'OF
 			routingTaskAssocs = routing.getRelated("FromWorkEffortAssoc",UtilMisc.toMap("workEffortAssocTypeId","ROUTING_COMPONENT"), UtilMisc.toList("sequenceNum","fromDate"));
 		} catch (GenericEntityException e) {
 			Debug.logWarning(e.getMessage(), module);
 		}
+                // The components are retrived using the getManufacturingComponents service 
+                // (that performs a bom breakdown and if needed runs the configurator).
+                List components = null;
+                Map serviceContext = new HashMap();
+                serviceContext.put("productId", productId); // the product that we want to manufacture
+                serviceContext.put("quantity", context.get("pRQuantity")); // the quantity that we want to manufacture
+                Map resultService = null;
+                try {
+                    resultService = dispatcher.runSync("getManufacturingComponents", serviceContext);
+                    components = (List)resultService.get("components"); // a list of objects representing the product's components
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
+                }
+
+                // By Jacopo: this is a temp patch; I've removed this check because a configured product could be linked indirectly to a routing by
+                //            it's virtual (not configured) product; maybe we could add an input flag and test it to see if we want to perform this check...
 //TODO: test sur quantité vide et choix de la bonne gamme
-		if (workEffortProducts == null) 
-				return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductRoutingNotExist", locale));
-		if (productBoms == null || productBoms.size() == 0) 
+//		if (workEffortProducts == null) 
+//				return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductRoutingNotExist", locale));
+                // Here we test the components list instead of the productBoms list
+                //if (productBoms == null || productBoms.size() == 0) 
+                if (components == null || components.size() == 0) 
 				return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductHasNoBom", locale));
 		if (routingTaskAssocs == null || routingTaskAssocs.size()==0) 
 				return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRoutingHasNoRoutingTask", locale));
@@ -147,7 +166,7 @@ public class ProductionRunServices {
 		String description = (String) context.get("description");
 		Double pRQuantity = (Double) context.get("pRQuantity");
         if (workEffortName== null) workEffortName = product.getString("productName") + "-" + routing.getString("workEffortName");
-		Map serviceContext = new HashMap();
+		serviceContext.clear();
 		serviceContext.put("workEffortTypeId", "PROD_ORDER_HEADER");
 		serviceContext.put("workEffortPurposeTypeId","WEPT_PRODUCTION_RUN");
 		serviceContext.put("currentStatusId","PRUN_CREATED");
@@ -156,7 +175,6 @@ public class ProductionRunServices {
 		serviceContext.put("estimatedStartDate",startDate);
 		serviceContext.put("quantityToProduce", pRQuantity);
 		serviceContext.put("userLogin", userLogin);
-		Map resultService = null;
 		try {
 			resultService = dispatcher.runSync("createWorkEffort", serviceContext);
 		} catch (GenericServiceException e) {
@@ -220,18 +238,35 @@ public class ProductionRunServices {
 				if (Debug.infoOn()) Debug.logInfo("ProductionRunTaskId created: " + productionRunTaskId, module);
 				if ( first ) {
 					first = false;
-					Iterator  pb = productBoms.iterator();
+                                        // Now we iterate thru the components returned by the getManufacturingComponents service
+                                        //Iterator  pb = productBoms.iterator();
+                                        Iterator  pb = components.iterator();
 					while (pb.hasNext()) {
-						GenericValue productBom = (GenericValue) pb.next();
-						if (TechDataServices.productBomIsValid(productBom, startDate)  && 
-                        (productBom.getString("routingWorkEffortId") == null || productBom.getString("routingWorkEffortId").equals(productionRunTaskId))) {
+                                                // The components variable contains a list of ItemConfigurationNodes: 
+                                                // each node represents a product (component).
+						//GenericValue productBom = (GenericValue) pb.next();
+                                                org.ofbiz.manufacturing.bom.ItemConfigurationNode node = (org.ofbiz.manufacturing.bom.ItemConfigurationNode) pb.next();
+                                                GenericValue productBom = node.getProductAssoc();
+                                                // By Jacopo: this is a temp patch: 
+                                                // I've commented out the call to productBomIsValid because this check has been
+                                                // already performed in the getManufacturingComponents service
+//						if (TechDataServices.productBomIsValid(productBom, startDate)  && 
+//                        (productBom.getString("routingWorkEffortId") == null || productBom.getString("routingWorkEffortId").equals(productionRunTaskId))) {
+                                                if (productBom.getString("routingWorkEffortId") == null || productBom.getString("routingWorkEffortId").equals(productionRunTaskId)) {
 							serviceContext.clear();
 							serviceContext.put("workEffortId", productionRunTaskId);
-							serviceContext.put("productId", productBom.get("productIdTo"));
+                                                        // Here we get the ProductAssoc record from the ItemConfigurationNode 
+                                                        // object to be sure to use the 
+                                                        // right component (possibly configured).
+							//serviceContext.put("productId", productBom.get("productIdTo"));
+                                                        serviceContext.put("productId", node.getProduct().get("productId"));
 							serviceContext.put("statusId","WIP_INCOMING_FULFIL");
 							serviceContext.put("fromDate",productBom.get("fromDate"));
-							double scrapFactor = (productBom.get("scrapFactor") != null)? productBom.getDouble("scrapFactor").doubleValue() : 0;
-							serviceContext.put("estimatedQuantity", new Double(Math.floor((productBom.getDouble("quantity").doubleValue() * pRQuantity.doubleValue() / (1-(scrapFactor / 100))) + 0.5)));
+                                                        // Here we use the getQuantity method to get the quantity already 
+                                                        // computed by the getManufacturingComponents service
+							//double scrapFactor = (productBom.get("scrapFactor") != null)? productBom.getDouble("scrapFactor").doubleValue() : 0;
+							//serviceContext.put("estimatedQuantity", new Double(Math.floor((productBom.getDouble("quantity").doubleValue() * pRQuantity.doubleValue() / (1-(scrapFactor / 100))) + 0.5)));
+                                                        serviceContext.put("estimatedQuantity", new Double(node.getQuantity()));
 							serviceContext.put("userLogin", userLogin);
 							resultService = null;
 							try {
