@@ -415,7 +415,9 @@ public class ContentPermissionServices {
                     statusId = entity.getString("statusId");
                 }
                 
-                passed = hasMatch(entityName, targetOperationEntityList, roleList, hasPurposeOp, purposeList, hasStatusOp, statusId);
+                if (purposeList.size() > 0) {
+                    passed = hasMatch(entityName, targetOperationEntityList, roleList, hasPurposeOp, purposeList, hasStatusOp, statusId);
+                }
                 if (passed){
                     break;
                 }
