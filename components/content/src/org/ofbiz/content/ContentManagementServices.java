@@ -855,6 +855,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             }
             String dataResourceId = content.getString("dataResourceId");
             String contentTypeIdTo = content.getString("contentTypeId");
+            /* this does not seem to be correct or needed
             if (UtilValidate.isNotEmpty(contentTypeIdTo)) {
                 if (contentTypeIdTo.equals("OUTLINE_NODE")) {
                     content.put("contentTypeId", "OUTLINE_NODE");
@@ -863,6 +864,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                 } else
                     content.put("contentTypeId", "PAGE_NODE");
             }
+            */
 
             content.set("dataResourceId", null);
             content.set("lastModifiedDate", UtilDateTime.nowTimestamp());
