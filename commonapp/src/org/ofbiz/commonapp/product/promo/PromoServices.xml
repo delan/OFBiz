@@ -41,18 +41,10 @@
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPromo you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductPromo" map-name="lookupPKMap" value-name="prodCatalogPromo"/>
-        <set-nonpk-fields map-name="parameters" value-name="prodCatalogPromo"/>
-        <store-value value-name="prodCatalogPromo"/>
-    </simple-method>
-    <simple-method method-name="deleteProductPromo" short-description="Delete an ProductPromo">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPromo you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
-        <check-errors/>
-
-        <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductPromo" map-name="lookupPKMap" value-name="prodCatalogPromo"/>
-        <remove-value value-name="prodCatalogPromo"/>
+        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductPromo" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
     </simple-method>
 
     <!-- ProductPromoRule methods -->
