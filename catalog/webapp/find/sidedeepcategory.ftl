@@ -86,9 +86,11 @@
               </#if>
             </#if>
               <div style='margin-left: 10px;'>
-                <#list topLevelList as category>
-                  <@categoryList parentCategory=category category=category/>
-                </#list>
+                <#if topLevelList?exists>
+                  <#list topLevelList as category>
+                    <@categoryList parentCategory=category category=category/>
+                  </#list>
+                </#if>
               </div>
             </div>
           </td>
