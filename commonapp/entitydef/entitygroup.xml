@@ -640,12 +640,12 @@
   <!-- org.ofbiz.commonapp.workeffort.definition -->
   <!-- ========================================================= -->
 	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDef" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAssoc" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAssocAttr" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAttribute" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowArrayTypeMembers" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowFormalParam" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowFormalParamList" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackage" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackageExternal" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowProcess" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowSpecification" />
 
   <!-- ========================================================= -->
