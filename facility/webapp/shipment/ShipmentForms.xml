@@ -1,0 +1,70 @@
+
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<forms>
+	<form name="EditShipment" type="single" 
+		target="updateShipment" title="" default-map-name="shipment"
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		
+		<alt-target use-when="shipment==null" target="createShipment"/>
+		
+		<auto-fields-service service-name="updateShipment" map-name=""/>
+		
+		<field use-when="shipment!=null" name="shipmentId" tooltip="This cannot be changed without re-creating the Product Catalog."><display/></field>
+		<field use-when="shipment==null&amp;&amp;shipmentId!=null" name="shipmentId" tooltip="Could not find Shipment with ID [${shipmentId}]"><text size="20" maxlength="20"/></field>
+		<!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
+		<field use-when="shipment==null&amp;&amp;shipmentId==null" name="shipmentId"><text size="20" maxlength="20"/></field>
+
+		<field name="siteName"><text size="30" maxlength="60"/></field>
+		<field name="enableHttps" widget-style="selectBox">
+		    <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+		</field>		
+
+		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+	</form>
+	<form name="CreateShipmentItem" type="single" 
+		target="createShipmentItem" title=""
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<auto-fields-service service-name="createShipmentItem"/>
+		<field name="shipmentId" map-name="shipment"><hidden/></field>
+		<field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
+	</form>
+	<form name="UpdateShipmentItem" type="list" 
+		target="updateShipmentItem" title="" list-name="shipmentItemDatas"
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<auto-fields-service service-name="updateShipmentItem" map-name="shipmentItem"/>
+		<field name="shipmentId"><hidden/></field>
+		<!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
+		<field name="partyId" title="Party [ID]" widget-style="buttontext">
+			<hyperlink target-type="inter-app" target="/partymgr/control/viewprofile?partyId=${shipmentItem.partyId}"
+				description="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName} ${person.suffix} ${partyGroup.groupName} [${shipmentItem.partyId}]"/>
+		</field>
+		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+			<hyperlink target="removeShipmentItem?shipmentId=${shipmentItem.shipmentId}&amp;shipmentItemSeqId=${shipmentItem.shipmentItemSeqId}"
+				description="[Delete]" also-hidden="false"/>
+		</field>
+	</form>
+</forms>
