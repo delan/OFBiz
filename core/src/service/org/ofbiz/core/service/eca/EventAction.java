@@ -43,6 +43,7 @@ public class EventAction {
     protected String serviceMode;
     protected boolean updateContext;
     protected boolean ignoreError;
+    protected boolean persist;
 
     protected EventAction() {}
 
@@ -52,6 +53,7 @@ public class EventAction {
         // default is true, so anything but false is true
         this.updateContext = !"false".equals(action.getAttribute("update-context"));
         this.ignoreError = !"false".equals(action.getAttribute("ignore-error"));
+        this.persist = !"false".equals(action.getAttribute("persist"));
     }
 
     public void runAction(String selfService, DispatchContext dctx, Map context, Map result) throws GenericServiceException {
@@ -70,7 +72,7 @@ public class EventAction {
         if (serviceMode.equals("sync")) {
             actionResult = dispatcher.runSync(this.serviceName, actionContext);
         } else if (serviceMode.equals("async")) {
-            dispatcher.runAsync(serviceName, actionContext);
+            dispatcher.runAsync(serviceName, actionContext, persist);
         }
 
         // use the result to update the context fields.
