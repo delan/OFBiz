@@ -1,5 +1,5 @@
 /*
- * $Id: WfProcessImpl.java,v 1.4 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: WfProcessImpl.java,v 1.5 2003/11/26 07:24:17 ajzeneski Exp $
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import org.ofbiz.workflow.client.StartActivityJob;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
@@ -415,13 +415,13 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
          
         // the GenericRequester object will hold any exceptions; and report the job as failed       
         if (req.status() == GenericResultWaiter.SERVICE_FAILED) {
-            Exception excep = req.getException();
-            if (excep instanceof CannotStart)
+            Throwable reqt = req.getThrowable();
+            if (reqt instanceof CannotStart)
                 Debug.logVerbose("[WfProcess.startActivity] : Cannot start activity. Waiting for manual start.", module);
-            else if (excep instanceof AlreadyRunning) 
-                throw new WfException("Activity already running", excep);
+            else if (reqt instanceof AlreadyRunning)
+                throw new WfException("Activity already running", reqt);
             else            
-                throw new WfException("Activity error", excep);
+                throw new WfException("Activity error", reqt);
         }                        
     }
 

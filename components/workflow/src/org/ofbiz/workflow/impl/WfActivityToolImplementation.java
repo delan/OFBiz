@@ -1,5 +1,5 @@
 /*
- * $Id: WfActivityToolImplementation.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
+ * $Id: WfActivityToolImplementation.java,v 1.3 2003/11/26 07:24:17 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.workflow.WfException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     Oswin Ondarza and Manuel Soto
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class WfActivityToolImplementation extends WfActivityAbstractImplementation {
@@ -108,7 +108,7 @@ public class WfActivityToolImplementation extends WfActivityAbstractImplementati
                         thwResult = thw.getResult();
                         Debug.logVerbose("Service finished.", module);
                     } else if (thw.status() == GenericResultWaiter.SERVICE_FAILED) {
-                        Debug.logError(thw.getException(), "Service failed", module);
+                        Debug.logError(thw.getThrowable(), "Service failed", module);
                     }
                     if (thwResult != null && thwResult.containsKey(ModelService.RESPONSE_MESSAGE)) {
                         if (thwResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
