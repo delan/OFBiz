@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.3 2003/09/19 06:13:45 jonesde Exp $
+ * $Id: DatabaseUtil.java,v 1.4 2003/09/19 21:39:54 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -903,7 +903,6 @@ public class DatabaseUtil {
                     ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
 
                     ccInfo.isNullable = rsCols.getString("IS_NULLABLE");
-                    //ccInfo.isNullable = (ccInfo.isNullable == null) ? null : ccInfo.isNullable.toUpperCase();
 
                     List tableColInfo = (List) colInfo.get(ccInfo.tableName);
 
