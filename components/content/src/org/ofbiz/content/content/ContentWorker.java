@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev:$
+ * @version $Rev$
  * @since 2.2
  * 
  *  
@@ -988,7 +988,7 @@ public class ContentWorker {
                 throw new IOException("ContentId is null");
             }
             try {
-                List lst = delegator.findByAnd("SubContentDataResourceView", UtilMisc.toMap("contentId", contentId), UtilMisc.toList("-fromDate"));
+                List lst = delegator.findByAnd("SubContentDataResourceView", UtilMisc.toMap("contentId", contentId));
                 if (lst != null && lst.size() > 0) {
                     view = (GenericValue) lst.get(0);
                 } else {
