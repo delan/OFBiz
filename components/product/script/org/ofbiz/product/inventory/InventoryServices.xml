@@ -771,11 +771,8 @@
 
         <make-value value-name="newEntity" entity-name="InventoryTransfer"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-
-        <sequenced-id-to-env sequence-name="InventoryTransfer" env-name="inventoryTransferId"/>
-        <to-string field-name="inventoryTransferId"/>
-        <env-to-field env-name="inventoryTransferId" map-name="newEntity"/>
-        <field-to-result field-name="inventoryTransferId" result-name="inventoryTransferId"/>
+        <sequenced-id-to-env sequence-name="InventoryTransfer" env-name="newEntity.inventoryTransferId" to-string="true"/>
+        <field-to-result field-name="newEntity.inventoryTransferId" result-name="inventoryTransferId"/>
 
         <create-value value-name="newEntity"/>
     </simple-method>
