@@ -121,9 +121,9 @@
             <exclude name="org/ofbiz/commonapp/thirdparty/verisign/**"/>            
         </javac>
         
-        <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
+        <!-- also copy all .xml, .ftl, .bsh & .logic files to classpath directory -->
         <copy todir="${build.dir}/jar">
-            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
+            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.ftl,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
     </target>
 
