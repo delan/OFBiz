@@ -47,7 +47,7 @@
    <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
    <%if(utilCache!=null){%>
     <H3>&nbsp;<%=cacheName%> (<%=(new Date()).toString()%>)</H3>
-    <a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Back to Cache Maintenance</A>
+    <a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
     <TABLE border='0' cellpadding='2' cellspacing='2'>
     <%
       String rowColor1 = "99CCFF";
@@ -87,7 +87,7 @@
                 </TD>
                 <TD>
                   <%if(hasUtilCacheEdit){%>
-                    <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=" + cacheName + "&UTIL_CACHE_ELEMENT_NUMBER=" + utilCache.keyLRUList.indexOf(key))%>" class="buttontext">Remove</a>
+                    <a href='<ofbiz:url>/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=<%=cacheName%>&UTIL_CACHE_ELEMENT_NUMBER=<%=utilCache.keyLRUList.indexOf(key)%></ofbiz:url>' class='buttontext'>Remove</a>
                   <%}%>
                 </TD>
               </TR>
@@ -136,7 +136,7 @@
   <%}else{%>
     <H3>&nbsp;No Cache Name Specified</H3>
   <%}%>
-  <a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Back to Cache Maintenance</A>
+  <a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_VIEW needed).</h3>
 <%}%>

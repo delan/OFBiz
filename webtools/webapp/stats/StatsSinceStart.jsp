@@ -46,7 +46,8 @@
 
 <br>
 <h2 style='margin:0;'>Server Statistics Since Start Page</h2>
-<div><a href="<ofbiz:url>/StatsSinceStart?clear=true</ofbiz:url>" class='buttontext'>Reset Since Start Stats</A></div>
+<div><a href="<ofbiz:url>/StatsSinceStart?clear=true</ofbiz:url>" class='buttontext'>[Clear Since Start Stats]</A>
+<a href="<ofbiz:url>/StatsSinceStart</ofbiz:url>" class='buttontext'>[Reload Page]</A></div>
 <div class='tabletext'>Current Time: <%=UtilDateTime.nowTimestamp().toString()%></div>
 <%if (security.hasPermission("SERVER_STATS_VIEW", session)) {%>
 <%
