@@ -80,7 +80,16 @@
                 </entity-options> 
             </drop-down>
         </field>
-        
+
+        <field name="parentFixedAssetId" title="Fixed Asset Group" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}">
+                    <entity-constraint name="fixedAssetTypeId" operator="equals" value="GROUP_EQUIPMENT" />
+                    <entity-order-by field-name="fixedAssetId"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+    
 <!--        <field name="parentFixedAssetId" title="Parent Asset Id" ><lookup target-form-name="LookupFixedAsset"/></field> -->
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
