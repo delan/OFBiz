@@ -155,17 +155,23 @@
                     <make-value entity-name="InventoryItem" value-name="newNonSerInventoryItem"/>
                     <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
                     <env-to-field env-name="inventoryItemId" map-name="newNonSerInventoryItem"/>
-
                     <field-to-field field-name="productId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                     <field-to-field field-name="facilityId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                     <field-to-field field-name="containerId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                     <string-to-field string="NON_SERIAL_INV_ITEM" field-name="inventoryItemTypeId" map-name="newNonSerInventoryItem"/>
-                    <calculate field-name="newNonSerInventoryItem.availableToPromiseTotal">
-                        <calcop field-name="parameters.quantityNotReserved" operator="negative"/>
-                    </calculate>
                     <create-value value-name="newNonSerInventoryItem"/>
 
-                       <!-- get the promiseDatetime -->
+                    <!-- also create a detail record with the quantities -->
+                    <env-to-env env-name="newNonSerInventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+                    <env-to-env env-name="parameters.orderId" to-env-name="createDetailMap.orderId"/>
+                    <env-to-env env-name="parameters.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
+                    <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
+                        <calcop field-name="parameters.quantityNotReserved" operator="negative"/>
+                    </calculate>
+                    <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+                    <clear-field field-name="createDetailMap"/>
+
+                    <!-- get the promiseDatetime -->
                     <get-related-one value-name="newNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
                     <field-to-env field-name="daysToShip" map-name="productFacility" env-name="daysToShip"/>
                     <if-empty field-name="daysToShip">

@@ -243,7 +243,7 @@
     </service>
 
     <service name="issueImmediatelyFulfilledOrder" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryIssueServices.xml" invoke="issueImmediatelyFulfilledOrder" auth="true">
+                location="org/ofbiz/product/inventory/InventoryIssueServices.xml" invoke="issueImmediatelyFulfilledOrder" auth="false">
         <description>
             Issues the Inventory for an Order that was Immediately Fulfilled, like in a POS environment.
             Note that this skips the normal inventory reservation process, and the shipment process (no shipment is created).
@@ -251,7 +251,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="issueImmediatelyFulfilledOrderItem" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryIssueServices.xml" invoke="issueImmediatelyFulfilledOrderItem" auth="true">
+                location="org/ofbiz/product/inventory/InventoryIssueServices.xml" invoke="issueImmediatelyFulfilledOrderItem" auth="false">
         <description>
             Issues the Inventory for an Order Item that was Immediately Fulfilled for more info see the issueImmediatelyFulfilledOrder service.
         </description>
