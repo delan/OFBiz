@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.29 2003/10/30 10:15:02 jonesde Exp $
+ *  $Id: build.xml,v 1.30 2004/03/18 08:48:06 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -90,6 +90,12 @@
         <echo message="[clean] ========== Cleaning entity component ============"/>
         <echo message="[clean] ================================================="/>
         <ant dir="components/entity" target="clean" inheritAll="false"/>
+
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning jetty component ============"/>
+        <echo message="[clean] ================================================="/>
+        <ant dir="components/jetty" target="clean" inheritAll="false"/>
 
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
@@ -243,6 +249,12 @@
         <ant dir="components/entity" inheritAll="false"/>
 
         <echo message="[build]"/>
+        <echo message="[build] ==============================================="/>
+        <echo message="[build] ========== Building jetty component =========="/>
+        <echo message="[build] ==============================================="/>
+        <ant dir="components/jetty" inheritAll="false"/>
+
+        <echo message="[build]"/>
         <echo message="[build] ================================================="/>
         <echo message="[build] ========== Building security component =========="/>
         <echo message="[build] ================================================="/>
@@ -383,6 +395,12 @@
         <echo message="[docs] ========== Building entity component =========="/>
         <echo message="[docs] ==============================================="/>
         <ant dir="components/entity" target="docs" inheritAll="false"/>
+
+        <echo message="[docs]"/>
+        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] ========== Building jetty component =========="/>
+        <echo message="[docs] ==============================================="/>
+        <ant dir="components/jetty" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
         <echo message="[docs] ================================================="/>
