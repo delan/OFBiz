@@ -17,10 +17,13 @@
     <!-- view handlers -->
     <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/>
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
+    <handler name="fop" type="view" class="org.ofbiz.content.webapp.view.FopPdfViewHandler"/>
+    <handler name="screenfop" type="view" class="org.ofbiz.content.webapp.view.ScreenFopPdfViewHandler"/>
 
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
@@ -556,6 +559,10 @@
         <response name="success" type="view" value="orderreportlist"/>
     </request-map>
 
+    <request-map uri="OrderPurchaseReportProduct.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="OrderPurchaseReportProduct"/>
+    </request-map>
+
     <!-- Lookup request mappings -->
     <request-map uri="genericLookup">
         <security https="true" auth="true"/>
@@ -616,5 +623,7 @@
     <view-map name="orderreportlist" type="jpublish" page="/reports/reportlist.ftl"/>
     <view-map name="orderreportjasper" type="jasperreportspdf" page="/reports/orderreport.xml" content-type="application/pdf" encoding="none"/>
     <view-map name="orderitemreportjasper" type="jasperreportspdf" page="/reports/orderitemreport.xml" content-type="application/pdf" encoding="none"/>
+
+    <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>

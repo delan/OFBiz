@@ -53,8 +53,8 @@
 
     <Facility facilityId="MyRetailStore" productStoreId="9100"/>
     
-    <InventoryItem facilityId="MyRetailStore" inventoryItemId="9100" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1001"/>
-    <InventoryItemDetail inventoryItemId="9100" inventoryItemDetailSeqId="0001" availableToPromiseDiff="20" quantityOnHandDiff="20"/>
+    <!-- <InventoryItem facilityId="MyRetailStore" inventoryItemId="9100" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1001"/>
+    <InventoryItemDetail inventoryItemId="9100" inventoryItemDetailSeqId="0001" availableToPromiseDiff="20" quantityOnHandDiff="20"/> -->
     <!-- NOTE: for testing now leaving out GZ-5005 which is the other default product with a button in the POS, should create a new inventory item with negative QOH -->
 </entity-engine-xml>
 

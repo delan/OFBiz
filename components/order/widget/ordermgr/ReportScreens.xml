@@ -26,16 +26,11 @@
 -->
 
 <screens>
-    <screen name="EditProduct">
+    <screen name="OrderPurchaseReportOptions">
         <section>
             <actions>
-                <set field="title" value="Edit Product"/>
-                <set field="titleProperty" value="PageTitleEditProduct"/>
-                <set field="tabButtonItem" value="EditProduct"/>
-                <set field="labelTitleProperty" value="ProductProduct"/>
-    
-                <set field="productId" from-field="parameters.productId"/>
-                <entity-one entity-name="Product" value-name="product"/>
+                <set field="title" value="Order Purchase Report Options"/>
+                <!-- <set field="titleProperty" value=""/> -->
             </actions>
             <widgets>
                 <decorator-screen name="main" location="component://order/widget/ordermgr/ReportScreens.xml">
@@ -53,6 +48,54 @@
                         </container>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="OrderPurchaseReportPayment">
+        <section>
+            <actions>
+                <set field="title" value="Order Purchase Report Payment"/>
+                <!-- <set field="titleProperty" value=""/> -->
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
+                    <html><html-template location="component://order/webapp/ordermgr/reports/OrderPurchaseReportPayment.fo.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="OrderPurchaseReportProduct">
+        <section>
+            <actions>
+                <set field="title" value="Order Purchase Report Product"/>
+                <!-- <set field="titleProperty" value=""/> -->
+                <entity-condition entity-name="OrderPurchaseProductSummary" list-name="orderPurchaseProductSummaryList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-null="true"/>
+                        <condition-expr field-name="orderDate" operator="greater-equals" env-name="fromOrderDate" ignore-if-null="true"/>
+                        <condition-expr field-name="orderDate" operator="less" env-name="thruOrderDate" ignore-if-null="true"/>
+                    </condition-list>
+                    <select-field field-name="productStoreId"/>
+                    <select-field field-name="originFacilityId"/>
+                    <select-field field-name="terminalId"/>
+                    <select-field field-name="statusId"/>
+                    <select-field field-name="productId"/>
+                    <select-field field-name="internalName"/>
+                    <select-field field-name="quantity"/>
+                    <select-field field-name="cancelQuantity"/>
+                    <order-by field-name="productStoreId"/>
+                    <order-by field-name="originFacilityId"/>
+                    <order-by field-name="terminalId"/>
+                    <order-by field-name="productId"/>
+                </entity-condition>
+                <!-- <script location="component://order/widget/test.bsh"/> -->
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
+                    <html><html-template location="component://order/webapp/ordermgr/reports/OrderPurchaseReportProduct.fo.ftl"/></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>
