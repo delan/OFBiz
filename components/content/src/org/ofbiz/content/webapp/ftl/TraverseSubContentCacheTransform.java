@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentCacheTransform.java,v 1.2 2004/01/09 23:35:27 byersa Exp $
+ * $Id: TraverseSubContentCacheTransform.java,v 1.3 2004/01/11 06:21:41 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TemplateModelException;
  * TraverseSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.0
  */
 public class TraverseSubContentCacheTransform implements TemplateTransformModel {
@@ -124,10 +124,12 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
         if (UtilValidate.isEmpty(vwIdx))
             vwIdx = "0";
         final int viewIndex = Integer.parseInt(vwIdx);
-        String vwSz = (String)templateCtx.get("viewIndex");
+        templateCtx.put("viewIndex", new Integer(viewIndex).toString());
+        String vwSz = (String)templateCtx.get("viewSize");
         if (UtilValidate.isEmpty(vwSz))
             vwSz = "10";
         final int viewSize = Integer.parseInt(vwSz);
+        templateCtx.put("viewSize", new Integer(viewSize).toString());
         traverseContext.put("delegator", delegator);
         Map whenMap = new HashMap();
         whenMap.put("followWhen", (String)templateCtx.get( "followWhen"));
@@ -173,8 +175,8 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 //templateContext.put("buf", new StringBuffer());
                 templateCtx.put("thisViewIndex", new Integer(0));
                 templateCtx.put("thisViewSize", new Integer(0));
-                templateCtx.put("lowIndex", new Integer(-1));
-                templateCtx.put("highIndex", new Integer(0));
+                templateCtx.put("lowIndex", "-1");
+                templateCtx.put("highIndex", "0");
                 List nodeTrail = null;
                 GenericValue subContentDataResourceView = null;
                 if (passedGlobalNodeTrail.size() > 0) {
@@ -220,27 +222,33 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 int thisViewIndex = thisViewIndexInteger.intValue();
                 Integer thisViewSizeInteger = (Integer)templateCtx.get("thisViewSize");
                 int thisViewSize = thisViewSizeInteger.intValue();
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContentCache, buf(w):" + buf.toString(), module);
                 if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContentCache, pickWhen(w):" + templateCtx.get("pickWhen"), module);
                 List nodeTrail = (List)traverseContext.get("nodeTrail");
+                FreeMarkerWorker.traceNodeTrail("afterBody",nodeTrail);
                 int sz = nodeTrail.size();
-                Integer highIndexInteger = (Integer)templateCtx.get("highIndex");
+                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContentCache, sz(w):" + sz, module);
+                Object highIndexObj = templateCtx.get("highIndex");
                 int highIndex = 0;
-                highIndex = highIndexInteger.intValue();
+                if (highIndexObj != null) {
+                    highIndex = Integer.parseInt((String)highIndexObj);
+                }
                 highIndex++;
-                templateCtx.put("highIndex", new Integer(highIndex));
+                templateCtx.put("highIndex", new Integer(highIndex).toString());
+                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContentCache, highIndex(w):" + highIndex, module);
+                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContentCache, viewSize(w):" + viewSize, module);
                 if (sz == 2) {
                     if (thisViewIndex == viewIndex) {
-                        templateCtx.put("lowIndex", new Integer(highIndex - 1));
+                        templateCtx.put("lowIndex", new Integer(highIndex - 1).toString());
                     }
-                    Integer lowIndexInteger = (Integer)templateCtx.get("lowIndex");
-                    if (lowIndexInteger != null) {
-                        int lowIndex = lowIndexInteger.intValue();
+                    Object lowIndexObj = templateCtx.get("lowIndex");
+                    if (lowIndexObj != null) {
+                        int lowIndex = Integer.parseInt((String)lowIndexObj);
                         if ((highIndex - lowIndex) >= viewSize) {
                              return TransformControl.END_EVALUATION;
                         }
                     }
                     templateCtx.put("thisViewIndex", new Integer(thisViewIndex + 1));
+                    templateCtx.put("viewIndex", new Integer(thisViewIndex).toString());
                 }
                 FreeMarkerWorker.traceNodeTrail("6",nodeTrail);
                 boolean inProgress = ContentWorker.traverseSubContent(traverseContext);
