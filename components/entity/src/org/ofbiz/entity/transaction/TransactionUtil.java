@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionUtil.java,v 1.4 2003/12/04 21:54:20 ajzeneski Exp $
+ * $Id: TransactionUtil.java,v 1.5 2004/05/25 06:19:14 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,9 @@ package org.ofbiz.entity.transaction;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
 
 import javax.sql.XAConnection;
 import javax.transaction.*;
@@ -39,6 +42,7 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 import javax.transaction.xa.XAResource;
+import javax.transaction.xa.XAException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -48,12 +52,14 @@ import org.ofbiz.base.util.UtilDateTime;
  * <p>Provides a wrapper around the transaction objects to allow for changes in underlying implementations in the future.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class TransactionUtil implements Status {
     // Debug module name
     public static final String module = TransactionUtil.class.getName();
+    public static Map debugResMap = new HashMap();
+    public static boolean debugResources = true;
 
     /** Begins a transaction in the current thread IF transactions are available; only
      * tries if the current transaction status is ACTIVE, if not active it returns false.
@@ -98,7 +104,18 @@ public class TransactionUtil implements Status {
                 clearTransactionStamps();
                 // initialize the start stamp
                 getTransactionStartStamp();
-                
+
+                // initialize the debug resource
+                if (debugResources) {
+                    DebugXaResource dxa = new DebugXaResource();
+                    try {
+                        dxa.enlist();
+                        debugResMap.put(dxa.getXid(), dxa);
+                    } catch (XAException e) {
+                        Debug.logError(e, module);
+                    }
+                }
+
                 return true;
             } catch (NotSupportedException e) {
                 //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
@@ -314,6 +331,19 @@ public class TransactionUtil implements Status {
                 return "Transaction Status Unknown (" + state + ")";
             default:
                 return "Not a valid state code (" + state + ")";
+        }
+    }
+
+    public static void logRunningTx() {
+        if (debugResources) {
+            if (debugResMap != null && debugResMap.size() > 0) {
+                Iterator i = debugResMap.keySet().iterator();
+                while (i.hasNext()) {
+                    Object o = i.next();
+                    DebugXaResource dxa = (DebugXaResource) debugResMap.get(o);
+                    dxa.log();
+                }
+            }
         }
     }
 

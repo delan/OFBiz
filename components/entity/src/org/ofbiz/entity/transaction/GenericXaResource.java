@@ -1,5 +1,5 @@
 /*
- * $Id: GenericXaResource.java,v 1.2 2003/12/04 21:54:20 ajzeneski Exp $
+ * $Id: GenericXaResource.java,v 1.3 2004/05/25 06:19:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import javax.transaction.*;
  * GenericXaResource - Abstract XA Resource implementation supporting a single transaction
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public abstract class GenericXaResource implements XAResource {
@@ -159,6 +159,10 @@ public abstract class GenericXaResource implements XAResource {
     public boolean setTransactionTimeout(int seconds) throws XAException {
         this.timeout = seconds;
         return true;
+    }
+
+    public Xid getXid() {
+        return this.xid;
     }
 
     /**
