@@ -83,6 +83,9 @@ public class UpsServices {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
             }
             
+            // TODO: add ShipmentRouteSegment carrierServiceStatusId, check before all UPS services
+            // TODO: set ShipmentRouteSegment carrierServiceStatusId after each UPS service applicable 
+            
             // Get Origin Info
             GenericValue originPostalAddress = shipmentRouteSegment.getRelatedOne("OriginPostalAddress");
             if (originPostalAddress == null) {
@@ -478,7 +481,7 @@ public class UpsServices {
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
 
-        String shipmentAccessResponseString = null;
+        String shipmentAcceptResponseString = null;
 
         try {
             GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
@@ -488,15 +491,15 @@ public class UpsServices {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
             }
             
-            if (UtilValidate.isEmpty(shipmentRouteSegment.getString("trackingDigest"))) {
-                return ServiceUtil.returnError("ERROR: The trackingDigest was not set for this Route Segment, meaning that a UPS shipment confirm has not been done.");
-            }
-
             List shipmentPackageRouteSegs = shipmentRouteSegment.getRelated("ShipmentPackageRouteSeg", null, UtilMisc.toList("+shipmentPackageSeqId"));
             if (shipmentPackageRouteSegs == null || shipmentPackageRouteSegs.size() == 0) {
                 return ServiceUtil.returnError("No ShipmentPackageRouteSegs found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
             }
             
+            if (UtilValidate.isEmpty(shipmentRouteSegment.getString("trackingDigest"))) {
+                return ServiceUtil.returnError("ERROR: The trackingDigest was not set for this Route Segment, meaning that a UPS shipment confirm has not been done.");
+            }
+
             Document shipmentAcceptRequestDoc = UtilXml.makeEmptyXmlDocument("ShipmentAcceptRequest");
             Element shipmentAcceptRequestElement = shipmentAcceptRequestDoc.getDocumentElement();
             shipmentAcceptRequestElement.setAttribute("xml:lang", "en-US");
@@ -542,35 +545,35 @@ public class UpsServices {
             xmlString.append(accessRequestString);
             xmlString.append(shipmentAcceptRequestString);
             try {
-                shipmentAccessResponseString = sendUpsRequest("ShipAccept", xmlString.toString());
+                shipmentAcceptResponseString = sendUpsRequest("ShipAccept", xmlString.toString());
             } catch (UpsConnectException e) {
                 String uceErrMsg = "Error sending UPS request for UPS Service ShipAccept: " + e.toString();
                 Debug.logError(e, uceErrMsg);
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
-            Document shipmentAccessResponseDocument = null;
+            Document shipmentAcceptResponseDocument = null;
             try {
-                shipmentAccessResponseDocument = UtilXml.readXmlDocument(shipmentAccessResponseString, false);
+                shipmentAcceptResponseDocument = UtilXml.readXmlDocument(shipmentAcceptResponseString, false);
             } catch (SAXException e2) {
-                String excErrMsg = "Error parsing the ShipmentAccessResponse: " + e2.toString();
+                String excErrMsg = "Error parsing the ShipmentAcceptResponse: " + e2.toString();
                 Debug.logError(e2, excErrMsg);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (ParserConfigurationException e2) {
-                String excErrMsg = "Error parsing the ShipmentAccessResponse: " + e2.toString();
+                String excErrMsg = "Error parsing the ShipmentAcceptResponse: " + e2.toString();
                 Debug.logError(e2, excErrMsg);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (IOException e2) {
-                String excErrMsg = "Error parsing the ShipmentAccessResponse: " + e2.toString();
+                String excErrMsg = "Error parsing the ShipmentAcceptResponse: " + e2.toString();
                 Debug.logError(e2, excErrMsg);
                 return ServiceUtil.returnError(excErrMsg);
             }
 
-            // process ShipmentAccessResponse, update data as needed
-            Element shipmentAccessResponseElement = shipmentAccessResponseDocument.getDocumentElement();
+            // process ShipmentAcceptResponse, update data as needed
+            Element shipmentAcceptResponseElement = shipmentAcceptResponseDocument.getDocumentElement();
             
             // handle Response element info
-            Element responseElement = UtilXml.firstChildElement(shipmentAccessResponseElement, "Response");
+            Element responseElement = UtilXml.firstChildElement(shipmentAcceptResponseElement, "Response");
             Element responseTransactionReferenceElement = UtilXml.firstChildElement(responseElement, "TransactionReference");
             String responseTransactionReferenceCustomerContext = UtilXml.childElementValue(responseTransactionReferenceElement, "CustomerContext");
             String responseTransactionReferenceXpciVersion = UtilXml.childElementValue(responseTransactionReferenceElement, "XpciVersion");
@@ -581,7 +584,7 @@ public class UpsServices {
             UpsServices.handleErrors(responseElement, errorList);
 
             if ("1".equals(responseStatusCode)) {
-                Element shipmentResultsElement = UtilXml.firstChildElement(shipmentAccessResponseElement, "ShipmentResults");
+                Element shipmentResultsElement = UtilXml.firstChildElement(shipmentAcceptResponseElement, "ShipmentResults");
 
                 // This information is returned in both the ShipmentConfirmResponse and 
                 //the ShipmentAcceptResponse. So, we'll go ahead and store it here again
@@ -739,6 +742,8 @@ public class UpsServices {
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
 
+        String voidShipmentResponseString = null;
+
         try {
             GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
             GenericValue shipmentRouteSegment = delegator.findByPrimaryKey("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId));
@@ -747,13 +752,137 @@ public class UpsServices {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
             }
             
+            if (UtilValidate.isEmpty(shipmentRouteSegment.getString("trackingIdNumber"))) {
+                return ServiceUtil.returnError("ERROR: The trackingIdNumber was not set for this Route Segment, meaning that a UPS shipment confirm has not been done.");
+            }
+
+            Document voidShipmentRequestDoc = UtilXml.makeEmptyXmlDocument("VoidShipmentRequest");
+            Element voidShipmentRequestElement = voidShipmentRequestDoc.getDocumentElement();
+            voidShipmentRequestElement.setAttribute("xml:lang", "en-US");
+
+            // Top Level Element: Request
+            Element requestElement = UtilXml.addChildElement(voidShipmentRequestElement, "Request", voidShipmentRequestDoc);
+
+            Element transactionReferenceElement = UtilXml.addChildElement(requestElement, "TransactionReference", voidShipmentRequestDoc);
+            UtilXml.addChildElementValue(transactionReferenceElement, "CustomerContext", "Void / 1", voidShipmentRequestDoc);
+            UtilXml.addChildElementValue(transactionReferenceElement, "XpciVersion", "1.0001", voidShipmentRequestDoc);
+
+            UtilXml.addChildElementValue(requestElement, "RequestAction", "Void", voidShipmentRequestDoc);
+            UtilXml.addChildElementValue(requestElement, "RequestOption", "1", voidShipmentRequestDoc);
+
+            UtilXml.addChildElementValue(voidShipmentRequestElement, "ShipmentIdentificationNumber", shipmentRouteSegment.getString("trackingIdNumber"), voidShipmentRequestDoc);
+
+            String voidShipmentRequestString = null;
+            try {
+                voidShipmentRequestString = UtilXml.writeXmlDocument(voidShipmentRequestDoc);
+            } catch (IOException e) {
+                String ioeErrMsg = "Error writing the VoidShipmentRequest XML Document to a String: " + e.toString();
+                Debug.logError(e, ioeErrMsg);
+                return ServiceUtil.returnError(ioeErrMsg);
+            }
+            
+            // create AccessRequest XML doc
+            Document accessRequestDocument = createAccessRequestDocument();
+            String accessRequestString = null;
+            try {
+                accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
+            } catch (IOException e) {
+                String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
+                Debug.logError(e, ioeErrMsg);
+                return ServiceUtil.returnError(ioeErrMsg);
+            }
+            
+            // connect to UPS server, send AccessRequest to auth
+            // send ShipmentConfirmRequest String
+            // get ShipmentConfirmResponse String back
+            StringBuffer xmlString = new StringBuffer();
+            // TODO: note that we may have to append <?xml version="1.0"?> before each string
+            xmlString.append(accessRequestString);
+            xmlString.append(voidShipmentRequestString);
+            try {
+                voidShipmentResponseString = sendUpsRequest("Void", xmlString.toString());
+            } catch (UpsConnectException e) {
+                String uceErrMsg = "Error sending UPS request for UPS Service Void: " + e.toString();
+                Debug.logError(e, uceErrMsg);
+                return ServiceUtil.returnError(uceErrMsg);
+            }
+
+            Document voidShipmentResponseDocument = null;
+            try {
+                voidShipmentResponseDocument = UtilXml.readXmlDocument(voidShipmentResponseString, false);
+            } catch (SAXException e2) {
+                String excErrMsg = "Error parsing the VoidShipmentResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            } catch (ParserConfigurationException e2) {
+                String excErrMsg = "Error parsing the VoidShipmentResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            } catch (IOException e2) {
+                String excErrMsg = "Error parsing the VoidShipmentResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            }
+
+            // process VoidShipmentResponse, update data as needed
+            Element voidShipmentResponseElement = voidShipmentResponseDocument.getDocumentElement();
+            
+            // handle Response element info
+            Element responseElement = UtilXml.firstChildElement(voidShipmentResponseElement, "Response");
+            Element responseTransactionReferenceElement = UtilXml.firstChildElement(responseElement, "TransactionReference");
+            String responseTransactionReferenceCustomerContext = UtilXml.childElementValue(responseTransactionReferenceElement, "CustomerContext");
+            String responseTransactionReferenceXpciVersion = UtilXml.childElementValue(responseTransactionReferenceElement, "XpciVersion");
+
+            String responseStatusCode = UtilXml.childElementValue(responseElement, "ResponseStatusCode");
+            String responseStatusDescription = UtilXml.childElementValue(responseElement, "ResponseStatusDescription");
+            List errorList = new LinkedList();
+            UpsServices.handleErrors(responseElement, errorList);
+
+            // TODO: handle other response elements
+/*
+
+<VoidShipmentResponse>
+    ...
+    <Status>
+        <StatusType>
+            <Code>1</Code>
+            <Description>Success</Description>
+        </StatusType>
+        <StatusCode>
+            <Code>1</Code>
+            <Description>Success</Description>
+        </StatusCode>
+    </Status>
+</VoidShipmentResponse>
+ * 
+ */
+
+            if ("1".equals(responseStatusCode)) {
+                Element shipmentResultsElement = UtilXml.firstChildElement(voidShipmentResponseElement, "ShipmentResults");
+
+                // -=-=-=- Okay, now done with that, just return any extra info...
+                StringBuffer successString = new StringBuffer("The UPS VoidShipment succeeded");
+                if (errorList.size() > 0) {
+                    // this shouldn't happen much, but handle it anyway
+                    successString.append(", but the following occurred: ");
+                    Iterator errorListIter = errorList.iterator();
+                    while (errorListIter.hasNext()) {
+                        String errorMsg = (String) errorListIter.next();
+                        successString.append(errorMsg);
+                        if (errorListIter.hasNext()) {
+                            successString.append(", ");
+                        }
+                    }
+                }
+                return ServiceUtil.returnSuccess(successString.toString());
+            } else {
+                errorList.add(0, "The UPS ShipmentConfirm failed");
+                return ServiceUtil.returnError(errorList);
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e);
             return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Void Shipment: " + e.toString());
         }
-
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        return result;
     }
     
     public static Map upsTrackShipment(DispatchContext dctx, Map context) {
@@ -762,6 +891,8 @@ public class UpsServices {
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
 
+        String trackShipmentResponseString = null;
+
         try {
             GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
             GenericValue shipmentRouteSegment = delegator.findByPrimaryKey("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId));
@@ -770,13 +901,167 @@ public class UpsServices {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
             }
             
+            if (UtilValidate.isEmpty(shipmentRouteSegment.getString("trackingIdNumber"))) {
+                return ServiceUtil.returnError("ERROR: The trackingIdNumber was not set for this Route Segment, meaning that a UPS shipment confirm has not been done.");
+            }
+
+            Document trackShipmentRequestDoc = UtilXml.makeEmptyXmlDocument("TrackShipmentRequest");
+            Element trackShipmentRequestElement = trackShipmentRequestDoc.getDocumentElement();
+            trackShipmentRequestElement.setAttribute("xml:lang", "en-US");
+
+            // Top Level Element: Request
+            Element requestElement = UtilXml.addChildElement(trackShipmentRequestElement, "Request", trackShipmentRequestDoc);
+
+            Element transactionReferenceElement = UtilXml.addChildElement(requestElement, "TransactionReference", trackShipmentRequestDoc);
+            UtilXml.addChildElementValue(transactionReferenceElement, "CustomerContext", "Track", trackShipmentRequestDoc);
+            UtilXml.addChildElementValue(transactionReferenceElement, "XpciVersion", "1.0001", trackShipmentRequestDoc);
+
+            UtilXml.addChildElementValue(requestElement, "RequestAction", "Track", trackShipmentRequestDoc);
+
+            UtilXml.addChildElementValue(trackShipmentRequestElement, "ShipmentIdentificationNumber", shipmentRouteSegment.getString("trackingIdNumber"), trackShipmentRequestDoc);
+
+            String trackShipmentRequestString = null;
+            try {
+                trackShipmentRequestString = UtilXml.writeXmlDocument(trackShipmentRequestDoc);
+            } catch (IOException e) {
+                String ioeErrMsg = "Error writing the TrackShipmentRequest XML Document to a String: " + e.toString();
+                Debug.logError(e, ioeErrMsg);
+                return ServiceUtil.returnError(ioeErrMsg);
+            }
+            
+            // create AccessRequest XML doc
+            Document accessRequestDocument = createAccessRequestDocument();
+            String accessRequestString = null;
+            try {
+                accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
+            } catch (IOException e) {
+                String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
+                Debug.logError(e, ioeErrMsg);
+                return ServiceUtil.returnError(ioeErrMsg);
+            }
+            
+            // connect to UPS server, send AccessRequest to auth
+            // send ShipmentConfirmRequest String
+            // get ShipmentConfirmResponse String back
+            StringBuffer xmlString = new StringBuffer();
+            // TODO: note that we may have to append <?xml version="1.0"?> before each string
+            xmlString.append(accessRequestString);
+            xmlString.append(trackShipmentRequestString);
+            try {
+                trackShipmentResponseString = sendUpsRequest("Track", xmlString.toString());
+            } catch (UpsConnectException e) {
+                String uceErrMsg = "Error sending UPS request for UPS Service Track: " + e.toString();
+                Debug.logError(e, uceErrMsg);
+                return ServiceUtil.returnError(uceErrMsg);
+            }
+
+            Document trackShipmentResponseDocument = null;
+            try {
+                trackShipmentResponseDocument = UtilXml.readXmlDocument(trackShipmentResponseString, false);
+            } catch (SAXException e2) {
+                String excErrMsg = "Error parsing the TrackShipmentResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            } catch (ParserConfigurationException e2) {
+                String excErrMsg = "Error parsing the TrackShipmentResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            } catch (IOException e2) {
+                String excErrMsg = "Error parsing the TrackShipmentResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            }
+
+            // process TrackShipmentResponse, update data as needed
+            Element trackShipmentResponseElement = trackShipmentResponseDocument.getDocumentElement();
+            
+            // handle Response element info
+            Element responseElement = UtilXml.firstChildElement(trackShipmentResponseElement, "Response");
+            Element responseTransactionReferenceElement = UtilXml.firstChildElement(responseElement, "TransactionReference");
+            String responseTransactionReferenceCustomerContext = UtilXml.childElementValue(responseTransactionReferenceElement, "CustomerContext");
+            String responseTransactionReferenceXpciVersion = UtilXml.childElementValue(responseTransactionReferenceElement, "XpciVersion");
+
+            String responseStatusCode = UtilXml.childElementValue(responseElement, "ResponseStatusCode");
+            String responseStatusDescription = UtilXml.childElementValue(responseElement, "ResponseStatusDescription");
+            List errorList = new LinkedList();
+            UpsServices.handleErrors(responseElement, errorList);
+
+            // TODO: handle other response elements
+/*
+<TrackResponse>
+    ...
+    <Shipment>
+        <Shipper>
+            <ShipperNumber>12345E</ShipperNumber>
+        </Shipper>
+        <Service>
+            <Code>15</Code>
+            <Description>NDA EAM/EXP EAM</Description>
+        </Service>
+        <ShipmentIdentificationNumber>1Z12345E1512345676</ShipmentIdentificationNumber>
+        <Package>
+            <TrackingNumber>1Z12345E1512345676</TrackingNumber>
+            <Activity>
+                <ActivityLocation>
+                    <Address>
+                        <City>CLAKVILLE</City>
+                        <StateProvinceCode>AK</StateProvinceCode>
+                        <PostalCode>99901</PostalCode>
+                        <CountryCode>US</CountryCode>
+                    </Address>
+                    <Code>MG</Code>
+                    <Description>MC MAN</Description>
+                </ActivityLocation>
+                <Status>
+                    <StatusType>
+                        <Code>D</Code>
+                        <Description>DELIVERED</Description>
+                    </StatusType>
+                    <StatusCode>
+                        <Code>FS</Code>
+                    </StatusCode>
+                </Status>
+                <Date>20020930</Date>
+                <Time>130900</Time>
+            </Activity>
+            <PackageWeight>
+                <UnitOfMeasurement>
+                    <Code>LBS</Code>
+                </UnitOfMeasurement>
+                <Weight>0.00</Weight>
+            </PackageWeight>
+        </Package>
+    </Shipment>
+</TrackResponse>
+ * 
+ */
+
+            if ("1".equals(responseStatusCode)) {
+                Element shipmentResultsElement = UtilXml.firstChildElement(trackShipmentResponseElement, "ShipmentResults");
+
+                // -=-=-=- Okay, now done with that, just return any extra info...
+                StringBuffer successString = new StringBuffer("The UPS TrackShipment succeeded");
+                if (errorList.size() > 0) {
+                    // this shouldn't happen much, but handle it anyway
+                    successString.append(", but the following occurred: ");
+                    Iterator errorListIter = errorList.iterator();
+                    while (errorListIter.hasNext()) {
+                        String errorMsg = (String) errorListIter.next();
+                        successString.append(errorMsg);
+                        if (errorListIter.hasNext()) {
+                            successString.append(", ");
+                        }
+                    }
+                }
+                return ServiceUtil.returnSuccess(successString.toString());
+            } else {
+                errorList.add(0, "The UPS ShipmentConfirm failed");
+                return ServiceUtil.returnError(errorList);
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e);
             return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Track Shipment: " + e.toString());
         }
-
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        return result;
     }
     
     public static Document createAccessRequestDocument() {
@@ -1222,6 +1507,7 @@ Shipment Accept Request/Response
 Void Shipment Request/Response
 =======================================
 
+<?xml version="1.0"?>
 <VoidShipmentRequest>
     <Request>
         <TransactionReference>
@@ -1258,7 +1544,7 @@ Void Shipment Request/Response
 </VoidShipmentResponse>
 
 =======================================
-Void Shipment Request/Response
+Track Shipment Request/Response
 =======================================
 
 <?xml version="1.0"?>
