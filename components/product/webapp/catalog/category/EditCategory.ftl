@@ -27,7 +27,28 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
+<SCRIPT language="JavaScript">
+function insertImageName(type,nameValue) {
+  eval('document.productCategoryForm.' + type + 'ImageUrl.value=nameValue;');
+};
+</SCRIPT>
+
+
 ${pages.get("/category/CategoryTabBar.ftl")}
+
+    <#if fileType?has_content>
+        <div class='head3'>${uiLabelMap.ProductResultOfImageUpload}</div>
+        <#if !(clientFileName?has_content)>
+            <div class='tabletext'>${uiLabelMap.ProductNoFileSpecifiedForUpload}.</div>
+        <#else>
+            <div class='tabletext'>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName?if_exists}</b></div>
+            <div class='tabletext'>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse?if_exists}</b></div>
+            <div class='tabletext'>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath?if_exists}</b></div>
+            <div class='tabletext'>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl?if_exists}</@ofbizContentUrl>">${imageUrl?if_exists}</a></b></div>
+        </#if>
+    <br>
+    </#if>
+
 
 <div class="head1">${uiLabelMap.ProductCategory} <span class="head2">  <#if productCategory?has_content> 
 ${productCategory.description?if_exists} 
@@ -101,59 +122,71 @@ ${productCategory.description?if_exists}
     <td width="74%"><textarea cols="60" rows="3" name="longDescription" maxlength="2000" class="textAreaBox"><#if productCategory?has_content>${productCategory.longDescription?if_exists}</#if></textarea></td>
   </tr>
 -->
-<#if productCategoryId?has_content> 
-    <SCRIPT language="JavaScript">
-    function insertImageName(type,ext) {
-        var imageUrlPrefix = '${Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("catalog", "image.url.prefix")}';
-        eval('document.forms.productCategoryForm.' + type + 'ImageUrl.value="'+imageUrlPrefix+'.${productCategoryId}.' + type + '.' + ext + '";');
-    };
-    </SCRIPT>
-</#if>
-  <tr>
-    <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductCategoryImageUrl}</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <input type="text" <#if productCategory?has_content>value="${productCategory.categoryImageUrl?if_exists}"</#if> name="categoryImageUrl" size="60" maxlength="250" class="inputBox">
-      <#if productCategoryId?has_content> 
-        <div>
-          <a href="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=category</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductUploadCategoryImage}]</a>
-          <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-          <a href="javascript:insertImageName('category', 'jpg');" class="buttontext">[.jpg]</a>
-          <a href="javascript:insertImageName('category', 'gif');" class="buttontext">[.gif]</a>
-        </div>
-      </#if>
-    </td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductLinkOneImageUrl}</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <input type="text" <#if productCategory?has_content>value="${productCategory.linkOneImageUrl?if_exists}"</#if> name="linkOneImageUrl" size="60" maxlength="250" class="inputBox">
-      <#if productCategoryId?has_content> 
-        <div>
-          <a href="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkOne</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductUploadLinkOneImage}]</a>
-          <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-          <a href="javascript:insertImageName('linkOne', 'jpg');" class="buttontext">[.jpg]</a>
-          <a href="javascript:insertImageName('linkOne', 'gif');" class="buttontext">[.gif]</a>
-        </div>
-      </#if>
-    </td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductLinkTwoImageUrl}</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <input type="text" <#if productCategory?has_content>value="${productCategory.linkTwoImageUrl?if_exists}"</#if> name="linkTwoImageUrl" size="60" maxlength="250" class="inputBox">
-      <#if productCategoryId?has_content> 
-        <div>
-          <a href="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkTwo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductUploadLinkTwoImage}]</a>
-          <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-          <a href="javascript:insertImageName('linkTwo', 'jpg');" class="buttontext">[.jpg]</a>
-          <a href="javascript:insertImageName('linkTwo', 'gif');" class="buttontext">[.gif]</a>
-        </div>
-      </#if>
-    </td>
-  </tr>
+
+
+        <tr>
+            <td width="20%" align=right valign=top>
+                <div class="tabletext"><b>${uiLabelMap.ProductCategoryImageUrl}</b></div>
+                <#if (productCategory.categoryImageUrl)?exists>
+                    <a href="<@ofbizContentUrl>${(productCategory.categoryImageUrl)?if_exists}</@ofbizContentUrl>" target="_blank"><img alt="Category Image" src="<@ofbizContentUrl>${(productCategory.categoryImageUrl)?if_exists}</@ofbizContentUrl>" height="40" width="40"></a>
+                </#if>
+            </td>
+            <td>&nbsp;</td>
+            <td width="80%" colspan="4" valign=top>
+            <input type="text" class="inputBox" name="categoryImageUrl" value="${(productCategory.categoryImageUrl)?default('')}" size="60" maxlength="255">
+            <#if productCategory?has_content>
+                <div>
+                <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
+                <a href="javascript:insertImageName('category','${imageNameCategory}.jpg');" class="buttontext">[.jpg]</a>
+                <a href="javascript:insertImageName('category','${imageNameCategory}.gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:insertImageName('category','');" class="buttontext">[clear]</a>
+                </div>
+            </#if>
+            </td>
+        </tr>
+
+        <tr>
+            <td width="20%" align=right valign=top>
+                <div class="tabletext"><b>${uiLabelMap.ProductLinkOneImageUrl}</b></div>
+                <#if (productCategory.linkOneImageUrl)?exists>
+                    <a href="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)?if_exists}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkOneImageUrl)?if_exists}</@ofbizContentUrl>" height="40" width="40"></a>
+                </#if>
+            </td>
+            <td>&nbsp;</td>
+            <td width="80%" colspan="4" valign=top>
+            <input type="text" class="inputBox" name="linkOneImageUrl" value="${(productCategory.linkOneImageUrl)?default('')}" size="60" maxlength="255">
+            <#if productCategory?has_content>
+                <div>
+                <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
+                <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.jpg');" class="buttontext">[.jpg]</a>
+                <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:insertImageName('linkOne','');" class="buttontext">[clear]</a>
+                </div>
+            </#if>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td width="20%" align=right valign=top>
+                <div class="tabletext"><b>${uiLabelMap.ProductLinkTwoImageUrl}</b></div>
+                <#if (productCategory.linkTwoImageUrl)?exists>
+                    <a href="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)?if_exists}</@ofbizContentUrl>" target="_blank"><img alt="Link One Image" src="<@ofbizContentUrl>${(productCategory.linkTwoImageUrl)?if_exists}</@ofbizContentUrl>" height="40" width="40"></a>
+                </#if>
+            </td>
+            <td>&nbsp;</td>
+            <td width="80%" colspan="4" valign=top>
+            <input type="text" class="inputBox" name="linkTwoImageUrl" value="${(productCategory.linkTwoImageUrl)?default('')}" size="60" maxlength="255">
+            <#if productCategory?has_content>
+                <div>
+                <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
+                <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.jpg');" class="buttontext">[.jpg]</a>
+                <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:insertImageName('linkTwo','');" class="buttontext">[clear]</a>
+                </div>
+            </#if>
+            </td>
+   </tr>
 
   <tr>
     <td width="26%" align="right"><div class="tabletext">${uiLabelMap.ProductDetailTemplate}</div></td>
@@ -188,6 +221,25 @@ ${productCategory.description?if_exists}
 </table>
 </form>
 <br>
+        <hr class="sepbar"/>
+
+        <SCRIPT language="JavaScript">
+            function setUploadUrl(newUrl) {
+            var toExec = 'document.imageUploadForm.action="' + newUrl + '";';
+            eval(toExec);
+            };
+        </SCRIPT>
+        <div class="head3">${uiLabelMap.CategoryUploadImage}</div>
+        <form method="POST" enctype="multipart/form-data" action="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId?if_exists}&upload_file_type=category</@ofbizUrl>" name="imageUploadForm">
+            <input type="file" class="inputBox" size="50" name="fname">
+            <br>
+            <span class="tabletext">
+                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="category" checked onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=category</@ofbizUrl>");'>${uiLabelMap.ProductCategoryImageUrl}
+                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkOne</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
+                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkTwo</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
+            </span>
+            <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
+        </form>
 
 <#else>
   <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
