@@ -49,7 +49,7 @@ shipmentPlans = null;
 shipmentPlansIt = null;
 rows = new ArrayList();
 if (shipment != null) {
-    shipmentPlans = delegator.findByAnd("ShipmentPlan", UtilMisc.toMap("shipmentId", shipment.getString("shipmentId")));
+    shipmentPlans = delegator.findByAnd("OrderShipment", UtilMisc.toMap("shipmentId", shipment.getString("shipmentId")));
 }
 if (shipmentPlans != null) {
     shipmentPlansIt = shipmentPlans.iterator();
@@ -82,7 +82,7 @@ if (shipmentPlans != null) {
         // Total quantity planned not issued
         plannedQuantity = 0.0;
         qtyPlannedInShipment = new HashMap();
-        plans = delegator.findByAnd("ShipmentPlan", UtilMisc.toMap("orderId", orderItem.getString("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")));
+        plans = delegator.findByAnd("OrderShipment", UtilMisc.toMap("orderId", orderItem.getString("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")));
         plansIt = plans.iterator();
         while (plansIt.hasNext()) {
             plan = plansIt.next();
@@ -115,7 +115,7 @@ if (shipmentPlans != null) {
         // Reserved and Not Available quantity
         reservedQuantity = 0.0;
         reservedNotAvailable = 0.0;
-        reservations = orderItem.getRelated("OrderItemInventoryRes");
+        reservations = orderItem.getRelated("OrderItemShipGrpInvRes");
         reservationsIt = reservations.iterator();
         while (reservationsIt.hasNext()) {
             reservation = reservationsIt.next();
