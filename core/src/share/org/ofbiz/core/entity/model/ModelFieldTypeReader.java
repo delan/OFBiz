@@ -54,6 +54,7 @@ import org.ofbiz.core.util.*;
 
 public class ModelFieldTypeReader {
 
+    public static final String module = ModelFieldTypeReader.class.getName();
     public static UtilCache readers = new UtilCache("ModelFieldTypeReader", 0, 0);
 
     public Map fieldTypeCache = null;
@@ -133,15 +134,15 @@ public class ModelFieldTypeReader {
                                 if (fieldType != null) {
                                     fieldTypeCache.put(fieldTypeName, fieldType);
                                     //utilTimer.timerString("  After fieldTypeCache.put -- " + i + " --");
-                                    Debug.logInfo("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName);
+                                    Debug.logVerbose("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName, module);
                                 } else {
-                                    Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName);
+                                    Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName, module);
                                 }
 
                             }
                         } while ((curChild = curChild.getNextSibling()) != null);
                     } else
-                        Debug.logWarning("No child nodes found.");
+                        Debug.logWarning("No child nodes found.", module);
                     utilTimer.timerString("FINISHED - Total Field Types: " + i + " FINISHED");
                 }
             }
