@@ -21,14 +21,13 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <div class="head1">${uiLabelMap.AccountingEditPayment}</div>
-<a href="<@ofbizUrl>/view/manualCcPay</@ofbizUrl>" class="buttontext">[Credit Card Payment]</a>
-<a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="buttontext">[Generic Payment]</a>
+<a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingCreatePayment}]</a>
 <br>
 
 <#if payment?has_content>

@@ -2,6 +2,6 @@
 <page>
     <template>main</template>
     <property name="title">Manual Electronic Transaction</property>
-    <property name="headerItem">payments</property>
-    <page-action name="/payment/manualCCTx.bsh"/>
+    <property name="headerItem">manualTx</property>
+    <page-action name="/payment/manualTx.bsh"/>
 </page>
