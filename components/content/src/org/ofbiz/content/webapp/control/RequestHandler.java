@@ -234,11 +234,18 @@ public class RequestHandler implements Serializable {
             if (eventType != null && eventPath != null && eventMethod != null) {
                 try {
                     long eventStartTime = System.currentTimeMillis();
-                    eventReturnString = this.runEvent(request, response, eventType, eventPath, eventMethod);                    
+
+                    // run the event
+                    eventReturnString = this.runEvent(request, response, eventType, eventPath, eventMethod);
+
+                    // save the server hit
                     ServerHitBin.countEvent(cname + "." + eventMethod, request, eventStartTime,
-                        System.currentTimeMillis() - eventStartTime, userLogin, delegator);
-                    if (eventReturnString == null)
+                            System.currentTimeMillis() - eventStartTime, userLogin, delegator);
+
+                    // set the default event return
+                    if (eventReturnString == null) {
                         nextView = "none:";
+                    }
                 } catch (EventHandlerException e) {
                     // check to see if there is an "error" response, if so go there and make an request error message
                     String tryErrorMsg = requestManager.getRequestAttribute(requestUri, "error");
@@ -247,7 +254,7 @@ public class RequestHandler implements Serializable {
                         eventReturnString = "error";
                         Locale locale = UtilHttp.getLocale(request);
                         String errMsg = UtilProperties.getMessage(RequestHandler.err_resource, "layoutEvents.error_call_event", locale);
-                       request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
+                        request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
                     } else {
                         throw new RequestHandlerException("Error calling event and no error repsonse was specified", e);
                     }
@@ -257,7 +264,6 @@ public class RequestHandler implements Serializable {
 
         // Process the eventReturn.
         String eventReturn = requestManager.getRequestAttribute(requestUri, eventReturnString);
-
         if (Debug.verboseOn()) Debug.logVerbose("[Response Qualified]: " + eventReturn, module);
 
         // Set the next view
@@ -346,7 +352,7 @@ public class RequestHandler implements Serializable {
 
             // a page request
             else if (nextView != null) {
-                Debug.log("[RequestHandler.doRequest]: Response is a page.", module);
+                Debug.log("[RequestHandler.doRequest]: Response is a page [" + nextView + "]", module);
                 renderView(nextView, requestManager.allowExtView(requestUri), request, response);
             }
 
