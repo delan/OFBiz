@@ -1,5 +1,5 @@
 /*
- * $Id: NotificationServices.java,v 1.3 2003/11/26 16:57:36 jonesde Exp $
+ * $Id: NotificationServices.java,v 1.4 2003/12/03 14:29:48 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -107,7 +107,7 @@ import freemarker.template.TemplateHashModel;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class NotificationServices {
@@ -277,7 +277,7 @@ public class NotificationServices {
      * @param context   The context to check and, if necessary, set the
      * <code>baseUrl</code>.
      */
-    private static void setBaseUrl(GenericDelegator delegator, String webSiteId, Map context) {
+    public static void setBaseUrl(GenericDelegator delegator, String webSiteId, Map context) {
         StringBuffer httpBase = null;
         StringBuffer httpsBase = null;
                 
