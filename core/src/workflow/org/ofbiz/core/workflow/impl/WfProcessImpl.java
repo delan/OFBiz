@@ -42,8 +42,7 @@ import org.ofbiz.core.workflow.*;
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     
     private WfRequester requester;
-    private WfProcessMgr manager;
-    private List activeSteps; 
+    private WfProcessMgr manager;    
         
     /**
      * Creates new WfProcessImpl
@@ -53,8 +52,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
         super(valueObject,null);
         this.manager = manager;        
-        this.requester = null;
-        this.activeSteps = new ArrayList();
+        this.requester = null;        
     }
     
     /**
@@ -66,8 +64,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public WfProcessImpl(GenericDelegator delegator, String workEffortId) throws WfException {
         super(delegator,workEffortId);
         this.manager = WfFactory.getWfProcessMgr(delegator,packageId,processId);
-        this.requester = null;
-        this.activeSteps = new ArrayList();
+        this.requester = null;        
     }
             
     /**
@@ -89,8 +86,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      */
     public List getSequenceStep(int maxNumber) throws WfException {
         if ( maxNumber > 0 )
-            return new ArrayList(activeSteps.subList(0, maxNumber-1));
-        return activeSteps;
+            return new ArrayList(activeSteps().subList(0, maxNumber-1));
+        return activeSteps();
     }
     
     /**
@@ -146,7 +143,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @return Iterator of WfActivity objects.
      */
     public Iterator getIteratorStep() throws WfException {
-        return activeSteps.iterator();
+        return activeSteps().iterator();
     }
     
     /**
@@ -157,7 +154,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * false otherwise.
      */
     public boolean isMemberOfStep(WfActivity member) throws WfException {
-        return activeSteps.contains(member);
+        return activeSteps().contains(member);
     }
     
     /**
@@ -207,7 +204,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @return Number of activities of this process
      */
     public int howManyStep() throws WfException {
-        return activeSteps.size();
+        return activeSteps().size();
     }
     
     /**
@@ -426,5 +423,26 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                 throw new WfException(e.getMessage(),e);
             }
         }
+    }
+    
+    // Get the active process activities
+    private List activeSteps() throws WfException {
+        List steps = new ArrayList();
+        Collection c = null;
+        try {
+            c = getDelegator().findByAnd("WorkEffort",UtilMisc.toMap("workEffortParentId",runtimeKey()));
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        if ( c == null )
+            return steps;
+        Iterator i = c.iterator();
+        while ( i.hasNext() ) {
+            GenericValue v = (GenericValue) i.next();
+            if ( v.get("currentStatusId") != null && getOMGStatus(v.getString("currentStatusId")).startsWith("open.") )
+                steps.add(WfFactory.getWfActivity(getDelegator(),v.getString("workEffortId")));
+        }
+        return steps;
     }
 }

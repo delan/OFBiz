@@ -613,7 +613,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         }
     }
     
-    private String getEntityStatus(String state) {
+    protected String getEntityStatus(String state) {
         String statesArr[] = { "open.running",  "open.not_running.not_started",
         "open.not_running.suspended",  "closed.completed", "closed.terminated",
         "closed.aborted" };
@@ -626,6 +626,20 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         }
         return null;
     }
+    
+    protected String getOMGStatus(String state) {
+        String statesArr[] = { "open.running",  "open.not_running.not_started",
+        "open.not_running.suspended",  "closed.completed", "closed.terminated",
+        "closed.aborted" };
+        String entityArr[] = { "WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED",
+        "WF_COMPLETED", "WF_TERMINATED", "WF_ABORTED" };
+        
+        for ( int i = 0; i < entityArr.length; i++ ) {
+            if ( entityArr[i].equals(state) )
+                return statesArr[i];
+        }
+        return null;
+    }    
     
     private Map getContext() throws WfException {        
         GenericValue dataObject = getRuntimeObject();
