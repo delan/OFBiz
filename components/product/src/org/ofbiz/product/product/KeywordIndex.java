@@ -50,7 +50,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class KeywordIndex {
@@ -62,14 +62,15 @@ public class KeywordIndex {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         
         if (!doAll) {
-            if ("Y".equals(product.getString("isVariant"))) {
-                return;
-            }
             if ("N".equals(product.getString("autoCreateKeywords"))) {
                 return;
             }
+            if ("Y".equals(product.getString("isVariant")) && "true".equals(UtilProperties.getPropertyValue("prodsearch", "index.ignore.variants"))) {
+                return;
+            }
             Timestamp salesDiscontinuationDate = product.getTimestamp("salesDiscontinuationDate");
-            if (salesDiscontinuationDate != null && salesDiscontinuationDate.before(nowTimestamp)) {
+            if (salesDiscontinuationDate != null && salesDiscontinuationDate.before(nowTimestamp) && 
+                    "true".equals(UtilProperties.getPropertyValue("prodsearch", "index.ignore.discontinued.sales"))) {
                 return;
             }
         }
