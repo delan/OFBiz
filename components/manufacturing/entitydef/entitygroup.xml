@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  */
 -->
 
@@ -35,7 +35,7 @@
   <!-- org.ofbiz.manufacturing.bom -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz" entity="ProductPartRule" />
+    <entity-group group="org.ofbiz" entity="ProductManufacturingRule" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.manufacturing.techdata -->
