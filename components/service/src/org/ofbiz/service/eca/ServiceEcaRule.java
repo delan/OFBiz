@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * ServiceEcaRule
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServiceEcaRule {
@@ -49,6 +49,7 @@ public class ServiceEcaRule {
     
     protected String serviceName = null;
     protected String eventName = null;
+    protected boolean runOnFailure = false;
     protected boolean runOnError = false;
     protected List conditions = new LinkedList();
     protected List actions = new LinkedList();
@@ -58,6 +59,7 @@ public class ServiceEcaRule {
     public ServiceEcaRule(Element eca) {
         this.serviceName = eca.getAttribute("service");
         this.eventName = eca.getAttribute("event");
+        this.runOnFailure = "true".equals(eca.getAttribute("run-on-failure"));
         this.runOnError = "true".equals(eca.getAttribute("run-on-error"));
 
         List condList = UtilXml.childElementList(eca, "condition");
@@ -87,7 +89,10 @@ public class ServiceEcaRule {
         if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions, module);
     }
 
-    public void eval(String serviceName, DispatchContext dctx, Map context, Map result, boolean isError, Set actionsRun) throws GenericServiceException {
+    public void eval(String serviceName, DispatchContext dctx, Map context, Map result, boolean isError, boolean isFailure, Set actionsRun) throws GenericServiceException {
+        if (isFailure && !this.runOnFailure) {
+            return;
+        }
         if (isError && !this.runOnError) {
             return;
         }
@@ -114,8 +119,11 @@ public class ServiceEcaRule {
                 // only execute a given service name once per service call phase
                 if (!actionsRun.contains(ea.serviceName)) {
                     if (Debug.infoOn()) Debug.logInfo("Running ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName, module);
-                    ea.runAction(serviceName, dctx, context, result);
-                    actionsRun.add(ea.serviceName);
+                    if (ea.runAction(serviceName, dctx, context, result)) {
+                        actionsRun.add(ea.serviceName);
+                    } else {
+                        break;
+                    }
                 }
             }
         }

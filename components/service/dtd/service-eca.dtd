@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Service Framework - Service ECA Definition DTD
- *  $Id: service-eca.dtd,v 1.2 2003/11/13 21:13:45 ajzeneski Exp $
+ *  $Id$
 -->
 
 <!ELEMENT service-eca ( eca+ )>
@@ -34,6 +34,7 @@
 <!ATTLIST eca
     service CDATA #REQUIRED
     event ( global-commit | global-rollback | auth | in-validate | out-validate | invoke | commit | return ) #REQUIRED
+    run-on-failure ( true | false ) "false"
     run-on-error ( true | false ) "false"
 >
 
@@ -64,6 +65,7 @@
     mode ( sync | async ) #REQUIRED
     result-map-name CDATA #IMPLIED
     result-to-context ( true | false ) "true"
+    ignore-failure ( true | false ) "true"
     ignore-error ( true | false ) "true"
     persist ( true | false ) "false"
 >

@@ -277,11 +277,11 @@ public class ServiceDispatcher {
             Map eventMap = ServiceEcaUtil.getServiceEventMap(modelService.name);
 
             // setup global transaction ECA listeners
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-rollback", ctx, context, null, false);
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-rollback", ctx, context, null, false, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit", ctx, context, null, false, false);
 
             // pre-auth ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "auth", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "auth", ctx, context, null, false, false);
 
             context = checkAuth(localName, context, modelService);
             Object userLogin = context.get("userLogin");
@@ -294,7 +294,7 @@ public class ServiceDispatcher {
             GenericEngine engine = getGenericEngine(modelService.engineName);
 
             // pre-validate ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", ctx, context, null, false, false);
 
             // validate the context
             if (modelService.validate) {
@@ -307,12 +307,13 @@ public class ServiceDispatcher {
             }
 
             // pre-invoke ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "invoke", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "invoke", ctx, context, null, false, false);
 
             // ===== invoke the service =====
             Map result = engine.runSync(localName, modelService, context);
 
             // if anything but the error response, is not an error
+            boolean isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
             boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
 
             // create a new context with the results to pass to ECA services; necessary because caller may reuse this context
@@ -324,7 +325,7 @@ public class ServiceDispatcher {
             // validate the result
             if (modelService.validate && validateOut) {
                 // pre-out-validate ECA
-                if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "out-validate", ctx, ecaContext, result, isError);
+                if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "out-validate", ctx, ecaContext, result, isError, isFailure);
                 try {
                     modelService.validate(result, ModelService.OUT_PARAM);
                 } catch (ServiceValidationException e) {
@@ -334,7 +335,12 @@ public class ServiceDispatcher {
             }
 
             // pre-commit ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "commit", ctx, ecaContext, result, isError);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "commit", ctx, ecaContext, result, isError, isFailure);
+
+            // check for failure and log on info level; this is used for debugging
+            if (isFailure) {
+                Debug.logWarning("Service Failure [" + modelService.name + "]: " + ServiceUtil.getErrorMessage(result), module);
+            }
 
             // if there was an error, rollback transaction, otherwise commit
             if (isError) {
@@ -373,7 +379,7 @@ public class ServiceDispatcher {
             }
 
             // pre-return ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "return", ctx, ecaContext, result, isError);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "return", ctx, ecaContext, result, isError, isFailure);
 
             checkDebug(modelService, 0, debugging);
             return result;
@@ -467,7 +473,7 @@ public class ServiceDispatcher {
             Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
 
             // pre-auth ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, null, false, false);
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
@@ -479,7 +485,7 @@ public class ServiceDispatcher {
             GenericEngine engine = getGenericEngine(service.engineName);
 
             // pre-validate ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, null, false, false);
 
             // validate the context
             if (service.validate) {
