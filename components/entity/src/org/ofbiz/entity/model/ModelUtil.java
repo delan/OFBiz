@@ -1,5 +1,5 @@
 /*
- * $Id: ModelUtil.java,v 1.4 2003/12/26 12:44:52 jonesde Exp $
+ * $Id: ModelUtil.java,v 1.5 2004/01/26 17:42:10 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - General Utilities
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ModelUtil {
@@ -250,7 +250,7 @@ public class ModelUtil {
     /** 
      * Converts a package name to a path by replacing all '.' characters with the File.separatorChar character. 
      *  Is therefore platform independent.
-     * @param The package name.
+     * @param packageName The package name.
      * @return The path name corresponding to the specified package name.
      */
     public static String packageToPath(String packageName) {
