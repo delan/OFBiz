@@ -46,7 +46,7 @@ if ("SALES_ORDER".equals(cart.getOrderType())) {
 } else {
     catalogCol = CatalogWorker.getAllCatalogIds(request);
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-    if (UtilValidate.isEmpty(currentCatalogId)) {
+    if (UtilValidate.isEmpty(currentCatalogId) && catalogCol.size() > 0) {
         currentCatalogId = (String) catalogCol.get(0);
     }
     currentCatalogName = CatalogWorker.getCatalogName(request, currentCatalogId);

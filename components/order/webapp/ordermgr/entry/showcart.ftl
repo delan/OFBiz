@@ -139,6 +139,9 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
                   <td align="right" valign="middle">
                      <a href="<@ofbizUrl>/RequirementsForSupplier</@ofbizUrl>" class="buttontext">[${uiLabelMap.Requirements}]</a>
                   </td>
+                  <td align="right" valign="middle">
+                     <a href="<@ofbizUrl>/orderagreements</@ofbizUrl>" class="buttontext">[${uiLabelMap.AgreementsAndCurrency}]</a>
+                  </td>
                   </#if>
 
                   <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
@@ -373,7 +376,7 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()?exists>
                     ${cartLine.getQuantity()?string.number}
                 <#else>
-                    <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}">
+                    <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()}">
                 </#if>
               </div>
             </td>
@@ -382,7 +385,7 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
                 <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
                   <@ofbizCurrency amount=cartLine.getBasePrice() isoCode=currencyUomId/>
                 <#else>
-                  <input size="6" class="inputBox" type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}">
+                  <input size="6" class="inputBox" type="text" name="price_${cartLineIndex}" value="<@ofbizCurrency amount=cartLine.getBasePrice() isoCode=currencyUomId/>">
                 </#if>
               </div>
             </td>

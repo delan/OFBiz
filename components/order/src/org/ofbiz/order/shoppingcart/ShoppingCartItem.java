@@ -95,6 +95,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private double reservNthPPPerc = 0.0;    // for reservations: extra % Nth person    
     private double listPrice = 0.0;
     private double selectedAmount = 0.0;
+    private String requirementId = null;
     private Map attributes = null;
     private String orderItemSeqId = null;       
     private Locale locale = null;
@@ -535,6 +536,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.listPrice = item.getListPrice();
         this.reserv2ndPPPerc = item.getReserv2ndPPPerc();
         this.reservNthPPPerc = item.getReservNthPPPerc();
+        this.requirementId = item.getRequirementId();
         this.isPromo = item.getIsPromo();
         this.promoQuantityUsed = item.promoQuantityUsed;
         this.locale = item.locale;
@@ -1104,6 +1106,16 @@ public class ShoppingCartItem implements java.io.Serializable {
         if (attributes != null && attributes.containsKey("shoppingListItemSeqId"))
             return (String) attributes.get("shoppingListItemSeqId");
         return null;
+    }
+
+    /** Sets the requirementId. */
+    public void setRequirementId(String requirementId) {
+        this.requirementId = requirementId;
+    }
+
+    /** Returns the requirementId. */
+    public String getRequirementId() {
+        return this.requirementId;
     }
 
     /** Returns true if shipping charges apply to this item. */
