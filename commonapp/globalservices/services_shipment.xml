@@ -12,10 +12,10 @@
         <description>Create Shipment</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true">
-        	<exclude field-name="createdDate"/>
-        	<exclude field-name="createdByUserLogin"/>
-        	<exclude field-name="lastModifiedDate"/>
-        	<exclude field-name="lastModifiedByUserLogin"/>
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
     </service>
     <service name="updateShipment" default-entity-name="Shipment" engine="simple"
@@ -23,10 +23,10 @@
         <description>Update Shipment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true">
-        	<exclude field-name="createdDate"/>
-        	<exclude field-name="createdByUserLogin"/>
-        	<exclude field-name="lastModifiedDate"/>
-        	<exclude field-name="lastModifiedByUserLogin"/>
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
     </service>
     <service name="deleteShipment" default-entity-name="Shipment" engine="simple"
@@ -35,6 +35,15 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <service name="issueOrderItemInventoryResToShipment" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="issueOrderItemInventoryResToShipment" auth="true">
+        <description>Add an OrderItemInventoryRes to a Shipment</description>
+        <auto-attributes entity-name="Shipment" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="shipmentItemSeqId" type="String" mode="INOUT" optional="true"/>
+    </service>
+    
     <!-- ShipmentItem Services -->
     <service name="createShipmentItem" default-entity-name="ShipmentItem" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentItem" auth="true">
@@ -61,7 +70,7 @@
         <description>Create ShipmentPackage</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true">
-        	<exclude field-name="dateCreated"/>
+            <exclude field-name="dateCreated"/>
         </auto-attributes>
         <override name="shipmentPackageSeqId" mode="INOUT" optional="true"/>
     </service>
@@ -154,8 +163,7 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-	<!-- ============================================================== -->
-
+    <!-- ============================================================== -->
     <!-- ItemIssuance Services -->
     <service name="createItemIssuance" default-entity-name="ItemIssuance" engine="simple"
             location="org/ofbiz/commonapp/shipment/issuance/IssuanceServices.xml" invoke="createItemIssuance" auth="true">
@@ -194,59 +202,59 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-	<!-- ============================================================== -->
+    <!-- ============================================================== -->
     <!-- Receipt Services -->
     <service name="interfaceShipmentReceipt" engine="interface" location="" invoke="">
-    	<description>ShipmentReceipt Interface</description>
-    	<attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
-    	<attribute name="productId" type="String" mode="IN" optional="false"/>
-    	<attribute name="shipmentPackageId" type="String" mode="IN" optional="true"/>
-    	<attribute name="orderId" type="String" mode="IN" optional="true"/>
-    	<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
-    	<attribute name="returnId" type="String" mode="IN" optional="true"/>
-    	<attribute name="returnItemSeqId" type="String" mode="IN" optional="true"/>
-    	<attribute name="rejectionId" type="String" mode="IN" optional="true"/>
-    	<attribute name="datetimeReceived" type="Timestamp" mode="IN" optional="true"/>
-    	<attribute name="itemDescription" type="String" mode="IN" optional="true"/>
-    	<attribute name="quantityAccepted" type="Double" mode="IN" optional="false"/>
-    	<attribute name="quantityRejected" type="Double" mode="IN" optional="false"/>
+        <description>ShipmentReceipt Interface</description>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentPackageId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="returnId" type="String" mode="IN" optional="true"/>
+        <attribute name="returnItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="rejectionId" type="String" mode="IN" optional="true"/>
+        <attribute name="datetimeReceived" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="itemDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="quantityAccepted" type="Double" mode="IN" optional="false"/>
+        <attribute name="quantityRejected" type="Double" mode="IN" optional="false"/>
     </service>
     <service name="createShipmentReceipt" engine="simple"
-    		location="org/ofbiz/commonapp/shipment/receipt/ShipmentReceiptServices.xml" invoke="createShipmentReceipt" auth="true">
-    	<description>Creates a ShipmentReceipt Record</description>
-		<implements service="interfaceShipmentReceipt"/>    	
-    	<attribute name="receiptId" type="String" mode="OUT" optional="false"/>
+            location="org/ofbiz/commonapp/shipment/receipt/ShipmentReceiptServices.xml" invoke="createShipmentReceipt" auth="true">
+        <description>Creates a ShipmentReceipt Record</description>
+        <implements service="interfaceShipmentReceipt"/>        
+        <attribute name="receiptId" type="String" mode="OUT" optional="false"/>
     </service>
     
     <service name="prepareInventoryReceipt" engine="simple"
-    		location="org/ofbiz/commonapp/shipment/receipt/ShipmentReceiptServices.xml" invoke="prepareInventoryReceipt" auth="true">
-    	<description>Prepare Receipt Form for Inventory Item</description>
-    	<attribute name="quantityAccepted" type="Double" mode="IN" optional="false"/>
-    	<attribute name="inventoryItemTypeId" type="String" mode="IN" optional="false"/>
-    	<attribute name="quantityOnHand" type="Double" mode="OUT" optional="true"/>
-    	<attribute name="availableToPromise" type="Double" mode="OUT" optional="true"/>
+            location="org/ofbiz/commonapp/shipment/receipt/ShipmentReceiptServices.xml" invoke="prepareInventoryReceipt" auth="true">
+        <description>Prepare Receipt Form for Inventory Item</description>
+        <attribute name="quantityAccepted" type="Double" mode="IN" optional="false"/>
+        <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantityOnHand" type="Double" mode="OUT" optional="true"/>
+        <attribute name="availableToPromise" type="Double" mode="OUT" optional="true"/>
     </service>
     <service name="receiveInventoryProduct" engine="group" location="receiveInventoryProduct" invoke="" auth="true">
-    	<attribute name="inventoryItemId" type="String" mode="INOUT" optional="true"/>
-    	<attribute name="availableToPromise" type="Double" mode="INOUT" optional="true"/>
-    	<attribute name="quantityOnHand" type="Double" mode="INOUT" optional="true"/>
+        <attribute name="inventoryItemId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="availableToPromise" type="Double" mode="INOUT" optional="true"/>
+        <attribute name="quantityOnHand" type="Double" mode="INOUT" optional="true"/>
     </service>
     
     <service name="interfaceShipmentReceiptRole" engine="interface" location="" invoke="">
-    	<description>Interface for ShipmentReceiptRole</description>
-    	<attribute name="receiptId" type="String" mode="IN" optional="false"/>
-    	<attribute name="partyId" type="String" mode="IN" optional="false"/>
-    	<attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+        <description>Interface for ShipmentReceiptRole</description>
+        <attribute name="receiptId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="createShipmentReceiptRole" engine="simple"
-    		location="org/ofbiz/commonapp/shipment/receipt/ShipmentReceiptServices.xml" invoke="createShipmentReceiptRole" auth="true">
-    	<description>Create a ShipmentReceipt Role entry</description>
-    	<implements service="interfaceShipmentReceiptRole"/>
+            location="org/ofbiz/commonapp/shipment/receipt/ShipmentReceiptServices.xml" invoke="createShipmentReceiptRole" auth="true">
+        <description>Create a ShipmentReceipt Role entry</description>
+        <implements service="interfaceShipmentReceiptRole"/>
     </service>
     <service name="removeShipmentReceiptRole" engine="simple"
-    		location="org/ofbiz/commonapp/shipment/receipt/ShipmentReceiptServices.xml" invoke="removeShipmentReceiptRole" auth="true">
-    	<description>Remove a ShipmentReceipt Role entry</description>
-    	<implements service="interfaceShipmentReceiptRole"/>
+            location="org/ofbiz/commonapp/shipment/receipt/ShipmentReceiptServices.xml" invoke="removeShipmentReceiptRole" auth="true">
+        <description>Remove a ShipmentReceipt Role entry</description>
+        <implements service="interfaceShipmentReceiptRole"/>
     </service>
 
     <!-- Shipment Estimate (Rate) Services -->
@@ -277,12 +285,12 @@
     </service>
 
     <service name="removeShipmentEstimate" engine="java"
-                location="org.ofbiz.commonapp.shipment.shipment.ShipmentServices" invoke="removeShipmentEstimate" auth="true">
+            location="org.ofbiz.commonapp.shipment.shipment.ShipmentServices" invoke="removeShipmentEstimate" auth="true">
         <description>Remove Shipment Estimate</description>
         <attribute name="shipmentCostEstimateId" type="String" mode="IN" optional="false"/>
     </service>
     
-	<!-- Picklist Data Services -->    
+    <!-- Picklist Data Services -->    
     <service name="getPicklistData" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/PicklistServices.xml" invoke="getPicklistData">
         <description>Gets Picklist Data</description>
