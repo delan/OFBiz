@@ -22,14 +22,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.36 2004/05/01 12:55:06 jonesde Exp $
+ *  $Id: build.xml,v 1.37 2004/05/22 21:16:31 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
 
     <filelist id="ordered-subdirs" dir="components"
-        files="minerva/build.xml,jotm/build.xml,
-               entity/build.xml,jetty/build.xml,
+        files="minerva/build.xml,jotm/build.xml,entity/build.xml
+               catalina/build.xml,jetty/build.xml,
                security/build.xml,service/build.xml,entityext/build.xml,
                datafile/build.xml,rules/build.xml,minilang/build.xml,
                common/build.xml,workflow/build.xml,shark/build.xml,
@@ -111,10 +111,6 @@
         <mkdir dir="data"/>
         <mkdir dir="logs"/>
 
-        <echo message="[build]"/>
-        <echo message="[build] ========================================="/>
-        <echo message="[build] ========== Building base tools =========="/>
-        <echo message="[build] ========================================="/>
         <ant dir="base" inheritAll="false"/>
         <!-- copy the ofbiz.jar file -->
         <copy todir="${basedir}">
