@@ -266,21 +266,5 @@
             <result-to-result result-name="contactMechId"/>
             <result-to-request result-name="contactMechId"/>
         </call-service>        	
-    </simple-method>    
-     
-    <simple-method method-name="createPartyPostalAddressAndPurpose" short-description="Create Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/PartyContactMechMapProcs.xml"
-                processor-name="postalAddress" in-map-name="parameters" out-map-name="addressContext"/>                
-        <check-errors/>
-        <field-to-field map-name="parameters" field-name="paymentMethodId" to-map-name="addressContext"/>
-        <call-service service-name="createPartyPostalAddress" in-map-name="addressContext">
-            <default-message>Postal Address successfully created.</default-message>
-            <result-to-field result-name="contactMechId" map-name="parameters"/>
-            <result-to-request result-name="contactMechId"/></call-service>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/PartyContactMechMapProcs.xml"
-                processor-name="createPartyContactMechPurpose" in-map-name="parameters" out-map-name="purposeContext"/>
-        <check-errors/>
-        <call-service service-name="createPartyContactMechPurpose" in-map-name="purposeContext">
-            <default-message>Postal Address successfully created.</default-message></call-service>
-    </simple-method>          
+    </simple-method>             
 </simple-methods>
