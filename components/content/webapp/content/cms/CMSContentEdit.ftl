@@ -20,9 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
+
 
 <#include "publishlib.ftl" />
 <#--
@@ -78,6 +79,7 @@ ${menuWrapper.renderMenuString()}
   </TR>
 </TABLE>
 
+<!--
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -131,9 +133,16 @@ ${summaryData?if_exists}
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Article</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
-${textData?if_exists}
-<div></td></tr>
+    <tr>
+      <td align=right nowrap><div class='tabletext'><b>Article</b></div></td>
+      <td>&nbsp;</td><td align=left>
+contentId:${contentId}
+        <div class='tabletext'>
+           <@renderSubContentCache subContentId=contentId?if_exists />
+        <div>
+
+      </td>
+    </tr>
   </table>
           </td>
         </tr>
@@ -141,6 +150,13 @@ ${textData?if_exists}
     </TD>
   </TR>
 </TABLE>
+-->
+<#if currentValue?has_content>
+    <@renderTextData contentId=currentValue.contentId textData=textData contentIdTo="" mapKey="" />
+</#if>
+<#list textList as map>
+    <@renderTextData contentId=map.entity.contentId textData=map.text contentIdTo=map.entity.contentIdTo mapKey=map.entity.caMapKey?if_exists />
+</#list>
 <#-- ============================================================= -->
 
 <br>
@@ -228,6 +244,22 @@ ${textData?if_exists}
                        <#assign rowCount=rowCount + 1/>
                     </#list>
                     <tr>
+                      <td valign="middle" align="left">
+                        <div class="boxhead"><input type="text" name="fieldValue0_o_${rowCount}" value=""/>
+                          <a href="javascript:call_fieldlookup3('<@ofbizUrl>/LookupFeature</@ofbizUrl>')">
+                            <img src="<@ofbizContentUrl>/content/images/fieldlookup.gif</@ofbizContentUrl>" width="16" height="16" border="0" alt="Lookup">
+                          </a>
+                        </div>
+                      </td>
+                          <input type="hidden" name="fieldName0_o_${rowCount}" value="productFeatureId"/>
+                          <input type="hidden" name="fieldValue0_o_${rowCount}" value=""/>
+                          <input type="hidden" name="fieldName1_o_${rowCount}" value="dataResourceId"/>
+                          <input type="hidden" name="fieldValue1_o_${rowCount}" value="${dataResourceId}"/>
+                          <input type="hidden" name="entityName_o_${rowCount}" value="ProductFeatureDataResource"/>
+                          <input type="hidden" name="pkFieldCount_o_${rowCount}" value="2"/>
+                          <#assign rowCount=rowCount + 1/>
+                    </tr>
+                    <tr>
                       <td colspan="1">
                           <input type="submit" name="submitBtn" value="Update"/>
                       </td>
@@ -275,3 +307,70 @@ ${textData?if_exists}
   </TR>
 </TABLE>
 
+
+<#--
+<#macro contentTree currentValue >
+
+    <#assign contentId = currentValue.contentId/>
+    <#assign dataResourceId = currentValue.dataResourceId/>
+    <#assign currentTextData = "" />
+    <#if dataResourceId?has_content>
+        <#assign currentTextData=Static["org.ofbiz.content.data.DataResourceWorker"].renderDataResourceAsTextCache(delegator, dataResourceId, (Map)null, (GenericValue)null, (Locale)null, (String)null) />
+        <#if currentTextData?has_content>
+            <@renderTextData contentId=contentId textData=currentTextData />
+        </#if>
+    </#if>
+    <#assign contentAssocViewList =Static["org.ofbiz.content.content.ContentWorker"].getContentAssocViewList(delegator, contentId, null, "SUB_CONTENT", null, null)?if_exists />
+    <#list contentAssocViewList as contentAssocDataResourceView>
+        <#assign contentId2 = contentAssocDataResourceView.contentId/>
+        <#assign mapKey = contentAssocDataResourceView.mapKey/>
+        <#assign dataResourceId2 = contentAssocDataResourceView.dataResourceId/>
+        <#assign currentTextData=Static["org.ofbiz.content.data.DataResourceWorker"].renderDataResourceAsTextCache(delegator, dataResourceId2, null, null, null, null) />
+        <#if currentTextData?has_content>
+            <@renderTextData contentId=contentId2 contentIdTo=contentId mapKey=mapKey textData=currentTextData />
+        </#if>
+    </#list>
+</#macro>
+-->
+
+<#macro renderTextData contentId textData contentIdTo="" mapKey="" >
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Content Text</div>
+          </td>
+          <td valign="middle" align="right">
+            <#assign paramClause=""/>
+            <#if contentIdTo?has_content>
+                <#assign paramClause="&contentIdTo=" + contentIdTo/>
+            </#if>
+            <#assign paramClause2=""/>
+            <#if mapKey?has_content>
+                <#assign paramClause2="&mapKey=" + mapKey/>
+            </#if>
+            <a href="<@ofbizUrl>/EditAddContent?subContentId=${contentId?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+  <table width="100%" border="0" cellpadding="0" cellspacing='0'>
+    <tr><td align=right nowrap><div class='tabletext'><b>Data</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
+${textData?if_exists}
+<div></td></tr>
+  </table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+</#macro>

@@ -296,3 +296,4 @@ function call_fieldlookup3(view_name) {
 </SCRIPT>
 
 </#macro>
+
