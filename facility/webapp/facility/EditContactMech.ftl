@@ -39,7 +39,7 @@
     <p class="head1">Create New Contact Information</p>
     <form method="get" action='<@ofbizUrl>/EditContactMech</@ofbizUrl>' name="createcontactmechform">
       <input type='hidden' name='facilityId' value='${facilityId}'>
-      <input type='hidden' name='DON_PAGE' value='${donePage?if_exists}'>
+      <input type='hidden' name='DONE_PAGE' value='${donePage?if_exists}'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
           <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
@@ -75,7 +75,7 @@
         <#if paymentMethodId?exists><input type='hidden' name='paymentMethodId' value='${paymentMethodId}'></#if>
     <#else>
       <p class="head1">Edit Contact Information</p>
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class='buttontext'>[Go&nbsp;Back]</a>
+    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='buttontext'>[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
       

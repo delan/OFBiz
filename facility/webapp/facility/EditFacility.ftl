@@ -30,6 +30,7 @@
 <#if facility?exists && facilityId?has_content>
   <div class='tabContainer'>
     <a href="<@ofbizUrl>/EditFacility?facilityId=${facilityId}</@ofbizUrl>" class="tabButtonSelected">Facility</a>
+    <a href="<@ofbizUrl>/ViewContactMechs?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Contact Mechs</a>
     <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Groups</a>
     <a href="<@ofbizUrl>/FindFacilityLocations?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Locations</a>
     <a href="<@ofbizUrl>/EditFacilityRoles?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Roles</a>

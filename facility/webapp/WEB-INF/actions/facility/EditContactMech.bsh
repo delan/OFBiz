@@ -59,7 +59,7 @@ if(paymentMethodId != null) context.put("paymentMethodId", paymentMethodId);
 
 String donePage = request.getParameter("DONE_PAGE");
 if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
-if (donePage == null || donePage.length() <= 0) donePage = "EditContactMech";
+if (donePage == null || donePage.length() <= 0) donePage = "ViewContactMechs";
 context.put("donePage", donePage);
 
 String cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");
