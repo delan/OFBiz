@@ -69,6 +69,15 @@ public abstract class GenericDevice implements JposDevice {
         control = null;
     }
 
+    public boolean isEnabled() {
+        try {
+            return control.getDeviceEnabled();
+        } catch (JposException e) {
+            Debug.logError(e, module);
+            return false;
+        }
+    }
+
     public void enable(boolean enable) {
         try {
             control.setDeviceEnabled(enable);

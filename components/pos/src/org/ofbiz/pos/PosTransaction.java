@@ -126,6 +126,14 @@ public class PosTransaction implements Serializable {
         return this.transactionId;
     }
 
+    public String getTerminalId() {
+        return this.terminalId;
+    }
+
+    public String getFacilityId() {
+        return this.facilityId;
+    }
+
     public boolean isMgr() {
         return this.isMgr;
     }
@@ -455,6 +463,13 @@ public class PosTransaction implements Serializable {
 
         // attach the party ID to the cart
         cart.setOrderPartyId(partyId);
+
+        // validate payment methods
+        output.print("Validating...");
+        Map valRes = ch.validatePaymentMethods();
+        if (valRes != null && ServiceUtil.isError(valRes)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(valRes));
+        }
 
         // store the "order"
         output.print("Saving sale...");

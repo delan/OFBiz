@@ -50,7 +50,7 @@
 
         <!-- col 6 -->
         <Button name="mgrPopDrwr" x="0" y="310" w="100" h="60" style="posButton" content="OPEN DRAWER" alignment="Center"/>
-        <Button name="" x="102" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="mgrTotals" x="102" y="310" w="100" h="60" style="posButton" content="TOTALS" alignment="Center"/>
         <Button name="" x="204" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
