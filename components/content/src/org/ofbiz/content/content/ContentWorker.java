@@ -617,10 +617,9 @@ public class ContentWorker {
         if (Debug.infoOn()) Debug.logInfo(" assocExprList:" + assocExprList , "");
         List relatedAssocs = delegator.findByCondition("ContentAssoc", assocExprList, new ArrayList(), UtilMisc.toList("-fromDate"));
         if (Debug.infoOn()) Debug.logInfo(" relatedAssoc:" + relatedAssocs.size() , "");
-        for (int i = 0; i < relatedAssocs.size(); i++) {
-            GenericValue a = (GenericValue) relatedAssocs.get(i);
-
-        }
+        //for (int i = 0; i < relatedAssocs.size(); i++) {
+            //GenericValue a = (GenericValue) relatedAssocs.get(i);
+        //}
         return relatedAssocs;
     }
 
@@ -1254,7 +1253,7 @@ public class ContentWorker {
 
         List targetOperationList = (List)context.get("targetOperationList");
         String targetOperationString = (String)context.get("targetOperationString");
-        if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, targetOperationString(0):" + targetOperationString, "");
+        if (Debug.infoOn()) Debug.logInfo("in prepTargetOperationList, targetOperationString(0):" + targetOperationString, "");
         if (UtilValidate.isNotEmpty(targetOperationString) ) {
             List opsFromString = StringUtil.split(targetOperationString, "|");
             if (targetOperationList == null || targetOperationList.size() == 0) {
@@ -1268,7 +1267,7 @@ public class ContentWorker {
                 md ="_CREATE";
             targetOperationList.add("CONTENT" + md);
         }
-        if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, targetOperationList(0):" + targetOperationList, "");
+        if (Debug.infoOn()) Debug.logInfo("in prepTargetOperationList, targetOperationList(0):" + targetOperationList, "");
         return targetOperationList;
     }
 
@@ -1276,7 +1275,7 @@ public class ContentWorker {
 
         List contentPurposeList = (List)context.get("contentPurposeList");
         String contentPurposeString = (String)context.get("contentPurposeString");
-        if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeString(0):" + contentPurposeString, "");
+        if (Debug.infoOn()) Debug.logInfo("in prepContentPurposeList, contentPurposeString(0):" + contentPurposeString, "");
         if (UtilValidate.isNotEmpty(contentPurposeString) ) {
             List purposesFromString = StringUtil.split(contentPurposeString, "|");
             if (contentPurposeList == null || contentPurposeList.size() == 0) {
@@ -1287,7 +1286,7 @@ public class ContentWorker {
         if (contentPurposeList == null || contentPurposeList.size() == 0) {
             contentPurposeList = new ArrayList();
         }
-        if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeList(0):" + contentPurposeList, "");
+        if (Debug.infoOn()) Debug.logInfo("in prepContentPurposeList, contentPurposeList(0):" + contentPurposeList, "");
         return contentPurposeList;
     }
 

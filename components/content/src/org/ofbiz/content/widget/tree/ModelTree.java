@@ -41,6 +41,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.widget.screen.ModelScreen;
@@ -51,6 +52,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.content.ContentManagementWorker;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import javax.servlet.http.HttpServletRequest;
@@ -374,7 +376,35 @@ public class ModelTree {
         public boolean hasChildren(Map context) {
 
              boolean hasChildren = false;
-                 if (Debug.infoOn()) Debug.logInfo(" subNodeList:" + subNodeList, module);
+             Long nodeCount = null;
+       		Object obj = context.get("childBranchCount");
+       		if (obj != null)
+                nodeCount = (Long)obj;
+             if (nodeCount == null) {
+                 GenericDelegator delegator = (GenericDelegator)context.get("delegator");
+                 String contentId = (String)context.get("contentId");
+                 if (UtilValidate.isNotEmpty(contentId)) {
+                 	try {
+                 		int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, contentId, UtilMisc.toList("SUB_CONTENT"));
+                 		GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+                 		obj = content.get("childBranchCount");
+                        if (obj != null)
+                            nodeCount = (Long)obj;
+                 	} catch(GenericEntityException e) {
+                 		Debug.logError(e, module);
+                		throw new RuntimeException(e.getMessage());
+                 	}
+                 }
+             }
+             if (nodeCount != null && nodeCount.intValue() > 0) 
+             	hasChildren = true;
+                
+             
+             return hasChildren;
+        }
+
+        public List getChildren(Map context) {
+      
              Iterator nodeIter = subNodeList.iterator();
              while (nodeIter.hasNext()) {
                  ModelSubNode subNode = (ModelSubNode)nodeIter.next();
@@ -390,7 +420,6 @@ public class ModelTree {
                      if (Debug.infoOn()) Debug.logInfo(" hasChildren, val:" + val.getPrimaryKey(), module);
                      Object [] arr = {node,val};
                      subNodeValues.add(arr);
-                     hasChildren = true;
                  }
                  if (dataIter instanceof EntityListIterator) {
                  	try {
@@ -401,11 +430,6 @@ public class ModelTree {
                  }
                  
              }
-             return hasChildren;
-        }
-
-        public List getChildren(Map context) {
-      
             return new ArrayList(subNodeValues);
         }
 

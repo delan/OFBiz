@@ -647,17 +647,19 @@ public class ContentServices {
         context.put("targetOperationList", targetOperationList);
         context.put("contentPurposeList", contentPurposeList);
 
-        // This section guesses how contentId should be used (From or To) if
-        // only a contentIdFrom o contentIdTo is passed in
-        String contentIdFrom = (String) context.get("contentId");
-        String contentIdTo = (String) context.get("contentIdTo");
-        String contentId = (String) context.get("contentId");
-        String contentAssocTypeId = (String) context.get("contentAssocTypeId");
-        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        GenericValue pk = delegator.makeValue("ContentAssoc",null);
+        pk.setAllFields(context, false, null, new Boolean(true));
+        pk.setAllFields(context, false, "ca", new Boolean(true));
+        //String contentIdFrom = (String) context.get("contentId");
+        //String contentIdTo = (String) context.get("contentIdTo");
+        //String contentId = (String) context.get("contentId");
+        //String contentAssocTypeId = (String) context.get("contentAssocTypeId");
+        //Timestamp fromDate = (Timestamp) context.get("fromDate");
 
         GenericValue contentAssoc = null;
         try {
-            contentAssoc = delegator.findByPrimaryKey("ContentAssoc", UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo, "contentAssocTypeId", contentAssocTypeId, "fromDate", fromDate));
+            //contentAssoc = delegator.findByPrimaryKey("ContentAssoc", UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo, "contentAssocTypeId", contentAssocTypeId, "fromDate", fromDate));
+            contentAssoc = delegator.findByPrimaryKey("ContentAssoc", pk);
         } catch (GenericEntityException e) {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
@@ -681,8 +683,8 @@ public class ContentServices {
         serviceInMap.put("targetOperationList", targetOperationList);
         serviceInMap.put("contentPurposeList", contentPurposeList);
         serviceInMap.put("entityOperation", context.get("entityOperation"));
-        serviceInMap.put("contentIdTo", contentIdTo);
-        serviceInMap.put("contentIdFrom", contentIdFrom);
+        serviceInMap.put("contentIdTo", contentAssoc.get("contentIdTo"));
+        serviceInMap.put("contentIdFrom", contentAssoc.get("contentId"));
 
         Map permResults = null;
         try {

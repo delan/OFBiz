@@ -45,6 +45,9 @@
     <ContentType contentTypeId="STRUCTURE_DEF" description="Structure Definition (like DTD)" hasTable="N" parentTypeId=""/>
     <ContentType contentTypeId="TXFORM_DEF" description="Transformation Definition (like XSLT)" hasTable="N" parentTypeId=""/>
     <ContentType contentTypeId="DOCUMENT" description="Document" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="OUTLINE_NODE" description="Outline Node" hasTable="N" parentTypeId="DOCUMENT"/>
+    <ContentType contentTypeId="PAGE_NODE" description="Page Node" hasTable="N" parentTypeId="DOCUMENT"/>
+    <ContentType contentTypeId="SUBPAGE_NODE" description="Sub Page Node" hasTable="N" parentTypeId="DOCUMENT"/>
     <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
 
     <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
