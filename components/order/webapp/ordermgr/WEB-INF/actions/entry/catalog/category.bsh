@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
  */
 
@@ -38,8 +38,8 @@ if (productCategoryId == null)
 
 category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 if (category != null) {
-    if (category.get("detailTemplate") != null) 
-        detailTemplate = category.getString("detailTemplate");
+    //if (category.get("detailTemplate") != null) 
+        //detailTemplate = category.getString("detailTemplate");
     content = context.get("page");
     content.setProperty("title", category.getString("description"));
     context.put("metaDescription", category.getString("description"));
