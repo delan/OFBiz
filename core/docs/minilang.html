@@ -11,7 +11,7 @@
 <br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
-<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
+<A href="http://sf.net/projects/ofbiz"><IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
 Last Updated: January 14, 2002<br>
@@ -23,7 +23,23 @@ $Id$ <br>
 <ul>
   <li><a href="#Introduction">Introduction</a>
   <li><a href="#Simple_Map_Processor">The Simple Map Processor Mini-Language</a>
-  <li><a href="#Simple_Event">The Simple Event Mini-Language</a>
+    <ul>
+    <li><a href='#MapOverview'>Simple Map Processor Overview</a>
+    <li><a href='#MakeInString'>Make In String Operations</a>
+    <li><a href='#Process'>Process Field Operations</a>
+    <li><a href='#MapExample'>Simple Map Processors Example</a>
+    </ul>
+  <li><a href="#Simple_Method">The Simple Method Mini-Language</a>
+    <ul>
+    <li><a href='#MethodOverview'>Simple Method Overview</a>
+    <li><a href='#Call'>Call Operations</a>
+    <li><a href='#Event'>Event Specific Operations</a>
+    <li><a href='#Service'>Service Specific Operations</a>
+    <li><a href='#Environment'>Method Environment Operations</a>
+    <li><a href='#Entity'>Entity Engine Operations</a>
+    <li><a href='#Conditional'>Conditional (If) Operations</a>
+    <li><a href='#MethodExample'>Simple Methods Example</a>
+    </ul>
 </ul>
 
 <br>
@@ -51,13 +67,44 @@ In Open For Business the Mini-Languages are expressed as XML files to simplify t
 learning and manipulation of the syntax, in addition to making the Mini-Languages
 easier to write and extend.</p>
 
+<p>The DTD for the simple-map-processor and simple-method XML files is 
+in the distribution in <b>ofbiz/core/docs/xmldefs/ofbiz/simple-methods.dtd</b> or
+on the website at <a href='http://www.ofbiz.org/dtds/simple-methods.dtd'>www.ofbiz.org/dtds/simple-methods.dtd</a>.
+These are combined into a single DTD to make it easy to use inlined 
+simple-map-processors inside a simple-method.</p>
+
+<p>To specify the DOCTYPE for a simple-map-processors XML file use the following:</p>
+<pre>
+&lt;!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
+</pre>
+
+<p>To specify the DOCTYPE for a simple-methods XML file use the following:</p>
+<pre>
+&lt;!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
+</pre>
+
+<p>The only difference between the two DOCTYPE definitions is the root node to use
+from the DTD.</p>
+
 <hr>
 <h3><a name="Simple_Map_Processor">The Simple Map Processor Mini-Language</a></h3>
+<ul>
+<li><a href='#MapOverview'>Simple Map Processor Overview</a>
+<li><a href='#MakeInString'>Make In String Operations</a>
+<li><a href='#Process'>Process Field Operations</a>
+<li><a href='#MapExample'>Simple Map Processors Example</a>
+</ul>
 <hr>
+
+<h4><a name='MapOverview'>Simple Map Processor Overview</a></h4>
+
 <p>The Simple Map Processor Mini-Language performes two primary tasks: validation
 and conversion. It does this in a context of moving values from one Map to another. The
 input map will commonly contain Strings, but can contain other object types like Integer, Long,
 Float, Double, java.sql.Date, Time, and Timestamp.</p>
+
+<hr>
+<h4><a name='MakeInString'>Make In String Operations</a></h4>
 
 <p><b><u>make-in-string</u></b></p>
 <p>In addition to dealing with the fields already in the incoming Map you can build 
@@ -66,6 +113,9 @@ many make-in-string tags, and they must all come before the process tags. Inside
 make-in-string is a list of snippets to concatenate together to make the final String. 
 Each snippet can be another field in the in-Map (in-field element), a value from a properties 
 file (property element), or a constant (constant element).</p>
+
+<hr>
+<h4><a name='Process'>Process Field Operations</a></h4>
 
 <p><b><u>process</u></b></p>
 <p>The process tag is used to contain the operations to be done on the specified 
@@ -133,8 +183,11 @@ converted to the type specified in the type attribute. The format attribute
 can be used to specify the format for date/time fields. These two tags are
 in addition to all of the the attributes in the copy tag.</p>
 
-<p><b><u>Example</u></b></p>
+<hr>
+<h4><a name='MapExample'>Simple Map Processors Example</a></h4>
 <pre>
+&lt;!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
+
 &lt;simple-map-processors&gt;
   &lt;simple-map-processor name="update"&gt;
     &lt;make-in-string field="estimatedStartDate"&gt;
@@ -166,32 +219,147 @@ in addition to all of the the attributes in the copy tag.</p>
 </pre>
 
 <hr>
-<h3><a name="Simple_Event">The Simple Event Mini-Language</a></h3>
+<h3><a name="Simple_Method">The Simple Method Mini-Language</a></h3>
+<ul>
+<li><a href='#MethodOverview'>Simple Method Overview</a>
+<li><a href='#Call'>Call Operations</a>
+<li><a href='#Event'>Event Specific Operations</a>
+<li><a href='#Service'>Service Specific Operations</a>
+<li><a href='#Environment'>Method Environment Operations</a>
+<li><a href='#Entity'>Entity Engine Operations</a>
+<li><a href='#Conditional'>Conditional (If) Operations</a>
+<li><a href='#MethodExample'>Simple Methods Example</a>
+</ul>
 <hr>
-<p>The Simple Event Mini-Language is a simple way to implement an event
-that is invoked by the Control Servlet when it is attached to a request.
-A Simple Event can be invoked through the static methods on the SimpleEvent
-class, or through a configuration in the controller configuration XML file
-as follows:</p>
+
+<h4><a name='MethodOverview'>Simple Method Overview</a></h4>
+
+<p>The Simple Method Mini-Language is a simple way to implement an event
+that is invoked by the Control Servlet or a service that is invoked by the Service Engine.
+A Simple Method can be invoked through the static methods on the SimpleMethod
+class, or as an event through an entry in the controller configuration XML file
+like the following:</p>
 
 <pre>
-        &lt;event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="update"/&gt;
+    &lt;event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="update"/&gt;
 </pre>
 
-<p>The path in the case of a Simple Event is the classpath and filename of the XML file.</p>
-<p>In this Mini-Language you can invoke Simple Map Processors and Services,
-and create error and event messages to put in the request for the view to display.
-You can also put other values into request or session attributes. One of the Maps
-available when the Simple Event starts is the request parameters map. The name
-is specified in the parameter-map-name attribute of the simple-event tag. The default
-map-name is "parameters".</p>
+<p>or as a service through an entry in a services.xml file like the following:
 
-<p><b><u>simple-map-processor</u></b></p>
-<p>The simple-map-processor tag invokes a simple map processor from an existing 
+<pre>
+    &lt;service name="createPartyRole" engine="simple"
+            location="org/ofbiz/commonapp/party/party/PartyRoleServices.xml" invoke="createPartyRole" auth="true"&gt;
+        &lt;description&gt;Create a Party Role (add a Role to a Party)&lt;/description&gt;
+        &lt;attribute name="partyId" type="String" mode="IN" optional="true"/&gt;
+        &lt;attribute name="roleTypeId" type="String" mode="IN" optional="false"/&gt;
+    &lt;/service&gt;
+</pre>
+
+<p>The path or location for a Simple Method is the classpath and filename of the XML file.</p>
+
+<p>In this Mini-Language you can invoke Simple Map Processors, Services and bsh scripts,
+perform entity related operations, and create messages to return to the caller.
+Speficic operations can be enclosed in if blocks to execute conditionally and
+values or fields can be copied around in the maps, lists and method environment.</p>
+
+<p>There are a number of tags which can be used to get and set attributes to/from
+a request or session object when called as an event or to set attributes in the
+result when called as a service. These operations are only applied when applicable. 
+In other words if you include a <b>env-to-request</b> operation it will only be
+invoked when the simple-method is called as an event and a <b>env-to-result</b>
+operation will only be invoked when the simple-method is called as a service.
+Everything else is the same when called as an event or a service which makes it
+easy to write flexible logic that can be mounted/applied in various ways.</p>
+
+<p>There are a number of objects that exist in the method environment when a
+simple-method starts or that are used as it executes to keep track of certain 
+information. Some will exist when called as an event or a service, these
+are marked in the following list. Each name can be overridden using an attribute
+on the <b>simple-method</b> tag. The defaults are listed below (you can also find 
+them in the DTD):</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Default&nbsp;Value</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>parameter-map-name</td><td>"parameters"</td>
+    <td>As event: copy of request parameters<br>As service: incoming context</td>
+</tr>
+<tr>
+    <td>event-request-object-name</td><td>"request"</td>
+    <td>(as event only)</td>
+</tr>
+<tr>
+    <td>event-response-code-name</td><td>"_response_code_"</td>
+    <td>(as event only)</td>
+</tr>
+<tr>
+    <td>event-error-message-name</td><td>"_error_message_"</td>
+    <td>(as event only)</td>
+</tr>
+<tr>
+    <td>event-event-message-name</td><td>"_event_message_"</td>
+    <td>(as event only)</td>
+</tr>
+<tr>
+    <td>service-response-message-name</td><td>"responseMessage"</td>
+    <td>(as service only)</td>
+</tr>
+<tr>
+    <td>service-error-message-name</td><td>"errorMessage"</td>
+    <td>(as service only)</td>
+</tr>
+<tr>
+    <td>service-error-message-list-name</td><td>"errorMessageList"</td>
+    <td>(as service only)</td>
+</tr>
+<tr>
+    <td>service-success-message-name</td><td>"successMessage"</td>
+    <td>(as service only)</td>
+</tr>
+<tr>
+    <td>service-success-message-list-name</td><td>"successMessageList"</td>
+    <td>(as service only)</td>
+</tr>
+<tr>
+    <td>delegator-name</td><td>"delegator"</td>
+    <td>A GenericDelegator object to use in the method</td>
+</tr>
+<tr>
+    <td>security-name</td><td>"security"</td>
+    <td>A Security object to use in the method</td>
+</tr>
+<tr>
+    <td>dispatcher-name</td><td>"dispatcher"</td>
+    <td>A LocalDispatcher object to use in the method</td>
+</tr>
+</table>
+
+<p>Okay, enough of the general stuff, here is a catalog and description of the 
+available operations.</p>
+
+<hr>
+<h4><a name='Call'>Call Operations</a></h4>
+
+<p><b><u>call-map-processor</u></b></p>
+<p>The call-map-processor tag invokes a simple map processor from an existing 
 map, creating a new map or adding to an existing one if the named out-map already
 exists. Resulting messages are added to the named list, and a new list is
 created if a list with the given name does not yet exist. Note that all lists 
 and maps exist in the same context and must have unique names.</p>
+
+<p><b><u>call-service</u></b></p>
+<p>The call-service tag invokes a service through the Service Engine. If the
+specified error code is returned from the service, the event is aborted
+and the transaction in the current thread is rolled back. Otherwise, the
+remaining operations are invoked.</p>
+
+<p><b><u>call-service-asynch</u></b></p>
+
+<p><b><u>call-bsh</u></b></p>
 
 <p><b><u>check-errors</u></b></p>
 <p>The message lists from invoking are not checked until the check-errors tag
@@ -199,11 +367,8 @@ is used. The named list is checked and if it contains any messages they are
 put in the servlet request object and the specified error code is returned to
 the control servlet.</p>
 
-<p><b><u>service</u></b></p>
-<p>The service tag invokes a service through the Service Engine. If the
-specified error code is returned from the service, the event is aborted
-and the transaction in the current thread is rolled back. Otherwise, the
-remaining operations are invoked.</p>
+<hr>
+<h4><a name='Event'>Event Specific Operations</a></h4>
 
 <p><b><u>field-to-request</u></b></p>
 <p>The field-to-request tag copies a field from a map to the specified request
@@ -213,35 +378,40 @@ attribute.</p>
 <p>The field-to-request tag copies a field from a map to the specified session
 attribute.</p>
 
-<p><b><u>Example</u></b></p>
+<hr>
+<h4><a name='Service'>Service Specific Operations</a></h4>
+
+<hr>
+<h4><a name='Environment'>Method Environment Operations</a></h4>
+
+<hr>
+<h4><a name='Entity'>Entity Engine Operations</a></h4>
+
+<hr>
+<h4><a name='Conditional'>Conditional (If) Operations</a></h4>
+
+<hr>
+<h4><a name='MethodExample'>Simple Methods Example</a></h4>
 <pre>
-&lt;simple-events&gt;
-    &lt;simple-event event-name="create" short-description="Create Work Effort"&gt;
-        &lt;simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+&lt;!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
+
+&lt;simple-methods&gt;
+    &lt;simple-method event-name="create" short-description="Create Work Effort"&gt;
+        &lt;call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
                 processor-name="update" in-map-name="parameters" out-map-name="context"/&gt;
-        &lt;check-errors&gt;
-            &lt;error-prefix&gt;&lt;![CDATA[The following errors occured:&lt;ul&gt;]]&gt;&lt;/error-prefix&gt;&lt;error-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/error-suffix&gt;
-            &lt;message-prefix&gt;&lt;![CDATA[&lt;li&gt;]]&gt;&lt;/message-prefix&gt;&lt;message-suffix&gt;&lt;![CDATA[&lt;/li&gt;]]&gt;&lt;/message-suffix&gt;&lt;/check-errors&gt;
-        &lt;service service-name="createWorkEffort" in-map-name="context"&gt;
-            &lt;error-prefix&gt;&lt;![CDATA[The following errors occured:&lt;ul&gt;]]&gt;&lt;/error-prefix&gt;&lt;error-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/error-suffix&gt;
-            &lt;success-prefix&gt;&lt;![CDATA[&lt;ul&gt;]]&gt;&lt;/success-prefix&gt;&lt;success-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/success-suffix&gt;
-            &lt;message-prefix&gt;&lt;![CDATA[&lt;li&gt;]]&gt;&lt;/message-prefix&gt;&lt;message-suffix&gt;&lt;![CDATA[&lt;/li&gt;]]&gt;&lt;/message-suffix&gt;
+        &lt;check-errors/&gt;
+        &lt;call-service service-name="createWorkEffort" in-map-name="context"&gt;
             &lt;default-message&gt;Work Effort successfully created.&lt;/default-message&gt;
             &lt;result-to-request result-name="workEffortId"/&gt;&lt;/service&gt;
-    &lt;/simple-event&gt;
-    &lt;simple-event event-name="update" short-description="Update Work Effort"&gt;
-        &lt;simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+    &lt;/simple-method&gt;
+    &lt;simple-method event-name="update" short-description="Update Work Effort"&gt;
+        &lt;call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
                 processor-name="update" in-map-name="parameters" out-map-name="context"/&gt;
-        &lt;check-errors&gt;
-            &lt;error-prefix&gt;&lt;![CDATA[The following errors occured:&lt;ul&gt;]]&gt;&lt;/error-prefix&gt;&lt;error-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/error-suffix&gt;
-            &lt;message-prefix&gt;&lt;![CDATA[&lt;li&gt;]]&gt;&lt;/message-prefix&gt;&lt;message-suffix&gt;&lt;![CDATA[&lt;/li&gt;]]&gt;&lt;/message-suffix&gt;&lt;/check-errors&gt;
-        &lt;service service-name="updateWorkEffort" in-map-name="context"&gt;
-            &lt;error-prefix&gt;&lt;![CDATA[The following errors occured:&lt;ul&gt;]]&gt;&lt;/error-prefix&gt;&lt;error-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/error-suffix&gt;
-            &lt;success-prefix&gt;&lt;![CDATA[&lt;ul&gt;]]&gt;&lt;/success-prefix&gt;&lt;success-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/success-suffix&gt;
-            &lt;message-prefix&gt;&lt;![CDATA[&lt;li&gt;]]&gt;&lt;/message-prefix&gt;&lt;message-suffix&gt;&lt;![CDATA[&lt;/li&gt;]]&gt;&lt;/message-suffix&gt;
+        &lt;check-errors/&gt;
+        &lt;call-service service-name="updateWorkEffort" in-map-name="context"&gt;
             &lt;default-message&gt;Work Effort successfully updated.&lt;/default-message&gt;&lt;/service&gt;
-    &lt;/simple-event&gt;
-&lt;/simple-events&gt;
+    &lt;/simple-method&gt;
+&lt;/simple-methods&gt;
 </pre>
 
 </body>
