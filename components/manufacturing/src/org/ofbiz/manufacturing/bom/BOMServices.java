@@ -262,9 +262,9 @@ public class BOMServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = (String) context.get("productId");
-        String productIdKey = (String) context.get("productIdKey");
+        String productIdKey = (String) context.get("productIdTo");
         String fromDateStr = (String) context.get("fromDate");
-        String bomType = (String) context.get("bomType");
+        String bomType = (String) context.get("productAssocTypeId");
         Date fromDate = null;
         if (UtilValidate.isNotEmpty(fromDateStr)) {
             try {
