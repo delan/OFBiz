@@ -49,11 +49,15 @@
   <tr>
     <td align=left>
       <div class="head1">The Profile of
-        <%=UtilFormatOut.checkNull(person.getString("personalTitle"))%>
-        <%=UtilFormatOut.checkNull(person.getString("firstName"))%>
-        <%=UtilFormatOut.checkNull(person.getString("middleName"))%>
-        <%=UtilFormatOut.checkNull(person.getString("lastName"))%>
-        <%=UtilFormatOut.checkNull(person.getString("suffix"))%>
+        <%if(person != null){%>
+          <%=UtilFormatOut.checkNull(person.getString("personalTitle"))%>
+          <%=UtilFormatOut.checkNull(person.getString("firstName"))%>
+          <%=UtilFormatOut.checkNull(person.getString("middleName"))%>
+          <%=UtilFormatOut.checkNull(person.getString("lastName"))%>
+          <%=UtilFormatOut.checkNull(person.getString("suffix"))%>
+        <%}else{%>
+          New User
+        <%}%>
       </div>
     </td>
     <td align=right>
@@ -78,8 +82,8 @@
       <p class="head2"><font color="white">&nbsp;Personal Information</font>
     </td>
     <td valign="middle" align="right">
-        <a href="<%=response.encodeURL(controlPath + "/editperson")%>" class="lightbuttontext">
-        [Update]</a>&nbsp;&nbsp;
+      <a href="<%=response.encodeURL(controlPath + "/editperson")%>" class="lightbuttontext">
+      [<%=(person==null?"Create":"Update")%>]</a>&nbsp;&nbsp;
     </td>
   </tr>
   </table>
@@ -87,37 +91,40 @@
   </tr>
   <tr>
     <td bgcolor='white' colspan='2'>
-<table width="80%" border="0" cellpadding="0" cellspacing='0'>
-  <tr>
-    <td align="right" width="15%"><div class="tabletext"><b>Name</b></div></td>
-    <td width="5">&nbsp;</td>
-    <td align="left">
-      <div class="tabletext">
-        <%=UtilFormatOut.checkNull(person.getString("personalTitle"))%>
-        <%=UtilFormatOut.checkNull(person.getString("firstName"))%>
-        <%=UtilFormatOut.checkNull(person.getString("middleName"))%>
-        <%=UtilFormatOut.checkNull(person.getString("lastName"))%>
-        <%=UtilFormatOut.checkNull(person.getString("suffix"))%>
-      </div>
-    </td>
-  </tr>
-  <%String preBeforeLabel = "<tr><td align=right width='15%' nowrap><div class='tabletext'><b>";%>
-  <%String preAfterLabel = "</b></div></td><td width='5'>&nbsp;</td><td align=left><div class='tabletext'>";%>
-  <%String postStr = "</div></td></tr>";%>
-  <%=UtilFormatOut.ifNotEmpty(person.getString("nickname"), preBeforeLabel + "Nickname" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(person.getString("gender"), preBeforeLabel + "Gender" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateString(person.getDate("birthDate")), preBeforeLabel + "Birth Date" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("height")), preBeforeLabel + "Height" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("weight")), preBeforeLabel + "Weight" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(person.getString("mothersMaidenName"), preBeforeLabel + "Mothers Maiden Name" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(person.getString("maritalStatus"), preBeforeLabel + "Marital Status" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(person.getString("socialSecurityNumber"), preBeforeLabel + "Social Security Number" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(person.getString("passportNumber"), preBeforeLabel + "Passport Number" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateString(person.getDate("passportExpireDate")), preBeforeLabel + "Passport Expire" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("totalYearsWorkExperience")), preBeforeLabel + "Years Work" + preAfterLabel, postStr)%>
-  <%=UtilFormatOut.ifNotEmpty(person.getString("comment"), preBeforeLabel + "Comment" + preAfterLabel, postStr)%>
-  
-</table>
+<%if(person != null){%>
+  <table width="100%" border="0" cellpadding="0" cellspacing='0'>
+    <tr>
+      <td align="right" width="15%"><div class="tabletext"><b>Name</b></div></td>
+      <td width="5">&nbsp;</td>
+      <td align="left">
+        <div class="tabletext">
+          <%=UtilFormatOut.checkNull(person.getString("personalTitle"))%>
+          <%=UtilFormatOut.checkNull(person.getString("firstName"))%>
+          <%=UtilFormatOut.checkNull(person.getString("middleName"))%>
+          <%=UtilFormatOut.checkNull(person.getString("lastName"))%>
+          <%=UtilFormatOut.checkNull(person.getString("suffix"))%>
+        </div>
+      </td>
+    </tr>
+    <%String preBeforeLabel = "<tr><td align=right width='15%' nowrap><div class='tabletext'><b>";%>
+    <%String preAfterLabel = "</b></div></td><td width='5'>&nbsp;</td><td align=left><div class='tabletext'>";%>
+    <%String postStr = "</div></td></tr>";%>
+    <%=UtilFormatOut.ifNotEmpty(person.getString("nickname"), preBeforeLabel + "Nickname" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(person.getString("gender"), preBeforeLabel + "Gender" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateString(person.getDate("birthDate")), preBeforeLabel + "Birth Date" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("height")), preBeforeLabel + "Height" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("weight")), preBeforeLabel + "Weight" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(person.getString("mothersMaidenName"), preBeforeLabel + "Mothers Maiden Name" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(person.getString("maritalStatus"), preBeforeLabel + "Marital Status" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(person.getString("socialSecurityNumber"), preBeforeLabel + "Social Security Number" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(person.getString("passportNumber"), preBeforeLabel + "Passport Number" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateString(person.getDate("passportExpireDate")), preBeforeLabel + "Passport Expire" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatQuantity(person.getDouble("totalYearsWorkExperience")), preBeforeLabel + "Years Work" + preAfterLabel, postStr)%>
+    <%=UtilFormatOut.ifNotEmpty(person.getString("comment"), preBeforeLabel + "Comment" + preAfterLabel, postStr)%>
+  </table>
+<%}else{%>
+<div class="tabletext">Personal Information Not Found</div>
+<%}%>
     </td>
   </tr>
 </table>
@@ -150,19 +157,19 @@
             <th colspan='2'>Soliciting&nbsp;OK?</th>
             <th>&nbsp;</th>
           </tr>
-          <%while(partyContactMechIterator.hasNext()) {
-              GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();
-              GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
-              GenericValue contactMechType = contactMech.getRelatedOne("ContactMechType");
-              Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
-              if(showOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date())) {%>
+          <%while(partyContactMechIterator.hasNext()) {%>
+            <%GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();%>
+            <%GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");%>
+            <%GenericValue contactMechType = (contactMech==null?null:contactMech.getRelatedOne("ContactMechType"));%>
+            <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));%>
+            <%if(showOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date())) {%>
               <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
               <tr>
-                <td align="right" valign="top" width="5%">
+                <td align="right" valign="top" width="15%">
                   <div class="tabletext">&nbsp;<b><%if(contactMechType!=null){%><%=UtilFormatOut.checkNull(contactMechType.getString("description"))%><%}%></b></div>
                 </td>
                 <td width="5">&nbsp;</td>
-                <td align="left" valign="top" width="90%">
+                <td align="left" valign="top" width="80%">
                   <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
                     <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
                     <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
@@ -305,7 +312,7 @@
   </tr>
   <tr>
     <td bgcolor='white' colspan='2'>
-<table width="80%" border="0" cellpadding="1">
+<table width="100%" border="0" cellpadding="1">
   <tr>
     <td align="right" valign="top" width="15%" nowrap><div class="tabletext"><b>User Name</b></div></td>
     <td width="5">&nbsp;</td>

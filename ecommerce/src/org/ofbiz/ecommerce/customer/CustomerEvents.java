@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2001/09/03 07:32:46  jonesde
+ * Small changes to take advantage of the new set semantics.
+ *
  * Revision 1.13  2001/09/02 09:30:22  jonesde
  * Added initial edit person and enhanced validation for credit cards.
  *
@@ -640,6 +643,17 @@ public class CustomerEvents {
       Double weight = null;
       Double totalYearsWorkExperience = null;
       
+      if(UtilValidate.isNotEmpty(birthDateStr))
+      {
+        try { birthDate = UtilDateTime.toSqlDate(birthDateStr); }
+        catch(Exception e) { errMsg += "<li>Height is not a valid number."; }
+      }
+      if(UtilValidate.isNotEmpty(passportExpireDateStr))
+      {
+        try { passportExpireDate = UtilDateTime.toSqlDate(passportExpireDateStr); }
+        catch(Exception e) { errMsg += "<li>Height is not a valid number."; }
+      }
+
       if(UtilValidate.isNotEmpty(heightStr))
       {
         try { height = Double.valueOf(heightStr); }

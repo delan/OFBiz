@@ -105,7 +105,8 @@
     <tr>
       <td width="26%"><div class="tabletext">Birth Date</div></td>
       <td width="74%">
-        <input type="text" name="PERSON_BIRTH_DATE" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(person.getTimestamp("birthDate")):request.getParameter("PERSON_BIRTH_DATE"))%>" size="30" maxlength="60">
+        <input type="text" name="PERSON_BIRTH_DATE" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(person.getTimestamp("birthDate")):request.getParameter("PERSON_BIRTH_DATE"))%>" size="11" maxlength="20">
+        (MM/DD/YYYY)
       </td>
     </tr>
     <tr>
@@ -148,7 +149,8 @@
     <tr>
       <td width="26%"><div class="tabletext">Passport Expire Date</div></td>
       <td width="74%">
-        <input type="text" name="PERSON_PASSPORT_EXPIRE_DATE" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(person.getTimestamp("passportExpireDate")):request.getParameter("PERSON_PASSPORT_EXPIRE_DATE"))%>" size="30" maxlength="60">
+        <input type="text" name="PERSON_PASSPORT_EXPIRE_DATE" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(person.getTimestamp("passportExpireDate")):request.getParameter("PERSON_PASSPORT_EXPIRE_DATE"))%>" size="11" maxlength="20">
+        (MM/DD/YYYY)
       </td>
     </tr>
     <tr>
