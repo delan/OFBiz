@@ -6,8 +6,8 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
@@ -1253,6 +1253,45 @@
         <key-map field-name="custRequestItemSeqId"/>
       </relation>
     </entity>
+    <entity entity-name="CustRequestItemNote"
+            package-name="org.ofbiz.commonapp.order.request"
+            title="Customer Request Item Note Entity">
+      <field name="custRequestId" type="id-ne"></field>
+      <field name="custRequestItemSeqId" type="id-ne"></field>
+      <field name="noteId" type="id-ne"></field>
+      <prim-key field="custRequestId"/>
+      <prim-key field="custRequestItemSeqId"/>
+      <prim-key field="noteId"/>
+      <relation type="one" fk-name="CUST_REQ_ITNT" rel-entity-name="OrderHeader">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQ_NOTE" rel-entity-name="NoteData">
+        <key-map field-name="noteId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="CustRequestItemNoteView"
+            package-name="org.ofbiz.commonapp.order.request"
+            title="Customer Request Item View Entity">
+      <member-entity entity-alias="PR" entity-name="Person"/>
+      <member-entity entity-alias="CR" entity-name="CustRequestItemNote"/>
+      <member-entity entity-alias="ND" entity-name="NoteData"/>
+      <alias entity-alias="CR" name="custRequestId"/>
+      <alias entity-alias="CR" name="custRequestItemSeqId"/>
+      <alias entity-alias="ND" name="noteId"/>
+      <alias entity-alias="ND" name="noteName"/>
+      <alias entity-alias="ND" name="noteInfo"/>
+      <alias entity-alias="ND" name="noteDateTime"/>
+      <alias entity-alias="PR" name="partyId"/>
+      <alias entity-alias="PR" name="firstName"/>
+      <alias entity-alias="PR" name="lastName"/>
+      <view-link entity-alias="CR" rel-entity-alias="ND">
+        <key-map field-name="noteId"/>
+      </view-link>
+      <view-link entity-alias="ND" rel-entity-alias="PR">
+        <key-map field-name="noteParty" rel-field-name="partyId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="CustRequestRole"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Role Entity">

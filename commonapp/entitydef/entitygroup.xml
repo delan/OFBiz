@@ -377,6 +377,8 @@
     <entity-group group="org.ofbiz.commonapp" entity="CustRequest" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestItem" />
+    <entity-group group="org.ofbiz.commonapp" entity="CustRequestItemNote" />
+    <entity-group group="org.ofbiz.commonapp" entity="CustRequestItemNoteView" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestRole" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestType" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestTypeAttr" />
