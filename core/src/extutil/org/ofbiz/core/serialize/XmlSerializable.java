@@ -24,6 +24,8 @@
 
 package org.ofbiz.core.serialize;
 
+import org.w3c.dom.Element;
+
 /**
  * XmlSerializable
  *
@@ -35,17 +37,17 @@ package org.ofbiz.core.serialize;
 public interface XmlSerializable {
 
     /**
-     * Deserialize the XML string back to an object
-     * @string XML string
+     * Deserialize the XML element back to an object
+     * @element XML element
      * @throws SerializeException
      */
-    public static Object deserialize(String string) throws SerializeException;
+    public static Object deserialize(Element element) throws SerializeException;
 
     /**
-     * Serialize the object to an XML string
+     * Serialize the object to an XML element
      * @throws SerializeException
      */
-    public String serialize() throws SerializeException;
+    public Element serialize() throws SerializeException;
 
 }
 
