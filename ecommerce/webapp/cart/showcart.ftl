@@ -46,13 +46,13 @@ function checkToggle(e) {
         cform.selectAll.checked = false;
     }
 }
-function toggleAll() {
+function toggleAll(e) {
     var cform = document.cartform;
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
-        var e = cform.elements[i];   
-        if (e.name == "selectedItem") {
-            toggle(e);
+        var element = cform.elements[i];   
+        if (element.name == "selectedItem" && element.checked != e.checked) {
+            toggle(element);
         }
     }   
 }
@@ -156,7 +156,7 @@ function addToList() {
           <TD NOWRAP align='right'><div class='tabletext'><b>Unit Price</b></div></TD>
           <TD NOWRAP align='right'><div class='tabletext'><b>Adjustments</b></div></TD>
           <TD NOWRAP align='right'><div class='tabletext'><b>Item Total</b></div></TD>
-          <TD NOWRAP align='center'><input type='checkbox' name='selectAll' value='0' onclick="javascript:toggleAll();"></TD>
+          <TD NOWRAP align='center'><input type='checkbox' name='selectAll' value='0' onclick="javascript:toggleAll(this);"></TD>
         </TR>
 
         <#assign itemsFromList = false>
