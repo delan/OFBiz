@@ -34,6 +34,9 @@ userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
 
 context.put("contentSubPage", session.getAttribute("contentSubPage"));
+context.put("dataSubPage", session.getAttribute("dataSubPage"));
+context.put("contentSetupSubPage", session.getAttribute("contentSetupSubPage"));
+context.put("dataSetupSubPage", session.getAttribute("dataSetupSubPage"));
 
 person = session.getAttribute(SiteDefs.PERSON);
 partyGroup = session.getAttribute(SiteDefs.PARTY_GROUP);
