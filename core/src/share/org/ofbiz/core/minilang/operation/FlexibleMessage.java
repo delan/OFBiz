@@ -1,0 +1,91 @@
+
+package org.ofbiz.core.minilang.operation;
+
+import java.net.*;
+import java.text.*;
+import java.util.*;
+import javax.servlet.http.*;
+
+import org.w3c.dom.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.*;
+
+import org.ofbiz.core.minilang.*;
+
+/**
+ * <p><b>Title:</b> Simple class to wrap messages that come either from a straight string or a properties file
+ * <p><b>Description:</b> None
+ * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@created    December 29, 2001
+ *@version    1.0
+ */
+public class FlexibleMessage {
+    String message = null;
+    String propertyResource = null;
+    boolean isProperty = false;
+
+    public FlexibleMessage(Element element, String defaultProperty) {
+        String resAttr = null;
+        String propAttr = null;
+        String elVal = null;
+        if (element != null) {
+            resAttr = element.getAttribute("resource");
+            propAttr = element.getAttribute("property");
+            elVal = UtilXml.elementValue(element);
+        }
+
+        if (resAttr != null && resAttr.length() > 0) {
+            propertyResource = resAttr;
+            message = propAttr;
+            isProperty = true;
+        } else if (elVal != null && elVal.length() > 0) {
+            message = elVal;
+            isProperty = false;
+        } else {
+            //put in default property
+            propertyResource = "DefaultMessages";
+            message = defaultProperty;
+            isProperty = true;
+        }
+    }
+
+    public String getMessage(ClassLoader loader) {
+        //Debug.logInfo("[FlexibleMessage.getMessage] isProperty: " + isProperty + ", message: " + message + ", propertyResource: " + propertyResource);
+        if (!isProperty && message != null) {
+            //Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
+            return message;
+        } else if (isProperty && propertyResource != null && message != null) {
+            URL propertyURL = UtilURL.fromResource(propertyResource, loader);
+            String propMsg = UtilProperties.getPropertyValue(propertyURL, message);
+            //Debug.logInfo("[FlexibleMessage.getMessage] Got property message: " + propMsg);
+            if (propMsg == null || propMsg.length() == 0)
+                return "In Simple Map Processing property message could not be found in resource " + propertyResource + " [" + propertyURL + "] with name " + message + ". ";
+            else
+                return propMsg;
+        } else {
+            Debug.logInfo("[FlexibleMessage.getMessage] No message found, returning empty string");
+            return "";
+        }
+    }
+}
