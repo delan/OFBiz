@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/10/13 22:37:37  jonesde
+ * Added UtilURL and changed FlexibleProperties and UtilProperties to be URL-centric
+ *
  *
  */
 
@@ -72,6 +75,7 @@ public class UtilURL {
   }
   
   public static URL fromFilename(String filename) {
+    if(filename == null) return null;
     File file = new File(filename);
     URL url = null;
     try { if(file.exists()) url = file.toURL(); }
