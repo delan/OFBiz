@@ -12,4 +12,10 @@ but not each others.
 There is an editor (and admin) that can edit both.
 The authors should not be able to edit their articles after the status is set to "BLOG_PUBLISHED".
 
+
+Since this is a "specialized" app, it is not loaded automatically. 
+You must go to the component-load.xml file in the "ofbiz/specialized" dir 
+and uncommenting the "community" line. 
+This should be done before running "ant run-install" so that the seed data will get loaded.
+
 -Al
