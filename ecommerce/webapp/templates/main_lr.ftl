@@ -8,7 +8,7 @@ ${pages.get("/templates/header.ftl")}
     ${pages.get("/templates/errormsg.ftl")}
     $pages.get(content.path)}
   </td>
-  $pages.get("/templates/rightbar.ftl")}
+  ${pages.get("/templates/rightbar.ftl")}
  </tr>
 </table>
 

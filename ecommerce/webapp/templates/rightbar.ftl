@@ -2,7 +2,7 @@
   <td width='950' valign=top align=right>
     ${pages.get("/cart/minicart.ftl")}
     <br>
-    ${pages.get("/catalog/minipromotext.ftl")}
+    $pages.get("/catalog/minipromotext.ftl")}
     <br>
-    ${pages.get("/catalog/miniassocprods.ftl")}
+    $pages.get("/catalog/miniassocprods.ftl")}
   </td>
