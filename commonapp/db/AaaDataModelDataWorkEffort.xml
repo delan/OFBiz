@@ -118,6 +118,8 @@
   <StatusItem description="Released"  sequenceId="03" statusCode="RELEASED" statusId="WPS_RELEASED" statusTypeId="WORKFLOW_PUB_STATUS"/>
 
   <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_SENT" transitionName="Send"/>
+  <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_TENTATIVE" transitionName="Tentatively Plan"/>
+  <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CONFIRMED" transitionName="Confirm"/>
   <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
   <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_ACCEPTED" transitionName="Accept"/>
   <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_DECLINED" transitionName="Decline"/>
@@ -125,15 +127,17 @@
   <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
   <StatusValidChange condition="" statusId="CAL_ACCEPTED" statusIdTo="CAL_COMPLETED" transitionName="Complete"/>
   <StatusValidChange condition="" statusId="CAL_ACCEPTED" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
-  <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_TENTATIVE" transitionName="Tentatively Plan"/>
+  <StatusValidChange condition="" statusId="CAL_ACCEPTED" statusIdTo="CAL_DELEGATED" transitionName="Delegate"/>
+  <StatusValidChange condition="" statusId="CAL_TENTATIVE" statusIdTo="CAL_ACCEPTED" transitionName="Accept"/>
+  <StatusValidChange condition="" statusId="CAL_TENTATIVE" statusIdTo="CAL_DECLINED" transitionName="Decline"/>
+  <StatusValidChange condition="" statusId="CAL_TENTATIVE" statusIdTo="CAL_DELEGATED" transitionName="Delegate"/>
   <StatusValidChange condition="" statusId="CAL_TENTATIVE" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
-  <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CONFIRMED" transitionName="Confirm"/>
   <StatusValidChange condition="" statusId="WF_NOT_STARTED" statusIdTo="WF_RUNNING" transitionName="Start"/>
-  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_SUSPENDED" transitionName="Suspend"/>
-  <StatusValidChange condition="" statusId="WF_SUSPENDED" statusIdTo="WF_RUNNING" transitionName="Un-suspend"/>
+  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_SUSPENDED" transitionName="Suspend"/>  
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_COMPLETED" transitionName="Complete"/>
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_TERMINATED" transitionName="Terminate"/>
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_ABORTED" transitionName="Abort"/>
+  <StatusValidChange condition="" statusId="WF_SUSPENDED" statusIdTo="WF_RUNNING" transitionName="Un-suspend"/>
 
   <WorkEffortAssocType description="WorkEffort Breakdown" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_BREAKDOWN"/>
   <WorkEffortAssocType description="WorkEffort Dependency" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_DEPENDENCY"/>
