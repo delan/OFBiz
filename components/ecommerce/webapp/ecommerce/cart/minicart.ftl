@@ -85,7 +85,8 @@
                 </tr>
                 <tr>
                   <td colspan="3">
-                    <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewCart}]</a>&nbsp;<a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckout}]</a>
+                    <div><a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewCart}]</a>&nbsp;<a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckout}]</a></div>
+                    <div><a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckoutQuick}]</a></div>
                   </td>
                 </tr>
               <#else>
