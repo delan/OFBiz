@@ -273,6 +273,7 @@
         <field-to-field field-name="contactMechId" map-name="parameters" to-map-name="lookUpMap"/>
         <field-to-field field-name="contactMechPurposeTypeId" map-name="parameters" to-map-name="lookUpMap"/>
         <find-by-and entity-name="FacilityContactMechPurpose" map-name="lookUpMap" list-name="purposeList"/>
+        <filter-list-by-date list-name="purposeList"/>
         
         <if-not-empty field-name="purposeList">
         	<add-error><fail-message message="Could not create new purpose, a purpose with that type already exists"/></add-error>
@@ -296,15 +297,15 @@
     	
     	<make-value value-name="lookUpMap" entity-name="FacilityContactMechPurpose"/>
     	<set-pk-fields map-name="parameters" value-name="lookUpMap"/>
-        <find-by-primary-key value-name="purposeEntity" entity-name="FacilityContactMechPurpose" map-name="lookUpMap"/>
-                        
+        <find-by-primary-key value-name="purposeEntity" entity-name="FacilityContactMechPurpose" map-name="lookUpMap"/>        
+        
         <if-empty field-name="purposeEntity">
         	<add-error><fail-message message="Unable to locate purpose; cannot delete"/></add-error>
         	<check-errors/>
         </if-empty>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="purposeEntity"/>
+        <env-to-field env-name="nowTimestamp" field-name="thruDate" map-name="purposeEntity"/>
         <store-value value-name="purposeEntity"/>                
     </simple-method>    
 </simple-methods>

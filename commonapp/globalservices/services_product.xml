@@ -1063,7 +1063,7 @@
         <attribute name="fromDate" type="Timestamp" mode="OUT" optional="false"/>
     </service>
     <service name="deleteFacilityContactMechPurpose" engine="simple"
-            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="createFacilityContactMechPurpose">
+            location="org/ofbiz/commonapp/product/storage/FacilityContactMechServices.xml" invoke="deleteFacilityContactMechPurpose">
         <description>Delete a purpose for facility contact mech</description>
         <auto-attributes entity-name="FacilityContactMechPurpose" include="pk" mode="IN" optional="false"/>
     </service>    
