@@ -206,6 +206,11 @@ function insertImageName(size,ext) {
     <td width="80%" colspan='4'><input type="text" <ofbiz:inputvalue entityAttr='product' field='internalName' tryEntityAttr="tryEntity" fullattrs="true"/> size="30" maxlength="60" style='font-size: x-small;'></td>
   </tr>
   <tr>
+    <td width="20%" align=right><div class="tabletext">Brand Name</div></td>
+    <td>&nbsp;</td>
+    <td width="80%" colspan='4'><input type="text" <ofbiz:inputvalue entityAttr='product' field='brandName' tryEntityAttr="tryEntity" fullattrs="true"/> size="30" maxlength="60" style='font-size: x-small;'></td>
+  </tr>
+  <tr>
     <td width="20%" align=right valign=top><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
     <td width="80%" colspan='4'><textarea cols="60" rows="2" name="description" maxlength="250" style='font-size: small;'><ofbiz:inputvalue entityAttr='product' field='description' tryEntityAttr="tryEntity"/></textarea></td>
