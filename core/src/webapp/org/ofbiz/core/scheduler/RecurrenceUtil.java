@@ -30,6 +30,15 @@ public class RecurrenceUtil {
         return formatter.parse(dateStr,pos);
     }
     
+    /** Returns a List of parsed date strings. */
+    public static List parseDateList(List dateList) {
+        List newList = new ArrayList();
+        Iterator i = dateList.iterator();
+        while ( i.hasNext() ) 
+            newList.add(parseDate((String)i.next()));
+        return newList;
+    }
+    
     /** Uses StringTokenizer to split the string. */
     public static List split(String str, String delim) {
         List splitList = null;

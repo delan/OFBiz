@@ -63,11 +63,15 @@ public class RecurrenceInfo {
         }
         
         // Get the recurrence date list
-        rDateList = RecurrenceUtil.split(info.getString("recurrenceDateTimes"),",");
+        rDateList = RecurrenceUtil.parseDateList(RecurrenceUtil.split(info.getString("recurrenceDateTimes"),","));
         // Get the exception date list
-        eDateList = RecurrenceUtil.split(info.getString("exceptionDateTimes"),",");
+        eDateList = RecurrenceUtil.parseDateList(RecurrenceUtil.split(info.getString("exceptionDateTimes"),","));
+        
+        // Sort the lists.
+        Collections.sort(rDateList);
+        Collections.sort(eDateList);
     }
-            
+    
     /** Returns the startDate Date object. */
     public Date getStartDate() {
         return this.startDate;
@@ -77,13 +81,13 @@ public class RecurrenceInfo {
     public long getStartTime() {
         return this.startDate.getTime();
     }
-        
+    
     /** Returns a recurrence rule iterator */
     public Iterator getRecurrenceRuleIterator() {
         return rRulesList.iterator();
     }
     
-    /** Returns a recurrence date iterator */
+    /** Returns a sorted recurrence date iterator */
     public Iterator getRecurrenceDateIterator() {
         return rDateList.iterator();
     }
@@ -93,46 +97,73 @@ public class RecurrenceInfo {
         return eRulesList.iterator();
     }
     
-    /** Returns a exception date iterator */
+    /** Returns a sorted exception date iterator */
     public Iterator getExceptionDateIterator() {
         return eDateList.iterator();
     }
-
+    
+    /** Returns the current count of this recurrence. */
+    public int getCurrentCount() {
+        int count = 0;
+        count = info.getInteger("recurrenceCount").intValue();
+        return count;
+    }
+    
+    /** Increments the current count of this recurrence. */
+    public void incrementCurrentCount() throws GenericEntityException {
+        int count = getCurrentCount();
+        count++;
+        Integer countInt = new Integer(count);
+        info.set("recurrenceCount",countInt);
+        info.store();
+    }
+    
     /** Returns the first recurrence. */
-    public long first() throws RecurrenceRuleException {
+    public long first()  {
         return startDate.getTime();
         // TODO: Get the recurrence of a special byXXX case.
     }
     
     /** Returns the last recurrence. */
-    public long last() throws RecurrenceRuleException {
+    public long last()  {
         return 0;
     }
     
     /** Returns the next recurrence from now. */
-    public long next() throws RecurrenceRuleException {
+    public long next()  {
         return next(RecurrenceUtil.now());
     }
     
     /** Returns the next recurrence from the specified time. */
-    public long next(long previous) throws RecurrenceRuleException {        
-        // Get the first rule.
-        Iterator rulesIt = getRecurrenceRuleIterator();
-        RecurrenceRule rule = null;
-        if ( rulesIt.hasNext() )
-            rule = (RecurrenceRule) rulesIt.next();
+    public long next(long fromTime)  {
+        // Check for the first recurrence
+        if ( fromTime == 0 || fromTime == startDate.getTime() )
+            return first();
         
-        int currentCount = info.getInteger("recurrenceCount").intValue();
-        int maxCount = rule.getCount();
+        Date fromDate = new Date(fromTime);
+        Date now = new Date();
+        Date next = null;
         
-        // Test the number of repeats
-        if ( maxCount > 0 && ++currentCount > maxCount )
-            return 0;
+        // Loop through the date list.
+        Iterator dateIterator = getRecurrenceDateIterator();
+        while ( dateIterator.hasNext() && next == null ) {
+            Date thisDate = (Date) dateIterator.next();
+            // Test if this date is valid and not in the exception list.
+            if ( thisDate.getTime() > fromTime && !eDateList.contains(thisDate))
+                next = thisDate;
+        }
+        if ( next != null )
+            return next.getTime();
         
-        // Test the end date/time
-        if ( rule.getEndTime() > RecurrenceUtil.now() )
-            return 0;
-                                
-        return 0;
-    }    
+        // Test the rules.
+        long nextTime = 0;
+        Iterator rulesIterator = getRecurrenceRuleIterator();
+        while ( rulesIterator.hasNext() ) {
+            RecurrenceRule rule = (RecurrenceRule) rulesIterator.next();
+            if ( nextTime == 0 )
+                nextTime = rule.next(getStartTime(), fromTime, getCurrentCount());
+        }
+                
+        return nextTime;
+    }
 }
