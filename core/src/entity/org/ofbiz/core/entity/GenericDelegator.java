@@ -1046,7 +1046,7 @@ public class GenericDelegator {
                 //only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
             } catch (GenericEntityException e2) {
-                Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ", module);
+                Debug.logError("[GenericDelegator.storeAll] Could not rollback transaction: ", module);
                 Debug.logError(e2, module);
             }
             //after rolling back, rethrow the exception
@@ -1108,13 +1108,11 @@ public class GenericDelegator {
             }
 
             //only commit the transaction if we started one...
-            if (beganTransaction)
-                TransactionUtil.commit();
+            TransactionUtil.commit(beganTransaction);
         } catch (GenericEntityException e) {
             try {
                 //only rollback the transaction if we started one...
-                if (beganTransaction)
-                    TransactionUtil.rollback();
+                TransactionUtil.rollback(beganTransaction);
             } catch (GenericEntityException e2) {
                 Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ", module);
                 Debug.logError(e2, module);

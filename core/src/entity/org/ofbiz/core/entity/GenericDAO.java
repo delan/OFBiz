@@ -215,12 +215,15 @@ public class GenericDAO {
         try {
             singleUpdate(entity, modelEntity, fieldsToSave, connection);
             if (manualTX) {
+                Debug.logVerbose("Committing transaction on connection, not JTA commit");
                 try {
                     connection.commit();
                 } catch (SQLException sqle) {
                     try {
-                        if (manualTX)
+                        if (manualTX) {
+                            Debug.logVerbose("Rolling back transaction on connection, not JTA rollback");
                             connection.rollback();
+                        }
                     } catch (SQLException sqle2) {
                         Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:", module);
                         Debug.logWarning(sqle2, module);
@@ -230,8 +233,10 @@ public class GenericDAO {
             }
         } catch (GenericDataSourceException e) {
             try {
-                if (manualTX)
+                if (manualTX) {
+                    Debug.logVerbose("Rolling back transaction on connection, not JTA rollback");
                     connection.rollback();
+                }
             } catch (SQLException sqle2) {
                 Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:", module);
                 Debug.logWarning(sqle2, module);
@@ -357,6 +362,7 @@ public class GenericDAO {
                 singleStore(curEntity, connection);
             }
             if (manualTX) {
+                Debug.logVerbose("Committing transaction on connection, not JTA commit");
                 try {
                     connection.commit();
                 } catch (SQLException sqle) {
@@ -372,8 +378,10 @@ public class GenericDAO {
             }
         } catch (GenericDataSourceException e) {
             try {
-                if (manualTX)
+                if (manualTX) {
+                    Debug.logVerbose("Rolling back transaction on connection, not JTA rollback");
                     connection.rollback();
+                }
             } catch (SQLException sqle2) {
                 Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back store. Error was:", module);
                 Debug.logWarning(sqle2, module);
