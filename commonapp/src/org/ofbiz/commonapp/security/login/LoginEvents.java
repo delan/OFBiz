@@ -150,29 +150,15 @@ public class LoginEvents {
 
             // in this condition log them in if not already; if not logged in or can't log in, save parameters and return error
             if ((username == null) || (password == null) || ("error".equals(login(request, response)))) {
-                StringBuffer queryStringBuffer = new StringBuffer();
-                
                 Map reqParams = UtilHttp.getParameterMap(request);
-                Iterator paramEntryIter = reqParams.entrySet().iterator();
-                while (paramEntryIter.hasNext()) {
-                    Map.Entry paramEntry = (Map.Entry) paramEntryIter.next();
-                    String paramName = (String) paramEntry.getKey();
-                    String paramValue = (String) paramEntry.getValue();
-
-                    if (paramName != null) {
-                        if (queryStringBuffer.length() > 0) queryStringBuffer.append('&');
-                        queryStringBuffer.append(paramName);
-                        queryStringBuffer.append('=');
-                        queryStringBuffer.append(paramValue);
-                    }
-                }
+                String queryString = UtilHttp.urlEncodeArgs(reqParams);
 
                 session.setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
-                if (queryStringBuffer.length() > 0) {
-                    session.setAttribute(SiteDefs.PREVIOUS_PARAMS, queryStringBuffer.toString());
+                if (queryString != null && queryString.length() > 0) {
+                    session.setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
                 }
 
-                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryStringBuffer.toString());
+                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString);
                 if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo());
 
                 return "error";
