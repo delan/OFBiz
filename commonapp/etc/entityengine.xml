@@ -24,10 +24,15 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
     </transaction-factory>   
     -->
-    <!-- It is common to use UserTransaction for the TransactionManager, but if that doesn't work, try this: <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/TransactionManager"/> -->
-    <!-- Common UserTransaction locations:
-            java:comp/UserTransaction (most servers: Resin, Orion, OC4J, JBoss, etc)
+    <!-- 
+    	It is common to use UserTransaction for the TransactionManager, but if that doesn't work, try this: <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/TransactionManager"/>
+        Common UserTransaction locations:
+            java:comp/UserTransaction (most servers: Resin, Orion, OC4J, etc)
             UserTransaction (RexIP)
+    -->
+    <!-- 
+        JBoss uses two different objects for the UserTransaction and TransactionManager interfaces;
+        they are located in JNDI at: "java:comp/UserTransaction" and "java:/TransactionManager" respectively
     -->
 
     <delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" 
