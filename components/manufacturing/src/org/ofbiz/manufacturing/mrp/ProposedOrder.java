@@ -20,7 +20,7 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
- 
+
 package org.ofbiz.manufacturing.mrp;
 
 import java.sql.Timestamp;
@@ -51,159 +51,144 @@ import org.ofbiz.service.GenericServiceException;
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
  * @author     <a href=mailto:thierry.grauss@etu.univ-tours.fr">Thierry GRAUSS</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ProposedOrder {
-
+    
     public static final String module = ProposedOrder.class.getName();
     public static final String resource = "ManufacturingUiLabels";
     
     protected GenericValue product;
     protected boolean isbuild;
     protected String productId;
+    protected String facilityId;
     protected Timestamp requiredByDate;
     protected Timestamp requirementStartDate;
     protected double quantity;
-
     
-    public ProposedOrder(GenericValue product, boolean isbuild, Timestamp requiredByDate, double quantity) {
+    
+    public ProposedOrder(GenericValue product, String facilityId, boolean isbuild, Timestamp requiredByDate, double quantity) {
         this.product = product;
         this.productId = product.getString("productId");
+        this.facilityId = facilityId;
         this.isbuild = isbuild;
         this.requiredByDate = requiredByDate;
         this.quantity = quantity;
         this.requirementStartDate = null;
     }
     /**
-      * get the quantity property.
-      * @return the quantity property 
-      **/    
+     * get the quantity property.
+     * @return the quantity property
+     **/
     public double getQuantity(){
         return quantity;
     }
     /**
-      * get the requirementStartDate property.
-      * @return the quantity property 
-      **/    
+     * get the requirementStartDate property.
+     * @return the quantity property
+     **/
     public Timestamp getRequirementStartDate(){
         return requirementStartDate;
     }
-	/**
-	  * calculate the ProposedOrder requirementStartDate and update the requirementStartDate property.
-      * <li>For the build product, <ul>
-      *         <li>read the routing associated to the product, 
-      *         <li>read the routingTask associated to the routing
-      *         <li> step by step calculate from the endDate the startDate</ul> 
-      * <li>For the bought product, the first ProductFacility.daysToShip is used to calculated the startDate
-      * @return <ul> 
-      * <li>if ProposedOrder.isBuild a Map with all the routingTaskId as keys and estimatedStartDate as value.
-      * <li>else null.
-	  **/    
-    public Map calculateStartDate(){
+    /**
+     * calculate the ProposedOrder requirementStartDate and update the requirementStartDate property.
+     * <li>For the build product, <ul>
+     *         <li>read the routing associated to the product,
+     *         <li>read the routingTask associated to the routing
+     *         <li> step by step calculate from the endDate the startDate</ul>
+     * <li>For the bought product, the first ProductFacility.daysToShip is used to calculated the startDate
+     * @return <ul>
+     * <li>if ProposedOrder.isBuild a Map with all the routingTaskId as keys and estimatedStartDate as value.
+     * <li>else null.
+     **/
+    public Map calculateStartDate(int daysToShip, GenericValue routing, LocalDispatcher dispatcher){
         Map result = null;
         Timestamp endDate = (Timestamp) requiredByDate.clone();
         Timestamp startDate = endDate;
         if (isbuild) {
-            GenericValue routing = ProductHelper.getRouting(product, quantity, requiredByDate);
+            if (routing == null) {
+                routing = ProductHelper.getRouting(product, quantity, requiredByDate, dispatcher);
+            }
             if (routing != null) {
                 //Looks for all the routingTask (ordered by inversed (begin from the end) sequence number)
-              List listRoutingTaskAssoc = null;
-              try{
-                  listRoutingTaskAssoc = routing.getRelatedCache("FromWorkEffortAssoc",UtilMisc.toMap("workEffortAssocTypeId","ROUTING_COMPONENT"), UtilMisc.toList("sequenceNum DESC"));
-              } catch (GenericEntityException e) {
-                  Debug.logError("Error : routing.getRelatedCache('FromWorkEffort',UtilMisc.toMap('workEff..  error="+e, module);
-                  listRoutingTaskAssoc = null;
-              }
-              // Iterate for all the routingTask, check if it's a valid routingTask, and step by step calculate the startDate
-              Iterator  listIterRTA = listRoutingTaskAssoc.iterator();
-              result = new HashMap();
-              while (listIterRTA.hasNext()) {
-                  GenericValue routingTaskAssoc = (GenericValue) listIterRTA.next();
-                  if (EntityUtil.isValueActive(routingTaskAssoc,endDate)) {
-                      GenericValue routingTask = null;
-                      try {
-                        routingTask = routingTaskAssoc.getRelatedOneCache("ToWorkEffort");
-                      } catch (GenericEntityException e) {
-                      Debug.logError(e.getMessage(),  module);
-                      }   
-                      // Calculate the estimatedStartDate 
-                      long duringTime = (long)  (routingTask.getDouble("estimatedSetupMillis").doubleValue() + (routingTask.getDouble("estimatedMilliSeconds").doubleValue() * quantity));
-                      startDate = TechDataServices.addBackward(TechDataServices.getTechDataCalendar(routingTask),endDate, duringTime);
-                      // record the routingTask with the startDate associated
-                      result.put(routingTask.getString("workEffortId"),startDate);
-                      endDate = startDate;
-                  }
-              }
-           }
-           else { // routing is null
-//             TODO : write an error message for the endUser to say "Build product without routing"
-               Debug.logError("Build product without routing for product = "+product.getString("productId"), module);
-           }
-        }
-        else {  // the product is bought
-// TODO : this part of code need to be review, when in the GUI it will be possible to declare a default facility or a default Supplier to a product 
-            List listProductFacility = null;
-            try {
-                listProductFacility = product.getRelatedCache("ProductFacility");
-            } catch(GenericEntityException e) {
-                Debug.logError(e, "Error : product.getRelatedCache(\"ProductFacility\") productId="+product.getString("productId")+"--"+e.getMessage(), module);
-            }
-// TODO : add an error message if there is no ProductFaclity, and so no startDate calculation
-            if (listProductFacility.size()>0) {
-                GenericValue productFacility = (GenericValue) EntityUtil.getFirst(listProductFacility);
-                long duringTime = productFacility.getLong("daysToShip").longValue()*8*60*60*1000;
-                try {
-                    GenericValue techDataCalendar = productFacility.getDelegator().findByPrimaryKeyCache("TechDataCalendar",UtilMisc.toMap("calendarId","SUPPLIER"));
-                    startDate = TechDataServices.addBackward(techDataCalendar,endDate, duringTime);
-                } catch(GenericEntityException e) {
-                    Debug.logError(e, "Error : reading SUPPLIER TechDataCalendar"+"--"+e.getMessage(), module);
+                List listRoutingTaskAssoc = null;
+                try{
+                    listRoutingTaskAssoc = routing.getRelatedCache("FromWorkEffortAssoc",UtilMisc.toMap("workEffortAssocTypeId","ROUTING_COMPONENT"), UtilMisc.toList("sequenceNum DESC"));
+                } catch (GenericEntityException e) {
+                    Debug.logError("Error : routing.getRelatedCache('FromWorkEffort',UtilMisc.toMap('workEff..  error="+e, module);
+                    listRoutingTaskAssoc = null;
                 }
+                // Iterate for all the routingTask, check if it's a valid routingTask, and step by step calculate the startDate
+                Iterator  listIterRTA = listRoutingTaskAssoc.iterator();
+                result = new HashMap();
+                while (listIterRTA.hasNext()) {
+                    GenericValue routingTaskAssoc = (GenericValue) listIterRTA.next();
+                    if (EntityUtil.isValueActive(routingTaskAssoc,endDate)) {
+                        GenericValue routingTask = null;
+                        try {
+                            routingTask = routingTaskAssoc.getRelatedOneCache("ToWorkEffort");
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e.getMessage(),  module);
+                        }
+                        // Calculate the estimatedStartDate
+                        long duringTime = (long)  (routingTask.getDouble("estimatedSetupMillis").doubleValue() + (routingTask.getDouble("estimatedMilliSeconds").doubleValue() * quantity));
+                        startDate = TechDataServices.addBackward(TechDataServices.getTechDataCalendar(routingTask),endDate, duringTime);
+                        // record the routingTask with the startDate associated
+                        result.put(routingTask.getString("workEffortId"),startDate);
+                        endDate = startDate;
+                    }
+                }
+            } else { 
+                // routing is null
+                // TODO : write an error message for the endUser to say "Build product without routing"
+                Debug.logError("Build product without routing for product = "+product.getString("productId"), module);
+            }
+        } else {
+            // the product is purchased
+            // TODO: REVIEW this code
+            long duringTime = daysToShip * 8 * 60 * 60 * 1000;
+            try {
+                GenericValue techDataCalendar = product.getDelegator().findByPrimaryKeyCache("TechDataCalendar",UtilMisc.toMap("calendarId", "SUPPLIER"));
+                startDate = TechDataServices.addBackward(techDataCalendar, endDate, duringTime);
+            } catch(GenericEntityException e) {
+                Debug.logError(e, "Error : reading SUPPLIER TechDataCalendar"+"--"+e.getMessage(), module);
             }
         }
         requirementStartDate = startDate;
         return result;
     }
-        
+    
     
     /**
-      * calculate the ProposedOrder quantity and update the quantity property.
-      * Read the first ProductFacility.reorderQuantity and calculate the quantity : if (quantity < reorderQuantity) quantity = reorderQuantity; <br>
-      * will be review in the futur !! 
-      **/    
-    public void calculateQuantityToSupply(ListIterator  listIterIEP){
-//      TODO : use a better algorithm using Order management cost et Product Stock cost to calculate the re-order quantity
-//                     the variable listIterIEP will be used for that
-//      TODO : this part of code need to be review, when in the GUI it will be possible to declare a default facility or a default Supplier to a product 
-        List listProductFacility = null;
-        try {
-            listProductFacility = product.getRelatedCache("ProductFacility");
-        } catch(GenericEntityException e) {
-            Debug.logError(e, "Error : product.getRelatedCache(\"ProductFacility\") productId="+product.getString("productId")+"--"+e.getMessage(), module);
-        }
-//      TODO : add an error message if there is no ProductFaclity, and so no startDate calculation
-        if (listProductFacility.size()>0) {
-            GenericValue productFacility = (GenericValue) EntityUtil.getFirst(listProductFacility);
-            Double reorderQuantity = productFacility.getDouble("reorderQuantity");
-            if (quantity < reorderQuantity.doubleValue()) quantity = reorderQuantity.doubleValue();
+     * calculate the ProposedOrder quantity and update the quantity property.
+     * Read the first ProductFacility.reorderQuantity and calculate the quantity : if (quantity < reorderQuantity) quantity = reorderQuantity;
+     **/
+    // FIXME: facilityId
+    public void calculateQuantityToSupply(double reorderQuantity, ListIterator  listIterIEP){
+        //      TODO : use a better algorithm using Order management cost et Product Stock cost to calculate the re-order quantity
+        //                     the variable listIterIEP will be used for that
+        if (quantity < reorderQuantity) {
+            quantity = reorderQuantity;
         }
     }
-		
+    
     /**
-      * create a ProposedOrder in the Requirement Entity calling the createRequirement service.
-      * @param ctx The DispatchContext used to call service to create the Requirement Entity record.
-      * @return String the requirementId 
-      **/    
-    public String create(DispatchContext ctx, GenericValue userLogin){
+     * create a ProposedOrder in the Requirement Entity calling the createRequirement service.
+     * @param ctx The DispatchContext used to call service to create the Requirement Entity record.
+     * @return String the requirementId
+     **/
+    public String create(DispatchContext ctx, GenericValue userLogin) {
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Map parameters = UtilMisc.toMap("userLogin", userLogin);
-
-        parameters.put("productId",productId);
-        parameters.put("requiredByDate",requiredByDate);
-        parameters.put("requirementStartDate",requirementStartDate);
-        parameters.put("quantity",new Double(quantity));
-        parameters.put("requirementTypeId",isbuild ? "MRP_PRO_PROD_ORDER" : "MRP_PRO_PURCH_ORDER");
-        parameters.put("description","Automatically generated by MRP");
+        
+        parameters.put("productId", productId);
+        parameters.put("facilityId", facilityId);
+        parameters.put("requiredByDate", requiredByDate);
+        parameters.put("requirementStartDate", requirementStartDate);
+        parameters.put("quantity", new Double(quantity));
+        parameters.put("requirementTypeId", (isbuild? "MRP_PRO_PROD_ORDER" : "MRP_PRO_PURCH_ORDER"));
+        parameters.put("description", "Automatically generated by MRP");
         try{
             Map result = dispatcher.runSync("createRequirement", parameters);
             return (String) result.get("requirementId");
