@@ -352,6 +352,7 @@ public class EntitySyncServices {
         EntitySyncContext esc = null;
         try {
             esc = new EntitySyncContext(dctx, context);
+            Debug.logInfo("(1)Doing pullAndReportEntitySyncData split, currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
             
             if ("Y".equals(esc.entitySync.get("forPushOnly"))) {
                 return ServiceUtil.returnError("Cannot do Entity Sync Pull because entitySyncId [] is set for Push Only.");
@@ -359,6 +360,7 @@ public class EntitySyncServices {
 
             // restore info from last pull, or if no results start new run
             esc.runPullStartOrRestoreSavedResults();
+            Debug.logInfo("(2)Doing pullAndReportEntitySyncData split, currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
 
             // increment starting time to run until now
             while (esc.hasMoreTimeToSync()) {
@@ -366,7 +368,7 @@ public class EntitySyncServices {
                 esc.saveResultsReportedFromDataStore();
                 
                 // make sure the following message is commented out before commit:
-                //Debug.logInfo("Doing runEntitySync split, currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
+                Debug.logInfo("(3-loop)Doing pullAndReportEntitySyncData split, currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
                 
                 esc.totalSplits++;
                 
