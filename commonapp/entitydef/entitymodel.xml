@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Wed Oct 17 15:55:21 EDT 2001
+ *@created    Wed Oct 17 19:08:46 EDT 2001
  *@version    1.0
  */
 -->
@@ -109,6 +109,7 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
+  <!--  - org.ofbiz.commonapp.common.currency -->
   <!--  - org.ofbiz.commonapp.common.geo -->
   <!--  - org.ofbiz.commonapp.common.period -->
   <!--  - org.ofbiz.commonapp.common.sequence -->
@@ -123,6 +124,20 @@
   <!--  - org.ofbiz.commonapp.security.securitygroup -->
   <!-- ========================================================= -->
 
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.currency -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="CurrencyCode" 
+            package-name="org.ofbiz.commonapp.common.currency"
+            title="Currency ISO Code Chart"
+            author="Andy Zeneski (jaz@zsolv.com)">
+      <description></description>
+      <field name="currencyCode" type="id-ne"></field>
+      <field name="currencyName" type="description"></field>	
+      <prim-key field="currencyCode" />
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.geo -->

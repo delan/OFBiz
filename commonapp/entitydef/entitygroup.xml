@@ -142,6 +142,11 @@
     <entity-group group="org.ofbiz.commonapp" entity="Withdrawal" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.currency -->
+  <!-- ========================================================= -->
+    <entity-group group="org.ofbiz.commonapp" entity="CurrencyCode" />	
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.geo -->
   <!-- ========================================================= -->
 	
