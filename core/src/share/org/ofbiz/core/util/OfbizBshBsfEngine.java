@@ -21,7 +21,7 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package bsh;
+package org.ofbiz.core.util;
 
 /*
         This file is associated with the BeanShell Java Scripting language
@@ -32,17 +32,17 @@ package bsh;
  
  */
 
-import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.ofbiz.core.util.Debug;
-import org.ofbiz.core.util.UtilCache;
+import bsh.BshClassManager;
+import bsh.EvalError;
+import bsh.Interpreter;
+import bsh.InterpreterError;
+import bsh.NameSpace;
+import bsh.TargetError;
 
 import com.ibm.bsf.BSFDeclaredBean;
 import com.ibm.bsf.BSFException;
@@ -195,25 +195,25 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
         try {
             //return interpreter.eval(((String) expr));
             
-            List parsedLineNodes = null;
+            Interpreter.ParsedScript script = null;
             
             if (source != null && source.length() > 0) {
-                parsedLineNodes = (List) parsedScripts.get(source);
-                if (parsedLineNodes == null) {
+                script = (Interpreter.ParsedScript) parsedScripts.get(source);
+                if (script == null) {
                     synchronized (OfbizBshBsfEngine.class) {
-                        parsedLineNodes = (List) parsedScripts.get(source);
-                        if (parsedLineNodes == null) {
-                            parsedLineNodes = bshParse(source, new StringReader((String) expr));
+                        script = (Interpreter.ParsedScript) parsedScripts.get(source);
+                        if (script == null) {
+                            script = interpreter.parseScript(source, new StringReader((String) expr));
                             Debug.logInfo("Caching BSH script at: " + source);
-                            parsedScripts.put(source, parsedLineNodes);
+                            parsedScripts.put(source, script);
                         }
                     }
                 }
             } else {
-                parsedLineNodes = bshParse(source, new StringReader((String) expr));
+                script = interpreter.parseScript(source, new StringReader((String) expr));
             }
             
-            return bshEval(source, parsedLineNodes, interpreter);
+            return interpreter.evalParsedScript(script);
         } catch (InterpreterError e) {
             throw new BSFException("BeanShell interpreter internal error: "+ e + sourceInfo(source,lineNo,columnNo));
         } catch (TargetError e2) {
@@ -261,95 +261,5 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
     
     private String sourceInfo(String source, int lineNo, int columnNo) {
         return "BSF info: " + source + " at line: " + lineNo +" column: " + columnNo;
-    }
-    
-    public List bshParse(String sourceFileInfo, Reader in) throws ParseException {
-        List parsedLineNodes = new LinkedList();
-        Parser parser = new Parser(in);
-
-        boolean eof = false;
-        while(!eof) {
-            try {
-                eof = parser.Line();
-                if (parser.jjtree.nodeArity() > 0) {
-                    SimpleNode node = (SimpleNode) parser.jjtree.rootNode();
-                    // nodes remember from where they were sourced
-                    node.setSourceFile(sourceFileInfo);
-                    parsedLineNodes.add(node);
-                    if (Debug.verboseOn()) Debug.logVerbose("// " + node.getText());
-                }
-            } catch (ParseException e) {
-                // add the source file info and throw again
-                e.setErrorSourceFile(sourceFileInfo);
-                Debug.logError(e);
-                throw e;
-            } finally {
-                parser.jjtree.reset();
-            }
-        }
-        
-        return parsedLineNodes;
-    }
-    
-    public Object bshEval(String sourceFileInfo, List parsedLineNodes, Interpreter parentInterpreter) throws EvalError {
-        if (parsedLineNodes == null) {
-            return null;
-        }
-        NameSpace nameSpace = parentInterpreter.getNameSpace();
-        Object retVal = null;
-        if (Debug.verboseOn()) Debug.logVerbose("eval: nameSpace = " + nameSpace);
-        
-        //Interpreter localInterpreter = new Interpreter(in, System.out, System.err, false, nameSpace, parentInterpreter, sourceFileInfo);
-        
-        CallStack callstack = new CallStack();
-        callstack.push(nameSpace);
-        
-        Iterator lineNodeIter = parsedLineNodes.iterator();
-        while(lineNodeIter.hasNext()) {
-            SimpleNode node = (SimpleNode) lineNodeIter.next();
-            try {
-                retVal = node.eval(callstack, parentInterpreter);
-
-                // sanity check during development
-                if (callstack.depth() > 1) throw new InterpreterError("Callstack growing: " + callstack);
-
-                if (retVal instanceof ReturnControl) {
-                    retVal = ((ReturnControl)retVal).value;
-                    break; // non-interactive, return control now
-                }
-            } catch (InterpreterError e) {
-                Debug.logError(e);
-                throw new EvalError("Sourced file: " + sourceFileInfo + " internal Error: " + e.getMessage(), node, callstack);
-            } catch (TargetError e) {
-                // failsafe, set the Line as the origin of the error.
-                if (e.getNode() == null) e.setNode(node);
-                Debug.logError(e, "Outermost exception: ");
-                Debug.logError(e.getTarget(), "BSH Target Exception: ");
-                //Debug.logError(e.getCause(), "BSH Cause Exception: ");
-                e.reThrow("Sourced file: " + sourceFileInfo);
-            } catch (EvalError e) {
-                // failsafe, set the Line as the origin of the error.
-                if (e.getNode() == null) e.setNode(node);
-                Debug.logError(e);
-                e.reThrow("Sourced file: " + sourceFileInfo);
-            } catch (Exception e) {
-                Debug.logError(e);
-                EvalError newError = new EvalError("Sourced file: " + sourceFileInfo + " unknown error: " + e.getMessage(), node, callstack);
-                Debug.logError(newError);
-                throw newError;
-            } catch (TokenMgrError e) {
-                Debug.logError(e);
-                EvalError newError = new EvalError("Sourced file: " + sourceFileInfo + " Token Parsing Error: " + e.getMessage(), node, callstack);
-                Debug.logError(newError);
-                throw newError;
-            } finally {
-                // reinit the callstack
-                if (callstack.depth() > 1) {
-                    callstack.clear();
-                    callstack.push(nameSpace);
-                }
-            }
-        }
-        return Primitive.unwrap(retVal);
     }
 }

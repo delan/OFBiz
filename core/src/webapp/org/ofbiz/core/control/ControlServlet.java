@@ -416,8 +416,8 @@ public class ControlServlet extends HttpServlet {
     }
     
     protected void configureBSF() {
-        String[] extensions = {"bsh"};
-        BSFManager.registerScriptingEngine("beanshell", "bsh.OfbizBshBsfEngine", extensions);
+        String[] bshExtensions = {"bsh"};
+        BSFManager.registerScriptingEngine("beanshell", "org.ofbiz.core.util.OfbizBshBsfEngine", bshExtensions);
         //BSFManager.registerScriptingEngine("beanshell", "bsh.util.BeanShellBSFEngine", extensions);
 
         String[] jsExtensions = {"js"};
