@@ -79,5 +79,8 @@
     <classpathentry kind="lib" path="components/entity/lib/jdbc/sapdbc.jar"/>
     <classpathentry kind="lib" path="components/accounting/lib/worldpay/cryptix.jar"/>
     <classpathentry kind="lib" path="components/accounting/lib/worldpay/select.jar"/>
+    <classpathentry kind="lib" path="base/lib/servlet.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/commons-dbcp.jar"/>
+    <classpathentry kind="var" path="JCE_LIB"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>
