@@ -56,6 +56,27 @@ import java.util.List;
 
 public class WfExecutionObjectImpl implements WfExecutionObject {
     
+    // Workflow state types
+    public static final int WORKFLOW_STATE_OPEN = 100;
+    public static final int WORKFLOW_STATE_CLOSED = 200;    
+    
+    // While open types
+    public static final int WORKFLOW_OPEN_NOT_RUNNING = 110;
+    public static final int WORKFLOW_OPEN_RUNNING = 120;
+    
+    // Why not running types
+    public static final int WORKFLOW_NOT_STARTED = 111;
+    public static final int WORKFLOW_SUSPENDED = 112;
+    
+    // How closed types
+    public static final int WORKFLOW_COMPLETED = 201;
+    public static final int WORKFLOW_TERMINATED = 202;
+    public static final int WORKFLOW_ABORTED = 203;
+    
+    // Process Manager state types
+    public static final int PROCESS_MGR_DISABLED = 10;
+    public static final int PROCESS_MGR_ENABLED = 11;
+        
     // Attribute instance 'name'
     private String name;
     
@@ -76,8 +97,9 @@ public class WfExecutionObjectImpl implements WfExecutionObject {
      * @param pName Initial value for attribute 'name'
      * @param pDescription Initial value for attribute 'description'
      */
-    public WfExecutionObjectImpl(String pName) {
-        name = pName;
+    public WfExecutionObjectImpl(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
     
     /**
