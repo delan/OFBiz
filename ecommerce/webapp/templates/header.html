@@ -1,8 +1,9 @@
+<#assign layoutSettings = request.layoutSettings>
 
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${request.layoutSettings.companyName}: ${content.title}</title>
+    <title>${layoutSettings.companyName?if_exists}: ${content.title?if_exists}</title>
     <link rel='stylesheet' href='<ofbiz:contenturl>/images/maincss.css</ofbiz:contenturl>' type='text/css'>
     
     <%-- Append CSS for catalog --%>
