@@ -62,7 +62,7 @@
 <!ATTLIST action
     service CDATA #REQUIRED
     mode ( sync | async ) #REQUIRED
-    update-context ( true | false ) "true"
+    result-to-context ( true | false ) "true"
     ignore-error ( true | false ) "true"
 >
 
