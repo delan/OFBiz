@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionList.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
+ * $Id: EntityConditionList.java,v 1.2 2003/11/05 12:08:00 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ package org.ofbiz.entity.condition;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
 
@@ -34,17 +35,17 @@ import org.ofbiz.entity.model.ModelEntity;
  * Encapsulates a list of EntityConditions to be used as a single EntityCondition combined as specified
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class EntityConditionList extends EntityCondition {
 
     protected List conditionList;
-    protected EntityOperator operator;
+    protected EntityJoinOperator operator;
 
     protected EntityConditionList() {}
 
-    public EntityConditionList(List conditionList, EntityOperator operator) {
+    public EntityConditionList(List conditionList, EntityJoinOperator operator) {
         this.conditionList = conditionList;
         this.operator = operator;
     }
@@ -95,6 +96,20 @@ public class EntityConditionList extends EntityCondition {
             EntityCondition entityCondition = (EntityCondition) exprIter.next();
             entityCondition.checkCondition(modelEntity);
         }
+    }
+
+    public boolean entityMatches(GenericEntity entity) {
+        if (conditionList != null && conditionList.size() > 0) {
+            boolean matches = true;
+            EntityCondition condition = (EntityCondition) conditionList.get(0);
+            EntityOperator.MatchResult result = operator.join(condition, entity);
+            for (int i = 1; !result.shortCircuit && i < conditionList.size(); i++) {
+                condition = (EntityCondition) conditionList.get(i);
+                result = operator.join(condition, entity);
+            }
+            return result.matches;
+        }
+        return false;
     }
 
     public String toString() {

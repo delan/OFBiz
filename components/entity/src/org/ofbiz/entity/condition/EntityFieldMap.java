@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
+ * $Id: EntityFieldMap.java,v 1.2 2003/11/05 12:08:00 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.jdbc.SqlJdbcUtil;
 import org.ofbiz.entity.model.ModelEntity;
@@ -38,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class EntityFieldMap extends EntityCondition {
@@ -78,15 +79,42 @@ public class EntityFieldMap extends EntityCondition {
         List whereFields = new ArrayList();
 
         if (fieldMap != null && fieldMap.size() > 0) {
-            for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
-                ModelField curField = modelEntity.getField(fi);
+            if (modelEntity == null) {
+                Iterator iter = fieldMap.keySet().iterator();
+                while (iter.hasNext()) {
+                    String fieldName = (String) iter.next();
+                    whereFields.add(fieldName);
+                }
+            } else {
+                for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
+                    ModelField curField = modelEntity.getField(fi);
 
-                if (fieldMap.containsKey(curField.getName())) {
-                    whereFields.add(curField);
+                    if (fieldMap.containsKey(curField.getName())) {
+                        whereFields.add(curField);
+                    }
                 }
             }
         }
         return SqlJdbcUtil.makeWhereStringFromFields(whereFields, fieldMap, operator.getCode(), entityConditionParams);
+    }
+
+    public boolean entityMatches(GenericEntity entity) {
+        Iterator iter = fieldMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            String fieldName = (String) entry.getKey();
+            Object value = entity.get( fieldName );
+            if ( value == null ) {
+                if ( entry.getValue() != null ) {
+                    return false;
+                }
+            } else {
+                if ( !value.equals( entry.getValue() ) ) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {

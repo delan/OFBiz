@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
+ * $Id: EntityExpr.java,v 1.2 2003/11/05 12:08:00 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
@@ -36,7 +37,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -49,7 +50,7 @@ public class EntityExpr extends EntityCondition {
 
     protected EntityExpr() {}
 
-    public EntityExpr(String lhs, EntityOperator operator, Object rhs) {
+    public EntityExpr(Object lhs, EntityComparisonOperator operator, Object rhs) {
         if (lhs == null) {
             throw new IllegalArgumentException("The field name cannot be null");
         }
@@ -62,13 +63,13 @@ public class EntityExpr extends EntityCondition {
         this.rhs = rhs;
     }
 
-    public EntityExpr(String lhs, boolean leftUpper, EntityOperator operator, Object rhs, boolean rightUpper) {
+    public EntityExpr(String lhs, boolean leftUpper, EntityComparisonOperator operator, Object rhs, boolean rightUpper) {
         this(lhs, operator, rhs);
         this.leftUpper = leftUpper;
         this.rightUpper = rightUpper;
     }
 
-    public EntityExpr(EntityCondition lhs, EntityOperator operator, EntityCondition rhs) {
+    public EntityExpr(EntityCondition lhs, EntityJoinOperator operator, EntityCondition rhs) {
         if (lhs == null) {
             throw new IllegalArgumentException("The left EntityCondition argument cannot be null");
         }
@@ -117,11 +118,11 @@ public class EntityExpr extends EntityCondition {
         StringBuffer whereStringBuffer = new StringBuffer();
 
         if (lhs instanceof String) {
-            ModelField field = (ModelField) modelEntity.getField((String) this.getLhs());
-
-            if (field != null) {
+            ModelField field = getField(modelEntity, (String) this.getLhs());
+            String colName = getColName(field, (String) this.getLhs());
+            if (colName != null) {
                 if (this.getRhs() == null) {
-                    whereStringBuffer.append(field.getColName());
+                    whereStringBuffer.append(colName);
                     if (EntityOperator.NOT_EQUAL.equals(this.getOperator())) {
                         whereStringBuffer.append(" IS NOT NULL ");
                     } else {
@@ -129,9 +130,9 @@ public class EntityExpr extends EntityCondition {
                     }
                 } else {
                     if (this.isLUpper()) {
-                        whereStringBuffer.append("UPPER(" + field.getColName() + ")");
+                        whereStringBuffer.append("UPPER(" + colName + ")");
                     } else {
-                        whereStringBuffer.append(field.getColName());
+                        whereStringBuffer.append(colName);
                     }
                     whereStringBuffer.append(' ');
                     whereStringBuffer.append(this.getOperator().toString());
@@ -147,55 +148,79 @@ public class EntityExpr extends EntityCondition {
                             while (rhsIter.hasNext()) {
                                 Object inObj = rhsIter.next();
 
-                                whereStringBuffer.append('?');
+                                addValue(whereStringBuffer, field, inObj, entityConditionParams);
+
                                 if (rhsIter.hasNext()) {
                                     whereStringBuffer.append(", ");
                                 }
 
-                                if (this.isRUpper()) {
-                                    if (inObj instanceof String) {
-                                        inObj = ((String) inObj).toUpperCase();
-                                    }
-                                }
-                                entityConditionParams.add(new EntityConditionParam(field, inObj));
                             }
                         } else {
-                            whereStringBuffer.append(" ? ");
-
-                            if (this.isRUpper()) {
-                                if (rhs instanceof String) {
-                                    rhs = ((String) rhs).toUpperCase();
-                                }
-                            }
-                            entityConditionParams.add(new EntityConditionParam(field, rhs));
+                            addValue(whereStringBuffer, field, rhs, entityConditionParams);
                         }
 
-                        whereStringBuffer.append(") ");
+                        whereStringBuffer.append(')');
                     } else {
-                        whereStringBuffer.append(" ? ");
-
-                        if (this.isRUpper()) {
-                            if (rhs instanceof String) {
-                                rhs = ((String) rhs).toUpperCase();
-                            }
-                        }
-                        entityConditionParams.add(new EntityConditionParam(field, rhs));
+                        addValue(whereStringBuffer, field, rhs, entityConditionParams);
                     }
                 }
             } else {
                 throw new IllegalArgumentException("ModelField with field name " + (String) this.getLhs() + " not found");
             }
         } else if (lhs instanceof EntityCondition) {
-            // then rhs MUST also be an EntityCondition
             whereStringBuffer.append('(');
             whereStringBuffer.append(((EntityCondition) lhs).makeWhereString(modelEntity, entityConditionParams));
             whereStringBuffer.append(") ");
             whereStringBuffer.append(this.getOperator().toString());
             whereStringBuffer.append(" (");
-            whereStringBuffer.append(((EntityCondition) rhs).makeWhereString(modelEntity, entityConditionParams));
+            if (rhs instanceof EntityCondition) {
+                whereStringBuffer.append(((EntityCondition) rhs).makeWhereString(modelEntity, entityConditionParams));
+            } else {
+                addValue(whereStringBuffer, null, rhs, entityConditionParams);
+            }
             whereStringBuffer.append(')');
         }
         return whereStringBuffer.toString();
+    }
+
+    public boolean entityMatches(GenericEntity entity) {
+        ModelEntity modelEntity = entity.getModelEntity();
+        if (this.operator instanceof EntityComparisonOperator) {
+            EntityComparisonOperator comparer = (EntityComparisonOperator) this.operator;
+            Object leftValue;
+            if (lhs instanceof String) {
+                leftValue = entity.get( (String) lhs );
+                if (this.isLUpper() && leftValue instanceof String ) {
+                    leftValue = ( (String) leftValue ).toUpperCase();
+                }
+            } else if (lhs instanceof EntityFunction) {
+                EntityFunction func = (EntityFunction) lhs;
+                leftValue = func.eval(entity);
+            } else {
+                leftValue = lhs;
+            }
+            Object rightValue;
+            if (rhs instanceof EntityFunction) {
+                EntityFunction func = (EntityFunction) rhs;
+                rightValue = func.eval(entity);
+            } else {
+                rightValue = rhs;
+            }
+            if (this.isRUpper() && rightValue instanceof String ) {
+                rightValue = ( (String) rightValue ).toUpperCase();
+            }
+
+            return comparer.compare(leftValue, rightValue);
+        } else if (lhs instanceof EntityCondition && this.operator instanceof EntityJoinOperator) {
+            EntityJoinOperator joiner = (EntityJoinOperator) this.operator;
+            EntityOperator.MatchResult result = joiner.join((EntityCondition) lhs, entity);
+            if (!result.shortCircuit) {
+                result = joiner.join((EntityCondition) rhs, entity);
+            }
+            return result.matches;
+        } else {
+            return false;
+        }
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
@@ -209,6 +234,15 @@ public class EntityExpr extends EntityCondition {
             ((EntityCondition) rhs).checkCondition(modelEntity);
         }
     }
+
+	protected void addValue(StringBuffer buffer, ModelField field, Object value, List params) {
+		if (this.isRUpper()) {
+			if (value instanceof String) {
+				value = ((String) value).toUpperCase();
+			}
+		}
+		super.addValue(buffer, field, value, params);
+	}
 
     public String toString() {
         return "[Expr::" + lhs + "::" + operator + "::" + rhs + "]";

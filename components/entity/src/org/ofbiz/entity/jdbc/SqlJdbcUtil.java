@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.4 2003/10/18 06:24:50 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.5 2003/11/05 12:08:00 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -175,15 +175,15 @@ public class SqlJdbcUtil {
 
                 if (useParenthesis) sql.append(openParens.toString());
                 sql.append(restOfStatement.toString());
-                
+
                 // handle tables not included in view-link
                 Iterator meIter = modelViewEntity.getMemberModelMemberEntities().entrySet().iterator();
                 boolean fromEmpty = restOfStatement.length() == 0;
-                
+
                 while (meIter.hasNext()) {
                     Map.Entry entry = (Map.Entry) meIter.next();
                     ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());
-                    
+
                     if (!joinedAliasSet.contains((String) entry.getKey())) {
                         if (!fromEmpty) sql.append(", ");
                         fromEmpty = false;
@@ -300,7 +300,7 @@ public class SqlJdbcUtil {
 
                     ModelEntity linkEntity = modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
                     ModelEntity relLinkEntity = modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
-                    
+
                     if (linkEntity == null) {
                         throw new GenericEntityException("Link entity not found with alias: " + viewLink.getEntityAlias() + " for entity: " + modelViewEntity.getEntityName());
                     }
@@ -440,7 +440,7 @@ public class SqlJdbcUtil {
                 sql.append(" GROUP BY ");
                 sql.append(groupByString);
             }
-            
+
             sql.append(")");
             return sql.toString();
         } else {
@@ -479,7 +479,8 @@ public class SqlJdbcUtil {
      *
      * @param sqlP
      * @param list
-     * @param entity
+     * @param dummyValue
+     * @param modelFieldTypeReader
      * @throws GenericEntityException
      */
     public static void setValuesWhereClause(SQLProcessor sqlP, List list, GenericValue dummyValue, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
@@ -499,8 +500,9 @@ public class SqlJdbcUtil {
      *  to the an SQL statement (SQL-Processor)
      *
      * @param sqlP
-     * @param list
+     * @param modelEntity
      * @param entity
+     * @param modelFieldTypeReader
      * @throws GenericEntityException
      */
     public static void setPkValues(SQLProcessor sqlP, ModelEntity modelEntity, GenericEntity entity, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
@@ -548,22 +550,22 @@ public class SqlJdbcUtil {
                 case 10:
                     Object obj = null;
                     InputStream binaryInput = null;
-                    
+
                     byte[] fieldBytes = rs.getBytes(ind);
                     if (fieldBytes != null && fieldBytes.length > 0) {
                         binaryInput = new ByteArrayInputStream(fieldBytes);
                     }
-                    
+
                     if (fieldBytes != null && fieldBytes.length <= 0) {
                         Debug.logWarning("Got bytes back for Object field with length: " + fieldBytes.length + " while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + "): ", module);
                     }
-                    
+
                     //alt 1: binaryInput = rs.getBinaryStream(ind);
                     //alt 2: Blob blobLocator = rs.getBlob(ind);
                     //if (blobLocator != null) {
                     //    binaryInput = blobLocator.getBinaryStream();
                     //}
-                    
+
                     if (binaryInput != null) {
                         ObjectInputStream in = null;
                         try {
@@ -670,7 +672,7 @@ public class SqlJdbcUtil {
 
         if (fieldValue != null) {
             if (!ObjectType.instanceOf(fieldValue, fieldType)) {
-                // this is only an info level message because under normal operation for most JDBC 
+                // this is only an info level message because under normal operation for most JDBC
                 // drivers this will be okay, but if not then the JDBC driver will throw an exception
                 // and when lower debug levels are on this should help give more info on what happened
                 Class fieldClass = fieldValue.getClass();
@@ -728,11 +730,11 @@ public class SqlJdbcUtil {
             case 10:
                 sqlP.setBinaryStream(fieldValue);
                 break;
-                
+
             case 11:
                 sqlP.setValue((java.sql.Blob) fieldValue);
                 break;
-            
+
             case 12:
                 sqlP.setValue((java.sql.Clob) fieldValue);
                 break;

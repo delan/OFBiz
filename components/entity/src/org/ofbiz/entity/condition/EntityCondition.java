@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCondition.java,v 1.2 2003/09/23 17:25:49 jonesde Exp $
+ * $Id: EntityCondition.java,v 1.3 2003/11/05 12:08:00 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -27,9 +27,13 @@ package org.ofbiz.entity.condition;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.jdbc.SqlJdbcUtil;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
 
 
 /**
@@ -42,12 +46,42 @@ import org.ofbiz.entity.model.ModelEntity;
  * </ul>
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    July 12, 2002
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision: 1.3 $
+ * @since      2.0
  */
 public abstract class EntityCondition implements Serializable {
+    protected ModelField getField(ModelEntity modelEntity, String fieldName) {
+        ModelField modelField = null;
+        if (modelEntity != null) {
+            modelField = (ModelField) modelEntity.getField(fieldName);
+        }
+        return modelField;
+    }
+
+    protected String getColName(ModelField modelField, String fieldName) {
+        String colName = null;
+        if (modelField != null) {
+            colName = modelField.getColName();
+        } else {
+            colName = (String) fieldName;
+        }
+        return colName;
+    }
+
+    protected void addValue(StringBuffer buffer, ModelField field, Object value, List params) {
+        //SqlJdbcUtil.addValue(buffer, params == null ? null : field, value, params);
+        buffer.append(" ? ");
+        params.add(new EntityConditionParam(field, value));
+    }
+
+    public String toString() {
+        return makeWhereString(null, new ArrayList());
+    }
+
     abstract public String makeWhereString(ModelEntity modelEntity, List entityConditionParams);
 
     abstract public void checkCondition(ModelEntity modelEntity) throws GenericModelException;
+
+    abstract public boolean entityMatches(GenericEntity entity);
 }
