@@ -41,25 +41,29 @@ import org.ofbiz.core.entity.*;
  *@version    1.0
  */
 public class EntityConfigUtil {
+    static Document docSave = null;
+    
     public static Element getXmlRootElement() throws GenericEntityConfException {
         return getXmlDocument().getDocumentElement();
     }
 
     public static Document getXmlDocument() throws GenericEntityConfException {
-        URL confUrl = UtilURL.fromResource("entityengine.xml");
-        if (confUrl == null) {
-            throw new GenericEntityConfException("ERROR: could not find entityengine.xml file on the classpath");
+        if (docSave == null) {
+            URL confUrl = UtilURL.fromResource("entityengine.xml");
+            if (confUrl == null) {
+                throw new GenericEntityConfException("ERROR: could not find entityengine.xml file on the classpath");
+            }
+            //Document document = null;
+            try {
+                docSave = UtilXml.readXmlDocument(confUrl);
+            } catch (org.xml.sax.SAXException e) {
+                throw new GenericEntityConfException("Error reading entityengine.xml", e);
+            } catch (javax.xml.parsers.ParserConfigurationException e) {
+                throw new GenericEntityConfException("Error reading entityengine.xml", e);
+            } catch (java.io.IOException e) {
+                throw new GenericEntityConfException("Error reading entityengine.xml", e);
+            }
         }
-        Document document = null;
-        try {
-            document = UtilXml.readXmlDocument(confUrl);
-        } catch (org.xml.sax.SAXException e) {
-            throw new GenericEntityConfException("Error reading entityengine.xml", e);
-        } catch (javax.xml.parsers.ParserConfigurationException e) {
-            throw new GenericEntityConfException("Error reading entityengine.xml", e);
-        } catch (java.io.IOException e) {
-            throw new GenericEntityConfException("Error reading entityengine.xml", e);
-        }
-        return document;
+        return docSave;
     }
 }

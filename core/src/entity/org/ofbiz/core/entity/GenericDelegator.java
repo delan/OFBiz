@@ -136,7 +136,7 @@ public class GenericDelegator {
                 }
 
                 if (checkOnStart) {
-                    Debug.logInfo("Doing database check as requested in entityengine.properties with addMissing=" + addMissing, module);
+                    Debug.logInfo("Doing database check as requested in entityengine.xml with addMissing=" + addMissing, module);
                     try {
                         helper.checkDataSource(this.getModelEntityMapByGroup(groupName), null, addMissing);
                     } catch (GenericEntityException e) {

@@ -43,7 +43,7 @@ import org.ofbiz.core.entity.config.*;
 public class JNDIContextFactory {
     static UtilCache contexts = new UtilCache("JNDIContexts", 0, 0);
 
-    /** Return the initial context according to the entityengine.properties parameters that correspond to the given prefix
+    /** Return the initial context according to the entityengine.xml parameters that correspond to the given prefix
      * @return the JNDI initial context
      */
     public static InitialContext getInitialContext(String jndiServerName) throws GenericEntityConfException {
