@@ -54,12 +54,9 @@ public class WorkEffortPartyAssignmentServices {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
-        // where is userLogin?? TODO
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         Timestamp nowStamp = UtilDateTime.nowTimestamp();
-        Timestamp fromDate = nowStamp;
-
         GenericValue newWorkEffortPartyAssignment = null;
 
         newWorkEffortPartyAssignment = delegator.makeValue("WorkEffortPartyAssignment", null);
@@ -67,15 +64,11 @@ public class WorkEffortPartyAssignmentServices {
 
         toBeStored.add(newWorkEffortPartyAssignment);
 
-        newWorkEffortPartyAssignment.set("workEffortId", context.get("workEffortId"));
-        newWorkEffortPartyAssignment.set("partyId", context.get("partyId"));
-        newWorkEffortPartyAssignment.set("roleTypeId", context.get("roleTypeId"));
-        newWorkEffortPartyAssignment.set("fromDate", fromDate);
-        newWorkEffortPartyAssignment.set("thruDate", context.get("thruDate"), false);
-        newWorkEffortPartyAssignment.set("facilityId", context.get("facilityId"), false);
-        newWorkEffortPartyAssignment.set("comments", context.get("comments"), false);
-        newWorkEffortPartyAssignment.set("mustRsvp", context.get("mustRsvp"), false);
-        newWorkEffortPartyAssignment.set("expectationEnumId", context.get("expectationEnumId"), false);
+        newWorkEffortPartyAssignment.setPKFields(context);
+        if (newWorkEffortPartyAssignment.get("fromDate") == null) {
+            newWorkEffortPartyAssignment.set("fromDate", nowStamp);
+        }
+        newWorkEffortPartyAssignment.setNonPKFields(context);
 
         // if necessary create new status entry, and set statusDateTime date
         String statusId = (String) context.get("statusId");
@@ -97,7 +90,7 @@ public class WorkEffortPartyAssignmentServices {
             return result;
         }
 
-        result.put("fromDate", fromDate);
+        result.put("fromDate", nowStamp);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
 
         return result;
@@ -113,7 +106,6 @@ public class WorkEffortPartyAssignmentServices {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
-        // where is userLogin?? TODO
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         // do a findByPrimary key to see if the entity exists, and other things later
@@ -148,19 +140,10 @@ public class WorkEffortPartyAssignmentServices {
 
         newWorkEffortPartyAssignment = (GenericValue) workEffortPartyAssignment.clone();
         List toBeStored = new LinkedList();
-
         toBeStored.add(newWorkEffortPartyAssignment);
-        Timestamp nowStamp = UtilDateTime.nowTimestamp();
 
-        newWorkEffortPartyAssignment.set("workEffortId", context.get("workEffortId"));
-        newWorkEffortPartyAssignment.set("partyId", context.get("partyId"));
-        newWorkEffortPartyAssignment.set("roleTypeId", context.get("roleTypeId"));
-        newWorkEffortPartyAssignment.set("fromDate", context.get("fromDate"));
-        newWorkEffortPartyAssignment.set("thruDate", context.get("thruDate"), false);
-        newWorkEffortPartyAssignment.set("facilityId", context.get("facilityId"), false);
-        newWorkEffortPartyAssignment.set("comments", context.get("comments"), false);
-        newWorkEffortPartyAssignment.set("mustRsvp", context.get("mustRsvp"), false);
-        newWorkEffortPartyAssignment.set("expectationEnumId", context.get("expectationEnumId"), false);
+        Timestamp nowStamp = UtilDateTime.nowTimestamp();
+        newWorkEffortPartyAssignment.setNonPKFields(context);
 
         // if necessary create new status entry, and set statusDateTime date
         String statusId = (String) context.get("statusId");
@@ -204,7 +187,6 @@ public class WorkEffortPartyAssignmentServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         List errorMessageList = new LinkedList();
-        // where is userLogin?? TODO
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         GenericValue workEffort = null;
 
