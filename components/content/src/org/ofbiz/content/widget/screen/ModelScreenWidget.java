@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenWidget.java,v 1.5 2004/07/24 23:01:20 byersa Exp $
+ * $Id: ModelScreenWidget.java,v 1.6 2004/07/27 20:29:40 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,6 +61,7 @@ import org.ofbiz.content.widget.tree.ModelTree;
 import org.ofbiz.content.widget.tree.TreeStringRenderer;
 import org.ofbiz.content.widget.tree.TreeFactory;
 import org.ofbiz.content.widget.html.HtmlTreeRenderer;
+import org.ofbiz.content.widget.html.HtmlTreeExpandCollapseRenderer;
 import org.ofbiz.entity.GenericValue;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -69,7 +70,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.1
  */
 public abstract class ModelScreenWidget {
@@ -116,6 +117,10 @@ public abstract class ModelScreenWidget {
                 subWidgets.add(new SubContent(modelScreen, subElement));
             } else if ("platform-specific".equals(subElement.getNodeName())) {
                 subWidgets.add(new PlatformSpecific(modelScreen, subElement));
+            } else if ("link".equals(subElement.getNodeName())) {
+                subWidgets.add(new Link(modelScreen, subElement));
+            } else if ("image".equals(subElement.getNodeName())) {
+                subWidgets.add(new Image(modelScreen, subElement));
             } else {
                 throw new IllegalArgumentException("Found invalid screen widget element with name: " + subElement.getNodeName());
             }
@@ -550,30 +555,12 @@ public abstract class ModelScreenWidget {
             TreeStringRenderer treeStringRenderer = (TreeStringRenderer) context.get("treeStringRenderer");
             // if there was no treeStringRenderer put in place, now try finding the request/response in the context and creating a new one
             if (treeStringRenderer == null) {
-                HttpServletRequest request = (HttpServletRequest) context.get("request");
-                HttpServletResponse response = (HttpServletResponse) context.get("response");
-                if (request != null && response != null) {
-                    String renderClassString = modelTree.getRenderClass();
-                    if (UtilValidate.isEmpty(renderClassString)) 
-                        renderClassString = "org.ofbiz.content.widget.html.HtmlTreeRenderer";
-                    try {
-                        Class renderClass = Class.forName(renderClassString);
-                        treeStringRenderer = (TreeStringRenderer)renderClass.newInstance();
-                    } catch (ClassNotFoundException e) {
-                        String errMsg = "Class not found for " + renderClassString + e.toString();
-                        Debug.logError(e, errMsg, module);
-                        throw new RuntimeException(errMsg);
-                    } catch (InstantiationException e2) {
-                        String errMsg = e2.toString();
-                        Debug.logError(e2, errMsg, module);
-                        throw new RuntimeException(errMsg);
-                    } catch (IllegalAccessException e3) {
-                        String errMsg = e3.toString();
-                        Debug.logError(e3, errMsg, module);
-                        throw new RuntimeException(errMsg);
-                    }
+                String renderClassStyle = modelTree.getRenderStyle();
+                if (UtilValidate.isNotEmpty(renderClassStyle) && renderClassStyle.equals("simple")) 
+                    treeStringRenderer = new HtmlTreeRenderer();
+                else
+                    treeStringRenderer = new HtmlTreeExpandCollapseRenderer();
         
-                }
             }
             // still null, throw an error
             if (treeStringRenderer == null) {
@@ -775,5 +762,238 @@ public abstract class ModelScreenWidget {
             return this.locationExdr.expandString(context);
         }
     }
+    
+    public static class Link extends ModelScreenWidget {
+        protected FlexibleStringExpander textExdr;
+        protected FlexibleStringExpander idExdr;
+        protected FlexibleStringExpander styleExdr;
+        protected FlexibleStringExpander targetExdr;
+        protected FlexibleStringExpander targetWindowExdr;
+        protected FlexibleStringExpander prefixExdr;
+        protected Image image;
+        protected String urlMode = "ofbiz";
+        protected boolean fullPath = false;
+        protected boolean secure = false;
+        protected boolean encode = false;
+        
+
+        public Link(ModelScreen modelScreen, Element linkElement) {
+            super(modelScreen, linkElement);
+
+            setText(linkElement.getAttribute("text"));
+            setId(linkElement.getAttribute("id"));
+            setStyle(linkElement.getAttribute("style"));
+            setTarget(linkElement.getAttribute("target"));
+            setTargetWindow(linkElement.getAttribute("target-window"));
+            setPrefix(linkElement.getAttribute("prefix"));
+            setUrlMode(linkElement.getAttribute("url-mode"));
+            setFullPath(linkElement.getAttribute("full-path"));
+            setSecure(linkElement.getAttribute("secure"));
+            setEncode(linkElement.getAttribute("encode"));
+            Element imageElement = UtilXml.firstChildElement(linkElement, "image");
+            if (imageElement != null) {
+                this.image = new Image(modelScreen, imageElement);
+            }
+
+        }
+
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+            try {
+                screenStringRenderer.renderLink(writer, context, this);
+            } catch (IOException e) {
+                String errMsg = "Error rendering link with id [" + getId(context) + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
+        }
+        
+        public String getText(Map context) {
+            return this.textExdr.expandString(context);
+        }
+        
+        public String getId(Map context) {
+            return this.idExdr.expandString(context);
+        }
+        
+        public String getStyle(Map context) {
+            return this.styleExdr.expandString(context);
+        }
+        
+        public String getTarget(Map context) {
+            return this.targetExdr.expandString(context);
+        }
+        
+        public String getTargetWindow(Map context) {
+            return this.targetWindowExdr.expandString(context);
+        }
+        
+        public String getUrlMode() {
+            return this.urlMode;
+        }
+        
+        public String getPrefix(Map context) {
+            return this.prefixExdr.expandString(context);
+        }
+        
+        public boolean getFullPath() {
+            return this.fullPath;
+        }
+        
+        public boolean getSecure() {
+            return this.secure;
+        }
+        
+        public boolean getEncode() {
+            return this.encode;
+        }
+        
+        public Image getImage() {
+            return this.image;
+        }
+
+        public void setText( String val ) {
+            String textAttr = UtilFormatOut.checkNull(val);
+            this.textExdr = new FlexibleStringExpander(textAttr);
+        }
+        public void setId( String val ) {
+            this.idExdr = new FlexibleStringExpander(val);
+        }
+        public void setStyle( String val ) {
+            this.styleExdr = new FlexibleStringExpander(val);
+        }
+        public void setTarget( String val ) {
+            this.targetExdr = new FlexibleStringExpander(val);
+        }
+        public void setTargetWindow( String val ) {
+            this.targetWindowExdr = new FlexibleStringExpander(val);
+        }
+        public void setPrefix( String val ) {
+            this.prefixExdr = new FlexibleStringExpander(val);
+        }
+        public void setUrlMode( String val ) {
+            if (UtilValidate.isEmpty(val))
+                this.urlMode = "ofbiz";
+            else
+                this.urlMode = val;
+        }
+        public void setFullPath( String val ) {
+            String sFullPath = val;
+            if (sFullPath != null && sFullPath.equalsIgnoreCase("true"))
+                this.fullPath = true;
+            else
+                this.fullPath = false;
+        }
+
+        public void setSecure( String val ) {
+            String sSecure = val;
+            if (sSecure != null && sSecure.equalsIgnoreCase("true"))
+                this.secure = true;
+            else
+                this.secure = false;
+        }
+
+        public void setEncode( String val ) {
+            String sEncode = val;
+            if (sEncode != null && sEncode.equalsIgnoreCase("true"))
+                this.encode = true;
+            else
+                this.encode = false;
+        }
+        public void setImage( Image img ) {
+            this.image = img;
+        }
+            
+    }
+
+    public static class Image extends ModelScreenWidget {
+
+        protected FlexibleStringExpander srcExdr;
+        protected FlexibleStringExpander idExdr;
+        protected FlexibleStringExpander styleExdr;
+        protected FlexibleStringExpander widthExdr;
+        protected FlexibleStringExpander heightExdr;
+        protected FlexibleStringExpander borderExdr;
+        protected String urlMode = "content";
+        
+
+        public Image( ModelScreen modelScreen, Element imageElement) {
+            super(modelScreen, imageElement);
+
+            setSrc(imageElement.getAttribute("src"));
+            setId(imageElement.getAttribute("id"));
+            setStyle(imageElement.getAttribute("style"));
+            setWidth(imageElement.getAttribute("width"));
+            setHeight(imageElement.getAttribute("height"));
+            setBorder(imageElement.getAttribute("border"));
+            setUrlMode(imageElement.getAttribute("url-mode"));
+
+        }
+
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+            try {
+                screenStringRenderer.renderImage(writer, context, this);
+            } catch (IOException e) {
+                String errMsg = "Error rendering image with id [" + getId(context) + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
+        }
+        
+        public String getSrc(Map context) {
+            return this.srcExdr.expandString(context);
+        }
+        
+        public String getId(Map context) {
+            return this.idExdr.expandString(context);
+        }
+        
+        public String getStyle(Map context) {
+            return this.styleExdr.expandString(context);
+        }
+
+        public String getWidth(Map context) {
+            return this.widthExdr.expandString(context);
+        }
+
+        public String getHeight(Map context) {
+            return this.heightExdr.expandString(context);
+        }
+
+        public String getBorder(Map context) {
+            return this.borderExdr.expandString(context);
+        }
+        
+        public String getUrlMode() {
+            return this.urlMode;
+        }
+        
+        public void setSrc( String val ) {
+            String textAttr = UtilFormatOut.checkNull(val);
+            this.srcExdr = new FlexibleStringExpander(textAttr);
+        }
+        public void setId( String val ) {
+            this.idExdr = new FlexibleStringExpander(val);
+        }
+        public void setStyle( String val ) {
+            this.styleExdr = new FlexibleStringExpander(val);
+        }
+        public void setWidth( String val ) {
+            this.widthExdr = new FlexibleStringExpander(val);
+        }
+        public void setHeight( String val ) {
+            this.heightExdr = new FlexibleStringExpander(val);
+        }
+        public void setBorder( String val ) {
+            this.borderExdr = new FlexibleStringExpander(val);
+        }
+        public void setUrlMode( String val ) {
+            if (UtilValidate.isEmpty(val))
+                this.urlMode = "content";
+            else
+                this.urlMode = val;
+        }
+            
+    }
+
 }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlTreeRenderer.java,v 1.1 2004/07/24 23:01:20 byersa Exp $
+ * $Id: HtmlTreeRenderer.java,v 1.2 2004/07/27 20:29:40 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -44,20 +44,12 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class HtmlTreeRenderer implements TreeStringRenderer {
 
-    HttpServletRequest request;
-    HttpServletResponse response;
-
     public HtmlTreeRenderer() {}
-
-    public HtmlTreeRenderer(HttpServletRequest request, HttpServletResponse response) {
-        this.request = request;
-        this.response = response;
-    }
 
     public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException {
         StringBuffer sb = new StringBuffer();
@@ -121,13 +113,13 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             boolean fullPath = link.getFullPath();
             boolean secure = link.getSecure();
             boolean encode = link.getEncode();
+            HttpServletResponse res = (HttpServletResponse) context.get("response");
+            HttpServletRequest req = (HttpServletRequest) context.get("request");
             if (urlMode != null && urlMode.equalsIgnoreCase("ofbiz")) {
-                HttpServletResponse response = (HttpServletResponse) context.get("response");
-                HttpServletRequest request = (HttpServletRequest) context.get("request");
-                if (request != null && response != null) {
-                    ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                if (req != null && res != null) {
+                    ServletContext ctx = (ServletContext) req.getAttribute("servletContext");
                     RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                    String urlString = rh.makeLink(request, response, target, fullPath, secure, encode);
+                    String urlString = rh.makeLink(req, res, target, fullPath, secure, encode);
                     writer.write(urlString);
                 } else if (prefix != null) {
                     writer.write(prefix + target);
@@ -136,7 +128,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
                 }
             } else  if (urlMode != null && urlMode.equalsIgnoreCase("content")) {
                 StringBuffer newURL = new StringBuffer();
-                ContentUrlTag.appendContentPrefix(request, newURL);
+                ContentUrlTag.appendContentPrefix(req, newURL);
                 newURL.append(target);
                 writer.write(newURL.toString());
             } else {
@@ -148,10 +140,84 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         writer.write(">");
         
         // the text
-        writer.write(link.getText(context));
+        ModelTree.ModelNode.Image img = link.getImage();
+        if (img == null)
+            writer.write(link.getText(context));
+        else
+            renderImage(writer, context, img);
         
         // close tag
         writer.write("</a>");
+        
+        appendWhitespace(writer);
+    }
+
+    public void renderImage(Writer writer, Map context, ModelTree.ModelNode.Image image) throws IOException {
+        // open tag
+        writer.write("<img ");
+        String id = image.getId(context);
+        if (UtilValidate.isNotEmpty(id)) {
+            writer.write(" id=\"");
+            writer.write(id);
+            writer.write("\"");
+        }
+        String style = image.getStyle(context);
+        if (UtilValidate.isNotEmpty(style)) {
+            writer.write(" class=\"");
+            writer.write(style);
+            writer.write("\"");
+        }
+        String wid = image.getWidth(context);
+        if (UtilValidate.isNotEmpty(wid)) {
+            writer.write(" width=\"");
+            writer.write(wid);
+            writer.write("\"");
+        }
+        String hgt = image.getHeight(context);
+        if (UtilValidate.isNotEmpty(hgt)) {
+            writer.write(" height=\"");
+            writer.write(hgt);
+            writer.write("\"");
+        }
+        String border = image.getBorder(context);
+        if (UtilValidate.isNotEmpty(border)) {
+            writer.write(" border=\"");
+            writer.write(border);
+            writer.write("\"");
+        }
+        String src = image.getSrc(context);
+        if (UtilValidate.isNotEmpty(src)) {
+            writer.write(" src=\"");
+            String urlMode = image.getUrlMode();
+            boolean fullPath = false;
+            boolean secure = false;
+            boolean encode = false;
+            HttpServletResponse response = (HttpServletResponse) context.get("response");
+            HttpServletRequest request = (HttpServletRequest) context.get("request");
+            if (urlMode != null && urlMode.equalsIgnoreCase("ofbiz")) {
+                if (request != null && response != null) {
+                    ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                    RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                    String urlString = rh.makeLink(request, response, src, fullPath, secure, encode);
+                    writer.write(urlString);
+                } else {
+                    writer.write(src);
+                }
+            } else  if (urlMode != null && urlMode.equalsIgnoreCase("content")) {
+                if (request != null && response != null) {
+                    StringBuffer newURL = new StringBuffer();
+                    ContentUrlTag.appendContentPrefix(request, newURL);
+                    newURL.append(src);
+                    writer.write(newURL.toString());
+                }
+            } else {
+                writer.write(src);
+            }
+
+            writer.write("\"");
+        }
+        writer.write("/>");
+        
         
         appendWhitespace(writer);
     }

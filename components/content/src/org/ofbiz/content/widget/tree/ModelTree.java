@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.1 2004/07/24 22:57:29 byersa Exp $
+ * $Id: ModelTree.java,v 1.2 2004/07/27 20:29:40 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ModelTree {
@@ -66,7 +66,7 @@ public class ModelTree {
 
     protected String name;
     protected String rootNodeName;
-    protected String renderClass;
+    protected String renderStyle;
     protected List nodeList = new ArrayList();
     protected Map nodeMap = new HashMap();
     protected GenericDelegator delegator;
@@ -80,7 +80,7 @@ public class ModelTree {
 
         this.name = treeElement.getAttribute("name");
         this.rootNodeName = treeElement.getAttribute("root-node-name");
-        this.renderClass = treeElement.getAttribute("render-class");
+        this.renderStyle = UtilFormatOut.checkEmpty(treeElement.getAttribute("render-style"), "simple");
         this.delegator = delegator;
         this.dispatcher = dispatcher;
 
@@ -154,8 +154,8 @@ public class ModelTree {
         return this.delegator;
     }
 
-    public String getRenderClass() {
-        return this.renderClass;
+    public String getRenderStyle() {
+        return this.renderStyle;
     }
     
 
@@ -165,11 +165,13 @@ public class ModelTree {
         protected String screenLocation;
         protected Label label;
         protected Link link;
+        protected Image image;
         protected List subNodeList = new ArrayList();
         protected List actions = new ArrayList();
         protected String name;
         protected ModelTree modelTree;
         protected List subNodeValues = new ArrayList();
+        protected String expandCollapseStyle;
 
         public ModelNode() {}
 
@@ -177,6 +179,7 @@ public class ModelTree {
 
             this.modelTree = modelTree;
             this.name = nodeElement.getAttribute("name");
+            this.expandCollapseStyle = nodeElement.getAttribute("expand-collapse-style");
     
             Element actionElement = UtilXml.firstChildElement(nodeElement, "entity-one");
             if (actionElement != null) {
@@ -202,6 +205,11 @@ public class ModelTree {
             Element linkElement = UtilXml.firstChildElement(nodeElement, "link");
             if (linkElement != null) {
                 this.link = new Link(linkElement);
+            }
+            
+            Element imageElement = UtilXml.firstChildElement(nodeElement, "image");
+            if (imageElement != null) {
+                this.image = new Image(imageElement);
             }
     
             if (screenElement == null && labelElement == null && linkElement == null) {
@@ -310,6 +318,10 @@ public class ModelTree {
         public String getName() {
             return name;
         }
+
+        public String getExpandCollapseStyle() {
+            return expandCollapseStyle;
+        }
     
         public static class ModelSubNode {
     
@@ -396,6 +408,7 @@ public class ModelTree {
             protected FlexibleStringExpander targetExdr;
             protected FlexibleStringExpander targetWindowExdr;
             protected FlexibleStringExpander prefixExdr;
+            protected Image image;
             protected String urlMode = "ofbiz";
             protected boolean fullPath = false;
             protected boolean secure = false;
@@ -426,6 +439,11 @@ public class ModelTree {
                 setFullPath(linkElement.getAttribute("full-path"));
                 setSecure(linkElement.getAttribute("secure"));
                 setEncode(linkElement.getAttribute("encode"));
+                Element imageElement = UtilXml.firstChildElement(linkElement, "image");
+                if (imageElement != null) {
+                    this.image = new Image(imageElement);
+                }
+    
             }
     
             public void renderLinkString(Writer writer, Map context, TreeStringRenderer treeStringRenderer) {
@@ -477,6 +495,11 @@ public class ModelTree {
             public boolean getEncode() {
                 return this.encode;
             }
+            
+            public Image getImage() {
+                return this.image;
+            }
+
             public void setText( String val ) {
                 String textAttr = UtilFormatOut.checkNull(val);
                 this.textExdr = new FlexibleStringExpander(textAttr);
@@ -524,6 +547,108 @@ public class ModelTree {
                     this.encode = true;
                 else
                     this.encode = false;
+            }
+            public void setImage( Image img ) {
+                this.image = img;
+            }
+                
+        }
+
+        public static class Image {
+
+            protected FlexibleStringExpander srcExdr;
+            protected FlexibleStringExpander idExdr;
+            protected FlexibleStringExpander styleExdr;
+            protected FlexibleStringExpander widthExdr;
+            protected FlexibleStringExpander heightExdr;
+            protected FlexibleStringExpander borderExdr;
+            protected String urlMode = "content";
+            
+            public Image() {
+
+                setSrc(null);
+                setId(null);
+                setStyle(null);
+                setWidth(null);
+                setHeight(null);
+                setBorder(null);
+                setUrlMode(null);
+            }
+
+            public Image( Element imageElement) {
+    
+                setSrc(imageElement.getAttribute("src"));
+                setId(imageElement.getAttribute("id"));
+                setStyle(imageElement.getAttribute("style"));
+                setWidth(imageElement.getAttribute("width"));
+                setHeight(imageElement.getAttribute("height"));
+                setBorder(imageElement.getAttribute("border"));
+                setUrlMode(imageElement.getAttribute("url-mode"));
+    
+            }
+    
+            public void renderImageString(Writer writer, Map context, TreeStringRenderer treeStringRenderer) {
+                try {
+                    treeStringRenderer.renderImage(writer, context, this);
+                } catch (IOException e) {
+                    String errMsg = "Error rendering image with id [" + getId(context) + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                }
+            }
+            
+            public String getSrc(Map context) {
+                return this.srcExdr.expandString(context);
+            }
+            
+            public String getId(Map context) {
+                return this.idExdr.expandString(context);
+            }
+            
+            public String getStyle(Map context) {
+                return this.styleExdr.expandString(context);
+            }
+
+            public String getWidth(Map context) {
+                return this.widthExdr.expandString(context);
+            }
+
+            public String getHeight(Map context) {
+                return this.heightExdr.expandString(context);
+            }
+
+            public String getBorder(Map context) {
+                return this.borderExdr.expandString(context);
+            }
+            
+            public String getUrlMode() {
+                return this.urlMode;
+            }
+            
+            public void setSrc( String val ) {
+                String textAttr = UtilFormatOut.checkNull(val);
+                this.srcExdr = new FlexibleStringExpander(textAttr);
+            }
+            public void setId( String val ) {
+                this.idExdr = new FlexibleStringExpander(val);
+            }
+            public void setStyle( String val ) {
+                this.styleExdr = new FlexibleStringExpander(val);
+            }
+            public void setWidth( String val ) {
+                this.widthExdr = new FlexibleStringExpander(val);
+            }
+            public void setHeight( String val ) {
+                this.heightExdr = new FlexibleStringExpander(val);
+            }
+            public void setBorder( String val ) {
+                this.borderExdr = new FlexibleStringExpander(val);
+            }
+            public void setUrlMode( String val ) {
+                if (UtilValidate.isEmpty(val))
+                    this.urlMode = "content";
+                else
+                    this.urlMode = val;
             }
                 
         }
