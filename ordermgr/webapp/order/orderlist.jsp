@@ -88,6 +88,7 @@
                         maxDate = maxDate + " " + "23:59:59.999";
                     exprs.add(new EntityExpr("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(maxDate, "Timestamp", null, null)));
                 }
+                exprs.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
                 orderHeaderList = delegator.findByAnd("OrderHeader", exprs, UtilMisc.toList("-orderDate"));
             } catch (Exception e) { Debug.logError(e); }
         } else {
@@ -97,7 +98,7 @@
         // lookup by status
         pageParamString = "listStatusId=" + listStatusId;
         pageContext.setAttribute("STATUS_MODE", "YES");
-        orderHeaderList = delegator.findByAnd("OrderHeader", UtilMisc.toMap("statusId", listStatusId), UtilMisc.toList("-orderDate"));
+        orderHeaderList = delegator.findByAnd("OrderHeader", UtilMisc.toMap("orderTypeId", "SALES_ORDER", "statusId", listStatusId), UtilMisc.toList("-orderDate"));
     }
 
     if (orderHeaderList != null && orderHeaderList.size() > 0) pageContext.setAttribute("orderHeaderList", orderHeaderList);
