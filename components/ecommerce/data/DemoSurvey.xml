@@ -2,8 +2,8 @@
 <entity-engine-xml>
     <Survey surveyId="1000" description="Gift Card Purchase Information" isAnonymous="Y" allowMultiple="Y" allowUpdate="N" lastUpdatedStamp="2003-12-05 16:49:33.835" lastUpdatedTxStamp="2003-12-05 16:49:33.835"/>
     <Survey surveyId="1001" description="Gift Card Reload Information" isAnonymous="Y" allowMultiple="Y" allowUpdate="N" lastUpdatedStamp="2003-12-05 16:49:41.943" lastUpdatedTxStamp="2003-12-05 16:49:41.943"/>
-    <Survey surveyId="1002" surveyName="Shopping Survey" description="Tell us about your on-line shopping patterns" isAnonymous="N" allowMultiple="Y" allowUpdate="Y" lastUpdatedStamp="2003-12-05 19:11:04.883" lastUpdatedTxStamp="2003-12-05 19:11:04.883"/>
-    <Survey surveyId="1003" surveyName="Mini-Poll Poll" description="Tell us where the mini-poll should go" isAnonymous="N" allowMultiple="N" allowUpdate="N" lastUpdatedStamp="2003-12-05 19:11:04.883" lastUpdatedTxStamp="2003-12-05 19:11:04.883"/>
+    <Survey surveyId="1002" surveyName="Shopping Survey" description="Tell us about your on-line shopping patterns" submitCaption="Complete Survey" comments="Your answers will help us serve you better" isAnonymous="N" allowMultiple="Y" allowUpdate="Y" lastUpdatedStamp="2003-12-05 19:11:04.883" lastUpdatedTxStamp="2003-12-05 19:11:04.883"/>
+    <Survey surveyId="1003" surveyName="Mini-Poll Poll" description="Tell us where the mini-poll should go" submitCaption="Vote!" isAnonymous="N" allowMultiple="N" allowUpdate="N" lastUpdatedStamp="2003-12-05 19:11:04.883" lastUpdatedTxStamp="2003-12-05 19:11:04.883"/>
     <Survey surveyId="1004" surveyName="Mouse Hand Poll" description="Your mouse hand is" isAnonymous="N" allowMultiple="N" allowUpdate="N" lastUpdatedStamp="2003-12-05 19:11:04.883" lastUpdatedTxStamp="2003-12-05 19:11:04.883"/>
 
     <SurveyQuestionCategory surveyQuestionCategoryId="1000" description="Gift Card Purchase Questions" lastUpdatedStamp="2003-12-04 21:40:23.207" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
