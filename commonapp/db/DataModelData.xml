@@ -188,6 +188,11 @@
   <Enumeration description="Synchronous Execution" enumCode="SYNCHR" enumId="WSE_SYNCHR" sequenceId="02" enumTypeId="WORKFLOW_SUB_EXEC"/>
   <Enumeration description="While loop - go until condition evaluates to false" enumCode="WHILE" enumId="WLK_WHILE" sequenceId="01" enumTypeId="WORKFLOW_LOOP_KIND"/>
   <Enumeration description="Repeat Until loop - go until condition evaluates to true" enumCode="REPEAT_UNTIL" enumId="WLK_REPEAT_UNTIL" sequenceId="02" enumTypeId="WORKFLOW_LOOP_KIND"/>
+  <Enumeration description="No Loop" enumCode="NOLOOP" enumId="WTL_NOLOOP" sequenceId="01" enumTypeId="WORKFLOW_TRANS_LOOP"/>
+  <Enumeration description="From Loop" enumCode="FROMLOOP" enumId="WTL_FROMLOOP" sequenceId="02" enumTypeId="WORKFLOW_TRANS_LOOP"/>
+  <Enumeration description="To Loop" enumCode="TOLOOP" enumId="WTL_TOLOOP" sequenceId="03" enumTypeId="WORKFLOW_TRANS_LOOP"/>
+  <Enumeration description="Condition" enumCode="CONDITION" enumId="WTC_CONDITION" sequenceId="01" enumTypeId="WORKFLOW_TRANS_COND"/>
+  <Enumeration description="Otherwise" enumCode="OTHERWISE" enumId="WTC_OTHERWISE" sequenceId="02" enumTypeId="WORKFLOW_TRANS_COND"/>
   <EnumerationType description="Parent Type for all Work Effort enum types" enumTypeId="WORK_EFFORT" hasTable="N" parentTypeId=""/>
   <EnumerationType description="Work Effort Expectations" enumTypeId="WORK_EFF_EXPECT" hasTable="N" parentTypeId="WORK_EFFORT"/>
   <EnumerationType description="Work Effort Scope Classifications" enumTypeId="WORK_EFF_SCOPE" hasTable="N" parentTypeId="WORK_EFFORT"/>
@@ -201,6 +206,8 @@
   <EnumerationType description="Workflow Tool Type" enumTypeId="WORKFLOW_TOOL_TYPE" hasTable="N" parentTypeId="WORKFLOW"/>
   <EnumerationType description="Workflow SubFlow Execution" enumTypeId="WORKFLOW_SUB_EXEC" hasTable="N" parentTypeId="WORKFLOW"/>
   <EnumerationType description="Workflow Loop Kind" enumTypeId="WORKFLOW_LOOP_KIND" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow Transition Loop Type" enumTypeId="WORKFLOW_TRANS_LOOP" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow Transition Condition Type" enumTypeId="WORKFLOW_TRANS_COND" hasTable="N" parentTypeId="WORKFLOW"/>
   <FacilityType description="" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>
   <FacilityType description="" facilityTypeId="ROOM" hasTable="N" parentTypeId=""/>
   <FacilityType description="" facilityTypeId="PLANT" hasTable="N" parentTypeId=""/>
