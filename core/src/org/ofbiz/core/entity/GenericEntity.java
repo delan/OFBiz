@@ -236,6 +236,18 @@ public class GenericEntity implements Serializable {
     }
   }
   
+  public boolean matchesFields(Map keyValuePairs) {
+    if (fields == null) return true;
+    Iterator keyIter = keyValuePairs.keySet().iterator();
+    while (keyIter.hasNext()) {
+      String key = (String) keyIter.next();
+      if (!UtilValidate.areEqual(keyValuePairs.get(key), this.fields.get(key))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
   /** Determines the equality of two GenericEntity objects, overrides the default equals
    *@param  obj  The object (GenericEntity) to compare this two
    *@return      boolean stating if the two objects are equal
