@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.17 2004/01/27 23:04:22 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.18 2004/01/27 23:07:47 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -226,6 +226,7 @@ public class ProductUtilServices {
     public static Map makeStandAloneFromSingleVariantVirtuals(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         Debug.logInfo("Starting makeStandAloneFromSingleVariantVirtuals", module);
@@ -262,7 +263,7 @@ public class ProductUtilServices {
                     Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
                 } else {
                     // for all virtuals with one variant move all info from virtual to variant and remove virtual, make variant as not a variant
-                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.TRUE));
+                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.TRUE, "userLogin", userLogin));
                     
                     numWithOneOnly++;
                     if (numWithOneOnly % 100 == 0) {
@@ -289,7 +290,7 @@ public class ProductUtilServices {
                     Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
                 } else {
                     // for all virtuals with one valid variant move info from virtual to variant, put variant in categories from virtual, remove virtual from all categories but leave "family" otherwise intact, mark variant as not a variant
-                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.FALSE));
+                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.FALSE, "userLogin", userLogin));
                     
                     numWithOneValid++;
                     if (numWithOneValid % 100 == 0) {
