@@ -5,26 +5,26 @@ Introduction.
 ------------
 This component is intended for the travel and tourist industry and is further documented
 at http://www.opentravelsystem.org . Currently it consists out of a hotel reservation site
-consisting out of a 'frontend' application and to maintain product and customers the 
-backend application.
+with a frontend application for Ecommerce and a backend system for the maintenance of 
+product and customers.
 
 how to activate?
 ----------------
-1. copy this (opentravelsystem) directory into the 'hot-deploy' directory so a subdirectory 
-opentravelsystem will be created under hot-deploy.
-2. copy the directories under opentravelsystem/images into the 
-component/images/webapp/images directory.
-(did not yet find a way to display directly from the opentravelsystem/images directory
-	please tell me if you know)
-3. run the command 'ant run-install' from the commandline to create the test data and to
+1. Edit the  component-load.xml file located in the (in ofbiz/base/config directory) and add 
+the line: <load-component component-location="${ofbiz.home}/specialized/opentravelsystem"/>
+similar to the line which are already there
+2. go to build.xml in the Ofbiz directory and add to the "<filelist id="ordered-subdirs" dir="components"
+files=" the reference to  ../specialized/opentravelsystem/build.xml
+3. copy the content of the opentravelsystem/webapp/hotelbackend/images to the new component/images/webapp/images/hotelbackend directory.
+copy the content of the opentravelsystem/webapp/hotelfrontend/images to the new component/images/webapp/images/hotelfrontend directory.
+(did not yet find a way to display directly from the opentravelsystem/images directory please tell me if you know)
+4. run the command 'ant run-install' from the commandline to create the test data and to
 compile.
 
 How to try.
 ----------
-1. the frontend application can be started with:
-http://localhost:8080/frontend
-2. the backend application can be started with:
-https://localhost:8434/backend
+the hote demo site can be started with: https://localhost:8434/hotelbackend
+Clicking on the WebSite tab, will start the Hotel E-commerce application
 
 General comments.
 --------------------

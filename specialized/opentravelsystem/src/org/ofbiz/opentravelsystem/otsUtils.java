@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class otsUtils {
 	
-	public static final String module = utils.class.getName();
+	public static final String module = otsUtils.class.getName();
 
 	public static long explode(GenericValue topEntityName, String childEntityName, PrintWriter writer)	{
 		return explode( topEntityName, childEntityName, null, writer);

@@ -55,18 +55,18 @@
     
     <!-- web applications; will be mounted when using the embedded Jetty container -->
        
-    <webapp name="backend"
+    <webapp name="hotelbackend"
         title="Hotel demo site Admininstrator backend"
         server="default-server"
-        location="webapp/backend"
-        mount-point="/backend"
+        location="webapp/hotelbackend"
+        mount-point="/hotelbackend"
         app-bar-display="false"/>
 
-    <webapp name="frontend"
+    <webapp name="hotelfrontend"
         title="Hotel Demo Website Site Frontend"
         server="default-server"
-        location="webapp/frontend"
-        mount-point="/frontend"
+        location="webapp/hotelfrontend"
+        mount-point="/hotelfrontend"
         app-bar-display="false"/>        
     
 </ofbiz-component>
