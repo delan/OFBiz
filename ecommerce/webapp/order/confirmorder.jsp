@@ -43,8 +43,18 @@
 
 <% pageContext.setAttribute("PageName", "confirmorder");%>
 
-<%    String siteName = SiteDefs.SITE_NAME; %>
-<%    GenericValue userLogin = null; %>
+<%String companyName = UtilProperties.getPropertyValue("ecommerce", "company.name");%>
+<%String companySubtitle = UtilProperties.getPropertyValue("ecommerce", "company.subtitle");%>
+<%String headerImageUrl = UtilProperties.getPropertyValue("ecommerce", "header.image.url");%>
+
+<%String boxBorderColor = UtilProperties.getPropertyValue("ecommerce", "box.border.color", "black");%>
+<%String boxBorderWidth = UtilProperties.getPropertyValue("ecommerce", "box.border.width", "1");%>
+<%String boxTopColor = UtilProperties.getPropertyValue("ecommerce", "box.top.color", "#678475");%>
+<%String boxBottomColor = UtilProperties.getPropertyValue("ecommerce", "box.bottom.color", "white");%>
+<%String boxTopPadding = UtilProperties.getPropertyValue("ecommerce", "box.top.padding", "4");%>
+<%String boxBottomPadding = UtilProperties.getPropertyValue("ecommerce", "box.bottom.padding", "4");%>
+
+<%GenericValue userLogin = null;%>
 
 <html>
   <head>
@@ -58,63 +68,20 @@
           FONT-FAMILY: Helvetica,sans-serif;
           FONT-SIZE: 10pt;
       }
-      .head1 {
-          FONT-FAMILY: Helvetica,sans-serif;
-          MARGIN: 0;
-          FONT-SIZE: 15pt;
-          FONT-WEIGHT: bold;
-          COLOR: #3A4C37;
-      }
-      .head2 {
-          FONT-FAMILY: Helvetica,sans-serif;
-          MARGIN: 0;
-          FONT-SIZE: 12pt;
-          FONT-WEIGHT: bold;
-          COLOR: #000000;
-      }
-      .tabletext {
-          FONT-FAMILY: Verdana,sans-serif;
-          FONT-SIZE: 9pt;
-      }
-      .commentary {
-          FONT-FAMILY: Helvetica,sans-serif;
-          FONT-SIZE: 8pt;
-          FONT-WEIGHT: bold;
-      }
-      ul {
-          FONT-FAMILY: Helvetica,sans-serif;
-          FONT-SIZE: 9pt;
-          }
-      ol {
-          FONT-FAMILY: Helvetica,sans-serif;
-          FONT-SIZE: 9pt;
-      }
   
-  A.buttonlinkbig {
-          FONT-FAMILY: Helvetica,sans-serif;
-          FONT-SIZE: 14pt;
-          FONT-WEIGHT: bold;
-      text-decoration: none;
-          color: blue;
-          }
-          A.buttonlinkbig:hover { color: red; }
-  
-      A.headerlink {
-          FONT-FAMILY: Helvetica,sans-serif;
-          FONT-SIZE: 8pt;
-          FONT-WEIGHT: bold;
-      text-decoration: none;
-          color: blue;
-          }
-          A.headerlink:hover { color: red; }
-  
-          .headertext {
-          FONT-FAMILY: Helvetica,sans-serif;
-          FONT-SIZE: 8pt;
-          FONT-WEIGHT: bold;
-                  text-decoration: none;
-                  color: #567856;
-      }
+    .head1 {font-family: Helvetica,sans-serif; margin: 0; font-size: 15pt; font-weight: bold; COLOR: #3A4C37;}
+    .head2 {font-family: Helvetica,sans-serif; margin: 0; font-size: 12pt; font-weight: bold; COLOR: #000000;}
+    .head3 {font-family: Helvetica,sans-serif; margin: 0; font-size: 10pt; font-weight: bold; COLOR: #000000;}
+    .tabletext {FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+
+    .boxhead {font-family: Helvetica,sans-serif; margin: 0; font-size: 12pt; font-weight: bold; COLOR: #FFFFFF; }
+
+    .button	{border-style: outset; border-color: #9999CC; border-width: 2px; background-color: #dddddd; padding-right: 5px; padding-left: 5px;}
+    A.buttontext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: blue; }
+    A.buttontext:hover {color: red;}
+
+    A.buttontextbig {font-family: Helvetica,sans-serif; font-size: 14pt; font-weight: bold; text-decoration: none; color: blue; }
+    A.buttontextbig:hover {color: red;}
   </style>
   </head>
   <body bgcolor="white">
@@ -186,14 +153,14 @@
 %>
 <h1><div class="head1">Order Confirmation</div></h1>
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
-<div class="tabletext">Thank you for shopping at <%= siteName %> online. Don't forget to stop back for more great deals, contests, new store openings and specials.<br></div>
+<div class="tabletext">Thank you for shopping at <%=companyName%> online. Don't forget to stop back for more great deals, contests, new store openings and specials.<br></div>
 
 <%@ include file="orderinformation.jsp" %>
   
 <br>
 <%@ include file="orderitems.jsp" %>
   
-  <a href="<%=response.encodeUrl(serverRoot + controlPath + "/orderstatus?order_id=" + orderId)%>" class="buttonlinkbig">[View Order]</a>&nbsp;&nbsp;
+  <a href="<%=response.encodeUrl(serverRoot + controlPath + "/orderstatus?order_id=" + orderId)%>" class="buttontextbig">[View Order]</a>&nbsp;&nbsp;
 
 </ofbiz:if> <%-- Order Header --%>
 <ofbiz:unless name="orderHeader">
@@ -203,6 +170,6 @@
 <ofbiz:unless name="validated">
 <font color="red">Security Error!  You do not have permission to view this page.</font><br>
 </ofbiz:unless>
-  <a href="<%=response.encodeUrl(serverRoot + controlPath + "/main")%>" class="buttonlinkbig">[Continue Shopping]</a>
+  <a href="<%=response.encodeUrl(serverRoot + controlPath + "/main")%>" class="buttontextbig">[Continue Shopping]</a>
   </body>
 </html>
