@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.32 $
+ *@version    $Revision: 1.33 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -179,7 +179,7 @@ function gwAll(e) {
         <tr>
           <td NOWRAP>&nbsp;</td>
           <td NOWRAP><div class="tabletext"><b>${uiLabelMap.EcommerceProduct}</b></div></td>
-          <#if showOrderGiftWrap?default("true") == "true">
+          <#if asslGiftWraps?has_content && showOrderGiftWrap?default("true") == "true">
             <td NOWRAP align="right">
               <select class="selectBox" name="GWALL" onChange="javascript:gwAll(this);">
                 <option value="">Gift Wrap All Items</option>
