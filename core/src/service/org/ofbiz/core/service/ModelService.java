@@ -40,6 +40,8 @@ import org.ofbiz.core.util.*;
  */
 public class ModelService {
 
+    public static final String module = ModelService.class.getName();
+
     public static final String OUT_PARAM = "OUT";
     public static final String IN_PARAM = "IN";
 
@@ -100,6 +102,8 @@ public class ModelService {
         Map requiredInfo = new HashMap();
         Map optionalInfo = new HashMap();
 
+        Debug.logVerbose("[ModelService.validate] : Validating context - " + test, module);
+
         // get the info values
         Collection values = contextInfo.values();
 
@@ -135,17 +139,16 @@ public class ModelService {
         }
 
         Debug.logVerbose("[ModelService.validate] : (" + mode + ") Required - " +
-                         requiredTest.size() + " / " + requiredInfo.size());
+                         requiredTest.size() + " / " + requiredInfo.size(), module);
         Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +
-                         optionalTest.size() + " / " + optionalInfo.size());
+                         optionalTest.size() + " / " + optionalInfo.size(), module);
 
 
         try {
             validate(requiredInfo, requiredTest, true);
             validate(optionalInfo, optionalTest, false);
         } catch (ServiceValidationException e) {
-            Debug.logError("[ModelService.validate] : (" + mode +
-                           ") Required test error: " + e.toString());
+            Debug.logError("[ModelService.validate] : (" + mode + ") Required test error: " + e.toString(), module);
             throw e;
         }
     }
@@ -180,8 +183,7 @@ public class ModelService {
                 }
             }
 
-            throw new ServiceValidationException(
-                    "The following required parameters are missing: " + missingStr);
+            throw new ServiceValidationException("The following required parameters are missing: " + missingStr);
         }
         // This is to see if the info set contains all from the test set
         if (!keySet.containsAll(testSet)) {
@@ -195,15 +197,14 @@ public class ModelService {
                     extraStr += ", ";
                 }
             }
-
-            throw new ServiceValidationException("Unknown paramters found: " +
-                                                 extraStr);
+            throw new ServiceValidationException("Unknown paramters found: " + extraStr);
         }
 
         // * Validate types next
         // Warning - the class types MUST be accessible to this classloader
         String LANG_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
-        String SQL_PACKAGE = "java.sql."; // We will test both the raw value and this + raw value
+        String SQL_PACKAGE = "java.sql.";   // We will test both the raw value and this + raw value
+
         Iterator i = testSet.iterator();
         while (i.hasNext()) {
             Object key = i.next();
@@ -213,29 +214,24 @@ public class ModelService {
             try {
                 infoClass = ObjectType.loadClass(infoType);
             } catch (SecurityException se1) {
-                throw new ServiceValidationException(
-                        "Problems with classloader: sercurity exception (" +
+                throw new ServiceValidationException("Problems with classloader: sercurity exception (" +
                         se1.getMessage() + ")");
             } catch (ClassNotFoundException e1) {
                 try {
                     infoClass = ObjectType.loadClass(LANG_PACKAGE + infoType);
                 } catch (SecurityException se2) {
-                    throw new ServiceValidationException(
-                            "Problems with classloader: sercurity exception (" +
+                    throw new ServiceValidationException("Problems with classloader: sercurity exception (" +
                             se2.getMessage() + ")");
                 } catch (ClassNotFoundException e2) {
                     try {
                         infoClass = ObjectType.loadClass(SQL_PACKAGE + infoType);
                     } catch (SecurityException se3) {
-                        throw new ServiceValidationException(
-                                "Problems with classloader: sercurity exception (" +
+                        throw new ServiceValidationException("Problems with classloader: sercurity exception (" +
                                 se3.getMessage() + ")");
                     } catch (ClassNotFoundException e3) {
-                        throw new ServiceValidationException(
-                                "Cannot find and load the class of type: " +
-                                infoType + " or of type: " + LANG_PACKAGE +
-                                infoType + " or of type: " + SQL_PACKAGE +
-                                infoType + ":  (" + e3.getMessage() + ")");
+                        throw new ServiceValidationException("Cannot find and load the class of type: " + infoType +
+                                " or of type: " + LANG_PACKAGE + infoType + " or of type: " + SQL_PACKAGE + infoType +
+                                ":  (" + e3.getMessage() + ")");
                     }
                 }
             }
@@ -244,12 +240,9 @@ public class ModelService {
                 throw new ServiceValidationException("Illegal type found in info map (could not load class for specified type)");
 
             if (!ObjectType.instanceOf(testObject, infoClass)) {
-                String testType = testObject == null ? "null" :
-                        testObject.getClass().getName();
-                throw new ServiceValidationException(
-                        "Type check failed for field " + key +
-                        "; expected type is " + infoType +
-                        "; actual type is: " + testType);
+                String testType = testObject == null ? "null" : testObject.getClass().getName();
+                throw new ServiceValidationException("Type check failed for field " + key + "; expected type is " +
+                        infoType + "; actual type is: " + testType);
             }
         }
     }

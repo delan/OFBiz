@@ -148,7 +148,7 @@ public class DispatchContext {
 
         ModelService retVal = (ModelService) serviceMap.get(serviceName);
         if (retVal == null)
-            throw new GenericServiceException("Cannot locate service by name");
+            throw new GenericServiceException("Cannot locate service by name (" + serviceName + ")");
         return retVal;
     }
 
