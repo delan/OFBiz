@@ -466,6 +466,12 @@
     <request-map uri="product">
         <response name="success" type="view" value="product"/>
     </request-map>
+    <request-map uri="crosssell">
+        <response name="success" type="view" value="product"/>
+    </request-map>
+    <request-map uri="upsell">
+        <response name="success" type="view" value="product"/>
+    </request-map>
 
     <request-map uri="lastviewedproducts">
         <response name="success" type="view" value="lastviewedproducts"/>
