@@ -18,9 +18,8 @@
 
   if(groupName != null && groupName.length() > 0) {
     helperName = delegator.getGroupHelperName(groupName);
-    Element rootElement = EntityConfigUtil.getXmlRootElement();
-    Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
-    List sqlLoadPathElements = UtilXml.childElementList(datasourceElement, "sql-load-path");
+    EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+    List sqlLoadPathElements = datasourceInfo.sqlLoadPaths;
     Iterator slpIter = sqlLoadPathElements.iterator();
     while (slpIter.hasNext()) {
         Element sqlLoadPathElement = (Element) slpIter.next();
