@@ -486,13 +486,13 @@ public class SimpleEvent {
         }
 
         public String getMessage(ClassLoader loader) {
-            Debug.logInfo("[FlexibleMessage.getMessage] isProperty: " + isProperty + ", message: " + message + ", propertyResource: " + propertyResource);
+            //Debug.logInfo("[FlexibleMessage.getMessage] isProperty: " + isProperty + ", message: " + message + ", propertyResource: " + propertyResource);
             if (!isProperty && message != null) {
-                Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
+                //Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
                 return message;
             } else if (isProperty && propertyResource != null && message != null) {
                 String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
-                Debug.logInfo("[FlexibleMessage.getMessage] Adding property message: " + propMsg);
+                //Debug.logInfo("[FlexibleMessage.getMessage] Adding property message: " + propMsg);
                 if (propMsg == null || propMsg.length() == 0)
                     return "Simple Map Processing error occurred, but no message was found, sorry.";
                 else
