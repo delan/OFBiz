@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.15 2004/01/20 17:10:49 ajzeneski Exp $
+ * $Id: GenericDelegator.java,v 1.16 2004/04/23 05:18:10 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -111,6 +111,7 @@ public class GenericDelegator implements DelegatorInterface {
     protected SequenceUtil sequencer = null;
 
     public static GenericDelegator getGenericDelegator(String delegatorName) {
+        if (delegatorName == null) delegatorName = "default";
         GenericDelegator delegator = (GenericDelegator) delegatorCache.get(delegatorName);
 
         if (delegator == null) {

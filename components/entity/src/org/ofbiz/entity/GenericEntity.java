@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.23 2004/04/23 04:40:02 doogie Exp $
+ * $Id: GenericEntity.java,v 1.24 2004/04/23 05:18:10 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.23 $
+ *@version    $Revision: 1.24 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -197,6 +197,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      */
     public GenericDelegator getDelegator() {
         if (internalDelegator == null) {
+            if (delegatorName == null) delegatorName = "default";
             if (delegatorName != null) internalDelegator = GenericDelegator.getGenericDelegator(delegatorName);
             if (internalDelegator == null) {
                 throw new IllegalStateException("[GenericEntity.getDelegator] could not find delegator with name " + delegatorName);
