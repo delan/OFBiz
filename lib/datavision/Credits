@@ -31,6 +31,10 @@ pt_PT Portuguese (Portugal)       Sergio Ferreira <sergio@moredata.pt>
 
 ru_RU Russian (Russia)            Igor Osminin <oia@kovgok.ru>
 
+sk_SK Slovakian (Slovakia)        Matej "Mato" Holly <h.matej@krs.sk>
+
+tr_TR Turkish (Turkey)            Ismail Cansiz <icansiz@haysoft.com>
+
 ================================================================
 
 Bug reports, fixes, and suggestions have come from:
@@ -51,9 +55,10 @@ TonyTomov <ttomov@abs.bg>
     arbitrary SQL statements, UNION, etc. Found subtotal creation bugs
     (null format in original field caused NullPointerException; non-Float
     values were not properly converted). Found database column title
-    creation bug. Found many, many more bugs.
+    creation bug. Found hidden formula evaluation bug. Found many, many
+    more bugs.
 
-Achim Weßling <Achim.Wessling@gt-net.de>
+Achim WeÃling <Achim.Wessling@gt-net.de>
 
     Found Informix driver issues. Found field widget selection bug.
 
@@ -82,7 +87,7 @@ Jaume from Tau Ingenieros <tauinge@menta.net>
 
 John Wilson <tug@wilson.co.uk>
 
-    Author of the MinML XML parser used by DataVision.
+    Author of the MinML2 XML parser used by DataVision.
 
 Kai Toedter <kai@toedter.com>
 
@@ -109,7 +114,9 @@ Miguel Angel Rojas Aquino <mrojas_aquino@mail.flashmail.com>
     Pointed out Oracle date/timestamp issues. Found fixes that greatly
     improved print quality and layout. Found format dialog crash bug. Found
     Windows field popup menu bug. Found bug with columns in headers when
-    the query returns zero rows.
+    the query returns zero rows. Found fix (avoid reading same column two
+    times) that allows Progress JDBC driver to read metadata. Documentation
+    improvement suggestions.
 
 William Colls <bcolls@cbnlottery.com>
 
@@ -191,7 +198,8 @@ Brian Johnson <mastermnd@users.sourceforge.net>
 
     Found PDF layout engine newline bug. Found user column id generation
     bug. Pointed out missing FLOAT constant in Column.isNumeric(). Found
-    bug in PDF line splitting code.
+    bug in PDF line splitting code. Suggested field name should go in title
+    of FormatWin.
 
 Russell V. Toone <russ@redcon.com>
 
@@ -212,3 +220,70 @@ Pete Fowler <pfowler@tempo.com.au>
 Thorsten Wenzlaff <wenzlaff@users.sourceforge.net>
 
     Discussions about table and column name case sensitivity.
+
+Steven Findlay <StevenFindlay@noratek.com>
+
+    Reported landscape printing problem.
+
+Gene Coldwell <coldwell@csptexas.com>
+
+    Made a voluntary monitary contribution for DataVision. Thank you, Gene.
+
+Saleem Burhani <pesheek@yahoo.com>
+
+    Pointed out image field path-to-URL translation bug.
+
+Andre Wohnig <a.wohnig@thiesen.com>
+
+    Found bug in Expression code that looks for columns.
+
+Bill Shaw <Bill.Shaw@atrs.state.ar.us>
+
+    Noticed that SQL was not generated when the report contained user
+    columns but no database columns.
+
+Shannon Noe <noe@lim.com>
+
+    Pointed out problems with contents of GPL text and links on legal page.
+
+Riq Willitts <riq@scs.co.uk>
+
+    Found bug in evaluation of hidden formula fields.
+
+Peter van der Kooi <kooi008@users.sourceforge.net>
+
+    Found bug in SQLTable that made column loading not work in certain
+    cases.
+
+Laura Moloney <laura55@users.sourceforge.net>
+
+    Helped clarify confusing documentation of suppression proc behavior.
+    Found bug where database connection reset deleted query.
+
+Jeff Maldonado <jeffmaldonado@hotmail.com>
+
+    Found FieldPickerWin bug that prevented charsep columns from being
+    displayed.
+
+Runako Godfrey <runako@users.sourceforge.net>
+
+    Found and fixed PDF footer layout problems.
+
+Pierre Ernst <pernst@cbnco.com>
+
+    Reported null pointer exception when certain special fields appear in a
+    report and their values are null.
+
+Lixin Fan <LixinF@mailcode.com>
+
+    Found bug in XML layout engine XMLDecl element.
+
+Khadiyd Idris <khad@linuxindo.com>
+
+    Contributed HTML layout engine border code.
+
+Tim Pauwels <Timp@landc.be>
+
+    Suggested creation of Column.equals and many gui code cleanup
+    improvements. Showed that VisTableWin can work with any data source,
+    not just SQL.

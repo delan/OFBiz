@@ -2,15 +2,53 @@
     Bugs
 ================================================================
 
-* Edit database connection. Click "OK" to save (without making any
-  changes). Run report. java.sql.SQLException: ERROR: Table name "jobs"
-  specified more than once.
+* Sandeep's Japanese data problem.
 
-* Swing layout engine eating up memory, even between reports. "Using -in
-  the above application jws- the swing layout on different reports after
-  some time I get a java.lang.OutOfMemory exception. I tried gc, weak
-  referencing etc but nothing works? Can you help?" Kleandros
-  Stogiannopoulos, <kstogian@logicdis.gr>
+* Informix quoted table/col names. [Chad Lemmen <chad@lemmen.com>]
+
+* Char sep problems described by James Lin in
+  <http://sourceforge.net/forum/message.php?msg_id=1984107>.
+  Need to reproduce; need his report XML file.
+
+* Laura's group footer problem. [Laura Moloney, <lmoloney@theradex.com>]
+
+* The scroll bar hops around when you move from page to page. I've worked
+  around this by saving the position before switching to a page and then
+  switching back, but it still jumps around.
+
+* [Try to reproduce; was not fixed in 0.7.3 or 0.7.4]: The problem occur
+  when I used the section suppression proc to suppress 2 detail sections,
+  which will only appear once in my report and suppressed throughout. After
+  using the suppression proc, all the contents is printed within 1 page,
+  but the 2nd page continues to print out the page header and the page
+  footer with blank contents. I m using the SWING layout engine. -- Kui
+  Mian
+
+  I emailed Kui Mian asking if this had gone away. He said it hadn't.
+
+* When move hidden field, it draws as if not hidden. Outline is drawn
+  properly, but text is black instead of gray.
+
+* i can't even open the pdf file -- acrobat tells me there is a sharing
+  violation (Real problem: when parameter XML file name is missing, the
+  message "please specify one on the command line. Report run has been
+  cancelled" appears on the console and the PDF file isn't created
+  properly.)
+
+* [Try to reproduce]: Saleem's header/footer problems on Windows. See XML
+  files he emailed to me.
+
+* Top margin on page 2 and later. -- Andre'. [I can't reproduce this
+  problem.]
+
+* PDF: No special characters like (a-umlaut, u-umlaut) are displayed.
+  Andre Wohnig <a.wohnig@thiesen.com> [I can't reproduce this
+  problem. I emaled Andre on 2/24.]
+
+  I see them just fine.
+
+* PDF: lines longer than field continue past right side of field.
+  Andre' Wohnig <a.wohnig@thiesen.com>
 
 * What happens when you remove a field that has subtotals? See
   Report.getSubtotalFieldsFor().
@@ -61,11 +99,146 @@
 -- Limit text to box
 
 ================================================================
-    To Do 
+    To Do
 ================================================================
 
-* Documentation: all h3 tags should have X.Y.Z numbers and appear in the
-  TOC.
+----------------------------------------------------------------
+Features
+----------------------------------------------------------------
+
+* Can we set "default font" for each component(text, formula) because I
+  have to change "every" component font in the design ui. -- James Lin
+  <inchlin@users.sourceforge.net>
+
+* Use subtotals in formulas.
+
+* Space on swing toolbar between print and navigation.
+
+* Modify group by, sort by, and join dialogs so that they don't have to
+  read all tables' columns.
+
+* "All" value for list parameters. -- Lili Kushnir,
+  <LKushnir@checkfree.com>
+
+* Handle empty parameters by either using wildcard or null or something
+  like that. [Mayur Purandhar <mayur_purandhar@yahoo.com>]
+
+  Add "default value if not specified"?
+
+* Nee a way to not specify top or bottom values of ranges.
+
+* See Todd Davis mods.
+
+* For arbitrary SQL, need to create a SQL parser that understands both
+  columns/expressions and table names. Big, big problem with reading result
+  metadata after query has run: the PostgreSQL ResultSet object only
+  returns column name, not the table or schema name.
+
+* Better error message when column not found when reading XML (for example,
+  join columns).
+
+* Report error messages to user when Ruby scripts fail.
+
+* Add startup script prefix to datavision.properties, something like this.
+
+    module DV
+	LAYOUT_ENGINE = :INSERT_LAYOUT_ENGINE_NAME_AS_SYMBOL_HERE
+	# ...
+    end
+
+  Users can then refer to DV::LAYOUT_ENGINE in their scripts.
+
+* Due to RMI considerations, we were forced to separate the actual data-
+  and metadata-retrieval of DataVision and replace some components with
+  Serializable equivalents. After succesful implementation, we found that
+  the grouping feature generated an error in the Query.java because it
+  could not find the first element in the columns ArrayList.
+	 
+  We believe that is has to do with the fact that the .indexOfColumn()
+  method uses the standard method for comparing objects of the ArrayList
+  class, which would be too low-level to accurately compare objects. For
+  our project, we have overridden this .indexOfColumn() method with a
+  simple for-loop and added a higher-level .equals() method to the Column
+  class. This way, it seems to work correct when using groups. Since it may
+  be a valid suggestion, we decided to send you a mail with this
+  modification for your consideration. If you have any questions or
+  comments, feel free to EMail us back. -- Gert Van De Slijke
+  <Gertvds@landc.be>
+
+  It is sufficient to write Column.equals() (as he suggested) without
+  rewriting Query.indexOfColumn(). ArrayList.indexOf() calls equals().
+
+* Let user set default font, font size, etc. for new fields. -- Andre
+  Wohnig <a.wohnig@thiesen.com>
+
+* Marker in command history when save file.
+
+* When creating a new report, specify data source. If charsep, get column
+  metadata either as a URL or as a list.
+
+* PDF base fonts don't necessarily show up in the list of fonts in the
+  format dialog. -- Russell V. Toone <russ@redcon.com>
+
+* Parameter gets values from database column. -- Helga Wyns
+
+	* XML read and write
+	* Read data from database
+	* GUI
+	* Documentation
+	* Test
+
+* Where clause gui drag-and-drop. -- Edwin Ramirez
+
+* Applet: java.lang.RuntimePermission exitVM denied.
+
+* Script for section output (e.g., group output). (Hmm...what did I mean
+  by that?)
+
+* Investigate Bean Scripting Framework (BSF) for JRuby and other scripting
+  languages. -- Todd J. Davis <tdavis@msfw.com>
+
+* Turn schema.table.column into Table Ruby object with column ivar and
+  schema object with table ivar.
+
+* Expand name field when AskStringDialog is grown.
+
+* In an oracle environment where multiple schemas with the same table/view
+  definition exist, how do we generate reports without the schema name
+  attached to the database field names, and run the report using the
+  default schema of the user who is running the report? -- Tai-Jen Gordon
+  <tjfong@users.sourceforge.net>
+
+  Perhaps I should add an "ignore schema name" flag? Ugh.
+
+* OLAP (drill-down) features.
+
+* Use where clause in charsep source: evaluate it as a formula and only
+  select the record if the formula's value returns true.
+
+* Use I18N.get(String, int) when reading paper.properties. Problem: this is
+  read during static initialization, so will the locale be correct?
+
+* Option for CSV to suppress all but detail row? -- Don Widkelgren
+  <dtwickelgren@users.sourceforge.net>
+
+  Section suppression procs could do this, if (a) they knew which layout
+  engine was being used and (b) they existed.
+
+* Add DataSource.setReport(). This allows data sources to be re-used from
+  report to report. This is important when you have a connection you want
+  to re-use. The Database ctor that takes a conn also takes a report, and
+  report is immutable. It shouldn't be. Tai-Jen Gordon
+  <tgordon@scintelligence.com>
+
+  All you have to do is add a setReport() method to Database. It has to do
+  two things: set the report and create a new SQLQuery.
+
+    public void setReport(Report r) {
+	report = r;
+	query = new SQLQuery(report);
+    }
+
+* Report calls datasource.setReport.
 
 * Disable "Delete Selected" button from join dialog when there are no
   entries in the list.
@@ -76,34 +249,13 @@
   Parameters have isSet == true then it doesn't run askForParameters(). --
   Brian Johnson <bmj@camfour.com>
 
-* Info for sections: height, number of fields.
+* HTML layout engine option: page headers and footers only once; ignore
+  page breaks.
+
+* Info display for sections: height, number of fields.
 
 * Warning if section height totals (page headers plus details, at least)
   are greater than page height.
-
-* Translations
-
-  * tu_TR (Turkish, Turkey) from Ismail Cansiz <icansiz@haysoft.com>
-  * Chinese from Liangw <liangw-tek@21.com>
-  * Possible Dutch from Nils Ottevanger <N.Ottevanger@hetnet.nl>
-
-  * -q flag translation received for 0.6.0:
-	de_DE
-	it_ID
-
-  * language updates received for 0.6.0:
-	de_DE
-	es_MX
-	it_IT
-	pt_BR
-	ru_RU
-
-  * language updates received for 0.5.5:
-	bg_BG
-	de_DE
-	es_MX
-	it_IT
-	ru_RU
 
 * Add getValue() to all things (columns) for which we now call
   report.columnValue().
@@ -124,9 +276,7 @@
   couldn't distinguish between what are two different columns. How about
   <column name="my-col" name-attr="name" />?
 
-* Need a way to bind different shortcut and accel keys to menu items.
-
-* Let text column fields expand based on data.
+* Let text column fields expand vertically based on data.
 
 * Even/odd page distinction (sections print even only/odd only/both). Idea
   by Oleg <oleg_vn@users.sourceforge.net>.
@@ -142,10 +292,6 @@
   all the columns used. I have to a check to see if a usercolumn uses
   the above and automatically adds the GROUP BY before the ORDER BY.
   (Eddie)
-
-* Web interface for translation submission.
-
-* Updated fr_FR translations.
 
 * Add "quit" to file menu of swing le when it is running standalone.
 
@@ -193,8 +339,7 @@
   groups and you insert a "rec # in group" special field, how will you know
   which group's count is being displayed?
 
-* Remove code in images that turns file paths into URL. As of version
-  0.6.0, we only use URLs and change file paths into "file:" URLs.
+  This is easy to do with Ruby. Provide an example.
 
 * Paste into drag targets (code windows, report).
 
@@ -205,8 +350,6 @@
 * New duplicate command? Necessary?
 
 * Persistent undo/redo between application runs.
-
-* User column tests.
 
 * Idea: use formula to present text interspersed with column data.
 
@@ -258,13 +401,6 @@
   way the report can be distributed to separate users or used with separate
   database instances.
 
-* New layout engine classes from Adeline and Edison. Add them to Credits.
-  LE is not different, except for creation of page, use of TextField, and
-  page.addTextField().
-  Page has new setMargin(), setPage(), and addTextField() methods. Page
-  holds list of fields and iterates over them to paint instead of adding
-  them to the swing page. See print(), paintComponent(), and doPaint().
-
 * Keyboard navigation and defaults for dialogs.
 
 * In the field picker window, visually mark formulas and parameters used in
@@ -299,14 +435,6 @@
 * Can we use SQL error number or message to determine if we want to retry a
   botched login? How was it botched: bad password or something else?
 
-* Docs: testdata directory.
-
-* FAQ:
-
--- classpath error messages
-
--- mailing lists
-
 * Avoid circular references in formulas.
 
 * Need another way to open field picker window besides the "Insert" menu.
@@ -338,8 +466,6 @@
 
 * Reduce coupling (Demeter principle).
 
-* Complete javadoc comments.
-
 * VisTableWin: only enable Delete Selected button when some join's delete
   check box is selected.
 
@@ -349,12 +475,6 @@
   create joins).
 
 * Formula parser checks syntax and types.
-
-* Strings into props file for future I18N.
-
-* Command line opt for alternate string props file.
-
-* Multiple sections moot since no suppression proces yet.
 
 * Dynamically load LayoutEngine subclasses. Allows for dynamic extension.
 
@@ -371,19 +491,19 @@
   that some shared actions aren't really identical when invoked from the
   window menu and from a field (the popup in the field).
 
-* Stored procedures.
-
 * Icons for field picker win.
 
 * Grid toggle for window. When moving or putting down (drag and drop)
   fields, snap to grid. Menu item in Format menu.
 
-* Can add action listener to an entire menu instead of just one item at a 
+* Can add action listener to an entire menu instead of just one item at a
   time.
 
-* Use a Menu Listener!! That way we can enable/disable menus in dialog 
-  window without resorting to calling enable after every select.
-  (See JMenu addMenuListener)
+* Use a Menu Listener. That way we can enable/disable menus in dialog
+  window without resorting to calling enable after every select. (See JMenu
+  addMenuListener)
+
+* Installer script that edits classpath?
 
 * Logo for DataVision.
 
@@ -394,9 +514,6 @@
 
 * Suggestions from Tony: combos, areas, checkbox, background, working
   borders, line, rectangles.
-
-* Add if-then-else and booleans to formula expressions: &, |, &&, ||, <, >,
-  <=, >=, =, ==, !=, <>. Will need booleans for suppression procs, anyway.
 
 * Instead of "This report has been modified" in save dialog, use report
   title.
@@ -413,9 +530,11 @@
 
 * Provide schema-building scripts for ODBC databases.
 
-* Suppression procs: implement, load, save.
-
 * Arbitrary SQL?
+
+  Row.getObject should take string name, not int index.
+
+  Introduce new interface for objects with ids. (Done: Identity).
 
 * Hide ancillary windows when another report window becomes the front one.
   We'll need to associate those windows with the report window first, of
@@ -423,7 +542,7 @@
 
 * Line types (dash, etc.)
 
-* Fix DTD
+* Fix DTD.
 
 * When have visual preview of output, only read first page from database.
 
@@ -434,15 +553,62 @@
 
 * In border tab, example field that displays selected border edges.
 
+----------------------------------------------------------------
+Testing
+----------------------------------------------------------------
+
+* Formula tests to make sure a formula field's formula never gets executed
+  twice.
+
+* Write test for Ruby script eval in char sep row where clause.
+
+* Suppression proc test.
+
+* User column tests.
+
+* I'm testing for the wrong thing with respect to generation of new ids. I
+  should not test to see that the new id == max old id + 1, but rather that
+  the new id is unique.
+
+* Test for formula value in group footer. Make sure it doesn't revert to
+  old value.
+
+----------------------------------------------------------------
+Documentation
+----------------------------------------------------------------
+
+* Informix docs from Chad Lemmen.
+
+* Add success stories to Web site.
+
+* (after writing setReport) New DataSource.setReport; describe in
+  embed.html.
+
+* Add "no group by" to FAQ.
+
+* Complete javadoc comments.
+
+* Testdata directory.
+
+----------------------------------------------------------------
+Translations
+----------------------------------------------------------------
+
+* Possible Serbian and Croation from Ilija, Gojkovic
+  <Ilija.Gojkovic@bcferries.com>
+
+* Waiting for Chinese from Liangw <liangw-tek@21.com>
+
+* Possible Dutch from Nils Ottevanger <N.Ottevanger@hetnet.nl>
+
+* Web interface for translation submission. Even better, Translate-O-Matic
+  Java application.
+
+* Add more comments to datavision.properties for translation program.
+
 ================================================================
 Notes
 ================================================================
-
-Installer script that edits classpath?
-
-Formula language: keep RPN, use embedded Ruby, or write a tree parser?
-Formulas turn into SQL? How reference other formulas? (Find dependencies
-and put them in order in the SQL.) How inclue subtotals?
 
 http://java.sun.com/docs/books/tutorial/uiswing/painting/example-swing/SelectionDemo.java
 

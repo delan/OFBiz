@@ -1,4 +1,4 @@
-<!-- Version 0.6 -->
+<!-- Version 0.7 -->
 <!-- NOTE: THIS DTD IS ONLY A GUIDE. IT MAY NOT BE CORRECT. -->
 <!-- DON'T TRUST IT. -->
 
@@ -26,9 +26,9 @@
 <!ATTLIST paper		name		CDATA	#REQUIRED>
 <!ATTLIST paper		orientation	(portrait|landscape)>
 
-<!ELEMENT source	(database | charsep)>
+<!ELEMENT source	(database|charsep) query?>
 
-<!ELEMENT database	query>
+<!ELEMENT database>
 <!ATTLIST database	driverClassName	CDATA	#REQUIRED
 			connInfo	CDATA	#REQUIRED
 			name		CDATA	#REQUIRED
@@ -51,7 +51,7 @@
 			order		(ascending|descending)	ascending
 >
 
-<!ELEMENT charsep	column*>
+<!ELEMENT charsep	(column*|metadata-url)>
 <!ATTLIST charsep	sep-char	CDATA	#IMPLIED
 >
 
@@ -60,6 +60,11 @@
 			type		(string | number | date)
 			date-format	CDATA
 >
+
+<!-- With metadata-url, PCDATA is the URL from which we read an XML file -->
+<!-- describing columns (same as using inline "column" elements). -->
+<!-- See metadata.dtd for the format of that file. -->
+<!ELEMENT metadata-url	#(PCDATA)>
 
 <!ELEMENT parameters	parameter*>
 <!ELEMENT parameter	default*>
@@ -107,10 +112,13 @@
 
 <!ELEMENT details	section*>
 
-<!ELEMENT section	(field|line)*>
+<!ELEMENT section	(field|line)* suppression-proc?>
 <!ATTLIST section	height		CDATA	#REQUIRED
-			suppressed	(true|false)
 			pagebreak	(true|false)
+>
+
+<!ELEMENT suppression-proc formula?>
+<!ATTLIST suppression-proc state	(hide|show|proc) #REQUIRED
 >
 
 <!ELEMENT field		(bounds|format|border)*>
