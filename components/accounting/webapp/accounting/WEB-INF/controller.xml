@@ -437,8 +437,8 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/main.ftl"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>
+    <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
+    <view-map name="login" type="screen" page="component://accounting/widget/CommonScreens.xml#login"/>
     
     <view-map name="FindBillingAccount" type="jpublish" page="/billingaccount/FindBillingAccount.ftl"/>
     <view-map name="EditBillingAccount" type="jpublish" page="/billingaccount/EditBillingAccount.ftl"/>
