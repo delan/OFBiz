@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.10 2004/01/21 19:55:19 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.11 2004/01/22 01:25:16 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -35,9 +35,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -47,12 +50,14 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.1
  */
 public class ParametricSearch {
@@ -262,6 +267,32 @@ public class ParametricSearch {
     }
      */
 
+    public static Map attachProductFeaturesToCategory(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String productCategoryId = (String) context.get("productCategoryId");
+        String doSubCategoriesStr = (String) context.get("doSubCategories");
+        // default to true
+        boolean doSubCategories = !"N".equals(doSubCategoriesStr);
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        
+        Set productFeatureTypeIdsToExclude = new HashSet();
+        String excludeProp = UtilProperties.getPropertyValue("prodsearch", "attach.feature.type.exclude");
+        if (UtilValidate.isNotEmpty(excludeProp)) {
+            List typeList = StringUtil.split(excludeProp, ",");
+            productFeatureTypeIdsToExclude.add(typeList);
+        }
+
+        try {
+            attachProductFeaturesToCategory(productCategoryId, productFeatureTypeIdsToExclude, delegator, doSubCategories, nowTimestamp);
+        } catch (GenericEntityException e) {
+            String errMsg = "Error in attachProductFeaturesToCategory" + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+        
+        return ServiceUtil.returnSuccess();
+    }
+    
     /** Get all features associated with products and associate them with a feature group attached to the category for each feature type;
      * includes products associated with this category only, but will also associate all feature groups of sub-categories with this category, optionally calls this method for all sub-categories too
      */
