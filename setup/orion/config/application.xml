@@ -5,7 +5,7 @@
 	applications in this server. -->
 <orion-application>
 	<web-module id="defaultWebApp" path="../default-web-app" />
-
+	
 	<web-module id="webtools" path="../../ofbiz/webtools/webapp" />
 	<web-module id="commonapp" path="../../ofbiz/commonapp/webapp" />
 	<web-module id="ecommerce" path="../../ofbiz/ecommerce/webapp" />
@@ -17,9 +17,14 @@
 
 	<persistence path="../persistence" />
 	
-        <!-- Path to the libraries that are installed on this server.
-	These will accesible for the servlets, EJBs etc -->
-	<library path="../lib" />
+    <!-- Path to the libraries that are installed on this server.
+	These will accesible for the servlets, EJBs etc -->	
+	<library path="../../ofbiz/lib/common"/>
+	<library path="../../ofbiz/lib/share"/>
+	<library path="../../ofbiz/core/lib"/>
+	<library path="../../ofbiz/commonapp/lib"/>
+	<library path="../../ofbiz/commonapp/etc"/>
+	<library path="../lib"/>
 	
 	<principals path="./principals.xml" />
 

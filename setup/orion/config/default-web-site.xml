@@ -7,7 +7,8 @@
 
 	<!-- Uncomment this to activate the news app -->
 	<!-- <web-app application="news" name="news-web" root="/news" /> -->
-    <web-app load-on-startup="true" application="default" name="commonapp" root="/commonapp" /> 
+
+	<web-app load-on-startup="true" application="default" name="commonapp" root="/commonapp" /> 
     <web-app load-on-startup="true" application="default" name="webtools" root="/webtools" /> 
     <web-app load-on-startup="true" application="default" name="ecommerce" root="/ecommerce" /> 
     <web-app load-on-startup="true" application="default" name="images" root="/images" />
@@ -15,7 +16,7 @@
     <web-app load-on-startup="true" application="default" name="ordermgr" root="/ordermgr" /> 
     <web-app load-on-startup="true" application="default" name="partymgr" root="/partymgr" /> 
     <web-app load-on-startup="true" application="default" name="workeffort" root="/workeffort" /> 
-
+    
 	<!-- Access Log, where requests are logged to -->
 	<access-log path="../log/default-web-access.log" />
 </web-site>
