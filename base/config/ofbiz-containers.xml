@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.6 2003/12/02 06:40:07 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.7 2004/01/24 16:09:38 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -56,6 +56,18 @@
 				<property name="max-idle-time" value="30000"/>
 				<property name="low-resource-persist-time" value="5000"/>
 			</property>
+                        <property name="ssl-listener" value="listener">
+                                <property name="type" value="sun-jsse"/>
+                                <property name="host" value="0.0.0.0"/>
+                                <property name="port" value="8443"/>
+                                <property name="min-threads" value="5"/>
+                                <property name="max-threads" value="100"/>
+                                <property name="max-idle-time" value="30000"/>
+                                <property name="keystore" value="base/config/ofbizssl.jks"/>
+                                <property name="password" value="changeme"/>
+                                <property name="key-password" value="changeme"/>
+                                <property name="low-resource-persist-time" value="5000"/>
+                        </property>
 			<property name="request-log" value="request-log">
 				<property name="filename" value="logs/yyyy_mm_dd.request.log"/>
 				<property name="buffered" value="false"/>
