@@ -155,6 +155,7 @@
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
         <attribute name="valuesToStore" type="List" mode="IN" optional="false"/>
         <attribute name="keysToRemove" type="List" mode="IN" optional="false"/>
+        <attribute name="delegatorName" type="String" mode="IN" optional="true"/>
         <attribute name="numInserted" type="Long" mode="OUT" optional="false"/>
         <attribute name="numUpdated" type="Long" mode="OUT" optional="false"/>
         <attribute name="numNotUpdated" type="Long" mode="OUT" optional="false"/>
