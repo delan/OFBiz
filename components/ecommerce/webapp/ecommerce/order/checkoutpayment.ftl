@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      3.0
 -->
 
@@ -67,13 +67,13 @@ function submitForm(form, mode, value) {
 }
 
 function toggleBillingAccount(box) {
-    var amountName = box.value + "_amount";
+    var amountName = "amount_" + box.value;
     box.checked = true;
     box.form.elements[amountName].disabled = false;
 
     for (var i = 0; i < box.form.elements[box.name].length; i++) {
         if (!box.form.elements[box.name][i].checked) {
-            box.form.elements[box.form.elements[box.name][i].value + "_amount"].disabled = true;
+            box.form.elements["amount_" + box.form.elements[box.name][i].value].disabled = true;
         }
     }
 }
