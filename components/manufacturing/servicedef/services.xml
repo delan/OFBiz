@@ -294,26 +294,34 @@
 	</service>
 
     <!-- Bill of Materials services -->
-    <service name="createProductAssoc" default-entity-name="ProductAssoc" engine="simple"
-                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="createProductAssoc">
+    <service name="createBOMAssoc" default-entity-name="ProductAssoc" engine="simple"
+                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="createBOMAssoc" auth="true">
         <description>Add Product to Product Association</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true" />
-        <!--<auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>-->
-        <!--<override name="contentId" optional="true" mode="INOUT" />-->
+        <attribute name="errorMessage" type="String" optional="true" mode="OUT"/>
     </service>
-    <service name="updateProductAssoc" default-entity-name="ProductAssoc" engine="simple"
-                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="updateProductAssoc">
+    <service name="updateBOMAssoc" default-entity-name="ProductAssoc" engine="simple"
+                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="updateBOMAssoc" auth="true">
         <description>Update Product to Product Association</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeProductAssoc" default-entity-name="ProductAssoc" engine="simple"
-                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="removeProductAssoc">
+    <service name="removeBOMAssoc" default-entity-name="ProductAssoc" engine="simple"
+                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="removeBOMAssoc" auth="true">
         <description>Remove Product to Product Association</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="copyBOMAssocs" default-entity-name="ProductAssoc" engine="simple"
+                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="copyBOMAssocs" auth="true">
+        <description>Copy BOM associations from one product to another</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <override name="fromDate" optional="true" />
+        <override name="productIdTo" optional="true" />
+        <attribute name="copyToProductId" type="String" optional="false" mode="IN"/>
     </service>
 
     <service name="updateProductManufacturingRule" engine="simple"
@@ -424,6 +432,6 @@
         <attribute mode="IN" name="quantity" optional="true" type="Double"/>
         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
         <attribute mode="OUT" name="notAssembledComponents" type="java.util.List"/>
-    </service>  
-
+    </service>
+    
 </services>
