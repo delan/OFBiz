@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.13 2004/07/17 20:49:56 doogie Exp $
+ * $Id: EntityUtil.java,v 1.14 2004/07/18 03:07:43 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -313,7 +313,7 @@ public class EntityUtil {
 
             while (exprIter.hasNext()) {
                 EntityCondition condition = (EntityCondition) exprIter.next();
-                include = condition.entityMatches(entity);
+                include = condition.entityMatches(value);
                 if (include) break;
             }
             if (include) {
