@@ -46,34 +46,39 @@ public class CallSimpleMethod extends MethodOperation {
 
     public CallSimpleMethod(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.xmlResource = element.getAttribute("xml-resource");
         this.methodName = element.getAttribute("method-name");
+        this.xmlResource = element.getAttribute("xml-resource");
     }
 
     public boolean exec(MethodContext methodContext) {
-        if (this.xmlResource != null && this.xmlResource.length() > 0 &&
-                this.methodName != null && this.methodName.length() > 0) {
-            String xmlResource = methodContext.expandString(this.xmlResource);
+        if (this.methodName != null && this.methodName.length() > 0) {
             String methodName = methodContext.expandString(this.methodName);
+            String xmlResource = methodContext.expandString(this.xmlResource);
 
-            Map simpleMethods = null;
-            try {
-                simpleMethods = SimpleMethod.getSimpleMethods(xmlResource, methodName, methodContext.getLoader());
-            } catch (MiniLangException e) {
-                Debug.logError(e);
-                String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [error getting methods from resource: " + e.getMessage() + "]";
+            SimpleMethod simpleMethodToCall = null;
+            if (xmlResource == null || xmlResource.length() == 0) {
+                simpleMethodToCall = this.simpleMethod.getSimpleMethodInSameFile(methodName);
+            } else {
+                Map simpleMethods = null;
+                try {
+                    simpleMethods = SimpleMethod.getSimpleMethods(xmlResource, methodName, methodContext.getLoader());
+                } catch (MiniLangException e) {
+                    Debug.logError(e);
+                    String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [error getting methods from resource: " + e.getMessage() + "]";
 
-                if (methodContext.getMethodType() == MethodContext.EVENT) {
-                    methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
-                    methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
-                } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                    methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
-                    methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
+                    if (methodContext.getMethodType() == MethodContext.EVENT) {
+                        methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
+                        methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
+                    } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                        methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
+                        methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
+                    }
+                    return false;
                 }
-                return false;
+
+                simpleMethodToCall = (SimpleMethod) simpleMethods.get(methodName);
             }
 
-            SimpleMethod simpleMethodToCall = (SimpleMethod) simpleMethods.get(methodName);
             if (simpleMethodToCall == null) {
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process, could not find SimpleMethod " + methodName + " in XML document in resource: " + xmlResource;
 
@@ -97,6 +102,18 @@ public class CallSimpleMethod extends MethodOperation {
                 }
                 return false;
             }
+        } else {
+            String errMsg = "ERROR in call-simple-method: methodName was missing; not running simpleMethod";
+            Debug.logError(errMsg);
+
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
+                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
+                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
+            }
+            return false;
         }
 
         return true;

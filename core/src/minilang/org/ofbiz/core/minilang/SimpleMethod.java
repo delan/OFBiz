@@ -177,7 +177,7 @@ public class SimpleMethod {
 
         while (simpleMethodIter.hasNext()) {
             Element simpleMethodElement = (Element) simpleMethodIter.next();
-            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement);
+            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement, simpleMethods);
             simpleMethods.put(simpleMethod.getMethodName(), simpleMethod);
         }
 
@@ -231,7 +231,7 @@ public class SimpleMethod {
 
         while (simpleMethodIter.hasNext()) {
             Element simpleMethodElement = (Element) simpleMethodIter.next();
-            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement);
+            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement, simpleMethods);
             simpleMethods.put(simpleMethod.getMethodName(), simpleMethod);
         }
 
@@ -240,6 +240,7 @@ public class SimpleMethod {
 
     // Member fields begin here...
     List methodOperations = new LinkedList();
+    Map parentSimpleMethodsMap;
     String methodName;
     String shortDescription;
     String defaultErrorCode;
@@ -271,9 +272,10 @@ public class SimpleMethod {
     String dispatcherName;
     String userLoginName;
 
-    public SimpleMethod(Element simpleMethodElement) {
-        methodName = simpleMethodElement.getAttribute("method-name");
-        shortDescription = simpleMethodElement.getAttribute("short-description");
+    public SimpleMethod(Element simpleMethodElement, Map parentSimpleMethodsMap) {
+        this.parentSimpleMethodsMap = parentSimpleMethodsMap;
+        this.methodName = simpleMethodElement.getAttribute("method-name");
+        this.shortDescription = simpleMethodElement.getAttribute("short-description");
 
         defaultErrorCode = simpleMethodElement.getAttribute("default-error-code");
         if (defaultErrorCode == null || defaultErrorCode.length() == 0)
@@ -351,6 +353,11 @@ public class SimpleMethod {
 
     public String getMethodName() {
         return this.methodName;
+    }
+
+    public SimpleMethod getSimpleMethodInSameFile(String simpleMethodName) {
+        if (parentSimpleMethodsMap == null) return null;
+        return (SimpleMethod) parentSimpleMethodsMap.get(simpleMethodName);
     }
 
     public String getShortDescription() {
