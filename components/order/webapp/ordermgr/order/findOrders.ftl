@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 
@@ -58,7 +58,7 @@ function lookupOrders(click) {
                 <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
               <#else>
                 <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                <a href="javascript:void();" onclick="javascript:lookupOrders(true);" class="submenutext">Lookup Order(s)</a>
+                <a href="javascript:lookupOrders(true);" class="submenutext">Lookup Order(s)</a>
                 <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">Lookup Party</a>
               </#if>
             </div>
@@ -229,12 +229,13 @@ function lookupOrders(click) {
 </table>
 <input type="image" src="/images/spacer.gif" onClick="javascript:lookupOrders(true);">
 </form>
+<#if requestParameters.hideFields?default("N") != "Y">
 <script language="JavaScript">
 <!--//
 document.lookuporder.order_id.focus();
 //-->
 </script>
-
+</#if>
 
 <#if orderHeaderList?exists>
 <br>
