@@ -116,9 +116,7 @@
         -->
     </simple-method>
 
-    <!--
-        update the name of a product - handles real , virtual and variant products
-    -->
+    <!-- update the name of a product - handles real , virtual and variant products -->
     <simple-method method-name="updateProductQuickAdminName" short-description="Update a Product Name from quick admin">
         <if-not-empty field-name="productName" map-name="parameters">
             <string-to-field string="updateProductQuickAdminName" field-name="callingMethodName"/>
