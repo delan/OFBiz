@@ -182,6 +182,27 @@ public class ModelServiceReader {
         // errorMessage
         def = new ModelParam();
         def.name = ModelService.ERROR_MESSAGE;
+        def.type = "String";
+        def.mode = "OUT";
+        def.optional = true;
+        contextMap.put(def.name,def);
+        // errorMessageList
+        def = new ModelParam();
+        def.name = ModelService.ERROR_MESSAGE_LIST;
+        def.type = "java.util.List";
+        def.mode = "OUT";
+        def.optional = true;
+        contextMap.put(def.name,def);
+        // successMessage
+        def = new ModelParam();
+        def.name = ModelService.SUCCESS_MESSAGE;
+        def.type = "String";
+        def.mode = "OUT";
+        def.optional = true;
+        contextMap.put(def.name,def);
+        // successMessageList
+        def = new ModelParam();
+        def.name = ModelService.SUCCESS_MESSAGE_LIST;
         def.type = "java.util.List";
         def.mode = "OUT";
         def.optional = true;
@@ -255,12 +276,8 @@ public class ModelServiceReader {
     protected Document getDocument(URL url) {
         if(url == null) return null;
         Document document = null;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(true);
-        //factory.setNamespaceAware(true);
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse(url.openStream());
+            document = UtilXml.readXmlDocument(url, true);
         }
         catch (SAXException sxe) {
             // Error generated during parsing)

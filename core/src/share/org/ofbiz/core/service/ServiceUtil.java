@@ -5,6 +5,7 @@
 package org.ofbiz.core.service;
 
 import java.util.*;
+import javax.servlet.http.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -35,20 +36,22 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class ServiceUtil {
+    public static void getHtmlMessages(HttpServletRequest request, Map result) {
+        String errorMessage = ServiceUtil.makeHtmlErrorMessage(result);
+        if (errorMessage != null && errorMessage.length() > 0)
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
+            
+        String successMessage = ServiceUtil.makeHtmlSuccessMessage(result);
+        if (successMessage != null && successMessage.length() > 0)
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, successMessage);
+    }
+    
     public static String makeHtmlErrorMessage(Map result) {
         String errorMsg = (String) result.get(ModelService.ERROR_MESSAGE);
         List errorMsgList = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
         StringBuffer outMsg = new StringBuffer();
         
-        if (errorMsgList != null && errorMsgList.size() > 0) {
-            Iterator iter = errorMsgList.iterator();
-            while (iter.hasNext()) {
-                String curMsg = (String) iter.next();
-                outMsg.append("<li>");
-                outMsg.append(curMsg);
-                outMsg.append("</li>");
-            }
-        }
+        outMsg.append(makeHtmlMessageList(errorMsgList));
         
         if (errorMsg != null) {
             outMsg.append("<li>");
@@ -61,5 +64,39 @@ public class ServiceUtil {
         } else {
             return null;
         }
+    }
+
+    public static String makeHtmlSuccessMessage(Map result) {
+        String successMsg = (String) result.get(ModelService.SUCCESS_MESSAGE);
+        List successMsgList = (List) result.get(ModelService.SUCCESS_MESSAGE_LIST);
+        StringBuffer outMsg = new StringBuffer();
+        
+        outMsg.append(makeHtmlMessageList(successMsgList));
+        
+        if (successMsg != null) {
+            outMsg.append("<li>");
+            outMsg.append(successMsg);
+            outMsg.append("</li>");
+        }
+        
+        if (outMsg.length() > 0) {
+            return "<b>The following occured:</b><br><ul>" + outMsg + "</ul>";
+        } else {
+            return null;
+        }
+    }
+
+    public static String makeHtmlMessageList(List msgList) {
+        StringBuffer outMsg = new StringBuffer();
+        if (msgList != null && msgList.size() > 0) {
+            Iterator iter = msgList.iterator();
+            while (iter.hasNext()) {
+                String curMsg = (String) iter.next();
+                outMsg.append("<li>");
+                outMsg.append(curMsg);
+                outMsg.append("</li>");
+            }
+        }
+        return outMsg.toString();
     }
 }
