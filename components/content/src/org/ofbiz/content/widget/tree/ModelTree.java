@@ -97,7 +97,13 @@ public class ModelTree {
 
         this.name = treeElement.getAttribute("name");
         this.rootNodeName = treeElement.getAttribute("root-node-name");
-        this.defaultRenderStyle = UtilFormatOut.checkEmpty(treeElement.getAttribute("default-render-style"), treeElement.getAttribute("render-style"), "simple");
+        this.defaultRenderStyle = UtilFormatOut.checkEmpty(treeElement.getAttribute("default-render-style"), "simple");
+        // A temporary hack to accommodate those who might still be using "render-style" instead of "default-render-style"
+        if (UtilValidate.isEmpty(this.defaultRenderStyle) || this.defaultRenderStyle.equals("simple")) {
+            String rStyle = treeElement.getAttribute("render-style");
+            if (UtilValidate.isNotEmpty(rStyle))
+                this.defaultRenderStyle = rStyle;
+        }
         this.defaultWrapStyleExdr = new FlexibleStringExpander(treeElement.getAttribute("default-wrap-style"));
         this.expandCollapseRequestExdr = new FlexibleStringExpander(treeElement.getAttribute("expand-collapse-request"));
         this.trailNameExdr = new FlexibleStringExpander(UtilFormatOut.checkEmpty(treeElement.getAttribute("trail-name"), "trail"));
