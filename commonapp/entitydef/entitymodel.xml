@@ -3640,6 +3640,11 @@
         <key-map><col-name>ORDER_ID</col-name></key-map>
         <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PRODUCT</rel-table-name>
+        <key-map><col-name>PRODUCT_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Item Association Entity</title>
@@ -9052,4 +9057,3 @@
       </relation>
     </entity>  
 </entitymodel>
-
