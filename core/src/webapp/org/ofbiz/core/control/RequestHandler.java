@@ -317,7 +317,7 @@ public class RequestHandler implements Serializable {
             ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
             vh.render(view, nextPage, rm.getViewInfo(view), req, resp);
         } catch (ViewHandlerException e) {
-            throw new RequestHandlerException("", e);
+            throw new RequestHandlerException(e.getMessage(), e.getCause());
         }
 
         String vname = (String) req.getAttribute(SiteDefs.CURRENT_VIEW);
