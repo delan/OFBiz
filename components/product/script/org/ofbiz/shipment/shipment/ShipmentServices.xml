@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
 -->
 <simple-methods>
@@ -1033,7 +1033,99 @@
             <call-service service-name="updateShipment" in-map-name="packedContext"/>
         </if-empty>
         <field-to-result field-name="shipmentId" map-name="shipment" result-name="shipmentId"/>
-    </simple-method>
+    </simple-method>	 	
+
+	<!-- quick ship entire order in one package per facility -->
+	<simple-method method-name="quickShipEntireOrderMultipleFacilities" short-description="Quick ships an entire order from multiple facilities">
+		<!-- first get the order header; make sure we have a product store -->
+		<field-to-field field-name="orderId" map-name="parameters" to-map-name="ohpkmap"/>
+		<find-by-primary-key entity-name="OrderHeader" map-name="ohpkmap" value-name="orderHeader"/>
+		<if-empty field-name="productStoreId" map-name="orderHeader">
+			<!-- no store cannot use quick ship; throw error -->
+			<add-error><fail-message message="No ProductStore associated with order; cannot use Quick Ship"/></add-error>
+			<check-errors/>
+		</if-empty>
+		<if-not-empty field-name="productStoreId" map-name="orderHeader">
+			<!-- get the product store entity -->
+			<field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
+			<find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
+			<if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
+				<!-- no reservations; no shipment; cannot use quick ship -->
+				<add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship"/></add-error>
+			</if-compare>
+			<if-compare field-name="explodeOrderItems" map-name="productStore" operator="equals" value="Y">
+				<!-- can't insert duplicate rows in shipmentPackageContent -->
+				<add-error><fail-message message="ProductStore [${productStore.productStoreID}] explodes order items; cannot use Quick Ship"/></add-error>
+			</if-compare>
+
+			<!-- locate shipping facilities associated with order item rez's -->
+			<call-class-method class-name="org.ofbiz.order.order.OrderReadHelper" method-name="getOrderItemInventoryResFacilityIds" ret-field-name="orderItemInventoryResFacilityIds">
+			 	<field field-name="orderHeader" type="org.ofbiz.entity.GenericValue"/>
+			</call-class-method>
+			<field-to-list field-name="orderItemInventoryResFacilityIds" list-name="orderItemInventoryResFacilityIds"/>
+
+			<!-- issue all order items that are in approved status -->
+			<string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
+			<field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
+			<find-by-and entity-name="OrderItem" map-name="itemLookupMap" list-name="orderItems"/>
+
+			<!-- traverse facilities, instantiate shipment for each -->
+			<iterate list-name="orderItemInventoryResFacilityIds" entry-name="orderItemInventoryResFacilityId">
+				<!-- sanity check for valid facility -->
+				<string-to-field string="${orderItemInventoryResFacilityId}" field-name="facilityId" map-name="facilityLookupMap"/>
+				<find-by-primary-key entity-name="Facility" map-name="facilityLookupMap" value-name="facility"/>
+				<if-not-empty field-name="facilityId" map-name="facility">
+
+					<!-- create the shipment for this facility -->
+					<field-to-field field-name="orderId" map-name="orderHeader" to-field-name="primaryOrderId" to-map-name="shipmentContext"/>
+					<string-to-field field-name="statusId" map-name="shipmentContext" string="SHIPMENT_INPUT"/>
+					<field-to-field field-name="facilityId" map-name="facility" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
+					<call-service service-name="createShipment" in-map-name="shipmentContext">
+						<result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
+					</call-service>
+					<find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
+			
+					<!-- issue items by reservation facility to facility shipment -->
+					<iterate list-name="orderItems" entry-name="orderItem">
+						<get-related value-name="orderItem" relation-name="OrderItemInventoryRes" list-name="itemReses"/>
+						<iterate list-name="itemReses" entry-name="itemRes">
+							<get-related-one value-name="itemRes" relation-name="InventoryItem" to-value-name="inventoryItem"/>
+							<if-compare field-name="facilityId" map-name="inventoryItem" operator="equals" value="${orderItemInventoryResFacilityId}">
+								<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
+								<field-to-field field-name="orderId" map-name="itemRes" to-map-name="issueContext"/>
+								<field-to-field field-name="orderItemSeqId" map-name="itemRes" to-map-name="issueContext"/>
+								<field-to-field field-name="inventoryItemId" map-name="itemRes" to-map-name="issueContext"/>
+								<field-to-field field-name="quantity" map-name="itemRes" to-map-name="issueContext"/>
+								<call-service service-name="issueOrderItemInventoryResToShipment" in-map-name="issueContext"/>
+							</if-compare>
+						</iterate>
+					</iterate>
+					<!-- place all issued items into a single package -->
+					<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueLookupMap"/>
+					<field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueLookupMap"/>
+					<find-by-and entity-name="ItemIssuance" map-name="issueLookupMap" list-name="itemIssuances"/>
+					<string-to-field field-name="packageId" map-name="packageSeqMap" string="New"/>
+					<iterate list-name="itemIssuances" entry-name="itemIssuance">
+						<field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
+						<field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
+						<field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
+						<field-to-field field-name="packageId" map-name="packageSeqMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
+						<call-service service-name="createShipmentPackageContent" in-map-name="shipItemContext">
+							<result-to-field result-name="shipmentPackageSeqId" field-name="packageId" map-name="packageSeqMap"/>
+						</call-service>
+					</iterate>
+					<!-- update the shipment status to packed -->
+					<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
+					<string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_PACKED"/>
+					<call-service service-name="updateShipment" in-map-name="packedContext"/>
+					<!-- update the shipment status to shipped -->
+					<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
+					<string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
+					<call-service service-name="updateShipment" in-map-name="packedContext"/>	
+				</if-not-empty>
+			</iterate>
+		</if-not-empty>
+	</simple-method>   
 
     <!-- quick ship order using multiple packages per tracking number -->
     <!-- The input list contains a Map with four keys: orderItemSeqId, inventoryItemId, qtyShipped, trackingNum -->
