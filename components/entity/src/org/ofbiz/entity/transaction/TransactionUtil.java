@@ -144,6 +144,15 @@ public class TransactionUtil implements Status {
         }
     }
 
+    public static boolean isTransactionInPlace() throws GenericTransactionException {
+        int status = getStatus();
+        if (status == STATUS_NO_TRANSACTION) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
     /** Commits the transaction in the current thread IF transactions are available
      *  AND if beganTransaction is true
      */
