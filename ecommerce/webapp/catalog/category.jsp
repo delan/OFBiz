@@ -68,10 +68,10 @@
 </ofbiz:if>
 
 <center>
-  <table>
+  <table width='100%'>
     <%int listIndex = lowIndex.intValue();%>
     <ofbiz:iterator name="product" property="productList">
-      <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+      <tr><td height="1" bgcolor="#999999"></td></tr>
       <tr>
         <td>
           <%@ include file="/catalog/productsummary.jsp" %>

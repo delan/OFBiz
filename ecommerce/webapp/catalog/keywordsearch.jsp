@@ -42,7 +42,7 @@
 </ofbiz:if>
 
 <center>
-  <table>
+  <table width='100%'>
     <%int listIndex = lowIndex.intValue();%>
     <ofbiz:iterator name="product" property="searchProductList">
       <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
