@@ -1049,6 +1049,16 @@
         <key-map field-name="productPriceActionTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="ProductPriceAutoNotice"
+            package-name="org.ofbiz.commonapp.product.price"
+            title="Product Price Automatic Notice History Entity">
+      <field name="productPriceNoticeId" type="id-ne"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="runDate" type="date-time"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="productPriceNoticeId"/>
+    </entity>
     <entity entity-name="ProductPriceChange"
             package-name="org.ofbiz.commonapp.product.price"
             title="Product Price Change History Entity">
@@ -1058,6 +1068,7 @@
       <field name="currencyUomId" type="id"></field>
       <field name="facilityGroupId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <field name="price" type="currency-amount"></field>
       <field name="oldPrice" type="currency-amount"></field>
       <field name="changedDate" type="date-time"></field>
