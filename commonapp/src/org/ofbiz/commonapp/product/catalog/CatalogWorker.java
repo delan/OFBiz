@@ -149,6 +149,7 @@ public class CatalogWorker {
                 serviceContext.put("orderItemSeqId", orderItemSeqId);
                 serviceContext.put("quantity", quantity);
                 serviceContext.put("requireInventory", prodCatalog.get("requireInventory"));
+                serviceContext.put("reserveOrderEnumId", prodCatalog.get("reserveOrderEnumId"));
                 serviceContext.put("userLogin", userLogin);
                 
                 Map result = dispatcher.runSync("reserveProductInventoryByFacility", serviceContext);

@@ -150,7 +150,30 @@
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
         
-        <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems"/>
+        <!-- before we do the find, put together the orderBy list based on which reserveOrderEnumId is specified -->
+        <if-compare value="INVRO_FIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
+            <string-to-field string="+expireDate" field-name="orderByString"/>
+            
+            <else>
+            <if-compare value="INVRO_LIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
+                <string-to-field string="-expireDate" field-name="orderByString"/>
+
+                <else>
+                <if-compare value="INVRO_LIFO_REC" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
+                    <string-to-field string="+dateReceived" field-name="orderByString"/>
+            
+                    <else>
+                        <!-- the default reserveOrderEnumId is INVRO_FIFO_REC, ie FIFO based on date received -->
+                        <string-to-field string="-dateReceived" field-name="orderByString"/>
+                    </else>
+                </if-compare>
+                </else>
+            </if-compare>
+            </else>
+        </if-compare>
+        <field-to-list field-name="orderByString" list-name="orderByList"/>
+        
+        <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems" order-by-list-name="orderByList"/>
         
         <field-to-field field-name="quantity" map-name="parameters" to-field-name="quantityNotReserved"/>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
