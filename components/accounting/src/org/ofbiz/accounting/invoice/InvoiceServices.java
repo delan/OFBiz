@@ -62,11 +62,11 @@ public class InvoiceServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         String orderId = (String) context.get("orderId");
         List billItems = (List) context.get("billItems");
         boolean previousInvoiceFound = false;
-        
+
         if (billItems == null || billItems.size() == 0) {
             Debug.logVerbose("No items to invoice; not creating; returning success", module);
             return ServiceUtil.returnSuccess();
@@ -83,7 +83,7 @@ public class InvoiceServices {
         if (orderHeader == null) {
             return ServiceUtil.returnError("No OrderHeader, cannot create invoice");
         }
-        
+
         // get list of previous invoices for the order
         List billedItems = null;
         try {
@@ -118,18 +118,18 @@ public class InvoiceServices {
             }
         }
 
-        // figure out the invoice type   
-        String invoiceType = null;        
+        // figure out the invoice type
+        String invoiceType = null;
 
         String orderType = orderHeader.getString("orderTypeId");
         if (orderType.equals("SALES_ORDER")) {
-            invoiceType = "SALES_INVOICE";        
+            invoiceType = "SALES_INVOICE";
         } else if (orderType.equals("PURCHASE_ORDER")) {
-            invoiceType = "PURCHASE_INVOICE";            
+            invoiceType = "PURCHASE_INVOICE";
         }
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        
+
         // get the product store
         GenericValue productStore = null;
         try {
@@ -138,16 +138,16 @@ public class InvoiceServices {
             Debug.logError(e, "Unable to get ProductStore", module);
             return ServiceUtil.returnError("Unable to get Product Store from order");
         }
-        
+
         // get the payToParty
         String payToPartyId = productStore.getString("payToPartyId");
         if (payToPartyId == null) {
             return ServiceUtil.returnError("Unable to create invoice; no payToPartyId set for ProductStore Id : " + orh.getProductStoreId());
         }
-        
+
         // get some quantity totals
         double totalItemsInOrder = orh.getTotalOrderItemsQuantity();
-        
+
         // get some price totals
         double shippableAmount = orh.getShippableTotal(null);
         double orderSubTotal = orh.getOrderItemsSubTotal();
@@ -157,51 +157,51 @@ public class InvoiceServices {
         double invoiceQuantity = 0.00;
 
         // create the invoice record
-        String invoiceId = delegator.getNextSeqId("Invoice").toString();               
-        GenericValue invoice = delegator.makeValue("Invoice", UtilMisc.toMap("invoiceId", invoiceId));        
+        String invoiceId = delegator.getNextSeqId("Invoice").toString();
+        GenericValue invoice = delegator.makeValue("Invoice", UtilMisc.toMap("invoiceId", invoiceId));
         invoice.set("invoiceDate", UtilDateTime.nowTimestamp());
         invoice.set("invoiceTypeId", invoiceType);
         invoice.set("statusId", "INVOICE_READY");
         invoice.set("currencyUomId", orderHeader.getString("currencyUom"));
-        
+
         GenericValue billingAccount = null;
         List billingAccountTerms = null;
         try {
-            billingAccount = orderHeader.getRelatedOne("BillingAccount");            
+            billingAccount = orderHeader.getRelatedOne("BillingAccount");
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting BillingAccount entity from OrderHeader", module);
             return ServiceUtil.returnError("Trouble getting BillingAccount entity from OrderHeader");
         }
-        
+
         // for billing accounts we will use related information
-        if (billingAccount != null) {                      
-            // set the billing account        
-            invoice.set("billingAccountId", billingAccount.getString("billingAccountId"));           
-           
+        if (billingAccount != null) {
+            // set the billing account
+            invoice.set("billingAccountId", billingAccount.getString("billingAccountId"));
+
             // get the billing account terms
             try {
-                billingAccountTerms = billingAccount.getRelated("BillingAccountTerm");                
+                billingAccountTerms = billingAccount.getRelated("BillingAccountTerm");
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Trouble getting BillingAccountTerm entity list", module);
                 return ServiceUtil.returnError("Trouble getting BillingAccountTerm entity list");
             }
-            
+
             // set the invoice terms as defined for the billing account
             if (billingAccountTerms != null) {
                 Iterator billingAcctTermsIter = billingAccountTerms.iterator();
                 while (billingAcctTermsIter.hasNext()) {
                     GenericValue term = (GenericValue) billingAcctTermsIter.next();
-                    GenericValue invoiceTerm = delegator.makeValue("InvoiceTerm", 
+                    GenericValue invoiceTerm = delegator.makeValue("InvoiceTerm",
                         UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", "_NA_"));
-                    String invoiceTermId = delegator.getNextSeqId("InvoiceTerm").toString();	               
-                    invoiceTerm.set("invoiceTermId", invoiceTermId);			
-                    invoiceTerm.set("termTypeId", term.get("termTypeId"));	
+                    String invoiceTermId = delegator.getNextSeqId("InvoiceTerm").toString();
+                    invoiceTerm.set("invoiceTermId", invoiceTermId);
+                    invoiceTerm.set("termTypeId", term.get("termTypeId"));
                     invoiceTerm.set("termValue", term.get("termValue"));
                     invoiceTerm.set("uomId", term.get("uomId"));
-                    toStore.add(invoiceTerm);                                        
+                    toStore.add(invoiceTerm);
                 }
             }
-            
+
             // set the invoice bill_to_customer from the billing account
             List billToRoles = null;
             try {
@@ -217,8 +217,8 @@ public class InvoiceServices {
                 invoiceRole.set("partyId", billToRole.get("partyId"));
                 invoiceRole.set("roleTypeId", "BILL_TO_CUSTOMER");
                 toStore.add(invoiceRole);
-            } 
-            
+            }
+
             // set the bill-to contact mech as the contact mech of the billing account
             if (UtilValidate.isNotEmpty(billingAccount.getString("contactMechId"))) {
                 GenericValue billToContactMech = delegator.makeValue("InvoiceContactMech", UtilMisc.toMap("invoiceId", invoiceId));
@@ -229,7 +229,7 @@ public class InvoiceServices {
         } else {
             // no billing account use the info off the order header
             GenericValue billToPerson = orh.getBillToPerson();
-            if (billToPerson != null) {            
+            if (billToPerson != null) {
                 GenericValue invoiceRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
                 invoiceRole.set("partyId", billToPerson.getString("partyId"));
                 invoiceRole.set("roleTypeId", "BILL_TO_CUSTOMER");
@@ -246,9 +246,9 @@ public class InvoiceServices {
                     billToContactMech.set("contactMechPurposeTypeId", "BILLING_LOCATION");
                     toStore.add(billToContactMech);
                 }
-            }                   
+            }
         }
-                    
+
         // store the invoice first
         try {
             delegator.create(invoice);
@@ -256,7 +256,7 @@ public class InvoiceServices {
             Debug.logError(e, "Cannot create invoice record", module);
             return ServiceUtil.returnError("Problems storing Invoice record");
         }
-                
+
         // get a list of the payment method types
         List paymentPreferences = null;
         try {
@@ -264,26 +264,26 @@ public class InvoiceServices {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting OrderPaymentPreference entity list", module);
         }
-        
+
         // create the bill-from role BILL_FROM_VENDOR as the partyId for the store
         GenericValue payToRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
         payToRole.set("partyId", payToPartyId);
         payToRole.set("roleTypeId", "BILL_FROM_VENDOR");
         toStore.add(payToRole);
-        
+
         // create the bill-from (or pay-to) contact mech as the primary PAYMENT_LOCATION of the party from the store
         GenericValue payToAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId);
         if (payToAddress != null) {
             GenericValue payToCm = delegator.makeValue("InvoiceContactMech", UtilMisc.toMap("invoiceId", invoiceId));
-            payToCm.set("contactMechId", payToAddress.getString("contactMechId")); 
-            payToCm.set("contactMechPurposeTypeId", "PAYMENT_LOCATION"); 
-            toStore.add(payToCm);    
-        }        
+            payToCm.set("contactMechId", payToAddress.getString("contactMechId"));
+            payToCm.set("contactMechPurposeTypeId", "PAYMENT_LOCATION");
+            toStore.add(payToCm);
+        }
 
         // sequence for items - all OrderItems or InventoryReservations + all Adjustments
         int itemSeqId = 1;
 
-        // create the item records        
+        // create the item records
         if (billItems != null) {
             Iterator itemIter = billItems.iterator();
             while (itemIter.hasNext()) {
@@ -295,11 +295,11 @@ public class InvoiceServices {
                 } else if ("OrderItem".equals(currentValue.getEntityName())) {
                     orderItem = currentValue;
                 }
-                
+
                 if (orderItem == null && itemIssuance != null) {
                     try {
                         orderItem = itemIssuance.getRelatedOne("OrderItem");
-                    } catch (GenericEntityException e) {                   
+                    } catch (GenericEntityException e) {
                         Debug.logError(e, "Trouble getting related OrderItem from ItemIssuance", module);
                         return ServiceUtil.returnError("Trouble getting OrderItem from ItemIssuance");
                     }
@@ -308,15 +308,15 @@ public class InvoiceServices {
                     return ServiceUtil.returnError("Illegal values passed to create invoice service");
                 }
                 GenericValue product = null;
-                if (orderItem.get("productId") != null) {                
+                if (orderItem.get("productId") != null) {
                     try {
-                        product = orderItem.getRelatedOne("Product");                  
+                        product = orderItem.getRelatedOne("Product");
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Trouble getting Product from OrderItem", module);
                         return ServiceUtil.returnError("Trouble getting Product from OrderItem");
                     }
                 }
-                
+
                 // get some quantities
                 Double orderedQuantity = orderItem.getDouble("quantity");
                 Double billingQuantity = null;
@@ -349,15 +349,15 @@ public class InvoiceServices {
                 invoiceItem.set("productId", orderItem.get("productId"));
                 invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
                 //invoiceItem.set("uomId", "");
-                
-                String itemIssuanceId = null;           
+
+                String itemIssuanceId = null;
                 if (itemIssuance != null && itemIssuance.get("inventoryItemId") != null) {
-                    itemIssuanceId = itemIssuance.getString("itemIssuanceId");                
+                    itemIssuanceId = itemIssuance.getString("itemIssuanceId");
                     invoiceItem.set("inventoryItemId", itemIssuance.get("inventoryItemId"));
-                }                                                   
+                }
                 if (product != null) {
                     invoiceItem.set("taxableFlag", product.get("taxable"));
-                }                                
+                }
                 toStore.add(invoiceItem);
 
                 // this item total
@@ -382,16 +382,16 @@ public class InvoiceServices {
                 orderItemBill.set("quantity", invoiceItem.get("quantity"));
                 orderItemBill.set("amount", invoiceItem.get("amount"));
                 toStore.add(orderItemBill);
-                        
+
                 // increment the counter
-                itemSeqId++;                
-                
+                itemSeqId++;
+
                 // create the item adjustment as line items
                 List itemAdjustments = OrderReadHelper.getOrderItemAdjustmentList(orderItem, orh.getAdjustments());
                 Iterator itemAdjIter = itemAdjustments.iterator();
-                while (itemAdjIter.hasNext()) {                    
-                    GenericValue adj = (GenericValue) itemAdjIter.next();                    
-                    if (adj.get("amount") != null) {                                               
+                while (itemAdjIter.hasNext()) {
+                    GenericValue adj = (GenericValue) itemAdjIter.next();
+                    if (adj.get("amount") != null) {
                         // pro-rate the amount
                         double amount = ((adj.getDouble("amount").doubleValue() / orderItem.getDouble("quantity").doubleValue()) * invoiceItem.getDouble("quantity").doubleValue());
                         GenericValue adjInvItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
@@ -404,7 +404,7 @@ public class InvoiceServices {
                         adjInvItem.set("amount", new Double(amount));
                         adjInvItem.set("description", adj.get("description"));
                         toStore.add(adjInvItem);
-                        
+
                         // this adjustment amount
                         double thisAdjAmount = adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
 
@@ -424,7 +424,7 @@ public class InvoiceServices {
                         itemSeqId++;
                     }
                     if (adj.get("percentage") != null || adj.get("amountPerQuantity") != null) {
-                        Double amountPerQty = adj.getDouble("amount");
+                        Double amountPerQty = adj.getDouble("amountPerQuantity");
                         Double percent = adj.getDouble("percentage");
                         double totalAmount = 0.00;
                         if (percent != null)
@@ -442,7 +442,7 @@ public class InvoiceServices {
                         adjInvItem.set("amount", new Double(totalAmount));
                         adjInvItem.set("description", adj.get("description"));
                         toStore.add(adjInvItem);
-                        
+
                         // this adjustment amount
                         double thisAdjAmount = adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
 
@@ -468,9 +468,9 @@ public class InvoiceServices {
         // get the shipping adjustment mode (Y = Pro-Rate; N = First-Invoice)
         String prorateShipping = productStore.getString("prorateShipping");
         if (prorateShipping == null) {
-            prorateShipping = "Y"; 
+            prorateShipping = "Y";
         }
-        
+
         // create header adjustments as line items -- always to tax/shipping last
         List shipAdjustments = new ArrayList();
         List taxAdjustments = new ArrayList();
