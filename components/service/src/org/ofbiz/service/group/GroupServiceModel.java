@@ -1,5 +1,5 @@
 /*
- * $Id: GroupServiceModel.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: GroupServiceModel.java,v 1.2 2003/09/25 21:52:58 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * GroupServiceModel.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class GroupServiceModel {
@@ -92,6 +92,7 @@ public class GroupServiceModel {
             throw new GenericServiceException("Group defined service (" + getName() + ") is not a defined service.");
             
         Map thisContext = model.makeValid(context, ModelService.IN_PARAM);
+        Debug.logInfo("Running grouped service [" + serviceName + "]", module);
         if (getMode().equals("async")) {
             List requiredOut = model.getParameterNames(ModelService.OUT_PARAM, false);
             if (requiredOut.size() > 0) {
