@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerConfig.java,v 1.6 2004/04/01 18:16:53 ajzeneski Exp $
+ * $Id: ContainerConfig.java,v 1.7 2004/05/22 22:09:48 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.LinkedList;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -43,7 +45,7 @@ import org.xml.sax.SAXException;
  * ContainerConfig - Container configuration for ofbiz.xml
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
  */
 public class ContainerConfig {
@@ -143,7 +145,22 @@ public class ContainerConfig {
         public Property getProperty(String name) {
             return (Property) properties.get(name);
         }
-        
+
+        public List getPropertiesWithValue(String value) {
+            List props = new LinkedList();
+            if (properties != null && properties.size() > 0) {
+                Iterator i = properties.entrySet().iterator();
+                while (i.hasNext()) {
+                    Map.Entry e = (Map.Entry) i.next();
+                    Property p = (Property) e.getValue();
+                    if (p != null && value.equals(p.value)) {
+                        props.add(p);
+                    }
+                }
+            }
+            return props;
+        }
+
         public static class Property {
             public String name;
             public String value;
@@ -164,6 +181,21 @@ public class ContainerConfig {
             
             public Property getProperty(String name) {
                 return (Property) properties.get(name);
+            }
+
+            public List getPropertiesWithValue(String value) {
+                List props = new LinkedList();
+                if (properties != null && properties.size() > 0) {
+                    Iterator i = properties.entrySet().iterator();
+                    while (i.hasNext()) {
+                        Map.Entry e = (Map.Entry) i.next();
+                        Property p = (Property) e.getValue();
+                        if (p != null && value.equals(p.value)) {
+                            props.add(p);
+                        }
+                    }
+                }
+                return props;
             }
         }
     }                        
