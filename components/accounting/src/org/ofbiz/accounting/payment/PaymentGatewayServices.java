@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.9 2003/09/02 04:18:05 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.10 2003/09/04 19:23:52 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,6 +39,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -56,7 +57,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -116,7 +117,7 @@ public class PaymentGatewayServices {
             return ServiceUtil.returnError("ERROR: Cannot parse grand total from formatted string; see logs");
         }
         
-        double amountToBill = grandTotal.doubleValue();        
+        double totalRemaining = grandTotal.doubleValue();        
                       
         // loop through and auth each payment         
         List finished = new ArrayList();
@@ -131,54 +132,63 @@ public class PaymentGatewayServices {
                 reAuth = true;
             }
             
-            // call the authPayment method
-            Map processorResult = authPayment(dispatcher, orh, paymentPref, amountToBill, reAuth);
+            // check the maxAmount for 0.00
+            Double maxAmount = paymentPref.getDouble("maxAmount");
+            if (maxAmount == null || maxAmount.doubleValue() > 0) {            
+                // call the authPayment method
+                Map processorResult = authPayment(dispatcher, orh, paymentPref, totalRemaining, reAuth);
             
-            // handle the response
-            if (processorResult != null) {
-                // not null result means either an approval or decline; null would mean error
-                GenericValue paymentSettings = (GenericValue) processorResult.get("paymentSettings");
-                Double thisAmount = (Double) processorResult.get("processAmount");                
+                // handle the response
+                if (processorResult != null) {
+                    // not null result means either an approval or decline; null would mean error
+                    GenericValue paymentSettings = (GenericValue) processorResult.get("paymentSettings");
+                    Double thisAmount = (Double) processorResult.get("processAmount");                
 
-                // process the auth results             
-                boolean processResult = false;
-                try {
-                    processResult = processResult(dctx, processorResult, userLogin, paymentPref, paymentSettings);
-                    if (processResult) {
-                        amountToBill -= thisAmount.doubleValue();
-                        finished.add(processorResult);
-                    }
-                } catch (GeneralException e) {
-                    Debug.logError(e, "Trouble processing the result; processorResult: " + processorResult, module);
-                    hadError.add(paymentPref);
-                    ServiceUtil.returnError("Trouble processing the auth results");                     
-                }                                                                                                                                              
+                    // process the auth results             
+                    boolean processResult = false;
+                    try {
+                        processResult = processResult(dctx, processorResult, userLogin, paymentPref, paymentSettings);
+                        if (processResult) {
+                            totalRemaining -= thisAmount.doubleValue();
+                            finished.add(processorResult);
+                        }
+                    } catch (GeneralException e) {
+                        Debug.logError(e, "Trouble processing the result; processorResult: " + processorResult, module);
+                        hadError.add(paymentPref);
+                        ServiceUtil.returnError("Trouble processing the auth results");                     
+                    }                                                                                                                                              
+                } else {
+                    // error with payment processor; will try later
+                    hadError.add(paymentPref);                
+                    continue;             
+                }
             } else {
-                // error with payment processor; will try later
-                hadError.add(paymentPref);                
-                continue;             
+                finished.add(null);
             }
         }
         
         Debug.logInfo("Finished with auth(s) checking results", module);
 
         if (hadError.size() > 0) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            Debug.logError("Error(s) (" + hadError.size() + ") during auth; returning ERROR", module);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);            
             result.put("processResult", "ERROR");
             return result;
         
         } else if (finished.size() == paymentPrefs.size()) {
+            Debug.logInfo("All auth(s) passed total remaining : " + totalRemaining, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put("processResult", "APPROVED");
             return result;
-        } else {                            
+        } else {
+            Debug.logInfo("Only (" + finished.size() + ") passed auth; returning FAILED", module);                      
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put("processResult", "FAILED");
             return result;        
         }         
     }
                    
-    private static Map authPayment(LocalDispatcher dispatcher, OrderReadHelper orh, GenericValue paymentPref, double authTotal, boolean reauth) {
+    private static Map authPayment(LocalDispatcher dispatcher, OrderReadHelper orh, GenericValue paymentPref, double totalRemaining, boolean reauth) {
         String paymentConfig = null;
         String serviceName = null;        
             
@@ -206,7 +216,7 @@ public class PaymentGatewayServices {
         // get the process context
         Map processContext = null;
         try {
-            processContext = makeAuthContext(orh, paymentPref, paymentConfig, authTotal);
+            processContext = makeAuthContext(orh, paymentPref, paymentConfig, totalRemaining);
         } catch (GeneralException e) {
             Debug.logError(e, "Problems creating the context for the auth service", module);
             return null;                
@@ -278,7 +288,7 @@ public class PaymentGatewayServices {
         return payToPartyId;
     }
             
-    private static Map makeAuthContext(OrderReadHelper orh, GenericValue paymentPreference, String paymentConfig, double authTotal) throws GeneralException {
+    private static Map makeAuthContext(OrderReadHelper orh, GenericValue paymentPreference, String paymentConfig, double totalRemaining) throws GeneralException {
         Map processContext = new HashMap();        
                 
         processContext.put("orderId", orh.getOrderId());
@@ -292,7 +302,7 @@ public class PaymentGatewayServices {
         getBillingInformation(orh, paymentPreference, processContext);
 
         // get the process amount.
-        double thisAmount = authTotal;
+        double thisAmount = totalRemaining;
 
         // check if there is already a authAmount; if so this is a re-auth and we should use this amount.
         if (paymentPreference.get("authAmount") != null) {
@@ -507,6 +517,9 @@ public class PaymentGatewayServices {
             return ServiceUtil.returnError("Trouble getting OrderItemBilling(s) from Invoice #" + invoiceId);
         }
         
+        // check for an associated billing account
+        String billingAccountId = invoice.getString("billingAccountId");
+        
         // make sure they are all for the same order
         String testOrderId = null;
         boolean allSameOrder = true;                              
@@ -537,6 +550,9 @@ public class PaymentGatewayServices {
         
         // now capture the order
         Map serviceContext = UtilMisc.toMap("userLogin", userLogin, "orderId", testOrderId, "invoiceId", invoiceId, "captureAmount", new Double(invoiceTotal));
+        if (UtilValidate.isNotEmpty(billingAccountId)) {
+            serviceContext.put("billingAccountId", billingAccountId);
+        }
         try {
             return dispatcher.runSync("captureOrderPayments", serviceContext);
         } catch (GenericServiceException e) {
@@ -555,6 +571,7 @@ public class PaymentGatewayServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId"); 
         String invoiceId = (String) context.get("invoiceId");
+        String billingAccountId = (String) context.get("billingAccountId");
         Double captureAmount = (Double) context.get("captureAmount");                         
               
         Map result = new HashMap();               
@@ -594,7 +611,7 @@ public class PaymentGatewayServices {
         double orderTotal = orh.getOrderGrandTotal();
         double totalPayments = PaymentWorker.getPaymentsTotal(orh.getOrderPayments());
         double remainingTotal = orderTotal - totalPayments;
-        Debug.log("Remaining Total: "+remainingTotal, module);
+        Debug.log("Remaining Total: " + remainingTotal, module);
         
         // re-format the remaining total
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
@@ -613,11 +630,35 @@ public class PaymentGatewayServices {
         if (captureAmount == null) {         
             captureAmount = new Double(remainingTotal);
         }
-        Debug.log("Remaining total : " + remainingTotal, module);
+        Debug.log("Formatted Remaining total : " + remainingTotal, module);
         
         double amountToCapture = captureAmount.doubleValue();
-        Debug.log("Amount to capture : " + amountToCapture, module);
+        Debug.log("Expected Capture Amount : " + amountToCapture, module);
         
+        // if we have a billing account get balance/limit and available
+        GenericValue billingAccount = null;
+        Double billingAccountBalance = null;
+        Double billingAccountAvail = null;
+        Map billingAccountInfo = null;        
+        if (UtilValidate.isNotEmpty(billingAccountId)) {
+            try {
+                billingAccountInfo = dispatcher.runSync("calcBillingAccountBalance", UtilMisc.toMap("billingAccountId", billingAccountId));
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Unable to get billing account information for #" + billingAccountId, module);
+            }
+        }
+        if (billingAccountInfo != null) {
+            billingAccount = (GenericValue) billingAccountInfo.get("billingAccount");
+            billingAccountBalance = (Double) billingAccountInfo.get("accountBalance");
+        }
+        if (billingAccount != null && billingAccountBalance != null) {
+            Double accountLimit = billingAccount.getDouble("accountLimit");
+            if (accountLimit == null) {
+                accountLimit = new Double(0.00);
+            }
+            billingAccountAvail = new Double(accountLimit.doubleValue() - billingAccountBalance.doubleValue());            
+        }
+                        
         // iterate over the prefs and capture each one until we meet our total
         List finished = new ArrayList();
         Iterator payments = paymentPrefs.iterator();
@@ -632,19 +673,37 @@ public class PaymentGatewayServices {
             }
             Debug.log("Actual Auth amount : " + authAmount, module);
             
-            // if the authAmount is more then the remaining total; just use that
+            // if the authAmount is more then the remaining total; just use remaining total
             if (authAmount.doubleValue() > remainingTotal) {
                 authAmount = new Double(remainingTotal);
             }
-                                               
+            
+            // if we have a billing account; total up auth + account available
+            double amountToBillAccount = 0.00;
+            if (billingAccountAvail != null) {
+                amountToBillAccount = authAmount.doubleValue() + billingAccountAvail.doubleValue();
+            }
+            
+            // the amount for *this* capture                               
             double amountThisCapture = 0.00;
+                
+            // determine how much for *this* capture        
             if (authAmount.doubleValue() >= amountToCapture) {
+                // if the auth amount is more then expected capture just capture what is expected
                 amountThisCapture = amountToCapture;
             } else if (payments.hasNext()) {
+                // if we have more payments to capture; just capture what was authorized
+                amountThisCapture = authAmount.doubleValue();
+            } else if (billingAccountAvail != null && amountToBillAccount >= amountToCapture) {
+                // the provided billing account will cover the remaining; just capture what was autorized
                 amountThisCapture = authAmount.doubleValue();
             } else {
-                // problem we need to capture more then what was authorized
-                // TODO: add support for re-auth for additional funds          
+                // we need to capture more then what was authorized; re-auth for the new amount
+                // TODO: add what the billing account cannot support to the re-auth amount
+                // TODO: add support for re-auth for additional funds
+                // just in case; we will capture the autorized amount here; until this is implemented
+                Debug.logError("The amount to capture was more then what was authorized; we only captured the authorized amount : " + paymentPref, module);
+                amountThisCapture = authAmount.doubleValue();          
             }
                               
             Map captureResult = capturePayment(dispatcher, orh, paymentPref, amountThisCapture); 
@@ -857,21 +916,11 @@ public class PaymentGatewayServices {
             
             // create the PaymentApplication if invoiceId is available
             if (invoiceId != null) {
-                Debug.log("Processing Invoice #" + invoiceId, module);
-                List itemBillings = delegator.findByAnd("OrderItemBilling", UtilMisc.toMap("orderId", orderId, "invoiceId", invoiceId));
-              
-                if (itemBillings != null && itemBillings.size() > 0) {
-                    Iterator ibi = itemBillings.iterator();
-                    while (ibi.hasNext()) {
-                        GenericValue ib = (GenericValue) ibi.next();
-                                            
-                        Map paCtx = UtilMisc.toMap("paymentId", paymentId, "invoiceId", invoiceId);
-                        paCtx.put("invoiceItemSeqId", ib.get("invoiceItemSeqId"));
-                        paCtx.put("amountApplied", result.get("captureAmount")); 
-                        paCtx.put("userLogin", userLogin);                       
-                        Map paRes = dispatcher.runSync("createPaymentApplication", paCtx); 
-                    }
-                }
+                Debug.log("Processing Invoice #" + invoiceId, module);                                                                                      
+                Map paCtx = UtilMisc.toMap("paymentId", paymentId, "invoiceId", invoiceId);                
+                paCtx.put("amountApplied", result.get("captureAmount")); 
+                paCtx.put("userLogin", userLogin);                       
+                Map paRes = dispatcher.runSync("createPaymentApplication", paCtx);                
             }
         } else if (result != null && !captureResult.booleanValue()) {
             // problem with the capture lets get some needed info

@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.5 2003/09/04 06:28:19 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.6 2003/09/04 19:23:52 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1009,8 +1009,9 @@ public class ShoppingCart implements java.io.Serializable {
             p.set("paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"));
             p.set("paymentMethodId", paymentMethod.get("paymentMethodId"));            
             p.set("statusId", "PAYMENT_NOT_AUTH");            
-            if (this.paymentMethodAmounts.get(paymentMethod.getString("paymentMethodId")) != null)
+            if (this.paymentMethodAmounts.get(paymentMethod.getString("paymentMethodId")) != null) {
                 p.set("maxAmount", this.paymentMethodAmounts.get(paymentMethod.getString("paymentMethodId")));
+            }
             allOpPrefs.add(p);                                                    
         }
         
@@ -1022,8 +1023,9 @@ public class ShoppingCart implements java.io.Serializable {
             GenericValue p = delegator.makeValue("OrderPaymentPreference", new HashMap());
             p.set("paymentMethodTypeId", paymentMethodTypeId);
             p.set("statusId", "PAYMENT_NOT_RECEIVED");
-            if (this.paymentMethodTypeAmounts.get(paymentMethodTypeId) != null)
+            if (this.paymentMethodTypeAmounts.get(paymentMethodTypeId) != null) {
                 p.set("maxAmount", this.paymentMethodTypeAmounts.get(paymentMethodTypeId));
+            }
             allOpPrefs.add(p);
         }
                 
