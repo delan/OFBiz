@@ -224,6 +224,7 @@
         <env-to-env env-name="orderItem.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
         <env-to-env env-name="shipmentItem.shipmentId" to-env-name="createDetailMap.shipmentId"/>
         <env-to-env env-name="shipmentItem.shipmentItemSeqId" to-env-name="createDetailMap.shipmentItemSeqId"/>
+        <env-to-env env-name="itemIssuanceId" to-env-name="createDetailMap.itemIssuanceId"/>
         <calculate field-name="createDetailMap.quantityOnHandDiff" type="Double">
             <calcop field-name="parameters.quantity" operator="negative"/>
         </calculate>

@@ -135,7 +135,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 	              <#assign selectedFacilityId = requestParameters.facilityId>
 	          </#if>
               <#list facilities as nextFacility>
-                <option value="${nextFacility.facilityId}"<#if selectedFacilityId?if_exists == nextFacility.facilityId> ${uiLabelMap.ProductSelected}</#if>>${nextFacility.facilityName} [${nextFacility.facilityId}]</option>
+                <option value="${nextFacility.facilityId}"<#if selectedFacilityId?if_exists == nextFacility.facilityId> ${uiLabelMap.ProductSelected}</#if>>${nextFacility.facilityName?if_exists} [${nextFacility.facilityId}]</option>
               </#list>
             </select>
             <#if (inventoryItem.facilityId)?has_content>
