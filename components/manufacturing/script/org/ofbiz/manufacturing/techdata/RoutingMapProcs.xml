@@ -25,14 +25,16 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  -->
 <simple-map-processors>
   <simple-map-processor name="copyRoutingTask">
     <process field="workEffortName"><copy/></process>
     <process field="description"><copy/></process>
-    <process field="workEffortPurposeTypeId"><copy/></process>
+    <process field="workEffortPurposeTypeId">
+        <copy/>
+    </process>
     <process field="fixedAssetId"><copy/></process>
     <process field="estimatedSetupMillis"><copy/></process>
     <process field="estimatedMilliSeconds"><copy/></process>
