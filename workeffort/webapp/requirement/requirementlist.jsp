@@ -63,9 +63,12 @@
                   <TD><DIV class='tabletext'><b>Description</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Required By</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Estmated Budget</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+                  <TD align=right><DIV class='tabletext'><b>View Tasks / Edit</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
+                <ofbiz:unless name="requirements">
+                  <div class="tabletext">No open requirements found.</div>
+                </ofbiz:unless>
                 <ofbiz:iterator name="requirement" property="requirements">
                   <% GenericValue requirementType = requirement.getRelatedOne("RequirementType"); %>
                   <TR>
@@ -74,7 +77,7 @@
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="requirement" field="requiredByDate"/></DIV></TD>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="requirement" field="estimatedBudget"/></DIV></TD>
 
-                    <TD align=right width='1%'><A class='buttontext' href='<ofbiz:url>/requirement?requirementId=<ofbiz:entityfield attribute="requirement" field="requirementId"/></ofbiz:url>'>
+                    <TD align=right NOWRAP><A class="buttontext" href="<ofbiz:url>/workefforts?requirementId=<%=requirement.getString("requirementId")%></ofbiz:url>">Tasks</a>&nbsp;/&nbsp;<A class='buttontext' href='<ofbiz:url>/requirement?requirementId=<ofbiz:entityfield attribute="requirement" field="requirementId"/></ofbiz:url>'>
                         Edit&nbsp;[<ofbiz:entityfield attribute="requirement" field="requirementId"/>]</a></DIV></TD>
                   </TR>
                 </ofbiz:iterator>

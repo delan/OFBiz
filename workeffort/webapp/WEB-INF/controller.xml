@@ -114,6 +114,12 @@
         <response name="error" type="view" value="requirement"/>
     </request-map>
 
+    <request-map uri="assoctask"><security https="true" auth="true"/>
+        <event type="service" invoke="addRequirementTask"/>
+    	<response name="success" type="view" value="workefforts"/>
+        <response name="error" type="view" value="workefforts"/>
+    </request-map>
+
     <request-map uri="activity"><security https="true" auth="true"/>
     	<response name="success" type="view" value="activity"/>
     </request-map>
@@ -162,6 +168,10 @@
     	<response name="success" type="view" value="requirementlist"/>
     </request-map>
 
+    <request-map uri="workefforts"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="workefforts"/>
+    </request-map>
+
     <request-map uri="event"><security https="true" auth="true"/>
     	<response name="success" type="view" value="event"/>
     </request-map>
@@ -207,6 +217,7 @@
     <view-map name="login" type="region"/>
 
     <view-map name="task" type="region"/>
+    <view-map name="workefforts" type="region"/>
     <view-map name="requirement" type="region"/>
     <view-map name="activity" type="region"/>
     <view-map name="mytasks" type="region"/>

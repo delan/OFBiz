@@ -59,7 +59,7 @@
           </TD>
           <TD align=right width='60%'>
             <A href='<ofbiz:url>/requirementlist</ofbiz:url>' class='lightbuttontext'>[Requirement&nbsp;List]</A>
-            <A href='<ofbiz:url>/requirement</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Requirement]</A>
+            <A href='<ofbiz:url>/task?requirementId=<%=requirementId%></ofbiz:url>' class='lightbuttontext'>[Add&nbsp;Task]</A>
           </TD>
         </tr>
       </table>
