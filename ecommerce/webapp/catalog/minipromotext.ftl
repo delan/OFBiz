@@ -4,9 +4,9 @@
 
 <#-- Make sure that at least one promo has non-empty promoText -->
 <#assign showPromoText = false>
-<#foreach productPromo in productPromos>
+<#list productPromos as productPromo>
     <#if productPromo.promoText?has_content><#assign showPromoText = true></#if>
-</#foreach>
+</#list>
 
 <#if showPromoText>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -28,7 +28,7 @@
             <td>
                 <table width='100%' cellspacing="0" cellpadding="1" border="0">
                   <#-- show promotions text -->
-                  <#foreach productPromo in productPromos>
+                  <#list productPromos as productPromo>
                     <#if productPromo.promoText?has_content>
                         <tr>
                           <td>
@@ -39,7 +39,7 @@
                           <tr><td><hr class='sepbar'></td></tr>
                         </#if>
                     </#if>
-                  </#foreach>
+                  </#list>
                 </table>
             </td>
           </tr>
