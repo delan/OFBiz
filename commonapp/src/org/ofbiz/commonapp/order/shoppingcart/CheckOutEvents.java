@@ -277,6 +277,7 @@ public class CheckOutEvents {
         return "success";
     }
 
+    // TODO: remove me after the FTL integration
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         // getServletContext appears to be new on the session object for Servlet 2.3
@@ -338,7 +339,146 @@ public class CheckOutEvents {
             return "error";
         }
     }
+    
+    public static String emailOrderConfirm(HttpServletRequest request, HttpServletResponse response) {         
+        String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        
+        URL ecommercePropertiesUrl = CheckOutEvents.getEcommerceProperties(request);
+        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);
+      
+        try {
+            String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
+            String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
+            
+            String CONFIRM_TEMPLATE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.template");
+            String CONFIRM_SUBJECT = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.subject");            
+            String CONFIRM_FROM = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.from");
+            String CONFIRM_BCC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.bcc");
+            String CONFIRM_CC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.cc");            
 
+            String NOTIFY_TEMPLATE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.template");
+            String NOTIFY_SUBJECT = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.subject");
+            String NOTIFY_FROM = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.from");
+            String NOTIFY_TO = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.to");
+            String NOTIFY_CC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.cc");
+            String NOTIFY_BCC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.bcc");
+
+            GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+            String orderAdditionalEmails = (String) request.getAttribute("orderAdditionalEmails");
+            StringBuffer emails = new StringBuffer();
+            
+            String orderId = (String) request.getAttribute("order_id");
+            
+            // get the email addresses from the order contact mech(s)
+            List orderContactMechs = null;
+            try {
+                Map ocFields = UtilMisc.toMap("orderId", orderId, "contactMechPurposeTypeId", "ORDER_EMAIL");
+                orderContactMechs = delegator.findByAnd("OrderContactMech", ocFields);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Problems getting order contact mechs", module);
+            }
+            
+            if (orderContactMechs != null) {
+                Iterator oci = orderContactMechs.iterator();
+                while (oci.hasNext()) {
+                    try {
+                        GenericValue orderContactMech = (GenericValue) oci.next();
+                        GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
+                        emails.append(emails.length() > 0 ? "," : "").append(contactMech.getString("infoString"));
+                    } catch (GenericEntityException e) {
+                        Debug.logWarning(e, "Problems getting contact mech from order contact mech", module);
+                    }                        
+                }
+            }
+            
+            // parse the subjects for special codes            
+            int start = 0;           
+            while (CONFIRM_SUBJECT.indexOf('{', start) > -1) {                
+                start = CONFIRM_SUBJECT.indexOf('{');
+                int end = CONFIRM_SUBJECT.indexOf('}');
+                if (end > start) {                                        
+                    String beginString = CONFIRM_SUBJECT.substring(0, start);
+                    String keyWord = CONFIRM_SUBJECT.substring(start + 1, end);
+                    String endString = CONFIRM_SUBJECT.substring(end + 1);                    
+                    if (keyWord.equals("orderId")) {
+                        keyWord = orderId;
+                        // add more keywords here
+                    }
+                    CONFIRM_SUBJECT = beginString + keyWord + endString;
+                }
+            }      
+            start = 0;           
+            while (NOTIFY_SUBJECT.indexOf('{', start) > -1) {                
+                start = NOTIFY_SUBJECT.indexOf('{');
+                int end = NOTIFY_SUBJECT.indexOf('}');
+                if (end > start) {                                        
+                    String beginString = NOTIFY_SUBJECT.substring(0, start);
+                    String keyWord = NOTIFY_SUBJECT.substring(start + 1, end);
+                    String endString = NOTIFY_SUBJECT.substring(end + 1);                   
+                    if (keyWord.equals("orderId")) {
+                        keyWord = orderId;
+                        // add more keywords here                        
+                    }
+                    NOTIFY_SUBJECT = beginString + keyWord + endString;
+                }
+            }                                                                                    
+                
+            // send off the confirmation email
+            try {
+                URL templateUrl = application.getResource(CONFIRM_TEMPLATE);
+                Map context = new HashMap();
+                context.put("orderId", orderId);
+                context.put("templateUrl", templateUrl.toExternalForm());
+                context.put("subject", CONFIRM_SUBJECT);
+                context.put("sendFrom", CONFIRM_FROM);
+                context.put("sendTo", emails.toString());
+                context.put("sendCc", CONFIRM_CC);
+                context.put("sendBcc", CONFIRM_BCC);
+                context.put("sendVia", SMTP_SERVER);
+                dispatcher.runAsync("sendEmailConfirmation", context);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Trouble calling emailOrderConfirm service", module);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
+            } catch (MalformedURLException e) {
+                Debug.logError(e, "Trouble getting template url", module);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");                    
+            }
+                        
+            // send off the notification email  
+            try {
+                URL templateUrl = application.getResource(NOTIFY_TEMPLATE);
+                Map context = new HashMap();
+                context.put("orderId", orderId);
+                context.put("templateUrl", templateUrl.toExternalForm());
+                context.put("subject", NOTIFY_SUBJECT);
+                context.put("sendFrom", NOTIFY_FROM);
+                context.put("sendTo", NOTIFY_TO);
+                context.put("sendCc", NOTIFY_CC);
+                context.put("sendBcc", NOTIFY_BCC);
+                context.put("sendVia", SMTP_SERVER);
+                dispatcher.runAsync("sendEmailConfirmation", context);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Trouble calling emailOrderConfirm service for merchant notification", module);               
+            } catch (MalformedURLException e) {
+                Debug.logError(e, "Trouble getting template url for merchant notification", module);                                   
+            }                      
+            
+        } catch (RuntimeException re) {
+            Debug.logError(re, module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
+            return "success"; // "error";
+        } catch (Error e) {
+            Debug.logError(e, module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
+            return "success"; // "error";
+        }
+        return "success";
+    }
+        
+    // TODO: remove me after FTL/WSP is complete
     public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");

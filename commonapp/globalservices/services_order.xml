@@ -13,8 +13,17 @@
         <attribute name="orderStatusId" type="String" mode="INOUT" optional="false"/>
     </service>
     
+    <service name="sendEmailConfirmation" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="emailOrderConfirm">
+        <description>Order confirmation email</description>
+        <implements service="sendMail"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="templateUrl" type="String" mode="IN" optional="false"/>  
+        <!-- body is just to override the required body in sendMail, this service creates the body -->
+        <attribute name="body" type="String" mode="IN" optional="true"/>            
+    </service>
     <service name="sendProcessNotification" engine="java"
-    		location="org.ofbiz.commonapp.order.order.OrderServices" invoke="sendNotification">
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="sendNotification">
     	<description>Limit Service for order processing workflow; sends activitiy notifications</description>
     	<attribute name="workEffortId" type="String" mode="IN"/>
     	<attribute name="adminEmailList" type="String" mode="IN"/>
@@ -46,27 +55,27 @@
         <attribute name="orderId" type="String" mode="OUT"/>
     </service>
 
-	<service name="createOrderAdjustment" engine="simple"
-			location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="createOrderAdjustment">
-		<description>Creates a new order adjustment record</description>
-		<attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="false"/>
-		<attribute name="orderId" type="String" mode="IN" optional="false"/>
-		<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
-		<attribute name="comments" type="String" mode="IN" optional="true"/>
-		<attribute name="description" type="String" mode="IN" optional="true"/>
-		<attribute name="amount" type="Double" mode="IN" optional="true"/>
-		<attribute name="amountPerQuantity" type="Double" mode="IN" optional="true"/>
-		<attribute name="percentage" type="Double" mode="IN" optional="true"/>
-		<attribute name="productPromoId" type="String" mode="IN" optional="true"/>
-		<attribute name="productPromoRuleId" type="String" mode="IN" optional="true"/>
-		<attribute name="productPromoActionSeqId" type="String" mode="IN" optional="true"/>
-		<attribute name="productFeatureId" type="String" mode="IN" optional="true"/>
-		<attribute name="correspondingProductId" type="String" mode="IN" optional="true"/>
-		<attribute name="sourceReferenceId" type="String" mode="IN" optional="true"/>
-		<attribute name="includeInTax" type="Boolean" mode="IN" optional="true"/>
-		<attribute name="includeInShipping" type="Boolean" mode="IN" optional="true"/>
-		<attribute name="orderAdjustmentId" type="String" mode="OUT" optional="false"/>
-	</service>
+    <service name="createOrderAdjustment" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="createOrderAdjustment">
+        <description>Creates a new order adjustment record</description>
+        <attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="amount" type="Double" mode="IN" optional="true"/>
+        <attribute name="amountPerQuantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="percentage" type="Double" mode="IN" optional="true"/>
+        <attribute name="productPromoId" type="String" mode="IN" optional="true"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="true"/>
+        <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="true"/>
+        <attribute name="correspondingProductId" type="String" mode="IN" optional="true"/>
+        <attribute name="sourceReferenceId" type="String" mode="IN" optional="true"/>
+        <attribute name="includeInTax" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="includeInShipping" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="orderAdjustmentId" type="String" mode="OUT" optional="false"/>
+    </service>
     
     <service name="updateTrackingNumber" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="updateTrackingNumber">
@@ -100,7 +109,7 @@
     </service>
     
     <service name="checkOrderForBackOrders" engine="java"
-    		location="org.ofbiz.commonapp.order.order.OrderServices" invoke="checkBackOrderItems">
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="checkBackOrderItems">
     	<description>Check the order for items backordered</description>
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>
     	<attribute name="backOrderedItems" type="List" mode="OUT" optional="false"/>
