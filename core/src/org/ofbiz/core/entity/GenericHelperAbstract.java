@@ -106,7 +106,7 @@ public abstract class GenericHelperAbstract implements GenericHelper
     if(value == null)
     {
       value = findByPrimaryKey(primaryKey);
-      primaryKeyCache.put(primaryKey, value);
+      if(value != null) primaryKeyCache.put(primaryKey, value);
     }
     return value;
   }
@@ -122,7 +122,7 @@ public abstract class GenericHelperAbstract implements GenericHelper
     if(col == null)
     {
       col = findAll(entityName, orderBy);
-      allCache.put(entityName, col);
+      if(col != null) allCache.put(entityName, col);
     }
     return col;
   }
@@ -140,7 +140,7 @@ public abstract class GenericHelperAbstract implements GenericHelper
     if(col == null)
     {
       col = findByAnd(entityName, fields, orderBy);
-      andCache.put(tempPK, col);
+      if(col != null) andCache.put(tempPK, col);
     }
     return col;
   }
