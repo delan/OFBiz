@@ -139,7 +139,10 @@ public class ProductPromoWorker {
         // there will be a ton of db access, so just do a big catch entity exception block
         try {
             // loop through promotions and get a list of all of the rules...
-            Collection prodCatalogPromoApplsCol = EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true);
+            Collection prodCatalogPromoApplsCol = prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum"));
+            if (apply) {
+                prodCatalogPromoApplsCol = EntityUtil.filterByDate((List) prodCatalogPromoApplsCol, true);
+            }
 
             if (prodCatalogPromoApplsCol == null || prodCatalogPromoApplsCol.size() == 0) {
                 if (Debug.infoOn()) Debug.logInfo("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId, module);
