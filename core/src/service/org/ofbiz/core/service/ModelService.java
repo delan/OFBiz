@@ -243,14 +243,13 @@ public class ModelService {
         }
 
         // * Validate types next
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Iterator i = testSet.iterator();
         while (i.hasNext()) {
             Object key = i.next();
             Object testObject = test.get(key);
             String infoType = (String) info.get(key);
             
-            if (!ObjectType.instanceOf(testObject, infoType, loader)) {
+            if (!ObjectType.instanceOf(testObject, infoType, null)) {
                 String testType = testObject == null ? "null" : testObject.getClass().getName();
                 throw new ServiceValidationException("Type check failed for field " + key + "; expected type is " +
                         infoType + "; actual type is: " + testType);

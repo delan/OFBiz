@@ -95,7 +95,11 @@ public class ObjectType {
      * @param className The name of the class to load
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
-        return loadClass(className, Thread.currentThread().getContextClassLoader());
+        //small block to speed things up by putting using preloaded classes for common objects, this turns out to help quite a bit...
+        Class theClass = (Class) classNameClassMap.get(className);
+        if (theClass != null) return theClass;
+
+        return loadClass(className, null);
     }
     
     /** Loads a class with the current thread's context classloader
@@ -106,6 +110,8 @@ public class ObjectType {
         Class theClass = (Class) classNameClassMap.get(className);
         if (theClass != null) return theClass;
 
+        if (loader == null) loader = Thread.currentThread().getContextClassLoader();
+        
         try {
             theClass = loader.loadClass(className);
         } catch (Exception e) {
@@ -217,7 +223,7 @@ public class ObjectType {
      * @param typeObject Object to test against
      */
     public static boolean instanceOf(Object obj, String typeName) {
-        return instanceOf(obj, typeName, Thread.currentThread().getContextClassLoader());
+        return instanceOf(obj, typeName, null);
     }
     /** Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
