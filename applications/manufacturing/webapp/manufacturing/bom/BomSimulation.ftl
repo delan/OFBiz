@@ -28,6 +28,14 @@
 </#if>
 
 <#if requestParameters.lookupFlag?default("N") == "Y">
+
+<#if selectedFeatures?has_content>
+<hr>
+<div class="tableheadtext">${uiLabelMap.ManufacturingSelectedFeatures}</div>
+<#list selectedFeatures as selectedFeature>
+    <div class="tabletext">${selectedFeature.productFeatureTypeId} = ${selectedFeature.description?if_exists} [${selectedFeature.productFeatureId}]</div>
+</#list>
+</#if>
 <hr>
       <table border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
