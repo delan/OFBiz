@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -34,15 +34,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -53,6 +49,10 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * Survey Wrapper - Class to render survey forms
@@ -136,17 +136,17 @@ public class SurveyWrapper {
     // returns the FTL Template object
     protected Template getTemplate(String templatePath) {
         URL templateUrl = UtilURL.fromResource(templatePath);
-
         if (templateUrl == null) {
             Debug.logError("Problem getting the template URL: " + templatePath + " not found", module);
         }
 
-        Configuration config = Configuration.getDefaultConfiguration();
-        config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+        Configuration config = null;
         try {
-            config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+            config = FreeMarkerWorker.makeDefaultOfbizConfig();
+        } catch (IOException e) {
+            Debug.logError(e, "Error creating default OFBiz FreeMarker Configuration", module);
         } catch (TemplateException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, "Error creating default OFBiz FreeMarker Configuration", module);
         }
 
         Template template = null;
