@@ -203,6 +203,11 @@ public class OrderServices {
             result.put(ModelService.ERROR_MESSAGE_LIST, errorMessages);
             return result;
         }
+        
+        String initialStatus = "ORDER_ORDERED";
+        if ("SALES_ORDER".equals(orderTypeId)) {
+            initialStatus = "ORDER_CREATED";
+        }
 
         // create the order object
         String orderId = delegator.getNextSeqId("OrderHeader").toString();
@@ -210,7 +215,7 @@ public class OrderServices {
         GenericValue order = delegator.makeValue("OrderHeader",
                 UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
                     "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
-                    "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
+                    "statusId", initialStatus, "billingAccountId", billingAccountId));
 
         if (context.get("currencyUom") != null) {
             order.set("currencyUom", context.get("currencyUom"));
