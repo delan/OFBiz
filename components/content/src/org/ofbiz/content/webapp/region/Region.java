@@ -1,5 +1,5 @@
 /*
- * $Id: Region.java,v 1.3 2004/05/23 03:20:35 jonesde Exp $
+ * $Id: Region.java,v 1.4 2004/05/23 08:13:33 jonesde Exp $
  *
  * Copyright (c) 2001-2003 Sun Microsystems Inc., published in "Advanced Java Server Pages" by Prentice Hall PTR
  * Copyright (c) 2001-2002 The Open For Business Project - www.ofbiz.org
@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +45,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class Region extends Content {
@@ -112,7 +113,9 @@ public class Region extends Content {
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
         if (Debug.verboseOn()) Debug.logVerbose("Rendering " + this.toString(), module);
 
-        RequestDispatcher rd = request.getRequestDispatcher(content);
+        ServletContext application = (ServletContext) request.getAttribute("servletContext");
+        RequestDispatcher rd = application.getRequestDispatcher(content);
+        //RequestDispatcher rd = request.getRequestDispatcher(content);
         if (rd == null) {
             throw new IllegalArgumentException("HttpServletRequest returned a null RequestDispatcher for: [" + content + "]");
         } else {
