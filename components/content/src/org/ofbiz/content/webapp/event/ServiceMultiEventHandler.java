@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceMultiEventHandler.java,v 1.2 2003/08/19 17:45:22 jonesde Exp $
+ * $Id: ServiceMultiEventHandler.java,v 1.3 2003/09/05 21:07:34 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * ServiceMultiEventHandler - Event handler for running a service multiple times; for bulk forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ServiceMultiEventHandler implements EventHandler {
@@ -124,6 +124,10 @@ public class ServiceMultiEventHandler implements EventHandler {
         // check if we are using per row submit
         boolean useRowSubmit = request.getParameter("_useRowSubmit") == null ? false : 
                 "Y".equalsIgnoreCase(request.getParameter("_useRowSubmit"));
+        
+        // check if we are to also look in a global scope (no delimiter)        
+        boolean checkGlobalScope = request.getParameter("_checkGlobalScope") == null ? false :
+                "Y".equalsIgnoreCase(request.getParameter("_checkGlobalScope"));
         
         // get the number of rows
         String rowCountField = request.getParameter("_rowCount");
@@ -198,6 +202,20 @@ public class ServiceMultiEventHandler implements EventHandler {
                     if (value == null) {
                         value = request.getSession().getAttribute(name + thisSuffix);
                     }
+                    
+                    // now check global scope
+                    if (value == null) {
+                        if (checkGlobalScope) {
+                            value = request.getParameter(name);
+                            if (value == null) {
+                                value = request.getAttribute(name);                                
+                            }
+                            if (value == null) {
+                                value = request.getSession().getAttribute(name);
+                            }
+                        }
+                    }
+                    
                     if (value == null) {
                         // still null, give up for this one
                         continue;
