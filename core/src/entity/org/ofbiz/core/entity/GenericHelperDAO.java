@@ -121,11 +121,12 @@ public class GenericHelperDAO implements GenericHelper {
     
     /** Remove a Generic Entity corresponding to the primaryKey
      *@param  primaryKey  The primary key of the entity to remove.
+     *@return int representing number of rows effected by this operation
      */
-    public void removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
-        if (primaryKey == null) return;
+    public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
+        if (primaryKey == null) return 0;
         Debug.logVerbose("Removing GenericPK: " + primaryKey.toString(), module);
-        genericDAO.delete(primaryKey);
+        return genericDAO.delete(primaryKey);
     }
     
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
@@ -163,23 +164,24 @@ public class GenericHelperDAO implements GenericHelper {
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
-     *@return Collection of GenericValue instances that match the query
+     *@return int representing number of rows effected by this operation
      */
-    public void removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
+    public int removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
         if (modelEntity == null || fields == null) {
-            return;
+            return 0;
         }
-        genericDAO.deleteByAnd(modelEntity, fields);
+        return genericDAO.deleteByAnd(modelEntity, fields);
     }
     
     /** Store the Entity from the GenericValue to the persistent store
      *@param value GenericValue instance containing the entity
+     *@return int representing number of rows effected by this operation
      */
-    public void store(GenericValue value) throws GenericEntityException {
+    public int store(GenericValue value) throws GenericEntityException {
         if (value == null) {
-            return;
+            return 0;
         }
-        genericDAO.update(value);
+        return genericDAO.update(value);
     }
     
     /** Store the Entities from the Collection GenericValue instances to the persistent store.
@@ -190,9 +192,10 @@ public class GenericHelperDAO implements GenericHelper {
      *  if the data source supports transactions. This is just like to othersToStore feature
      *  of the GenericEntity on a create or store.
      *@param values Collection of GenericValue instances containing the entities to store
+     *@return int representing number of rows effected by this operation
      */
-    public void storeAll(Collection values) throws GenericEntityException {
-        genericDAO.storeAll(values);
+    public int storeAll(Collection values) throws GenericEntityException {
+        return genericDAO.storeAll(values);
     }
     
     /** Remove the Entities from the Collection from the persistent store.
@@ -204,9 +207,10 @@ public class GenericHelperDAO implements GenericHelper {
      *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
      *  if the data source supports transactions.
      *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+     *@return int representing number of rows effected by this operation
      */
-    public void removeAll(Collection dummyPKs) throws GenericEntityException {
-        genericDAO.deleteAll(dummyPKs);
+    public int removeAll(Collection dummyPKs) throws GenericEntityException {
+        return genericDAO.deleteAll(dummyPKs);
     }
     
     /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server

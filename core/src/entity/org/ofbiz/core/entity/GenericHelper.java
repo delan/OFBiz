@@ -69,8 +69,9 @@ public interface GenericHelper {
     
     /** Remove a Generic Entity corresponding to the primaryKey
      *@param  primaryKey  The primary key of the entity to remove.
+     *@return int representing number of rows effected by this operation
      */
-    public void removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException;
+    public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException;
     
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
@@ -94,7 +95,6 @@ public interface GenericHelper {
      *       optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue instances that match the query
      */
-    
     public Collection findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
     
     public Collection findByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException;
@@ -102,14 +102,15 @@ public interface GenericHelper {
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
-     *@return Collection of GenericValue instances that match the query
+     *@return int representing number of rows effected by this operation
      */
-    public void removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException;
+    public int removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException;
     
     /** Store the Entity from the GenericValue to the persistent store
      *@param value GenericValue instance containing the entity
+     *@return int representing number of rows effected by this operation
      */
-    public void store(GenericValue value) throws GenericEntityException;
+    public int store(GenericValue value) throws GenericEntityException;
     
     /** Store the Entities from the Collection GenericValue instances to the persistent store.
      *  This is different than the normal store method in that the store method only does
@@ -119,8 +120,9 @@ public interface GenericHelper {
      *  if the data source supports transactions. This is just like to othersToStore feature
      *  of the GenericEntity on a create or store.
      *@param values Collection of GenericValue instances containing the entities to store
+     *@return int representing number of rows effected by this operation
      */
-    public void storeAll(Collection values) throws GenericEntityException;
+    public int storeAll(Collection values) throws GenericEntityException;
     
     /** Remove the Entities from the Collection from the persistent store.
      *  <br>The Collection contains GenericEntity objects, can be either GenericPK or GenericValue.
@@ -131,8 +133,9 @@ public interface GenericHelper {
      *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
      *  if the data source supports transactions.
      *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+     *@return int representing number of rows effected by this operation
      */
-    public void removeAll(Collection dummyPKs) throws GenericEntityException;
+    public int removeAll(Collection dummyPKs) throws GenericEntityException;
     
     /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
      *@param modelEntities Map of entityName names and ModelEntity values
