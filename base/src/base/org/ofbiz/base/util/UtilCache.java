@@ -23,17 +23,7 @@
  */
 package org.ofbiz.base.util;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 
 /**
  * Generalized caching utility. Provides a number of caching features:
@@ -46,7 +36,7 @@ import java.util.WeakHashMap;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UtilCache {
@@ -296,6 +286,20 @@ public class UtilCache {
         	}
         }
         return line.getValue();
+    }
+
+    public List values() {
+        if (keyLRUList == null) {
+            return null;
+        }
+        List valuesList = new LinkedList();
+        Iterator i = keyLRUList.iterator();
+        while (i.hasNext()) {
+            Object key = i.next();
+            valuesList.add(this.get(key));
+        }
+
+        return valuesList;
     }
 
     /** Removes an element from the cache according to the specified key
