@@ -46,7 +46,7 @@ public class HashEncrypt {
         String hashType = UtilProperties.getPropertyValue("security.properties", "password.encrypt.hash.type");
 
         if (hashType == null || hashType.length() == 0) {
-            Debug.logWarning("Password encrypt hash type is not specified in security.properties, use SHA");
+            Debug.logWarning("Password encrypt hash type is not specified in security.properties, use SHA", module);
             hashType = "SHA";
         }
 
@@ -76,7 +76,7 @@ public class HashEncrypt {
 
             return new String(digestChars, 0, digestChars.length);
         } catch (Exception e) {
-            Debug.logError(e, "Error while computing hash of type " + hashType);
+            Debug.logError(e, "Error while computing hash of type " + hashType, module);
         }
         return str;
     }
@@ -107,7 +107,7 @@ public class HashEncrypt {
 
             return new String(digestChars, 0, digestChars.length);
         } catch (Exception e) {
-            Debug.logError(e, "Error while computing hash of type " + hashType);
+            Debug.logError(e, "Error while computing hash of type " + hashType, module);
         }
         return str;
     }

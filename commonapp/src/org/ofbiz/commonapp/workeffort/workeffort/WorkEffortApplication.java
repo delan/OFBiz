@@ -61,7 +61,7 @@ public final class WorkEffortApplication {
             if (getApplications(workEffort).isEmpty())
                 return false;
         } catch (GenericEntityException ee) {
-            Debug.logWarning(ee);
+            Debug.logWarning(ee, module);
             return false;
         }
 
@@ -103,10 +103,10 @@ public final class WorkEffortApplication {
                     GenericValue applicationSandbox = (GenericValue) applicationSandboxs.toArray()[0];
                     return (String) applicationSandbox.get("applicationId");
                 } catch (GenericEntityException ee) {
-                    Debug.logWarning(ee);
+                    Debug.logWarning(ee, module);
                 }
         }
-        Debug.logWarning("Can't find applicationId");
+        Debug.logWarning("Can't find applicationId", module);
         return null;
     }
 

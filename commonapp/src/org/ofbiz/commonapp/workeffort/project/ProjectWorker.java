@@ -56,7 +56,7 @@ public class ProjectWorker {
                                 new EntityExpr("workEffortPurposeTypeId", EntityOperator.EQUALS, "WEPT_PROJECT")),
                             UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         if (validWorkEfforts == null || validWorkEfforts.size() <= 0)
@@ -79,7 +79,7 @@ public class ProjectWorker {
                                 new EntityExpr("workEffortPurposeTypeId", EntityOperator.EQUALS, "WEPT_PROJECT")),
                             UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         if (validWorkEfforts == null || validWorkEfforts.size() <= 0)
@@ -106,7 +106,7 @@ public class ProjectWorker {
                             UtilMisc.toList(new EntityExpr("workEffortIdFrom", EntityOperator.EQUALS, projectWorkEffortId),
                                 new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_BREAKDOWN")));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
 
@@ -127,7 +127,7 @@ public class ProjectWorker {
                     }
                 }
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         if (validWorkEfforts == null || validWorkEfforts.size() <= 0)
@@ -154,7 +154,7 @@ public class ProjectWorker {
                             UtilMisc.toList(new EntityExpr("workEffortIdFrom", EntityOperator.EQUALS, phaseWorkEffortId),
                                 new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_BREAKDOWN")));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
 
@@ -174,7 +174,7 @@ public class ProjectWorker {
                     }
                 }
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         if (validWorkEfforts == null || validWorkEfforts.size() <= 0)
@@ -201,7 +201,7 @@ public class ProjectWorker {
                             UtilMisc.toList(new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId)),
                             UtilMisc.toList("noteDateTime"));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         if (notes == null || notes.size() <= 0)

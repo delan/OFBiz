@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2002/10/01 04:29:11  azeneski
+ * ran through jacobe
+ *
  * Revision 1.10  2002/09/04 17:41:19  azeneski
  * another pass of Collection => List updates
  *
@@ -108,7 +111,7 @@ public class ContactHelper {
                 return EntityUtil.getRelatedByAnd("ContactMech", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), partyContactMechList);
             }
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee);
+            Debug.logWarning(gee, module);
             return Collections.EMPTY_LIST;
         }
     }

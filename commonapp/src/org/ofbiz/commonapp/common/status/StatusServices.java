@@ -53,7 +53,7 @@ public class StatusServices {
                 Collection myStatusItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeId), UtilMisc.toList("sequenceId"));
                 statusItems.addAll(myStatusItems);
             } catch (GenericEntityException e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
             }
         }        
         Map ret = new HashMap();
@@ -71,7 +71,7 @@ public class StatusServices {
         try {
             statusValidChangeToDetails = delegator.findByAndCache("StatusValidChangeToDetail", UtilMisc.toMap("statusId", statusId), UtilMisc.toList("sequenceId"));
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
 
         Map ret = new HashMap();

@@ -54,7 +54,7 @@ public class ShippingEvents {
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/order.properties");
         } catch (MalformedURLException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
 
         StringBuffer errorMessage = new StringBuffer();
@@ -81,20 +81,20 @@ public class ShippingEvents {
             Map fields = UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER");
 
             estimates = delegator.findByAnd("ShipmentCostEstimate", fields);
-            if (Debug.verboseOn()) Debug.logVerbose("Estimate fields: " + fields);
-            if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates);
+            if (Debug.verboseOn()) Debug.logVerbose("Estimate fields: " + fields, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates, module);
         } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.");
+            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
             return "succes";
         }
         if (estimates == null || estimates.size() < 1) {
-            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.");
+            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
             return "success";
         }
 
-        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size());
+        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size(), module);
 
         // Get the PostalAddress
         GenericValue shipAddress = null;
@@ -102,7 +102,7 @@ public class ShippingEvents {
         try {
             shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId));
         } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.");
+            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
             return "success";
         }
@@ -191,10 +191,10 @@ public class ShippingEvents {
             }
         }
 
-        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size());
+        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size(), module);
 
         if (estimateList.size() < 1) {
-            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.");
+            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
             return "success";
         }
@@ -235,7 +235,7 @@ public class ShippingEvents {
         // Grab the estimate and work with it.
         GenericValue estimate = (GenericValue) estimateList.get(estimateIndex);
 
-        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Working with estimate: " + estimateIndex);
+        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Working with estimate: " + estimateIndex, module);
 
         double orderFlat = 0.00;
 
@@ -272,7 +272,7 @@ public class ShippingEvents {
 
         double shippingTotal = weightAmount + quantityAmount + priceAmount + orderFlat + itemFlatAmount + orderPercentage;
 
-        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal);
+        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal, module);
 
         // remove old shipping adjustments if there
         cart.removeAdjustmentByType("SHIPPING_CHARGES");
@@ -298,7 +298,7 @@ public class ShippingEvents {
             shipmentPackageRouteSeg = delegator.findByPrimaryKey("ShipmentPackageRouteSeg", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId, "shipmentPackageSeqId", shipmentPackageSeqId));
         } catch (GenericEntityException e) {
             String errorMsg = "Error looking up ShipmentPackageRouteSeg: " + e.toString();
-            Debug.logError(e, errorMsg);
+            Debug.logError(e, errorMsg, module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
             return "error";
         }
@@ -325,7 +325,7 @@ public class ShippingEvents {
             return "success";
         } catch (IOException e) {
             String errorMsg = "Error writing labelImage to OutputStream: " + e.toString();
-            Debug.logError(e, errorMsg);
+            Debug.logError(e, errorMsg, module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
             return "error";
         }
@@ -364,7 +364,7 @@ public class ShippingEvents {
      totalWeight += (item.getWeight() * item.getQuantity());
      }
      String weightString = new Double(totalWeight).toString();
-     if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Total Weight: " + weightString);
+     if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Total Weight: " + weightString, module);
      
      // Set up the UPS arguments.
      arguments.put("AppVersion","1.2");
@@ -391,7 +391,7 @@ public class ShippingEvents {
      upsResponse = req.get();
      }
      catch ( HttpClientException e ) {
-     Debug.logError("[ShippingEvents.getUPSRate] Problems getting UPS Rate Infomation.");
+     Debug.logError("[ShippingEvents.getUPSRate] Problems getting UPS Rate Infomation.", module);
      return -1;
      }
      
@@ -414,18 +414,18 @@ public class ShippingEvents {
      Iterator i = respList.iterator();
      while ( i.hasNext() ) {
      String value = (String) i.next();
-     if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Resp List: " + value);
+     if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Resp List: " + value, module);
      }
      
      // Shipping method is index 5
      // Shipping rate is index 12
      if ( !respList.get(5).equals(upsMethod) )
-     Debug.logInfo("[ShippingEvents.getUPSRate] Shipping method does not match.");
+     Debug.logInfo("[ShippingEvents.getUPSRate] Shipping method does not match.", module);
      try {
      upsRate = Double.parseDouble((String)respList.get(12));
      }
      catch ( NumberFormatException nfe ) {
-     Debug.logError("[ShippingEvents.getUPSRate] Problems parsing rate value.");
+     Debug.logError("[ShippingEvents.getUPSRate] Problems parsing rate value.", module);
      }
      }
      

@@ -88,7 +88,7 @@ public class ContactMechServices {
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString());
+            Debug.logWarning(e.toString(), module);
             return ServiceUtil.returnError("Could not create contact info (write failure): " + e.getMessage());
         }
 
@@ -131,7 +131,7 @@ public class ContactMechServices {
         try {
             contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             contactMech = null;
         }
         
@@ -146,7 +146,7 @@ public class ContactMechServices {
                     toBeStored.add(partyContactMech);        
                 }
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());            
+                Debug.logWarning(e.getMessage(), module);            
                 contactMech = null;
             }
         }
@@ -196,7 +196,7 @@ public class ContactMechServices {
                     toBeStored.add(tempVal);
                 }
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e.toString(), module);
                 return ServiceUtil.returnError("ERROR: Could not change contact info (read purpose failure): " + e.getMessage());
             }
 
@@ -204,7 +204,7 @@ public class ContactMechServices {
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e.toString(), module);
                 return ServiceUtil.returnError("ERROR: Could not change contact info (write failure): " + e.getMessage());
             }
         } else {
@@ -248,7 +248,7 @@ public class ContactMechServices {
 
             partyContactMech = EntityUtil.getFirst(partyContactMechs);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString());
+            Debug.logWarning(e.toString(), module);
             return ServiceUtil.returnError("Could not delete contact info (read failure): " + e.getMessage());
         }
 
@@ -260,7 +260,7 @@ public class ContactMechServices {
         try {
             partyContactMech.store();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString());
+            Debug.logWarning(e.toString(), module);
             return ServiceUtil.returnError("Could not delete contact info (write failure)");
         }
 
@@ -329,7 +329,7 @@ public class ContactMechServices {
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString());
+            Debug.logWarning(e.toString(), module);
             return ServiceUtil.returnError("Could not create contact info (write failure): " + e.getMessage());
         }
 
@@ -372,7 +372,7 @@ public class ContactMechServices {
         try {
             contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             contactMech = null;
         }
         
@@ -387,7 +387,7 @@ public class ContactMechServices {
                     toBeStored.add(partyContactMech);        
                 }
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());            
+                Debug.logWarning(e.getMessage(), module);            
                 contactMech = null;
             }
         }
@@ -408,7 +408,7 @@ public class ContactMechServices {
             try {
                 addr = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e.toString(), module);
                 addr = null;
             }
             relatedEntityToSet = new GenericValue(addr);
@@ -461,7 +461,7 @@ public class ContactMechServices {
                         toBeStored.add(tempVal);
                     }
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e.toString());
+                    Debug.logWarning(e.toString(), module);
                     return ServiceUtil.returnError("ERROR: Could not change contact info (read purpose failure): " + e.getMessage());
                 }
 
@@ -471,7 +471,7 @@ public class ContactMechServices {
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e.toString(), module);
                 return ServiceUtil.returnError("ERROR: Could not change contact info (write failure): " + e.getMessage());
             }
         } else {
@@ -530,7 +530,7 @@ public class ContactMechServices {
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString());
+            Debug.logWarning(e.toString(), module);
             return ServiceUtil.returnError("Could not create contact info (write failure): " + e.getMessage());
         }
 
@@ -577,7 +577,7 @@ public class ContactMechServices {
 
             partyContactMech = EntityUtil.getFirst(partyContactMechs);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             contactMech = null;
             partyContactMech = null;
         }
@@ -600,7 +600,7 @@ public class ContactMechServices {
             try {
                 telNum = delegator.findByPrimaryKey("TelecomNumber", UtilMisc.toMap("contactMechId", contactMechId));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e.toString(), module);
                 telNum = null;
             }
             relatedEntityToSet = new GenericValue(telNum);
@@ -644,7 +644,7 @@ public class ContactMechServices {
                     toBeStored.add(tempVal);
                 }
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e.toString(), module);
                 return ServiceUtil.returnError("ERROR: Could not change contact info (read purpose failure): " + e.getMessage());
             }
 
@@ -652,7 +652,7 @@ public class ContactMechServices {
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e.toString(), module);
                 return ServiceUtil.returnError("ERROR: Could not change contact info (write failure): " + e.getMessage());
             }
         } else {
@@ -734,7 +734,7 @@ public class ContactMechServices {
 
             tempVal = EntityUtil.getFirst(allPCMPs);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             tempVal = null;
         }
 
@@ -752,7 +752,7 @@ public class ContactMechServices {
             try {
                 delegator.create(newPartyContactMechPurpose);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 return ServiceUtil.returnError("ERROR: Could not add purpose to contact mechanism (write failure): " + e.getMessage());
             }
         }
@@ -793,7 +793,7 @@ public class ContactMechServices {
                 return ServiceUtil.returnError("Could not delete purpose from contact mechanism (record not found)");
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could not delete purpose from contact mechanism (read failure): " + e.getMessage());
         }
 
@@ -801,7 +801,7 @@ public class ContactMechServices {
         try {
             pcmp.store();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could not delete purpose from contact mechanism (write failure): " + e.getMessage());
         }
 

@@ -147,14 +147,14 @@ public class OrderServices {
                 product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", currentProductId));
             } catch (GenericEntityException e) {
                 String errMsg = UtilProperties.getMessage(resource, "product.not_found", new Object[] { currentProductId }, locale);
-                Debug.logError(e, errMsg);
+                Debug.logError(e, errMsg, module);
                 errorMessages.add(errMsg);
                 continue;
             }
 
             if (product == null) {
                 String errMsg = UtilProperties.getMessage(resource, "product.not_found", new Object[] { currentProductId }, locale);
-                Debug.logError(errMsg);
+                Debug.logError(errMsg, module);
                 errorMessages.add(errMsg);
                 continue;
             }
@@ -164,7 +164,7 @@ public class OrderServices {
                 if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
                     String excMsg = UtilProperties.getMessage(resource, "product.not_yet_for_sale", 
                     		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
-                    Debug.logWarning(excMsg);
+                    Debug.logWarning(excMsg, module);
                     errorMessages.add(excMsg);
                     continue;
                 }
@@ -175,7 +175,7 @@ public class OrderServices {
                 if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
                     String excMsg = UtilProperties.getMessage(resource, "product.no_longer_for_sale", 
                     		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
-                    Debug.logWarning(excMsg);
+                    Debug.logWarning(excMsg, module);
                     errorMessages.add(excMsg);
                     continue;
                 }
@@ -188,7 +188,7 @@ public class OrderServices {
                     		currentQuantity.doubleValue(), delegator, dispatcher)) {
                         String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock", 
                         		new Object[] { getProductName(product, itemName), currentProductId }, locale);
-                        Debug.logWarning(invErrMsg);
+                        Debug.logWarning(invErrMsg, module);
                         errorMessages.add(invErrMsg);
                         continue;
                     }
@@ -410,7 +410,7 @@ public class OrderServices {
                             UtilMisc.toMap("orderId", orderId, "partyId", webSiteRole.get("partyId"), "roleTypeId", "VENDOR")));                        
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error looking up Vendor for the current Web Site");
+                Debug.logError(e, "Error looking up Vendor for the current Web Site", module);
             }
             
         }
@@ -471,7 +471,7 @@ public class OrderServices {
                             try {
                                 product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
                             } catch (GenericEntityException e) {
-                                Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation");
+                                Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation", module);
                             }
                             String invErrMsg = "The product ";
         
@@ -666,8 +666,8 @@ public class OrderServices {
                 if (orderItem == null)
                     ServiceUtil.returnError("ERROR: Cannot change item status; item not found.");
                 if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setItemStatus] : Status Change: [" + orderId + "] (" + orderItem.getString("orderItemSeqId"), module);
-                if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setIte,Status] : From Status : " + orderItem.getString("statusId"));
-                if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId);
+                if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setIte,Status] : From Status : " + orderItem.getString("statusId"), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId, module);
                 
                 if (orderItem.getString("statusId").equals(statusId)) { 
                     continue;
@@ -744,8 +744,8 @@ public class OrderServices {
                 result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status; order cannot be found.");
                 return result;
             }
-            if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"));
-            if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId);
+            if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"), module);
+            if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId, module);
             
             if (orderHeader.getString("statusId").equals(statusId)) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -820,7 +820,7 @@ public class OrderServices {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not set tracking number (" + e.getMessage() + ").");
         }
@@ -1341,7 +1341,7 @@ public class OrderServices {
 
             delegator.create(v);
         } catch (GenericEntityException ee) {
-            Debug.logError(ee);
+            Debug.logError(ee, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem associating note with order (" + ee.getMessage() + ").");
         }
@@ -1577,7 +1577,7 @@ public class OrderServices {
             try {
                 delegator.create(payment);
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem creating Payment record");
+                Debug.logError(e, "Problem creating Payment record", module);
                 return ServiceUtil.returnError("Problem creating Payment record");
             }
             
@@ -1610,7 +1610,7 @@ public class OrderServices {
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem storing ReturnItem updates");
+                Debug.logError(e, "Problem storing ReturnItem updates", module);
                 return ServiceUtil.returnError("Problem storing ReturnItem updates");
             }
         }

@@ -313,7 +313,7 @@ public class UpsServices {
                 shipmentConfirmRequestString = UtilXml.writeXmlDocument(shipmentConfirmRequestDoc);
             } catch (IOException e) {
                 String ioeErrMsg = "Error writing the ShipmentConfirmRequest XML Document to a String: " + e.toString();
-                Debug.logError(e, ioeErrMsg);
+                Debug.logError(e, ioeErrMsg, module);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
             
@@ -324,7 +324,7 @@ public class UpsServices {
                 accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
             } catch (IOException e) {
                 String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
-                Debug.logError(e, ioeErrMsg);
+                Debug.logError(e, ioeErrMsg, module);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
             
@@ -339,7 +339,7 @@ public class UpsServices {
                 shipmentConfirmResponseString = sendUpsRequest("ShipConfirm", xmlString.toString());
             } catch (UpsConnectException e) {
                 String uceErrMsg = "Error sending UPS request for UPS Service ShipConfirm: " + e.toString();
-                Debug.logError(e, uceErrMsg);
+                Debug.logError(e, uceErrMsg, module);
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
@@ -348,15 +348,15 @@ public class UpsServices {
                 shipmentConfirmResponseDocument = UtilXml.readXmlDocument(shipmentConfirmResponseString, false);
             } catch (SAXException e2) {
                 String excErrMsg = "Error parsing the ShipmentConfirmResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (ParserConfigurationException e2) {
                 String excErrMsg = "Error parsing the ShipmentConfirmResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (IOException e2) {
                 String excErrMsg = "Error parsing the ShipmentConfirmResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             }
 
@@ -403,21 +403,21 @@ public class UpsServices {
                     shipmentRouteSegment.set("actualTransportCost", Double.valueOf(transportationMonetaryValue));
                 } catch (NumberFormatException e) {
                     String excErrMsg = "Error parsing the transportationMonetaryValue [" + transportationMonetaryValue + "]: " + e.toString();
-                    Debug.logError(e, excErrMsg);
+                    Debug.logError(e, excErrMsg, module);
                     errorList.add(excErrMsg);
                 }
                 try {
                     shipmentRouteSegment.set("actualServiceCost", Double.valueOf(serviceOptionsMonetaryValue));
                 } catch (NumberFormatException e) {
                     String excErrMsg = "Error parsing the serviceOptionsMonetaryValue [" + serviceOptionsMonetaryValue + "]: " + e.toString();
-                    Debug.logError(e, excErrMsg);
+                    Debug.logError(e, excErrMsg, module);
                     errorList.add(excErrMsg);
                 }
                 try {
                     shipmentRouteSegment.set("actualCost", Double.valueOf(totalMonetaryValue));
                 } catch (NumberFormatException e) {
                     String excErrMsg = "Error parsing the totalMonetaryValue [" + totalMonetaryValue + "]: " + e.toString();
-                    Debug.logError(e, excErrMsg);
+                    Debug.logError(e, excErrMsg, module);
                     errorList.add(excErrMsg);
                 }
             
@@ -430,7 +430,7 @@ public class UpsServices {
                     shipmentRouteSegment.set("billingWeight", Double.valueOf(billingWeight));
                 } catch (NumberFormatException e) {
                     String excErrMsg = "Error parsing the billingWeight [" + billingWeight + "]: " + e.toString();
-                    Debug.logError(e, excErrMsg);
+                    Debug.logError(e, excErrMsg, module);
                     errorList.add(excErrMsg);
                 }
                 shipmentRouteSegment.set("billingWeightUomId", unitsUpsToOfbiz.get(billingWeightUnitOfMeasurement));
@@ -468,9 +468,9 @@ public class UpsServices {
                 return ServiceUtil.returnError(errorList);
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             if (shipmentConfirmResponseString != null) {
-                Debug.logError("Got XML ShipmentConfirmRespose: " + shipmentConfirmResponseString);
+                Debug.logError("Got XML ShipmentConfirmRespose: " + shipmentConfirmResponseString, module);
                 return ServiceUtil.returnError(UtilMisc.toList(
                             "Error reading or writing Shipment data for UPS Shipment Confirm: " + e.toString(),
                             "A ShipmentConfirmRespose was received: " + shipmentConfirmResponseString));
@@ -532,7 +532,7 @@ public class UpsServices {
                 shipmentAcceptRequestString = UtilXml.writeXmlDocument(shipmentAcceptRequestDoc);
             } catch (IOException e) {
                 String ioeErrMsg = "Error writing the ShipmentAcceptRequest XML Document to a String: " + e.toString();
-                Debug.logError(e, ioeErrMsg);
+                Debug.logError(e, ioeErrMsg, module);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
             
@@ -543,7 +543,7 @@ public class UpsServices {
                 accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
             } catch (IOException e) {
                 String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
-                Debug.logError(e, ioeErrMsg);
+                Debug.logError(e, ioeErrMsg, module);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
             
@@ -558,7 +558,7 @@ public class UpsServices {
                 shipmentAcceptResponseString = sendUpsRequest("ShipAccept", xmlString.toString());
             } catch (UpsConnectException e) {
                 String uceErrMsg = "Error sending UPS request for UPS Service ShipAccept: " + e.toString();
-                Debug.logError(e, uceErrMsg);
+                Debug.logError(e, uceErrMsg, module);
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
@@ -567,15 +567,15 @@ public class UpsServices {
                 shipmentAcceptResponseDocument = UtilXml.readXmlDocument(shipmentAcceptResponseString, false);
             } catch (SAXException e2) {
                 String excErrMsg = "Error parsing the ShipmentAcceptResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (ParserConfigurationException e2) {
                 String excErrMsg = "Error parsing the ShipmentAcceptResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (IOException e2) {
                 String excErrMsg = "Error parsing the ShipmentAcceptResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             }
 
@@ -629,21 +629,21 @@ public class UpsServices {
                     shipmentRouteSegment.set("actualTransportCost", Double.valueOf(transportationMonetaryValue));
                 } catch (NumberFormatException e) {
                     String excErrMsg = "Error parsing the transportationMonetaryValue [" + transportationMonetaryValue + "]: " + e.toString();
-                    Debug.logError(e, excErrMsg);
+                    Debug.logError(e, excErrMsg, module);
                     errorList.add(excErrMsg);
                 }
                 try {
                     shipmentRouteSegment.set("actualServiceCost", Double.valueOf(serviceOptionsMonetaryValue));
                 } catch (NumberFormatException e) {
                     String excErrMsg = "Error parsing the serviceOptionsMonetaryValue [" + serviceOptionsMonetaryValue + "]: " + e.toString();
-                    Debug.logError(e, excErrMsg);
+                    Debug.logError(e, excErrMsg, module);
                     errorList.add(excErrMsg);
                 }
                 try {
                     shipmentRouteSegment.set("actualCost", Double.valueOf(totalMonetaryValue));
                 } catch (NumberFormatException e) {
                     String excErrMsg = "Error parsing the totalMonetaryValue [" + totalMonetaryValue + "]: " + e.toString();
-                    Debug.logError(e, excErrMsg);
+                    Debug.logError(e, excErrMsg, module);
                     errorList.add(excErrMsg);
                 }
             
@@ -656,7 +656,7 @@ public class UpsServices {
                     shipmentRouteSegment.set("billingWeight", Double.valueOf(billingWeight));
                 } catch (NumberFormatException e) {
                     String excErrMsg = "Error parsing the billingWeight [" + billingWeight + "]: " + e.toString();
-                    Debug.logError(e, excErrMsg);
+                    Debug.logError(e, excErrMsg, module);
                     errorList.add(excErrMsg);
                 }
                 shipmentRouteSegment.set("billingWeightUomId", unitsUpsToOfbiz.get(billingWeightUnitOfMeasurement));
@@ -706,7 +706,7 @@ public class UpsServices {
                         shipmentRouteSegment.set("packageServiceCost", Double.valueOf(packageServiceOptionsMonetaryValue));
                     } catch (NumberFormatException e) {
                         String excErrMsg = "Error parsing the packageServiceOptionsMonetaryValue [" + packageServiceOptionsMonetaryValue + "] for Package [" + shipmentPackageRouteSeg.getString("shipmentPackageSeqId") + "]: " + e.toString();
-                        Debug.logError(e, excErrMsg);
+                        Debug.logError(e, excErrMsg, module);
                         errorList.add(excErrMsg);
                     }
                     
@@ -744,7 +744,7 @@ public class UpsServices {
                 return ServiceUtil.returnError(errorList);
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Shipment Accept: " + e.toString());
         }
     }
@@ -795,7 +795,7 @@ public class UpsServices {
                 voidShipmentRequestString = UtilXml.writeXmlDocument(voidShipmentRequestDoc);
             } catch (IOException e) {
                 String ioeErrMsg = "Error writing the VoidShipmentRequest XML Document to a String: " + e.toString();
-                Debug.logError(e, ioeErrMsg);
+                Debug.logError(e, ioeErrMsg, module);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
             
@@ -806,7 +806,7 @@ public class UpsServices {
                 accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
             } catch (IOException e) {
                 String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
-                Debug.logError(e, ioeErrMsg);
+                Debug.logError(e, ioeErrMsg, module);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
             
@@ -821,7 +821,7 @@ public class UpsServices {
                 voidShipmentResponseString = sendUpsRequest("Void", xmlString.toString());
             } catch (UpsConnectException e) {
                 String uceErrMsg = "Error sending UPS request for UPS Service Void: " + e.toString();
-                Debug.logError(e, uceErrMsg);
+                Debug.logError(e, uceErrMsg, module);
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
@@ -830,15 +830,15 @@ public class UpsServices {
                 voidShipmentResponseDocument = UtilXml.readXmlDocument(voidShipmentResponseString, false);
             } catch (SAXException e2) {
                 String excErrMsg = "Error parsing the VoidShipmentResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (ParserConfigurationException e2) {
                 String excErrMsg = "Error parsing the VoidShipmentResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (IOException e2) {
                 String excErrMsg = "Error parsing the VoidShipmentResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             }
 
@@ -892,7 +892,7 @@ public class UpsServices {
                 return ServiceUtil.returnError(errorList);
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Void Shipment: " + e.toString());
         }
     }
@@ -942,7 +942,7 @@ public class UpsServices {
                 trackRequestString = UtilXml.writeXmlDocument(trackRequestDoc);
             } catch (IOException e) {
                 String ioeErrMsg = "Error writing the TrackRequest XML Document to a String: " + e.toString();
-                Debug.logError(e, ioeErrMsg);
+                Debug.logError(e, ioeErrMsg, module);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
             
@@ -953,7 +953,7 @@ public class UpsServices {
                 accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
             } catch (IOException e) {
                 String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
-                Debug.logError(e, ioeErrMsg);
+                Debug.logError(e, ioeErrMsg, module);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
             
@@ -968,7 +968,7 @@ public class UpsServices {
                 trackResponseString = sendUpsRequest("Track", xmlString.toString());
             } catch (UpsConnectException e) {
                 String uceErrMsg = "Error sending UPS request for UPS Service Track: " + e.toString();
-                Debug.logError(e, uceErrMsg);
+                Debug.logError(e, uceErrMsg, module);
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
@@ -977,15 +977,15 @@ public class UpsServices {
                 trackResponseDocument = UtilXml.readXmlDocument(trackResponseString, false);
             } catch (SAXException e2) {
                 String excErrMsg = "Error parsing the TrackResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (ParserConfigurationException e2) {
                 String excErrMsg = "Error parsing the TrackResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (IOException e2) {
                 String excErrMsg = "Error parsing the TrackResponse: " + e2.toString();
-                Debug.logError(e2, excErrMsg);
+                Debug.logError(e2, excErrMsg, module);
                 return ServiceUtil.returnError(excErrMsg);
             }
 
@@ -1078,7 +1078,7 @@ public class UpsServices {
                 return ServiceUtil.returnError(errorList);
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Track Shipment: " + e.toString());
         }
     }

@@ -47,7 +47,7 @@ public class StatusWorker {
             if (statusItems != null)
                 pageContext.setAttribute(attributeName, statusItems);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
     }
 
@@ -61,7 +61,7 @@ public class StatusWorker {
             if (calItems != null)
                 statusItems.addAll(calItems);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
         try {
             Collection taskItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeIdTwo), UtilMisc.toList("sequenceId"));
@@ -69,7 +69,7 @@ public class StatusWorker {
             if (taskItems != null)
                 statusItems.addAll(taskItems);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
 
         if (statusItems.size() > 0)
@@ -83,7 +83,7 @@ public class StatusWorker {
         try {
             statusValidChangeToDetails = delegator.findByAndCache("StatusValidChangeToDetail", UtilMisc.toMap("statusId", statusId), UtilMisc.toList("sequenceId"));
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
 
         if (statusValidChangeToDetails != null)

@@ -52,7 +52,7 @@ public class CatalogWorker {
             try {
                 product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error looking up product with id " + productId + ", will check the ProdCatalog for inventory required");
+                Debug.logError(e, "Error looking up product with id " + productId + ", will check the ProdCatalog for inventory required", module);
             }
         }
 
@@ -78,14 +78,14 @@ public class CatalogWorker {
             GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
 
             if (prodCatalog == null) {
-                Debug.logWarning("ProdCatalog not found with id " + prodCatalogId + ", returning false for inventory required check");
+                Debug.logWarning("ProdCatalog not found with id " + prodCatalogId + ", returning false for inventory required check", module);
                 return false;
             }
 
             // default to false, so if anything but Y, return false
             return "Y".equals(prodCatalog.getString("requireInventory"));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId + ", returning false for inventory required");
+            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId + ", returning false for inventory required", module);
             return false;
         }
     }
@@ -101,18 +101,18 @@ public class CatalogWorker {
         try {
             prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId);
+            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId, module);
         }
 
         if (prodCatalog == null) {
-            Debug.logWarning("No catalog found with id " + prodCatalogId + ", returning false for inventory available check");
+            Debug.logWarning("No catalog found with id " + prodCatalogId + ", returning false for inventory available check", module);
             return false;
         }
 
         // if prodCatalog is set to not check inventory break here
         if ("N".equals(prodCatalog.getString("checkInventory"))) {
             // note: if not set, defaults to yes, check inventory
-            if (Debug.infoOn()) Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT check inventory, returning true for inventory available check");
+            if (Debug.infoOn()) Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT check inventory, returning true for inventory available check", module);
             return true;
         }
 
@@ -120,7 +120,7 @@ public class CatalogWorker {
             String inventoryFacilityId = prodCatalog.getString("inventoryFacilityId");
 
             if (UtilValidate.isEmpty(inventoryFacilityId)) {
-                Debug.logWarning("Catalog with id " + prodCatalogId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, returning false for inventory check");
+                Debug.logWarning("Catalog with id " + prodCatalogId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, returning false for inventory check", module);
                 return false;
             }
 
@@ -133,25 +133,25 @@ public class CatalogWorker {
                 availableToPromise = (Double) result.get("availableToPromise");
 
                 if (availableToPromise == null) {
-                    Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
+                    Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE), module);
                     return false;
                 }
             } catch (GenericServiceException e) {
-                Debug.logWarning(e, "Error invoking getInventoryAvailableByFacility service in isCatalogInventoryAvailable");
+                Debug.logWarning(e, "Error invoking getInventoryAvailableByFacility service in isCatalogInventoryAvailable", module);
                 return false;
             }
 
             // whew, finally here: now check to see if we got enough back...
             if (availableToPromise.doubleValue() >= quantity) {
-                if (Debug.infoOn()) Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
+                if (Debug.infoOn()) Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
                 return true;
             } else {
-                if (Debug.infoOn()) Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
+                if (Debug.infoOn()) Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
                 return false;
             }
 
         } else {
-            Debug.logWarning("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, return false for inventory check");
+            Debug.logWarning("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, return false for inventory check", module);
             return false;
 
             // TODO: check multiple inventory locations
@@ -171,17 +171,17 @@ public class CatalogWorker {
         try {
             prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId);
+            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId, module);
         }
         if (prodCatalog == null) {
-            Debug.logWarning("No catalog found with id " + prodCatalogId + ", not reserving inventory");
+            Debug.logWarning("No catalog found with id " + prodCatalogId + ", not reserving inventory", module);
             return new Double(0.0);
         }
 
         // if prodCatalog is set to not reserve inventory, break here
         if ("N".equals(prodCatalog.getString("reserveInventory"))) {
             // note: if not set, defaults to yes, reserve inventory
-            if (Debug.infoOn()) Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory");
+            if (Debug.infoOn()) Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory", module);
             return null;
         }
 
@@ -189,7 +189,7 @@ public class CatalogWorker {
             String inventoryFacilityId = prodCatalog.getString("inventoryFacilityId");
 
             if (UtilValidate.isEmpty(inventoryFacilityId)) {
-                Debug.logWarning("Catalog with id " + prodCatalogId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, not reserving inventory");
+                Debug.logWarning("Catalog with id " + prodCatalogId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, not reserving inventory", module);
                 return new Double(0.0);
             }
 
@@ -218,7 +218,7 @@ public class CatalogWorker {
                 quantityNotReserved = (Double) result.get("quantityNotReserved");
 
                 if (quantityNotReserved == null) {
-                    Debug.logWarning("The reserveProductInventoryByFacility service returned a null quantityNotReserved, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
+                    Debug.logWarning("The reserveProductInventoryByFacility service returned a null quantityNotReserved, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE), module);
                     if (!requireInventory) {
                         return null;
                     } else {
@@ -226,7 +226,7 @@ public class CatalogWorker {
                     }
                 }
             } catch (GenericServiceException e) {
-                Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility service");
+                Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility service", module);
                 if (!requireInventory) {
                     return null;
                 } else {
@@ -236,15 +236,15 @@ public class CatalogWorker {
 
             // whew, finally here: now check to see if we were able to reserve...
             if (quantityNotReserved.doubleValue() == 0) {
-                if (Debug.infoOn()) Debug.logInfo("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity);
+                if (Debug.infoOn()) Debug.logInfo("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity, module);
                 return null;
             } else {
-                if (Debug.infoOn()) Debug.logInfo("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved);
+                if (Debug.infoOn()) Debug.logInfo("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved, module);
                 return quantityNotReserved;
             }
 
         } else {
-            Debug.logError("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, not reserving inventory");
+            Debug.logError("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, not reserving inventory", module);
             return new Double(0.0);
 
             // TODO: check multiple inventory locations
@@ -281,7 +281,7 @@ public class CatalogWorker {
         try {
             return delegator.findByPrimaryKeyCache("WebSite", UtilMisc.toMap("webSiteId", webSiteId));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up website with id " + webSiteId);
+            Debug.logError(e, "Error looking up website with id " + webSiteId, module);
         }
         return null;
     }
@@ -297,7 +297,7 @@ public class CatalogWorker {
         try {
             return EntityUtil.filterByDate(delegator.findByAndCache("WebSiteCatalog", UtilMisc.toMap("webSiteId", webSiteId), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up website catalogs for website with id " + webSiteId);
+            Debug.logError(e, "Error looking up website catalogs for website with id " + webSiteId, module);
         }
         return null;
     }
@@ -318,7 +318,7 @@ public class CatalogWorker {
         try {
             return EntityUtil.filterByDate(delegator.findByAndCache("ProdCatalogRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "CUSTOMER"), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up ProdCatalog Roles for party with id " + partyId);
+            Debug.logError(e, "Error looking up ProdCatalog Roles for party with id " + partyId, module);
         }
         return null;
     }
@@ -344,7 +344,7 @@ public class CatalogWorker {
             }
             return prodCatalogCategories;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up ProdCatalogCategories for prodCatalog with id " + prodCatalogId);
+            Debug.logError(e, "Error looking up ProdCatalogCategories for prodCatalog with id " + prodCatalogId, module);
         }
         return null;
     }
@@ -373,7 +373,7 @@ public class CatalogWorker {
         }
 
         if (!fromSession) {
-            if (Debug.verboseOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId);
+            if (Debug.verboseOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId, module);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             CategoryWorker.setTrail(request, new ArrayList());
         }
@@ -425,7 +425,7 @@ public class CatalogWorker {
                 return prodCatalog.getString("catalogName");
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId, module);
         }
 
         return null;
@@ -475,7 +475,7 @@ public class CatalogWorker {
         try {
             return delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId, module);
             return null;
         }
     }
@@ -604,7 +604,7 @@ public class CatalogWorker {
                 return "Y".equals(prodCatalog.getString("useQuickAdd"));
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId, module);
         }
         return false;
     }
@@ -675,7 +675,7 @@ public class CatalogWorker {
         String prodCatalogId = getCurrentCatalogId((HttpServletRequest) request);
 
         if (prodCatalogId == null || prodCatalogId.length() == 0) {
-            Debug.logWarning("No current catalog id found, return false for inventory check");
+            Debug.logWarning("No current catalog id found, return false for inventory check", module);
             return false;
         }
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -687,7 +687,7 @@ public class CatalogWorker {
         String prodCatalogId = getCurrentCatalogId((HttpServletRequest) request);
 
         if (prodCatalogId == null || prodCatalogId.length() == 0) {
-            Debug.logWarning("No current catalog id found, return false for inventory check");
+            Debug.logWarning("No current catalog id found, return false for inventory check", module);
             return false;
         }
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -788,7 +788,7 @@ public class CatalogWorker {
                 cartAssocs.remove(toRemove);
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         
         if (cartAssocs != null && cartAssocs.size() > 0) {
@@ -951,7 +951,7 @@ public class CatalogWorker {
             results.put("products", reorderProds);
             results.put("quantities", productQuantities);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         
         return results;

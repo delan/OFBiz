@@ -68,7 +68,7 @@ public class CategoryWorker {
             topCatName = "CATALOG1";
 
         if (!fromSession) {
-            if (Debug.infoOn()) Debug.logInfo("[CategoryWorker.getCatalogTopCategory] Setting new top category: " + topCatName);
+            if (Debug.infoOn()) Debug.logInfo("[CategoryWorker.getCatalogTopCategory] Setting new top category: " + topCatName, module);
             httpRequest.getSession().setAttribute("CATALOG_TOP_CATEGORY", topCatName);
         }
         return topCatName;
@@ -97,7 +97,7 @@ public class CategoryWorker {
                     results.add(curCat);
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         request.setAttribute(attributeName, results);
     }
@@ -115,7 +115,7 @@ public class CategoryWorker {
                 
         if (requestId.equals(""))
             return;
-        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.getRelatedCategories] RequestID: " + requestId);
+        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.getRelatedCategories] RequestID: " + requestId, module);
         getRelatedCategories(request, attributeName, requestId, limitView);
     }
 
@@ -137,7 +137,7 @@ public class CategoryWorker {
     public static ArrayList getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView) {
         ArrayList categories = new ArrayList();        
 
-        if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
+        if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.getRelatedCategories] ParentID: " + parentId, module);
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         List rollups = null;
@@ -150,22 +150,22 @@ public class CategoryWorker {
                 rollups = EntityUtil.filterByDate(rollups, true);
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             rollups = null;
         }
         if (rollups != null && rollups.size() > 0) {
-            // Debug.log("Rollup size: " + rollups.size());
+            // Debug.log("Rollup size: " + rollups.size(), module);
             Iterator ri = rollups.iterator();
 
             while (ri.hasNext()) {
                 GenericValue parent = (GenericValue) ri.next();
-                // Debug.log("Adding child of: " + parent.getString("parentProductCategoryId"));
+                // Debug.log("Adding child of: " + parent.getString("parentProductCategoryId"), module);
                 GenericValue cv = null;
 
                 try {
                     cv = parent.getRelatedOneCache("CurrentProductCategory");
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e.getMessage());
+                    Debug.logWarning(e.getMessage(), module);
                     cv = null;
                 }
                 if (cv != null)
@@ -216,7 +216,7 @@ public class CategoryWorker {
                 previousCategory = "TOP";
                 crumb.clear();
                 crumb.add(previousCategory);
-                if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Starting new list, added previousCategory: " + previousCategory);
+                if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Starting new list, added previousCategory: " + previousCategory, module);
             }
         }
 
@@ -243,7 +243,7 @@ public class CategoryWorker {
 
         // add the current category to the end of the list
         crumb.add(currentCategory);
-        if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.setTrail] Continuing list: Added currentCategory: " + currentCategory);
+        if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.setTrail] Continuing list: Added currentCategory: " + currentCategory, module);
         setTrail(request, crumb);
     }
 

@@ -67,7 +67,7 @@ public class WorkEffortWorker {
         try {
             workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
 
         Boolean canView = null;
@@ -85,7 +85,7 @@ public class WorkEffortWorker {
                 try {
                     currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", statusId));
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             }
         } else {
@@ -95,7 +95,7 @@ public class WorkEffortWorker {
                     workEffortPartyAssignments =
                             delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId")));
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             }
             canView = (workEffortPartyAssignments != null && workEffortPartyAssignments.size() > 0) ? new Boolean(true) : new Boolean(false);
@@ -109,7 +109,7 @@ public class WorkEffortWorker {
                 try {
                     currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.get("currentStatusId")));
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             }
         }
@@ -149,10 +149,10 @@ public class WorkEffortWorker {
         try {
             result = dispatcher.runSync("wfGetActivityContext", svcCtx);
         } catch (GenericServiceException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
         if (result != null && result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
-            Debug.logError((String) result.get(ModelService.ERROR_MESSAGE));
+            Debug.logError((String) result.get(ModelService.ERROR_MESSAGE), module);
         if (result != null && result.containsKey("activityContext")) {
             Map aC = (Map) result.get("activityContext");
 

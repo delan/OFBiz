@@ -98,7 +98,7 @@ public class ProductServices {
 
             while (i.hasNext())
                 featureSet.add(((GenericValue) i.next()).getString("productFeatureTypeId"));
-            if (Debug.infoOn()) Debug.logInfo("" + featureSet);
+            if (Debug.infoOn()) Debug.logInfo("" + featureSet, module);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading product features: " + e.getMessage());
@@ -153,13 +153,13 @@ public class ProductServices {
             try {
                 productTo = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIdTo));
             } catch (GenericEntityException e) {
-                Debug.logError(e);
+                Debug.logError(e, module);
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                 result.put(ModelService.ERROR_MESSAGE, "Error finding associated variant with ID " + productIdTo + ", error was: " + e.toString());
                 return result;
             }
             if (productTo == null) {
-                Debug.logWarning("Could not find associated variant with ID " + productIdTo + ", not showing in list");
+                Debug.logWarning("Could not find associated variant with ID " + productIdTo + ", not showing in list", module);
                 continue;
             }
 
@@ -171,7 +171,7 @@ public class ProductServices {
                     String excMsg = "Tried to view the Product " + productTo.getString("productName") +
                         " (productId: " + productTo.getString("productId") + ") as a variant. This product has not yet been made available for sale, so not adding for view.";
 
-                    Debug.logVerbose(excMsg);
+                    Debug.logVerbose(excMsg, module);
                 }
                 continue;
             }
@@ -182,7 +182,7 @@ public class ProductServices {
                     String excMsg = "Tried to view the Product " + productTo.getString("productName") +
                         " (productId: " + productTo.getString("productId") + ") as a variant. This product is no longer available for sale, so not adding for view.";
 
-                    Debug.logVerbose(excMsg);
+                    Debug.logVerbose(excMsg, module);
                 }
                 continue;
             }
@@ -206,7 +206,7 @@ public class ProductServices {
             selectableFeatures = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
             selectableFeatures = EntityUtil.filterByDate(selectableFeatures, true);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Empty list of selectable features found");
             return result;
@@ -237,7 +237,7 @@ public class ProductServices {
         try {
             tree = makeGroup(delegator, features, items, featureOrder, 0);
         } catch (Exception e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, e.getMessage());
             return result;
@@ -324,15 +324,15 @@ public class ProductServices {
                         UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
 
                 if (c != null) {
-                    if (Debug.infoOn()) Debug.logInfo("Found related: " + c);
+                    if (Debug.infoOn()) Debug.logInfo("Found related: " + c, module);
                     c = EntityUtil.filterByDate(c, true);
-                    if (Debug.infoOn()) Debug.logInfo("Found Filtered related: " + c);
+                    if (Debug.infoOn()) Debug.logInfo("Found Filtered related: " + c, module);
                     if (c.size() > 0) {
                         GenericValue asV = (GenericValue) c.iterator().next();
 
-                        if (Debug.infoOn()) Debug.logInfo("ASV: " + asV);
+                        if (Debug.infoOn()) Debug.logInfo("ASV: " + asV, module);
                         mainProduct = asV.getRelatedOneCache("MainProduct");
-                        if (Debug.infoOn()) Debug.logInfo("Main product = " + mainProduct);
+                        if (Debug.infoOn()) Debug.logInfo("Main product = " + mainProduct, module);
                     }
                 }
             }
@@ -454,7 +454,7 @@ public class ProductServices {
             // -------------------------------
             String thisItem = (String) itemIterator.next();
 
-            if (Debug.verboseOn()) Debug.logVerbose("ThisItem: " + thisItem);
+            if (Debug.verboseOn()) Debug.logVerbose("ThisItem: " + thisItem, module);
             List features = null;
 
             try {
@@ -468,7 +468,7 @@ public class ProductServices {
             } catch (GenericEntityException e) {
                 throw new IllegalStateException("Problem reading relation: " + e.getMessage());
             }
-            if (Debug.verboseOn()) Debug.logVerbose("Features: " + features);
+            if (Debug.verboseOn()) Debug.logVerbose("Features: " + features, module);
 
             // -------------------------------
             Iterator featuresIterator = features.iterator();
@@ -489,7 +489,7 @@ public class ProductServices {
                 }
             }
         }
-        if (Debug.verboseOn()) Debug.logVerbose("TempGroup: " + tempGroup);
+        if (Debug.verboseOn()) Debug.logVerbose("TempGroup: " + tempGroup, module);
 
         // Loop through the feature list and order the keys in the tempGroup
         List orderFeatureList = (List) featureList.get(orderKey);
@@ -507,7 +507,7 @@ public class ProductServices {
                 group.put(featureStr, tempGroup.get(featureStr));
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("Group: " + group);
+        if (Debug.verboseOn()) Debug.logVerbose("Group: " + group, module);
 
         // no groups; no tree
         if (group.size() == 0) {

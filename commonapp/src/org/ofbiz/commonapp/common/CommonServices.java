@@ -115,7 +115,7 @@ public class CommonServices {
         try {
             url = new URL(bodyUrl);
         } catch (MalformedURLException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Malformed URL: " + bodyUrl + "; error was: " + e.toString());
         }
 
@@ -125,7 +125,7 @@ public class CommonServices {
         try {
             body = httpClient.post();
         } catch (HttpClientException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Error getting content: " + e.toString());
         }
 

@@ -103,7 +103,7 @@ public class ShipmentServices {
             if (estimate.get("priceBreakId") != null)
                 delegator.removeRelated("PriceQuantityBreak", estimate);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             return ServiceUtil.returnError("Problem removing entity or related entities (" + e.toString() + ")");
         }
         return ServiceUtil.returnSuccess();
@@ -131,7 +131,7 @@ public class ShipmentServices {
                         storeAll.add(0, weightBreak);
                     }
                     catch ( Exception e ) {
-                        Debug.logError(e);
+                        Debug.logError(e, module);
                     }
                 }
                 else {

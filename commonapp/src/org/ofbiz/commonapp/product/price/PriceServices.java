@@ -140,42 +140,42 @@ public class PriceServices {
         GenericValue listPriceValue = EntityUtil.getFirst(listPrices);
 
         if (listPrices != null && listPrices.size() > 1) {
-            Debug.logWarning("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + listPriceValue.getDouble("price"));
+            Debug.logWarning("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + listPriceValue.getDouble("price"), module);
         }
 
         List defaultPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
         GenericValue defaultPriceValue = EntityUtil.getFirst(defaultPrices);
 
         if (defaultPrices != null && defaultPrices.size() > 1) {
-            Debug.logWarning("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"));
+            Debug.logWarning("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"), module);
         }
 
         List averageCosts = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
         GenericValue averageCostValue = EntityUtil.getFirst(averageCosts);
 
         if (averageCosts != null && averageCosts.size() > 1) {
-            Debug.logWarning("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + averageCostValue.getDouble("price"));
+            Debug.logWarning("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + averageCostValue.getDouble("price"), module);
         }
 
         List promoPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "PROMO_PRICE"));
         GenericValue promoPriceValue = EntityUtil.getFirst(promoPrices);
 
         if (promoPrices != null && promoPrices.size() > 1) {
-            Debug.logWarning("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + promoPriceValue.getDouble("price"));
+            Debug.logWarning("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + promoPriceValue.getDouble("price"), module);
         }
 
         List minimumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MINIMUM_PRICE"));
         GenericValue minimumPriceValue = EntityUtil.getFirst(minimumPrices);
 
         if (minimumPrices != null && minimumPrices.size() > 1) {
-            Debug.logWarning("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"));
+            Debug.logWarning("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"), module);
         }
 
         List maximumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
         GenericValue maximumPriceValue = EntityUtil.getFirst(maximumPrices);
 
         if (maximumPrices != null && maximumPrices.size() > 1) {
-            Debug.logWarning("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"));
+            Debug.logWarning("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"), module);
         }
 
         // if any of these prices is missing and this product is a variant, default to the corresponding price on the virtual product
@@ -185,7 +185,7 @@ public class PriceServices {
 
                 listPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                    Debug.logWarning("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + listPriceValue.getDouble("price"));
+                    Debug.logWarning("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + listPriceValue.getDouble("price"), module);
                 }
             }
             if (defaultPriceValue == null) {
@@ -193,7 +193,7 @@ public class PriceServices {
 
                 defaultPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                    Debug.logWarning("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"));
+                    Debug.logWarning("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"), module);
                 }
             }
             if (averageCostValue == null) {
@@ -201,7 +201,7 @@ public class PriceServices {
 
                 averageCostValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                    Debug.logWarning("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + averageCostValue.getDouble("price"));
+                    Debug.logWarning("There is more than one AVERAGE_COST with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + averageCostValue.getDouble("price"), module);
                 }
             }
             if (promoPriceValue == null) {
@@ -209,7 +209,7 @@ public class PriceServices {
 
                 promoPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                    Debug.logWarning("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + promoPriceValue.getDouble("price"));
+                    Debug.logWarning("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + promoPriceValue.getDouble("price"), module);
                 }
             }
             if (minimumPriceValue == null) {
@@ -217,7 +217,7 @@ public class PriceServices {
 
                 minimumPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                    Debug.logWarning("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"));
+                    Debug.logWarning("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"), module);
                 }
             }
             if (maximumPriceValue == null) {
@@ -225,7 +225,7 @@ public class PriceServices {
 
                 maximumPriceValue = EntityUtil.getFirst(virtualTempPrices);
                 if (virtualTempPrices != null && virtualTempPrices.size() > 1) {
-                    Debug.logWarning("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"));
+                    Debug.logWarning("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + virtualProductId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"), module);
                 }
             }
         }

@@ -108,7 +108,7 @@ public class PartyServices {
         try {
             party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
         }
 
         if (party != null) {
@@ -126,7 +126,7 @@ public class PartyServices {
         try {
             person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
         }
 
         if (person != null) {
@@ -140,7 +140,7 @@ public class PartyServices {
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.create.db_error", new Object[] { e.getMessage() }, locale));
         }
 
@@ -173,7 +173,7 @@ public class PartyServices {
         try {
             person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.update.read_failure", new Object[] { e.getMessage() }, locale));
         }
 
@@ -186,7 +186,7 @@ public class PartyServices {
         try {
             person.store();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.update.write_failure", new Object[] { e.getMessage() }, locale));
         }
 
@@ -270,7 +270,7 @@ public class PartyServices {
             partyGroup.setNonPKFields(context);
             partyGroup.create();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Data source error occurred while adding party group: " + e.getMessage());
         }
 
@@ -303,7 +303,7 @@ public class PartyServices {
             partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
             party = partyGroup.getRelatedOne("Party");
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Could not update party or party group information (read failure): " + e.getMessage());
         }
 
@@ -318,7 +318,7 @@ public class PartyServices {
             partyGroup.store();
             party.store();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could update party or party group information (write failure): " + e.getMessage());
         }
 
@@ -368,7 +368,7 @@ public class PartyServices {
         try {
             party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
         }
 
         if (party == null) {
@@ -380,7 +380,7 @@ public class PartyServices {
         try {
             affiliate = delegator.findByPrimaryKey("Affiliate", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
         }
 
         if (affiliate != null) {
@@ -394,7 +394,7 @@ public class PartyServices {
         try {
             delegator.create(affiliate);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could not add affiliate info (write failure): " + e.getMessage());
         }
 
@@ -426,7 +426,7 @@ public class PartyServices {
         try {
             affiliate = delegator.findByPrimaryKey("Affiliate", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Could not update affiliate information (read failure): " + e.getMessage());
         }
 
@@ -531,7 +531,7 @@ public class PartyServices {
 
             delegator.create(v);
         } catch (GenericEntityException ee) {
-            Debug.logError(ee);
+            Debug.logError(ee, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem associating note with party (" + ee.getMessage() + ").");
         }
@@ -560,8 +560,8 @@ public class PartyServices {
             exprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%" + email.toUpperCase() + "%", true));
             List c = EntityUtil.filterByDate(delegator.findByAnd("PartyAndContactMech", exprs, UtilMisc.toList("infoString")), true);
 
-            if (Debug.verboseOn()) Debug.logVerbose("List: " + c);
-            if (Debug.infoOn()) Debug.logInfo("PartyFromEmail number found: " + c.size());
+            if (Debug.verboseOn()) Debug.logVerbose("List: " + c, module);
+            if (Debug.infoOn()) Debug.logInfo("PartyFromEmail number found: " + c.size(), module);
             if (c != null) {
                 Iterator i = c.iterator();
 
@@ -587,7 +587,7 @@ public class PartyServices {
      * @return Map with the result of the service, the output parameters.
      */
     public static Map getPartyFromUserLogin(DispatchContext dctx, Map context) {
-        Debug.logWarning("Running the getPartyFromUserLogin Service...");
+        Debug.logWarning("Running the getPartyFromUserLogin Service...", module);
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         Collection parties = new LinkedList();
@@ -602,8 +602,8 @@ public class PartyServices {
             exprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%" + userLoginId.toUpperCase() + "%", true));
             Collection ulc = delegator.findByAnd("PartyAndUserLogin", exprs, UtilMisc.toList("userloginId"));
 
-            if (Debug.verboseOn()) Debug.logVerbose("Collection: " + ulc);
-            if (Debug.infoOn()) Debug.logInfo("PartyFromUserLogin number found: " + ulc.size());
+            if (Debug.verboseOn()) Debug.logVerbose("Collection: " + ulc, module);
+            if (Debug.infoOn()) Debug.logInfo("PartyFromUserLogin number found: " + ulc.size(), module);
             if (ulc != null) {
                 Iterator i = ulc.iterator();
 
@@ -652,7 +652,7 @@ public class PartyServices {
             exprs.add(new EntityExpr("lastName", true, EntityOperator.LIKE, "%" + lastName.toUpperCase() + "%", true));
             Collection pc = delegator.findByAnd("Person", exprs, UtilMisc.toList("lastName", "firstName", "partyId"));
 
-            if (Debug.infoOn()) Debug.logInfo("PartyFromPerson number found: " + pc.size());
+            if (Debug.infoOn()) Debug.logInfo("PartyFromPerson number found: " + pc.size(), module);
             if (pc != null) {
                 Iterator i = pc.iterator();
 
@@ -694,7 +694,7 @@ public class PartyServices {
             exprs.add(new EntityExpr("groupName", true, EntityOperator.LIKE, "%" + groupName.toUpperCase() + "%", true));
             Collection pc = delegator.findByAnd("PartyGroup", exprs, UtilMisc.toList("groupName", "partyId"));
 
-            if (Debug.infoOn()) Debug.logInfo("PartyFromGroup number found: " + pc.size());
+            if (Debug.infoOn()) Debug.logInfo("PartyFromGroup number found: " + pc.size(), module);
             if (pc != null) {
                 Iterator i = pc.iterator();
 
@@ -742,7 +742,7 @@ public class PartyServices {
             roleType.setNonPKFields(context);
             roleType = delegator.create(roleType);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             return ServiceUtil.returnError("Cannot create role type entity (write failure): " + e.getMessage());
         }
         if (roleType != null) {

@@ -81,8 +81,8 @@ public class WorkEffortPartyAssignmentServices {
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
-            Debug.logWarning("[WorkEffortPartyAssignmentEvents.updateWorkEffortPartyAssignment] Could not create WorkEffortPartyAssignment (write error)");
-            Debug.logWarning(e);
+            Debug.logWarning("[WorkEffortPartyAssignmentEvents.updateWorkEffortPartyAssignment] Could not create WorkEffortPartyAssignment (write error)", module);
+            Debug.logWarning(e, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Could not create new WorkEffortPartyAssignment (write error)");
             return result;
@@ -114,7 +114,7 @@ public class WorkEffortPartyAssignmentServices {
                         UtilMisc.toMap("workEffortId", context.get("workEffortId"), "partyId", context.get("partyId"),
                             "roleTypeId", context.get("roleTypeId"), "fromDate", context.get("fromDate")));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
 
         if (workEffortPartyAssignment == null) {
@@ -160,8 +160,8 @@ public class WorkEffortPartyAssignmentServices {
         try {
             workEffortPartyAssignment.store();            
         } catch (GenericEntityException e) {
-            Debug.logWarning("[WorkEffortPartyAssignmentEvents.updateWorkEffortPartyAssignment] Could not update WorkEffortPartyAssignment (write error)");
-            Debug.logWarning(e);
+            Debug.logWarning("[WorkEffortPartyAssignmentEvents.updateWorkEffortPartyAssignment] Could not update WorkEffortPartyAssignment (write error)", module);
+            Debug.logWarning(e, module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Could not update WorkEffortPartyAssignment (write error)");
             return result;
@@ -193,7 +193,7 @@ public class WorkEffortPartyAssignmentServices {
                         UtilMisc.toMap("workEffortId", context.get("workEffortId"), "partyId", context.get("partyId"),
                             "roleTypeId", context.get("roleTypeId"), "fromDate", context.get("fromDate")));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
 
         if (workEffortPartyAssignment == null) {
@@ -252,7 +252,7 @@ public class WorkEffortPartyAssignmentServices {
         try {
             workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", wepa.get("workEffortId")));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         if (workEffort != null && "ACTIVITY".equals(workEffort.getString("workEffortTypeId"))) {
             // TODO: restrict status transitions
@@ -268,9 +268,9 @@ public class WorkEffortPartyAssignmentServices {
                     Map results = dispatcher.runSync("wfAcceptAssignment", context);
 
                     if (results != null && results.get(ModelService.ERROR_MESSAGE) != null)
-                        Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE));
+                        Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE), module);
                 } catch (GenericServiceException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             } else if ("CAL_COMPLETED".equals(statusId)) {
                 // complete the activity assignment
@@ -278,9 +278,9 @@ public class WorkEffortPartyAssignmentServices {
                     Map results = dispatcher.runSync("wfCompleteAssignment", context);
 
                     if (results != null && results.get(ModelService.ERROR_MESSAGE) != null)
-                        Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE));
+                        Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE), module);
                 } catch (GenericServiceException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             } else if ("CAL_DECLINED".equals(statusId)) {
                 // decline the activity assignment
@@ -288,9 +288,9 @@ public class WorkEffortPartyAssignmentServices {
                     Map results = dispatcher.runSync("wfDeclineAssignment", context);
 
                     if (results != null && results.get(ModelService.ERROR_MESSAGE) != null)
-                        Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE));
+                        Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE), module);
                 } catch (GenericServiceException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             } else {// do nothing...
             }

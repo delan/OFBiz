@@ -67,7 +67,7 @@ public class PaymentServices {
             paymentMethod =
                 delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString());
+            Debug.logWarning(e.toString(), module);
             return ServiceUtil.returnError(
                 "ERROR: Could not find Payment Method to delete (read failure: " + e.getMessage() + ")");
         }
@@ -88,7 +88,7 @@ public class PaymentServices {
         try {
             paymentMethod.store();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString());
+            Debug.logWarning(e.toString(), module);
             return ServiceUtil.returnError("ERROR: Could not delete Payment Method (write failure): " + e.getMessage());
         }
 
@@ -206,7 +206,7 @@ public class PaymentServices {
 
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 tempVal = null;
             }
 
@@ -233,7 +233,7 @@ public class PaymentServices {
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("ERROR: Could not create credit card (write failure): " + e.getMessage());
         }
 
@@ -297,7 +297,7 @@ public class PaymentServices {
             paymentMethod =
                 delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(
                 "ERROR: Could not get credit card to update (read error): " + e.getMessage());
         }
@@ -368,7 +368,7 @@ public class PaymentServices {
 
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 tempVal = null;
             }
 
@@ -390,7 +390,7 @@ public class PaymentServices {
         }
 
         if (isModified) {
-            // Debug.logInfo("yes, is modified");
+            // Debug.logInfo("yes, is modified", module);
             if (newPartyContactMechPurpose != null)
                 toBeStored.add(newPartyContactMechPurpose);
 
@@ -401,7 +401,7 @@ public class PaymentServices {
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 return ServiceUtil.returnError(
                     "ERROR: Could not update credit card (write failure): " + e.getMessage());
             }
@@ -496,7 +496,7 @@ public class PaymentServices {
 
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 tempVal = null;
             }
 
@@ -523,7 +523,7 @@ public class PaymentServices {
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("ERROR: Could not create credit card (write failure): " + e.getMessage());
         }
 
@@ -567,7 +567,7 @@ public class PaymentServices {
             paymentMethod =
                 delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(
                 "ERROR: Could not get EFT Account to update (read error): " + e.getMessage());
         }
@@ -632,7 +632,7 @@ public class PaymentServices {
 
                 tempVal = EntityUtil.getFirst(allPCMPs);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 tempVal = null;
             }
 
@@ -654,7 +654,7 @@ public class PaymentServices {
         }
 
         if (isModified) {
-            // Debug.logInfo("yes, is modified");
+            // Debug.logInfo("yes, is modified", module);
             if (newPartyContactMechPurpose != null)
                 toBeStored.add(newPartyContactMechPurpose);
 
@@ -665,7 +665,7 @@ public class PaymentServices {
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 return ServiceUtil.returnError(
                     "ERROR: Could not update EFT Account (write failure): " + e.getMessage());
             }
@@ -731,7 +731,7 @@ public class PaymentServices {
         try {
             payment.create();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("ERROR: Could not Create Payment (write failure): " + e.getMessage());
         }
 

@@ -41,7 +41,7 @@ public class PartyHelper {
         try {
             person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee);
+            Debug.logWarning(gee, module);
         }
         if (person != null) {
             return getPersonName(person);
@@ -79,7 +79,7 @@ public class PartyHelper {
                     result.append(UtilFormatOut.checkNull(person.getString("lastName")));
                 }
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         return result.toString().trim();

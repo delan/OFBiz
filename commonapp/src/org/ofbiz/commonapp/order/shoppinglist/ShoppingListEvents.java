@@ -214,7 +214,7 @@ public class ShoppingListEvents {
             result = dispatcher.runSync("updateShoppingListItem", serviceInMap);
         } catch (GenericServiceException e) {
             String errMsg = "Error calling the updateShoppingListItem in handleShoppingListItemVariant: " + e.toString();
-            Debug.logError(e, errMsg);
+            Debug.logError(e, errMsg, module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }

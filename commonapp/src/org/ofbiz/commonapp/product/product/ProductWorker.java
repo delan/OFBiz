@@ -63,7 +63,7 @@ public class ProductWorker {
         try {
             product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             product = null;
         }
         if (product != null)
@@ -133,7 +133,7 @@ public class ProductWorker {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         if (intraKeywordOperator == null || (!"AND".equalsIgnoreCase(intraKeywordOperator) && !"OR".equalsIgnoreCase(intraKeywordOperator))) {
-            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR");
+            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR", module);
             intraKeywordOperator = "OR";
         }
 
@@ -165,8 +165,8 @@ public class ProductWorker {
         String resultArrayName = (String) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
 
         if (productIds == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
-            if (Debug.infoOn()) Debug.logInfo("KeywordSearch productId Array not found in session, getting new one...");
-            if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
+            if (Debug.infoOn()) Debug.logInfo("KeywordSearch productId Array not found in session, getting new one...", module);
+            if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName, module);
 
             // productIds will be pre-sorted
             if (featureIdByType.size() > 0) {
@@ -202,7 +202,7 @@ public class ProductWorker {
             try {
                 prod = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIds.get(ind - 1)));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
+                Debug.logWarning(e.getMessage(), module);
                 prod = null;
             }
             if (prod != null) products.add(prod);
@@ -253,7 +253,7 @@ public class ProductWorker {
             if (obsoleteByProducts != null && obsoleteByProducts.size() > 0)
                 pageContext.setAttribute(assocPrefix + "obsoleteby", obsoleteByProducts);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
     }
 }

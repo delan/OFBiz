@@ -363,7 +363,7 @@ public class CheckOutEvents {
         // get the tax adjustments
         List taxReturn = getTaxAdjustments(dispatcher, "calcTax", items, adjs, shipAddress);
 
-        if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn);
+        if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn, module);
 
         List orderAdj = (List) taxReturn.get(0);
         List itemAdj = (List) taxReturn.get(1);
@@ -411,7 +411,7 @@ public class CheckOutEvents {
                 amounts.add(i, new Double(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments, true, false))); // get the item amount
                 shipAmts.add(i, new Double(OrderReadHelper.getOrderItemAdjustmentsTotal(orderItem, allAdjustments, false, false, true))); // get the shipping amount
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot read order item entity (" + e.getMessage() + ")");
+                Debug.logError(e, "Cannot read order item entity (" + e.getMessage() + ")", module);
                 throw new GeneralException("Cannot read the order item entity", e);
             }
         }
@@ -423,7 +423,7 @@ public class CheckOutEvents {
         try {
             serviceResult = dispatcher.runSync(taxService, serviceContext);
         } catch (GenericServiceException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
             throw new GeneralException("Problem occurred in tax service (" + e.getMessage() + ")", e);
         }
 

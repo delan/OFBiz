@@ -91,7 +91,7 @@ public class PartyRelationshipServices {
                 return ServiceUtil.returnError("Cannot create party relationship, partyIdTo is not in specified role.");
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Could not create party role (read failure): " + e.getMessage());
         }
         
@@ -103,14 +103,14 @@ public class PartyRelationshipServices {
                 return ServiceUtil.returnError("Could not create party relationship: already exists");
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Could not create party role (read failure): " + e.getMessage());
         }
 
         try {
             partyRelationship.create();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could not create party relationship (write failure): " + e.getMessage());
         }
 
@@ -163,7 +163,7 @@ public class PartyRelationshipServices {
             partyRelationship = delegator.findByPrimaryKey("PartyRelationship", UtilMisc.toMap("partyIdFrom", partyIdFrom,
                             "partyIdTo", partyIdTo, "roleTypeIdFrom", roleTypeIdFrom, "roleTypeIdTo", roleTypeIdTo, "fromDate", context.get("fromDate")));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Could not update party realtion (read failure): " + e.getMessage());
         }
 
@@ -176,7 +176,7 @@ public class PartyRelationshipServices {
         try {
             partyRelationship.store();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could not update party relationship (write failure): " + e.getMessage());
         }
 
@@ -205,7 +205,7 @@ public class PartyRelationshipServices {
         try {
             partyRelationship = delegator.findByPrimaryKey("PartyRelationship", UtilMisc.toMap("partyIdFrom", context.get("partyIdFrom"), "partyIdTo", context.get("partyIdTo"), "roleTypeIdFrom", context.get("roleTypeIdFrom"), "roleTypeIdTo", context.get("roleTypeIdTo"), "fromDate", context.get("fromDate")));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Could not delete party relationship (read failure): " + e.getMessage());
         }
 
@@ -216,7 +216,7 @@ public class PartyRelationshipServices {
         try {
             partyRelationship.remove();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could delete party role (write failure): " + e.getMessage());
         }
 
@@ -254,14 +254,14 @@ public class PartyRelationshipServices {
                 return ServiceUtil.returnError("Could not create party relationship type: already exists");
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Could not create party relationship type (read failure): " + e.getMessage());
         }
 
         try {
             partyRelationshipType.create();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could not create party relationship type (write failure): " + e.getMessage());
         }
 

@@ -116,14 +116,14 @@ public class ShoppingCartItem implements java.io.Serializable {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString());
+            Debug.logWarning(e.toString(), module);
             product = null;
         }
 
         if (product == null) {
             String excMsg = "Product not found, not adding to cart. [productId: " + productId + "]";
 
-            Debug.logWarning(excMsg);
+            Debug.logWarning(excMsg, module);
             throw new CartItemModifyException(excMsg);
         }        
 
@@ -154,7 +154,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             String excMsg = "Tried to add the Virtual Product " + product.getString("productName") +
                 " (productId: " + product.getString("productId") + ") to the cart, not adding.";
 
-            Debug.logWarning(excMsg);
+            Debug.logWarning(excMsg, module);
             throw new CartItemModifyException(excMsg);
         }
 
@@ -165,7 +165,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             String excMsg = "Tried to add the Product " + product.getString("productName") +
                 " (productId: " + product.getString("productId") + ") to the cart. This product has not yet been made available for sale, so not adding.";
 
-            Debug.logWarning(excMsg);
+            Debug.logWarning(excMsg, module);
             throw new CartItemModifyException(excMsg);
         }
 
@@ -174,7 +174,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             String excMsg = "Tried to add the Product " + product.getString("productName") +
                 " (productId: " + product.getString("productId") + ") to the cart. This product is no longer available for sale, so not adding.";
 
-            Debug.logWarning(excMsg);
+            Debug.logWarning(excMsg, module);
             throw new CartItemModifyException(excMsg);
         }
 
@@ -328,7 +328,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                 if (!org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(this.prodCatalogId, productId, quantity, getDelegator(), dispatcher)) {
                     String excMsg = "Sorry, we do not have enough (you tried " + UtilFormatOut.formatQuantity(quantity) + ") of the product " + this.getName() + " (product ID: " + productId + ") in stock, not adding to cart. Please try a lower quantity, try again later, or call customer service for more information.";
 
-                    Debug.logWarning(excMsg);
+                    Debug.logWarning(excMsg, module);
                     throw new CartItemModifyException(excMsg);
                 }
             }
@@ -892,7 +892,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                 item.setQuantity(1, dispatcher, cart, false);
 
                 // now copy/calc the adjustments
-                Debug.logInfo("Clone's adj: " + item.getAdjustments());
+                Debug.logInfo("Clone's adj: " + item.getAdjustments(), module);
                 if (item.getAdjustments() != null && item.getAdjustments().size() > 0) {
                     List adjustments = new LinkedList(item.getAdjustments());
                     Iterator adjIterator = adjustments.iterator();
@@ -908,10 +908,10 @@ public class ShoppingCartItem implements java.io.Serializable {
                             // we use != becuase adjustments can be +/-
                             if (adjAmount != null && adjAmount.doubleValue() != 0.00)
                                 newAdjustment.set("amount", new Double(adjAmount.doubleValue() / baseQuantity));
-                            Debug.logInfo("Cloned adj: " + newAdjustment);
+                            Debug.logInfo("Cloned adj: " + newAdjustment, module);
                             item.addAdjustment(newAdjustment);
                         } else {
-                            Debug.logInfo("Clone Adjustment is null");
+                            Debug.logInfo("Clone Adjustment is null", module);
                         }
                     }
                 }
@@ -921,8 +921,8 @@ public class ShoppingCartItem implements java.io.Serializable {
             // set this item's quantity
             this.setQuantity(1, dispatcher, cart, false);
 
-            Debug.logInfo("BaseQuantity: " + baseQuantity);
-            Debug.logInfo("Item's Adj: " + this.getAdjustments());
+            Debug.logInfo("BaseQuantity: " + baseQuantity, module);
+            Debug.logInfo("Item's Adj: " + this.getAdjustments(), module);
 
             // re-calc this item's adjustments
             if (this.getAdjustments() != null && this.getAdjustments().size() > 0) {
@@ -940,7 +940,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                         // we use != becuase adjustments can be +/-
                         if (adjAmount != null && adjAmount.doubleValue() != 0.00)
                             newAdjustment.set("amount", new Double(adjAmount.doubleValue() / baseQuantity));
-                        Debug.logInfo("Updated adj: " + newAdjustment);
+                        Debug.logInfo("Updated adj: " + newAdjustment, module);
                         this.addAdjustment(newAdjustment);
                     }
                 }

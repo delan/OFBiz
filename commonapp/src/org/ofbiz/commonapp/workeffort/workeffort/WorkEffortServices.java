@@ -74,7 +74,7 @@ public class WorkEffortServices {
                                 new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED")),
                             UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 return ServiceUtil.returnError("Error finding desired WorkEffort records: " + e.toString());
             }
         }
@@ -106,7 +106,7 @@ public class WorkEffortServices {
                 constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
                 validWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign", constraints, UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 return ServiceUtil.returnError("Error finding desired WorkEffort records: " + e.toString());
             }
         }
@@ -138,7 +138,7 @@ public class WorkEffortServices {
                 constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
                 roleWorkEfforts = delegator.findByAnd("WorkEffortPartyAssignByRole", constraints, UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 return ServiceUtil.returnError("Error finding desired WorkEffort records: " + e.toString());
             }
         }
@@ -170,7 +170,7 @@ public class WorkEffortServices {
                 constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
                 groupWorkEfforts = delegator.findByAnd("WorkEffortPartyAssignByGroup", constraints, UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
                 return ServiceUtil.returnError("Error finding desired WorkEffort records: " + e.toString());
             }
         }
@@ -193,7 +193,7 @@ public class WorkEffortServices {
         try {
             workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         
         Boolean canView = null;
@@ -211,7 +211,7 @@ public class WorkEffortServices {
                 try {
                     currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", statusId));
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             }
         } else {
@@ -220,7 +220,7 @@ public class WorkEffortServices {
                 try {
                     workEffortPartyAssignments = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId")));
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             }
             canView = (workEffortPartyAssignments != null && workEffortPartyAssignments.size() > 0) ? Boolean.TRUE : Boolean.FALSE;
@@ -234,7 +234,7 @@ public class WorkEffortServices {
                 try {
                     currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.get("currentStatusId")));
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             }
         }
@@ -266,7 +266,7 @@ public class WorkEffortServices {
             validWorkEfforts = new ArrayList(delegator.findByAnd("WorkEffortAndPartyAssign",
                     entityExprList, UtilMisc.toList("estimatedStartDate")));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return validWorkEfforts;        
     }
@@ -295,7 +295,7 @@ public class WorkEffortServices {
                 try {
                     workEffortPartyAssignments = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("partyId", userLogin.get("partyId")));
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             }
             // filter the work effort - this should really be done in a join/view entity
@@ -309,7 +309,7 @@ public class WorkEffortServices {
                 try {
                     workEffort = workEffortPartyAssignment.getRelatedOne("WorkEffort");
                 } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
                 if (workEffort == null) continue;
                 
@@ -344,7 +344,7 @@ public class WorkEffortServices {
             
                 for (int j = 0; j < validWorkEfforts.size(); j++) {
                     GenericValue workEffort = (GenericValue) validWorkEfforts.get(j);
-                    // Debug.log("Got workEffort: " + workEffort.toString());
+                    // Debug.log("Got workEffort: " + workEffort.toString(), module);
             
                     Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
                     Timestamp estimatedCompletionDate = workEffort.getTimestamp("estimatedCompletionDate");
@@ -434,7 +434,7 @@ public class WorkEffortServices {
                 for (int j = 0; j < validWorkEfforts.size(); j++) {
                     
                     GenericValue workEffort = (GenericValue) validWorkEfforts.get(j);
-                    // Debug.log("Got workEffort: " + workEffort.toString());
+                    // Debug.log("Got workEffort: " + workEffort.toString(), module);
             
                     Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
                     Timestamp estimatedCompletionDate = workEffort.getTimestamp("estimatedCompletionDate");
@@ -442,7 +442,7 @@ public class WorkEffortServices {
                     if (estimatedStartDate == null || estimatedCompletionDate == null) continue;
                     
                     if (estimatedStartDate.compareTo(curPeriodEnd) < 0 && estimatedCompletionDate.compareTo(curPeriodStart) > 0) {
-                        //Debug.logInfo("Task start: "+estimatedStartDate+" Task end: "+estimatedCompletionDate+" Period start: "+curPeriodStart+" Period end: "+curPeriodEnd);
+                        //Debug.logInfo("Task start: "+estimatedStartDate+" Task end: "+estimatedCompletionDate+" Period start: "+curPeriodStart+" Period end: "+curPeriodEnd, module);
                        
                         Map calEntry = new HashMap();
                         calEntry.put("workEffort",workEffort);

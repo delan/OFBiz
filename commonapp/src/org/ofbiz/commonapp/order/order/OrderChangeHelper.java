@@ -232,7 +232,7 @@ public class OrderChangeHelper {
         if (workEffort != null) {
             String workEffortId = workEffort.getString("workEffortId");            
             if (workEffort.getString("currentStatusId").equals("WF_RUNNING")) {
-                Debug.logInfo("WF is running; trying to abort");
+                Debug.logInfo("WF is running; trying to abort", module);
                 WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());
                 try {
                     client.abortProcess(workEffortId);

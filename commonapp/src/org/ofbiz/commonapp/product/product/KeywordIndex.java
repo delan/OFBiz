@@ -127,7 +127,7 @@ public class KeywordIndex {
             toBeStored.add(productKeyword);
         }
         if (toBeStored.size() > 0) {
-            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch.induceKeywords] Storing " + toBeStored.size() + " keywords for productId " + product.getString("productId"));
+            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch.induceKeywords] Storing " + toBeStored.size() + " keywords for productId " + product.getString("productId"), module);
             delegator.storeAll(toBeStored);
         }
     }

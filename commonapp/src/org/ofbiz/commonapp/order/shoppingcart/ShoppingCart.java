@@ -142,7 +142,7 @@ public class ShoppingCart implements java.io.Serializable {
             if (sci.equals(productId, features, attributes, prodCatalogId)) {
                 double newQuantity = sci.getQuantity() + quantity;
 
-                if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity);
+                if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity, module);
                 sci.setQuantity(newQuantity, dispatcher, this);
                 return i;
             }
@@ -486,7 +486,7 @@ public class ShoppingCart implements java.io.Serializable {
                 try {
                     paymentMethods.add(getDelegator().findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId)));
                 } catch (GenericEntityException e) {
-                    Debug.logError(e);
+                    Debug.logError(e, module);
                 }
             }
         }
@@ -498,7 +498,7 @@ public class ShoppingCart implements java.io.Serializable {
             try {
                 return getDelegator().findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.getShippingContactMechId()));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
+                Debug.logWarning(e.toString(), module);
                 return null;
             }
         } else {
@@ -801,11 +801,11 @@ public class ShoppingCart implements java.io.Serializable {
                 while (itemIter.hasNext()) {
                     ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
 
-                    Debug.logInfo("Item qty: " + item.getQuantity());
+                    Debug.logInfo("Item qty: " + item.getQuantity(), module);
                     try {
                         item.explodeItem(this, dispatcher);
                     } catch (CartItemModifyException e) {
-                        Debug.logError(e, "Problem exploding item! Item not exploded.");
+                        Debug.logError(e, "Problem exploding item! Item not exploded.", module);
                     }
                 }
             }

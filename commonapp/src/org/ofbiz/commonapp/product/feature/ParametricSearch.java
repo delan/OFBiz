@@ -71,7 +71,7 @@ public class ParametricSearch {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error getting features associated with the category with ID: " + productCategoryId);
+            Debug.logError(e, "Error getting features associated with the category with ID: " + productCategoryId, module);
         }
         
         // now before returning, order the features in each list by description
@@ -143,7 +143,7 @@ public class ParametricSearch {
                     // for now only constraining by productId and productFeatureId, so any appl type will be included...
                     productFeatureAppl = delegator.findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", productId, "productFeatureId", productFeatureId));
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, "Error getting feature appls associated with the productId: [" + productId + "] and the productFeatureId [" + productFeatureId + "], removing product from search match list.");
+                    Debug.logError(e, "Error getting feature appls associated with the productId: [" + productId + "] and the productFeatureId [" + productFeatureId + "], removing product from search match list.", module);
                     doRemove = true;
                     continue;
                 }

@@ -63,14 +63,14 @@ public class PartyRoleServices {
                 return ServiceUtil.returnError("Could not create party role: already exists");
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Could not create party role (read failure): " + e.getMessage());
         }
 
         try {
             partyRole.create();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could create party role (write failure): " + e.getMessage());
         }
 
@@ -100,7 +100,7 @@ public class PartyRoleServices {
         try {
             partyRole = delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", context.get("roleTypeId")));
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
             return ServiceUtil.returnError("Could not delete party role (read failure): " + e.getMessage());
         }
 
@@ -111,7 +111,7 @@ public class PartyRoleServices {
         try {
             partyRole.remove();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError("Could delete party role (write failure): " + e.getMessage());
         }
 

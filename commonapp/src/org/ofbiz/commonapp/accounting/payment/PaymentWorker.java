@@ -75,7 +75,7 @@ public class PaymentWorker {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
         return paymentMethodValueMaps;
     }
@@ -124,7 +124,7 @@ public class PaymentWorker {
                 creditCard = delegator.findByPrimaryKey("CreditCard", UtilMisc.toMap("paymentMethodId", paymentMethodId));
                 eftAccount = delegator.findByPrimaryKey("EftAccount", UtilMisc.toMap("paymentMethodId", paymentMethodId));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
         }
         if (paymentMethod != null) {

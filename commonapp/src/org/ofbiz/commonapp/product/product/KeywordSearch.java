@@ -70,7 +70,7 @@ public class KeywordSearch {
 
         intraKeywordOperator = intraKeywordOperator.toUpperCase();
         if (intraKeywordOperator == null || (!"AND".equals(intraKeywordOperator) && !"OR".equals(intraKeywordOperator))) {
-            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR");
+            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR", module);
             intraKeywordOperator = "OR";
         }
 
@@ -112,17 +112,17 @@ public class KeywordSearch {
                     statement.setTimestamp(i + 1, (Timestamp) param);
                 } else {
                     //in this class we only put Strings and Timestamps in there, but warn anyway...
-                    Debug.logWarning("Found a keyword search query parameter with an unknown type: " + param.getClass().getName());
+                    Debug.logWarning("Found a keyword search query parameter with an unknown type: " + param.getClass().getName(), module);
                 }
-                if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] Params: " + (String) params.get(i));
+                if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] Params: " + (String) params.get(i), module);
             }
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
                 pbkList.add(resultSet.getString("PRODUCT_ID"));
-                // Debug.logInfo("PRODUCT_ID=" + resultSet.getString("PRODUCT_ID") + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"));
+                // Debug.logInfo("PRODUCT_ID=" + resultSet.getString("PRODUCT_ID") + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"), module);
             }
-            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems);
+            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems, module);
 
             try {
                 GenericValue productKeywordResult = delegator.makeValue("ProductKeywordResult", null);
@@ -139,8 +139,8 @@ public class KeywordSearch {
                 productKeywordResult.set("numResults", new Long(pbkList.size()));
                 productKeywordResult.create();
             } catch (Exception e) {
-                Debug.logError(e, "Error saving keyword result stats");
-                Debug.logError("[KeywordSearch] Stats are: got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems);
+                Debug.logError(e, "Error saving keyword result stats", module);
+                Debug.logError("[KeywordSearch] Stats are: got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems, module);
             }
 
             if (pbkList.size() == 0) {
@@ -149,9 +149,9 @@ public class KeywordSearch {
                 return pbkList;
             }
         } catch (java.sql.SQLException sqle) {
-            Debug.logError(sqle);
+            Debug.logError(sqle, module);
         } catch (GenericEntityException e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         } finally {
             try {
                 if (resultSet != null)
@@ -382,7 +382,7 @@ public class KeywordSearch {
         }
         sql.append("TOTAL_WEIGHT DESC");
 
-        if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] sql=" + sql.toString());
+        if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] sql=" + sql.toString(), module);
         return sql.toString();
     }
 
