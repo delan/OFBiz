@@ -139,8 +139,8 @@
                       </#if>
                       <#assign outputted = "true">                  
                       <#-- try the paymentMethod first; if paymentMethodId is specified it overrides paymentMethodTypeId -->
-                      <#assign paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod")>
-                      <#if !paymentMethod?exists>
+                      <#assign paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod")?if_exists>
+                      <#if !paymentMethod?has_content>
                         <#assign paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType")>
                         <tr>
                           <td>
@@ -148,17 +148,17 @@
                           </td>
                           <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE">
                             <td align="right">
-                              <div class="tabletext">${orderPaymentPreference.maxAmount?default(0.00)?string.currency}&nbsp;-&nbsp;${orderPaymentPreference.authDate.toString()}</div>
+                              <div class="tabletext">${orderPaymentPreference.maxAmount?default(0.00)?string.currency}&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())?if_exists}</div>
                               <div class="tabletext">&nbsp;<#if orderPaymentPreference.authRefNum?exists>(Ref: ${orderPaymentPreference.authRefNum})</#if></div>
                            </td>
                           <#else>
                             <td align="right">                            
-                              <a valign="top" href="<@ofbizUrl>/receivepayment?${qString}</@ofbizUrl>" class="buttontext">Receive Payment</a>
+                              <a valign="top" href="<@ofbizUrl>/receivepayment?${qString?if_exists}</@ofbizUrl>" class="buttontext">Receive Payment</a>
                             </td>
                           </#if>
                         </tr>
                       <#else>
-                        <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">              
+                        <#if paymentMethod.paymentMethodTypeId?if_exists == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                           <#assign payments = orderPaymentPreference.getRelated("Payment")>
                           <#if payments?has_content>
@@ -200,7 +200,7 @@
                               </#if>                            
                             </td>
                           </tr>
-                        <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">                        
+                        <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">                        
                           <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                           <#if eftAccount?exists>
                             <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress")>
@@ -332,11 +332,6 @@
                           <#if contactMech.contactMechTypeId == "POSTAL_ADDRESS">
                             <#assign postalAddress = orderContactMechValueMap.postalAddress>
                             <#if postalAddress?has_content>
-                              <#assign spaceIdx = postalAddress.address1?index_of(" ")>
-                              <#assign addrLength = postalAddress.address1?length?number - 1>
-                              <#assign addressNum = postalAddress.address1[0..spaceIdx]>
-                              <#assign addressOther = postalAddress.address1>
-                              <#assign addressOther = addressOther?replace(addressNum, "")>
                               <div class="tabletext">
                                 <#if postalAddress.toName?has_content><b>To:</b> ${postalAddress.toName}<br></#if>
                                 <#if postalAddress.attnName?has_content><b>Attn:</b> ${postalAddress.attnName}<br></#if>
@@ -346,7 +341,12 @@
                                 ${postalAddress.postalCode}<br>
                                 ${postalAddress.countryGeoId?if_exists}<br>
                                 <#if !postalAddress.countryGeoId?exists || postalAddress.countryGeoId == "USA">  
-                                  <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=${addressNum}&s_a=${addressOther}&c=${postalAddress.city}&s=${postalAddress.stateProvinceGeoId}&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>                         
+                                  <#assign addr1 = postalAddress.address1?if_exists>
+                                  <#if (addr1.indexOf(" ") > 0)>
+                                    <#assign addressNum = addr1.substring(0, addr1.indexOf(" "))>
+                                    <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
+                                    <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=${addressNum}&s_a=${addressOther}&c=${postalAddress.city?if_exists}&s=${postalAddress.stateProvinceGeoId?if_exists}&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>
+                                  </#if>
                                 </#if>
                               </div>
                             </#if>
@@ -370,7 +370,7 @@
                             <div class="tabletext">
                               ${contactMech.infoString}
                               <#assign openString = contactMech.infoString>
-                              <#if !openString?starts_with("http") && !openString.starts_with("HTTP")>
+                              <#if !openString?starts_with("http") && !openString?starts_with("HTTP")>
                                 <#assign openString = "http://" + openString>
                               </#if>                              
                               <a target='_blank' href='${openString}' class='buttontext'>(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
