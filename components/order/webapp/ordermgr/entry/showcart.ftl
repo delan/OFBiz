@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 
@@ -72,10 +72,10 @@ function addToList() {
 //-->
 </script>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <TD width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;<#if modeStr?exists>${modeStr?cap_first}&nbsp;</#if>Order Entry</div>
@@ -90,23 +90,23 @@ function addToList() {
     </TD>
   </TR>
   <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+    <TD width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>           
-            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>              
-              <table width="100%" border="0" cellspacing='0' cellpadding='2'>
+            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">              
+              <table width="100%" border="0" cellspacing="0" cellpadding="2">
                 <tr>
-                  <td valign='middle'>
-                    <span class='tabletext'>Order for: </span>
+                  <td valign="middle">
+                    <span class="tabletext">Order for: </span>
                     <#if person?has_content>
                       <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]</a>
                     <#elseif partyGroup?has_content>
                       <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]</a>
                     <#else>
-                      <span class='tabletext'>[Party not defined]</span>
+                      <span class="tabletext">[Party not defined]</span>
                     </#if>
-                    - <span class='tabletext'><a href="<@ofbizUrl>/orderentry?updateParty=Y</@ofbizUrl>" class="buttontext">[Change]</a><#if partyId?default("_NA_") == "_NA_"> - <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">[Find Party]</a></#if></span>
+                    - <span class="tabletext"><a href="<@ofbizUrl>/orderentry?updateParty=Y</@ofbizUrl>" class="buttontext">[Change]</a><#if partyId?default("_NA_") == "_NA_"> - <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">[Find Party]</a></#if></span>
                   </td>
                   <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
                   <td align="right" valign="middle">
@@ -114,19 +114,12 @@ function addToList() {
                   </td>
                   </#if>
                 </tr>              
-              </table>            
-              <table border='0' cellspacing='0' cellpadding='2'>
-                <tr>
-                  <td><div class="tableheadtext">Product ID</div></td>
-                  <td><div class="tableheadtext">Quantity</div></td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td><input type='text' class='inputBox' size='20' name="add_product_id" value="${requestParameters.add_product_id?if_exists}"></td>
-                  <td><input type='text' class='inputBox' size='6' name="quantity" value="${requestParameters.quantity?default("1")}"></td>
-                  <td><input type='submit' class='smallSubmit' value="Add To Order"></td>
-                </tr>
               </table>
+              <div class="tableheadtext">
+                Product&nbsp;ID:&nbsp;<input type="text" class="inputBox" size="20" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
+                Quantity:&nbsp;<input type="text" class="inputBox" size="6" name="quantity" value="${requestParameters.quantity?default("1")}">
+                <input type="submit" class="smallSubmit" value="Add To Order">
+              </div>
             </form>
           </td>
         </tr>
@@ -134,37 +127,22 @@ function addToList() {
         <tr><td><hr class="sepbar"></td></tr>
         <tr>
           <td>
-            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>
-              <table border='0' cellspacing='0' cellpadding='2'>
-                <tr>
-                  <td><div class="tableheadtext">Item Type</div></td>
-                  <td><div class="tableheadtext">Product Category</div></td>
-                  <td><div class="tableheadtext">Description</div></td>
-                  <td><div class="tableheadtext">Quantity</div></td>
-                  <td><div class="tableheadtext">Price</div></td>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>
-                    <select name="add_item_type" class="selectBox">
-                      <option value="BULK_ORDER_ITEM">Bulk Item</option>
-                      <option value="WORK_ORDER_ITEM">Work Item</option>
-                    </select>
-                  </td>
-                  <td>
-                    <select name="add_category_id" class="selectBox">
+            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
+                <div class="tableheadtext">
+                    Item&nbsp;Type:&nbsp;<select name="add_item_type" class="selectBox"><option value="BULK_ORDER_ITEM">Bulk Item</option><option value="WORK_ORDER_ITEM">Work Item</option></select>
+                    Category:&nbsp;<select name="add_category_id" class="selectBox">
                       <option></option>
                       <#list productCategoryList as productCategory>
                         <option value="${productCategory.productCategoryId}">${productCategory.description?default("No Description")} [${productCategory.productCategoryId}]</option>
                       </#list>
                     </select>
-                  </td>
-                  <td><input type='text' class='inputBox' size='30' name="add_item_description" value="${requestParameters.add_product_id?if_exists}"></td>
-                  <td><input type='text' class='inputBox' size='6' name="quantity" value="${requestParameters.quantity?default("1")}"></td>
-                  <td><input type='text' class='inputBox' size='6' name="price" value="${requestParameters.price?if_exists}"></td>
-                  <td><input type='submit' class='smallSubmit' value="Add To Order"></td>
-                </tr>
-              </table>               
+                </div>
+                <div class="tableheadtext">
+                    Description:&nbsp;<input type="text" class="inputBox" size="25" name="add_item_description" value="${requestParameters.add_product_id?if_exists}"/>
+                    Quantity:&nbsp;<input type="text" class="inputBox" size="3" name="quantity" value="${requestParameters.quantity?default("1")}"/>
+                    Price:&nbsp;<input type="text" class="inputBox" size="6" name="price" value="${requestParameters.price?if_exists}"/>
+                    <input type="submit" class="smallSubmit" value="Add To Order"/>
+                </div>
             </form>
           </td>
         </tr>  
@@ -180,10 +158,10 @@ function addToList() {
 //-->
 </script>
 <BR>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <TD width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Order Items</div>
@@ -195,39 +173,39 @@ function addToList() {
     </TD>
   </TR>
   <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+    <TD width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>          
   <#if (shoppingCartSize > 0)>
-    <FORM METHOD="POST" ACTION="<@ofbizUrl>/modifycart</@ofbizUrl>" name='cartform' style='margin: 0;'>
+    <FORM METHOD="POST" ACTION="<@ofbizUrl>/modifycart</@ofbizUrl>" name="cartform" style="margin: 0;">
       <input type="hidden" name="removeSelected" value="false">
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <input type="hidden" name="finalizeReqShipInfo" value="false">
         <input type="hidden" name="finalizeReqOptions" value="false">
         <input type="hidden" name="finalizeReqPayInfo" value="false">
       </#if>
-      <table width='100%' cellspacing="0" cellpadding="1" border="0">
+      <table width="100%" cellspacing="0" cellpadding="1" border="0">
         <TR> 
           <TD NOWRAP>&nbsp;</TD>
-          <TD NOWRAP><div class='tabletext'><b>Product</b></div></TD>
-          <TD NOWRAP align='center'><div class='tabletext'><b>Quantity</b></div></TD>
-          <TD NOWRAP align='right'><div class='tabletext'><b>Unit Price</b></div></TD>
-          <TD NOWRAP align='right'><div class='tabletext'><b>Adjustments</b></div></TD>
-          <TD NOWRAP align='right'><div class='tabletext'><b>Item Total</b></div></TD>         
+          <TD NOWRAP><div class="tabletext"><b>Product</b></div></TD>
+          <TD NOWRAP align="center"><div class="tabletext"><b>Quantity</b></div></TD>
+          <TD NOWRAP align="right"><div class="tabletext"><b>Unit Price</b></div></TD>
+          <TD NOWRAP align="right"><div class="tabletext"><b>Adjustments</b></div></TD>
+          <TD NOWRAP align="right"><div class="tabletext"><b>Item Total</b></div></TD>         
         </TR>
 
         <#assign itemsFromList = false>
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
-          <tr><td colspan="7"><hr class='sepbar'></td></tr>
+          <tr><td colspan="7"><hr class="sepbar"></td></tr>
           <tr>
             <td>&nbsp;</td>         
             <td>
-                <div class='tabletext'>                    
+                <div class="tabletext">                    
                   <#if cartLine.getProductId()?exists>
                     <#-- product item -->
-                    <a href='<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>' class='buttontext'>${cartLine.getProductId()} - 
+                    <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} - 
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
                     
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
@@ -248,40 +226,40 @@ function addToList() {
                 </div>
             </td>
             <td nowrap align="center">
-              <div class='tabletext'>
+              <div class="tabletext">
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()?exists>
                     ${cartLine.getQuantity()?string.number}
                 <#else>
-                    <input size="6" class='inputBox' type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}">
+                    <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}">
                 </#if>
               </div>
             </td>
             <td nowrap align="right">
-              <div class='tabletext'>
+              <div class="tabletext">
                 <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
                   ${cartLine.getBasePrice()?string.currency}
                 <#else>
-                  <input size="6" class='inputBox' type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}">
+                  <input size="6" class="inputBox" type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}">
                 </#if>
               </div>
             </td>
-            <td nowrap align="right"><div class='tabletext'>${cartLine.getOtherAdjustments()?string.currency}</div></td>
-            <td nowrap align="right"><div class='tabletext'>${cartLine.getItemSubTotal()?string.currency}</div></td>
+            <td nowrap align="right"><div class="tabletext">${cartLine.getOtherAdjustments()?string.currency}</div></td>
+            <td nowrap align="right"><div class="tabletext">${cartLine.getItemSubTotal()?string.currency}</div></td>
           </TR>
         </#list>
 
         <#if shoppingCart.getAdjustments()?has_content>
-            <tr><td colspan="7"><hr class='sepbar'></td></tr>
+            <tr><td colspan="7"><hr class="sepbar"></td></tr>
               <tr>
-                <td colspan="4" nowrap align="right"><div class='tabletext'>Sub&nbsp;Total:</div></td>
-                <td nowrap align="right"><div class='tabletext'>${shoppingCart.getSubTotal()?string.currency}</div></td>
+                <td colspan="4" nowrap align="right"><div class="tabletext">Sub&nbsp;Total:</div></td>
+                <td nowrap align="right"><div class="tabletext">${shoppingCart.getSubTotal()?string.currency}</div></td>
                 <td>&nbsp;</td>
               </tr>
             <#list shoppingCart.getAdjustments() as cartAdjustment>
               <#assign adjustmentType = cartAdjustment.getRelatedOneCache("OrderAdjustmentType")>
               <tr>
-                <td colspan="4" nowrap align="right"><div class='tabletext'><i>Adjustment</i> - ${adjustmentType.description?if_exists}:</div></td>
-                <td nowrap align="right"><div class='tabletext'>${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
+                <td colspan="4" nowrap align="right"><div class="tabletext"><i>Adjustment</i> - ${adjustmentType.description?if_exists}:</div></td>
+                <td nowrap align="right"><div class="tabletext">${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
                 <td>&nbsp;</td>
               </tr>
             </#list>
@@ -289,11 +267,11 @@ function addToList() {
         
         <tr> 
           <td colspan="5" align="right" valign=bottom>             
-            <div class='tabletext'><b>Cart&nbsp;Total:</b></div>
+            <div class="tabletext"><b>Cart&nbsp;Total:</b></div>
           </td>
           <td align="right" valign=bottom>
-            <hr size=1 class='sepbar'>
-            <div class='tabletext'><b>${shoppingCart.getGrandTotal()?string.currency}</b></div>
+            <hr size=1 class="sepbar">
+            <div class="tabletext"><b>${shoppingCart.getGrandTotal()?string.currency}</b></div>
           </td>
         </tr>       
         <tr>
@@ -302,7 +280,7 @@ function addToList() {
       </table>    
     </FORM>
   <#else>
-    <div class='tabletext'>No order items to display.</div>
+    <div class="tabletext">No order items to display.</div>
   </#if>
           </td>
         </tr>
@@ -313,10 +291,10 @@ function addToList() {
 
 <#if showPromoText>
   <BR>
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
     <TR>
-      <TD width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <TD width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;Special Offers</div>
@@ -327,21 +305,21 @@ function addToList() {
       </TD>
     </TR>
     <TR>
-      <TD width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <TD width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
-                <table width='100%' cellspacing="0" cellpadding="1" border="0">
+                <table width="100%" cellspacing="0" cellpadding="1" border="0">
                   <#-- show promotions text -->
                   <#list productPromos as productPromo>
                     <#if productPromo.promoText?has_content>
                         <tr>
                           <td>
-                            <div class='tabletext'>${productPromo.promoText}</div>
+                            <div class="tabletext">${productPromo.promoText}</div>
                           </td>
                         </tr>
                         <#if productPromo_has_next>
-                          <tr><td><hr class='sepbar'></td></tr>
+                          <tr><td><hr class="sepbar"></td></tr>
                         </#if>
                     </#if>
                   </#list>
@@ -356,10 +334,10 @@ function addToList() {
 
 <#if associatedProducts?has_content>
   <BR>
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
     <TR>
-      <TD width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+      <TD width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;You might also be interested in:</div>
@@ -370,11 +348,11 @@ function addToList() {
       </TD>
     </TR>
     <TR>
-      <TD width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <TD width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
-    <table width='100%' cellspacing="0" cellpadding="1" border="0">
+    <table width="100%" cellspacing="0" cellpadding="1" border="0">
       <#-- random complementary products -->
       <#list associatedProducts as assocProduct> 
         <tr>
@@ -385,7 +363,7 @@ function addToList() {
           </td>
         </tr>
         <#if assocProduct_has_next>
-          <tr><td><hr class='sepbar'></td></tr>
+          <tr><td><hr class="sepbar"></td></tr>
         </#if>
       </#list>
     </table>

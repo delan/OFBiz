@@ -20,14 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Order Items</div>
@@ -42,11 +42,11 @@
     </td>
   </tr>
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
-            <table width="100%" border="0" cellpadding="0" cellspacing='0'>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
               <tr align=left valign=bottom>
                 <td width="30%" align="left"><div class="tableheadtext">Product</div></td>
                 <td width="30%" align="left"><div class="tableheadtext">Status</div></td>
@@ -60,7 +60,7 @@
                 <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
               <#else>
                 <#list orderItemList as orderItem>
-                  <tr><td colspan="8"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="8"><hr class="sepbar"></td></tr>
                   <tr>
                     <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")?if_exists>
                     <#assign productId = orderItem.productId?if_exists>
@@ -81,8 +81,8 @@
                         </div>
                         <#if productId?exists>
                           <div class="tabletext">
-                            <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target='_blank'>[catalog]</a>
-                            <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target='_blank'>[ecommerce]</a>
+                            <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target="_blank">[catalog]</a>
+                            <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[ecommerce]</a>
                           </div>
                         </#if>
                       </td>
@@ -90,19 +90,19 @@
                       <#-- now show status details per line item -->
                       <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem")>                    
                       <td align="left" colspan="1">                                                                                            
-                        <div class='tabletext'>Current: ${currentItemStatus.description?default(currentItemStatus.statusId)}</div>  
+                        <div class="tabletext">Current: ${currentItemStatus.description?default(currentItemStatus.statusId)}</div>  
                         <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
                         <#list orderItemStatuses as orderItemStatus>                     
                           <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem")>                            
-                          <div class='tabletext'>
+                          <div class="tabletext">
                             ${orderItemStatus.statusDatetime.toString()} : ${loopStatusItem.description?default(orderItemStatus.statusId)}
                           </div>
                         </#list>
                         <#assign returns = orderItem.getRelated("ReturnItem")?if_exists>
                         <#if returns?has_content>
                           <#list returns as return>
-                            <div class='tabletext'>
-                              <font color="red"><b>Returned</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${return.returnId}</@ofbizUrl>" class='buttontext'>${return.returnId}</a>
+                            <div class="tabletext">
+                              <font color="red"><b>Returned</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${return.returnId}</@ofbizUrl>" class="buttontext">${return.returnId}</a>
                             </div>
                           </#list>
                         </#if>
@@ -137,12 +137,12 @@
                       <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType")>
                       <tr>
                         <td align="right" colspan="2">
-                          <div class="tabletext" style='font-size: xx-small;'><b><i>Adjustment</i>:</b> <b>${adjustmentType.description}</b> : ${orderItemAdjustment.description?if_exists} (${orderItemAdjustment.comments?default("")})</div>
+                          <div class="tabletext" style="font-size: xx-small;"><b><i>Adjustment</i>:</b> <b>${adjustmentType.description}</b> : ${orderItemAdjustment.description?if_exists} (${orderItemAdjustment.comments?default("")})</div>
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td align="right">
-                          <div class="tabletext" style='font-size: xx-small;'>
+                          <div class="tabletext" style="font-size: xx-small;">
                             ${Static["org.ofbiz.order.order.OrderReadHelper"].calcItemAdjustment(orderItemAdjustment, orderItem)?string.currency}
                           </div>
                          </td>
@@ -158,11 +158,11 @@
                     <#list orderItemPriceInfos as orderItemPriceInfo>                      
                       <tr>
                         <td align="right" colspan="2">
-                          <div class="tabletext" style='font-size: xx-small;'><b><i>Price Rule</i>:</b> [${orderItemPriceInfo.productPriceRuleId}:${orderItemPriceInfo.productPriceActionSeqId}] ${orderItemPriceInfo.description?if_exists}</div>
+                          <div class="tabletext" style="font-size: xx-small;"><b><i>Price Rule</i>:</b> [${orderItemPriceInfo.productPriceRuleId}:${orderItemPriceInfo.productPriceActionSeqId}] ${orderItemPriceInfo.description?if_exists}</div>
                         </td>
                         <td>&nbsp;</td>
                         <td align="right">
-                          <div class="tabletext" style='font-size: xx-small;'>
+                          <div class="tabletext" style="font-size: xx-small;">
                             ${orderItemPriceInfo.modifyAmount?string.currency}
                           </div>
                         </td>
@@ -178,13 +178,13 @@
                     <#list orderItemInventoryReses as orderItemInventoryRes>
                       <tr>
                         <td align="right" colspan="2">
-                          <div class="tabletext" style='font-size: xx-small;'>
+                          <div class="tabletext" style="font-size: xx-small;">
                             <b><i>Inventory</i>:</b>
-                              <a href='/facility/control/EditInventoryItem?inventoryItemId=${orderItemInventoryRes.inventoryItemId}&externalLoginKey=${requestAttributes.externalLoginKey}' class='buttontext' style='font-size: xx-small;'>${orderItemInventoryRes.inventoryItemId}</a>
+                              <a href="/facility/control/EditInventoryItem?inventoryItemId=${orderItemInventoryRes.inventoryItemId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderItemInventoryRes.inventoryItemId}</a>
                           </div>
                         </td>
                         <td align="center">
-                          <div class="tabletext" style='font-size: xx-small;'>${orderItemInventoryRes.quantity?string.number}&nbsp;</div>
+                          <div class="tabletext" style="font-size: xx-small;">${orderItemInventoryRes.quantity?string.number}&nbsp;</div>
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
@@ -199,13 +199,13 @@
                     <#list itemIssuances as itemIssuance>
                       <tr>
                         <td align="right" colspan="2">
-                          <div class="tabletext" style='font-size: xx-small;'>
+                          <div class="tabletext" style="font-size: xx-small;">
                             <b><i>Issued to Shipment Item</i>:</b>
-                              <a target='facility' href='/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}' class='buttontext' style='font-size: xx-small;'>${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId}
+                              <a target="facility" href="/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId}
                           </div>
                         </td>
                         <td align="center">
-                          <div class="tabletext" style='font-size: xx-small;'>${itemIssuance.quantity?string.number}&nbsp;</div>
+                          <div class="tabletext" style="font-size: xx-small;">${itemIssuance.quantity?string.number}&nbsp;</div>
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
@@ -215,7 +215,7 @@
                   </#if>
                 </#list>
               </#if>
-              <tr><td colspan="8"><hr class='sepbar'></td></tr>
+              <tr><td colspan="8"><hr class="sepbar"></td></tr>
               <#list orderHeaderAdjustments as orderHeaderAdjustment>
                 <#assign adjustmentType = orderHeaderAdjustment.getRelatedOne("OrderAdjustmentType")>
                 <tr>
@@ -234,7 +234,7 @@
                 <tr>                  
                   <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>/addOrderAdjustment?${paramString}</@ofbizUrl>">
                     <input type="hidden" name="orderId" value="${orderId}">
-                    <input type="hidden" name="comments" value="Added manually by '${userLogin.userLoginId}'">
+                    <input type="hidden" name="comments" value="Added manually by "${userLogin.userLoginId}"">
                     <td align="right" colspan="5">
                       <select name="orderAdjustmentTypeId" class="selectBox">
                         <#list orderAdjustmentTypes as type>
@@ -253,7 +253,7 @@
               </#if>
               
               <#-- subtotal -->
-              <tr><td colspan=1></td><td colspan="8"><hr class='sepbar'></td></tr>
+              <tr><td colspan=1></td><td colspan="8"><hr class="sepbar"></td></tr>
               <tr>
                 <td align="right" colspan="5"><div class="tabletext"><b>Items Subtotal</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
