@@ -48,21 +48,97 @@ public class UpsServices {
 
         try {
             GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+            if (shipment == null) {
+                return ServiceUtil.returnError("Shipment not found with ID " + shipmentId);
+            }
             GenericValue shipmentRouteSegment = delegator.findByPrimaryKey("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId));
+            if (shipmentRouteSegment == null) {
+                return ServiceUtil.returnError("ShipmentRouteSegment not found with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
+            }
             
             if (!"UPS".equals(shipmentRouteSegment.getString("carrierPartyId"))) {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
             }
             
+            // Get Origin Info
             GenericValue originPostalAddress = shipmentRouteSegment.getRelatedOne("OriginPostalAddress");
+            if (originPostalAddress == null) {
+                return ServiceUtil.returnError("OriginPostalAddress not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
+            }
             GenericValue originTelecomNumber = shipmentRouteSegment.getRelatedOne("OriginTelecomNumber");
+            if (originTelecomNumber == null) {
+                return ServiceUtil.returnError("OriginTelecomNumber not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
+            }
+            String originPhoneNumber = originTelecomNumber.getString("areaCode") + originTelecomNumber.getString("contactNumber");
+            // don't put on country code if not specified or is the US country code (UPS wants it this way)
+            if (UtilValidate.isNotEmpty(originTelecomNumber.getString("countryCode")) && !"001".equals(originTelecomNumber.getString("countryCode"))) {
+                originPhoneNumber = originTelecomNumber.getString("countryCode") + originPhoneNumber;
+            }
+            originPhoneNumber = StringUtil.replaceString(originPhoneNumber, "-", "");
+            originPhoneNumber = StringUtil.replaceString(originPhoneNumber, " ", "");
+            // lookup the two letter country code (in the geoCode field)
+            GenericValue originCountryGeo = originPostalAddress.getRelatedOne("CountryGeo");
+            if (originCountryGeo == null) {
+                return ServiceUtil.returnError("OriginCountryGeo not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
+            }
+
+            // Get Dest Info
             GenericValue destPostalAddress = shipmentRouteSegment.getRelatedOne("DestPostalAddress");
+            if (destPostalAddress == null) {
+                return ServiceUtil.returnError("DestPostalAddress not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
+            }
             GenericValue destTelecomNumber = shipmentRouteSegment.getRelatedOne("DestTelecomNumber");
+            if (destTelecomNumber == null) {
+                return ServiceUtil.returnError("DestTelecomNumber not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
+            }
+            String destPhoneNumber = destTelecomNumber.getString("areaCode") + destTelecomNumber.getString("contactNumber");
+            // don't put on country code if not specified or is the US country code (UPS wants it this way)
+            if (UtilValidate.isNotEmpty(destTelecomNumber.getString("countryCode")) && !"001".equals(destTelecomNumber.getString("countryCode"))) {
+                destPhoneNumber = destTelecomNumber.getString("countryCode") + destPhoneNumber;
+            }
+            destPhoneNumber = StringUtil.replaceString(destPhoneNumber, "-", "");
+            destPhoneNumber = StringUtil.replaceString(destPhoneNumber, " ", "");
+            // lookup the two letter country code (in the geoCode field)
+            GenericValue destCountryGeo = destPostalAddress.getRelatedOne("CountryGeo");
+            if (destCountryGeo == null) {
+                return ServiceUtil.returnError("DestCountryGeo not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
+            }
             
             Map findCarrierShipmentMethodMap = UtilMisc.toMap("partyId", shipmentRouteSegment.get("carrierPartyId"), "roleTypeId", "CARRIER", "shipmentMethodTypeId", shipmentRouteSegment.get("shipmentMethodTypeId")); 
             GenericValue carrierShipmentMethod = delegator.findByPrimaryKey("CarrierShipmentMethod", findCarrierShipmentMethodMap);
+            if (carrierShipmentMethod == null) {
+                return ServiceUtil.returnError("CarrierShipmentMethod not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId + "; partyId is " + shipmentRouteSegment.get("carrierPartyId") + " and shipmentMethodTypeId is " + shipmentRouteSegment.get("shipmentMethodTypeId"));
+            }
+
             List shipmentPackageRouteSegs = shipmentRouteSegment.getRelated("ShipmentPackageRouteSeg");
+            if (shipmentPackageRouteSegs == null || shipmentPackageRouteSegs.size() == 0) {
+                return ServiceUtil.returnError("No ShipmentPackageRouteSegs found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
+            }
             
+            List itemIssuances = shipment.getRelated("ItemIssuance");
+            Set orderIdSet = new TreeSet();
+            Iterator itemIssuanceIter = itemIssuances.iterator();
+            while (itemIssuanceIter.hasNext()) {
+                GenericValue itemIssuance = (GenericValue) itemIssuanceIter.next();
+                orderIdSet.add(itemIssuance.get("orderId"));
+            }
+            String ordersDescription = "";
+            if (orderIdSet.size() > 1) {
+                StringBuffer odBuf = new StringBuffer("Orders ");
+                Iterator orderIdIter = orderIdSet.iterator();
+                while (orderIdIter.hasNext()) {
+                    String orderId = (String) orderIdIter.next();
+                    odBuf.append(orderId);
+                    if (orderIdIter.hasNext()) {
+                        odBuf.append(", ");
+                    }
+                }
+                ordersDescription = odBuf.toString();
+            } else if (orderIdSet.size() > 0) {
+                ordersDescription = "Order " + (String) orderIdSet.iterator().next();
+            }
+            
+            // Okay, start putting the XML together...
             Document shipmentConfirmRequestDoc = UtilXml.makeEmptyXmlDocument("ShipmentConfirmRequest");
             Element shipmentConfirmRequestElement = shipmentConfirmRequestDoc.getDocumentElement();
             shipmentConfirmRequestElement.setAttribute("xml:lang", "en-US");
@@ -90,7 +166,123 @@ public class UpsServices {
             
             // Top Level Element: Shipment
             Element shipmentElement = UtilXml.addChildElement(shipmentConfirmRequestElement, "Shipment", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipmentElement, "Description", "Goods for Shipment " + shipment.get("shipmentId") + " from " + ordersDescription, shipmentConfirmRequestDoc);
             
+            // Child of Shipment: Shipper
+            Element shipperElement = UtilXml.addChildElement(shipmentElement, "Shipper", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperElement, "Name", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperElement, "AttentionName", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperElement, "PhoneNumber", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperElement, "ShipperNumber", "", shipmentConfirmRequestDoc);
+
+            Element shipperAddressElement = UtilXml.addChildElement(shipperElement, "Address", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "AddressLine1", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "AddressLine2", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "AddressLine3", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "City", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "StateProvinceCode", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "PostalCode", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "CountryCode", "", shipmentConfirmRequestDoc);
+            // How to determine this? Add to data model... UtilXml.addChildElement(shipperAddressElement, "ResidentialAddress", shipmentConfirmRequestDoc);
+            // TODO: fill Shipper element
+
+            // Child of Shipment: ShipTo
+            Element shipToElement = UtilXml.addChildElement(shipmentElement, "ShipTo", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipToElement, "CompanyName", destPostalAddress.getString("toName"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipToElement, "AttentionName", destPostalAddress.getString("attnName"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipToElement, "PhoneNumber", destPhoneNumber, shipmentConfirmRequestDoc);
+            Element shipToAddressElement = UtilXml.addChildElement(shipToElement, "Address", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipToAddressElement, "AddressLine1", destPostalAddress.getString("address1"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipToAddressElement, "AddressLine2", destPostalAddress.getString("address2"), shipmentConfirmRequestDoc);
+            //UtilXml.addChildElementValue(shipToAddressElement, "AddressLine3", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipToAddressElement, "City", destPostalAddress.getString("city"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipToAddressElement, "StateProvinceCode", destPostalAddress.getString("stateProvinceGeoId"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipToAddressElement, "PostalCode", destPostalAddress.getString("postalCode"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipToAddressElement, "CountryCode", destCountryGeo.getString("geoCode"), shipmentConfirmRequestDoc);
+
+            // Child of Shipment: ShipFrom
+            Element shipFromElement = UtilXml.addChildElement(shipmentElement, "ShipFrom", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipFromElement, "CompanyName", originPostalAddress.getString("toName"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipFromElement, "AttentionName", originPostalAddress.getString("attnName"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipFromElement, "PhoneNumber", originPhoneNumber, shipmentConfirmRequestDoc);
+            Element shipFromAddressElement = UtilXml.addChildElement(shipFromElement, "Address", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipFromAddressElement, "AddressLine1", originPostalAddress.getString("address1"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipFromAddressElement, "AddressLine2", originPostalAddress.getString("address2"), shipmentConfirmRequestDoc);
+            //UtilXml.addChildElementValue(shipFromAddressElement, "AddressLine3", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipFromAddressElement, "City", originPostalAddress.getString("city"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipFromAddressElement, "StateProvinceCode", originPostalAddress.getString("stateProvinceGeoId"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipFromAddressElement, "PostalCode", originPostalAddress.getString("postalCode"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipFromAddressElement, "CountryCode", originCountryGeo.getString("geoCode"), shipmentConfirmRequestDoc);
+
+            // Child of Shipment: PaymentInformation
+            Element paymentInformationElement = UtilXml.addChildElement(shipmentElement, "PaymentInformation", shipmentConfirmRequestDoc);
+            Element prepaidElement = UtilXml.addChildElement(paymentInformationElement, "Prepaid", shipmentConfirmRequestDoc);
+            Element billShipperElement = UtilXml.addChildElement(prepaidElement, "BillShipper", shipmentConfirmRequestDoc);
+            // TODO: fill in BillShipper AccountNumber element
+            UtilXml.addChildElementValue(billShipperElement, "AccountNumber", "", shipmentConfirmRequestDoc);
+
+            // Child of Shipment: Service
+            Element serviceElement = UtilXml.addChildElement(shipmentElement, "Service", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(serviceElement, "Code", carrierShipmentMethod.getString("carrierServiceCode"), shipmentConfirmRequestDoc);
+
+            // Child of Shipment: Package
+            Iterator shipmentPackageRouteSegIter = shipmentPackageRouteSegs.iterator();
+            while (shipmentPackageRouteSegIter.hasNext()) {
+                GenericValue shipmentPackageRouteSeg = (GenericValue) shipmentPackageRouteSegIter.next();
+                GenericValue shipmentPackage = shipmentPackageRouteSeg.getRelatedOne("ShipmentPackage");
+                GenericValue shipmentBoxType = shipmentPackage.getRelatedOne("ShipmentBoxType");
+                List carrierShipmentBoxTypes = shipmentPackage.getRelated("CarrierShipmentBoxType", UtilMisc.toMap("partyId", "UPS"), null);
+                GenericValue carrierShipmentBoxType = null;
+                if (carrierShipmentBoxTypes.size() > 0) {
+                    carrierShipmentBoxType = (GenericValue) carrierShipmentBoxTypes.get(0); 
+                }
+                 
+                Element packageElement = UtilXml.addChildElement(shipmentElement, "Package", shipmentConfirmRequestDoc);
+                Element packagingTypeElement = UtilXml.addChildElement(packageElement, "PackagingType", shipmentConfirmRequestDoc);
+                if (carrierShipmentBoxType != null && carrierShipmentBoxType.get("packagingTypeCode") != null) {
+                    UtilXml.addChildElementValue(packagingTypeElement, "Code", carrierShipmentBoxType.getString("packagingTypeCode"), shipmentConfirmRequestDoc);
+                } else {
+                    // default to "02", plain old Package
+                    UtilXml.addChildElementValue(packagingTypeElement, "Code", "02", shipmentConfirmRequestDoc);
+                }
+                if (shipmentBoxType != null) {
+                    Element dimensionsElement = UtilXml.addChildElement(packageElement, "Dimensions", shipmentConfirmRequestDoc);
+                    Element unitOfMeasurementElement = UtilXml.addChildElement(dimensionsElement, "UnitOfMeasurement", shipmentConfirmRequestDoc);
+                    GenericValue dimensionUom = shipmentBoxType.getRelatedOne("DimensionUom");
+                    if (dimensionUom != null) {
+                        UtilXml.addChildElementValue(unitOfMeasurementElement, "Code", dimensionUom.getString("abbreviation"), shipmentConfirmRequestDoc);
+                    } else {
+                        // I guess we'll default to inches...
+                        UtilXml.addChildElementValue(unitOfMeasurementElement, "Code", "IN", shipmentConfirmRequestDoc);
+                    }
+                    UtilXml.addChildElementValue(dimensionsElement, "Length", shipmentBoxType.get("boxLength").toString(), shipmentConfirmRequestDoc);
+                    UtilXml.addChildElementValue(dimensionsElement, "Width", shipmentBoxType.get("boxWidth").toString(), shipmentConfirmRequestDoc);
+                    UtilXml.addChildElementValue(dimensionsElement, "Height", shipmentBoxType.get("boxHeight").toString(), shipmentConfirmRequestDoc);
+                }
+                Element packageWeightElement = UtilXml.addChildElement(packageElement, "PackageWeight", shipmentConfirmRequestDoc);
+                Element packageWeightUnitOfMeasurementElement = UtilXml.addChildElement(packageElement, "UnitOfMeasurement", shipmentConfirmRequestDoc);
+                GenericValue weightUom = shipmentPackage.getRelatedOne("WeightUom");
+                if (weightUom != null) {
+                    UtilXml.addChildElementValue(packageWeightUnitOfMeasurementElement, "Code", weightUom.getString("abbreviation"), shipmentConfirmRequestDoc);
+                } else {
+                    // might as well default to LBS
+                    UtilXml.addChildElementValue(packageWeightUnitOfMeasurementElement, "Code", "LBS", shipmentConfirmRequestDoc);
+                }
+                Element referenceNumberElement = UtilXml.addChildElement(packageElement, "ReferenceNumber", shipmentConfirmRequestDoc);
+                UtilXml.addChildElementValue(referenceNumberElement, "Code", "MK", shipmentConfirmRequestDoc);
+                UtilXml.addChildElementValue(referenceNumberElement, "Value", shipmentPackage.getString("shipmentPackageSeqId"), shipmentConfirmRequestDoc);
+
+                if (carrierShipmentBoxType != null && carrierShipmentBoxType.get("oversizeCode") != null) {
+                    UtilXml.addChildElementValue(packageElement, "OversizePackage", carrierShipmentBoxType.getString("oversizeCode"), shipmentConfirmRequestDoc);
+                }
+            }
+            
+            // TODO: create AccessRequest XML doc
+            // TODO: connect to UPS server, send AccessRequest to auth
+            // TODO: send ShipmentConfirmRequest doc
+            // TODO: get ShipmentConfirmResponse doc back
+            // TODO: process ShipmentConfirmResponse, update data as needed 
+
         } catch (GenericEntityException e) {
             Debug.logError(e);
             ServiceUtil.returnError("Error reading or writing Shipment data for UPS Shipment Confirm: " + e.toString());
@@ -230,7 +422,10 @@ Shipment Confirm Request/Response
             <ShipperNumber>12345E</ShipperNumber>
             <Address>
                 <AddressLine1>123 ShipperStreet</AddressLine1>
+                <AddressLine2>123 ShipperStreet</AddressLine2>
+                <AddressLine3>123 ShipperStreet</AddressLine3>
                 <City>ShipperCity</City>
+                <StateProvinceCode>foo</StateProvinceCode>
                 <PostalCode>03570</PostalCode>
                 <CountryCode>DE</CountryCode>
             </Address>
@@ -285,6 +480,10 @@ Shipment Confirm Request/Response
                 </UnitOfMeasurement>
                 <Weight>3.0</Weight>
             </PackageWeight>
+            <ReferenceNumber>
+                <Code>MK</Code>
+                <Value>00001</Value>
+            </ReferenceNumber>
         </Package>
     </Shipment>
 </ShipmentConfirmRequest>
