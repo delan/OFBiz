@@ -33,6 +33,8 @@
 
 <%if (security.hasEntityPermission("FACILITY", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     //default this to true, ie only show active
     boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
 
@@ -127,9 +129,6 @@
   </table>
 </ofbiz:if>
 
-<script language='JavaScript'>
-    function setLineThruDate(line) { eval('document.lineForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
-</script>
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Facility Group Name [ID]</b></div></td>
@@ -158,8 +157,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupMember" field="facilityId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupMember" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupMember" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="facilityGroupMember" field="thruDate" fullattrs="true"/> class="inputBox" style='<%if (hasExpired) {%>color: red;<%}%>'>
-            <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="facilityGroupMember" field="thruDate" fullattrs="true"/> class="inputBox" style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupMember" field="sequenceNum" fullattrs="true"/> class="inputBox">           
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -198,9 +197,6 @@
   <input type="hidden" name="useValues" value="true">
   <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'>
 
-  <script language='JavaScript'>
-      function setFgmFromDate() { document.addFacilityGroupMemberForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
-  </script>
   <div class='head2'>Add FacilityGroupMember:</div>
   <div class='tabletext'>
     Facility Group ID: 
@@ -209,7 +205,8 @@
             <option value='<ofbiz:entityfield attribute="facilityGroup" field="facilityGroupId"/>'><ofbiz:entityfield attribute="facilityGroup" field="facilityGroupName"/></option>
         </ofbiz:iterator>
     </select>
-    From Date: <input type=text size='22' class="inputBox" name='fromDate'><a href='#' onclick='setFgmFromDate()' class='buttontext'>[Now]</a>
+    From Date: <input type=text size='25' class='inputBox' name='fromDate'>
+    <a href="javascript:call_cal(document.addFacilityGroupMemberForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
     <input type="submit" value="Add">
   </div>
 </form>

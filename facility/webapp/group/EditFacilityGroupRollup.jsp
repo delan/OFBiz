@@ -33,6 +33,8 @@
 
 <%if(security.hasEntityPermission("FACILITY", "_VIEW", request.getSession())) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     boolean useValues = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
@@ -55,11 +57,6 @@
 	List facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
 	if (facilityGroups != null) pageContext.setAttribute("facilityGroups", facilityGroups);
 %>
-
-<script language='JavaScript'>
-    function setLineThruDateChild(line) { eval('document.lineChildForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
-    function setLineThruDateParent(line) { eval('document.lineParentForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
-</script>
 
 <%if(facilityGroupId != null && facilityGroupId.length() > 0) {%>
   <div class='tabContainer'>
@@ -92,7 +89,7 @@
     <%lineParent++;%>
     <%GenericValue curGroup = facilityGroupRollup.getRelatedOne("ParentFacilityGroup");%>
     <tr valign="middle">
-      <td><%if (curGroup!=null){%><a href="<ofbiz:url>/EditFacilityGroup?facilityGroupId=<%=curGroup.getString("facilityGroupId")%></ofbiz:url>" class="buttontext"><%=curGroup.getString("description")%> [<%=curGroup.getString("facilityGroupId")%>]</a><%}%></td>
+      <td><%if (curGroup!=null){%><a href="<ofbiz:url>/EditFacilityGroup?facilityGroupId=<%=curGroup.getString("facilityGroupId")%></ofbiz:url>" class="buttontext"><%=curGroup.getString("facilityGroupName")%><%-- [<%=curGroup.getString("facilityGroupId")%>]--%></a><%}%></td>
       <td><div class='tabletext' <%=(facilityGroupRollup.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(facilityGroupRollup.getTimestamp("fromDate")))?"style='color: red;'":""%>><ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate"/></div></td>
       <td align="center">
         <FORM method=POST action='<ofbiz:url>/updateFacilityGroupToGroup</ofbiz:url>' name='lineParentForm<%=lineParent%>'>
@@ -100,8 +97,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="parentFacilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" fullattrs="true"/> class="inputBox" style='<%=(facilityGroupRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
-            <a href='#' onclick='setLineThruDateParent("<%=lineParent%>")' class='buttontext'>[Now]</a>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" fullattrs="true"/> class="inputBox" style='<%=(facilityGroupRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
+            <a href="javascript:call_cal(document.lineParentForm<%=lineParent%>.thruDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="sequenceNum" fullattrs="true"/> class="inputBox">
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -134,11 +131,8 @@
         <%}%>
     <%}%>
     </select>
-  <script language='JavaScript'>
-      function setPctcParentFromDate() { document.addParentForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
-  </script>
-  <a href='#' onclick='setPctcParentFromDate()' class='buttontext'>[Now]</a>
-  <input type=text class="inputBox" size='22' name='fromDate'>
+  <input type=text class="inputBox" size='25' name='fromDate'>
+  <a href="javascript:call_cal(document.addParentForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
   <input type="submit" value="Add">
 </form>
 <br>
@@ -159,7 +153,7 @@
     <%lineChild++;%>
     <%GenericValue curGroup = facilityGroupRollup.getRelatedOne("CurrentFacilityGroup");%>
     <tr valign="middle">
-      <td><a href="<ofbiz:url>/EditFacilityGroup?facilityGroupId=<%=curGroup.getString("facilityGroupId")%></ofbiz:url>" class="buttontext"><%=curGroup.getString("description")%> [<%=curGroup.getString("facilityGroupId")%>]</a></td>
+      <td><a href="<ofbiz:url>/EditFacilityGroup?facilityGroupId=<%=curGroup.getString("facilityGroupId")%></ofbiz:url>" class="buttontext"><%=curGroup.getString("facilityGroupName")%><%-- [<%=curGroup.getString("facilityGroupId")%>]--%></a></td>
       <td><div class='tabletext' <%=(facilityGroupRollup.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(facilityGroupRollup.getTimestamp("fromDate")))?"style='color: red;'":""%>><ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate"/></div></td>
       <td align="center">
         <FORM method=POST action='<ofbiz:url>/updateFacilityGroupToGroup</ofbiz:url>' name='lineChildForm<%=lineChild%>'>
@@ -167,8 +161,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="parentFacilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" fullattrs="true"/> class="inputBox" style='<%=(facilityGroupRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
-            <a href='#' onclick='setLineThruDateChild("<%=lineChild%>")' class='buttontext'>[Now]</a>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="thruDate" fullattrs="true"/> class="inputBox" style='<%=(facilityGroupRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(facilityGroupRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
+            <a href="javascript:call_cal(document.lineChildForm<%=lineChild%>.thruDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="facilityGroupRollup" field="sequenceNum" fullattrs="true"/> class="inputBox">
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -200,11 +194,8 @@
       <%}%>
     <%}%>
     </select>
-  <script language='JavaScript'>
-      function setPctcChildFromDate() { document.addChildForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
-  </script>
-  <a href='#' onclick='setPctcChildFromDate()' class='buttontext'>[Now]</a>
-  <input type=text class="inputBox" size='22' name='fromDate'>
+  <input type=text class="inputBox" size='25' name='fromDate'>
+  <a href="javascript:call_cal(document.addChildForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
   <input type="submit" value="Add">
 </form>
 <%}%>

@@ -62,17 +62,19 @@
 <br>
 
 <p class="head2">Facility Role Member Maintenance</p>
-<table border="1" width="100%" cellpadding='2' cellspacing='0'>
+<table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Party ID</b></div></td>
-    <td><div class="tabletext"><b>Role Type ID</b></div></td>  
+    <td><div class="tabletext"><b>Role Type</b></div></td>  
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 
 <ofbiz:iterator name="facilityRole" property="facilityRoles">  
+  <%GenericValue roleType = facilityRole.getRelatedOne("RoleType");%>
+  <%if (roleType != null) pageContext.setAttribute("roleType", roleType);%>
   <tr valign="middle">
     <td><a href='/partymgr/control/viewprofile?party_id=<ofbiz:inputvalue entityAttr="facilityRole" field="partyId"/>' class="buttontext"><ofbiz:inputvalue entityAttr="facilityRole" field="partyId"/></a></td>    
-    <td><div class="tabletext"><ofbiz:inputvalue entityAttr="facilityRole" field="roleTypeId"/></div></td>    
+    <td><div class="tabletext"><ofbiz:inputvalue entityAttr="roleType" field="description"/></div></td>    
     <td align="center">
       <a href='<ofbiz:url>/removePartyFromFacility?facilityId=<ofbiz:entityfield attribute="facilityRole" field="facilityId"/>&partyId=<ofbiz:entityfield attribute="facilityRole" field="partyId"/>&roleTypeId=<ofbiz:entityfield attribute="facilityRole" field="roleTypeId"/></ofbiz:url>' class="buttontext">
       [Delete]</a>
@@ -87,10 +89,10 @@
   <div class='head2'>Add Facility Party Role:</div>
   <div class='tabletext'>
     Party ID: <input type='text' class="inputBox" size='20' name='partyId'>
-    Role Type ID:
+    Role Type:
     <select name='roleTypeId' class='selectBox'><option></option>
-	  <ofbiz:iterator name="role" property="roles">
-	    <option value="<ofbiz:entityfield attribute="role" field="roleTypeId"/>"><ofbiz:entityfield attribute="role" field="description"/></option>
+      <ofbiz:iterator name="role" property="roles">
+        <option value='<ofbiz:entityfield attribute="role" field="roleTypeId"/>'><ofbiz:entityfield attribute="role" field="description"/></option>
       </ofbiz:iterator>
     </select>
     <input type="submit" value="Add">
