@@ -106,36 +106,41 @@
         </call-map-processor>
 
         <!-- Create the Postal Address -->
-        <call-map-processor in-map-name="parameters" out-map-name="addressContext">
-            <simple-map-processor name="newPerson">
-                <make-in-string field="fullName">
-                    <in-field field="USER_FIRST_NAME"/><constant> </constant>
-                    <in-field field="USER_MIDDLE_NAME"/><constant> </constant>
-                    <in-field field="USER_LAST_NAME"/>
-                </make-in-string>
-                <process field="USERNAME"><copy to-field="partyId"/></process>
-                <process field="roleTypeId"><copy/></process>
-                <process field="fullName"><copy to-field="toName"/></process>
-                <process field="CUSTOMER_ADDRESS1"><copy to-field="address1"/><not-empty><fail-message message="Address Line 1 is missing"/></not-empty></process>
-                <process field="CUSTOMER_ADDRESS2"><copy to-field="address2"/></process>
-                <process field="CUSTOMER_CITY"><copy to-field="city"/><not-empty><fail-message message="City is missing"/></not-empty></process>
-                <process field="CUSTOMER_STATE"><copy to-field="stateProvinceGeoId"/></process>
-                <process field="CUSTOMER_POSTAL_CODE"><copy to-field="postalCode"/><not-empty><fail-message message="Postal Code is missing"/></not-empty></process>
-                <process field="CUSTOMER_COUNTRY"><copy to-field="countryGeoId"/><not-empty><fail-message message="Country is missing"/></not-empty></process>
-                <process field="CUSTOMER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
-            </simple-map-processor>
-        </call-map-processor>
-        <if-compare value="USA" operator="equals" field-name="CUSTOMER_COUNTRY" map-name="parameters">
-            <if-empty field-name="CUSTOMER_STATE" map-name="parameters">
-                <string-to-field string="State is missing, and is required for an address in the United States." field-name="tempErrorMessage"/>
-                <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
-            </if-empty>
-        </if-compare>
-        <if-compare value="CAN" operator="equals" field-name="CUSTOMER_COUNTRY" map-name="parameters">
-            <if-empty field-name="CUSTOMER_STATE" map-name="parameters">
-                <string-to-field string="State is missing, and is required for an address in Canada." field-name="tempErrorMessage"/>
-                <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
-            </if-empty>
+        <if-compare field-name="USE_ADDRESS" map-name="parameters" operator="equals" value="false">
+            <!-- address not used, do nothing -->
+            <else>
+                <call-map-processor in-map-name="parameters" out-map-name="addressContext">
+                    <simple-map-processor name="newPerson">
+                        <make-in-string field="fullName">
+                            <in-field field="USER_FIRST_NAME"/><constant> </constant>
+                            <in-field field="USER_MIDDLE_NAME"/><constant> </constant>
+                            <in-field field="USER_LAST_NAME"/>
+                        </make-in-string>
+                        <process field="USERNAME"><copy to-field="partyId"/></process>
+                        <process field="roleTypeId"><copy/></process>
+                        <process field="fullName"><copy to-field="toName"/></process>
+                        <process field="CUSTOMER_ADDRESS1"><copy to-field="address1"/><not-empty><fail-message message="Address Line 1 is missing"/></not-empty></process>
+                        <process field="CUSTOMER_ADDRESS2"><copy to-field="address2"/></process>
+                        <process field="CUSTOMER_CITY"><copy to-field="city"/><not-empty><fail-message message="City is missing"/></not-empty></process>
+                        <process field="CUSTOMER_STATE"><copy to-field="stateProvinceGeoId"/></process>
+                        <process field="CUSTOMER_POSTAL_CODE"><copy to-field="postalCode"/><not-empty><fail-message message="Postal Code is missing"/></not-empty></process>
+                        <process field="CUSTOMER_COUNTRY"><copy to-field="countryGeoId"/><not-empty><fail-message message="Country is missing"/></not-empty></process>
+                        <process field="CUSTOMER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
+                    </simple-map-processor>
+                </call-map-processor>
+                <if-compare value="USA" operator="equals" field-name="CUSTOMER_COUNTRY" map-name="parameters">
+                    <if-empty field-name="CUSTOMER_STATE" map-name="parameters">
+                        <string-to-field string="State is missing, and is required for an address in the United States." field-name="tempErrorMessage"/>
+                        <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
+                    </if-empty>
+                </if-compare>
+                <if-compare value="CAN" operator="equals" field-name="CUSTOMER_COUNTRY" map-name="parameters">
+                    <if-empty field-name="CUSTOMER_STATE" map-name="parameters">
+                        <string-to-field string="State is missing, and is required for an address in Canada." field-name="tempErrorMessage"/>
+                        <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
+                    </if-empty>
+                </if-compare>
+            </else>
         </if-compare>
 
         <!-- Create the Home Phone -->
