@@ -35,6 +35,64 @@
 <%
   String filename = request.getParameter("filename");
   String[] entityName = request.getParameterValues("entityName");
+
+  TreeSet passedEntityNames = new TreeSet();
+  if (entityName != null && entityName.length > 0) {
+    for(int inc=0; inc<entityName.length; inc++) {
+      passedEntityNames.add(entityName[inc]);
+    }
+  }
+  
+  String preConfiguredSetName = request.getParameter("preConfiguredSetName");
+  if ("Product1".equals(preConfiguredSetName)) {
+    passedEntityNames.add("DataResource");
+    passedEntityNames.add("Facility");
+    passedEntityNames.add("ProdCatalog");
+    passedEntityNames.add("Product");
+    passedEntityNames.add("ProductCategory");
+    passedEntityNames.add("ProductFeatureCategory");
+    passedEntityNames.add("ProductFeatureType");
+    passedEntityNames.add("ProductPriceRule");
+    passedEntityNames.add("ProductPromo");
+  } else if ("Product2".equals(preConfiguredSetName)) {
+    passedEntityNames.add("Content");
+    passedEntityNames.add("ElectronicText");
+    passedEntityNames.add("FacilityLocation");
+    passedEntityNames.add("ProdCatalogCategory");
+    passedEntityNames.add("ProdCatalogRole");
+    passedEntityNames.add("ProductAssoc");
+    passedEntityNames.add("ProductAttribute");
+    passedEntityNames.add("ProductCategoryMember");
+    passedEntityNames.add("ProductCategoryRollup");
+    passedEntityNames.add("ProductFacility");
+    passedEntityNames.add("ProductFeature");
+    passedEntityNames.add("ProductFeatureCategoryAppl");
+    passedEntityNames.add("ProductKeyword");
+    passedEntityNames.add("ProductPrice");
+    passedEntityNames.add("ProductPriceAction");
+    passedEntityNames.add("ProductPriceCond");
+    passedEntityNames.add("ProductPromoCode");
+    passedEntityNames.add("ProductPromoCategory");
+    passedEntityNames.add("ProductPromoProduct");
+    passedEntityNames.add("ProductPromoRule");
+  } else if ("Product3".equals(preConfiguredSetName)) {
+    passedEntityNames.add("ProdCatalogInvFacility");
+    passedEntityNames.add("ProductContent");
+    passedEntityNames.add("ProductFacilityLocation");
+    passedEntityNames.add("ProductFeatureAppl");
+    passedEntityNames.add("ProductFeatureContent");
+    passedEntityNames.add("ProductFeatureGroup");
+    passedEntityNames.add("ProductPriceChange");
+    passedEntityNames.add("ProductPromoAction");
+    passedEntityNames.add("ProductPromoCodeEmail");
+    passedEntityNames.add("ProductPromoCodeParty");
+    passedEntityNames.add("ProductPromoCond");
+  } else if ("Product4".equals(preConfiguredSetName)) {
+    passedEntityNames.add("InventoryItem");
+    passedEntityNames.add("ProductFeatureCatGrpAppl");
+    passedEntityNames.add("ProductFeatureGroupAppl");
+  }
+  
   boolean checkAll = "true".equals(request.getParameter("checkAll"));
   boolean tobrowser = request.getParameter("tobrowser")!=null?true:false;
 %>
@@ -60,11 +118,6 @@
   long numberWritten = 0;
   Document document = null;
   if(filename != null && filename.length() > 0 && entityName != null && entityName.length > 0) {
-    TreeSet passedEntityNames = new TreeSet();
-    for(int inc=0; inc<entityName.length; inc++) {
-      passedEntityNames.add(entityName[inc]);
-    }
-    
     numberOfEntities = passedEntityNames.size();
     
     PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")));
@@ -131,6 +184,15 @@
         <INPUT type=submit value='Export'>
         <A href='<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>' class='buttontext'>Check All</A>
         <A href='<ofbiz:url>/xmldsdump</ofbiz:url>' class='buttontext'>Un-Check All</A>
+        <br/>
+        Pre-configured set: 
+        <select name="preConfiguredSetName">
+            <option value="">None</option>
+            <option value="Product1">Product Part 1</option>
+            <option value="Product2">Product Part 2</option>
+            <option value="Product3">Product Part 3</option>
+            <option value="Product4">Product Part 4</option>
+        </select>
         <TABLE>
           <TR>
             <%Iterator iter = entityNames.iterator();%>
