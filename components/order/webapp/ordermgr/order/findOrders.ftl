@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -213,7 +213,13 @@ function lookupOrders() {
     </td>
   </tr>
 </table>
-</form> 
+<input type="image" src="/images/spacer.gif" onClick="javascript:lookupOrders();">
+</form>
+<script language="JavaScript">
+<!--//
+document.lookuporder.order_id.focus();
+//-->
+</script>
 
 
 <#if orderHeaderList?exists>
