@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.2 2003/09/12 19:54:04 ajzeneski Exp $
+ * $Id: DatabaseUtil.java,v 1.3 2003/09/19 06:13:45 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -135,17 +135,17 @@ public class DatabaseUtil {
                 messages.add(entMessage);
 
             // -make sure all entities have a corresponding table
-            if (tableNames.contains(entity.getTableName(datasourceInfo).toUpperCase())) {
-                tableNames.remove(entity.getTableName(datasourceInfo).toUpperCase());
+            if (tableNames.contains(entity.getTableName(datasourceInfo))) {
+                tableNames.remove(entity.getTableName(datasourceInfo));
 
                 if (colInfo != null) {
                     Map fieldColNames = new HashMap();
                     for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {
                         ModelField field = entity.getField(fnum);
-                        fieldColNames.put(field.getColName().toUpperCase(), field);
+                        fieldColNames.put(field.getColName(), field);
                     }
 
-                    List colList = (List) colInfo.get(entity.getTableName(datasourceInfo).toUpperCase());
+                    List colList = (List) colInfo.get(entity.getTableName(datasourceInfo));
                     int numCols = 0;
 
                     if (colList != null) {
@@ -206,7 +206,7 @@ public class DatabaseUtil {
                                         typeName = modelFieldType.getSqlTypeAlias();
                                     }
 
-                                    if (!ccInfo.typeName.equals(typeName.toUpperCase())) {
+                                    if (!ccInfo.typeName.equals(typeName)) {
                                         String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName(datasourceInfo) + "\" of entity \"" +
                                             entity.getEntityName() + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" +
                                             typeName + "\" in the entity definition.";
@@ -756,10 +756,10 @@ public class DatabaseUtil {
                     if (tableName != null && lookupSchemaName != null && !tableName.startsWith(lookupSchemaName)) {
                         tableName = lookupSchemaName + "." + tableName;
                     }
-                    tableName = (tableName == null) ? null : tableName.toUpperCase();
+                    tableName = (tableName == null) ? null : tableName;
                     String tableType = tableSet.getString("TABLE_TYPE");
 
-                    tableType = (tableType == null) ? null : tableType.toUpperCase();
+                    tableType = (tableType == null) ? null : tableType;
                     // only allow certain table types
                     if (tableType != null && !"TABLE".equals(tableType) && !"VIEW".equals(tableType) && !"ALIAS".equals(tableType) && !"SYNONYM".equals(tableType))
                         continue;
@@ -892,21 +892,18 @@ public class DatabaseUtil {
                     if (ccInfo.tableName != null && lookupSchemaName != null && !ccInfo.tableName.startsWith(lookupSchemaName)) {
                         ccInfo.tableName = lookupSchemaName + "." + ccInfo.tableName;
                     }
-                    ccInfo.tableName = (ccInfo.tableName == null) ? null : ccInfo.tableName.toUpperCase();
                     // ignore the column info if the table name is not in the list we are concerned with
                     if (!tableNames.contains(ccInfo.tableName))
                         continue;
 
                     ccInfo.columnName = rsCols.getString("COLUMN_NAME");
-                    ccInfo.columnName = (ccInfo.columnName == null) ? null : ccInfo.columnName.toUpperCase();
 
                     ccInfo.typeName = rsCols.getString("TYPE_NAME");
-                    ccInfo.typeName = (ccInfo.typeName == null) ? null : ccInfo.typeName.toUpperCase();
                     ccInfo.columnSize = rsCols.getInt("COLUMN_SIZE");
                     ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
 
                     ccInfo.isNullable = rsCols.getString("IS_NULLABLE");
-                    ccInfo.isNullable = (ccInfo.isNullable == null) ? null : ccInfo.isNullable.toUpperCase();
+                    //ccInfo.isNullable = (ccInfo.isNullable == null) ? null : ccInfo.isNullable.toUpperCase();
 
                     List tableColInfo = (List) colInfo.get(ccInfo.tableName);
 
@@ -1042,20 +1039,15 @@ public class DatabaseUtil {
                     ReferenceCheckInfo rcInfo = new ReferenceCheckInfo();
 
                     rcInfo.pkTableName = rsCols.getString("PKTABLE_NAME");
-                    rcInfo.pkTableName = (rcInfo.pkTableName == null) ? null : rcInfo.pkTableName.toUpperCase();
                     rcInfo.pkColumnName = rsCols.getString("PKCOLUMN_NAME");
-                    rcInfo.pkColumnName = (rcInfo.pkColumnName == null) ? null : rcInfo.pkColumnName.toUpperCase();
 
                     rcInfo.fkTableName = rsCols.getString("FKTABLE_NAME");
-                    rcInfo.fkTableName = (rcInfo.fkTableName == null) ? null : rcInfo.fkTableName.toUpperCase();
                     // ignore the column info if the FK table name is not in the list we are concerned with
                     if (!tableNames.contains(rcInfo.fkTableName))
                         continue;
                     rcInfo.fkColumnName = rsCols.getString("FKCOLUMN_NAME");
-                    rcInfo.fkColumnName = (rcInfo.fkColumnName == null) ? null : rcInfo.fkColumnName.toUpperCase();
 
                     rcInfo.fkName = rsCols.getString("FK_NAME");
-                    rcInfo.fkName = (rcInfo.fkName == null) ? null : rcInfo.fkName.toUpperCase();
 
                     if (Debug.verboseOn()) Debug.logVerbose("Got: " + rcInfo.toString(), module);
 
@@ -1195,16 +1187,11 @@ public class DatabaseUtil {
                         if (!rsCols.getBoolean("NON_UNIQUE")) continue;
 
                         String tableName = rsCols.getString("TABLE_NAME");
-
-                        tableName = (tableName == null) ? null : tableName.toUpperCase();
                         if (!tableNames.contains(tableName)) continue;
 
                         String indexName = rsCols.getString("INDEX_NAME");
 
-                        indexName = (indexName == null) ? null : indexName.toUpperCase();
-
                         TreeSet tableIndexList = (TreeSet) indexInfo.get(tableName);
-
                         if (tableIndexList == null) {
                             tableIndexList = new TreeSet();
                             indexInfo.put(tableName, tableIndexList);
@@ -1214,7 +1201,6 @@ public class DatabaseUtil {
                         tableIndexList.add(indexName);
                     } catch (SQLException sqle) {
                         String message = "Error getting fk reference info for table. Error was:" + sqle.toString();
-
                         Debug.logError(message, module);
                         if (messages != null)
                             messages.add(message);
