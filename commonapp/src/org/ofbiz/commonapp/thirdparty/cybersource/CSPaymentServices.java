@@ -23,6 +23,7 @@
 
 package org.ofbiz.commonapp.thirdparty.cybersource;
 
+import java.text.*;
 import java.net.*;
 import java.util.*;
 
@@ -54,35 +55,11 @@ public class CSPaymentServices {
 
         String currency = (String) context.get("currency");
         String orderId = (String) context.get("orderId");
-        String paymentMethodId = (String) context.get("paymentMethodId");
 
-        // Create a new ICSClient using the cybersource properties found on global classpath.
-        ICSClientRequest request = null;
-        ICSClient client = null;
-        ICSReply reply = null;
+        GenericValue orderHeader = null;
+        Collection paymentPreferences = null;
 
-        try {
-            client = new ICSClient(UtilProperties.getProperties("cybersource.properties"));
-            request = buildAuthRequest(client, delegator, orderId, paymentMethodId);
-            if (client == null)
-                throw new GeneralException("ICS returned a null client.");
-        } catch (ICSException ie) {
-            ie.printStackTrace();
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
-            return result;
-        } catch (GenericEntityException gee) {
-            gee.printStackTrace();
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
-            return result;
-        } catch (GeneralException ge) {
-            ge.printStackTrace();
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: GeneralException (" + ge.getMessage() + ").");
-            return result;
-        }
-
+        // Some default values
         StringBuffer apps = new StringBuffer();
         boolean fraudScore = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "fraudScore", "Y");
         boolean enableDAV = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableDAV", "Y");
@@ -101,6 +78,46 @@ public class CSPaymentServices {
             apps.append(",ics_dav");
         if (autoBill)
             apps.append(",ics_bill");
+
+        // Create a new ICSClient using the cybersource properties found on global classpath.
+        ICSClientRequest request = null;
+        ICSClient client = null;
+        ICSReply reply = null;
+
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            paymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
+        } catch (GenericEntityException gee) {
+            gee.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
+            return result;
+        }
+
+        // TODO: Loop through and authorize ALL payment prefs.
+        GenericValue paymentPreference = EntityUtil.getFirst(paymentPreferences);
+
+        try {
+            client = new ICSClient(UtilProperties.getProperties("cybersource.properties"));
+            request = buildAuthRequest(client, orderHeader, paymentPreference);
+            if (client == null)
+                throw new GeneralException("ICS returned a null client.");
+        } catch (ICSException ie) {
+            ie.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
+            return result;
+        } catch (GenericEntityException gee) {
+            gee.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
+            return result;
+        } catch (GeneralException ge) {
+            ge.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: GeneralException (" + ge.getMessage() + ").");
+            return result;
+        }
 
         // Basic Info
         request.setMerchantID(client.getMerchantID());
@@ -129,11 +146,102 @@ public class CSPaymentServices {
         Debug.logVerbose("[RES]: " + reply, module);
         Debug.logVerbose("---- End Reply ----", module);
 
-        return processResult(reply, result);
+        return processAuthResult(reply, result, paymentPreference);
     }
 
     public static Map billCC(DispatchContext dctx, Map context) {
-        return new HashMap();
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+
+        String currency = (String) context.get("currency");
+        String orderId = (String) context.get("orderId");
+
+        GenericValue orderHeader = null;
+        Collection paymentPreferences = null;
+
+        boolean disableAVS = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "disableAVS", "Y");
+        boolean enableRetry = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableRetry", "Y");
+
+        String defCur = UtilProperties.getPropertyValue("cybersource.properties", "defaultCurrency", "USD");
+        String timeout = UtilProperties.getPropertyValue("cybersource.properties", "timeout", "90");
+        String retryWait = UtilProperties.getPropertyValue("cybersource.properties", "retryWait", "90");
+        String merchantDesc = UtilProperties.getPropertyValue("cybersource.properties", "merchantDescr", null);
+
+        // Create a new ICSClient using the cybersource properties found on global classpath.
+        ICSClientRequest request = null;
+        ICSClient client = null;
+        ICSReply reply = null;
+
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            paymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
+        } catch (GenericEntityException gee) {
+            gee.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
+            return result;
+        }
+
+        // TODO: Loop through and bill ALL payment prefs.
+        GenericValue paymentPreference = EntityUtil.getFirst(paymentPreferences);
+
+        try {
+            client = new ICSClient(UtilProperties.getProperties("cybersource.properties"));
+            request = buildAuthRequest(client, orderHeader, paymentPreference);
+            if (client == null)
+                throw new GeneralException("ICS returned a null client.");
+        } catch (ICSException ie) {
+            ie.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
+            return result;
+        } catch (GenericEntityException gee) {
+            gee.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
+            return result;
+        } catch (GeneralException ge) {
+            ge.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: GeneralException (" + ge.getMessage() + ").");
+            return result;
+        }
+
+        // Basic Info
+        request.setMerchantID(client.getMerchantID());
+        request.addApplication("ics_bill");
+        request.setMerchantRefNo(orderId);
+        request.setDisableAVS(disableAVS);
+        request.setRetryStart(retryWait);
+        request.setTimeout(timeout);
+        request.setRetryEnabled(enableRetry ? "yes" : "no");
+        request.setCurrency((currency == null ? defCur : currency));
+
+        // Merchant Description (if available)
+        if (merchantDesc != null)
+            request.setField("merchant_descriptor", merchantDesc);
+
+        // Get the AUTH code from the preference
+        request.setAuthRequestId(paymentPreference.getString("authRefNum"));
+
+        Debug.logVerbose("---- CyberSource Request To: " + client.url.toString() + " ----", module);
+        Debug.logVerbose("[REQ]: " + request, module);
+        Debug.logVerbose("---- End Request ----", module);
+
+        try {
+            reply = client.send(request);
+        } catch (ICSException ie) {
+            ie.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS Problem (" + ie.getMessage() + ").");
+            return result;
+        }
+
+        Debug.logVerbose("---- CyberSource Response ----", module);
+        Debug.logVerbose("[RES]: " + reply, module);
+        Debug.logVerbose("---- End Reply ----", module);
+
+        return ServiceUtil.returnSuccess();
     }
 
     public static Map creditCC(DispatchContext dctx, Map context) {
@@ -160,29 +268,28 @@ public class CSPaymentServices {
         return new HashMap();
     }
 
-    private static ICSClientRequest buildAuthRequest(ICSClient client, GenericDelegator delegator,
-                                                     String orderId, String paymentMethodId) throws GenericEntityException, GeneralException, ICSException {
-        GenericValue orderHeader = null;
-        GenericValue paymentMethod = null;
-        GenericValue creditCard = null;
-        GenericValue billingAddress = null;
-        Collection adjustments = null;
+    private static ICSClientRequest buildAuthRequest(ICSClient client, GenericValue orderHeader, GenericValue paymentPref)
+            throws GenericEntityException, GeneralException, ICSException {
 
-        orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-        adjustments = delegator.findByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderId));
-        paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        GenericValue paymentMethod = paymentPref.getRelatedOne("PaymentMethod");
+
+        Debug.logVerbose("PaymentMethod: " + paymentMethod, module);
 
         if (paymentMethod.get("paymentMethodTypeId") != null &&
                 !paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD"))
             throw new GeneralException("Payment method is not a credit card.");
 
-        creditCard = paymentMethod.getRelatedOne("CreditCard");
-        billingAddress = creditCard.getRelatedOne("PostalAddress");
+        GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
+        GenericValue billingAddress = creditCard.getRelatedOne("PostalAddress");
+
+        //Debug.logVerbose("PaymentMethod: " + paymentMethod, module);
+        //Debug.logVerbose("CreditCard: " + creditCard, module);
+        //Debug.logVerbose("BillingAddress: " + billingAddress, module);
 
         if (billingAddress == null || creditCard == null)
             throw new GeneralException("Null billing or payment information");
 
-        OrderReadHelper orh = new OrderReadHelper(orderHeader);
         Collection orderItems = orh.getOrderItems();
 
         // Create a new ICSClientRequest Object.
@@ -228,6 +335,11 @@ public class CSPaymentServices {
         if (shippingAddress.get("stateProvinceGeoId") != null)
             request.setShipToState(shippingAddress.getString("stateProvinceGeoId"));
 
+        // Send over a line item total offer w/ the total for billing; Don't trust CyberSource for calc.
+        ICSClientOffer mainOffer = new ICSClientOffer();
+        mainOffer.setAmount(new Double(orh.getTotalPrice()).toString());
+        request.addOffer(mainOffer);
+
         // Create the offers (one for each line item)
         Iterator itemIterator = orderItems.iterator();
         while (itemIterator.hasNext()) {
@@ -238,43 +350,50 @@ public class CSPaymentServices {
             offer.setProductName(product.getString("productName"));
             offer.setMerchantProductSKU(product.getString("productId"));
 
-            // Get the quantity and price to do some testing.
+            // Get the quantity..
             Double quantity = item.getDouble("quantity");
-            Double price = item.getDouble("unitPrice");
 
-            // Test quantity if INT pass as is; if not do the math and pass price w/ qty 1
+            // Test quantity if INT pass as is; if not pass as 1
             long roundQ = Math.round(quantity.doubleValue());
             Double rounded = new Double(new Long(roundQ).toString());
-            if (rounded.doubleValue() != quantity.doubleValue()) {
-                offer.setAmount(new Double(price.doubleValue() * quantity.doubleValue()).toString());
+            if (rounded.doubleValue() != quantity.doubleValue())
                 offer.setQuantity(1);
-            } else {
-                offer.setAmount(price.toString());
+            else
                 offer.setQuantity(quantity.intValue());
-            }
+            // Set the amount to 0.0099 -- we will send a total too.
+            offer.setAmount("0.0000");
 
             //offer.setProductCode("electronic_software");
             //offer.setPackerCode("portland10");
 
-            Collection taxItems = EntityUtil.filterByAnd(adjustments, UtilMisc.toMap("orderAdjustmentTypeId",
-                    "SALES_TAX", "orderItemSeqId", item.getString("orderItemSeqId")));
-            double taxAmount = 0.00;
-            Iterator taxIt = taxItems.iterator();
-            while (taxIt.hasNext()) {
-                GenericValue adj = (GenericValue) taxIt.next();
-                taxAmount += adj.getDouble("amount").doubleValue();
-            }
-            if (taxAmount > 0.00) {
-                Double tax = new Double(taxAmount);
-                offer.setTaxAmount(tax.toString());
-            }
             request.addOffer(offer);
         }
         return request;
     }
 
-    private static Map processResult(ICSReply reply, Map result) {
+    private static Map processAuthResult(ICSReply reply, Map result, GenericValue paymentPreference) {
         // Process the return codes and return a nice response
+        try {
+            if (reply.getReplyCode() > 0) {
+                paymentPreference.set("authRefNum", reply.getField("request_id"));
+                result.put("authResponse", "SUCCESS");
+            } else {
+                result.put("authResponse", "FAIL");
+            }
+            paymentPreference.set("authMessage", reply.getErrorMessage());
+            paymentPreference.store();
+        } catch (ICSException ie) {
+            ie.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: ICS problem (" + ie.getMessage() + ").");
+            return result;
+        } catch (GenericEntityException gee) {
+            gee.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not store payment info (" + gee.getMessage() + ").");
+            return result;
+        }
+
         return result;
     }
 }
