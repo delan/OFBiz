@@ -40,13 +40,35 @@ public class ObjectType {
 
     protected static Map classCache = new HashMap();
     
+    public static final String LANG_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
+    public static final String SQL_PACKAGE = "java.sql.";   // We will test both the raw value and this + raw value
+
+    public static Map classNameExpandMap = new HashMap();
+    
+    static {
+        classNameExpandMap.put("String", "java.lang.String");
+        classNameExpandMap.put("Double", "java.lang.Double");
+        classNameExpandMap.put("Float", "java.lang.Float");
+        classNameExpandMap.put("Long", "java.lang.Long");
+        classNameExpandMap.put("Integer", "java.lang.Integer");
+
+        classNameExpandMap.put("Timestamp", "java.sql.Timestamp");
+        classNameExpandMap.put("Time", "java.sql.Time");
+    }
+    
     /** Loads a class with the current thread's context classloader
      * @param className The name of the class to load
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
+        return loadClass(className, Thread.currentThread().getContextClassLoader());
+    }
+    
+    /** Loads a class with the current thread's context classloader
+     * @param className The name of the class to load
+     */
+    public static Class loadClass(String className, ClassLoader loader) throws ClassNotFoundException {
         Class theClass = null;
         try {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
             theClass = loader.loadClass(className);
         } catch (Exception e) {
             theClass = (Class) classCache.get(className);
@@ -145,15 +167,6 @@ public class ObjectType {
 
     /** Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
-     * @param typeName Name of the class to test against
-     */
-    public static boolean instanceOf(Object obj, String typeName) throws ClassNotFoundException {
-        Class typeClass = loadClass(typeName);
-        return instanceOf(obj, typeClass);
-    }
-
-    /** Tests if an object is an instance of a sub-class of or properly implements an interface
-     * @param obj Object to test
      * @param typeObject Object to test against
      */
     public static boolean instanceOf(Object obj, Object typeObject) {
@@ -163,15 +176,64 @@ public class ObjectType {
 
     /** Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
+     * @param typeObject Object to test against
+     */
+    public static boolean instanceOf(Object obj, String typeName) {
+        return instanceOf(obj, typeName, Thread.currentThread().getContextClassLoader());
+    }
+    /** Tests if an object is an instance of a sub-class of or properly implements an interface
+     * @param obj Object to test
+     * @param typeObject Object to test against
+     */
+    public static boolean instanceOf(Object obj, String typeName, ClassLoader loader) {
+        //small block to speed things up by putting in full package names for common objects, this turns out to help quite a bit...
+        String newName = (String) classNameExpandMap.get(typeName);
+        if (newName != null) typeName = newName;
+
+        Class infoClass = null;
+        try {
+            infoClass = ObjectType.loadClass(typeName, loader);
+        } catch (SecurityException se1) {
+            throw new IllegalArgumentException("Problems with classloader: security exception (" +
+                    se1.getMessage() + ")");
+        } catch (ClassNotFoundException e1) {
+            try {
+                infoClass = ObjectType.loadClass(LANG_PACKAGE + typeName, loader);
+            } catch (SecurityException se2) {
+                throw new IllegalArgumentException("Problems with classloader: security exception (" +
+                        se2.getMessage() + ")");
+            } catch (ClassNotFoundException e2) {
+                try {
+                    infoClass = ObjectType.loadClass(SQL_PACKAGE + typeName, loader);
+                } catch (SecurityException se3) {
+                    throw new IllegalArgumentException("Problems with classloader: security exception (" +
+                            se3.getMessage() + ")");
+                } catch (ClassNotFoundException e3) {
+                    throw new IllegalArgumentException("Cannot find and load the class of type: " + typeName +
+                            " or of type: " + LANG_PACKAGE + typeName + " or of type: " + SQL_PACKAGE + typeName +
+                            ":  (" + e3.getMessage() + ")");
+                }
+            }
+        }
+
+        if (infoClass == null)
+            throw new IllegalArgumentException("Illegal type found in info map (could not load class for specified type)");
+
+        return instanceOf(obj, infoClass);
+    }
+
+    /** Tests if an object is an instance of a sub-class of or properly implements an interface
+     * @param obj Object to test
      * @param typeClass Class to test against
      */
     public static boolean instanceOf(Object obj, Class typeClass) {
         if (obj == null) return true;
         Class objectClass = obj.getClass();
-        if (typeClass.isInterface())
+        if (typeClass.isInterface()) {
             return interfaceOf(obj, typeClass);
-        else
+        } else {
             return isOrSubOf(obj, typeClass);
+        }
     }
 
     /** Converts the passed object to the named simple type; supported types

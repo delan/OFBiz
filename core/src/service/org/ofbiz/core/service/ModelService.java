@@ -26,6 +26,7 @@
 
 package org.ofbiz.core.service;
 
+import java.lang.*;
 import java.util.*;
 import org.ofbiz.core.util.*;
 
@@ -242,63 +243,14 @@ public class ModelService {
         }
 
         // * Validate types next
-        // Warning - the class types MUST be accessible to this classloader
-        String LANG_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
-        String SQL_PACKAGE = "java.sql.";   // We will test both the raw value and this + raw value
-
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Iterator i = testSet.iterator();
         while (i.hasNext()) {
             Object key = i.next();
             Object testObject = test.get(key);
             String infoType = (String) info.get(key);
             
-            //small block to speed things up by putting in full package names for common objects, this turns out to help quite a bit...
-            if ("String".equals(infoType)) {
-                infoType = "java.lang.String";
-            } else if ("Double".equals(infoType)) {
-                infoType = "java.lang.Double";
-            } else if ("Float".equals(infoType)) {
-                infoType = "java.lang.Float";
-            } else if ("Long".equals(infoType)) {
-                infoType = "java.lang.Long";
-            } else if ("Integer".equals(infoType)) {
-                infoType = "java.lang.Integer";
-            } else if ("Timestamp".equals(infoType)) {
-                infoType = "java.sql.Timestamp";
-            } else if ("Time".equals(infoType)) {
-                infoType = "java.sql.Time";
-            }
-            
-            Class infoClass = null;
-            try {
-                infoClass = ObjectType.loadClass(infoType);
-            } catch (SecurityException se1) {
-                throw new ServiceValidationException("Problems with classloader: security exception (" +
-                        se1.getMessage() + ")");
-            } catch (ClassNotFoundException e1) {
-                try {
-                    infoClass = ObjectType.loadClass(LANG_PACKAGE + infoType);
-                } catch (SecurityException se2) {
-                    throw new ServiceValidationException("Problems with classloader: security exception (" +
-                            se2.getMessage() + ")");
-                } catch (ClassNotFoundException e2) {
-                    try {
-                        infoClass = ObjectType.loadClass(SQL_PACKAGE + infoType);
-                    } catch (SecurityException se3) {
-                        throw new ServiceValidationException("Problems with classloader: security exception (" +
-                                se3.getMessage() + ")");
-                    } catch (ClassNotFoundException e3) {
-                        throw new ServiceValidationException("Cannot find and load the class of type: " + infoType +
-                                " or of type: " + LANG_PACKAGE + infoType + " or of type: " + SQL_PACKAGE + infoType +
-                                ":  (" + e3.getMessage() + ")");
-                    }
-                }
-            }
-
-            if (infoClass == null)
-                throw new ServiceValidationException("Illegal type found in info map (could not load class for specified type)");
-
-            if (!ObjectType.instanceOf(testObject, infoClass)) {
+            if (!ObjectType.instanceOf(testObject, infoType, loader)) {
                 String testType = testObject == null ? "null" : testObject.getClass().getName();
                 throw new ServiceValidationException("Type check failed for field " + key + "; expected type is " +
                         infoType + "; actual type is: " + testType);
