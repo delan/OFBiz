@@ -25,7 +25,7 @@
 
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.workflow.definition.*, org.ofbiz.workflow.*" %>
+<%@ page import="org.ofbiz.entity.condition.*, org.ofbiz.entity.util.*, org.ofbiz.workflow.definition.*, org.ofbiz.workflow.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
