@@ -218,7 +218,7 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            ${termType.description} <#if term.termValue?has_content> - ${term.termValue}</#if>
+                            ${termType.description} <#if term.termValue?has_content> ${term.termValue}</#if> <#if term.termDays?has_content> ${term.termDays} ${uiLabelMap.CommonDays}</#if>
                           </div>
                         </td>
                       </tr>

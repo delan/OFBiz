@@ -764,7 +764,8 @@
       <field name="termTypeId" type="id"></field>
       <field name="invoiceId" type="id"></field>
       <field name="invoiceItemSeqId" type="id"></field>
-      <field name="termValue" type="numeric"></field>
+      <field name="termValue" type="currency-amount"></field>
+      <field name="termDays" type="numeric"></field>
       <field name="uomId" type="id"></field>
       <prim-key field="invoiceTermId"/>
       <relation type="one" fk-name="INVCE_TRM_TRM" rel-entity-name="TermType">
@@ -1370,7 +1371,8 @@
       <field name="billingAccountTermId" type="id-ne"></field>
       <field name="billingAccountId" type="id-ne"></field>
       <field name="termTypeId" type="id"></field>
-      <field name="termValue" type="numeric"></field>
+      <field name="termValue" type="currency-amount"></field>
+      <field name="termDays" type="numeric"></field>
       <field name="uomId" type="id"></field>
       <prim-key field="billingAccountTermId"/>
       <relation type="one" fk-name="BILLACCT_TRM_UOM" rel-entity-name="Uom">

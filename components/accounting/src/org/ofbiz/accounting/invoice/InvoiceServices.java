@@ -942,6 +942,7 @@ public class InvoiceServices {
                 invoiceTerm.set("invoiceTermId", invoiceTermId);			
                 invoiceTerm.set("termTypeId", term.get("termTypeId"));	
                 invoiceTerm.set("termValue", term.get("termValue"));
+                invoiceTerm.set("termDays", term.get("termDays"));
                 invoiceTerm.set("uomId", term.get("uomId"));
                 invoiceTerms.add(invoiceTerm);
             }
