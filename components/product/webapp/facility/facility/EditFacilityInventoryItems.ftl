@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
@@ -74,6 +74,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td>&nbsp;</td>
             <#-- <td>&nbsp;</td> -->
         </tr>
+        <#if facilityInventoryItems?has_content>
         <#list facilityInventoryItems[lowIndex..highIndex-1] as inventoryItem>
         <#assign curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType")>
         <#assign facilityLocation = inventoryItem.getRelatedOne("FacilityLocation")?if_exists>
@@ -86,8 +87,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td><div class="tabletext">&nbsp;${(inventoryItem.statusId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.datetimeReceived)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.expireDate)?if_exists}</div></td>
-            <td><a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)?if_exists}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">
-                ${(inventoryItem.productId)?if_exists}</a></td>
+            <td><a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)?if_exists}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">${(inventoryItem.productId)?if_exists}</a></td>
             <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(inventoryItem.locationSeqId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?has_content>(${facilityLocationTypeEnum.description})</#if>[${(inventoryItem.locationSeqId)?if_exists}]</a></div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.lotId)?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>
@@ -116,6 +116,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             </td> -->
         </tr>
         </#list>
+        </#if>
         </table>
         <#if (facilityInventoryItems.size() > 0)>
         <table border="0" width="100%" cellpadding="2">
