@@ -184,10 +184,12 @@
       <td width="26%" align=right valign=top><div class="tabletext">Phone Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
+        <div class="tabletext">
         <input type="text" class='inputBox' size="4" maxlength="10" name="countryCode" value="${telecomNumberData.countryCode?if_exists}">
         -&nbsp;<input type="text" class='inputBox' size="4" maxlength="10" name="areaCode" value="${telecomNumberData.areaCode?if_exists}">
         -&nbsp;<input type="text" class='inputBox' size="15" maxlength="15" name="contactNumber" value="${telecomNumberData.contactNumber?if_exists}">
         &nbsp;ext&nbsp;<input type="text" class='inputBox' size="6" maxlength="10" name="extension" value="${partyContactMechData.extension?if_exists}">
+        </div>
       </td>
     </tr>
     <tr>

@@ -173,7 +173,7 @@
     	<if-empty map-name="parameters" field-name="partyId">
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
-        <if-compare-field field-name="partyId" to-map-name="userLogin" operator="not-equals">
+        <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
         </if-compare-field>
         <check-errors/>
@@ -220,7 +220,7 @@
     	<if-empty map-name="parameters" field-name="partyId">
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
-        <if-compare-field field-name="partyId" to-map-name="userLogin" operator="not-equals">
+        <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
         </if-compare-field>
         <check-errors/>
@@ -257,6 +257,13 @@
     </simple-method>
     
     <simple-method method-name="updatePartyEmailAddress" short-description="Update an email address for party">
+    	<if-empty map-name="parameters" field-name="partyId">
+            <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
+        </if-empty>
+        <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
+            <check-permission permission="PARTYMGR" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
+        </if-compare-field>
+        <check-errors/>    	
         <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/PartyContactMechMapProcs.xml"
             processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
