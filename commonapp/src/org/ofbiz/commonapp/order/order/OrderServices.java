@@ -67,7 +67,7 @@ public class OrderServices {
         if (cartDiscount.doubleValue() != 0.0) {
             order.preStoreOther(delegator.makeValue("OrderAdjustment",
             UtilMisc.toMap( "orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(),
-            "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", "NA",
+            "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
             "percentage", cartDiscount)));
         }
         
