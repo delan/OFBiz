@@ -72,9 +72,9 @@
       <field name="mimeTypeId" type="id-long"></field>
       <field name="characterSetId" type="id-long"></field>
       <field name="createdDate" type="date-time"></field>
-      <field name="createdByUserLogin" type="id"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
-      <field name="lastModifiedByUserLogin" type="id"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="contentId"/>
       <relation type="one" fk-name="CONTENT_TO_TYPE" rel-entity-name="ContentType">
         <key-map field-name="contentTypeId"/>
@@ -143,9 +143,9 @@
       <field name="upperCoordinate" type="numeric"></field>
       <field name="leftCoordinate" type="numeric"></field>
       <field name="createdDate" type="date-time"></field>
-      <field name="createdByUserLogin" type="id"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
-      <field name="lastModifiedByUserLogin" type="id"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="contentId"/>
       <prim-key field="contentIdTo"/>
       <prim-key field="contentAssocTypeId"/>
@@ -338,9 +338,9 @@
       <field name="characterSetId" type="id-long"></field>
       <field name="objectInfo" type="long-varchar"></field>
       <field name="createdDate" type="date-time"></field>
-      <field name="createdByUserLogin" type="id"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
-      <field name="lastModifiedByUserLogin" type="id"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="dataResourceId"/>
       <relation type="one-nofk" rel-entity-name="ElectronicText">
         <key-map field-name="dataResourceId"/>
