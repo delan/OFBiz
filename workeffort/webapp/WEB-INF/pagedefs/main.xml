@@ -2,6 +2,7 @@
 <page>
     <template>main</template>    
     <property name="title">Main Page</property>
+    <property name="headerItem">main</property>
     <page-action name="main.bsh"/>
 </page>
 

@@ -2,5 +2,6 @@
 <page>
     <template>main</template>
     <property name="title">Phase Tasks</property>
+    <property name="headerItem">project</property>
     <page-action name="/project/phasetasklist.bsh"/>
 </page>

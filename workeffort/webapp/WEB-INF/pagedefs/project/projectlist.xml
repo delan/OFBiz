@@ -2,5 +2,6 @@
 <page>
     <template>main</template>
     <property name="title">Project List</property>
+    <property name="headerItem">project</property>
     <page-action name="/project/projectlist.bsh"/>
 </page>
