@@ -47,11 +47,15 @@ public class FlexibleStringExpander {
     }
     
     public boolean isEmpty() {
-        if (original == null || original.length() == 0) {
+        if (this.original == null || this.original.length() == 0) {
             return true;
         } else {
             return false;
         }
+    }
+    
+    public String getOriginal() {
+        return this.original;
     }
 
     /** 
