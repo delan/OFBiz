@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.6  2001/08/25 17:29:11  azeneski
  * Started migrating Debug.log to Debug.logInfo and Debug.logError
  *
@@ -177,8 +180,8 @@ public class RequestManager implements Serializable {
             viewStr = viewStr.substring(viewStr.indexOf(':'));
         if ( viewMap != null && viewMap.containsKey(viewStr) ) {
             HashMap page = (HashMap) viewMap.get(viewStr);
-            if ( page != null && page.containsKey(ConfigXMLReader.MAPPED_PAGE) )
-                return (String) page.get(ConfigXMLReader.MAPPED_PAGE);
+            if ( page != null && page.containsKey(ConfigXMLReader.VIEW_PAGE) )
+                return (String) page.get(ConfigXMLReader.VIEW_PAGE);
         }
         return null;
     }
@@ -209,8 +212,8 @@ public class RequestManager implements Serializable {
     public boolean requiresAuth(String uriStr) {
         if ( requestMap != null && requestMap.containsKey(uriStr) ) {
             HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(ConfigXMLReader.REQ_AUTH) ) {
-                String value = (String) uri.get(ConfigXMLReader.REQ_AUTH);
+            if ( uri != null && uri.containsKey(ConfigXMLReader.SECURITY_AUTH) ) {
+                String value = (String) uri.get(ConfigXMLReader.SECURITY_AUTH);
                 if ( value.equalsIgnoreCase("true") )
                     return true;
             }
@@ -221,12 +224,30 @@ public class RequestManager implements Serializable {
     public boolean requiresHttps(String uriStr) {
         if ( requestMap != null && requestMap.containsKey(uriStr) ) {
             HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(ConfigXMLReader.REQ_HTTPS) ) {
-                String value = (String) uri.get(ConfigXMLReader.REQ_HTTPS);
+            if ( uri != null && uri.containsKey(ConfigXMLReader.SECURITY_HTTPS) ) {
+                String value = (String) uri.get(ConfigXMLReader.SECURITY_HTTPS);
                 if ( value.equalsIgnoreCase("true") )
                     return true;
             }
         }
         return false;
     }
+    
+    public Collection getPreProcessor() {
+        if ( configMap != null && configMap.containsKey(ConfigXMLReader.PREPROCESSOR) ) {
+            Collection c = (Collection) configMap.get(ConfigXMLReader.PREPROCESSOR);
+            return c;
+        }
+        return null;
+    }
+    
+    public Collection getPostProcessor() {
+        if ( configMap != null && configMap.containsKey(ConfigXMLReader.POSTPROCESSOR) ) {
+            Collection c = (Collection) configMap.get(ConfigXMLReader.POSTPROCESSOR);
+            return c;
+        }
+        return null;
+    }
+
+        
 }

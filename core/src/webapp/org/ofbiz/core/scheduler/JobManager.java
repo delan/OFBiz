@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.6  2001/09/19 08:32:01  jonesde
  * Initial checkin of refactored entity engine.
  *
@@ -115,26 +118,33 @@ public class JobManager {
         if ( config != null ) {
             Set hashSet = config.keySet();
             Iterator i = hashSet.iterator();
+            //Debug.logInfo("----------------------------------");
+            //Debug.logInfo("Scheduler Mappings:");
+            //Debug.logInfo("----------------------------------");            
             while ( i.hasNext() ) {
                 Object o = i.next();
                 // Job Name
                 String name = (String) o;
                 HashMap jobMap = (HashMap) config.get(o);
                 // Start/End Dates (must be parsed).
-                String startStr = (String) jobMap.get(ConfigXMLReader.SCHEDULER_STARTDATE);
-                String endStr = (String) jobMap.get(ConfigXMLReader.SCHEDULER_ENDDATE);
+                String startStr = (String) jobMap.get(ConfigXMLReader.SCHEDULER_DURATION_START);
+                String endStr = (String) jobMap.get(ConfigXMLReader.SCHEDULER_DURATION_END);
                 // Interval type and value (must be parsed).
-                String intervalStr = (String) jobMap.get(ConfigXMLReader.SCHEDULER_INTERVAL);
-                String intervalTypeStr = (String) jobMap.get(ConfigXMLReader.SCHEDULER_INTERVAL_TYPE);
+                String intervalStr = (String) jobMap.get(ConfigXMLReader.SCHEDULER_INTERVAL_VALUE);
+                String intervalTypeStr = (String) jobMap.get("i"+ConfigXMLReader.SCHEDULER_INTERVAL_TYPE);
                 // Event method/path/type strings.
-                String eventType = (String) jobMap.get(ConfigXMLReader.SCHEDULER_EVENT_TYPE);
-                String eventPath = (String) jobMap.get(ConfigXMLReader.SCHEDULER_EVENT_PATH);
-                String eventMethod = (String) jobMap.get(ConfigXMLReader.SCHEDULER_EVENT_METHOD);
+                String eventType = (String) jobMap.get(ConfigXMLReader.EVENT_TYPE);
+                String eventPath = (String) jobMap.get(ConfigXMLReader.EVENT_PATH);
+                String eventMethod = (String) jobMap.get(ConfigXMLReader.EVENT_METHOD);
                 // True/False does job repeat.
-                String jobRepeats = (String) jobMap.get(ConfigXMLReader.SCHEDULER_REPEAT);
+                String jobRepeats = (String) jobMap.get(ConfigXMLReader.SCHEDULER_INTERVAL_REPEAT);
                 // Parameters and headers to pass on to the invoker.
                 HashMap params = (HashMap) jobMap.get(ConfigXMLReader.SCHEDULER_PARAMETERS);
                 HashMap headers = (HashMap) jobMap.get(ConfigXMLReader.SCHEDULER_HEADERS);
+                
+                //String repStrVal = jobRepeats.equalsIgnoreCase("true") ? " R" : " ";
+                //Debug.logInfo(name + " => Begin: " + startStr + " End: " + endStr);
+                //Debug.logInfo(name + " => Interval: " + intervalStr + " " + intervalTypeStr + repStrVal);                
                 
                 // Fix the interval integers.
                 int intervalType = getIntervalTypeFromString(intervalTypeStr);
@@ -173,6 +183,9 @@ public class JobManager {
                 Job thisJob = addJob(name,startDate,endDate,interval,intervalType,repeat,eventType,eventPath,eventMethod,params,headers);
                 thisJob.setFromConfig(true);
             }
+            Debug.logInfo("----------------------------------");
+            Debug.logInfo("End Scheduler Mappings:");
+            Debug.logInfo("----------------------------------");                        
         }
     }
     

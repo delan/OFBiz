@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.12  2001/09/26 03:34:43  azeneski
  * Fixed bug where request chaining fails if no event is invoked.
  *
@@ -50,6 +53,9 @@
 package org.ofbiz.core.control;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -119,6 +125,28 @@ public class RequestHandler implements Serializable {
             requestUri = getRequestUri(chain);
             nextView = getNextPageUri(chain);
             Debug.logInfo("Chain in place: requestUri=" + requestUri + " nextView=" + nextView);
+        } 
+        else {
+            // Invoke the pre-processor (but NOT in a chain)
+            Collection preProcEvents = rm.getPreProcessor();
+            if ( preProcEvents != null ) {
+                Iterator i = preProcEvents.iterator();
+                while ( i.hasNext() ) {
+                    HashMap eventMap = (HashMap) i.next();
+                    String eType = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_TYPE);
+                    String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
+                    String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
+                    try {
+                        EventHandler preEvent = new EventHandler(eType,ePath,eMeth);
+                        String returnString = preEvent.invoke(request,response);
+                        if ( !returnString.equalsIgnoreCase("success") )
+                            throw new EventHandlerException("Event did not return 'success'.");
+                    }
+                    catch ( EventHandlerException e ) {
+                        Debug.logError(e);
+                    }
+                }
+            }
         }
         
         Debug.logInfo("***Request: " + requestUri);
