@@ -6,6 +6,73 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
+    <!-- Party services -->
+    <service name="deleteParty" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="deleteParty" auth="true">
+        <description>Delete a Party</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="createPerson" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPerson" auth="false">
+        <description>Create a Person</description>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="firstName" type="String" mode="IN" optional="false"/>
+        <attribute name="middleName" type="String" mode="IN" optional="true"/>
+        <attribute name="lastName" type="String" mode="IN" optional="false"/>
+        <attribute name="personalTitle" type="String" mode="IN" optional="true"/>
+        <attribute name="suffix" type="String" mode="IN" optional="true"/>
+        <attribute name="nickname" type="String" mode="IN" optional="true"/>
+        <attribute name="gender" type="String" mode="IN" optional="true"/>
+        <attribute name="birthDate" type="java.sql.Date" mode="IN" optional="true"/>
+        <attribute name="height" type="Double" mode="IN" optional="true"/>
+        <attribute name="weight" type="Double" mode="IN" optional="true"/>
+        <attribute name="mothersMaidenName" type="String" mode="IN" optional="true"/>
+        <attribute name="maritalStatus" type="String" mode="IN" optional="true"/>
+        <attribute name="socialSecurityNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="passportNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="passportExpireDate" type="java.sql.Date" mode="IN" optional="true"/>
+        <attribute name="totalYearsWorkExperience" type="Double" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePerson" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="updatePerson" auth="true">
+        <description>Update a Person</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="firstName" type="String" mode="IN" optional="false"/>
+        <attribute name="middleName" type="String" mode="IN" optional="true"/>
+        <attribute name="lastName" type="String" mode="IN" optional="false"/>
+        <attribute name="personalTitle" type="String" mode="IN" optional="true"/>
+        <attribute name="suffix" type="String" mode="IN" optional="true"/>
+        <attribute name="nickname" type="String" mode="IN" optional="true"/>
+        <attribute name="gender" type="String" mode="IN" optional="true"/>
+        <attribute name="birthDate" type="java.sql.Date" mode="IN" optional="true"/>
+        <attribute name="height" type="Double" mode="IN" optional="true"/>
+        <attribute name="weight" type="Double" mode="IN" optional="true"/>
+        <attribute name="mothersMaidenName" type="String" mode="IN" optional="true"/>
+        <attribute name="maritalStatus" type="String" mode="IN" optional="true"/>
+        <attribute name="socialSecurityNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="passportNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="passportExpireDate" type="java.sql.Date" mode="IN" optional="true"/>
+        <attribute name="totalYearsWorkExperience" type="Double" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="createPartyGroup" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPartyGroup" auth="false">
+        <description>Create a PartyGroup</description>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="groupName" type="String" mode="IN" optional="false"/>
+        <attribute name="federalTaxId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePartyGroup" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="updatePartyGroup" auth="true">
+        <description>Update a PartyGroup</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="groupName" type="String" mode="IN" optional="false"/>
+        <attribute name="federalTaxId" type="String" mode="IN" optional="true"/>
+    </service>
+    
     <!-- ContactMech services -->
     <service name="createContactMech" engine="java"
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createContactMech" auth="true">
