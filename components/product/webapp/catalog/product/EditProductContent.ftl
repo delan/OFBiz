@@ -31,8 +31,8 @@
 function insertNowTimestamp(field) {
   eval('document.productForm.' + field + '.value="${nowTimestampString}";');
 };
-function insertImageName(size,nameValue) {
-  eval('document.productForm.' + size + 'ImageUrl.value=nameValue;');
+function insertImageName(type,nameValue) {
+  eval('document.productForm.' + type + 'ImageUrl.value=nameValue;');
 };
 </SCRIPT>
 

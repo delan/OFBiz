@@ -177,7 +177,7 @@
     </request-map>
     <request-map uri="UploadCategoryImage">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="UploadCategoryImage"/>
+        <response name="success" type="view" value="EditCategory"/>
     </request-map>
 
     <request-map uri="createProductCategory">
