@@ -25,11 +25,11 @@
         <tr>
           <td>
             <#assign miniProdQuantity = 1>
-            <#assign miniProdFormName = "theminiassocprod" + associatedProduct_index + "form">
-            <#include "/catalog/miniproductsummary.jsp">
+            <#assign miniProdFormName = "theminiassocprod" + miniProduct_index + "form">
+            <#include "/catalog/miniproductsummary.ftl">
           </td>
         </tr>
-        <#if associatedProduct_has_next>
+        <#if miniProduct_has_next>
           <tr><td><hr class='sepbar'></td></tr>
         </#if>
       </#list>
