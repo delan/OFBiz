@@ -488,6 +488,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.RemoveValue(curOperElem, simpleMethod));
                 } else if ("remove-by-and".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.RemoveByAnd(curOperElem, simpleMethod));
+                } else if ("clear-cache-line".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.ClearCacheLine(curOperElem, simpleMethod));
 
                 } else if ("store-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.StoreList(curOperElem, simpleMethod));
