@@ -218,7 +218,7 @@
     </service>
 
     <service name="resetGrandTotal" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="resetGrandTotal" require-new-transaction="true">
+            location="org.ofbiz.order.order.OrderServices" invoke="resetGrandTotal" require-new-transaction="false">
         <description>Reset the grandTotal of an existing order</description>
         <attribute name="orderId" type="String" mode="IN"/>
     </service>
