@@ -46,7 +46,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.authorization">
-        <xs:attribute name="service-name" use="required"/>
+        <xs:attribute type="xs:string" name="service-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="thread-pool">
         <xs:complexType>
@@ -57,14 +57,14 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.thread-pool">
-        <xs:attribute name="send-to-pool" use="required"/>
-        <xs:attribute name="purge-job-days" default="30"/>
-        <xs:attribute name="failed-retry-min" default="30"/>
-        <xs:attribute name="ttl" use="required"/>
-        <xs:attribute name="wait-millis" use="required"/>
-        <xs:attribute name="jobs" use="required"/>
-        <xs:attribute name="min-threads" use="required"/>
-        <xs:attribute name="max-threads" use="required"/>
+        <xs:attribute type="xs:string" name="send-to-pool" use="required"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="purge-job-days" default="30"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="failed-retry-min" default="30"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="ttl" use="required"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="wait-millis" use="required"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="jobs" use="required"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="min-threads" use="required"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="max-threads" use="required"/>
         <xs:attribute name="poll-enabled" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -73,7 +73,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="poll-db-millis" use="required"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="poll-db-millis" use="required"/>
     </xs:attributeGroup>
     <xs:element name="run-from-pool">
         <xs:complexType>
@@ -81,7 +81,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.run-from-pool">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="engine">
         <xs:complexType>
@@ -89,8 +89,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.engine">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="class" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="class" use="required"/>
     </xs:attributeGroup>
     <xs:element name="startup-service">
         <xs:complexType>
@@ -98,10 +98,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.startup-service">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="runtime-data-id"/>
-        <xs:attribute name="runtime-delay" default="0"/>
-        <xs:attribute name="run-in-pool"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="runtime-data-id"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="runtime-delay" default="0"/>
+        <xs:attribute type="xs:string" name="run-in-pool"/>
     </xs:attributeGroup>
     <xs:element name="service-location">
         <xs:complexType>
@@ -109,8 +109,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.service-location">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="location" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="resource-loader">
         <xs:complexType>
@@ -118,10 +118,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.resource-loader">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="class" use="required"/>
-        <xs:attribute name="prepend-env"/>
-        <xs:attribute name="prefix"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="class" use="required"/>
+        <xs:attribute type="xs:string" name="prepend-env"/>
+        <xs:attribute type="xs:string" name="prefix"/>
     </xs:attributeGroup>
     <xs:element name="global-services">
         <xs:complexType>
@@ -129,8 +129,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.global-services">
-        <xs:attribute name="loader" use="required"/>
-        <xs:attribute name="location" use="required"/>
+        <xs:attribute type="xs:string" name="loader" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="service-groups">
         <xs:complexType>
@@ -138,8 +138,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.service-groups">
-        <xs:attribute name="loader" use="required"/>
-        <xs:attribute name="location" use="required"/>
+        <xs:attribute type="xs:string" name="loader" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="service-ecas">
         <xs:complexType>
@@ -147,8 +147,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.service-ecas">
-        <xs:attribute name="loader" use="required"/>
-        <xs:attribute name="location" use="required"/>
+        <xs:attribute type="xs:string" name="loader" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="jms-service">
         <xs:complexType>
@@ -159,7 +159,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.jms-service">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute name="send-mode" default="none">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -179,9 +179,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.server">
-        <xs:attribute name="jndi-server-name" use="required"/>
-        <xs:attribute name="jndi-name" use="required"/>
-        <xs:attribute name="topic-queue" use="required"/>
+        <xs:attribute type="xs:string" name="jndi-server-name" use="required"/>
+        <xs:attribute type="xs:string" name="jndi-name" use="required"/>
+        <xs:attribute type="xs:string" name="topic-queue" use="required"/>
         <xs:attribute name="type" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -190,9 +190,9 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="username"/>
-        <xs:attribute name="password"/>
-        <xs:attribute name="client-id"/>
+        <xs:attribute type="xs:string" name="username"/>
+        <xs:attribute type="xs:string" name="password"/>
+        <xs:attribute type="xs:string" name="client-id"/>
         <xs:attribute name="listen" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -201,6 +201,6 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="listener-class"/>
+        <xs:attribute type="xs:string" name="listener-class"/>
     </xs:attributeGroup>
 </xs:schema>
