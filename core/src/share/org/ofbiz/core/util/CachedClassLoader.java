@@ -185,16 +185,16 @@ public class CachedClassLoader extends URLClassLoader {
         }
         
         if (theResource == null) {
-            //if (Debug.verboseOn()) Debug.logVerbose("Cached loader cache miss for resource name: [" + name + "]", module);
-            Debug.logInfo("Cached loader cache miss for resource name: [" + name + "]", module);
+            if (Debug.verboseOn()) Debug.logVerbose("Cached loader cache miss for resource name: [" + name + "]", module);
+            //Debug.logInfo("Cached loader cache miss for resource name: [" + name + "]", module);
             
             synchronized (this) {
                 theResource = (URL) localResourceMap.get(name);
                 if (theResource == null) {
                     theResource = super.getResource(name);
                     if (theResource == null) {
-                        //if (Debug.verboseOn()) Debug.logVerbose("Remembering invalid resource name: [" + name + "]", module);
-                        Debug.logInfo("Remembering invalid resource name: [" + name + "]", module);
+                        if (Debug.verboseOn()) Debug.logVerbose("Remembering invalid resource name: [" + name + "]", module);
+                        //Debug.logInfo("Remembering invalid resource name: [" + name + "]", module);
                         if (isGlobalPath(name)) {
                             globalBadResourceNameSet.add(name);
                         } else {

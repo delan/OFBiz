@@ -585,10 +585,10 @@ public class SimpleMethod {
             if (response == null || response.length() == 0) {
                 if (forceError) {
                     //override response code, always use error code
-                    Debug.logInfo("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]", module);
+                    Debug.logVerbose("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]", module);
                     response = defaultErrorCode;
                 } else {
-                    Debug.logInfo("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]", module);
+                    Debug.logVerbose("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]", module);
                     response = defaultSuccessCode;
                 }
             }
