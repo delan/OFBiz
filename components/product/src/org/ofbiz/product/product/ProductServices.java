@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.8 2004/04/18 00:45:22 jonesde Exp $
+ * $Id: ProductServices.java,v 1.9 2004/04/24 18:35:20 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ProductServices {
@@ -206,6 +206,7 @@ public class ProductServices {
         }
 
         Collection variants = (Collection) prodFindAllVariants(dctx, context).get("assocProducts");
+        List virtualVariant = new ArrayList();
 
         if (variants == null || variants.size() == 0) {
             errMsg = UtilProperties.getMessage(resource,"productservices.empty_list_of_products_returned", locale);
@@ -266,6 +267,9 @@ public class ProductServices {
             if (!org.ofbiz.product.store.ProductStoreWorker.isStoreInventoryRequired(productStoreId, productIdTo, delegator) ||
                 org.ofbiz.product.store.ProductStoreWorker.isStoreInventoryAvailable(productStoreId, productIdTo, 1.0, delegator, dispatcher)) {
                 items.add(productIdTo);
+                if (productTo.getString("isVirtual") != null && productTo.getString("isVirtual").equals("Y")) {
+                    virtualVariant.add(productIdTo);
+                }
             }
         }
 
@@ -324,6 +328,7 @@ public class ProductServices {
             result.put(ModelService.ERROR_MESSAGE, errMsg);
         } else {
             result.put("variantTree", tree);
+            result.put("virtualVariant", virtualVariant);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
 

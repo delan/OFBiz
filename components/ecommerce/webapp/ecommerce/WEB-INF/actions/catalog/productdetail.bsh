@@ -21,8 +21,21 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.27 $
+ *@version    $Revision: 1.28 $
  *@since      2.1
+ */
+
+/*
+ *  WARNING:
+ *  the same copy of this file is used in the ecommerce 
+ *  application (catalog/productdetail.bsh) and in the ordermgr 
+ *  application (entry/catalog/productdetail.bsh).
+ *
+ *  For this reason this file should only contain code that is
+ *  relevant for both the applications.
+ *
+ *  It's also very important to keep the two files synchronized in CVS.
+ *
  */
 
 import org.ofbiz.base.util.*;
@@ -176,6 +189,11 @@ if (product != null) {
         context.put("daysToShip", productFacility.get("daysToShip"));
     }
 
+    // get the product distinguishing features
+    disFeatureMap = dispatcher.runSync("getProductFeatures", UtilMisc.toMap("productId", productId, "type", "DISTINGUISHING_FEAT"));
+    disFeatureList = disFeatureMap.get("productFeatures");
+    request.setAttribute("disFeatureList", disFeatureList);
+
     // Special Variant Code
     if ("Y".equals(product.getString("isVirtual"))) {
         featureMap = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId));
@@ -184,6 +202,8 @@ if (product != null) {
             variantTreeMap = dispatcher.runSync("getProductVariantTree", UtilMisc.toMap("productId", productId, "featureOrder", featureSet, "productStoreId", productStoreId));
             variantTree = variantTreeMap.get("variantTree");
             imageMap = variantTreeMap.get("variantSample");
+            virtualVariant = variantTreeMap.get("virtualVariant");
+            request.setAttribute("virtualVariant", virtualVariant);
             if (variantTree != null) {
                 request.setAttribute("variantTree", variantTree);
                 request.setAttribute("variantTreeSize", new Integer(variantTree.size()));
@@ -217,10 +237,14 @@ if (product != null) {
 	            jsBuf.append("var DET = new Array(" + variantTree.size() + ");");
 	            jsBuf.append("var IMG = new Array(" + variantTree.size() + ");");
 	            jsBuf.append("var OPT = new Array(" + featureOrder.size() + ");");
+                    jsBuf.append("var VIR = new Array(" + virtualVariant.size() + ");");
 	            jsBuf.append("var detailImageUrl = null;");
 	            for (li = 0; li < featureOrder.size(); li++) {
 	                jsBuf.append("OPT[" + li + "] = \"FT" + featureOrder.get(li) + "\";");
 	            }
+                    for (li = 0; li < virtualVariant.size(); li++) {
+                        jsBuf.append("VIR[" + li + "] = \"" + virtualVariant.get(li) + "\";");                  
+                    }
 
 	            // build the top level
 	            topLevelName = featureOrder.get(0);
