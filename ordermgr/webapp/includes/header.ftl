@@ -37,8 +37,7 @@
   <div class="col"><a href="<@ofbizUrl>/tasklist</@ofbizUrl>" class="${selectedLeftClassMap.orderlist?default(unselectedLeftClassName)}">Order&nbsp;List</a></div>
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-  <div class="col"><a href="<@ofbizUrl>/findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">Find&nbsp;Orders</a></div>
-  <div class="col"><a href="<@ofbizUrl>/potasklist</@ofbizUrl>" class="${selectedLeftClassMap.potasklist?default(unselectedLeftClassName)}">Purchase&nbsp;Orders</a></div>
+  <div class="col"><a href="<@ofbizUrl>/findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">Find&nbsp;Orders</a></div>  
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
   <div class="col"><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="${selectedLeftClassMap.orderentry?default(unselectedLeftClassName)}">Order&nbsp;Entry</a></div>  
