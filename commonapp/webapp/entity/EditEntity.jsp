@@ -171,10 +171,52 @@
     ModelKeyMap keyMap = new ModelKeyMap();
     relation.keyMaps.add(keyMap);
   }
+  else if("addReverse".equals(event))
+  {
+    int relNum = Integer.parseInt(request.getParameter("relNum"));
+
+    ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
+    ModelEntity relatedEnt = reader.getModelEntity(relation.relEntityName);
+    if(relatedEnt != null)
+    {
+      if(relatedEnt.getRelation(relation.title + entity.entityName) == null)
+      {
+        ModelRelation newRel = new ModelRelation();
+        relatedEnt.relations.add(newRel);
+
+        newRel.relEntityName = entity.entityName;
+        newRel.relTableName = entity.tableName;
+        newRel.title = relation.title;
+        if(relation.type.equalsIgnoreCase("one")) newRel.type = "many";
+        else newRel.type = "one";
+
+        for(int kmn=0; kmn<relation.keyMaps.size(); kmn++)
+        {
+          ModelKeyMap curkm = (ModelKeyMap)relation.keyMaps.get(kmn);
+          ModelKeyMap newkm = new ModelKeyMap();
+          newRel.keyMaps.add(newkm);
+          newkm.colName = curkm.relColName;
+          newkm.fieldName = curkm.relFieldName;
+          newkm.relColName = curkm.colName;
+          newkm.relFieldName = curkm.fieldName;
+        }
+
+        newRel.mainEntity = relatedEnt;
+      }
+      else errorMsg = errorMsg + "<li> Related entity already has a relation with name " + relation.title + entity.entityName + ", no reverse relation added.";
+    }
+    else errorMsg = errorMsg + "<li> Could not find related entity " + relation.relEntityName + ", no reverse relation added.";
+  }
 %>
 
 <html>
-<head><title>Entity Editor</title></head>
+<head>
+  <title>Entity Editor</title>
+  <style>
+    A.listtext {font-family: Helvetica,sans-serif; font-size: 10pt; font-weight: bold; text-decoration: none; color: blue;}
+    A.listtext:hover {color:red;}
+  </style>
+</head>
 <body>
 
 <H3>Entity Editor</H3>
@@ -274,7 +316,7 @@ Column Name: <%=entity.tableName%><br>
     <%ModelEntity relEntity = reader.getModelEntity(relation.relEntityName);%>
     <tr bgcolor='#CCCCFF'>
       <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateRelation&relNum=" + r)%>'>
-        <td align="left"><%=relation.title%><b><%=relation.relEntityName%></b></td>
+        <td align="left"><%=relation.title%><A class='listtext' href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + relation.relEntityName)%>'><%=relation.relEntityName%></A></td>
         <td align="left"><b><%=relation.relTableName%></b></td>
         <td>
           <INPUT type=TEXT name='title' value='<%=relation.title%>'>
@@ -290,6 +332,7 @@ Column Name: <%=entity.tableName%><br>
         </td>
         <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&event=removeRelation")%>'>Remove</A></TD>
         <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&event=addKeyMap")%>'>Add&nbsp;KeyMap</A></TD>
+        <TD><A href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&relNum=" + r + "&event=addReverse")%>'>Add&nbsp;Reverse</A></TD>
       </FORM>
     </tr>
     <%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
