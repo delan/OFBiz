@@ -173,25 +173,11 @@ public class ControlServlet extends HttpServlet {
                     }                    
                 }
             }            
-            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(),delegator,readers);            
+            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(),delegator,readers);      
+            dispatcher.getDispatchContext().setRootPath(getServletContext().getRealPath("/"));
             getServletContext().setAttribute("dispatcher",dispatcher);
             if ( dispatcher == null )
-                Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.");
-            
-            /*
-            else { // DEMO - TESTING THE SERVICES FRAMEWORK
-                Map context1 = UtilMisc.toMap("message","this is a test sync service message");
-                Map context2 = UtilMisc.toMap("message","this is a test async service message"); 
-                try {
-                    dispatcher.runSyncIgnore("testSvc",context1);
-                    dispatcher.runAsync("testSvc",context2);
-                }
-                catch( GenericServiceException e ) {
-                    Debug.logError(e,"Service Threw Exception:::"+e.getMessage());
-                }
-            } // END TEST
-            */
-            
+                Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.");                         
         }
         return dispatcher;
     }

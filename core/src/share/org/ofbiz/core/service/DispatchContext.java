@@ -39,6 +39,7 @@ import org.ofbiz.core.util.*;
 public class DispatchContext {
     
     protected String name;
+    protected String root;
     protected Map modelServices;
     protected Map attributes;
     protected Collection readers;
@@ -51,6 +52,7 @@ public class DispatchContext {
      */
     public DispatchContext(String name, Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
         this.name = name;
+        this.root = null;
         this.readers = readers;
         this.loader = loader;
         this.dispatcher = dispatcher;
@@ -89,6 +91,20 @@ public class DispatchContext {
      */
     public String getName() {
         return name;
+    }
+    
+    /** Gets the 'root' property of this context (used as a path)
+     *@return String root directory for this context (raw path)
+     */
+    public String getRootPath() {
+        return root;
+    }
+    
+    /** Sets the 'root' path property for this context
+     *@param rootPath The 'root' path for this context (i.e. context path)
+     */
+    public void setRootPath(String rootPath) {
+        this.root = rootPath;
     }
     
     /** Gets the GenericServiceModel instance that corresponds to given the name
