@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/08/22 14:07:43  jonesde
+ * A few changes needed to get GenericWebEvent working
+ *
  * Revision 1.7  2001/08/17 07:39:03  jonesde
  * Added initialization to ControlServlet, and put security and helper into the application scope (ServletContext). Other small changes to support this.
  *
@@ -103,12 +106,28 @@ public class ControlServlet extends HttpServlet {
         
         String nextPage  = null;
 
-        /** Setup the CONTROL_PATH for JSP dispatching. */
+        // Setup the CONTROL_PATH for JSP dispatching. 
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
         Debug.log("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
         /** Setup the SERVLET_CONTEXT for events. */
         request.setAttribute(SiteDefs.SERVLET_CONTEXT,getServletContext());
         request.setAttribute(SiteDefs.JOB_MANAGER,jm);
+        
+        // Store some first hit client info for later.
+        if ( session.isNew() ) {
+            StringBuffer request_url = new StringBuffer();
+            request_url.append(request.getScheme());
+            request_url.append("://" + request.getServerName());
+            if ( request.getServerPort() != 80 && request.getServerPort() != 443 )
+                request_url.append(":" + request.getServerPort());
+            request_url.append(request.getRequestURI());
+            if ( request.getQueryString() != null )
+                request_url.append("?" + request.getQueryString());            
+            session.setAttribute("_LOCALE_",request.getLocale());
+            session.setAttribute("_REQUESTURL_",request_url.toString());
+            session.setAttribute("_USERAGENT_",request.getHeader("User-Agent"));
+            session.setAttribute("_REFERER_",(request.getHeader("Referer") != null ? request.getHeader("Referer") : "" )); 
+        }
         
         // for convenience, and necessity with event handlers, make security and helper available in the session:
         GenericHelper helper = (GenericHelper)session.getAttribute("helper");
