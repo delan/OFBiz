@@ -29,6 +29,7 @@ import java.text.*;
  * General output formatting functions - mainly for helping in JSPs
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */
@@ -151,6 +152,19 @@ public class UtilFormatOut {
      */
     public static String formatQuantity(double quantity) {
         return quantityDecimalFormat.format(quantity);
+    }
+    
+    // ------------------- date handlers -------------------          
+    /** Formats a String timestamp into a nice string
+     * @param timestamp String timestamp to be formatted
+     * @return A String with the formatted date/time
+     */
+    public static String formatDate(java.sql.Timestamp timestamp) {
+        if (timestamp == null)
+            return "";
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.FULL);
+        java.util.Date date = (java.util.Date) timestamp;
+        return df.format(date);        
     }
 
     // ------------------- null string handlers -------------------
