@@ -273,15 +273,30 @@ public class GenericDelegator {
         Iterator enames = UtilMisc.toIterator(getModelGroupReader().getEntityNamesByGroup(groupName));
         Map entities = new HashMap();
 
-        if (enames == null || !enames.hasNext())
+        if (enames == null || !enames.hasNext()) {
             return entities;
+        }
+        
+        int errorCount = 0;
         while (enames.hasNext()) {
             String ename = (String) enames.next();
-            ModelEntity entity = this.getModelEntity(ename);
-
-            if (entity != null)
-                entities.put(entity.getEntityName(), entity);
+            try {
+                ModelEntity entity = getModelReader().getModelEntity(ename);
+                if (entity != null) {
+                    entities.put(entity.getEntityName(), entity);
+                } else {
+                    throw new IllegalStateException("Programm Error: entity was null with name " + ename);
+                }
+            } catch (GenericEntityException ex) {
+                errorCount++;
+                Debug.logError("Entity " + ename + " named in Entity Group with name " + groupName + " are not defined in any Entity Definition file");
+            }
         }
+
+        if (errorCount > 0) {
+            Debug.logError(errorCount + " entities were named in ModelGroup but not defined in any EntityModel");
+        }
+
         return entities;
     }
 
