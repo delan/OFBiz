@@ -228,17 +228,15 @@
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="HOST_SERVER_VISITOR" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="VISITOR_ISP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="WEB_MASTER_ASSIGNMEN" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyType description="" hasTable="N" parentTypeId="" partyTypeId="AUTOMATED_AGENT"/>
   <PartyType description="" hasTable="Y" parentTypeId="" partyTypeId="PERSON"/>
-  <PartyType description="" hasTable="N" parentTypeId="" partyTypeId="ORGANIZATION"/>
-  <PartyType description="" hasTable="N" parentTypeId="ORGANIZATION" partyTypeId="LEGAL_ORGANIZATION"/>
-  <PartyType description="" hasTable="N" parentTypeId="ORGANIZATION" partyTypeId="INFORMAL_ORGANIZATIO"/>
-  <PartyType description="" hasTable="N" parentTypeId="INFORMAL_ORGANIZATIO" partyTypeId="FAMILY"/>
+  <PartyType description="" hasTable="Y" parentTypeId="" partyTypeId="PARTY_GROUP"/>
+  <PartyType description="" hasTable="N" parentTypeId="PARTY_GROUP" partyTypeId="INFORMAL_GROUP"/>
+  <PartyType description="" hasTable="N" parentTypeId="INFORMAL_GROUP" partyTypeId="FAMILY"/>
+  <PartyType description="" hasTable="N" parentTypeId="INFORMAL_GROUP" partyTypeId="TEAM"/>
+  <PartyType description="" hasTable="N" parentTypeId="PARTY_GROUP" partyTypeId="LEGAL_ORGANIZATION"/>
   <PartyType description="" hasTable="N" parentTypeId="LEGAL_ORGANIZATION" partyTypeId="CORPORATION"/>
   <PartyType description="" hasTable="N" parentTypeId="LEGAL_ORGANIZATION" partyTypeId="GOVERNMENT_AGENCY"/>
-  <PartyType description="" hasTable="N" parentTypeId="INFORMAL_ORGANIZATIO" partyTypeId="TEAM"/>
-  <PartyType description="" hasTable="N" parentTypeId="" partyTypeId="AUTOMATED_AGENT"/>
-  <PartyTypeAttr attrName="FEDERAL_TAX_ID_NUM" partyTypeId="LEGAL_ORGANIZATION"/>
-  <PartyTypeAttr attrName="NAME" partyTypeId="ORGANIZATION"/>
   <PaymentMethodType description="Credit Card" paymentMethodTypeId="CREDIT_CARD"/>
   <PaymentMethodType description="Gift Certificate" paymentMethodTypeId="GIFT_CERTIFICATE"/>
   <PaymentMethodType description="Cash" paymentMethodTypeId="CASH"/>
