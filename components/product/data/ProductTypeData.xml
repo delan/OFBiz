@@ -41,6 +41,7 @@
   <Enumeration description="Payment Capture Service" enumCode="PAY_CAPTURE" enumId="PRDS_PAY_CAPTURE" sequenceId="04" enumTypeId="PRDS_PAYSVC"/>
   <Enumeration description="Payment Refund Service" enumCode="PAY_REFUND" enumId="PRDS_PAY_REFUND" sequenceId="05" enumTypeId="PRDS_PAYSVC"/>
   <Enumeration description="Payment Credit Service" enumCode="PAY_CREDIT" enumId="PRDS_PAY_CREDIT" sequenceId="06" enumTypeId="PRDS_PAYSVC"/>
+  <Enumeration description="External Payment (No Service)" enumCode="PAY_EXTERNAL" enumId="PRDS_PAY_EXTERNAL" sequenceId="07" enumTypeId="PRDS_PAYSVC"/>
 
   <EnumerationType description="Product Store Email Notification" enumTypeId="PRDS_EMAIL" hasTable="N" parentTypeId=""/>
   <Enumeration description="Confirmation" enumCode="ODR_CONFIRM" enumId="PRDS_ODR_CONFIRM" enumTypeId="PRDS_EMAIL" sequenceId="01"/>

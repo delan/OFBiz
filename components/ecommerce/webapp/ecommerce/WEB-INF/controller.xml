@@ -414,27 +414,27 @@
 
     <request-map uri="callWorldPay">
         <security https="true" direct-request="false"/>
-        <event type="java" path="org.ofbiz.thirdparty.worldpay.WorldPayEvents" invoke="worldPayRequest"/>
+        <event type="java" path="org.ofbiz.accounting.thirdparty.worldpay.WorldPayEvents" invoke="worldPayRequest"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
 
     <request-map uri="callPayPal">
         <security https="true" direct-request="false"/>
-        <event type="java" path="org.ofbiz.thirdparty.paypal.PayPalEvents" invoke="callPayPal"/>
+        <event type="java" path="org.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="callPayPal"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
 
     <request-map uri="payPalNotify">
-        <event type="java" path="org.ofbiz.thirdparty.paypal.PayPalEvents" invoke="payPalIPN"/>
+        <event type="java" path="org.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="payPalIPN"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
 
     <request-map uri="payPalCancel">
         <security https="true"/>
-        <event type="java" path="org.ofbiz.thirdparty.paypal.PayPalEvents" invoke="cancelPayPalOrder"/>
+        <event type="java" path="org.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="cancelPayPalOrder"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
