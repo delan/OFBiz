@@ -1,5 +1,5 @@
 /*
- * $Id: FindServices.java,v 1.3 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: FindServices.java,v 1.4 2003/12/06 09:33:15 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,10 +28,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -46,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * FindServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class FindServices {
@@ -205,6 +207,9 @@ public class FindServices {
             if (opString != null) {
                 if (opString.equals("contains")) {
                     fieldOp = (EntityOperator) entityOperators.get("like");
+
+                } else if (opString.equals("empty")) {
+                    fieldOp = (EntityOperator) entityOperators.get("equals");
                 } else {
                     fieldOp = (EntityOperator) entityOperators.get(opString);
                 }
@@ -217,27 +222,38 @@ public class FindServices {
                 continue;
             }
 
-            if (opString.equals("like")) {
-                fieldValue += "%";
-            } else if (opString.equals("contains")) {
-                fieldValue = "%" + fieldValue + "%";
-            } else if (opString.equals("greaterThanFromDayStart")) {
-                fieldValue = dayStart(fieldValue, 0);
-                fieldOp = (EntityOperator) entityOperators.get("greaterThan");
-            } else if (opString.equals("sameDay")) {
-                String timeStampString = fieldValue;
-                fieldValue = dayStart(timeStampString, 0);
-                fieldOp = (EntityOperator) entityOperators.get("greaterThan");
-
-                // Set up so next part finds ending conditions for same day
-                subMap2 = (HashMap) subMap.get("fld1");
-                if (subMap2 == null) {
-                    subMap2 = new HashMap();
-                    subMap.put("fld1", subMap2);
+            if (opString != null) {
+                if (opString.equals("contains")) {
+                    fieldOp = (EntityOperator) entityOperators.get("like");
+                    fieldValue = "%" + fieldValue + "%";
+                } else if (opString.equals("empty")) {
+                    fieldOp = (EntityOperator) entityOperators.get("equals");
+                    fieldValue = null;
+                } else if (opString.equals("like")) {
+                    fieldOp = (EntityOperator) entityOperators.get("like");
+                    fieldValue += "%";
+                } else if (opString.equals("greaterThanFromDayStart")) {
+                    fieldValue = dayStart(fieldValue, 0);
+                    fieldOp = (EntityOperator) entityOperators.get("greaterThan");
+                } else if (opString.equals("sameDay")) {
+                    String timeStampString = fieldValue;
+                    fieldValue = dayStart(timeStampString, 0);
+                    fieldOp = (EntityOperator) entityOperators.get("greaterThan");
+    
+                    // Set up so next part finds ending conditions for same day
+                    subMap2 = (HashMap) subMap.get("fld1");
+                    if (subMap2 == null) {
+                        subMap2 = new HashMap();
+                        subMap.put("fld1", subMap2);
+                    }
+                    String endOfDay = dayStart(timeStampString, 1);
+                    subMap2.put("value", endOfDay);
+                    subMap2.put("op", "lessThan");
+                } else {
+                    fieldOp = (EntityOperator) entityOperators.get(opString);
                 }
-                String endOfDay = dayStart(timeStampString, 1);
-                subMap2.put("value", endOfDay);
-                subMap2.put("op", "lessThan");
+            } else {
+                fieldOp = (EntityOperator) entityOperators.get("equals");
             }
 
             cond = new EntityExpr(fieldName, (EntityComparisonOperator) fieldOp, fieldValue);
@@ -254,6 +270,8 @@ public class FindServices {
             if (opString != null) {
                 if (opString.equals("contains")) {
                     fieldOp = (EntityOperator) entityOperators.get("like");
+                } else if (opString.equals("empty")) {
+                    fieldOp = (EntityOperator) entityOperators.get("equals");
                 } else {
                     fieldOp = (EntityOperator) entityOperators.get(opString);
                 }
@@ -269,6 +287,9 @@ public class FindServices {
                 fieldValue += "%";
             } else if (opString.equals("contains")) {
                 fieldValue += "%" + fieldValue + "%";
+            } else if (opString.equals("empty")) {
+                fieldOp = (EntityOperator) entityOperators.get("equals");
+                fieldValue = null;
             } else if (opString.equals("upToDay")) {
                 fieldValue = dayStart(fieldValue, 0);
                 fieldOp = (EntityOperator) entityOperators.get("lessThan");
@@ -287,11 +308,23 @@ public class FindServices {
         if (count > 0) {
             /* Retrieve entities  - an iterator over all the values*/
             try {
-                listIt =
-                    delegator.findListIteratorByCondition(entityName, exprList,
+                listIt = delegator.findListIteratorByCondition(entityName, exprList,
                         null, null, null, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError("Error finding iterator: " + e.getMessage());
+
+            }
+        } else {
+            try {
+                /*
+                List pkList = delegator.getModelEntity(entityName).getPkFieldNames();
+                String pkName = (String)pkList.get(0);
+                EntityExpr pkExpr = new EntityExpr(pkName, EntityOperator.LIKE, "%");
+                */
+                listIt = delegator.findListIteratorByCondition(entityName, null,
+                        null, null, null, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("Error finding all: " + e.getMessage());
 
             }
         }
