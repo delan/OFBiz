@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/19 03:30:06  jonesde
+ * Some changes for the FindGeneric page.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *
@@ -59,6 +62,80 @@ public class UtilDateTime
   {
     return new java.util.Date();
   }
+  
+  /** Converts a date String into a java.sql.Date
+   * @param date The date String: MM/DD/YYYY
+   * @return A java.sql.Date made from the date String
+   */  
+  public static java.sql.Date toSqlDate(String date)
+  {
+    java.util.Date newDate = toDate(date, "00:00:00");
+    if(newDate != null) return new java.sql.Date(newDate.getTime());
+    else return null;
+  }
+
+  /** Makes a java.sql.Date from separate Strings for month, day, year
+   * @param monthStr The month String
+   * @param dayStr The day String
+   * @param yearStr The year String
+   * @return A java.sql.Date made from separate Strings for month, day, year
+   */  
+  public static java.sql.Date toSqlDate(String monthStr, String dayStr, String yearStr)
+  {
+    java.util.Date newDate = toDate(monthStr, dayStr, yearStr, "0", "0", "0");
+    if(newDate != null) return new java.sql.Date(newDate.getTime());
+    else return null;
+  }
+
+  /** Makes a java.sql.Date from separate ints for month, day, year
+   * @param month The month int
+   * @param day The day int
+   * @param year The year int
+   * @return A java.sql.Date made from separate ints for month, day, year
+   */  
+  public static java.sql.Date toSqlDate(int month, int day, int year)
+  {
+    java.util.Date newDate = toDate(month, day, year, 0, 0, 0);
+    if(newDate != null) return new java.sql.Date(newDate.getTime());
+    else return null;
+  }
+
+  /** Converts a time String into a java.sql.Time
+   * @param time The time String: either HH:MM or HH:MM:SS
+   * @return A java.sql.Time made from the time String
+   */  
+  public static java.sql.Time toSqlTime(String time)
+  {
+    java.util.Date newDate = toDate("1/1/1970", time);
+    if(newDate != null) return new java.sql.Time(newDate.getTime());
+    else return null;
+  }
+
+  /** Makes a java.sql.Time from separate Strings for hour, minute, and second.
+   * @param hourStr The hour String
+   * @param minuteStr The minute String
+   * @param secondStr The second String
+   * @return A java.sql.Time made from separate Strings for hour, minute, and second.
+   */  
+  public static java.sql.Time toSqlTime(String hourStr, String minuteStr, String secondStr)
+  {
+    java.util.Date newDate = toDate("0", "0", "0", hourStr, minuteStr, secondStr);
+    if(newDate != null) return new java.sql.Time(newDate.getTime());
+    else return null;
+  }
+
+  /** Makes a java.sql.Time from separate ints for hour, minute, and second.
+   * @param hour The hour int
+   * @param minute The minute int
+   * @param second The second int
+   * @return A java.sql.Time made from separate ints for hour, minute, and second.
+   */  
+  public static java.sql.Time toSqlTime(int hour, int minute, int second)
+  {
+    java.util.Date newDate = toDate(0, 0, 0, hour, minute, second);
+    if(newDate != null) return new java.sql.Time(newDate.getTime());
+    else return null;
+  }
 
   /** Converts a date and time String into a Timestamp
    * @param dateTime A combined data and time string in the format "MM/DD/YYYY HH:MM:SS", the seconds are optional
@@ -66,10 +143,9 @@ public class UtilDateTime
    */  
   public static java.sql.Timestamp toTimestamp(String dateTime)
   {    
-    //dateTime must have one space between the date and time...
-    String date = dateTime.substring(0, dateTime.indexOf(" "));
-    String time = dateTime.substring(dateTime.indexOf(" ")+1);
-    return toTimestamp(date, time);
+    java.util.Date newDate = toDate(dateTime);
+    if(newDate != null) return new java.sql.Timestamp(newDate.getTime());
+    else return null;
   }
   
   /** Converts a date String and a time String into a Timestamp
@@ -79,37 +155,9 @@ public class UtilDateTime
    */  
   public static java.sql.Timestamp toTimestamp(String date, String time)
   {
-    if(date == null || time == null) return null;
-    String month;
-    String day;
-    String year;
-    String hour;
-    String minute;
-    String second;
-
-    int dateSlash1 = date.indexOf("/");
-    int dateSlash2 = date.lastIndexOf("/");
-    if(dateSlash1 <= 0 || dateSlash1 == dateSlash2) return null;
-    int timeColon1 = time.indexOf(":");
-    int timeColon2 = time.lastIndexOf(":");
-    if(timeColon1 <= 0) return null;
-    month = date.substring(0, dateSlash1);
-    day = date.substring(dateSlash1 + 1, dateSlash2);
-    year = date.substring(dateSlash2 + 1);
-    hour = time.substring(0, timeColon1);
-
-    if(timeColon1 == timeColon2)
-    {
-      minute = time.substring(timeColon1 + 1);
-      second = "0";
-    }
-    else
-    {
-      minute = time.substring(timeColon1 + 1, timeColon2);
-      second = time.substring(timeColon2 + 1);
-    }
-
-    return toTimestamp(month, day, year, hour, minute, second);
+    java.util.Date newDate = toDate(date, time);
+    if(newDate != null) return new java.sql.Timestamp(newDate.getTime());
+    else return null;
   }
 
   /** Makes a Timestamp from separate Strings for month, day, year, hour, minute, and second.
@@ -123,21 +171,9 @@ public class UtilDateTime
    */  
   public static java.sql.Timestamp toTimestamp(String monthStr, String dayStr, String yearStr, String hourStr, String minuteStr, String secondStr)
   {
-    int month, day, year, hour, minute, second;
-    try
-    {
-      month = Integer.parseInt(monthStr);
-      day = Integer.parseInt(dayStr);
-      year = Integer.parseInt(yearStr);
-      hour = Integer.parseInt(hourStr);
-      minute = Integer.parseInt(minuteStr);
-      second = Integer.parseInt(secondStr);
-    }
-    catch(Exception e)
-    {
-      return null;
-    }
-    return toTimestamp(month, day, year, hour, minute, second);
+    java.util.Date newDate = toDate(monthStr, dayStr, yearStr, hourStr, minuteStr, secondStr);
+    if(newDate != null) return new java.sql.Timestamp(newDate.getTime());
+    else return null;
   }
 
   /** Makes a Timestamp from separate ints for month, day, year, hour, minute, and second.
@@ -151,10 +187,9 @@ public class UtilDateTime
    */  
   public static java.sql.Timestamp toTimestamp(int month, int day, int year, int hour, int minute, int second)
   {
-    Calendar calendar = Calendar.getInstance();
-    try { calendar.set(year, month - 1, day, hour, minute, second); }
-    catch(Exception e) { return null; }
-    return new java.sql.Timestamp(calendar.getTime().getTime());
+    java.util.Date newDate = toDate(month, day, year, hour, minute, second);
+    if(newDate != null) return new java.sql.Timestamp(newDate.getTime());
+    else return null;
   }
 
   /** Converts a date and time String into a Date
