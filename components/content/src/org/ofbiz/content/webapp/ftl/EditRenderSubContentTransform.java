@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentTransform.java,v 1.4 2003/12/15 23:20:20 byersa Exp $
+ * $Id: EditRenderSubContentTransform.java,v 1.5 2003/12/21 03:40:50 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -85,7 +85,7 @@ import org.ofbiz.content.content.ContentWorker;
  * the contents that are placed within it.
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class EditRenderSubContentTransform implements TemplateTransformModel {
@@ -112,8 +112,11 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         final String editTemplate = getArg(args, "editTemplate", ctx);
         Debug.logInfo("in EditRenderSubContent, editTemplate:"+editTemplate,"");
         final String wrapTemplateId = getArg(args, "wrapTemplateId", ctx);
+        Debug.logInfo("in EditRenderSubContent, wrapTemplateId:"+wrapTemplateId,"");
         final String mapKey = getArg(args, "mapKey", ctx);
         Debug.logInfo("in EditRenderSubContent, mapKey:"+mapKey,"");
+        final String templateContentId = getArg(args, "templateContentId", ctx);
+        Debug.logInfo("in EditRenderSubContent, templateContentId:"+templateContentId,"");
         final String subContentId = getArg(args, "subContentId", ctx);
         Debug.logInfo("in EditRenderSubContent, subContentId:"+subContentId,"");
         String subDataResourceTypeIdTemp = getArg(args, "subDataResourceTypeId", ctx);
@@ -121,21 +124,24 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         Debug.logInfo("in EditRenderSubContent, contentId:"+contentId,"");
         final Locale locale = (Locale)FreeMarkerWorker.getWrappedObject("locale", env);
         String mimeTypeIdTemp = getArg(args, "mimeTypeId", ctx);
+        final String rootDir = getArg(args, "rootDir", ctx);
+        final String webSiteId = getArg(args, "webSiteId", ctx);
+        final String https = getArg(args, "https", ctx);
         final LocalDispatcher dispatcher = 
                        (LocalDispatcher)FreeMarkerWorker.getWrappedObject("dispatcher", env);
         final GenericDelegator delegator = 
                        (GenericDelegator)FreeMarkerWorker.getWrappedObject("delegator", env);
         final GenericValue userLogin = 
                        (GenericValue)FreeMarkerWorker.getWrappedObject("userLogin", env);
-        final HttpServletRequest request = 
-                       (HttpServletRequest)FreeMarkerWorker.getWrappedObject("request", env);
+        GenericValue subContentDataResourceViewTemp = 
+                       (GenericValue)FreeMarkerWorker.getWrappedObject("subContentDataResourceView", env);
+        //final HttpServletRequest request = (HttpServletRequest)FreeMarkerWorker.getWrappedObject("request", env);
 
-/*
         ctx.put("mapKey", mapKey);
         ctx.put("subDataResourceTypeIdTemp", subDataResourceTypeIdTemp);
         ctx.put("contentId", contentId);
+        ctx.put("templateContentId", templateContentId);
         ctx.put("locale", locale);
-*/
 
         // This transform does not need information about the subContent until the
         // close action, but any embedded RenderDataResourceTransformation will need it
@@ -146,13 +152,16 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         //ctx.put("userLogin", userLogin);
         List assocTypes = UtilMisc.toList("SUB_CONTENT");
         Timestamp fromDate = UtilDateTime.nowTimestamp();
-        GenericValue subContentDataResourceView = null;
-        try {
-            subContentDataResourceView = ContentWorker.getSubContent( delegator,
+        if (subContentDataResourceViewTemp == null) {
+            try {
+                subContentDataResourceViewTemp = ContentWorker.getSubContent( delegator,
                                  contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
-        } catch(IOException e) {
-           throw new RuntimeException(e.getMessage());
+            } catch(IOException e) {
+               throw new RuntimeException(e.getMessage());
+            }
         }
+
+        final GenericValue subContentDataResourceView = subContentDataResourceViewTemp;  
 
         String dataResourceIdTemp = null;
         String subContentIdSubTemp = null;
@@ -215,7 +224,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
-                  ////Debug.logInfo("in EditRenderSubContent, buf:"+buf.toString(),"");
+                  Debug.logInfo("in EditRenderSubContent, buf:"+buf.toString(),"");
             }
 
             public void flush() throws IOException {
@@ -226,15 +235,12 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
 
 
                 String wrappedFTL = buf.toString();
-                  //Debug.logInfo("in EditRenderSubContent, wrappedFTL:"+wrappedFTL,"");
+                  Debug.logInfo("in EditRenderSubContent, wrappedFTL:"+wrappedFTL,"");
                 if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
                     if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                         templateContext.put("wrappedFTL", wrappedFTL);
-                        ServletContext servletContext 
-                            = (ServletContext)request.getSession().getServletContext();
-                        String rootDir = servletContext.getRealPath("/");
-                        String webSiteId = (String)servletContext.getAttribute("webSiteId");
-                        String https = (String)servletContext.getAttribute("https");
+                        //ServletContext servletContext = (ServletContext)request.getSession().getServletContext();
+                        //String rootDir = servletContext.getRealPath("/");
                   Debug.logInfo("in EditRenderSubContent, rootDir:"+rootDir,"");
                         templateContext.put("webSiteId", webSiteId);
                         templateContext.put("https", https);
@@ -264,6 +270,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                 templateContext.put("locale", locale);
                 templateContext.put("mapKey", null);
                 templateContext.put("subContentId", null);
+                templateContext.put("templateContentId", null);
                 templateContext.put("subDataResourceTypeId", null);
                 templateContext.put("mimeTypeId", null);
         Debug.logInfo("in EditRenderSubContent, after.","");
