@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralException.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: GeneralException.java,v 1.2 2004/02/19 18:44:37 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import java.io.PrintWriter;
  * Base OFBiz Exception, provides nested exceptions, etc
  *
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      1.0
  */
 public class GeneralException extends Exception {
@@ -63,7 +63,7 @@ public class GeneralException extends Exception {
 
     /**
      * Constructs an <code>GeneralException</code> with the specified detail message and nested Exception.
-     * @param msg the detail message.
+     * @param nested the detail message.
      */
     public GeneralException(Throwable nested) {
         super();
