@@ -164,30 +164,41 @@ public class ModelService {
         contextParamList.add(param);        
     }
 
-    public List getAllParamNames() {        
-        List nameList = new LinkedList();
+    public Set getAllParamNames() {        
+        Set nameList = new TreeSet();
         Iterator i = this.contextParamList.iterator();
 
         while (i.hasNext()) {
             ModelParam p = (ModelParam) i.next();
-
             nameList.add(p.name);
         }
         return nameList;
     }
 
-    public List getInParamNames() {        
-        List nameList = new LinkedList();        
+    public Set getInParamNames() {        
+        Set nameList = new TreeSet();        
         Iterator i = this.contextParamList.iterator();
 
         while (i.hasNext()) {
             ModelParam p = (ModelParam) i.next();
-
             // don't include OUT parameters in this list, only IN and INOUT
             if ("OUT".equals(p.mode)) continue;
             nameList.add(p.name);
         }
         return nameList;
+    }
+    
+    public Set getOutParamNames() {
+        Set nameList = new TreeSet();        
+        Iterator i = this.contextParamList.iterator();
+
+        while (i.hasNext()) {
+            ModelParam p = (ModelParam) i.next();
+            // don't include IN parameters in this list, only OUT and INOUT
+            if ("IN".equals(p.mode)) continue;
+            nameList.add(p.name);
+        }
+        return nameList;        
     }
 
     /**
