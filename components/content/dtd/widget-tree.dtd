@@ -36,6 +36,8 @@
     root-node-name CDATA #REQUIRED
     render-style (simple | expand-collapse) "simple"
     default-wrap-style CDATA #REQUIRED
+    expand-collapse-request CDATA #IMPLIED
+    trail-name CDATA #IMPLIED
 >
 
 <!ELEMENT node ( (entity-one | service ), (include-screen | label | link )?, sub-node* )>
@@ -106,7 +108,6 @@
         value-name CDATA #REQUIRED
         use-cache ( true | false ) "false"
         auto-field-map ( true | false ) "true"
-        value-name CDATA #IMPLIED
     >
     
     <!ELEMENT entity-and ( field-map+, select-field*, order-by*  )>

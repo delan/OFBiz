@@ -275,12 +275,14 @@
     <!ELEMENT content EMPTY>
     <!ATTLIST content
         content-id CDATA #REQUIRED
+        edit-request CDATA #IMPLIED
     >
     
     <!ELEMENT sub-content EMPTY>
     <!ATTLIST sub-content
         content-id CDATA #REQUIRED
         assoc-name CDATA #REQUIRED
+        edit-request CDATA #IMPLIED
     >
 
     <!ELEMENT image (#PCDATA)>
