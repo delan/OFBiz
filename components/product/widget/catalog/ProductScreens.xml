@@ -22,7 +22,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: ProductScreens.xml,v 1.3 2004/07/30 02:11:21 jonesde Exp $
+ *  $Id: ProductScreens.xml,v 1.4 2004/07/31 12:17:42 jonesde Exp $
 -->
 
 <screens>
@@ -31,7 +31,6 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <!-- <set field="leftbarScreenLocation" value=""/> -->
-                <set field="tabButtonItem" value="EditProduct"/>
     
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-name="product"/>
@@ -76,6 +75,7 @@
             <actions>
                 <set field="title" value="Edit Product"/>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
+                <set field="tabButtonItem" value="EditProduct"/>
                 <set field="labelTitleProperty" value="ProductProduct"/>
     
                 <set field="productId" from-field="parameters.productId"/>
@@ -90,6 +90,36 @@
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductDupForm.ftl"/></html>
                         </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductPrices">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Prices"/>
+                <set field="titleProperty" value="PageTitleEditProductPrices"/>
+                <set field="tabButtonItem" value="EditProductPrices"/>
+                <set field="labelTitleProperty" value="ProductPrices"/>
+    
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <entity-and entity-name="ProductPrice" list-name="productPrices">
+                    <field-map env-name="productId"/>
+                    <order-by field-name="productStoreGroupId"/>
+                    <order-by field-name="productPriceTypeId"/>
+                    <order-by field-name="currencyUomId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-and>
+                
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator">
+                    <decorator-section name="body">
+                        <form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <form name="AddProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

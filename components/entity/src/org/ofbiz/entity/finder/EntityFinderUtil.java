@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFinderUtil.java,v 1.2 2004/07/24 09:43:27 jonesde Exp $
+ * $Id: EntityFinderUtil.java,v 1.3 2004/07/31 12:17:41 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class EntityFinderUtil {
@@ -339,6 +339,26 @@ public class EntityFinderUtil {
 
         public void handleOutput(List results, Map context, FlexibleMapAccessor listAcsr) {
             throw new IllegalArgumentException("Cannot handle output with use-iterator when the query is cached, or the result in general is not an EntityListIterator");
+        }
+    }
+    public static class GetAll implements OutputHandler {
+        public GetAll() {
+            // no parameters, nothing to do
+        }
+        
+        public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr) {
+            try {
+                listAcsr.put(context, eli.getCompleteList());
+                eli.close();
+            } catch (GenericEntityException e) {
+                String errorMsg = "Error getting list from EntityListIterator: " + e.toString();
+                Debug.logError(e, errorMsg, module);
+                throw new IllegalArgumentException(errorMsg);
+            }
+        }
+
+        public void handleOutput(List results, Map context, FlexibleMapAccessor listAcsr) {
+            listAcsr.put(context, results);
         }
     }
 }

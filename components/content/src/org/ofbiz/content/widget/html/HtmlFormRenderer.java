@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.11 2004/06/02 17:50:11 byersa Exp $
+ * $Id: HtmlFormRenderer.java,v 1.12 2004/07/31 12:17:40 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -430,14 +430,12 @@ public class HtmlFormRenderer implements FormStringRenderer {
         Iterator optionValueIter = allOptionValues.iterator();
         while (optionValueIter.hasNext()) {
             ModelFormField.OptionValue optionValue = (ModelFormField.OptionValue) optionValueIter.next();
+            String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
             buffer.append("<option");
             // if current value should be selected in the list, select it
             if (UtilValidate.isNotEmpty(currentValue) && currentValue.equals(optionValue.getKey()) && "selected".equals(dropDownField.getCurrent())) {
                 buffer.append(" selected");
-            } else if (
-                UtilValidate.isEmpty(currentValue)
-                    && dropDownField.getNoCurrentSelectedKey() != null
-                    && dropDownField.getNoCurrentSelectedKey().equals(optionValue.getKey())) {
+            } else if (UtilValidate.isEmpty(currentValue) && noCurrentSelectedKey != null && noCurrentSelectedKey.equals(optionValue.getKey())) {
                 buffer.append(" selected");
             }
             buffer.append(" value=\"");

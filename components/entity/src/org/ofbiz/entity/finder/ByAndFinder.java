@@ -1,5 +1,5 @@
 /*
- * $Id: ByAndFinder.java,v 1.1 2004/07/15 22:17:34 jonesde Exp $
+ * $Id: ByAndFinder.java,v 1.2 2004/07/31 12:17:40 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,6 +39,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.finder.EntityFinderUtil.GetAll;
 import org.ofbiz.entity.finder.EntityFinderUtil.LimitRange;
 import org.ofbiz.entity.finder.EntityFinderUtil.LimitView;
 import org.ofbiz.entity.finder.EntityFinderUtil.OutputHandler;
@@ -51,7 +52,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a and
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ByAndFinder {
@@ -108,6 +109,9 @@ public class ByAndFinder {
             outputHandler = new LimitView(limitViewElement);
         } else if (useIteratorElement != null) {
             outputHandler = new UseIterator(useIteratorElement);
+        } else {
+            // default to get all
+            outputHandler = new GetAll();
         }
     }
 

@@ -99,7 +99,12 @@
                 location="org/ofbiz/product/price/PriceServices.xml" invoke="createProductPrice" auth="true">
         <description>Create an ProductPrice</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
         <override name="fromDate" mode="INOUT" optional="true"/>
         <override name="price" optional="false"/>
     </service>
@@ -107,7 +112,12 @@
                 location="org/ofbiz/product/price/PriceServices.xml" invoke="updateProductPrice" auth="true">
         <description>Update an ProductPrice</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdDate"/>
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
         <attribute name="oldPrice" type="Double" mode="OUT" optional="false"/>
         <override name="price" optional="false"/>
     </service>

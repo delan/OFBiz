@@ -25,14 +25,14 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: widget-screen.dtd,v 1.16 2004/07/30 02:11:16 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.17 2004/07/31 12:17:39 jonesde Exp $
 -->
 
 <!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific | link | image">
 
 <!ENTITY % AllConditionals "and | xor | or | not | if-has-permission | if-validate-method | if-compare | if-compare-field | if-regexp | if-empty">
 
-<!ENTITY % AllActions "set | property-map | script | service | entity-one | entity-and | entity-condition">
+<!ENTITY % AllActions "set | property-map  | property-to-field | script | service | entity-one | entity-and | entity-condition">
 
 
 <!ELEMENT screens ( screen+ )>
@@ -113,6 +113,15 @@
         resource CDATA #REQUIRED
         map-name CDATA #REQUIRED
         global ( true | false ) "false"
+    >
+    <!ELEMENT property-to-field EMPTY>
+    <!ATTLIST property-to-field
+        resource CDATA #REQUIRED
+        property CDATA #REQUIRED
+        field CDATA #REQUIRED
+        default CDATA #IMPLIED
+        no-locale ( true | false ) "false"
+        arg-list-name CDATA #IMPLIED
     >
 
     <!ELEMENT service ( field-map* )>

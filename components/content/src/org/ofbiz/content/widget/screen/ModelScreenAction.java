@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenAction.java,v 1.8 2004/07/30 02:11:17 jonesde Exp $
+ * $Id: ModelScreenAction.java,v 1.9 2004/07/31 12:17:40 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.content.widget.screen;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -50,7 +51,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.1
  */
 public abstract class ModelScreenAction {
@@ -76,6 +77,8 @@ public abstract class ModelScreenAction {
                 actions.add(new SetField(modelScreen, actionElement));
             } else if ("property-map".equals(actionElement.getNodeName())) {
                 actions.add(new PropertyMap(modelScreen, actionElement));
+            } else if ("property-to-field".equals(actionElement.getNodeName())) {
+                actions.add(new PropertyToField(modelScreen, actionElement));
             } else if ("script".equals(actionElement.getNodeName())) {
                 actions.add(new Script(modelScreen, actionElement));
             } else if ("service".equals(actionElement.getNodeName())) {
@@ -180,6 +183,62 @@ public abstract class ModelScreenAction {
                     this.mapNameAcsr.put(globalCtx, propertyMap);
                 }
             }
+        }
+    }
+    
+    public static class PropertyToField extends ModelScreenAction {
+        
+        protected FlexibleStringExpander resourceExdr;
+        protected FlexibleStringExpander propertyExdr;
+        protected FlexibleMapAccessor fieldAcsr;
+        protected FlexibleStringExpander defaultExdr;
+        protected boolean noLocale;
+        protected FlexibleMapAccessor argListAcsr;
+        protected FlexibleStringExpander globalExdr;
+
+        public PropertyToField(ModelScreen modelScreen, Element setElement) {
+            super (modelScreen, setElement);
+            this.resourceExdr = new FlexibleStringExpander(setElement.getAttribute("resource"));
+            this.propertyExdr = new FlexibleStringExpander(setElement.getAttribute("property"));
+            this.fieldAcsr = new FlexibleMapAccessor(setElement.getAttribute("field"));
+            this.defaultExdr = new FlexibleStringExpander(setElement.getAttribute("default"));
+            noLocale = "true".equals(setElement.getAttribute("no-locale"));
+            this.argListAcsr = new FlexibleMapAccessor(setElement.getAttribute("arg-list-name"));
+            this.globalExdr = new FlexibleStringExpander(setElement.getAttribute("global"));
+        }
+        
+        public void runAction(Map context) {
+            String globalStr = this.globalExdr.expandString(context);
+            // default to false
+            boolean global = "true".equals(globalStr);
+
+            Locale locale = (Locale) context.get("locale");
+            String resource = this.resourceExdr.expandString(context, locale);
+            String property = this.propertyExdr.expandString(context, locale);
+            
+            String value = null;
+            if (noLocale) {
+                value = UtilProperties.getPropertyValue(resource, property);
+            } else {
+                value = UtilProperties.getMessage(resource, property, locale);
+            }
+            if (value == null || value.length() == 0) {
+                value = this.defaultExdr.expandString(context);
+            }
+            
+            // note that expanding the value string here will handle defaultValue and the string from 
+            //  the properties file; if we decide later that we don't want the string from the properties 
+            //  file to be expanded we should just expand the defaultValue at the beginning of this method.
+            value = FlexibleStringExpander.expandString(value, context);
+
+            if (!argListAcsr.isEmpty()) {
+                List argList = (List) argListAcsr.get(context);
+                if (argList != null && argList.size() > 0) {
+                    value = MessageFormat.format(value, argList.toArray());
+                }
+            }
+
+            fieldAcsr.put(context, value);
         }
     }
     
