@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.46 $
+ * @version    $Revision: 1.47 $
  */
 -->
 
@@ -753,10 +753,10 @@
       <prim-key field="productFeatureGroupId"/>
       <prim-key field="productFeatureId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PROD_FAPPL_PRODUCT" rel-entity-name="ProductFeatureGroup">
-        <key-map field-name="productId"/>
+      <relation type="one" fk-name="PROD_FGAPP_PRODUCT" rel-entity-name="ProductFeatureGroup">
+        <key-map field-name="productFeatureGroupId"/>
       </relation>
-      <relation type="one" fk-name="PROD_FAPPL_FEATURE" rel-entity-name="ProductFeature">
+      <relation type="one" fk-name="PROD_FGAPP_FEATURE" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId"/>
       </relation>
     </entity>
