@@ -85,10 +85,10 @@
 <!ELEMENT field ( %AllFields; )>
 <!ATTLIST field
     name CDATA #REQUIRED
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     entry-name CDATA #IMPLIED
     parameter-name CDATA #IMPLIED
-    title CDATA #REQUIRED
+    title CDATA #IMPLIED
     tooltip CDATA #IMPLIED
     title-style CDATA #IMPLIED
     widget-style CDATA #IMPLIED
