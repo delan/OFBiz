@@ -26,13 +26,100 @@
 
 <div class='tabContainer'>
     <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return</a>  
-    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Items</a>
+    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}<#if requestParameters.orderId?exists>&orderId=${requestParameters.orderId}</#if></@ofbizUrl>" class="tabButton">Items</a>
     <a href="<@ofbizUrl>/returnRefund?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Refund</a>
 </div>
-  
-${editReturnForm.renderFormString()}
 
-<hr>
-
-<#--${returnItemsForm.renderFormString()}-->
-
+<form name="returnhead">
+<table border='0' cellpadding='2' cellspacing='0'>
+  <#if returnId?exists>
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">Return ID:</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%'>
+      <b>${returnId}</b>
+    </td>                
+  </tr>
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">Entry Date:</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%'>
+      <input type='text' class='inputBox' size='25' name='entryDate' value=''>
+      <a href="javascript:call_cal(document.returnhead.entryDate, '');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+    </td>                
+  </tr>
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">Return Status:</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%'>
+      <select name="statusId" class="selectBox">
+        <#list returnStatus as status>
+          <option value="${status.statusId}">${status.description}</option>
+        </#list>
+      </select>
+    </td>                
+  </tr>   
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%'>&nbsp;</td>
+    <td width='6%'><hr class="sepbar"></td>   
+    <td width='74%'>&nbsp;</td>
+  </tr>
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">Return To Facility:</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%'>
+      <table border='0' cellpadding='1' cellspacing='0'>
+        <tr>
+          <td><input type='radio' name="destinationFacilityId" value=""></td>
+          <td><div class='tabletext'>No Facility</div></td>
+        </tr>
+        <#list facilityList as facility>
+        <tr>
+        <tr>
+          <td><input type='radio' name="destinationFacilityId" value="${facility.facilityId}"></td>
+          <td><div class='tabletext'>${facility.facilityName}</div></td>
+        </tr>
+        </#list>
+      </table>
+    </td>                
+  </tr>
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%'>&nbsp;</td>
+    <td width='6%'><hr class="sepbar"></td>   
+    <td width='74%'>&nbsp;</td>
+  </tr>       
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">Return From Address:</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%'>
+      <table border='0' cellpadding='1' cellspacing='0'>
+        <tr>
+          <td><input type='radio' name="orginContactMechId" value=""></td>
+          <td><div class='tabletext'>No Address</div></td>
+        </tr>       
+      </table>
+    </td>                
+  </tr> 
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%'>&nbsp;</td>
+    <td width='6%'><hr class="sepbar"></td>   
+    <td width='74%'>&nbsp;</td>
+  </tr>       
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%'>&nbsp;</td>
+    <td width='6%'>&nbsp;</td>   
+    <td width='74%'>
+      <input type="submit" class="standardButton" value="Update">      
+    </td>
+  </tr>     
+  </#if>
+</table>

@@ -26,26 +26,32 @@
  
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.widgetimpl.*;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
 
 orderId = request.getParameter("orderId");
 returnId = request.getParameter("returnId");
+if (returnId == null)
+    returnId = request.getAttribute("returnId");
+    
 returnHeader = null;
 if (returnId != null) {
     returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
 }
-
-editReturnForm = new HtmlFormWrapper("/return/ReturnForms.xml", "EditReturn", request, response);
-editReturnForm.putInContext("orderId", orderId);
-editReturnForm.putInContext("returnId", returnId);
-editReturnForm.putInContext("returnHeader", returnHeader);
-
-
-context.put("orderId", orderId);
-context.put("returnId", returnId);
 context.put("returnHeader", returnHeader);
-context.put("editReturnForm", editReturnForm);
-context.put("returnItemsForm", returnItemsForm);
+context.put("returnId", returnId);
+
+facilityList = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
+context.put("facilityList", facilityList);
+
+returnStatus = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_RETURN_STTS"), UtilMisc.toList("sequenceId"));
+context.put("returnStatus", returnStatus);
+
+orderRole = null;
+if (orderId != null) {
+    orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_TO_CUSTOMER"), UtilMisc.toList("-fromDate"));
+    orderRoles = EntityUtil.filterByDate(orderRoles);
+    orderRole = EntityUtil.getFirst(orderRoles);
+}
+context.put("orderRole", orderRole);
