@@ -24,11 +24,17 @@
     <eca service="sendOrderConfirmation" event="in-validate">
     	<action service="prepareOrderConfirmation" mode="sync" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>        
-    </eca>    
+    </eca>
+    <eca service="sendOrderConfirmation" event="commit">
+    	<action service="createOrderNotificationLog" mode="sync"/>
+    </eca>
     <eca service="sendOrderNotification" event="in-validate">
     	<action service="prepareOrderNotification" mode="sync" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>        
     </eca>
+    <eca service="sendOrderNotification" event="commit">
+    	<action service="createOrderNotificationLog" mode="sync"/>
+    </eca>    
     
     <!-- Return ECAs -->
     <eca service="updateReturnStatusFromReceipt" event="commit">
