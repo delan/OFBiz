@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.7 2004/07/07 00:15:24 doogie Exp $
+ * $Id: EntityFieldMap.java,v 1.8 2004/07/07 05:48:23 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.entity.condition;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class EntityFieldMap extends EntityCondition {
@@ -124,6 +125,12 @@ public class EntityFieldMap extends EntityCondition {
         if (fieldMap != null && !modelEntity.areFields(fieldMap.keySet())) {
             throw new GenericModelException("At least one of the passed fields is not valid: " + fieldMap.keySet().toString());
         }
+    }
+
+    public EntityCondition freeze() {
+        Map newMap = new LinkedHashMap();
+        newMap.putAll(fieldMap);
+        return new EntityFieldMap(newMap, operator);
     }
 
     public boolean equals(Object obj) {

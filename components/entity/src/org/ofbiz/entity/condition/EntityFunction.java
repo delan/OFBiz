@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFunction.java,v 1.5 2004/07/06 23:55:46 doogie Exp $
+ * $Id: EntityFunction.java,v 1.6 2004/07/07 05:48:23 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -102,6 +102,14 @@ public abstract class EntityFunction extends EntityConditionValue {
             this.nested = (EntityConditionValue) value;
         } else {
             this.value = value;
+        }
+    }
+
+    public EntityConditionValue freeze() {
+        if (nested != null) {
+            return new EntityFunction(fetcher, idInt, codeString, nested.freeze()) {};
+        } else {
+            return new EntityFunction(fetcher, idInt, codeString, value) {};
         }
     }
 

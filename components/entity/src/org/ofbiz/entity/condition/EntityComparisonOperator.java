@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.4 2004/07/07 05:03:40 doogie Exp $
+ * $Id: EntityComparisonOperator.java,v 1.5 2004/07/07 05:48:22 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {
@@ -136,6 +136,19 @@ public class EntityComparisonOperator extends EntityOperator {
         }
 
         return compare(leftValue, rightValue);
+    }
+
+    public EntityCondition freeze(Object lhs, Object rhs) {
+        return new EntityExpr(freeze(lhs), this, freeze(rhs));
+    }
+
+    protected Object freeze(Object item) {
+        if (item instanceof EntityConditionValue) {
+            EntityConditionValue ecv = (EntityConditionValue) item;
+            return ecv.freeze();
+        } else {
+            return item;
+        }
     }
 
     public EntityComparisonOperator(int id, String code) {

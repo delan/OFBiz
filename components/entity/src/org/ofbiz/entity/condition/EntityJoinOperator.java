@@ -1,5 +1,5 @@
 /*
- * $Id: EntityJoinOperator.java,v 1.3 2004/07/07 00:15:24 doogie Exp $
+ * $Id: EntityJoinOperator.java,v 1.4 2004/07/07 05:48:23 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -76,6 +76,23 @@ public class EntityJoinOperator extends EntityOperator {
             }
             sql.append(')');
         }
+    }
+
+    protected EntityCondition freeze(Object item) {
+        return ((EntityCondition) item).freeze();
+    }
+
+    public EntityCondition freeze(Object lhs, Object rhs) {
+        return new EntityExpr(freeze(lhs), this, freeze(rhs));
+    }
+
+    public EntityCondition freeze(List conditionList) {
+        List newList = new ArrayList(conditionList.size());
+        for (int i = 0; i < conditionList.size(); i++) {
+            EntityCondition condition = (EntityCondition) conditionList.get(i);
+            newList.add(condition.freeze());
+        }
+        return new EntityConditionList(newList, this);
     }
 
     public boolean entityMatches(GenericEntity entity, Object lhs, Object rhs) {

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCondition.java,v 1.7 2004/07/07 00:15:24 doogie Exp $
+ * $Id: EntityCondition.java,v 1.8 2004/07/07 05:48:23 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public abstract class EntityCondition extends EntityConditionBase {
@@ -62,4 +62,6 @@ public abstract class EntityCondition extends EntityConditionBase {
     }    
 
     abstract public boolean mapMatches(GenericDelegator delegator, Map map);
+
+    abstract public EntityCondition freeze();
 }

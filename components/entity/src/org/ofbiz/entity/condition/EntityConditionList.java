@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionList.java,v 1.6 2004/07/07 00:15:24 doogie Exp $
+ * $Id: EntityConditionList.java,v 1.7 2004/07/07 05:48:23 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * Encapsulates a list of EntityConditions to be used as a single EntityCondition combined as specified
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class EntityConditionList extends EntityCondition {
@@ -82,6 +82,10 @@ public class EntityConditionList extends EntityCondition {
 
     public boolean mapMatches(GenericDelegator delegator, Map map) {
         return operator.mapMatches(delegator, map, conditionList);
+    }
+
+    public EntityCondition freeze() {
+        return operator.freeze(conditionList);
     }
 
     public boolean equals(Object obj) {
