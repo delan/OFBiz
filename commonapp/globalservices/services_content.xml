@@ -10,13 +10,13 @@
     <service name="webSiteInterface" engine="interface" default-entity-name="WebSite" location="" invoke="">
         <description>WebSite Interface</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="siteName" optional="false"/> 
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>        
     </service>
     <service name="createWebSite" engine="simple"
             location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="createWebSite" auth="true">
         <description>Create an WebSite</description>
         <implements service="webSiteInterface"/>
+        <override name="siteName" optional="false"/>
     </service>
     <service name="updateWebSite" engine="simple"
             location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="updateWebSite" auth="true">
