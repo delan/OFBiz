@@ -1553,8 +1553,8 @@ public class OrderReadHelper {
         String quantityField = "quantity";
 
         if ("OrderItemAndShipGroupAssoc".equals(orderItem.getEntityName())) {
-            cancelQtyField = "shipGroupCancelQuantity";
-            quantityField = "shipGroupQuantity";
+            cancelQtyField = "cancelQuantity";
+            quantityField = "quantity";
         }
 
         Double cancelQty = orderItem.getDouble(cancelQtyField);
