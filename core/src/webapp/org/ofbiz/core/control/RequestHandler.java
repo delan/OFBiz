@@ -249,11 +249,18 @@ public class RequestHandler implements Serializable {
             return;
         }
 
+        long viewStartTime = System.currentTimeMillis();
+        
         try {
             ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
             vh.render(nextPage, request, response);
         } catch (ViewHandlerException e) {
             throw new RequestHandlerException(e.getMessage(), e);
+        }
+
+        String vname = (String) request.getAttribute(SiteDefs.CURRENT_VIEW);
+        if (vname != null) {
+            ServerHitBin.countView(cname + "." + vname, request.getSession().getId(), viewStartTime, System.currentTimeMillis() - viewStartTime, userLogin, delegator);
         }
     }
 

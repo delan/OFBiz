@@ -158,7 +158,7 @@ public class ControlServlet extends HttpServlet {
         ServletContext servletContext = getServletContext();
         request.setAttribute("servletContext", servletContext);
 
-        if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s)", module);
+        if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s) and View(s)", module);
 
         String errorPage = null;
         try {
@@ -174,7 +174,6 @@ public class ControlServlet extends HttpServlet {
         // Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage, module);
         // if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
-        long viewStartTime = System.currentTimeMillis();
         if (errorPage != null) {
             //some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
             request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
@@ -182,11 +181,6 @@ public class ControlServlet extends HttpServlet {
             if (rd != null) rd.forward(request, response);
         }
 
-        String vname = (String) request.getAttribute(SiteDefs.CURRENT_VIEW);
-        if (vname != null) {
-            ServerHitBin.countView(cname + "." + vname, session.getId(), viewStartTime, System.currentTimeMillis() - viewStartTime, userLogin, delegator);
-        }
-        
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
 
         ServerHitBin.countRequest(cname + "." + rname, session.getId(), requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
