@@ -84,6 +84,7 @@
     <td align='right'>
 	  <div class='tabContainer'>
       <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="tabButton">Profile</a>
+      <a href="<ofbiz:url>/viewvendor</ofbiz:url>" class="tabButton">Vendor</a>
       <a href="<ofbiz:url>/viewroles</ofbiz:url>" class="tabButton">Roles</a>
       <a href="<ofbiz:url>/viewrelationships</ofbiz:url>" class="tabButtonSelected">Relationships</a>
       </div>

@@ -49,6 +49,7 @@
     <td align="right">
 	  <div class="tabContainer">
       <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="tabButton">Profile</a>
+      <a href="<@ofbizUrl>/viewvendor</@ofbizUrl>" class="tabButton">Vendor</a>
       <a href="<@ofbizUrl>/viewroles</@ofbizUrl>" class="tabButtonSelected">Roles</a>
       <a href="<@ofbizUrl>/viewrelationships</@ofbizUrl>" class="tabButton">Relationships</a>
       </div>

@@ -282,6 +282,23 @@
         <response name="error" type="view" value="editpartygroup"/>
     </request-map>
 
+    <request-map uri="viewvendor">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewvendor"/>
+    </request-map>
+    <request-map uri="createVendor">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createVendor"/>
+        <response name="success" type="view" value="viewvendor"/>
+        <response name="error" type="view" value="viewvendor"/>
+    </request-map>
+    <request-map uri="updateVendor">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateVendor"/>
+        <response name="success" type="view" value="viewvendor"/>
+        <response name="error" type="view" value="viewvendor"/>
+    </request-map>
+
     <request-map uri="editlogin">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editlogin"/>
@@ -492,6 +509,7 @@
     <view-map name="login" type="jpublish" page="/login.ftl"/>
 
     <view-map name="viewprofile" type="jpublish" page="/party/viewprofile.ftl"/>
+    <view-map name="viewvendor" type="jpublish" page="/party/viewvendor.ftl"/>
     <view-map name="viewroles" type="jpublish" page="/party/viewroles.ftl"/>
     <view-map name="viewrelationships" type="region"/>
     <view-map name="editcontactmech" type="jpublish" page="/party/editcontactmech.ftl"/>
