@@ -199,7 +199,7 @@
     <!-- ================================================================== -->
 
 	<target name="docs" depends="prepare-docs">
-		<javadoc packagenames="org.ofbiz.*" classpath="${classpath}"
+		<javadoc packagenames="org.ofbiz.commonapp.accounting.*,org.ofbiz.commonapp.common.*,org.ofbiz.commonapp.content.*,org.ofbiz.commonapp.marketing.*,org.ofbiz.commonapp.order.*,org.ofbiz.commonapp.party.*,org.ofbiz.commonapp.product.*,org.ofbiz.commonapp.security.*,org.ofbiz.commonapp.shipment.*,org.ofbiz.commonapp.workeffort.*,org.ofbiz.commonapp.thirdparty.cybersource.*,org.ofbiz.commonapp.thirdparty.paymentech.*,org.ofbiz.commonapp.thirdparty.verisign.*" classpath="${classpath}"
 		         sourcepath="${src.dir}" destdir="${doc.dir}/api" 
 		         Windowtitle="Open for Business - Commonapp API"/>
 	</target>
