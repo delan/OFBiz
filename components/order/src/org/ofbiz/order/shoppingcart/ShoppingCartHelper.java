@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.13 2004/04/11 08:28:21 jonesde Exp $
+ * $Id: ShoppingCartHelper.java,v 1.14 2004/06/30 19:24:08 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,7 @@ import java.util.Vector;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -54,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -95,22 +96,22 @@ public class ShoppingCartHelper {
 
     /** Event to add an item to the shopping cart. */
     public Map addToCart(String catalogId, String shoppingListId, String shoppingListItemSeqId, String productId,
-                         String productCategoryId, String itemType, String itemDescription, double price,
-                         double amount, double quantity, Map context) {
+            String productCategoryId, String itemType, String itemDescription, double price,
+            double amount, double quantity, Map context) {
         Map result;
         Map attributes = null;
         String errMsg = null;
-
+	
         // price sanity check
         if (productId == null && price < 0) {
-            errMsg = UtilProperties.getMessage(resource,"cart.price_not_positive_number", this.cart.getLocale());
+            errMsg = UtilProperties.getMessage(resource, "cart.price_not_positive_number", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;
         }
 
         // quantity sanity check
         if (quantity < 1) {
-            errMsg = UtilProperties.getMessage(resource,"cart.quantity_not_positive_number", this.cart.getLocale());
+            errMsg = UtilProperties.getMessage(resource, "cart.quantity_not_positive_number", this.cart.getLocale());
             result = ServiceUtil.returnError(errMsg);
             return result;
         }
@@ -118,6 +119,24 @@ public class ShoppingCartHelper {
         // amount sanity check
         if (amount < 0) {
             amount = 0;
+        }
+
+        // check desiredDeliveryDate syntax and remove if empty
+        String ddDate = (String) context.get("itemDesiredDeliveryDate");
+        if (!UtilValidate.isEmpty(ddDate)) {
+            try {
+                java.sql.Timestamp.valueOf((String) context.get("itemDesiredDeliveryDate"));
+            } catch (IllegalArgumentException e) {
+                return ServiceUtil.returnError("Invalid Desired Delivery Date: Syntax Error");
+            }
+        } else {
+            context.remove("itemDesiredDeliveryDate");
+        }
+
+        // remove an empty comment
+        String comment = (String) context.get("itemComment");
+        if (UtilValidate.isEmpty(comment)) {
+            context.remove("itemComment");
         }
 
         // Create a HashMap of product attributes - From ShoppingCartItem.attributeNames[]
@@ -161,7 +180,7 @@ public class ShoppingCartHelper {
             return result;
         }
 
-        //Indicate there were no critical errors
+        // Indicate there were no critical errors
         result = ServiceUtil.returnSuccess();
         return result;
     }

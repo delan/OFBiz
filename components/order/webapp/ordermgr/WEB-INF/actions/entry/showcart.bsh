@@ -167,3 +167,5 @@ if (partyId != null) {
     }
 }
 
+context.put("defaultDesiredDeliveryDate", (new java.sql.Date(System.currentTimeMillis())).toString());
+

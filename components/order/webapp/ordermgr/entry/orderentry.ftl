@@ -20,14 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
 <#if !sessionAttributes.orderMode?exists || updateParty?exists>
   ${pages.get("/entry/checkinits.ftl")}
 <#elseif sessionAttributes.orderMode?exists && sessionAttributes.orderMode == "PURCHASE_ORDER" && !sessionAttributes.poHeader?exists>
-  ${pages.get("/entry/poheader.ftl")}
+  <#-- ${pages.get("/entry/poheader.ftl")}  -->
+  ${pages.get("/entry/showcart.ftl")}
 <#else>
   ${pages.get("/entry/showcart.ftl")}
 </#if>

@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.31 2004/06/29 19:03:47 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.32 2004/06/30 19:24:08 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import java.sql.Timestamp;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -60,14 +62,15 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
 
     public static String module = ShoppingCartItem.class.getName();
     public static final String resource = "OrderUiLabels";
-    public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId", "surveyResponses" };
+    public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId", "surveyResponses",
+                                              "itemDesiredDeliveryDate", "itemComment"};
 
     private transient GenericDelegator delegator = null;
     private transient GenericValue _product = null;       // the actual product
@@ -77,7 +80,6 @@ public class ShoppingCartItem implements java.io.Serializable {
     private String prodCatalogId = null;
     private String productId = null;
     private String itemType = null;
-    private String itemComment = null;
     private String productCategoryId = null;
     private String itemDescription = null;  // special field for non-product items
     private double quantity = 0.0;
@@ -276,7 +278,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.prodCatalogId = item.getProdCatalogId();
         this.productId = item.getProductId();
         this.itemType = item.getItemType();
-        this.itemComment = item.getItemComment();
         this.productCategoryId = item.getProductCategoryId();
         this.quantity = item.getQuantity();
         this.selectedAmount = item.getSelectedAmount();
@@ -310,7 +311,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.productId = _product.getString("productId");
         this.itemType = "PRODUCT_ORDER_ITEM";
         this.prodCatalogId = prodCatalogId;
-        this.itemComment = null;
         this.attributes = attributes;
         this.delegator = _product.getDelegator();
         this.delegatorName = _product.getDelegator().getDelegatorName();
@@ -593,14 +593,35 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Sets the item comment. */
     public void setItemComment(String itemComment) {
-        this.itemComment = itemComment;
+		this.setAttribute("itemComment", itemComment);
     }
 
     /** Returns the item's comment. */
     public String getItemComment() {
-        return itemComment;
+        return (String) this.getAttribute("itemComment");
     }
 
+    /** Sets the item's customer desired delivery date. */
+    public void setDesiredDeliveryDate(Timestamp ddDate) {
+        this.setAttribute("itemDesiredDeliveryDate", UtilDateTime.toDateTimeString(ddDate));
+    }
+    
+    /** Returns the item's customer desired delivery date. */
+    public Timestamp getDesiredDeliveryDate() {
+        String ddDate = (String) this.getAttribute("itemDesiredDeliveryDate");
+
+        if (ddDate != null) {
+            try {
+                return Timestamp.valueOf(ddDate);
+            } catch (IllegalArgumentException e) {
+                Debug.logWarning(e, "Problem getting itemDesiredDeliveryDate for "
+                        + this.getProductId(), module);
+                return null;
+            }
+        }
+        return null;
+    }
+    
     /** Sets the item type. */
     public void setItemType(String itemType) {
         this.itemType = itemType;
@@ -1117,8 +1138,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
 
         if ((this.attributes != null && attributes != null) &&
-                (this.attributes.size() != attributes.size()) &&
-                !(this.attributes.equals(attributes))) {
+                ( (this.attributes.size() != attributes.size()) ||
+                !(this.attributes.equals(attributes)) )) {
             return false;
         }
 
