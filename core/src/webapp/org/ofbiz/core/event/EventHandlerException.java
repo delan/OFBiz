@@ -1,10 +1,5 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.1  2001/08/25 01:42:01  azeneski
- * Seperated event processing, now is found totally in EventHandler.java
- * Updated all classes which deal with events to use to new handler.
- *
  */
 
 package org.ofbiz.core.event;
@@ -30,16 +25,18 @@ package org.ofbiz.core.event;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on August 24, 2001, 8:28 PM
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@created    December 7, 2001
+ *@version    1.0
  */
-public class EventHandlerException extends Exception {
+public class EventHandlerException extends org.ofbiz.core.util.GeneralException {
 
+    public EventHandlerException(String str, Throwable t) {
+        super(str,t);
+    }
     public EventHandlerException(String str) {
         super(str);
     }
-
     public EventHandlerException() {
         super();
     }

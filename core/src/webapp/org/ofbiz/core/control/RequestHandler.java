@@ -84,7 +84,8 @@ public class RequestHandler implements Serializable {
                     String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
                     String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
                     try {
-                        EventHandler preEvent = new EventHandler(eType,ePath,eMeth);
+                        EventHandler preEvent = EventFactory.getEventHandler(rm,eType);
+                        preEvent.initialize(ePath,eMeth);
                         String returnString = preEvent.invoke(request,response);
                         if ( !returnString.equalsIgnoreCase("success") )
                             throw new EventHandlerException("Event did not return 'success'.");
@@ -108,7 +109,8 @@ public class RequestHandler implements Serializable {
             String checkLoginMethod = rm.getEventMethod(SiteDefs.CHECK_LOGIN_REQUEST_URI);
             String checkLoginReturnString = null;
             try {
-                EventHandler loginEvent = new EventHandler(checkLoginType,checkLoginPath,checkLoginMethod);
+                EventHandler loginEvent = EventFactory.getEventHandler(rm,checkLoginType);
+                loginEvent.initialize(checkLoginPath,checkLoginMethod);                
                 checkLoginReturnString = loginEvent.invoke(request,response);
             }
             catch ( EventHandlerException e ) {
@@ -135,7 +137,8 @@ public class RequestHandler implements Serializable {
             eventMethod = rm.getEventMethod(requestUri);
             if ( eventType != null && eventPath != null && eventMethod != null ) {
                 try {
-                    EventHandler eh = new EventHandler(eventType,eventPath,eventMethod);
+                    EventHandler eh = EventFactory.getEventHandler(rm,eventType);
+                    eh.initialize(eventPath,eventMethod);                    
                     eventReturnString = eh.invoke(request,response);
                 }
                 catch ( EventHandlerException e ) {

@@ -56,7 +56,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService,context);
         if ( result == null || !(result instanceof Map))
-            throw new GenericServiceException("Service did not return expected result.");
+            throw new GenericServiceException("Service did not return expected result");
         return (Map) result;
     }
     
@@ -67,7 +67,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         Object result = null;
         
         if ( modelService.location == null || modelService.invoke == null )
-            throw new GenericServiceException("Cannot locate service to invoke.");
+            throw new GenericServiceException("Cannot locate service to invoke");
         
         // Get the classloader to use
         ClassLoader cl = null;
@@ -85,28 +85,28 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
             result = m.invoke(null, params);
         }
         catch ( ClassNotFoundException cnfe ) {
-            throw new GenericServiceException("Cannot find service location.",cnfe);
+            throw new GenericServiceException("Cannot find service location",cnfe);
         }
         catch ( NoSuchMethodException nsme) {
-            throw new GenericServiceException("Service method does not exist.",nsme);
+            throw new GenericServiceException("Service method does not exist",nsme);
         }
         catch ( SecurityException se ) {
-            throw new GenericServiceException("Access denied.",se);
+            throw new GenericServiceException("Access denied",se);
         }
         catch ( IllegalAccessException iae ) {
-            throw new GenericServiceException("Method not accessible.",iae);
+            throw new GenericServiceException("Method not accessible",iae);
         }
         catch ( IllegalArgumentException iarge ) {
-            throw new GenericServiceException("Invalid parameter match.",iarge);
+            throw new GenericServiceException("Invalid parameter match",iarge);
         }
         catch ( InvocationTargetException ite ) {
-            throw new GenericServiceException("Service threw an unexpected exception.",ite);
+            throw new GenericServiceException("Service threw an unexpected exception",ite);
         }
         catch ( NullPointerException npe ) {
-            throw new GenericServiceException("Specified object is null.",npe);
+            throw new GenericServiceException("Specified object is null",npe);
         }
         catch ( ExceptionInInitializerError eie ) {
-            throw new GenericServiceException("Initialization failed.",eie);
+            throw new GenericServiceException("Initialization failed",eie);
         }
         
         return result;

@@ -89,11 +89,11 @@ public class HTTPServiceEvents {
             return "error";
         }
         
-        String responseString;
+        String responseString = null;
         if ( result == null || !result.containsKey("response") ) 
             responseString = "success";            
         else                        
-            serviceResponse = (String) result.get("response");
+            responseString = (String) result.get("response");
         
         if ( result.containsKey("errorMessage") ) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,result.get("errorMessage"));
@@ -108,7 +108,7 @@ public class HTTPServiceEvents {
                 request.setAttribute(resultKey,resultValue);
         }
         
-        return serviceResponse;
+        return responseString;
             
     }
 }

@@ -4,12 +4,13 @@
 
 package org.ofbiz.core.event;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+import org.ofbiz.core.control.*;
+import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b>EventHandler.java
- * <p><b>Description:</b> Event Handler Interface
+ * <p><b>Title:</b>EventFactory.java
+ * <p><b>Description:</b> Event Handler Factory
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -33,21 +34,30 @@ import javax.servlet.http.HttpServletResponse;
  *@created    December 7, 2001
  *@version    1.0
  */
-public interface EventHandler {
-    
-    /** Initialize the required parameters
-     *@param eventPath The path or location of this event
-     *@param eventMethod The method to invoke
-     */
-    public void initialize(String eventPath, String eventMethod);
-    
-    /** Invoke the web event
-     *@param request The servlet request object
-     *@param response The servlet response object
-     *@return String Result code
-     *@throws EventHandlerException
-     */
-    public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException;
-
+public class EventFactory {
+        
+    public static EventHandler getEventHandler(RequestManager mgr, String type) throws EventHandlerException {
+        String handlerClass = mgr.getHandlerClass(type);
+        if ( handlerClass == null ) 
+            throw new EventHandlerException("Unknown handler");
+        
+        EventHandler handler = null;
+        try {            
+            handler = (EventHandler) ObjectType.getInstance(handlerClass);           
+        }
+        catch ( ClassNotFoundException cnf ) {
+            throw new EventHandlerException("Cannot load handler class",cnf);
+        }
+        catch ( InstantiationException ie ) {
+            throw new EventHandlerException("Cannot get instance of the handler",ie);
+        }
+        catch ( IllegalAccessException iae ) {
+            throw new EventHandlerException(iae.getMessage(),iae);
+        }
+        
+        return handler;
+    }
 }
-
+            
+       
+            

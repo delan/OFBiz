@@ -39,6 +39,8 @@ public class ModelService {
     
   /** The name of this service */
   public String name;
+  /** The namespace used for this service */
+  public String nameSpace;
   /** The name of the engine from engine.properties */
   public String engineName;
   /** The package name or location of this service */  
@@ -52,6 +54,19 @@ public class ModelService {
   /** Result Information, a list of values returned by the service */
   public Map resultInfo;
   
+  public static final String DEFAULT_NAMESPACE = "http://www.ofbiz.org/";
+  
+  public ModelService() {
+      this.name = null;
+      this.nameSpace = DEFAULT_NAMESPACE;
+      this.engineName = null;
+      this.location = null;
+      this.invoke = null;
+      this.export = false;
+      this.contextInfo = null;
+      this.resultInfo = null;
+  }
+      
   /** Validates a map of name, object types to a map of name, objects
    * @param info The map of name, object types
    * @param test The map to test its value types.
