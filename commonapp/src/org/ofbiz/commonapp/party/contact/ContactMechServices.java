@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2002/01/20 06:29:55  jonesde
+ * Initial, incomplete pass at refactoring of party contact stuff with services, simple events, etc
+ *
  * 
  */
 
@@ -396,6 +399,7 @@ public class ContactMechServices {
     }
     
     /** Creates a PartyContactMechPurpose
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -422,7 +426,7 @@ public class ContactMechServices {
             return result;
         }
         
-        //security check: userLogin partyId must equal partyId, or must have permission
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
         if (!partyId.equals(userLogin.getString("partyId"))) {
             if (!security.hasEntityPermission("PARTYMGR", "_CREATE", userLogin)) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -467,6 +471,7 @@ public class ContactMechServices {
     }
     
     /** Deletes the PartyContactMechPurpose corresponding to the parameters in the context
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_DELETE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -494,11 +499,11 @@ public class ContactMechServices {
             return result;
         }
         
-        //security check: userLogin partyId must equal partyId, or must have permission
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_DELETE permission
         if (!partyId.equals(userLogin.getString("partyId"))) {
-            if (!security.hasEntityPermission("PARTYMGR", "_CREATE", userLogin)) {
+            if (!security.hasEntityPermission("PARTYMGR", "_DELETE", userLogin)) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to create a contact mech purpose for this partyId");
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to delete a contact mech purpose for this partyId");
                 return result;
             }
         }
@@ -533,6 +538,7 @@ public class ContactMechServices {
     }
     
     /** Creates a CreditCardInfo entity according to the parameters passed in the context
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -543,81 +549,66 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
+        Timestamp now = UtilDateTime.nowTimestamp();
+
         String partyId = (String) context.get("partyId");
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
-        
-        Timestamp now = UtilDateTime.nowTimestamp();
-
-       /*
-        Collection toBeStored = new LinkedList();
-        boolean isModified = false;
-
-        String nameOnCard = request.getParameter("CC_NAME_ON_CARD");
-        String companyNameOnCard = request.getParameter("CC_COMPANY_NAME_ON_CARD");
-        String cardType = request.getParameter("CC_CARD_TYPE");
-        String cardNumber = request.getParameter("CC_CARD_NUMBER");
-        String cardSecurityCode = request.getParameter("CC_CARD_SECURITY_CODE");
-        String expMonth = request.getParameter("CC_EXPIRE_DATE_MONTH");
-        String expYear = request.getParameter("CC_EXPIRE_DATE_YEAR");
-        String expireDate = expMonth + "/" + expYear;
-        String contactMechId = request.getParameter("CC_CONTACT_MECH_ID");
-
-        if(!UtilValidate.isNotEmpty(nameOnCard)) errMsg += "<li>Name on Card missing.";
-        if(!UtilValidate.isNotEmpty(cardType)) errMsg += "<li>Card Type missing.";
-        if(!UtilValidate.isNotEmpty(cardNumber)) errMsg += "<li>Card Number missing.";
-        if(!UtilValidate.isNotEmpty(expMonth)) errMsg += "<li>Expiration Month missing.";
-        if(!UtilValidate.isNotEmpty(expYear)) errMsg += "<li>Expiration Year missing.";
-        if(!UtilValidate.isAnyCard(cardNumber)) errMsg += "<li>" + UtilValidate.isAnyCardMsg;
-        if(!UtilValidate.isCardMatch(cardType, cardNumber)) errMsg += "<li>" + cardNumber + UtilValidate.isCreditCardPrefixMsg + cardType + UtilValidate.isCreditCardSuffixMsg + " (It appears to be a " + UtilValidate.getCardType(cardNumber) + " credit card number)";
-        if(!UtilValidate.isDateAfterToday(expireDate)) errMsg += "<li>The expiration date " + expireDate + " is before today.";
-        if(errMsg.length() > 0) {
-            errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
-            return "error";
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing, cannot create credit card info");
+            return result;
         }
-
-        GenericValue creditCardInfo = null;
-        GenericValue newCc = null;
-        if("UPDATE".equals(updateMode)) {
-            String creditCardId = request.getParameter("CREDIT_CARD_ID");
-            try {
-                creditCardInfo = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
-            } catch(GenericEntityException e) {
-                Debug.logWarning(e.getMessage()); creditCardInfo = null;
+        
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_CREATE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to create credit card info for this partyId");
+                return result;
             }
         }
-        if (creditCardInfo != null) 
-            newCc = new GenericValue(creditCardInfo);
-        else 
-            newCc = delegator.makeValue("CreditCardInfo", null);
+        
+        //do some more complicated/critical validation...
+        List messages = new LinkedList();
+        if (!UtilValidate.isCardMatch((String) context.get("cardType"), (String) context.get("cardNumber")))
+            messages.add((String) context.get("cardNumber") + UtilValidate.isCreditCardPrefixMsg + 
+                    (String) context.get("cardType") + UtilValidate.isCreditCardSuffixMsg + 
+                    " (It appears to be a " + UtilValidate.getCardType((String) context.get("cardNumber")) + " credit card number)");
+        if (!UtilValidate.isDateAfterToday((String) context.get("expireDate"))) 
+            messages.add("The expiration date " + (String) context.get("expireDate") + " is before today.");
+        if (messages.size() > 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE_LIST, messages);
+            return result;
+        }
+
+        Collection toBeStored = new LinkedList();
+        GenericValue newCc = delegator.makeValue("CreditCardInfo", null);
         toBeStored.add(newCc);
 
-        Long newCcId = delegator.getNextSeqId("CreditCardInfo"); if(newCcId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
-        newCc.set("partyId", partyId);
-        newCc.set("nameOnCard", nameOnCard);
-        newCc.set("companyNameOnCard", companyNameOnCard);
-        newCc.set("cardType", cardType);
-        newCc.set("cardNumber", cardNumber);
-        newCc.set("cardSecurityCode", cardSecurityCode);
-        newCc.set("expireDate", expireDate);
-        newCc.set("contactMechId", contactMechId);
-
-        if ("UPDATE".equals(updateMode)) {
-            if(!newCc.equals(creditCardInfo)) {
-                newCc.set("creditCardId", newCcId.toString());
-                newCc.set("fromDate", now);
-                isModified = true;
-            }
-        } else {
-            //is CREATE, set values
-            newCc.set("creditCardId", newCcId.toString());
-            newCc.set("fromDate", now);
-            isModified = true;
+        Long newCcId = delegator.getNextSeqId("CreditCardInfo");
+        if(newCcId == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create credit card info (id generation failure)");
+            return result;
         }
+        newCc.set("partyId", partyId);
+        newCc.set("nameOnCard", context.get("nameOnCard"));
+        newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
+        newCc.set("cardType", context.get("cardType"));
+        newCc.set("cardNumber", context.get("cardNumber"));
+        newCc.set("cardSecurityCode", context.get("cardSecurityCode"));
+        newCc.set("expireDate", context.get("expireDate"));
+        newCc.set("contactMechId", context.get("contactMechId"));
+
+        newCc.set("creditCardId", newCcId.toString());
+        newCc.set("fromDate", now);
 
         GenericValue newPartyContactMechPurpose = null;
+        String contactMechId = (String) context.get("contactMechId");
         if (contactMechId != null && contactMechId.length() > 0) {
             //add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
@@ -626,42 +617,37 @@ public class ContactMechServices {
             try {
                 Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
                 tempVal = EntityUtil.getFirst(allPCMPs);
-            } catch(GenericEntityException e) {
+            } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
                 tempVal = null;
             }
 
-            if(tempVal == null) {
+            if (tempVal == null) {
                 //no value found, create a new one
                 newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
             }
         }
 
-        if(isModified) {
-            Debug.logInfo("yes, is modified");
-            if(newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
-            if("UPDATE".equals(updateMode)) {
-                //if it is an update, set thru date on old card
-                creditCardInfo.set("thruDate", now);
-                toBeStored.add(creditCardInfo);
-            }
+        if (newPartyContactMechPurpose != null)
+            toBeStored.add(newPartyContactMechPurpose);
 
-            try {
-                delegator.storeAll(toBeStored);
-            } catch(GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not add credit card (write failure). Please contact customer service.");
-                return "error";
-            }
+        try {
+            delegator.storeAll(toBeStored);
+        } catch(GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create credit card info (write failure): " + e.getMessage());
+            return result;
         }
-        request.setAttribute("CREDIT_CARD_ID", newCc.getString("creditCardId"));
 
-        return "success";
-       */
-        return null;
+        result.put("creditCardId", newCc.getString("creditCardId"));
+    
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
     }
     
     /** Updates a CreditCardInfo entity according to the parameters passed in the context
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -672,81 +658,90 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
+        Timestamp now = UtilDateTime.nowTimestamp();
+
         String partyId = (String) context.get("partyId");
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing, cannot update credit card info");
+            return result;
+        }
         
-        Timestamp now = UtilDateTime.nowTimestamp();
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to update credit card info for this partyId");
+                return result;
+            }
+        }
 
-       /*
+        //do some more complicated/critical validation...
+        List messages = new LinkedList();
+        if (!UtilValidate.isCardMatch((String) context.get("cardType"), (String) context.get("cardNumber")))
+            messages.add((String) context.get("cardNumber") + UtilValidate.isCreditCardPrefixMsg + 
+                    (String) context.get("cardType") + UtilValidate.isCreditCardSuffixMsg + 
+                    " (It appears to be a " + UtilValidate.getCardType((String) context.get("cardNumber")) + " credit card number)");
+        if (!UtilValidate.isDateAfterToday((String) context.get("expireDate"))) 
+            messages.add("The expiration date " + (String) context.get("expireDate") + " is before today.");
+        if (messages.size() > 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE_LIST, messages);
+            return result;
+        }
+
         Collection toBeStored = new LinkedList();
         boolean isModified = false;
 
-        String nameOnCard = request.getParameter("CC_NAME_ON_CARD");
-        String companyNameOnCard = request.getParameter("CC_COMPANY_NAME_ON_CARD");
-        String cardType = request.getParameter("CC_CARD_TYPE");
-        String cardNumber = request.getParameter("CC_CARD_NUMBER");
-        String cardSecurityCode = request.getParameter("CC_CARD_SECURITY_CODE");
-        String expMonth = request.getParameter("CC_EXPIRE_DATE_MONTH");
-        String expYear = request.getParameter("CC_EXPIRE_DATE_YEAR");
-        String expireDate = expMonth + "/" + expYear;
-        String contactMechId = request.getParameter("CC_CONTACT_MECH_ID");
-
-        if(!UtilValidate.isNotEmpty(nameOnCard)) errMsg += "<li>Name on Card missing.";
-        if(!UtilValidate.isNotEmpty(cardType)) errMsg += "<li>Card Type missing.";
-        if(!UtilValidate.isNotEmpty(cardNumber)) errMsg += "<li>Card Number missing.";
-        if(!UtilValidate.isNotEmpty(expMonth)) errMsg += "<li>Expiration Month missing.";
-        if(!UtilValidate.isNotEmpty(expYear)) errMsg += "<li>Expiration Year missing.";
-        if(!UtilValidate.isAnyCard(cardNumber)) errMsg += "<li>" + UtilValidate.isAnyCardMsg;
-        if(!UtilValidate.isCardMatch(cardType, cardNumber)) errMsg += "<li>" + cardNumber + UtilValidate.isCreditCardPrefixMsg + cardType + UtilValidate.isCreditCardSuffixMsg + " (It appears to be a " + UtilValidate.getCardType(cardNumber) + " credit card number)";
-        if(!UtilValidate.isDateAfterToday(expireDate)) errMsg += "<li>The expiration date " + expireDate + " is before today.";
-        if(errMsg.length() > 0) {
-            errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
-            return "error";
-        }
-
         GenericValue creditCardInfo = null;
         GenericValue newCc = null;
-        if("UPDATE".equals(updateMode)) {
-            String creditCardId = request.getParameter("CREDIT_CARD_ID");
-            try {
-                creditCardInfo = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
-            } catch(GenericEntityException e) {
-                Debug.logWarning(e.getMessage()); creditCardInfo = null;
-            }
+        String creditCardId = (String) context.get("creditCardId");
+        try {
+            creditCardInfo = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get credit card info to update (read error): " + e.getMessage());
+            return result;
         }
-        if (creditCardInfo != null) 
-            newCc = new GenericValue(creditCardInfo);
-        else 
-            newCc = delegator.makeValue("CreditCardInfo", null);
+
+        if (creditCardInfo == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not find credit card info to update with id " + creditCardId);
+            return result;
+        }
+        
+        newCc = new GenericValue(creditCardInfo);
         toBeStored.add(newCc);
 
-        Long newCcId = delegator.getNextSeqId("CreditCardInfo"); if(newCcId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
-        newCc.set("partyId", partyId);
-        newCc.set("nameOnCard", nameOnCard);
-        newCc.set("companyNameOnCard", companyNameOnCard);
-        newCc.set("cardType", cardType);
-        newCc.set("cardNumber", cardNumber);
-        newCc.set("cardSecurityCode", cardSecurityCode);
-        newCc.set("expireDate", expireDate);
-        newCc.set("contactMechId", contactMechId);
+        Long newCcId = delegator.getNextSeqId("CreditCardInfo");
+        if(newCcId == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not update credit card info (id generation failure)");
+            return result;
+        }
+        
+        newCc.set("partyId", context.get("partyId"));
+        newCc.set("nameOnCard", context.get("nameOnCard"));
+        newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
+        newCc.set("cardType", context.get("cardType"));
+        newCc.set("cardNumber", context.get("cardNumber"));
+        newCc.set("cardSecurityCode", context.get("cardSecurityCode"));
+        newCc.set("expireDate", context.get("expireDate"));
+        newCc.set("contactMechId", context.get("contactMechId"));
 
-        if ("UPDATE".equals(updateMode)) {
-            if(!newCc.equals(creditCardInfo)) {
-                newCc.set("creditCardId", newCcId.toString());
-                newCc.set("fromDate", now);
-                isModified = true;
-            }
-        } else {
-            //is CREATE, set values
+        if (!newCc.equals(creditCardInfo)) {
             newCc.set("creditCardId", newCcId.toString());
             newCc.set("fromDate", now);
             isModified = true;
         }
 
         GenericValue newPartyContactMechPurpose = null;
+        String contactMechId = (String) context.get("contactMechId");
         if (contactMechId != null && contactMechId.length() > 0) {
             //add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
@@ -767,30 +762,35 @@ public class ContactMechServices {
         }
 
         if(isModified) {
-            Debug.logInfo("yes, is modified");
-            if(newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
-            if("UPDATE".equals(updateMode)) {
-                //if it is an update, set thru date on old card
-                creditCardInfo.set("thruDate", now);
-                toBeStored.add(creditCardInfo);
-            }
+            //Debug.logInfo("yes, is modified");
+            if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
+
+            //set thru date on old card
+            creditCardInfo.set("thruDate", now);
+            toBeStored.add(creditCardInfo);
 
             try {
                 delegator.storeAll(toBeStored);
             } catch(GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not add credit card (write failure). Please contact customer service.");
-                return "error";
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not update credit card (write failure): " + e.getMessage());
+                return result;
             }
+        } else {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating credit card info");
+            return result;
         }
-        request.setAttribute("CREDIT_CARD_ID", newCc.getString("creditCardId"));
+
+        result.put("newCreditCardId", newCc.getString("creditCardId"));
     
-        return "success";
-       */
-        return null;
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
     }
     
     /** Deletes a CreditCardInfo entity according to the parameters passed in the context
+     * <b>security check</b>: userLogin partyId must equal creditCardInfo partyId, or must have PARTYMGR_DELETE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -801,36 +801,44 @@ public class ContactMechServices {
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
-        String partyId = (String) context.get("partyId");
-        if (partyId == null || partyId.length() == 0) {
-            partyId = userLogin.getString("partyId");
-        }
-        
         Timestamp now = UtilDateTime.nowTimestamp();
         
-       /*
         //never delete a credit card, just put a to date on the link to the party
-        String creditCardId = request.getParameter("CREDIT_CARD_ID");
+        String creditCardId = (String) context.get("creditCardId");
         GenericValue creditCardInfo = null;
-        try { creditCardInfo = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId)); }
-        catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); creditCardInfo = null; }
-
-        if(creditCardInfo == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not find credit card info to delete (read failure). Please contact customer service.");
-            return "error";
+        try {
+            creditCardInfo = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
+        } catch(GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            creditCardInfo = null;
         }
 
+        if(creditCardInfo == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not find credit card info to delete (read failure)");
+            return result;
+        }
+
+        //<b>security check</b>: userLogin partyId must equal creditCardInfo partyId, or must have PARTYMGR_DELETE permission
+        if (creditCardInfo.get("partyId") == null || !creditCardInfo.getString("partyId").equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_DELETE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to delete credit card info for this partyId");
+                return result;
+            }
+        }
+        
         creditCardInfo.set("thruDate", now);
         try {
             creditCardInfo.store(); 
         } catch(GenericEntityException e) {
             Debug.logWarning(e.getMessage());
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete credit card info (write failure). Please contact customer service.");
-            return "error";
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not delete credit card info (write failure): " + e.getMessage());
+            return result;
         }
         
-        return "success";
-       */
-        return null;
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
     }
 }
