@@ -103,9 +103,11 @@ public class LogikusMediator implements ActionListener, Runnable {
       conductProof();
     }
     if (object == haltButton) {
+        /* 
       if (computeThread != null) {
         computeThread.stop();
       }
+         */
       computeThread = null;
       setComputing(false);
     }
