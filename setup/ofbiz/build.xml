@@ -131,6 +131,7 @@
         <delete file="${etc.dir}/cache.properties" />
         <delete file="${etc.dir}/poolman.xml" />
         <delete file="${etc.dir}/jndi.properties" />
+        <delete file="${etc.dir}/servicesengine.properties" />
         <delete file="${etc.dir}/tyrexdomain.xml" />
         
         <delete file="${lib.dir}/ofbcore-share.jar" />
@@ -298,6 +299,7 @@
         <copy file="commonapp/etc/cache.properties" toFile="${etc.dir}/cache.properties" />
         <copy file="commonapp/etc/poolman.xml" toFile="${etc.dir}/poolman.xml" />
         <copy file="commonapp/etc/jndi.properties" toFile="${etc.dir}/jndi.properties" />
+        <copy file="commonapp/etc/servicesengine.properties" toFile="${etc.dir}/servicesengine.properties" />
         <copy file="commonapp/etc/tyrexdomain.xml" toFile="${etc.dir}/tyrexdomain.xml" />
 <!--
         <copy file="commonapp/lib/ofbcommonapp.jar"
