@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -59,6 +59,7 @@
       <td width='1%'><div class="tabletext">&nbsp;</div></td>
     </tr>
     
+    <#if securityGroupPermissions?has_content>
     <#list securityGroupPermissions[lowIndex..highIndex-1] as securityGroupPermission>
       <#assign securityPermission = securityGroupPermission.getRelatedOneCache("SecurityPermission")?if_exists>
       <tr valign="middle">
@@ -69,6 +70,7 @@
         </td>
       </tr>
     </#list>
+    </#if>
   </table>  
   <#if securityGroupPermissions?has_content>
     <table border="0" width="100%" cellpadding="2">
