@@ -521,6 +521,15 @@
       <view-link entity-alias="PF" rel-entity-alias="PFA">
         <key-map field-name="productFeatureId"/>
       </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductFeatureType">
+        <key-map field-name="productFeatureTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductFeatureApplType">
+        <key-map field-name="productFeatureApplTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductFeatureCategory">
+        <key-map field-name="productFeatureCategoryId"/>
+      </relation>
     </view-entity>
     <entity entity-name="ProductFeatureAppl"
             package-name="org.ofbiz.commonapp.product.feature"
