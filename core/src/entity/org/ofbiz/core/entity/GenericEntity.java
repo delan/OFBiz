@@ -317,7 +317,12 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
             if (fields.containsKey(curField.getName())) {
                 Object field = fields.get(curField.getName());
                 if (setIfEmpty) {
-                    this.set(curField.getName(), field);
+                    //if empty string, set to null
+                    if (field != null && field instanceof String && ((String)field).length() == 0) {
+                        this.set(curField.getName(), null);
+                    } else {
+                        this.set(curField.getName(), field);
+                    }
                 } else {
                     //okay, only set if not empty...
                     if (field != null) {
@@ -350,7 +355,12 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
             if (fields.containsKey(curField.getName())) {
                 Object field = fields.get(curField.getName());
                 if (setIfEmpty) {
-                    this.set(curField.getName(), field);
+                    //if empty string, set to null
+                    if (field != null && field instanceof String && ((String)field).length() == 0) {
+                        this.set(curField.getName(), null);
+                    } else {
+                        this.set(curField.getName(), field);
+                    }
                 } else {
                     //okay, only set if not empty...
                     if (field != null) {
