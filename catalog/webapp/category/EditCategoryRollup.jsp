@@ -164,7 +164,7 @@
       <td><div class='tabletext' <%=(productCategoryRollup.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productCategoryRollup.getTimestamp("fromDate")))?"style='color: red;'":""%>><ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate"/></div></td>
       <td align="center">
         <FORM method=POST action='<ofbiz:url>/updateProductCategoryToCategory</ofbiz:url>' name='lineChildForm<%=lineChild%>'>
-            <input type=hidden name='showProductCategoryId' value='<ofbiz:inputvalue entityAttr="productCategoryRollup" field="productCategoryId"/>'>
+            <input type=hidden name='showProductCategoryId' value='<%=productCategoryId%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="parentProductCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate" fullattrs="true"/>>
