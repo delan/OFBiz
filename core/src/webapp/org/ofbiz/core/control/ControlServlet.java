@@ -199,7 +199,7 @@ public class ControlServlet extends HttpServlet {
             getRequestHandler().doRequest(request, response, null, userLogin, delegator);
         } catch (Exception e) {
             Debug.logError(e, "Error in request handler: ");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, e.toString());
             errorPage = getRequestHandler().getDefaultErrorPage(request);
         }
 

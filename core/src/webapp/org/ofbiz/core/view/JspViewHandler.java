@@ -63,9 +63,9 @@ public class JspViewHandler implements ViewHandler {
         try {
             rd.forward(request, response);
         } catch (IOException ie) {
-            throw new ViewHandlerException(ie.getMessage(), ie);
+            throw new ViewHandlerException("IO Error in view", ie);
         } catch (ServletException se) {
-            throw new ViewHandlerException(se.getMessage(), se);
+            throw new ViewHandlerException("Error in view", se.getRootCause());
         }
     }
 }

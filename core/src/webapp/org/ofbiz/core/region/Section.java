@@ -83,9 +83,11 @@ public class Section extends Content {
                 } else {
                     try {
                         pageContext.include(content.toString());
-                    } catch (Exception ex) {
-                        // makes a redundant print: Debug.logError(ex, "Error including content [" + content + "]: ");
-                        throw new JspException("Error including content [" + content + "]: " + ex.getMessage());
+                    } catch (java.io.IOException ie) {
+                        throw new JspException("IO Error in [" + content + "]: ", ie);
+                    } catch (javax.servlet.ServletException se) {
+                        Debug.logError(se.getRootCause());
+                        throw new JspException("Error in [" + content + "]: " + se.getRootCause(), se.getRootCause());
                     }
                 }
             }

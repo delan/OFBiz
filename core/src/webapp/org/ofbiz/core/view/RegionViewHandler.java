@@ -82,9 +82,9 @@ public class RegionViewHandler implements ViewHandler {
         try {
             region.render(request, response);
         } catch (IOException ie) {
-            throw new ViewHandlerException("IO Error rendering region", ie);
+            throw new ViewHandlerException("IO Error in region", ie);
         } catch (ServletException se) {
-            throw new ViewHandlerException("Servlet Error rendering region", se);
+            throw new ViewHandlerException("Error in region", se.getRootCause());
         }
         RegionStack.pop(request);
     }
