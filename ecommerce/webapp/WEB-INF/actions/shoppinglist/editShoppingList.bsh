@@ -52,26 +52,26 @@ if (shoppingListId != null) {
     shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
     context.put("shoppingList", shoppingList);
 
-	if (shoppingList != null) {
-	    shoppingListItems = shoppingList.getRelated("ShoppingListItem");
-	    context.put("shoppingListItems", shoppingListItems);
+    if (shoppingList != null) {
+        shoppingListItems = shoppingList.getRelated("ShoppingListItem");
+        context.put("shoppingListItems", shoppingListItems);
+        
+        shoppingListType = shoppingList.getRelatedOne("ShoppingListType");
+        context.put("shoppingListType", shoppingListType);
 	
-	    shoppingListType = shoppingList.getRelatedOne("ShoppingListType");
-	    context.put("shoppingListType", shoppingListType);
-	
-		// get the child shopping lists of the current list for the logged in user
-		childShoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "parentShoppingListId", shoppingListId), UtilMisc.toList("listName"));
-		context.put("childShoppingLists", childShoppingLists);
+        // get the child shopping lists of the current list for the logged in user
+        childShoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "parentShoppingListId", shoppingListId), UtilMisc.toList("listName"));
+        context.put("childShoppingLists", childShoppingLists);
 
-		// get the parent shopping list if there is one
-	    parentShoppingList = shoppingList.getRelatedOne("ParentShoppingList");
-		context.put("parentShoppingList", parentShoppingList);
+        // get the parent shopping list if there is one
+        parentShoppingList = shoppingList.getRelatedOne("ParentShoppingList");
+        context.put("parentShoppingList", parentShoppingList);
 
-		if (userLogin.getString("partyId").equals(shoppingList.getString("partyId"))) {
-			context.put("canView", Boolean.TRUE);
-		} else {
-			context.put("canView", Boolean.FALSE);
-		}
-	}
+        if (userLogin.getString("partyId").equals(shoppingList.getString("partyId"))) {
+            context.put("canView", Boolean.TRUE);
+        } else {
+            context.put("canView", Boolean.FALSE);
+        }
+    }
 }
  

@@ -109,9 +109,10 @@ public class ShoppingListEvents {
     public static String addListToCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);        
         
         String shoppingListId = request.getParameter("shoppingListId");
+        String includeChild = request.getParameter("includeChild");
         String prodCatalogId =  CatalogWorker.getCurrentCatalogId(request);
         
         // no list; no add
@@ -125,7 +126,18 @@ public class ShoppingListEvents {
         List shoppingListItems = null;
         try {
             shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
-            shoppingListItems = shoppingList.getRelated("ShoppingListItem");  
+            shoppingListItems = shoppingList.getRelated("ShoppingListItem");
+            
+            // include all items of child lists if flagged to do so
+            if (includeChild != null) {            
+                List childShoppingLists = shoppingList.getRelated("ChildShoppingList");
+                Iterator ci = childShoppingLists.iterator();
+                while (ci.hasNext()) {
+                    GenericValue v = (GenericValue) ci.next();
+                    List items = v.getRelated("ShoppingListItem");
+                    shoppingListItems.addAll(items);
+                }
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting ShoppingList and ShoppingListItem records", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error getting shopping list and items.");
