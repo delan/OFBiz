@@ -14,7 +14,7 @@
 <A href="http://sf.net/projects/ofbiz"><IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: January 14, 2002<br>
+Last Updated: February 23, 2002<br>
 $Id$ <br>
 <hr>
 <br>
@@ -276,64 +276,93 @@ simple-method starts or that are used as it executes to keep track of certain
 information. Some will exist when called as an event or a service, these
 are marked in the following list. Each name can be overridden using an attribute
 on the <b>simple-method</b> tag. The defaults are listed below (you can also find 
-them in the DTD):</p>
+them in the DTD).</p>
+
+<p>Here is a complete list of the attributes of the simple-method tag:</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Reqd?</b></td>
     <td><b>Default&nbsp;Value</b></td>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>parameter-map-name</td><td>"parameters"</td>
+    <td>method-name</td><td>Y</td><td>N/A</td>
+    <td>A name (preferrably a legal Java identifier) for this method. This name
+    must be unique for the XML file it is in as it will be used to reference this
+    method externally.</td>
+</tr>
+<tr>
+    <td>short-description</td><td>Y</td><td>N/A</td>
+    <td>A short description of the method for certain system error messages.</td>
+</tr>
+<tr>
+    <td>login-required</td><td>N</td><td>"true"</td>
+    <td>Is a logged in user (UserLogin object, or login.username and login.password Strings) required to run this method? "true" or "false".</td>
+</tr>
+<tr>
+    <td>use-transaction</td><td>N</td><td>"true"</td>
+    <td>Create a transaction if none exists for this thread? "true" or "false".</td>
+</tr>
+<tr>
+    <td>default-error-code</td><td>N</td><td>"error"</td>
+    <td>The default error return code.</td>
+</tr>
+<tr>
+    <td>default-success-code</td><td>N</td><td>"success"</td>
+    <td>The default success return code.</td>
+</tr>
+<tr>
+    <td>parameter-map-name</td><td>N</td><td>"parameters"</td>
     <td>As event: copy of request parameters<br>As service: incoming context</td>
 </tr>
 <tr>
-    <td>event-request-object-name</td><td>"request"</td>
+    <td>event-request-object-name</td><td>N</td><td>"request"</td>
     <td>(as event only)</td>
 </tr>
 <tr>
-    <td>event-response-code-name</td><td>"_response_code_"</td>
+    <td>event-response-code-name</td><td>N</td><td>"_response_code_"</td>
     <td>(as event only)</td>
 </tr>
 <tr>
-    <td>event-error-message-name</td><td>"_error_message_"</td>
+    <td>event-error-message-name</td><td>N</td><td>"_error_message_"</td>
     <td>(as event only)</td>
 </tr>
 <tr>
-    <td>event-event-message-name</td><td>"_event_message_"</td>
+    <td>event-event-message-name</td><td>N</td><td>"_event_message_"</td>
     <td>(as event only)</td>
 </tr>
 <tr>
-    <td>service-response-message-name</td><td>"responseMessage"</td>
+    <td>service-response-message-name</td><td>N</td><td>"responseMessage"</td>
     <td>(as service only)</td>
 </tr>
 <tr>
-    <td>service-error-message-name</td><td>"errorMessage"</td>
+    <td>service-error-message-name</td><td>N</td><td>"errorMessage"</td>
     <td>(as service only)</td>
 </tr>
 <tr>
-    <td>service-error-message-list-name</td><td>"errorMessageList"</td>
+    <td>service-error-message-list-name</td><td>N</td><td>"errorMessageList"</td>
     <td>(as service only)</td>
 </tr>
 <tr>
-    <td>service-success-message-name</td><td>"successMessage"</td>
+    <td>service-success-message-name</td><td>N</td><td>"successMessage"</td>
     <td>(as service only)</td>
 </tr>
 <tr>
-    <td>service-success-message-list-name</td><td>"successMessageList"</td>
+    <td>service-success-message-list-name</td><td>N</td><td>"successMessageList"</td>
     <td>(as service only)</td>
 </tr>
 <tr>
-    <td>delegator-name</td><td>"delegator"</td>
+    <td>delegator-name</td><td>N</td><td>"delegator"</td>
     <td>A GenericDelegator object to use in the method</td>
 </tr>
 <tr>
-    <td>security-name</td><td>"security"</td>
+    <td>security-name</td><td>N</td><td>"security"</td>
     <td>A Security object to use in the method</td>
 </tr>
 <tr>
-    <td>dispatcher-name</td><td>"dispatcher"</td>
+    <td>dispatcher-name</td><td>N</td><td>"dispatcher"</td>
     <td>A LocalDispatcher object to use in the method</td>
 </tr>
 </table>
@@ -819,15 +848,551 @@ specified service result field.</p>
 <hr>
 <h4><a name='Environment'>Method Environment Operations</a></h4>
 
+<p><b><u>field-to-field</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the map in the method environment the field will come from.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to copy.</td>
+</tr>
+<tr>
+    <td>to-map-name</td><td>N</td>
+    <td>The name of the map in the method environment the field will go to.
+    If empty will default to the map-name.</td>
+</tr>
+<tr>
+    <td>to-field-name</td><td>N</td>
+    <td>The name (key) of the map field to put the original field in.
+    If empty will default to the field-name.</td>
+</tr>
+</table>
+<p>The field-to-field tag copies a field from a map to a field in another map.</p>
+
+<p><b><u>env-to-list</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the method environment field the object will come from.</td>
+</tr>
+<tr>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the list in the method environment that the object will be appended to.</td>
+</tr>
+</table>
+<p>The env-to-list tag appends a method environment field to the specified list.</p>
+
+<p><b><u>env-to-field</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the method environment field the object will come from.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the map in the method environment the field will go to.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>N</td>
+    <td>The name (key) of the map field to put the original field in.
+    If empty will default to the env-name.</td>
+</tr>
+</table>
+<p>The env-to-field tag copies a field from the method environment to a field in a map.</p>
+
+<p><b><u>field-to-env</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the method environment field the object will be put in.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the map in the method environment the field will come from.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>N</td>
+    <td>The name (key) of the map field to get the object from.
+    If empty will default to the env-name.</td>
+</tr>
+</table>
+<p>The field-to-env tag copies a field from a map to a field in the method environment.</p>
+
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
 <h4><a name='Entity'>Entity Engine Operations</a></h4>
 
+<p><b><u>now-timestamp-to-env</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the method environment field the timestamp will be put in.</td>
+</tr>
+</table>
+<p>The now-timestamp-to-env tag creates a java.sql.Timestamp object with the current date
+and time in it and puts it in a field in the method environment.</p>
+
+<p><b><u>now-date-to-env</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the method environment field the date will be put in.</td>
+</tr>
+</table>
+<p>The now-date-to-env tag creates a java.sql.Date object with the current date
+in it and puts it in a field in the method environment.</p>
+
+<p><b><u>sequenced-id-to-env</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>sequence-name</td><td>Y</td>
+    <td>The name of the sequence to pass to the delegator. The same name must
+    always be used for sequenced IDs that will be used for a certain entity 
+    field otherwise non-unique keys may result.</td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the method environment field the sequenced ID will be put in.</td>
+</tr>
+</table>
+<p>The sequenced-id-to-env tag gets a sequenced ID from the Entity Engine (through
+the delegator) and puts it in the specified method environment field. The object
+will be a java.lang.Long, but can of course be converted to a String.</p>
+
+<p><b><u>find-by-primary-key</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+<tr>
+    <td>entity-name</td><td>Y</td>
+    <td>The name of the entity to find an instance of.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of a map in the method environment that will be used for the
+    entity fields.</td>
+</tr>
+<tr>
+    <td>use-cache</td><td>N</td>
+    <td>Specifies whether or not the delegator's cache should be searched before
+    going to the database. This results in much faster retreival times, but can
+    return stale data that is not the most current in the database. Must be 
+    "true" or "false", defaults to "false".</td>
+</tr>
+</table>
+<p>The find-by-primary-key tag uses the delegator to find an entity value by
+its primary key. The resulting GenericValue object will be placed in the method
+environment using the specified value-name.</p>
+
+<p><b><u>find-by-and</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the list of GenericValue objects.</td>
+</tr>
+<tr>
+    <td>entity-name</td><td>Y</td>
+    <td>The name of the entity to find instances of.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of a map in the method environment that will be used for the
+    entity fields.</td>
+</tr>
+<tr>
+    <td>use-cache</td><td>N</td>
+    <td>Specifies whether or not the delegator's cache should be searched before
+    going to the database. This results in much faster retreival times, but can
+    return stale data that is not the most current in the database. Must be 
+    "true" or "false", defaults to "false".</td>
+</tr>
+</table>
+<p>The find-by-and tag uses the delegator to find entity values by
+anding the fields passed in the map. The resulting GenericValue objects will be 
+placed in the method environment using the specified list-name.</p>
+
+<p><b><u>make-value</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+<tr>
+    <td>entity-name</td><td>Y</td>
+    <td>The name of the entity to construct an instance of.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of a map in the method environment that will be used for the
+    entity fields.</td>
+</tr>
+</table>
+<p>The make-value tag uses the delegator to construct an entity value.
+The resulting value will not necessarily exist in the database, but will simply
+be assembled using the entity-name and fields map.
+The resulting GenericValue object will be placed in the method
+environment using the specified value-name.</p>
+
+<p><b><u>make-value</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+<tr>
+    <td>new-value-name</td><td>Y</td>
+    <td>The name of the method environment field that will contain the new GenericValue object.</td>
+</tr>
+</table>
+<p>The clone-value tag make a copy of the value in the method environment field 
+specified by value-name. The resulting GenericValue object will be placed in the method
+environment using the specified new-value-name.</p>
+
+<p><b><u>create-value</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+</table>
+<p>The create-value tag persists the specified GenericValue object by creating a
+new instance of the entity in the datasource. An error will result if an 
+instance of the entity exists in the datasource with the same primary key.</p>
+
+<p><b><u>store-value</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+</table>
+<p>The store-value tag persists the specified GenericValue object by updating the
+instance of the entity in the datasource. An error will result if an 
+instance of the entity does not exist in the datasource with the same primary key.</p>
+
+<p><b><u>remove-value</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the GenericValue object.</td>
+</tr>
+</table>
+<p>The remove-value tag removes the specified GenericValue object by removing the
+instance of the entity in the datasource. An error will result if an 
+instance of the entity does not exist in the datasource with the same primary key.</p>
+
+<p><b><u>remove-by-and</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>entity-name</td><td>Y</td>
+    <td>The name of the entity to remove instances of.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of a map in the method environment that will be used for the
+    entity fields.</td>
+</tr>
+</table>
+<p>The remove-by-and tag uses the delegator to remove entity values from the 
+datasource and is constrained by anding the fields passed in the map. Make sure
+the map contains something, or all values will be removed.</p>
+
+<p><b><u>store-list</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the list of GenericValue objects.</td>
+</tr>
+</table>
+<p>The store-list tag uses the delegator to store all entity values in the list.
+This is different than storing a single value in that values in the list will
+be inserted if it does not exist or updated if it does exist.</p>
+
+<p><b><u>remove-list</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the list of GenericValue objects.</td>
+</tr>
+</table>
+<p>The remove-list tag uses the delegator to remove all entity values in the list.
+For each value in the list if it is a primary key just that entity instance will
+be removed, but if it is not a full primary key all entity instances will be
+removed from the datasource that match the constraint of the field map.</p>
+
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
 <h4><a name='Conditional'>Conditional (If) Operations</a></h4>
+
+<p><b><u>if-validate-method</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the map that the field to be validated will come from.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the map field that will be validated.</td>
+</tr>
+<tr>
+    <td>method</td><td>Y</td>
+    <td>The name of the method that will be called to validate the field. It
+    must be a static method that takes a single String parameter and return a boolean.</td>
+</tr>
+<tr>
+    <td>class</td><td>N</td>
+    <td>The name of the class that contains the validation method. If not 
+    specified defaults to "org.ofbiz.core.util.UtilValidate".</td>
+</tr>
+</table>
+<p>The operations contained by the if-validate-method tag will only be executed
+if the validate method returns true. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
+<p><b><u>if-compare</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the map field that will be compared.</td>
+</tr>
+<tr>
+    <td>operator</td><td>Y</td>
+    <td>Specified the comparison operator must be one of the following:
+    less, greater, less-equals, greater-equals, equals, not-equals, or contains.</td>
+</tr>
+<tr>
+    <td>value</td><td>Y</td>
+    <td>The value that the field will compared to. Must be a String, but can be
+    converted to other types.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td>
+    <td>The data type to use for the comparison. Must be one of the following:
+    String, Double, Float, Long, Integer, Date, Time, or Timestamp. If no type
+    is specified the default will be String.</td>
+</tr>
+<tr>
+    <td>format</td><td>N</td>
+    <td>A format specifier to use when converting String objects to other data
+    types, mainly Date, Time and Timestamp.</td>
+</tr>
+</table>
+<p>The operations contained by the if-compare tag will only be executed
+if the comparison returns true. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
+<p><b><u>if-compare-field</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the map field that will be compared.</td>
+</tr>
+<tr>
+    <td>operator</td><td>Y</td>
+    <td>Specified the comparison operator must be one of the following:
+    less, greater, less-equals, greater-equals, equals, not-equals, or contains.</td>
+</tr>
+<tr>
+    <td>to-map-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+</tr>
+<tr>
+    <td>to-field-name</td><td>Y</td>
+    <td>The name of the to-map field that the main field will be compared to.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td>
+    <td>The data type to use for the comparison. Must be one of the following:
+    String, Double, Float, Long, Integer, Date, Time, or Timestamp. If no type
+    is specified the default will be String.</td>
+</tr>
+<tr>
+    <td>format</td><td>N</td>
+    <td>A format specifier to use when converting String objects to other data
+    types, mainly Date, Time and Timestamp.</td>
+</tr>
+</table>
+<p>The operations contained by the if-compare-field tag will only be executed
+if the comparison returns true. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
+<p><b><u>if-regexp</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the map field that will be compared.</td>
+</tr>
+<tr>
+    <td>expr</td><td>Y</td>
+    <td>A regular expression that the map value must comply with.</td>
+</tr>
+</table>
+<p>The operations contained by the if-regexp tag will only be executed
+if the value complies with the regular expression. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
+<p><b><u>if-empty</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the map field that will be compared.</td>
+</tr>
+</table>
+<p>The operations contained by the if-empty tag will only be executed
+if the map field is empty. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
+<p><b><u>if-not-empty</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the map field that will be compared.</td>
+</tr>
+</table>
+<p>The operations contained by the if-not-empty tag will only be executed
+if the map field is not empty. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
