@@ -302,6 +302,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(" size=\"1\">");
         
         String currentValue = modelFormField.getEntry(context);
+        List allOptionValues = dropDownField.getAllOptionValues(context, modelForm.getDelegator());
 
         // if the current value should go first, stick it in
         if (UtilValidate.isNotEmpty(currentValue) && "first-in-list".equals(dropDownField.getCurrent())) {
@@ -310,8 +311,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(" value=\"");
             buffer.append(currentValue);
             buffer.append("\">");
-            // TODO: need some way of looking up a description corresponding to the current selected option
-            buffer.append(currentValue);
+            buffer.append(ModelFormField.FieldInfoWithOptions.getDescriptionForOptionKey(currentValue, allOptionValues));
             buffer.append("</option>");
             
         }
@@ -322,7 +322,6 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         // list out all options according to the option list
-        List allOptionValues = dropDownField.getAllOptionValues(context, modelForm.getDelegator());
         Iterator optionValueIter = allOptionValues.iterator();
         while (optionValueIter.hasNext()) {
             ModelFormField.OptionValue optionValue = (ModelFormField.OptionValue) optionValueIter.next();
@@ -340,7 +339,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append("</select>");
     }
-
+    
     /* (non-Javadoc)
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderCheckField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.CheckField)
      */

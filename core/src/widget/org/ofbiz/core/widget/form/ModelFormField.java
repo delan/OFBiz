@@ -25,6 +25,7 @@ package org.ofbiz.core.widget.form;
 
 import java.sql.Timestamp;
 import java.util.*;
+
 import org.w3c.dom.*;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
@@ -743,6 +744,27 @@ public class ModelFormField {
             }
                   
             return optionValues;
+        }
+        
+        public static String getDescriptionForOptionKey(String key, List allOptionValues) {
+            if (UtilValidate.isEmpty(key)) {
+                return "";
+            }
+            
+            if (UtilValidate.isEmpty(allOptionValues)) {
+                return key;
+            }
+            
+            Iterator optionValueIter = allOptionValues.iterator();
+            while (optionValueIter.hasNext()) {
+                OptionValue optionValue = (OptionValue) optionValueIter.next();
+                if (key.equals(optionValue.getKey())) {
+                    return optionValue.getDescription();
+                }
+            }
+            
+            // if we get here we didn't find a match, just return the key
+            return key;
         }
     }
     
