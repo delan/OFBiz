@@ -336,10 +336,10 @@ public class ContentPermissionServices {
             boolean thisPassed = true; 
             Iterator iter = entityIdList.iterator();
             while (iter.hasNext()) {
-                   GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
-                   String entityId = entity.getString(pkFieldName);
-                   if (entity == null) continue;
+                GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
+                if (entity == null) continue;
                    
+                String entityId = entity.getString(pkFieldName);
                 String targetPrivilegeEnumId = entity.getString("privilegeEnumId");
                 if (UtilValidate.isNotEmpty(targetPrivilegeEnumId)) {
                     int targetPrivilegeEnumSeq = -1;
