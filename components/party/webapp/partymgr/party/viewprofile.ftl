@@ -27,7 +27,7 @@
  * @version    1.0
  */
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign delegator = requestAttributes.delegator>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 
