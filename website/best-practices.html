@@ -452,7 +452,7 @@ specific business requirements you will most likely come across situations where
 small changes to files are needed and it doesn't make sense to replace a
 component completely or attach logic to it through Service ECA rules or other
 means. So, how should you manage the differences between your code and the OFBiz
-baseline code so that updating from the OFBiz base will be as painless as
+baseline code so that updating from the OFBiz baseline will be as painless as
 possible?</p>
 
 <p class='contenttext'>The first thing you should always do is isolate your
@@ -460,54 +460,55 @@ chagnes and comment them so that it is easy to distringuish what you changed
 from the OFBiz baseline code. The final goal is to make it easy to merge your
 changes with future changes in the OFBiz baseline.</p>
 
-<p class='contenttext'>There are various ways to structure your company internal
+<p class='contenttext'>There are various ways to structure your internal
 CVS or other code repository. The most flexible, but laborious, way is to create
 a complete copy of the OFBiz CVS tree in a module in your own CVS repository.
 This could perhaps be called "ofbizbase".
-This should containt the code that you are currently working with and allows you
-to selectively incorporate specific changes from the OFBiz baseline. These files
-should be direct copies from a revision in the OFBiz CVS repository. If you make
-changes in this module that are not part from the main OFBiz CVS tree they
+This should contain the revisions of the code that you are currently working with 
+and allows you to selectively incorporate specific changes from the OFBiz baseline. 
+These files should be direct copies from a revision in the OFBiz CVS repository. 
+If you make changes in this module that are not part from the OFBiz baseline they
 should be temporary changes that are meant to be overwritten and replaced with
-future versions from the main OFBiz CVS repository.</p>
+future versions from the OFBiz baseline.</p>
 
-<p class='contenttext'>Once you baseline snapshot module as described above is
+<p class='contenttext'>Once your ofbizbase snapshot module as described above is
 in place you should create another module, maybe called "ofbizdiff". This will
-contain ONLY the files that you have changed relative to the OFBiz baseline.
-When updating the version of this file in your ofbizbase repository from the
-main OFBiz CVS repository you should do a three way diff/merge to make sure the
+contain ONLY the files that you have changed relative to your ofbizbase module.
+When updating the version of a file in your ofbizbase repository from the
+OFBiz baseline you should do a three way diff/merge to make sure the
 changes in the OFBiz baseline make it into the version of the file in your ofbizdiff
 module as well as the file in your ofbizbase module.</p>
 
-<p class='contenttext'>The three way diff will be
+<p class='contenttext'>The three way diff/merge will be
 done with the following three files: the old file from your ofbizbase module as
 the base, your changed file in your ofbizdiff module as the merge target, and
-the new file from the main OFBiz CVS repository as the merge source.</p>
+the new file from the OFBiz baseline as the merge source.</p>
 
-<p class='contenttext'>So, that is how you can setup your source repositories.
-The build process for this sort of a structure is very simple. Create a
-temporary build directory. Copy the entire ofbizbase tree into the directory.
-Copy the entire ofbizdiff tree into that directory, replacing files as
-needed. Then in the root of the temporary build directory run the Ant build
+<p class='contenttext'>The build process for this sort of a structure is very 
+simple. Create a temporary build directory. Copy the entire ofbizbase tree into 
+the directory. Copy the entire ofbizdiff tree into that directory, replacing 
+files as needed. In the root of the temporary build directory run the Ant build
 file. What could be more simple?</p>
 
 <p class='contenttext'>When editing files in your ofbizdiff module you should
 ALWAYS edit them in place in the ofbizdiff directory tree and copy them to the
-temporary build directory for testing. Doing this you will be able to always do
+temporary build directory for testing. Doing this you will always be able to do
 a CVS update to see which files you have modified as you are working.</p>
 
-<p class='contenttext'>Many variations on this base technique can be effectively
+<p class='contenttext'>Many variations on this technique can be effectively
 used. If you don't plan to make temporary changes to ofbizbase files or update
 individual ofbizbase files selectively, you may do just fine with an archive
-(like a zip or tar.gz file) instead of a CVS module for your ofbizbase tree.</p>
+(like a zip or tar.gz file) instead of a CVS module for your ofbizbase tree. You
+could keep the current version of this archive in your ofbizdiff CVS module.</p>
 
 <p class='contenttext'>We have heard a lot of questions about using simple merge
 scripts to apply differences to source in the ofbizdiff tree so that full files
-to not have to be stored or maintained. This is fine, but it is a LOT harder to
-perform the diff/merge code synchronization when you don't have the complete
-files to make a three way diff merge easy. So, we don't recommend using minimal
-diff files that can be applied as part of the build process. Just copy the file
-from ofbizbase to ofbizdiff and make the changes you need as recommended above.</p>
+do not have to be stored ant maintained there. This is fine, but it is a LOT 
+harder to perform the diff/merge or other code synchronization when you don't 
+have the complete files to do a three way diff/merge. So, we don't recommend 
+using minimal diff files that can be applied as part of preparation for the 
+build process. Just copy the file from ofbizbase to ofbizdiff and make the 
+changes you need as recommended above.</p>
 
 <hr class='sepbar'>
 <p class='contenttext'>For information about Open For Business contact David E. Jones at <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
