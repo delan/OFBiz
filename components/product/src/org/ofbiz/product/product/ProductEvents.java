@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.8 2004/01/22 00:45:26 jonesde Exp $
+ * $Id: ProductEvents.java,v 1.9 2004/01/22 05:19:24 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -47,7 +47,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Product Information Related Events
  * 
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 2.0
  */
 public class ProductEvents {
@@ -256,12 +256,12 @@ public class ProductEvents {
         EntityCondition condition = null;
         if (!"Y".equals(doAll)) {
             condition = new EntityConditionList(UtilMisc.toList(
-                    new EntityExpr("isVariant", EntityOperator.NOT_EQUAL, "Y"),
-                    new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N"),
+                    new EntityExpr(new EntityExpr("isVariant", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("isVariant", EntityOperator.NOT_EQUAL, "Y")),
+                    new EntityExpr(new EntityExpr("autoCreateKeywords", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N")),
                     new EntityExpr(new EntityExpr("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("salesDiscontinuationDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
                     ), EntityOperator.AND);
         } else {
-            condition = new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N");
+            condition = new EntityExpr(new EntityExpr("autoCreateKeywords", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N"));
         }
         
         
