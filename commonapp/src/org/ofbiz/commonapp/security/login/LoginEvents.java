@@ -24,6 +24,7 @@
 package org.ofbiz.commonapp.security.login;
 
 import java.util.*;
+import java.io.*;
 import java.net.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -34,6 +35,14 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.commonapp.party.contact.*;
+
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.WrappingTemplateModel;
 
 /**
  * LoginEvents - Events for UserLogin and Security handling.
@@ -410,51 +419,55 @@ public class LoginEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No Primary Email Address has been set, please contact customer service.");
             return "error";
         }
-
-        String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
-        // String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
-        String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
-
-        String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
-
-        if (controlPath == null) {
-            Debug.logError("[CheckOutEvents.renderConfirmOrder] CONTROL_PATH is null.");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
+        
+        // prepare the FTL context
+        WrappingTemplateModel.setDefaultObjectWrapper(BeansWrapper.getDefaultInstance());
+        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+        SimpleHash templateContext = new SimpleHash(wrapper);    
+        templateContext.put("password", UtilFormatOut.checkNull(passwordToSend));   
+        templateContext.put("useEncryption", new Boolean(useEncryption));
+        
+        // get the FTL template Reader
+        String templatePath = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.template");
+        Reader reader = new InputStreamReader(application.getResourceAsStream(templatePath));
+               
+        // process the template
+        Configuration config = Configuration.getDefaultConfiguration();     
+        config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+        config.setLocale(UtilHttp.getLocale(request));             
+        TemplateHashModel staticModels = wrapper.getStaticModels();   
+        templateContext.put("Static", staticModels);
+        
+        Writer writer = new StringWriter();
+        try {
+            Template template = new Template(templatePath, reader, config);
+            template.process(templateContext, writer, BeansWrapper.getDefaultInstance());
+        } catch (IOException e) {
+            Debug.logError(e, "Problems reading send password template", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Email password configuration error, please contact customer service.");
+            return "error";                        
+        } catch (TemplateException e) {
+            Debug.logError(e, "Template processing problem", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Email password configuration error, please contact customer service.");
             return "error";
-        }
-        // build the server root string
-        StringBuffer serverRoot = new StringBuffer();
-        String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
-        String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
-
-        serverRoot.append("http://");
-        serverRoot.append(server);
-        if (!port.equals("80")) {
-            serverRoot.append(":" + port);
-        }
-        String bodyUrl = serverRoot + controlPath + "/passwordemail";
-
-        Map context = new HashMap();
-
+        }           
+             
+        Map context = new HashMap();       
+        String mailHost = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");        
+        String sendFrom = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
+               
         if (useEncryption) {
             context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " New Password");
         } else {
             context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Password Reminder");
         }
-        context.put("bodyUrl", bodyUrl);
+        context.put("body", writer.toString());
         context.put("sendTo", emails.toString());
-        context.put("sendFrom", PASSWORD_SENDER_EMAIL);
-        context.put("sendVia", SMTP_SERVER);
-
-        Map parameters = new HashMap();
-
-        parameters.put("password", UtilFormatOut.checkNull(passwordToSend));
-        parameters.put("useEncryption", new Boolean(useEncryption).toString());
-        context.put("bodyUrlParameters", parameters);
-
-        // String content = "Username: " + userLoginId + "\n" + (useEncryption ? "New Password: " : "Current Password: ") + ;
+        context.put("sendFrom", sendFrom);
+        context.put("sendVia", mailHost);
+               
         try {
-            Map result = dispatcher.runSync("sendMailFromUrl", context);
+            Map result = dispatcher.runSync("sendMail", context);
 
             if (ModelService.RESPOND_ERROR.equals((String) result.get(ModelService.RESPONSE_MESSAGE))) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error occurred: unable to email password.  Please try again later or contact customer service. (error was: " + result.get(ModelService.ERROR_MESSAGE) + ")");
