@@ -221,9 +221,9 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     }
 
     // generic button XUI event calls into PosButton to lookup the external reference    
-    public void buttonPressed() {
+    public synchronized void buttonPressed() {
         this.setLastActivity(System.currentTimeMillis());
-        buttons.buttonPressed(this);
+        buttons.buttonPressed(this, this.getCurrentEvent());
         journal.focus();
     }
 

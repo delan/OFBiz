@@ -25,6 +25,7 @@
 package org.ofbiz.pos.event;
 
 import java.util.List;
+import java.awt.AWTEvent;
 
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
@@ -83,7 +84,7 @@ public class MenuEvents {
         pos.getInput().setFunction("QTY");
     }
 
-    public static void triggerEnter(PosScreen pos) {
+    public static void triggerEnter(PosScreen pos, AWTEvent event) {
         // enter key maps to various different events; depending on the function
         Input input = pos.getInput();
         String[] lastFunc = input.getLastFunction();
@@ -107,22 +108,22 @@ public class MenuEvents {
                     PaymentEvents.payGiftCard(pos);
                 }
             } else if ("SKU".equals(lastFunc[0])) {
-                MenuEvents.addItem(pos);
+                MenuEvents.addItem(pos, event);
             }
         } else if (input.value().length() > 0) {
-            MenuEvents.addItem(pos);
+            MenuEvents.addItem(pos, event);
         }
     }
 
-    public static void addItem(PosScreen pos) {
+    public static void addItem(PosScreen pos, AWTEvent event) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         Input input = pos.getInput();
         String[] func = input.getFunction("QTY");
         String value = input.value();
 
         // no value; just return
-        if (UtilValidate.isEmpty(value)) {
-            String buttonName = ButtonEventConfig.getButtonName(pos);
+        if (event != null && UtilValidate.isEmpty(value)) {
+            String buttonName = ButtonEventConfig.getButtonName(event);
             if (UtilValidate.isNotEmpty(buttonName)) {
                 if (buttonName.startsWith("SKU.")) {
                     value = buttonName.substring(4);
