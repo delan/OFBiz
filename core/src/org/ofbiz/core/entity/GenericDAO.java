@@ -469,7 +469,6 @@ public class GenericDAO
   
   public Collection selectRelated(String relationName, GenericEntity value)
   {
-    Collection collection = null;
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = modelEntity.getRelation(relationName);
     ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
@@ -529,21 +528,74 @@ public class GenericDAO
     return true;
   }
 
+  public boolean deleteByAnd(String entityName, Map fields)
+  {
+    if(entityName == null || fields == null) return false;
+    ModelEntity modelEntity = ModelReader.getModelEntity(entityName);
+    if(modelEntity == null) 
+    {
+      Debug.logError("[GenericDAO.selectByAnd] Could not find ModelEntity record for entityName: " + entityName);
+      return false;
+    }
+    
+    Connection connection = null;
+    PreparedStatement ps = null;
+    try { connection = getConnection(); } 
+    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.selectByAnd]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
+    
+    //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
+    Vector whereFields = new Vector();
+    if(fields != null || fields.size() > 0)
+    {
+      Set keys = fields.keySet();
+      for(int fi=0; fi<modelEntity.fields.size(); fi++)
+      {
+        ModelField curField=(ModelField)modelEntity.fields.elementAt(fi);
+        if(keys.contains(curField.name)) whereFields.add(curField);
+      }
+    }
+    
+    String sql = "DELETE FROM " + modelEntity.tableName;
+    if(fields != null || fields.size() > 0) sql = sql + " WHERE " + modelEntity.colNameString(whereFields, "=? AND ", "=?");
+    
+    try {
+      ps = connection.prepareStatement(sql);
+      
+      if(fields != null || fields.size() > 0)
+      {
+        GenericValue dummyValue = new GenericValue(entityName, fields);
+        for(int i=0;i<whereFields.size();i++)
+        {
+          ModelField curField=(ModelField)whereFields.elementAt(i);
+          setValue(ps, i+1, curField, dummyValue);
+        }
+      }
+      ps.executeUpdate();      
+    } catch (SQLException sqle) {
+      Debug.logWarning("ERROR [GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      sqle.printStackTrace();
+      return false;
+    } finally {
+      try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
+    }
+    return true;
+  }
+  
   public boolean deleteRelated(String relationName, GenericEntity value)
   {
-    ModelEntity entity = value.getModelEntity();
-    ModelRelation relation = entity.getRelation(relationName);
+    ModelEntity modelEntity = value.getModelEntity();
+    ModelRelation relation = modelEntity.getRelation(relationName);
     ModelEntity relatedEntity = ModelReader.getModelEntity(relation.relEntityName);
 
-    if(relation.type.equalsIgnoreCase("one"))
+    Map fields = new HashMap();
+    for(int i=0; i<relation.keyMaps.size(); i++)
     {
-      //public void remove<%=relation.relationTitle%><%=relatedEntity.ejbName%>() { <%=relatedEntity.ejbName%>Helper.removeByPrimaryKey(<%=relation.keyMapString(", ", "")%>); }
+      ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
+      fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
     }
-    else if(relation.type.equalsIgnoreCase("many"))
-    {
-      //public void remove<%=relation.relationTitle%><%=relatedEntity.ejbName%>s() { <%=relatedEntity.ejbName%>Helper.removeBy<%=relation.keyMapRelatedUpperString("And","")%>(<%=relation.keyMapString(", ", "")%>); }
-    }
-    return false;
+
+    return deleteByAnd(relatedEntity.entityName, fields);
   }  
     
 /* ====================================================================== */

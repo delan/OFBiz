@@ -57,7 +57,7 @@ public class GenericValue extends GenericEntity
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    */
   public void removeRelated(String relationName) { helper.removeRelated(relationName, this); }
-  /** Get the named Related Entity for the GenericValue from the persistent store
+  /** PreStore the named Related Entity instances so that on the next create or update, these will be updated in the same transaction
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    *@param entities Collection of GenericValue instances corresponding to the named relation that will be set or created if modified
    */
