@@ -1,3 +1,26 @@
+/*
+ * $Id: DataServices.java,v 1.9 2003/12/23 07:24:05 jonesde Exp $
+ *
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package org.ofbiz.content.data;
 
 import java.sql.Timestamp;
@@ -24,15 +47,12 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
-
-import freemarker.template.SimpleHash;
 
 /**
  * DataServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 3.0
  * 
  *  
@@ -427,52 +447,25 @@ public class DataServices {
         GenericDelegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Writer out = (Writer) context.get("outWriter");
-        SimpleHash templateContext = (SimpleHash) context.get("templateContext");
+        Map templateContext = (Map) context.get("templateContext");
         //GenericValue userLogin = (GenericValue) context.get("userLogin");
         String dataResourceId = (String) context.get("dataResourceId");
         if (templateContext != null && UtilValidate.isEmpty(dataResourceId)) {
-            dataResourceId = (String) FreeMarkerWorker.get(templateContext, "dataResourceId");
+            dataResourceId = (String) templateContext.get("dataResourceId");
         }
         String mimeTypeId = (String) context.get("mimeTypeId");
         if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String) FreeMarkerWorker.get(templateContext, "mimeTypeId");
+            mimeTypeId = (String) templateContext.get("mimeTypeId");
         }
 
         Locale locale = (Locale) context.get("locale");
 
         if (templateContext == null) {
-            templateContext = new SimpleHash();
+            templateContext = new HashMap();
         }
 
         GenericValue view = (GenericValue) context.get("subContentDataResourceView");
         DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
-        return;
-    }
-
-    public static void renderDataResourceAsHtml(DispatchContext dctx, Map context) throws GeneralException, IOException {
-        //Map results = new HashMap();
-        GenericDelegator delegator = dctx.getDelegator();
-        //LocalDispatcher dispatcher = dctx.getDispatcher();
-        Writer out = (Writer) context.get("outWriter");
-        SimpleHash templateContext = (SimpleHash) context.get("templateContext");
-        //GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String dataResourceId = (String) context.get("dataResourceId");
-        if (templateContext != null && UtilValidate.isEmpty(dataResourceId)) {
-            dataResourceId = (String) FreeMarkerWorker.get(templateContext, "dataResourceId");
-        }
-        String mimeTypeId = (String) context.get("mimeTypeId");
-        if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String) FreeMarkerWorker.get(templateContext, "mimeTypeId");
-        }
-
-        Locale locale = (Locale) context.get("locale");
-
-        if (templateContext == null) {
-            templateContext = new SimpleHash();
-        }
-
-        GenericValue view = (GenericValue) context.get("subContentDataResourceView");
-        DataResourceWorker.renderDataResourceAsHtml(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
         return;
     }
 }

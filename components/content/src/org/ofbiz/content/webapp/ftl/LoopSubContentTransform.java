@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentTransform.java,v 1.2 2003/12/21 11:53:05 jonesde Exp $
+ * $Id: LoopSubContentTransform.java,v 1.3 2003/12/23 07:24:05 jonesde Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.0
  */
 public class LoopSubContentTransform implements TemplateTransformModel {
@@ -220,8 +220,9 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                     templateContext.put("webSiteId", webSiteId);
                     templateContext.put("https", https);
                     templateContext.put("rootDir", rootDir);
-                    TemplateHashModel oldRoot = env.getDataModel();
-                    SimpleHash templateRoot = FreeMarkerWorker.buildNewRoot(oldRoot);
+                    
+                    Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
+                    
                     templateRoot.put("viewSize", viewSize);
                     templateRoot.put("viewIndex", viewIndex);
                     templateRoot.put("listSize", listSize);
@@ -229,14 +230,15 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                     templateRoot.put("lowIndex", lowIndex);
                     templateRoot.put("queryString", queryString);
                     templateRoot.put("wrapDataResourceTypeId", subDataResourceTypeId);
-                    if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
                     templateRoot.put("wrapContentIdTo", contentId);
-                    if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapContentIdTo:" + contentId, module);
                     templateRoot.put("wrapMimeTypeId", mimeTypeId);
-                    if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapMimeTypeId:" + mimeTypeId, module);
                     templateRoot.put("wrapMapKey", mapKey);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapMapKey:" + mapKey,module);
                     templateRoot.put("context", templateContext);
+                    
+                    if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
+                    if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapContentIdTo:" + contentId, module);
+                    if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapMimeTypeId:" + mimeTypeId, module);
+                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, wrapMapKey:" + mapKey,module);
                     if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, calling renderContentAsText, wrapTemplateId:" + wrapTemplateId, module);
                     try {
                         ContentWorker.renderContentAsText(delegator, wrapTemplateId, out, templateRoot, null, locale, mimeTypeId);

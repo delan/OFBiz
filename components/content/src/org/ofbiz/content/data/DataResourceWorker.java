@@ -1,22 +1,35 @@
 /*
- * $Id: DataResourceWorker.java,v 1.11 2003/12/21 11:53:05 jonesde Exp $
- * 
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  
+ * $Id: DataResourceWorker.java,v 1.12 2003/12/23 07:24:05 jonesde Exp $
+ *
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.ofbiz.content.data;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +48,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.email.NotificationServices;
-import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -45,8 +57,6 @@ import org.ofbiz.service.LocalDispatcher;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
 
@@ -54,10 +64,9 @@ import freemarker.template.TemplateHashModel;
  * DataResourceWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.11 $
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version $Revision: 1.12 $
  * @since 3.0
- * 
- *  
  */
 public class DataResourceWorker {
 
@@ -288,182 +297,8 @@ public class DataResourceWorker {
         return imageType;
     }
 
-    public static void renderDataResourceAsHtml(GenericDelegator delegator, String dataResourceId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
-        Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
-        if (context == null) {
-            context = new HashMap();
-        }
-
-        String webSiteId = (String) context.get("webSiteId");
-        String https = (String) context.get("https");
-        //if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, mimeTypeId:" + mimeTypeId, module);
-        if (UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = "text/html";
-        }
-
-        GenericValue dataResource = null;
-        if (view != null) {
-            Map dataResourceMap = new HashMap();
-            String entityName = view.getEntityName();
-            if (entityName != null && !entityName.equals("DataResource")) {
-                SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn", view, dataResourceMap, new ArrayList(), locale);
-            }
-            //if (Debug.infoOn()) Debug.logInfo("in renderDAtaResource(work), dataResourceMap:" + dataResourceMap, "");
-            dataResource = delegator.makeValue("DataResource", dataResourceMap);
-            dataResource.setPKFields(view);
-            dataResource.setNonPKFields(view);
-            dataResourceId = (String) dataResource.get("dataResourceId");
-        }
-
-        if (dataResource == null || dataResource.isEmpty()) {
-            if (dataResourceId == null) {
-                throw new GeneralException("DataResourceId is null");
-            }
-            dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
-        }
-        if (dataResource == null || dataResource.isEmpty()) {
-            throw new GeneralException("DataResource not found with id=" + dataResourceId);
-        }
-
-        String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
-        if (dataResourceTypeId == null) {
-            dataResourceTypeId = "SHORT_TEXT";
-        }
-        if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, dataResourceTypeId:" + dataResourceTypeId, module);
-
-        String dataTemplateTypeId = (String) dataResource.get("dataTemplateTypeId");
-        if (dataTemplateTypeId == null) {
-            dataTemplateTypeId = "NONE";
-        }
-
-        if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, dataTemplateTypeId:" + dataTemplateTypeId, module);
-        String text = null;
-        dataResourceId = (String) dataResource.get("dataResourceId");
-        if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, dataResourceId:" + dataResourceId, module);
-        String objectInfo = (String) dataResource.get("objectInfo");
-        if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, objectInfo:" + objectInfo, module);
-
-        if (dataTemplateTypeId.equals("FTL")) {
-
-            Configuration config = Configuration.getDefaultConfiguration();
-            String templateName = (String) dataResource.get("dataResourceName");
-            if (templateContext == null) {
-                templateContext = new SimpleHash();
-                config.setObjectWrapper(BeansWrapper.getDefaultInstance());
-                try {
-                    config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
-                } catch (TemplateException e) {
-                    throw new GeneralException("Error setting datetime_format", e);
-                }
-
-                BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-                TemplateHashModel staticModels = wrapper.getStaticModels();
-                templateContext.put("Static", staticModels);
-            }
-            String subContentId = (String) context.get("subContentId");
-            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, subContentId:" + subContentId, module);
-            if (UtilValidate.isNotEmpty(subContentId)) {
-                context.put("contentId", subContentId);
-                context.put("subContentId", null);
-            }
-            String subContentId2 = (String) context.get("subContentId");
-            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, subContentId2:" + subContentId2, module);
-            dataResource.set("dataTemplateTypeId", "NONE"); // Set so it won't come here again
-            StringWriter sOut = new StringWriter();
-            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, recalling renderDAtaResourceAsText to sOut", module);
-            renderDataResourceAsText(delegator, dataResourceId, sOut, templateContext, dataResource, locale, mimeTypeId);
-            String subContentId3 = (String) context.get("subContentId");
-            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, subContentId3:" + subContentId3, module);
-            //if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, sOut:" + sOut.toString(), module);
-            Reader templateReader = new StringReader(sOut.toString());
-            Template template = new Template(templateName, templateReader, config);
-
-            // process the template with the given data and write
-            try {
-                //SimpleHash templateRoot = FreeMarkerWorker.buildNewRoot(templateContext);
-                context.put("mimeTypeId", null);
-                templateContext.put("context", context);
-                if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, calling template.process", module);
-                template.process(templateContext, out);
-            } catch (TemplateException e) {
-                throw new GeneralException("Error processing template", e);
-            }
-
-        } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
-            GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
-            text = (String) electronicText.get("textData");
-            out.write(text);
-        } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-            if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), mimeTypeId:" + mimeTypeId, module);
-            if (mimeTypeId.equals("text/plain")) {
-                text = (String) dataResource.get("dataResourceId");
-            } else {
-                if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), locale:" + locale, module);
-                String requestName = UtilProperties.getMessage("content", "img.request", locale);
-                String requestParamName = UtilProperties.getMessage("content", "img.request.param.name", locale);
-                String url = requestName + "?" + requestParamName + "=" + dataResourceId;
-                if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), url:" + url, module);
-                if (UtilValidate.isEmpty(url)) {
-                    throw new GeneralException("Image url object is null for image object");
-                }
-                String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
-                if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), prefix:" + prefix, module);
-                String sep = "";
-                //String s = "";
-                if (url.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
-                    sep = "/";
-                }
-                text = "<img src=\"" + prefix + sep + url + "\"/>";
-                if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), text:" + text, module);
-            }
-            out.write(text);
-        } else if (dataResourceTypeId.equals("LINK")) {
-            if (mimeTypeId.equals("text/plain")) {
-                text = objectInfo;
-            } else {
-                String href = (String) dataResource.get("objectInfo");
-                String val = (String) dataResource.get("dataResourceName");
-                text = "<a href=\"" + href + "\">" + val + "</a>";
-            }
-            out.write(text);
-        } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
-            URL url = new URL(objectInfo);
-            if (url.getHost() != null) { // is absolute
-                InputStream in = url.openStream();
-                int c;
-                StringWriter sw = new StringWriter();
-                while ((c = in.read()) != -1) {
-                    sw.write(c);
-                }
-                sw.close();
-                text = sw.toString();
-                if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(URL-ABS), text:" + text, module);
-            } else {
-                String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
-                String sep = "";
-                //String s = "";
-                if (url.toString().indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
-                    sep = "/";
-                }
-                String s2 = prefix + sep + url.toString();
-                URL url2 = new URL(s2);
-                if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(URL-REL), s2:" + s2, module);
-                text = (String) url2.getContent();
-                if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml(URL-REL), text:" + text, module);
-            }
-            out.write(text);
-        } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
-            String rootDir = (String) context.get("rootDir");
-            renderFile(dataResourceTypeId, objectInfo, rootDir, out);
-        } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
-            text = (String) dataResource.get("objectInfo");
-            out.write(text);
-        }
-        return;
-    }
-
-    public static void renderDataResourceAsText(GenericDelegator delegator, String dataResourceId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
-        Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
+    public static void renderDataResourceAsText(GenericDelegator delegator, String dataResourceId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+        Map context = (Map) templateContext.get("context");
         if (context == null) {
             context = new HashMap();
         }
@@ -520,7 +355,7 @@ public class DataResourceWorker {
             Configuration config = Configuration.getDefaultConfiguration();
             //String templateName = (String) dataResource.get("dataResourceName");
             if (templateContext == null) {
-                templateContext = new SimpleHash();
+                templateContext = new HashMap();
                 config.setObjectWrapper(BeansWrapper.getDefaultInstance());
                 try {
                     config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
@@ -594,6 +429,8 @@ public class DataResourceWorker {
         }
         return;
     }
+    
+    
 
     public static void renderFile(String dataResourceTypeId, String objectInfo, String rootDir, Writer out) throws GeneralException, IOException {
         if (dataResourceTypeId.equals("LOCAL_FILE")) {

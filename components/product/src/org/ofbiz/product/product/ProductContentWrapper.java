@@ -1,5 +1,5 @@
 /*
- * $Id: ProductContentWrapper.java,v 1.5 2003/12/21 11:53:05 jonesde Exp $
+ * $Id: ProductContentWrapper.java,v 1.6 2003/12/23 07:24:06 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,8 +26,10 @@ package org.ofbiz.product.product;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,7 +49,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Product Content Worker: gets product content to display
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ProductContentWrapper {
@@ -133,9 +135,12 @@ public class ProductContentWrapper {
         List productContentList = delegator.findByAndCache("ProductContent", UtilMisc.toMap("productId", productId, "productContentTypeId", productContentTypeId), UtilMisc.toList("-fromDate"));
         productContentList = EntityUtil.filterByDate(productContentList);
         GenericValue productContent = EntityUtil.getFirst(productContentList);
-        
         if (productContent != null) {
-            ContentWorker.renderContentAsText(delegator, productContent.getString("contentId"), outWriter, null, null, locale, mimeTypeId);
+            // when rendering the product content, always include the Product and ProductContent records that this comes from
+            Map inContext = new HashMap();
+            inContext.put("product", product);
+            inContext.put("productContent", productContent);
+            ContentWorker.renderContentAsText(delegator, productContent.getString("contentId"), outWriter, inContext, null, locale, mimeTypeId);
         }
     }
 }

@@ -1198,10 +1198,9 @@
         <attribute mode="IN" name="mapKey" optional="true" type="String"/>
         <attribute mode="IN" name="outWriter" optional="false" type="java.io.Writer"/>
         <attribute mode="IN" name="subContentId" optional="true" type="String"/>
-        <attribute mode="IN" name="templateContext" optional="false" type="Object"/>
+        <attribute mode="IN" name="templateContext" optional="false" type="Map"/>
         <attribute mode="IN" name="locale" optional="true" type="String"/>
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
-        <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
         <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
         <attribute mode="IN" name="subContentDataResourceView" optional="true"
                              type="GenericValue"/>
@@ -1212,7 +1211,7 @@
         <description>Get the subcontent and render</description>
         <attribute mode="IN" name="contentId" optional="false" type="String"/>
         <attribute mode="IN" name="outWriter" optional="false" type="java.io.Writer"/>
-        <attribute mode="IN" name="templateContext" optional="true" type="Object"/>
+        <attribute mode="IN" name="templateContext" optional="true" type="Map"/>
         <attribute mode="IN" name="locale" optional="true" type="String"/>
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="subContentDataResourceView" optional="true" type="GenericValue"/>
@@ -1222,7 +1221,7 @@
         <description>Get the dataResource and render</description>
         <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
         <attribute mode="IN" name="outWriter" optional="false" type="java.io.Writer"/>
-        <attribute mode="IN" name="templateContext" optional="false" type="Object"/>
+        <attribute mode="IN" name="templateContext" optional="false" type="Map"/>
         <attribute mode="IN" name="locale" optional="true" type="String"/>
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="subContentDataResourceView" optional="true" type="GenericValue"/>
