@@ -128,12 +128,19 @@
     </service>
 
     <!-- Party Relationship services -->
-    <service name="interfacePartyRelationshipPK" engine="interface" location="" invoke="">
+    <service name="interfacePartyRelationshipCreatePK" engine="interface" location="" invoke="">
         <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="interfacePartyRelationshipPK" engine="interface" location="" invoke="">
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
     <service name="interfacePartyRelationship" engine="interface" location="" invoke="">
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
@@ -145,7 +152,7 @@
     <service name="createPartyRelationship" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyRelationshipServices" invoke="createPartyRelationship" auth="true">
         <description>Create a Relationship between two Parties; if partyIdFrom is not specified the partyId of the current userLogin will be used; if roleTypeIds are not specified they will default to "_NA_".</description>
-        <implements service="interfacePartyRelationshipPK"/>
+        <implements service="interfacePartyRelationshipCreatePK"/>
         <implements service="interfacePartyRelationship"/>
     </service>
     <service name="updatePartyRelationship" engine="java"
