@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.0
 --%>
 
@@ -42,7 +42,8 @@
 %>
 <div class="head2">Scheduled Jobs</div>
 <a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">[Refresh]</a>&nbsp;
-<a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">[Schedule Job]</a>
+<a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">[Schedule Job]</a>&nbsp;
+<a href="<ofbiz:url>/threadList</ofbiz:url>" class="buttontext">[Thread List]</a>
 <br>
 
 <br>
