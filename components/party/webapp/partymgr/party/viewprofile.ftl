@@ -327,7 +327,7 @@
           </td>
           <td valign="middle" align="right">
               <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session)>
-                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewCreditCard}</a><a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingCreateNewEftAccount}</a>
+                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewCreditCard}</a><a href="<@ofbizUrl>/editgiftcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewGiftCard}</a><a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingCreateNewEftAccount}</a>
               </#if>
           </td>
         </tr>
@@ -347,7 +347,7 @@
                         <#list paymentMethodValueMaps as paymentMethodValueMap>
                             <#assign paymentMethod = paymentMethodValueMap.paymentMethod>
                             <tr>
-                              <#if "CREDIT_CARD" = paymentMethod.paymentMethodTypeId>
+                              <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
                                   <#assign creditCard = paymentMethodValueMap.creditCard>
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
@@ -372,7 +372,32 @@
                                         [${uiLabelMap.CommonUpdate}]</a></div>
                                     </#if>
                                   </td>
-                              <#elseif "EFT_ACCOUNT" = paymentMethod.paymentMethodTypeId>
+                              <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
+                                  <#assign giftCard = paymentMethodValueMap.giftCard>
+                                  <td width="90%" valign="top">
+                                    <div class="tabletext">
+                                      <b>
+                                        ${uiLabelMap.PartyGiftCard}:
+                                        <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
+                                            ${giftCard.physicalNumber?default("N/A")} [${giftCard.physicalPin?default("N/A")}]
+                                            &nbsp;-&nbsp;
+                                            ${giftCard.virtualNumber?default("N/A")} [${giftCard.virtualPin?default("N/A")}]
+                                        <#else>
+                                            ${giveCard.physicalNumber?default("N/A")} - ${giftCard.virtualNumber?default("N/A")}
+                                        </#if>
+                                      </b>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</b></#if>
+                                    </div>
+                                  </td>
+                                  <td width="5">&nbsp;</td>
+                                  <td align="right" valign="top" width='1%' nowrap>
+                                    <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>
+                                        <div><a href='<@ofbizUrl>/editeftaccount?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                        [${uiLabelMap.CommonUpdate}]</a></div>
+                                    </#if>
+                                  </td>
+                              <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
                                   <#assign eftAccount = paymentMethodValueMap.eftAccount>
                                   <td width="90%" valign="top">
                                     <div class="tabletext">

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Edit Gift Card</property>
+    <property name="title.property">PageTitleEditGiftCard</property>
+    <page-action name="/party/editpaymentmethod.bsh"/>
+</page>

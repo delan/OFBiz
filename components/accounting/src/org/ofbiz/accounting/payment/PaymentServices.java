@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentServices.java,v 1.2 2003/09/02 04:18:05 ajzeneski Exp $
+ * $Id: PaymentServices.java,v 1.3 2003/11/04 18:46:29 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class PaymentServices {
@@ -303,7 +303,6 @@ public class PaymentServices {
         // first remove all spaces from the credit card number       
         String updatedCardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
         if (updatedCardNumber.startsWith("*")) {
-            Debug.log(updatedCardNumber);
             // get the masked card number from the db
             String origCardNumber = creditCard.getString("cardNumber");
             Debug.log(origCardNumber);
@@ -447,6 +446,194 @@ public class PaymentServices {
 
         result.put("newPaymentMethodId", newCc.getString("paymentMethodId"));
 
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+
+    public static Map createGiftCard(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        Timestamp now = UtilDateTime.nowTimestamp();
+
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE");
+
+        if (result.size() > 0)
+            return result;
+
+        List toBeStored = new LinkedList();
+        GenericValue newPm = delegator.makeValue("PaymentMethod", null);
+        toBeStored.add(newPm);
+        GenericValue newGc = delegator.makeValue("GiftCard", null);
+        toBeStored.add(newGc);
+
+        Long newPmId = delegator.getNextSeqId("PaymentMethod");
+        if (newPmId == null) {
+            return ServiceUtil.returnError("ERROR: Could not create GiftCard (id generation failure)");
+        }
+        newPm.set("partyId", partyId);
+        newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
+        newPm.set("thruDate", context.get("thruDate"));
+
+        newGc.set("physicalNumber", context.get("physicalNumber"));
+        newGc.set("physicalPin", context.get("physicalPin"));
+        newGc.set("virtualNumber", context.get("virtualNumber"));
+        newGc.set("virtualPin", context.get("virtualPin"));
+        newGc.set("expireDate", context.get("expireDate"));
+
+        newPm.set("paymentMethodId", newPmId.toString());
+        newPm.set("paymentMethodTypeId", "GIFT_CARD");
+        newGc.set("paymentMethodId", newPmId.toString());
+
+        try {
+            delegator.storeAll(toBeStored);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+            return ServiceUtil.returnError("ERROR: Could not create GiftCard (write failure): " + e.getMessage());
+        }
+
+        result.put("paymentMethodId", newGc.getString("paymentMethodId"));
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+
+    public static Map updateGiftCard(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        Timestamp now = UtilDateTime.nowTimestamp();
+
+        String partyId =
+            ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE");
+
+        if (result.size() > 0)
+            return result;
+
+        List toBeStored = new LinkedList();
+        boolean isModified = false;
+
+        GenericValue paymentMethod = null;
+        GenericValue newPm = null;
+        GenericValue giftCard = null;
+        GenericValue newGc = null;
+        String paymentMethodId = (String) context.get("paymentMethodId");
+
+        try {
+            giftCard = delegator.findByPrimaryKey("GiftCard", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+            paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+            return ServiceUtil.returnError("ERROR: Could not get GiftCard to update (read error): " + e.getMessage());
+        }
+
+        if (giftCard == null || paymentMethod == null) {
+            return ServiceUtil.returnError("ERROR: Could not find GiftCard to update with id " + paymentMethodId);
+        }
+
+        // handle masked card numbers both virtual and physical
+
+        // physical
+        String updatedPhysicalNumber = StringUtil.removeSpaces((String) context.get("physicalNumber"));
+        if (updatedPhysicalNumber.startsWith("*")) {
+            // get the masked card number from the db
+            String origCardNumber = giftCard.getString("physicalNumber");
+            Debug.log(origCardNumber);
+            String origMaskedNumber = "";
+            int cardLength = origCardNumber.length() - 4;
+            if (cardLength > 0) {
+                for (int i = 0; i < cardLength; i++) {
+                    origMaskedNumber = origMaskedNumber + "*";
+                }
+                origMaskedNumber = origMaskedNumber + origCardNumber.substring(cardLength);
+            } else {
+                origMaskedNumber = origCardNumber;
+            }
+
+            // compare the two masked numbers
+            if (updatedPhysicalNumber.equals(origMaskedNumber)) {
+                updatedPhysicalNumber = origCardNumber;
+            }
+        }
+        context.put("physicalNumber", updatedPhysicalNumber);
+
+        // virtual
+        String updatedVirtualNumber = StringUtil.removeSpaces((String) context.get("virtualNumber"));
+        if (updatedVirtualNumber.startsWith("*")) {
+            // get the masked card number from the db
+            String origCardNumber = giftCard.getString("virtualNumber");
+            Debug.log(origCardNumber);
+            String origMaskedNumber = "";
+            int cardLength = origCardNumber.length() - 4;
+            if (cardLength > 0) {
+                for (int i = 0; i < cardLength; i++) {
+                    origMaskedNumber = origMaskedNumber + "*";
+                }
+                origMaskedNumber = origMaskedNumber + origCardNumber.substring(cardLength);
+            } else {
+                origMaskedNumber = origCardNumber;
+            }
+
+            // compare the two masked numbers
+            if (updatedVirtualNumber.equals(origMaskedNumber)) {
+                updatedVirtualNumber = origCardNumber;
+            }
+        }
+        context.put("virtualNumber", updatedVirtualNumber);
+
+        newPm = new GenericValue(paymentMethod);
+        toBeStored.add(newPm);
+        newGc = new GenericValue(giftCard);
+        toBeStored.add(newGc);
+
+        Long newPmId = delegator.getNextSeqId("PaymentMethod");
+
+        if (newPmId == null) {
+            return ServiceUtil.returnError("ERROR: Could not update GiftCard info (id generation failure)");
+        }
+
+        newPm.set("partyId", partyId);
+        newPm.set("fromDate", context.get("fromDate"), false);
+        newPm.set("thruDate", context.get("thruDate"));
+
+        newGc.set("physicalNumber", context.get("physicalNumber"));
+        newGc.set("physicalPin", context.get("physicalPin"));
+        newGc.set("virtualNumber", context.get("virtualNumber"));
+        newGc.set("virtualPin", context.get("virtualPin"));
+        newGc.set("expireDate", context.get("expireDate"));
+
+        if (!newGc.equals(giftCard) || !newPm.equals(paymentMethod)) {
+            newPm.set("paymentMethodId", newPmId.toString());
+            newGc.set("paymentMethodId", newPmId.toString());
+
+            newPm.set("fromDate", (context.get("fromDate") != null ? context.get("fromDate") : now));
+            isModified = true;
+        }
+
+        if (isModified) {
+            // set thru date on old paymentMethod
+            paymentMethod.set("thruDate", now);
+            toBeStored.add(paymentMethod);
+
+            try {
+                delegator.storeAll(toBeStored);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                return ServiceUtil.returnError(
+                    "ERROR: Could not update EFT Account (write failure): " + e.getMessage());
+            }
+        } else {
+            result.put("newPaymentMethodId", paymentMethodId);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating EFT Account");
+
+            return result;
+        }
+
+        result.put("newPaymentMethodId", newGc.getString("paymentMethodId"));
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }

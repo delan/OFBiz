@@ -1,5 +1,5 @@
 /*
- * $Id: ContactHelper.java,v 1.1 2003/08/17 17:57:35 ajzeneski Exp $
+ * $Id: ContactHelper.java,v 1.2 2003/11/04 18:46:30 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Accessors for Contact Mechanisms
  * 
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ContactHelper {
@@ -100,4 +100,5 @@ public class ContactHelper {
         result.append(' ').append(creditCardInfo.getString("expireDate"));
         return result.toString();
     }
+
 }

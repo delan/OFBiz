@@ -186,20 +186,35 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editcreditcard"/>
     </request-map>
-
     <request-map uri="createCreditCard">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="createCreditCard"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
-    </request-map>    
-
+    </request-map>
     <request-map uri="updateCreditCard">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="updateCreditCard"/>
         <response name="success" type="view" value="editcreditcard"/>
         <response name="error" type="view" value="editcreditcard"/>
+    </request-map>
+
+    <request-map uri="editgiftcard">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editgiftcard"/>
+    </request-map>
+    <request-map uri="createGiftCard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGiftCard"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="editgiftcard"/>
+    </request-map>
+    <request-map uri="updateGiftCard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGiftCard"/>
+        <response name="success" type="view" value="editgiftcard"/>
+        <response name="error" type="view" value="editgiftcard"/>
     </request-map>
 
     <request-map uri="editeftaccount">
@@ -218,6 +233,7 @@
         <response name="success" type="view" value="editeftaccount"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
+
     <request-map uri="editAvsOverride">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editavsoverride"/>
@@ -572,6 +588,7 @@
     <view-map name="editcontactmech" type="jpublish" page="/party/editcontactmech.ftl"/>
 
     <view-map name="editcreditcard" type="region"/>
+    <view-map name="editgiftcard" type="jpublish" page="/party/editgiftcard.ftl"/>
     <view-map name="editeftaccount" type="region"/>
     <view-map name="editavsoverride" type="region"/>
     <view-map name="editlogin" type="region"/>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -33,9 +33,6 @@ function shipBillAddr() {
         window.location.replace("setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}");
     }
 }
-function makeExpDate() {
-    document.billsetupform.expireDate.value = document.billsetupform.expMonth.options[document.billsetupform.expMonth.selectedIndex].value + "/" + document.billsetupform.expYear.options[document.billsetupform.expYear.selectedIndex].value;
-}// -->
 </script>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -109,18 +106,94 @@ function makeExpDate() {
                   </tr>
                 </#if>
 
-                ${pages.get("/order/genericaddress.ftl")}
+                <#if (paymentMethodType == "CC" || paymentMethodType == "EFT")>
+                  ${pages.get("/order/genericaddress.ftl")}
+                </#if>
 
-                <#-- credit card fields -->
-                    <#if paymentMethodType == "CC">
-                      <#if !creditCard?has_content>
-                        <#assign creditCard = requestParameters>
-                      </#if>
-                      <input type='hidden' name='expireDate' value='${creditCard.expireDate?if_exists}'>
+                <#-- gift card fields -->
+                <#if paymentMethodType == "GC">
+                  <#if !giftCard?has_content>
+                    <#assign giftCard = requestParameters>
+                  </#if>
                   <tr>
                     <td colspan="3"><hr class="sepbar"></td>
                   </tr>
-                      <tr>
+                  <tr>
+                    <td width="26%" align=right valign=top><div class="tabletext">Physical Number</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">
+                      <input type="text" class="inputBox" size="20" maxlength="60" name="physicalNumber" value="${giftCard.physicalNumber?if_exists}">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="26%" align=right valign=top><div class="tabletext">Physical PIN</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">
+                      <input type="text" class="inputBox" size="10" maxlength="60" name="physicalPin" value="${giftCard.physicalPin?if_exists}">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="26%" align=right valign=top><div class="tabletext">Virtual Number</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">
+                      <input type="text" class="inputBox" size="20" maxlength="60" name="virtualNumber" value="${giftCard.virtualNumber?if_exists}">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="26%" align=right valign=top><div class="tabletext">Virtual PIN</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">
+                      <input type="text" class="inputBox" size="10" maxlength="60" name="virtualPin" value="${giftCard.virtualPin?if_exists}">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">
+                      <#assign expMonth = "">
+                      <#assign expYear = "">
+                      <#if giftCard?exists && giftCard.expireDate?exists>
+                        <#assign expDate = giftCard.expireDate>
+                        <#if (expDate?exists && expDate.indexOf("/") > 0)>
+                          <#assign expMonth = expDate.substring(0,expDate.indexOf("/"))>
+                          <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
+                        </#if>
+                      </#if>
+                      <select name="expMonth" class='selectBox'>
+                        <#if giftCard?has_content && expMonth?has_content>
+                          <#assign ccExprMonth = expMonth>
+                        <#else>
+                          <#assign ccExprMonth = requestParameters.expMonth?if_exists>
+                        </#if>
+                        <#if ccExprMonth?has_content>
+                          <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
+                        </#if>
+                        ${pages.get("/includes/ccmonths.ftl")}
+                      </select>
+                      <select name="expYear" class='selectBox'>
+                        <#if giftCard?has_content && expYear?has_content>
+                          <#assign ccExprYear = expYear>
+                        <#else>
+                          <#assign ccExprYear = requestParameters.expYear?if_exists>
+                        </#if>
+                        <#if ccExprYear?has_content>
+                          <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
+                        </#if>
+                        ${pages.get("/includes/ccyears.ftl")}
+                      </select>
+                    </td>
+                  </tr>
+                </#if>
+
+                <#-- credit card fields -->
+                <#if paymentMethodType == "CC">
+                  <#if !creditCard?has_content>
+                    <#assign creditCard = requestParameters>
+                  </#if>
+                  <tr>
+                    <td colspan="3"><hr class="sepbar"></td>
+                  </tr>
+                  <tr>
                     <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
@@ -139,7 +212,7 @@ function makeExpDate() {
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="cardType" class="selectBox">
-                        <#if creditCard.cartType?exists>
+                        <#if creditCard.cardType?exists>
                           <option>${creditCard.cardType}</option>
                           <option value="${creditCard.cardType}">---</option>
                         </#if>
@@ -174,7 +247,7 @@ function makeExpDate() {
                           <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
                         </#if>
                       </#if>
-                      <select name="expMonth" class='selectBox' onChange="javascript:makeExpDate();">
+                      <select name="expMonth" class='selectBox'>
                         <#if creditCard?has_content && expMonth?has_content>
                           <#assign ccExprMonth = expMonth>
                         <#else>
@@ -185,7 +258,7 @@ function makeExpDate() {
                         </#if>
                         ${pages.get("/includes/ccmonths.ftl")}
                       </select>
-                      <select name="expYear" class='selectBox' onChange="javascript:makeExpDate();">
+                      <select name="expYear" class='selectBox'>
                         <#if creditCard?has_content && expYear?has_content>
                           <#assign ccExprYear = expYear>
                         <#else>
@@ -198,14 +271,14 @@ function makeExpDate() {
                       </select>
                     *</td>
                   </tr>
-                    </#if>
+                </#if>
 
-                    <#-- eft fields -->
-                    <#if paymentMethodType =="EFT">
-                      <#if !eftAccount?has_content>
-                        <#assign eftAccount = requestParameters>
-                      </#if>
-                      <tr>
+                <#-- eft fields -->
+                <#if paymentMethodType =="EFT">
+                  <#if !eftAccount?has_content>
+                    <#assign eftAccount = requestParameters>
+                  </#if>
+                  <tr>
                     <td colspan="3"><hr class="sepbar"></td>
                   </tr>
                   <tr>

@@ -17,4 +17,37 @@
     <eca service="updatePostalAddress" event="return">
         <action service="updatePaymentMethodAddress" mode="sync"/>
     </eca>
+
+    <eca service="createCreditCard" event="in-validate">
+        <condition field-name="expMonth" operator="is-not-empty"/>
+        <condition field-name="expYear" operator="is-not-empty"/>
+        <action service="buildCcExpireDate" mode="sync"/>
+    </eca>
+    <eca service="updateCreditCard" event="in-validate">
+        <condition field-name="expMonth" operator="is-not-empty"/>
+        <condition field-name="expYear" operator="is-not-empty"/>
+        <action service="buildCcExpireDate" mode="sync"/>
+    </eca>
+
+    <eca service="createCreditCardAndAddress" event="in-validate">
+        <condition field-name="expMonth" operator="is-not-empty"/>
+        <condition field-name="expYear" operator="is-not-empty"/>
+        <action service="buildCcExpireDate" mode="sync"/>
+    </eca>
+    <eca service="updateCreditCardAndAddress" event="in-validate">
+        <condition field-name="expMonth" operator="is-not-empty"/>
+        <condition field-name="expYear" operator="is-not-empty"/>
+        <action service="buildCcExpireDate" mode="sync"/>
+    </eca>
+
+    <eca service="createGiftCard" event="in-validate">
+        <condition field-name="expMonth" operator="is-not-empty"/>
+        <condition field-name="expYear" operator="is-not-empty"/>
+        <action service="buildCcExpireDate" mode="sync"/>
+    </eca>
+    <eca service="updateGiftCard" event="in-validate">
+        <condition field-name="expMonth" operator="is-not-empty"/>
+        <condition field-name="expYear" operator="is-not-empty"/>
+        <action service="buildCcExpireDate" mode="sync"/>
+    </eca>
 </service-eca>

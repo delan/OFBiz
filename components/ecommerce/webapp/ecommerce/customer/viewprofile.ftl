@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -251,7 +251,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.AccountingPaymentMethodInformation}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/editcreditcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewCreditCard}</a><a href="<@ofbizUrl>/editeftaccount</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyCreateNewEftAccount}</a>
+            <a href="<@ofbizUrl>/editcreditcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewCreditCard}</a><a href="<@ofbizUrl>/editgiftcard</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyCreateNewGiftCard}</a><a href="<@ofbizUrl>/editeftaccount</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyCreateNewEftAccount}</a>
           </td>
         </tr>
       </table>
@@ -270,9 +270,10 @@
                         <#list paymentMethodValueMaps as paymentMethodValueMap>
                             <#assign paymentMethod = paymentMethodValueMap.paymentMethod?if_exists>
                             <#assign creditCard = paymentMethodValueMap.creditCard?if_exists>
+                            <#assign giftCard = paymentMethodValueMap.giftCard?if_exists>
                             <#assign eftAccount = paymentMethodValueMap.eftAccount?if_exists>
                             <tr>
-                              <#if paymentMethod.paymentMethodTypeId?if_exists = "CREDIT_CARD">
+                              <#if paymentMethod.paymentMethodTypeId?if_exists == "CREDIT_CARD">
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
@@ -287,7 +288,58 @@
                                     <div><a href='<@ofbizUrl>/editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                     [${uiLabelMap.CommonUpdate}]</a></div>
                                   </td>
-                              <#elseif paymentMethod.paymentMethodTypeId?if_exists = "EFT_ACCOUNT">
+                              <#elseif paymentMethod.paymentMethodTypeId?if_exists == "GIFT_CARD">
+                                  <#if giftCard?has_content && giftCard.physicalNumber?has_content>
+                                    <#assign pcardNumberDisplay = "">
+                                    <#assign pcardNumber = giftCard.physicalNumber>
+                                    <#if pcardNumber?has_content>
+                                      <#assign psize = pcardNumber?length - 4>
+                                      <#if 0 < psize>
+                                        <#list 0 .. psize-1 as foo>
+                                          <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
+                                        </#list>
+                                        <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
+                                      <#else>
+                                        <#assign pcardNumberDisplay = pcardNumber>
+                                      </#if>
+                                    </#if>
+                                  </#if>
+                                  <#if giftCard?has_content && giftCard.virtualNumber?has_content>
+                                    <#assign vcardNumberDisplay = "">
+                                    <#assign vcardNumber = giftCard.virtualNumber>
+                                    <#if vcardNumber?has_content>
+                                      <#assign vsize = vcardNumber?length - 4>
+                                      <#if 0 < vsize>
+                                        <#list 0 .. vsize-1 as foo>
+                                          <#assign vcardNumberDisplay = vcardNumberDisplay + "*">
+                                        </#list>
+                                        <#assign vcardNumberDisplay = vcardNumberDisplay + vcardNumber[vsize .. vsize + 3]>
+                                      <#else>
+                                        <#assign vcardNumberDisplay = vcardNumber>
+                                      </#if>
+                                    </#if>
+                                  </#if>
+
+                                  <#assign giftCardNumber = pcardNumberDisplay?if_exists>
+                                  <if (!giftCardNumber?has_content)>
+                                    <#assign giftCardNumber = vcardNumberDisplay?if_exists>
+                                  <#elseif vcardNumberDisplay?has_content>
+                                    <#assign giftCardNumber = giftCardNumber + " / " + vcardNumberDisplay>
+                                  </#if>
+
+                                  <td width="90%" valign="top">
+                                    <div class="tabletext">
+                                      <b>${uiLabelMap.AccountingGiftCard}: ${giftCardNumber}</b>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.thruDate?exists><b>(${uiLabelMap.CommonDelete}:&nbsp;${paymentMethod.thruDate.toString()})</b></#if>
+                                    </div>
+                                  </td>
+                                  <td width="5">&nbsp;</td>
+                                  <td align="right" valign="top" width='1%' nowrap>
+                                    <div><a href='<@ofbizUrl>/editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                    [${uiLabelMap.CommonUpdate}]</a></div>
+                                  </td>
+                              <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>${uiLabelMap.AccountingEftAccount}: ${eftAccount.nameOnAccount?if_exists} - <#if eftAccount.bankName?has_content>Bank: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}</#if></b>
