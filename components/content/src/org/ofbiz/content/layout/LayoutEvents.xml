@@ -18,7 +18,7 @@
       <field-to-field map-name="parameters" field-name="drObjectInfo"
                       to-map-name="context" to-field-name="objectInfo" />
       <string-to-field string="LOCAL_FILE" map-name="context" field-name="dataResourceTypeId" />
-      <call-service in-map-name="context" service-name="createContentAndAssoc">
+      <call-service in-map-name="context" service-name="persistContentAndAssoc">
         <result-to-field field-name="contentId" result-name="contentId"/>
         <result-to-field field-name="dataResourceId" result-name="dataResourceId"/>
       </call-service>
@@ -302,6 +302,7 @@
       </call-service>
       <check-errors/>
     </simple-method>
+
 
 </simple-methods>
 
