@@ -20,12 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if miniProduct?exists>
-    <a href="<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProduct.productName}</a>
+    <a href="<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProductContentWrapper.get("PRODUCT_NAME")}</a>
     <div class="tabletext"><b>${miniProduct.productId}</b>
       <#if (priceResult.price?default(0) > 0 && miniProduct.requireAmount?default("N") == "N")>
         <b><span class="<#if priceResult.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/></span></b>
@@ -35,17 +35,13 @@
     <#if (miniProduct.introductionDate?exists) && (nowTimeLong < miniProduct.introductionDate.getTime())>
         <#-- check to see if introductionDate hasn't passed yet -->
         <div class="tabletext" style="color: red;">${uiLabelMap.ProductNotYetAvailable}</div>
-    
     <#elseif (miniProduct.salesDiscontinuationDate?exists) && (nowTimeLong > miniProduct.salesDiscontinuationDate.getTime())>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <div class="tabletext" style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
-    
     <#elseif miniProduct.isVirtual?default("N") == "Y">
         <a href="<@ofbizUrl>/product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseVariations}...]</nobr></a>
-
     <#elseif miniProduct.requireAmount?default("N") == "Y">
         <a href="<@ofbizUrl>/product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext"><nobr>[${uiLabelMap.EcommerceChooseAmount}...]</nobr></a>
-    
     <#else>
         <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style="margin: 0;">
             <input type="hidden" name="add_product_id" value="${miniProduct.productId}">

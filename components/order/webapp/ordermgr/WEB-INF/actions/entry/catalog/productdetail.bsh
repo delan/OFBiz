@@ -20,13 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.service.*;
+import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 
@@ -88,6 +89,10 @@ if (product != null) {
     productTypeId = product.getString("productTypeId");  
     featureTypes = new HashMap();
     featureOrder = new LinkedList();
+
+    // make the productContentWrapper
+    ProductContentWrapper productContentWrapper = new ProductContentWrapper(product, request);
+    request.setAttribute("productContentWrapper", productContentWrapper);
 
     // get next/previous information for category
     categoryId = requestParams.get("category_id");

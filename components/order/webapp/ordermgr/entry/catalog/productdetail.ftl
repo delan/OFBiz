@@ -20,13 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#-- variable setup -->
 <#assign product = requestAttributes.product?if_exists>
 <#assign price = requestAttributes.priceMap?if_exists>
+<#assign productContentWrapper = requestAttributes.productContentWrapper>
 <#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
 <#-- end variable setup -->
 
@@ -66,13 +67,14 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <#-- Product image/name/price -->
   <tr>
     <td align="left" valign="top" width="0">
-      <#if product.largeImageUrl?exists>
-        <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.largeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align='left'>
+      <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL")>
+      <#if productLargeImageUrl?exists>
+        <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align='left'>
       </#if>
     </td>
     <td align="right" valign="top">
-      <div class="head2">${product.productName?if_exists}</div>
-      <div class="tabletext">${product.description?if_exists}</div>
+      <div class="head2">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</div>
+      <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}</div>
       <#if product.productId?has_content>
         <div class="tabletext"><b>${product.productId}</b> <a href="/catalog/control/EditProduct?productId=${product.productId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[Edit&nbsp;Product]</a></div>
       </#if>
@@ -197,10 +199,10 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <#assign indexer = 0>
             <#list imageKeys as key>
               <#assign swatchProduct = imageMap.get(key)>
-              <#assign imageUrl = swatchProduct.smallImageUrl?if_exists>
-              <#if swatchProduct?exists && swatchProduct.smallImageUrl?exists>
+              <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request)?if_exists>
+              <#if swatchProduct?exists && imageUrl?exists>
                 <td align="center" valign="bottom">
-                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${swatchProduct.smallImageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
+                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
                   <br>
                   <a href="#" class="buttontext" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);">${key}</a>
                 </td>
@@ -218,7 +220,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <#-- Long description of product -->
   <tr>
     <td colspan="2">
-      <div class="tabletext">${product.longDescription?if_exists}</div>
+      <div class="tabletext">${productContentWrapper.get("LONG_DESCRIPTION")?if_exists}</div>
     </td>
   </tr>
 

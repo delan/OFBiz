@@ -21,19 +21,19 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if requestAttributes.product?exists>
 <#-- variable setup -->
 <#assign product = requestAttributes.product>
-<#assign productContentWrapper = requestAttributes.productContentWrapper>
 <#assign price = requestAttributes.priceMap>
 <#assign targetRequestName = "product">
 <#if requestAttributes.targetRequestName?has_content>
     <#assign targetRequestName = requestAttributes.targetRequestName>
 </#if>
+<#assign productContentWrapper = requestAttributes.productContentWrapper>
 <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL")?if_exists>
 <#if !smallImageUrl?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
 <#-- end variable setup -->
