@@ -1,5 +1,5 @@
 /*
- * $Id: DebugXaResource.java,v 1.2 2004/05/25 06:30:56 ajzeneski Exp $
+ * $Id: DebugXaResource.java,v 1.3 2004/05/25 06:45:34 ajzeneski Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class DebugXaResource extends GenericXaResource {
@@ -65,5 +65,5 @@ public class DebugXaResource extends GenericXaResource {
     public void log() {
         Debug.log("Xid : " + xid, module);
         Debug.log(ex, module);
-    }
+    }    
 }
