@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2001/09/14 19:06:05  epabst
+ * created new session attribute called SiteDefs.SERVER_ROOT_URL that contains something like:
+ * "http://myserver.com:1234"
+ *
  * Revision 1.14  2001/09/06 03:30:27  azeneski
  * Removed control path debugging output.
  *
@@ -136,14 +140,15 @@ public class ControlServlet extends HttpServlet {
         // Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
         request.setAttribute(SiteDefs.JOB_MANAGER,jm);
         
+        StringBuffer request_url = new StringBuffer();
+        request_url.append(request.getScheme());
+        request_url.append("://" + request.getServerName());
+        if ( request.getServerPort() != 80 && request.getServerPort() != 443 )
+            request_url.append(":" + request.getServerPort());
+        request.setAttribute(SiteDefs.SERVER_ROOT_URL,request_url.toString());
+        
         // Store some first hit client info for later.
-        if ( session.isNew() ) {
-            StringBuffer request_url = new StringBuffer();
-            request_url.append(request.getScheme());
-            request_url.append("://" + request.getServerName());
-            if ( request.getServerPort() != 80 && request.getServerPort() != 443 )
-                request_url.append(":" + request.getServerPort());
-            session.setAttribute(SiteDefs.SERVER_ROOT_URL,request_url.toString());
+        if(session.isNew()) {
             request_url.append(request.getRequestURI());
             if ( request.getQueryString() != null )
                 request_url.append("?" + request.getQueryString());
