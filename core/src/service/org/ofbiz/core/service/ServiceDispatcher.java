@@ -187,7 +187,7 @@ public class ServiceDispatcher {
             }
             
             // isolate the transaction if defined
-            if (service.isolateTransaction && !beganTrans) {
+            if (service.requireNewTransaction && !beganTrans) {
                 try {
                     parentTransaction = tm.suspend();
                 } catch (SystemException se) {
@@ -277,9 +277,8 @@ public class ServiceDispatcher {
                 try {
                     TransactionUtil.commit(beganTrans);
                 } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not commit transaction", module);
-                    // TODO: check on this; we need to throw something here so the rest doesnt run
-                    //NOTE DEJ 25 Oct 2002 NEVER throw this exception, it masks the REAL problem which should already be in an error message, just log it:throw new GenericServiceException("Could not commit the transaction:", e);
+                    Debug.logError(e, "Could not commit transaction", module);      
+                    throw new GenericServiceException("Commit transaction failed");                              
                 }                               
             }
             
@@ -329,7 +328,11 @@ public class ServiceDispatcher {
         // check the locale
         this.checkLocale(context);
         
-        // start the transaction
+        // for isolated transactions        
+        TransactionManager tm = TransactionFactory.getTransactionManager();
+        Transaction parentTransaction = null;
+        
+        // start the transaction        
         boolean beganTrans = false;
         if (service.useTransaction) {
             try {
@@ -337,8 +340,26 @@ public class ServiceDispatcher {
             } catch (GenericTransactionException te) {
                 throw new GenericServiceException("Cannot start the transaction.", te.getNested());
             }
+            
+            // isolate the transaction if defined
+            if (service.requireNewTransaction && !beganTrans) {
+                try {
+                    parentTransaction = tm.suspend();
+                } catch (SystemException se) {
+                    Debug.logError(se, "Problems suspending current transaction", module);
+                    throw new GenericServiceException("Problems suspending transaction, see logs");
+                }
+                
+                // now start a new transaction
+                try {
+                    beganTrans = TransactionUtil.begin();
+                } catch (GenericTransactionException gte) {
+                    throw new GenericServiceException("Cannot start the transaction.", gte.getNested());                   
+                }
+            }
         }
 
+        // needed for events
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
 
         try {
@@ -382,9 +403,24 @@ public class ServiceDispatcher {
                 TransactionUtil.commit(beganTrans);
             } catch (GenericTransactionException e) {
                 Debug.logError(e, "Could not commit transaction", module);
-                //NOTE DEJ 25 Oct 2002 NEVER throw this exception, it masks the REAL problem which should already be in an error message, just log it:throw new GenericServiceException("Could not commit the transaction:", e);
+                throw new GenericServiceException("Commit transaction failed");
             }
 
+            // resume the parent transaction
+            if (parentTransaction != null) {            
+                try {
+                    tm.resume(parentTransaction);
+                } catch (InvalidTransactionException ite) {
+                    Debug.logWarning(ite, "Invalid transaction, not resumed", module);                
+                } catch (IllegalStateException ise) {
+                    Debug.logError(ise, "Trouble resuming parent transaction", module);
+                    throw new GenericServiceException("Resume transaction exception, see logs");               
+                } catch (SystemException se) {
+                    Debug.logError(se, "Trouble resuming parent transaction", module);
+                    throw new GenericServiceException("Resume transaction exception, see logs");                
+                }
+            }
+            
             // pre-return ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "return", ctx, context, null, false);
         } catch (GenericServiceException e) {
