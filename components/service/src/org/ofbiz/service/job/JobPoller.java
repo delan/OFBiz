@@ -1,5 +1,5 @@
 /*
- * $Id: JobPoller.java,v 1.4 2004/01/24 19:37:53 ajzeneski Exp $
+ * $Id: JobPoller.java,v 1.5 2004/01/24 20:40:45 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.Debug;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:">Magnus Rosenquist</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class JobPoller implements Runnable {
@@ -85,6 +85,11 @@ public class JobPoller implements Runnable {
 
     public synchronized void run() {
         if (Debug.infoOn()) Debug.logInfo("JobPoller: (" + thread.getName() + ") Thread Running...", module);
+        try {
+            // wait 30 seconds before the first poll
+            wait(30000);
+        } catch (InterruptedException e) {
+        }
         while (isRunning) {
             try {
                 // grab a list of jobs to run.
