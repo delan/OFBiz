@@ -30,15 +30,11 @@ import java.security.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import com.ibm.bsf.*;
-
 import org.jpublish.*;
 import org.jpublish.action.*;
 import org.jpublish.component.*;
 import org.jpublish.page.*;
 import org.jpublish.util.*;
-
-import org.ofbiz.core.util.*;
 
 /**
  * Handles JPublish type view rendering
@@ -66,9 +62,6 @@ public class JPublishViewHandler implements ViewHandler {
 
         // configure the classpath for scripting support
         configureClasspath(webInfPath);
-
-        // configure BSF
-        configureBSF();
 
         // create the site context
         try {
@@ -112,18 +105,6 @@ public class JPublishViewHandler implements ViewHandler {
         }
 
         AccessController.doPrivileged(new SetClassPathAction(classPath.toString()));
-    }
-
-    protected void configureBSF() {
-        String[] extensions = {"bsh"};
-        BSFManager.registerScriptingEngine("beanshell", "bsh.OfbizBshBsfEngine", extensions);
-        //BSFManager.registerScriptingEngine("beanshell", "bsh.util.BeanShellBSFEngine", extensions);
-
-        String[] jsExtensions = {"js"};
-        BSFManager.registerScriptingEngine("javascript", "org.ofbiz.core.action.OfbizJsBsfEngine", jsExtensions);
-        
-        String[] smExtensions = {"sm"};
-        BSFManager.registerScriptingEngine("simplemethod", "org.ofbiz.core.minilang.SimpleMethodBsfEngine", smExtensions);
     }
 
     protected boolean executeGlobalActions(HttpServletRequest request, HttpServletResponse response, JPublishContext context, String path) throws Exception {

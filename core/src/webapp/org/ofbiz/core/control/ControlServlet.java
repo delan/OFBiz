@@ -29,11 +29,12 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import com.ibm.bsf.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.stats.*;
-import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -64,6 +65,9 @@ public class ControlServlet extends HttpServlet {
         //initialize the cached class loader for this application
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
+
+        // configure BSF
+        configureBSF();
 
         // initialize the delegator
         getDelegator();
@@ -381,4 +385,15 @@ public class ControlServlet extends HttpServlet {
         getDispatcher().deregister();        
     }
     
+    protected void configureBSF() {
+        String[] extensions = {"bsh"};
+        BSFManager.registerScriptingEngine("beanshell", "bsh.OfbizBshBsfEngine", extensions);
+        //BSFManager.registerScriptingEngine("beanshell", "bsh.util.BeanShellBSFEngine", extensions);
+
+        String[] jsExtensions = {"js"};
+        BSFManager.registerScriptingEngine("javascript", "org.ofbiz.core.util.OfbizJsBsfEngine", jsExtensions);
+        
+        String[] smExtensions = {"sm"};
+        BSFManager.registerScriptingEngine("simplemethod", "org.ofbiz.core.minilang.SimpleMethodBsfEngine", smExtensions);
+    }
 }
