@@ -179,6 +179,7 @@ public class CatalogWorker {
                 return new Double(0.0);
             }
             
+            boolean requireInventory = isCatalogInventoryRequired(prodCatalogId, productId, delegator);
             Double quantityNotReserved = null;
             try {
                 Map serviceContext = new HashMap();
@@ -188,7 +189,7 @@ public class CatalogWorker {
                 serviceContext.put("orderItemSeqId", orderItemSeqId);
                 serviceContext.put("quantity", quantity);
                 
-                if (isCatalogInventoryRequired(prodCatalogId, productId, delegator)) {
+                if (requireInventory) {
                     serviceContext.put("requireInventory", "Y");
                 } else {
                     serviceContext.put("requireInventory", "N");
@@ -200,8 +201,8 @@ public class CatalogWorker {
                 quantityNotReserved = (Double) result.get("quantityNotReserved");
                 
                 if (quantityNotReserved == null) {
-                    Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
-                    if (!"Y".equals(prodCatalog.getString("requireInventory"))) {
+                    Debug.logWarning("The reserveProductInventoryByFacility service returned a null quantityNotReserved, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
+                    if (!requireInventory) {
                         return null;
                     } else {
                         return new Double(0.0);
@@ -209,7 +210,7 @@ public class CatalogWorker {
                 }
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility service");
-                if (!"Y".equals(prodCatalog.getString("requireInventory"))) {
+                if (!requireInventory) {
                     return null;
                 } else {
                     return new Double(0.0);

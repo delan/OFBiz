@@ -242,6 +242,10 @@
                             <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
                             <create-value value-name="newOiirEntity"/>
 
+                            <!-- keep track of the last non-serialized inventory item and corresponding order item inv res for use if inventory is not required for purchase -->
+                            <!-- use env variable named lastNonSerInventoryItem, lastNonSerOrderItemInventoryRes -->
+                            <env-to-field env-name="newOiirEntity" field-name="lastNonSerOrderItemInventoryRes"/>
+
                             <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(((Double) parameters.get("quantityNotReserved")).doubleValue() - ((Double) parameters.get("deductAmount")).doubleValue())); ]]></call-bsh>
                         </if-compare>
                     </if-not-empty>
@@ -249,7 +253,6 @@
                     <!-- keep track of the last non-serialized inventory item and corresponding order item inv res for use if inventory is not required for purchase -->
                     <!-- use env variable named lastNonSerInventoryItem, lastNonSerOrderItemInventoryRes -->
                     <env-to-field env-name="inventoryItem" field-name="lastNonSerInventoryItem"/>
-                    <env-to-field env-name="newOiirEntity" field-name="lastNonSerOrderItemInventoryRes"/>
                 </if-compare>
             </if-compare>
         </iterate>
@@ -281,8 +284,20 @@
                         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
                         
                         <!-- update OrderItemInventoryRes record -->
-                        <call-bsh><![CDATA[ lastNonSerOrderItemInventoryRes.put("quantity", new Double(((Double) lastNonSerOrderItemInventoryRes.get("quantity")).doubleValue() + ((Double) parameters.get("quantityNotReserved")).doubleValue())); ]]></call-bsh>
-                        <store-value value-name="newOiirEntity"/>
+                        <if-not-empty field-name="lastNonSerOrderItemInventoryRes">
+                            <call-bsh><![CDATA[ lastNonSerOrderItemInventoryRes.put("quantity", new Double(((Double) lastNonSerOrderItemInventoryRes.get("quantity")).doubleValue() + ((Double) parameters.get("quantityNotReserved")).doubleValue())); ]]></call-bsh>
+                            <store-value value-name="lastNonSerOrderItemInventoryRes"/>
+                            
+                            <else>
+                                <!-- okay, there was no last non-ser orderItemInventoryRes, so create one -->
+                                <make-value entity-name="OrderItemInventoryRes" value-name="newOiirEntity"/>
+                                <field-to-field field-name="orderId" map-name="parameters" to-map-name="newOiirEntity"/>
+                                <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
+                                <field-to-field field-name="inventoryItemId" map-name="lastNonSerInventoryItem" to-field-name="inventoryItemId" to-map-name="newOiirEntity"/>
+                                <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
+                                <create-value value-name="newOiirEntity"/>
+                            </else>
+                        </if-not-empty>
 
                         <else>
                             <!-- no non-ser inv item, create a non-ser InventoryItem with availableToPromise = -quantityNotReserved -->
@@ -313,7 +328,7 @@
                             <make-value entity-name="OrderItemInventoryRes" value-name="newOiirEntity"/>
                             <field-to-field field-name="orderId" map-name="parameters" to-map-name="newOiirEntity"/>
                             <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
-                            <field-to-field field-name="inventoryItemId" map-name="lastNonSerInventoryItem" to-field-name="inventoryItemId" to-map-name="newOiirEntity"/>
+                            <field-to-field field-name="inventoryItemId" map-name="newNonSerInventoryItem" to-field-name="inventoryItemId" to-map-name="newOiirEntity"/>
                             <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
                             <create-value value-name="newOiirEntity"/>
                         </else>
