@@ -1,26 +1,26 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
@@ -35,7 +35,7 @@
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;Order #${orderId} Information</div>
-                </td>           
+                </td>
               </tr>
             </table>
           </td>
@@ -45,7 +45,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
-                  <table width="100%" border="0" cellpadding="1" cellspacing='0'>                
+                  <table width="100%" border="0" cellpadding="1" cellspacing='0'>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Status History</b></div>
@@ -63,7 +63,7 @@
                           </#list>
                         </#if>
                       </td>
-                    </tr>             
+                    </tr>
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
@@ -75,7 +75,7 @@
                           ${orderHeader.orderDate.toString()}
                         </div>
                       </td>
-                    </tr>              
+                    </tr>
                     <#if distributorId?exists>
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <tr>
@@ -89,7 +89,7 @@
                         </div>
                       </td>
                     </tr>
-                    </#if>                  
+                    </#if>
                     <#if affiliateId?exists>
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <tr>
@@ -122,7 +122,7 @@
                 <tr>
                   <td valign="middle" align="left">
                     <div class="boxhead">&nbsp;Payment Information</div>
-                  </td>          
+                  </td>
                 </tr>
               </table>
             </td>
@@ -137,7 +137,7 @@
                       <#if outputted?default("false") == "true">
                         <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       </#if>
-                      <#assign outputted = "true">                  
+                      <#assign outputted = "true">
                       <#-- try the paymentMethod first; if paymentMethodId is specified it overrides paymentMethodTypeId -->
                       <#assign paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod")?if_exists>
                       <#if !paymentMethod?has_content>
@@ -156,7 +156,7 @@
                                 <div class="tabletext">&nbsp;<#if orderPaymentPreference.authRefNum?exists>(Ref: ${orderPaymentPreference.authRefNum})</#if></div>
                              </td>
                             <#else>
-                              <td align="right">                            
+                              <td align="right">
                                 <a valign="top" href="<@ofbizUrl>/receivepayment?${paramString}</@ofbizUrl>" class="buttontext">Receive Payment</a>
                               </td>
                             </#if>
@@ -170,7 +170,7 @@
                             <#assign payment = payments[0]>
                           </#if>
                           <#if creditCard?exists>
-                            <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")>                        
+                            <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")>
                           </#if>
                           <tr>
                             <td align="right" valign="top" width="15%">
@@ -186,26 +186,28 @@
                                   ${creditCard.cardType}
                                   ${creditCard.cardNumber}
                                   ${creditCard.expireDate}
-                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]                                    
+                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
                                 <#else>
                                   ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                 </#if>
-                              </div>                              
+                              </div>
+                              <#-- TODO: add transaction history
                               <#if orderPaymentPreference.authDate?exists>
                                 <div class="tabletext">
                                   Auth&nbsp;:&nbsp;${orderPaymentPreference.authDate.toString()}
                                   &nbsp;&nbsp;(<b>Ref:</b>&nbsp;${orderPaymentPreference.authRefNum?if_exists})
                                 </div>
                               </#if>
+                              -->
                               <#if payment?exists && payment.effectiveDate?exists>
                                 <div class="tabletext">
                                   Billed&nbsp;:&nbsp;${payment.effectiveDate.toString()}
                                   &nbsp;&nbsp;(<b>Ref:</b>&nbsp;${payment.paymentRefNum?if_exists})
                                 </div>
-                              </#if>                            
+                              </#if>
                             </td>
                           </tr>
-                        <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">                        
+                        <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
                           <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                           <#if eftAccount?exists>
                             <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress")>
@@ -220,10 +222,10 @@
                                 ${eftAccount.nameOnAccount?if_exists}<br>
                                 <#if eftAccount.companyNameOnAccount?exists>${eftAccount.companyNameOnAccount}<br></#if>
                                 Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
-                                Account#: ${eftAccount.accountNumber}                              
+                                Account#: ${eftAccount.accountNumber}
                               </div>
                             </td>
-                          </tr>                        
+                          </tr>
                         </#if>
                       </#if>
                       <#if pmBillingAddress?exists>
@@ -238,16 +240,16 @@
                               <#if pmBillingAddress.toName?has_content><b>To:</b> ${pmBillingAddress.toName}<br></#if>
                               <#if pmBillingAddress.attnName?has_content><b>Attn:</b> ${pmBillingAddress.attnName}<br></#if>
                               ${pmBillingAddress.address1}<br>
-                              <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br></#if>                            
+                              <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br></#if>
                               ${pmBillingAddress.city}<#if pmBillingAddress.stateProvinceGeoId?has_content>, ${pmBillingAddress.stateProvinceGeoId} </#if>
                               ${pmBillingAddress.postalCode?if_exists}<br>
                               ${pmBillingAddress.countryGeoId?if_exists}
-                            </div>                                                     
+                            </div>
                           </td>
                         </tr>
                       </#if>
                     </#list>
-                
+
                     <#-- billing account -->
                     <#if billingAccount?exists>
                       <#if outputted?default("false") == "true">
@@ -275,7 +277,7 @@
                         </td>
                       </tr>
                     </#if>
-                    
+
                     <#-- invoices -->
                     <#if invoices?has_content>
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
@@ -290,7 +292,7 @@
                           </#list>
                         </td>
                       </tr>
-                    </#if>                                                     
+                    </#if>
                     </table>
                   </td>
                 </tr>
@@ -312,7 +314,7 @@
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;Contact Information</div>
-                </td>          
+                </td>
               </tr>
             </table>
           </td>
@@ -349,7 +351,7 @@
                           <div class="tabletext">&nbsp;<b>${contactMechPurpose.description}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
-                        <td align="left" valign="top" width="80%">                          
+                        <td align="left" valign="top" width="80%">
                           <#if contactMech.contactMechTypeId == "POSTAL_ADDRESS">
                             <#assign postalAddress = orderContactMechValueMap.postalAddress>
                             <#if postalAddress?has_content>
@@ -357,11 +359,11 @@
                                 <#if postalAddress.toName?has_content><b>To:</b> ${postalAddress.toName}<br></#if>
                                 <#if postalAddress.attnName?has_content><b>Attn:</b> ${postalAddress.attnName}<br></#if>
                                 ${postalAddress.address1}<br>
-                                <#if postalAddress.address2?has_content>${postalAddress.address2}<br></#if>                            
+                                <#if postalAddress.address2?has_content>${postalAddress.address2}<br></#if>
                                 ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if>
                                 ${postalAddress.postalCode?if_exists}<br>
                                 ${postalAddress.countryGeoId?if_exists}<br>
-                                <#if !postalAddress.countryGeoId?exists || postalAddress.countryGeoId == "USA">  
+                                <#if !postalAddress.countryGeoId?exists || postalAddress.countryGeoId == "USA">
                                   <#assign addr1 = postalAddress.address1?if_exists>
                                   <#if (addr1.indexOf(" ") > 0)>
                                     <#assign addressNum = addr1.substring(0, addr1.indexOf(" "))>
@@ -371,8 +373,8 @@
                                 </#if>
                               </div>
                             </#if>
-                          <#elseif contactMech.contactMechTypeId == "TELECOM_NUMBER"> 
-                            <#assign telecomNumber = orderContactMechValueMap.telecomNumber>                            
+                          <#elseif contactMech.contactMechTypeId == "TELECOM_NUMBER">
+                            <#assign telecomNumber = orderContactMechValueMap.telecomNumber>
                             <div class="tabletext">
                               ${telecomNumber.countryCode?if_exists}
                               <#if telecomNumber.areaCode?exists>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber}
@@ -387,20 +389,20 @@
                               ${contactMech.infoString}
                               <a href='mailto:${contactMech.infoString}' class='buttontext'>(send&nbsp;email)</a>
                             </div>
-                          <#elseif contactMech.contactMechTypeId == "WEB_ADDRESS">              
+                          <#elseif contactMech.contactMechTypeId == "WEB_ADDRESS">
                             <div class="tabletext">
                               ${contactMech.infoString}
                               <#assign openString = contactMech.infoString>
                               <#if !openString?starts_with("http") && !openString?starts_with("HTTP")>
                                 <#assign openString = "http://" + openString>
-                              </#if>                              
+                              </#if>
                               <a target='_blank' href='${openString}' class='buttontext'>(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
                             </div>
                           <#else>
                             <div class="tabletext">
                               ${contactMech.infoString?if_exists}
                             </div>
-                          </#if>                        
+                          </#if>
                         </td>
                       </tr>
                     </#list>
@@ -410,11 +412,11 @@
             </table>
           </td>
         </tr>
-      </table>      
+      </table>
       <br>
-      </#if>           
+      </#if>
       <#-- end of contact box -->
-      
+
       <#-- shipping info box -->
       <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
@@ -448,7 +450,7 @@
                           </div>
                         </#if>
                       </td>
-                    </tr>                    
+                    </tr>
                     <#if maySplit?has_content>
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
@@ -457,7 +459,7 @@
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
-                          <div class="tabletext">                         
+                          <div class="tabletext">
                             <#if maySplit?upper_case == "N">
                                 Please wait until the entire order is ready before shipping.
                                 <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">[Allow&nbsp;Split]</a></#if>
@@ -481,7 +483,7 @@
                       </tr>
                     </#if>
                     <#if isGift?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>                    
+                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>Gift?</b></div>
@@ -506,7 +508,7 @@
                         </td>
                       </tr>
                     </#if>
-                  </#if>     
+                  </#if>
                   <#if allShipments?has_content>
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
@@ -541,7 +543,7 @@
             </table>
           </td>
         </tr>
-      </table> 
+      </table>
       <#-- end of shipping info box -->
     </td>
   </tr>

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  */
 -->
 
@@ -1112,15 +1112,6 @@
       <field name="paymentMethodTypeId" type="id"></field>
       <field name="paymentMethodId" type="id"></field>
       <field name="maxAmount" type="currency-amount"></field>
-      <field name="authAmount" type="currency-amount"></field>
-      <field name="authRefNum" type="short-varchar"></field>
-      <field name="authCode" type="short-varchar"></field>
-      <field name="authFlag" type="short-varchar"></field>
-      <field name="authMessage" type="long-varchar"></field>
-      <field name="authDate" type="date-time"></field>
-      <field name="avsCode" type="short-varchar"></field>
-      <field name="scoreCode" type="short-varchar"></field>
-      <field name="cancelRefNum" type="short-varchar"></field>
       <field name="statusId" type="id"></field>
       <prim-key field="orderPaymentPreferenceId"/>
       <relation type="one" fk-name="ORDER_PMPRF_OHDR" rel-entity-name="OrderHeader">
