@@ -420,9 +420,11 @@
             This service will not only move quantities from one InventoryItem to another but it will
             also reassign any existing OrderItemInventoryRes records to the new InventoryItem.
         </description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="locationSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="targetLocationSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="quantityMoved" type="Double" mode="IN" optional="false"/>
+        <attribute name="warningMessageList" type="List" mode="INOUT" optional="true"/>
     </service>
 </services>
