@@ -71,8 +71,12 @@ public abstract class WfActivityAbstractImplementation {
         return runService(service, params, extend);
     }
 
-    protected GenericResultWaiter runService(ModelService service, String params, String extend) throws WfException {      
-        Map ctx = getActivity().actualContext(params, extend, service.getParameterNames(ModelService.IN_PARAM, true));
+    protected GenericResultWaiter runService(ModelService service, String params, String extend) throws WfException { 
+        List paramNames = service.getParameterNames(ModelService.IN_PARAM, true);
+        if (paramNames != null && paramNames.size() == 0)
+            paramNames =  null;
+                 
+        Map ctx = getActivity().actualContext(params, extend, paramNames);
         
         GenericResultWaiter waiter = new GenericResultWaiter();
         Debug.logVerbose("[WfActivityAbstractImplementation.runService] : Invoking the service.", module);
