@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   To refer to this DTD in your XML file, use the following declaration:
-<!DOCTYPE simple-services PUBLIC "-//OFBiz//DTD Simple Services//EN" "http://www.ofbiz.org/dtds/simple-services.dtd">
+<!DOCTYPE entity-services PUBLIC "-//OFBiz//DTD Simple Services//EN" "http://www.ofbiz.org/dtds/entity-services.dtd">
 -->
 
 <!--
@@ -28,20 +28,31 @@
 *This is the DTD for the Open For Business Simple Service definition XML file.
 -->
 
-<!ELEMENT simple-events ( simple-event* )>
-<!ELEMENT simple-event ( ( simple-map-processor | check-errors | service )* )>
-<!ATTLIST simple-event
-    event-name CDATA #REQUIRED
+<!ELEMENT entity-services ( entity-service* )>
+<!ELEMENT entity-service ( ( make-now-timestamp | get-sequenced-id | simple-map-processor | check-errors | service | 
+                             make-value | find-value | clone-value | fill-value | value-to-list | store-list | remove-list |
+                             create-value | update-value | remove-value )* )>
+<!ATTLIST entity-service
+    service-name CDATA #REQUIRED
     short-description CDATA #REQUIRED
     login-required ( true | false ) "true"
-    use-transaction ( true | false ) "true"
-    default-error-code CDATA "error"
-    default-success-code CDATA "success"
-    parameter-map-name CDATA "parameters"
+    context-map-name CDATA "context"
     request-name CDATA "_request_"
     response-code-name CDATA "_response_code_"
     error-message-name CDATA "_error_message_"
-    event-message-name CDATA "_event_message_"
+    success-message-name CDATA "_success_message_"
+>
+
+<!ELEMENT make-now-timestamp EMPTY>
+<!ATTLIST make-now-timestamp
+    map-name CDATA #REQUIRED
+    map-field CDATA #REQUIRED
+>
+<!ELEMENT get-sequenced-id EMPTY>
+<!ATTLIST get-sequenced-id
+    sequence-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+    map-field CDATA #REQUIRED
 >
 
 <!ELEMENT simple-map-processor EMPTY>
@@ -53,14 +64,13 @@
     error-list-name CDATA "_error_list_"
 >
 
-<!ELEMENT check-errors ( error-prefix?, error-suffix?, message-prefix?, message-suffix? )>
+<!ELEMENT check-errors EMPTY>
 <!ATTLIST check-errors
     error-code CDATA "error"
     error-list-name CDATA "_error_list_"
 >
 
-<!ELEMENT service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message?, 
-                    results-to-map*, result-to-field* )>
+<!ELEMENT service ( results-to-map*, result-to-field* )>
 <!ATTLIST service
     service-name CDATA #REQUIRED
     in-map-name CDATA #REQUIRED
@@ -68,42 +78,6 @@
     error-code CDATA "error"
     success-code CDATA "success"
 >
-    <!ELEMENT error-prefix (#PCDATA)>
-    <!ATTLIST error-prefix
-        resource CDATA #IMPLIED
-        property CDATA #IMPLIED
-    >
-    <!ELEMENT error-suffix (#PCDATA)>
-    <!ATTLIST error-suffix
-        resource CDATA #IMPLIED
-        property CDATA #IMPLIED
-    >
-    <!ELEMENT success-prefix (#PCDATA)>
-    <!ATTLIST success-prefix
-        resource CDATA #IMPLIED
-        property CDATA #IMPLIED
-    >
-    <!ELEMENT success-suffix (#PCDATA)>
-    <!ATTLIST success-suffix
-        resource CDATA #IMPLIED
-        property CDATA #IMPLIED
-    >
-    <!ELEMENT message-prefix (#PCDATA)>
-    <!ATTLIST message-prefix
-        resource CDATA #IMPLIED
-        property CDATA #IMPLIED
-    >
-    <!ELEMENT message-suffix (#PCDATA)>
-    <!ATTLIST message-suffix
-        resource CDATA #IMPLIED
-        property CDATA #IMPLIED
-    >
-    <!ELEMENT default-message (#PCDATA)>
-    <!ATTLIST default-message
-        resource CDATA #IMPLIED
-        property CDATA #IMPLIED
-    >
-
     <!ELEMENT results-to-map EMPTY>
     <!ATTLIST results-to-map
         map-name CDATA #REQUIRED
@@ -114,3 +88,53 @@
         map-name CDATA #REQUIRED
         field-name CDATA #IMPLIED
     >
+
+<!ELEMENT make-value EMPTY>
+<!ATTLIST make-value
+    value-name CDATA #REQUIRED
+    entity-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+>
+<!ELEMENT find-value EMPTY>
+<!ATTLIST find-value
+    value-name CDATA #REQUIRED
+    entity-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+>
+<!ELEMENT clone-value EMPTY>
+<!ATTLIST clone-value
+    value-name CDATA #REQUIRED
+    new-value-name CDATA #REQUIRED
+>
+<!ELEMENT fill-value EMPTY>
+<!ATTLIST fill-value
+    value-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+>
+
+<!ELEMENT value-to-list EMPTY>
+<!ATTLIST value-to-list
+    value-name CDATA #REQUIRED
+    list-name CDATA #REQUIRED
+>
+<!ELEMENT store-list EMPTY>
+<!ATTLIST store-list
+    list-name CDATA #REQUIRED
+>
+<!ELEMENT remove-list EMPTY>
+<!ATTLIST remove-list
+    list-name CDATA #REQUIRED
+>
+
+<!ELEMENT create-value EMPTY>
+<!ATTLIST create-value
+    value-name CDATA #REQUIRED
+>
+<!ELEMENT update-value EMPTY>
+<!ATTLIST update-value
+    value-name CDATA #REQUIRED
+>
+<!ELEMENT remove-value EMPTY>
+<!ATTLIST remove-value
+    value-name CDATA #REQUIRED
+>
