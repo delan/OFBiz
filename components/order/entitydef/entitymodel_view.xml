@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  */
 -->
 
@@ -394,6 +394,65 @@
         <key-map field-name="orderItemSeqId"/>
         <key-map field-name="inventoryItemId"/>
       </relation>
+    </view-entity>
+    <view-entity entity-name="OrderPurchasePaymentSummary"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Purchase Payment Summary View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OPP" entity-name="OrderPaymentPreference"/>
+      <member-entity entity-alias="PMT" entity-name="PaymentMethodType"/>
+      <!-- only the fields desired should be included in fields-to-select, and can otherwise be used as select critera (or both too) -->
+      <alias entity-alias="OH" name="webSiteId" group-by="true"/>
+      <alias entity-alias="OH" name="productStoreId" group-by="true"/>
+      <alias entity-alias="OH" name="originFacilityId" group-by="true"/>
+      <alias entity-alias="OH" name="terminalId" group-by="true"/>
+      <alias entity-alias="OH" name="statusId" group-by="true"/>
+      <alias entity-alias="OPP" name="paymentMethodTypeId" group-by="true"/>
+      <alias entity-alias="PMT" name="description" group-by="true"/>
+      <alias entity-alias="OPP" name="maxAmount" function="sum"/>
+      <!-- these can be used for query, but generally won't be included in the fields-to-select -->
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <view-link entity-alias="OH" rel-entity-alias="OPP">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OPP" rel-entity-alias="PMT">
+        <key-map field-name="paymentMethodTypeId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="OrderPurchaseProductSummary"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Purchase Product Summary View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <member-entity entity-alias="PR" entity-name="Product"/>
+      <!-- only the fields desired should be included in fields-to-select, and can otherwise be used as select critera (or both too) -->
+      <alias entity-alias="OH" name="webSiteId" group-by="true"/>
+      <alias entity-alias="OH" name="productStoreId" group-by="true"/>
+      <alias entity-alias="OH" name="originFacilityId" group-by="true"/>
+      <alias entity-alias="OH" name="terminalId" group-by="true"/>
+      <alias entity-alias="OH" name="statusId" group-by="true"/>
+      <alias entity-alias="PR" name="productId" group-by="true"/>
+      <alias entity-alias="PR" name="internalName" group-by="true"/>
+      <alias entity-alias="OI" name="quantity" function="sum"/>
+      <alias entity-alias="OI" name="cancelQuantity" function="sum"/>
+      <!-- these are not simple to use, and as below are not quite accurate since they are not weighted by quantity -->
+      <alias entity-alias="OI" name="unitPrice" function="avg"/>
+      <alias entity-alias="OI" name="unitListPrice" function="avg"/>
+      <!-- these can be used for query, but generally won't be included in the fields-to-select -->
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OI" name="itemStatusId" field="statusId"/>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="PR">
+        <key-map field-name="productId"/>
+      </view-link>
     </view-entity>
     <view-entity entity-name="OrderReportView"
             package-name="org.ofbiz.order.order"

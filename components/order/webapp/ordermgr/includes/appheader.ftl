@@ -24,7 +24,11 @@
  *@since      2.1
 -->
 
-<#assign security = requestAttributes.security>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+<#if (requestAttributes.security)?exists><#assign security = requestAttributes.security></#if>
+<#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
+<#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
+
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
@@ -46,10 +50,10 @@
   <div class="col"><a href="<@ofbizUrl>/findreturn</@ofbizUrl>" class="${selectedLeftClassMap.return?default(unselectedLeftClassName)}">Returns</a></div>
   </#if>
                    
-  <#if requestAttributes.userLogin?has_content>
+  <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
   </#if>  
   <div class="col-right"><a href='<@ofbizUrl>/orderreportlist</@ofbizUrl>' class="${selectedRightClassMap.reports?default(unselectedRightClassName)}">Reports</a></div>
   <div class="col-right"><a href='<@ofbizUrl>/orderstats</@ofbizUrl>' class="${selectedRightClassMap.stats?default(unselectedRightClassName)}">Stats</a></div>
