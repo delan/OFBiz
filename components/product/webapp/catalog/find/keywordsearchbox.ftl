@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -30,7 +32,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-            <div class="boxhead">Search&nbsp;Products</div>
+            <div class="boxhead">${uiLabelMap.ProductSearchProducts}</div>
           </td>
           <td valign=middle align=right>
             <#if isOpen>
@@ -50,12 +52,12 @@
         <tr>
           <td>
             <form name="keywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch?VIEW_SIZE=25</@ofbizUrl>" style='margin: 0;'>
-              <div class='tabletext'>Keywords: <input type="text" class="inputBox" name="SEARCH_STRING" size="20" maxlength="50"></div>
-              <div class='tabletext'>CategoryId: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20"></div>
+              <div class='tabletext'>${uiLabelMap.ProductKeywords}: <input type="text" class="inputBox" name="SEARCH_STRING" size="20" maxlength="50"></div>
+              <div class='tabletext'>${uiLabelMap.ProductCategoryId}: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20"></div>
               <div class='tabletext'>
-                Any<input type=RADIO name='SEARCH_OPERATOR' value='OR' checked>
-                All<input type=RADIO name='SEARCH_OPERATOR' value='AND'>
-                &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">Find</a>
+                ${uiLabelMap.CommonAny}<input type=RADIO name='SEARCH_OPERATOR' value='OR' checked>
+                ${uiLabelMap.CommonAll}<input type=RADIO name='SEARCH_OPERATOR' value='AND'>
+                &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
               </div>
             </form>
           </td>

@@ -20,26 +20,28 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 ${pages.get("/category/CategoryTabBar.ftl")}
     
-    <div class="head1">Catalogs <span class="head2">for <#if productCategory?exists>${(productCategory.description)?if_exists}</#if> [ID:${productCategoryId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductCatalogs} <span class="head2">${uiLabelMap.CommonFor} <#if productCategory?exists>${(productCategory.description)?if_exists}</#if> [${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
     
-    <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[New Category]</a>
+    <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
     <#if productCategoryId?has_content>
-        <a href="/ecommerce/control/category?category_id=${productCategoryId?if_exists}" class="buttontext" target="_blank">[Category Page]</a>
+        <a href="/ecommerce/control/category?category_id=${productCategoryId?if_exists}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
     </#if>
     <p>
     <#if productCategoryId?exists && productCategory?exists>    
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Catalog Name [ID]</b></div></td>
-            <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductCatalogNameId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.CommonThruDateTime}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#assign line = 0>
@@ -65,7 +67,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             </td>
             <td align="center">
             <a href="<@ofbizUrl>/removeProductFeatureCategoryAppl?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)?if_exists}&productCategoryId=${(productFeatureCategoryAppl.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureCategoryAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
-            [Delete]</a>
+            [${uiLabelMap.CommonDelete}]</a>
             </td>
         </tr>
         </#list>
@@ -74,7 +76,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <form method="POST" action="<@ofbizUrl>/createProductFeatureCategoryAppl</@ofbizUrl>" style="margin: 0;" name="addNewForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         
-        <div class="head2">Add Catalog Product Category (select Category and Type, then enter optional From Date):</div>
+        <div class="head2">${uiLabelMap.ProductAddCatalogProductCategory}:</div>
         <br>
         <select name="productFeatureCategoryId" class="selectBox">
         <#list productFeatureCategories as productFeatureCategory>
@@ -87,5 +89,5 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         </form>
     </#if>    
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

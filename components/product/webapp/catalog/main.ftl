@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -30,7 +32,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align=left width='90%' >
-            <div class='boxhead'>&nbsp;Catalog Administration Main Page</div>
+            <div class='boxhead'>&nbsp;${uiLabelMap.ProductCatalogAdministrationMainPage}</div>
           </td>          
         </tr>
       </table>
@@ -42,43 +44,43 @@
         <tr>
           <td>
             <#if !sessionAttributes.userLogin?exists>
-              <div class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</div>
+              <div class='tabletext'> ${uiLabelMap.ProductGeneralMessage}.</div>
             </#if>
             <br>
             <#if security.hasEntityPermission("CATALOG", "_VIEW", session)>
-              <div class='tabletext'>Edit Catalog with Catalog ID:</div>
+              <div class='tabletext'> ${uiLabelMap.ProductEditCatalogWithCatalogId}:</div>
               <form method=POST action='<@ofbizUrl>/EditProdCatalog</@ofbizUrl>' style='margin: 0;'>
                 <input type='text' size='20' maxlength='20' name='prodCatalogId' class='inputBox' value=''>                
-                <input type='submit' value='Edit Catalog' class='smallSubmit'>
+                <input type='submit' value=' ${uiLabelMap.ProductEditCatalog}' class='smallSubmit'>
               </form>
-              <div class='tabletext'>OR: <A href='<@ofbizUrl>/EditProdCatalog</@ofbizUrl>' class='buttontext'>Create New Catalog</A></div>
+              <div class='tabletext'> ${uiLabelMap.CommonOr}: <A href='<@ofbizUrl>/EditProdCatalog</@ofbizUrl>' class='buttontext'> ${uiLabelMap.ProductCreateNewCatalog}</A></div>
             <br>            
-              <div class='tabletext'>Edit Category with Category ID:</div>
+              <div class='tabletext'> ${uiLabelMap.ProductEditCategoryWithCategoryId}:</div>
               <form method=POST action='<@ofbizUrl>/EditCategory</@ofbizUrl>' style='margin: 0;'>
                 <input type='text' size='20' maxlength='20' name='productCategoryId' class='inputBox' value=''>
-                <input type='submit' value='Edit Category' class='smallSubmit'>
+                <input type='submit' value='${uiLabelMap.ProductEditCategory}' class='smallSubmit'>
               </form>
-              <div class='tabletext'>OR: <A href='<@ofbizUrl>/EditCategory</@ofbizUrl>' class='buttontext'>Create New Category</A></div>
+              <div class='tabletext'> ${uiLabelMap.CommonOr}: <A href='<@ofbizUrl>/EditCategory</@ofbizUrl>' class='buttontext'> ${uiLabelMap.ProductCreateNewCategory}</A></div>
             <br>
-              <div class='tabletext'>Edit Product with Product ID:</div>
+              <div class='tabletext'> ${uiLabelMap.ProductEditProductWithProductId}:</div>
               <form method=POST action='<@ofbizUrl>/EditProduct</@ofbizUrl>' style='margin: 0;'>
                 <input type='text' size='20' maxlength='20' name='productId' class='inputBox' value=''>
-                <input type='submit' value='Edit Product' class='smallSubmit'>
+                <input type='submit' value=' ${uiLabelMap.ProductEditProduct}' class='smallSubmit'>
               </form>
-              <div class='tabletext'>OR: <A href='<@ofbizUrl>/EditProduct</@ofbizUrl>' class='buttontext'>Create New Product</A></div>
+              <div class='tabletext'> ${uiLabelMap.CommonOr}: <A href='<@ofbizUrl>/EditProduct</@ofbizUrl>' class='buttontext'> ${uiLabelMap.ProductCreateNewProduct}</A></div>
             <br>
-              <div class='tabletext'>Find Product with ID Value:</div>
+              <div class='tabletext'> ${uiLabelMap.ProductFindProductWithIdValue}:</div>
               <form method=POST action='<@ofbizUrl>/FindProductById</@ofbizUrl>' style='margin: 0;'>
                 <input type='text' size='20' maxlength='20' name='idValue' class='inputBox' value=''>
-                <input type='submit' value='Find Product' class='smallSubmit'>
+                <input type='submit' value=' ${uiLabelMap.ProductFindProduct}' class='smallSubmit'>
               </form>
             <br>
             <br>
-            <div><A href='<@ofbizUrl>/UpdateAllKeywords</@ofbizUrl>' class='buttontext'>Auto-Create Keywords for All Products</A></div>
-            <div><A href='<@ofbizUrl>/FastLoadCache</@ofbizUrl>' class='buttontext'>Fast-Load Catalog into Cache</A></div>
+            <div><A href='<@ofbizUrl>/UpdateAllKeywords</@ofbizUrl>' class='buttontext'> ${uiLabelMap.ProductAutoCreateKeywordsForAllProducts}</A></div>
+            <div><A href='<@ofbizUrl>/FastLoadCache</@ofbizUrl>' class='buttontext'> ${uiLabelMap.ProductFastLoadCatalogIntoCache}</A></div>
             <br>
             </#if>
-            <div class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of product catalog related information.</div>
+            <div class='tabletext'> ${uiLabelMap.ProductCatalogManagerIsFor}.</div>
           </td>
         </tr>
       </table>

@@ -23,13 +23,16 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @author     Olivier.Heintz@nereide.biz 
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 
 <simple-methods>
 	<simple-method method-name="createCommunicationEvent" short-description="Create a CommunicationEvent">
-		<check-permission permission="PARTYMGR" action="_CREATE"><fail-message message="Security Error: to run createCommunicationEvent you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission"/></check-permission>
+		<check-permission permission="PARTYMGR" action="_CREATE">
+				<fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPermissionError"/>
+		</check-permission>
 		<check-errors/>
 		
 		<make-value value-name="newEntity" entity-name="CommunicationEvent"/>
@@ -46,7 +49,9 @@
 		<create-value value-name="newEntity"/>	
 	</simple-method>
 	<simple-method method-name="updateCommunicationEvent" short-description="Update a CommunicationEvent">
-		<check-permission permission="PARTYMGR" action="_UPDATE"><fail-message message="Security Error: to run updateCommunicationEvent you must have the PARTYMGR_UPDATE or PARTYMGR_ADMIN permission"/></check-permission>
+		<check-permission permission="PARTYMGR" action="_UPDATE">
+			<fail-property resource="PartyUiLabels" property="PartyUpdateCommunicationEventPermissionError"/>
+		</check-permission>
 		<check-errors/>
 		
 		<field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -55,7 +60,9 @@
 		<store-value value-name="event"/>
 	</simple-method>
 	<simple-method method-name="createCommunicationEventPurpose" short-description="Create a CommunicationEventPurpose">
-		<check-permission permission="PARTYMGR" action="_CREATE"><fail-message message="Security Error: to run createCommunicationEventPurpose you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission"/></check-permission>
+		<check-permission permission="PARTYMGR" action="_CREATE">
+			<fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPurposePermissionError"/>
+		</check-permission>
 		<check-errors/>
 		
 		<make-value value-name="newEntity" entity-name="CommunicationEventPurpose"/>
@@ -64,7 +71,9 @@
 		<create-value value-name="newEntity"/>	
 	</simple-method>
 	<simple-method method-name="removeCommunicationEventPurpose" short-description="Remove a CommunicationEventPurpose">
-		<check-permission permission="PARTYMGR" action="_DELETE"><fail-message message="Security Error: to run removeCommunicationEventPurpose you must have the PARTYMGR_DELETE or PARTYMGR_ADMIN permission"/></check-permission>
+		<check-permission permission="PARTYMGR" action="_DELETE">
+			<fail-property resource="PartyUiLabels" property="PartyRemoveCommunicationEventPurposePermissionError"/>
+		</check-permission>
 		<check-errors/>
 		
 		<field-to-field field-name="communicationEventPrpTypId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -73,7 +82,9 @@
 		<remove-value value-name="eventPurpose"/>
 	</simple-method>
 	<simple-method method-name="createCommunicationEventRole" short-description="Create a CommunicationEventRole">
-		<check-permission permission="PARTYMGR" action="_CREATE"><fail-message message="Security Error: to run createCommunicationEventRole you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission"/></check-permission>
+		<check-permission permission="PARTYMGR" action="_CREATE">
+			<fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventRolePermissionError"/>
+		</check-permission>
 		<check-errors/>
 		
 		<make-value value-name="newEntity" entity-name="CommunicationEventRole"/>
@@ -82,7 +93,9 @@
 		<create-value value-name="newEntity"/>	
 	</simple-method>
 	<simple-method method-name="removeCommunicationEventRole" short-description="Remove a CommunicationEventRole">
-		<check-permission permission="PARTYMGR" action="_DELETE"><fail-message message="Security Error: to run removeCommunicationEventRole you must have the PARTYMGR_DELETE or PARTYMGR_ADMIN permission"/></check-permission>
+		<check-permission permission="PARTYMGR" action="_DELETE">
+			<fail-property resource="PartyUiLabels" property="PartyremoveCommunicationEventRolePermissionError"/>
+		</check-permission>
 		<check-errors/>
 				
 		<field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>

@@ -21,30 +21,32 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.3 $
  *@since      2.2
--->
+ -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
     <#if prodCatalogId?has_content>
         <div class="tabContainer">
-        <a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Catalog</a>
-        <a href="<@ofbizUrl>/EditProdCatalogStores?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Stores</a>
-        <a href="<@ofbizUrl>/EditProdCatalogParties?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Parties</a>
-        <a href="<@ofbizUrl>/EditProdCatalogCategories?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButtonSelected">Categories</a>
+        <a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.ProductCatalog}</a>
+        <a href="<@ofbizUrl>/EditProdCatalogStores?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.ProductStores}</a>
+        <a href="<@ofbizUrl>/EditProdCatalogParties?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyParties}</a>
+        <a href="<@ofbizUrl>/EditProdCatalogCategories?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ProductCategories}</a>
         </div>
     </#if>
-    <div class="head1">Categories <span class="head2">for <#if prodCatalogId?has_content>${prodCatalogId}</#if>
+    <div class="head1">${uiLabelMap.ProductCategoriesFor} <span class="head2"> <#if prodCatalogId?has_content>${prodCatalogId}</#if>
     </span></div>
     
-    <a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[New ProdCatalog]</a>
+    <a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProdCatalog}]</a>
     <p>
     <#if prodCatalogId?exists && prodCatalog?exists>    
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Category [ID]</b></div></td>
-            <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence&nbsp;&amp;&nbsp;Type</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductCategory_Id}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequenceType}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
@@ -91,12 +93,12 @@
                         <option value="${prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")}">${prodCatalogCategoryType.getString("description")}</option>
                         </list>
                     </select>
-                    <INPUT type=submit value="Update">
+                    <INPUT type=submit value="${uiLabelMap.CommonUpdate}">
                     <td align="center">
-                        <a href="<@ofbizUrl>/removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogCategory.prodCatalogId}&productCategoryId=${prodCatalogCategory.productCategoryId}&fromDate=${prodCatalogCategory.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a>
+                        <a href="<@ofbizUrl>/removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogCategory.prodCatalogId}&productCategoryId=${prodCatalogCategory.productCategoryId}&fromDate=${prodCatalogCategory.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
                     </td>
                     <td align="center">
-                        <a href="<@ofbizUrl>/EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="buttontext"> [MakeTop]</a>
+                        <a href="<@ofbizUrl>/EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="buttontext"> [${uiLabelMap.ProductMakeTop}]</a>
                     </td>            
                 </FORM>
             </td>
@@ -108,7 +110,7 @@
         <form method="POST" action="<@ofbizUrl>/addProductCategoryToProdCatalog</@ofbizUrl>" style="margin: 0;" name="addNewForm">
         <input type="hidden" name="prodCatalogId" value="${prodCatalogId}">
         <input type="hidden" name="tryEntity" value="true">
-        <div class="head2">Add Catalog Product Category (select Category and Type, then enter optional From Date):</div>
+        <div class="head2">${uiLabelMap.ProductAddCatalogProdCat}:</div>
         <br>
         <select class="selectBox" name="productCategoryId">
         <#list productCategories as productCategory>
@@ -123,9 +125,9 @@
             </select>
         <input type="text" class="inputBox" size="25" name="fromDate">
         <a href="javascript:call_cal(document.addNewForm.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-        <input type="submit" value="Add">
+        <input type="submit" value="${uiLabelMap.CommonAdd}">
         </form>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

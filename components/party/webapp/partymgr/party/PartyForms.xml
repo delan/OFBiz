@@ -24,16 +24,18 @@
 -->
 
 <forms>
-	<form name="EditVendor" type="single" 
-		target="updateVendor" title="" default-map-name="vendor"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		
-		<alt-target use-when="vendor==null" target="createVendor"/>
-		
-		<auto-fields-service service-name="updateVendor" map-name="vendor"/>
-		
-		<field name="partyId"><hidden value="${partyId}"/></field>
-		<field name="manifestPolicies"><textarea cols="60" rows="15"/></field>
-		<field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
-	</form>
+    <form name="EditVendor" type="single" 
+        target="updateVendor" title="" default-map-name="vendor"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <alt-target use-when="vendor==null" target="createVendor"/>
+        <auto-fields-service service-name="updateVendor" map-name="vendor"/>
+        
+        <field name="partyId"><hidden value="${partyId}"/></field>
+        <field name="manifestCompanyName" title="${uiLabelMap.PartyManifestCompanyName}"></field>
+        <field name="manifestCompanyTitle" title="${uiLabelMap.PartyManifestCompanyTitle}"></field>
+        <field name="manifestLogoUrl" title="${uiLabelMap.PartyManifestLogoUrl}"></field>
+        <field name="manifestPolicies" title="${uiLabelMap.PartyManifestPolicies}"><textarea cols="60" rows="15"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>
