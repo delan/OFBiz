@@ -207,11 +207,16 @@ public class Record implements Serializable {
     public String getFixedString(String name) {
         if (name == null)
             return null;
+        if (getModelRecord() == null) 
+            throw new IllegalArgumentException("Could not find modelrecord for field named \"" + name + "\"");
         ModelField field = getModelRecord().getModelField(name);
         if (field == null)
             throw new IllegalArgumentException("Could not find model for field named \"" + name + "\"");
 
         Object value = get(name);
+        if (value == null) {
+          return null;
+        }
         String fieldType = field.type;
         String str = null;
 
@@ -285,6 +290,15 @@ public class Record implements Serializable {
             ModelField modelField = (ModelField) modelRecord.fields.get(f);
             String data = this.getFixedString(modelField.name);
 
+            // if field is null (not set) then assume we want to pad the field
+            char PAD_CHAR = ' ';
+            if (data == null) {
+              StringBuffer sb = new StringBuffer("");
+              for(int i = 0; i < modelField.length; i++)
+                sb.append(PAD_CHAR);
+              data = new String(sb);
+            }
+            
             //Debug.logInfo("Got data \"" + data + "\" for field " + modelField.name + " in record " + modelRecord.name);
             if (modelField.length > 0 && data.length() != modelField.length)
                 throw new DataFileException("Got field length " + data.length() + " but expected field length is " + modelField.length + " for field \"" +
@@ -364,7 +378,14 @@ public class Record implements Serializable {
         Record record = new Record(modelRecord);
         for (int i = 0; i < modelRecord.fields.size(); i++) {
             ModelField modelField = (ModelField) modelRecord.fields.get(i);
-            String strVal = line.substring(modelField.position, modelField.position + modelField.length);
+            String strVal = null;
+            try {
+              strVal = line.substring(modelField.position, modelField.position + modelField.length);
+            } catch (IndexOutOfBoundsException ioobe) {
+                throw new DataFileException("Field " + modelField.name + " from " + modelField.position +
+                  " for " + modelField.length + " chars could not be read from a line (" + lineNum + ") with only " +
+                  line.length() + " chars.", ioobe);
+            }
             try {
                 record.setString(modelField.name, strVal);
             } catch (java.text.ParseException e) {
