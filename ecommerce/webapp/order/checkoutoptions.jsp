@@ -45,13 +45,19 @@
 <ofbiz:if name="cart">
     <%if (cart.getMaySplit() != null) pageContext.setAttribute("maySplit", cart.getMaySplit());%>
 </ofbiz:if>
+<% pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", null)); %>
+<% pageContext.setAttribute("shippingContactMechList", ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)); %>  
+<% pageContext.setAttribute("creditCardInfoList", EntityUtil.filterByDate(userLogin.getRelatedOne("Party").getRelated("CreditCardInfo"))); %>
+<% pageContext.setAttribute("emailList",  ContactHelper.getContactMechByType(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false));%>
+<% pageContext.setAttribute("billingAccountRoleList", delegator.findByAnd("BillingAccountRole", UtilMisc.toMap(
+        "partyId", userLogin.getString("partyId"),
+        "roleTypeId", "BILL_TO_CUSTOMER"), null)); %>  
 
 <BR>
 <form method="post" name="checkoutInfoForm" action="<ofbiz:url>/checkout</ofbiz:url>" style='margin:0;'>
 <table width="100%" border="0" cellpadding='0' cellspacing='0'>
   <tr valign="top" align="left">
     <td height='100%'>
-<% pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", null)); %>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
@@ -147,7 +153,6 @@
         <div class="tabletext">Your order will be sent to the following email addresses:</div>
         <div class="tabletext">
           <b>
-          <% pageContext.setAttribute("emailList",  ContactHelper.getContactMechByType(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false));%>
           <ofbiz:iterator name="email" property="emailList">
             <%=UtilFormatOut.checkNull(email.getString("infoString"))%>,
           </ofbiz:iterator>
@@ -172,7 +177,6 @@
 <%-- ======================================================================== --%>
 <%-- ======================================================================== --%>
 <td height='100%'>
-<% pageContext.setAttribute("shippingContactMechList", ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)); %>  
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>' style='height: 100%;'>
   <TR>
     <TD width='100%'>
@@ -206,15 +210,16 @@
         </td>
         <td align="left" valign="top" width="99%" nowrap>
           <div class="tabletext">
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
-<%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Update]</a>
-          <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Delete]</a> --%>
+            <ofbiz:entityfield attribute="shippingAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="address1"/><br>
+            <ofbiz:entityfield attribute="shippingAddress" field="address2" prefix="" suffix="<br>"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="city"/>,
+            <ofbiz:entityfield attribute="shippingAddress" field="stateProvinceGeoId"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="postalCode"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="countryGeoId" prefix="<br>" suffix=""/>
+            <%--<a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Update]</a>
+            <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Delete]</a> --%>
           </div>
         </td>
       </tr>
@@ -235,8 +240,6 @@
 <%-- ======================================================================== --%>
 <td>
 
-<% pageContext.setAttribute("creditCardInfoList", EntityUtil.filterByDate(userLogin.getRelatedOne("Party").getRelated("CreditCardInfo"))); %>
-
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>' style='height: 100%;'>
   <TR>
     <TD width='100%'>
@@ -249,7 +252,7 @@
       </table>
     </TD>
   </TR>
-  <TR style='height: 100%;'>
+  <TR style='height: 100%;'
     <TD width='100%' valign=top>
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>' style='height: 100%;'>
         <tr>
@@ -281,13 +284,9 @@
    <h3>There are no credit cards on file.</h3>
 </ofbiz:unless>
 
-<% pageContext.setAttribute("billingAccountRoleList", delegator.findByAnd("BillingAccountRole", UtilMisc.toMap(
-        "partyId", userLogin.getString("partyId"),
-        "roleTypeId", "BILL_TO_CUSTOMER"), null)); %>  
-
  <ofbiz:if name="billingAccountRoleList" size="0">
     <div class="tabletext">To pay with store credit, enter your Purchase Order (PO) number here and select the billing account:</div>
-    <input type="text" name="corresponding_po_id" size="20" value="<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getPoNumber())%></ofbiz:if>">
+    <input type="text" name="corresponding_po_id" size="20" value='<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getPoNumber())%></ofbiz:if>'>
     <br>
 
   <table width="90%" border="0" cellpadding="0" cellspacing="0">
@@ -303,10 +302,12 @@
         <div class="tabletext">
         Billing Account #<b><%=UtilFormatOut.checkNull(billingAccount.getString("billingAccountId"))%></b><br>
         <%=UtilFormatOut.checkNull(billingAccount.getString("description"))%>
-  <%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions?billing_account_id=<%=billingAccount.get("billingAccountId")%></ofbiz:url>" class="buttontext">[Update]</a>
-            <a href="<ofbiz:url>/checkoutoptions?event=DELETE_SHIPPING_LOCATION&billing_account_id=<%=billingAccount.get("billingAccountId")%></ofbiz:url>" class="buttontext">[Delete]</a>--%>
-
-<%--    <%GenericValue billingLocation = billingAccountRole.getRelatedOne("BillingAccount").getRelatedOne("PostalAddress");
+<%--
+            <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions?billing_account_id=<%=billingAccount.get("billingAccountId")%></ofbiz:url>" class="buttontext">[Update]</a>
+            <a href="<ofbiz:url>/checkoutoptions?event=DELETE_SHIPPING_LOCATION&billing_account_id=<%=billingAccount.get("billingAccountId")%></ofbiz:url>" class="buttontext">[Delete]</a>
+--%>
+<%--    
+    <%GenericValue billingLocation = billingAccountRole.getRelatedOne("BillingAccount").getRelatedOne("PostalAddress");
       pageContext.setAttribute("billingLocation", billingLocation);%>
     <ofbiz:if name="billingLocation">
         <%=UtilFormatOut.ifNotEmpty(billingLocation.getString("toName"), "<b>To:</b> ", "<br>")%>

@@ -36,20 +36,30 @@
 <%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
-<%@ page import="org.ofbiz.ecommerce.distributor.*" %>
+<%@ page import="org.ofbiz.ecommerce.misc.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
+
+    <%GenericValue localOrderHeader = null;%>
+    <%OrderReadHelper localOrder = null;%>
+    <ofbiz:if name="orderHeader">
+        <%localOrderHeader = (GenericValue) pageContext.getAttribute("orderHeader");%>
+        <%localOrder = new OrderReadHelper(localOrderHeader);%>
+    </ofbiz:if>
+    <%String distributorId = localOrder != null ? localOrder.getDistributorId() : (String) session.getAttribute(ThirdPartyEvents.DISTRIBUTOR_ID);%>
+    <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
+    <%if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);%>
+    <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
+    <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
+    <%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
+    <%if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);%>
+    <%String shipMethDescription = "";%>
+    <%GenericValue shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));%>
+    <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
+
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <td width='50%' valign=top align=left>
-
-  <%GenericValue localOrderHeader = null;%>
-  <%OrderReadHelper localOrder = null;%>
-  <ofbiz:if name="orderHeader">
-    <%localOrderHeader = (GenericValue) pageContext.getAttribute("orderHeader");%>
-    <%localOrder = new OrderReadHelper(localOrderHeader);%>
-  </ofbiz:if>
-
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
@@ -68,7 +78,6 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="1">
-   <%if (userLogin != null) pageContext.setAttribute("userLogin", userLogin);%>
    <ofbiz:if name="userLogin">
     <tr>
       <td align="right" valign="top" width="15%">
@@ -77,9 +86,8 @@
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
         <div class="tabletext">
-        <%GenericValue userPerson = userLogin.getRelatedOne("Person");%>
-        <%if(userPerson!=null){%>
-          <%=PartyHelper.getPersonName(userPerson)%>
+        <%if(person!=null){%>
+          <%=PartyHelper.getPersonName(person)%>
         <%}%>
         <%=UtilFormatOut.ifNotEmpty(userLogin.getString("userLoginId"), " (", ")")%>
         </div>
@@ -115,8 +123,6 @@
       </td>
     </tr>
   </ofbiz:if>
-  <%String distributorId = localOrder != null ? localOrder.getDistributorId() : DistributorEvents.getDistributorId(request);%>
-  <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
   <ofbiz:if name="distributorId">
     <tr><td colspan="7"><hr class='sepbar'></td></tr>
     <tr>
@@ -157,9 +163,6 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="1">
-  <%if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);%>
-  <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
-  <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
   <ofbiz:if name="creditCardInfo"> 
     <%pageContext.setAttribute("outputted", "true");%>
     <tr>
@@ -214,17 +217,18 @@
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
           <div class="tabletext">
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-            <%=UtilFormatOut.checkNull(billingAddress.getString("address1"))%><br>
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("address2"),  "", "<br>")%>
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("city"), "", "<br>")%>
-            <%=UtilFormatOut.checkNull(billingAddress.getString("stateProvinceGeoId"))%> &nbsp; <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("countryGeoId"), "", "")%>
+            <ofbiz:entityfield attribute="billingAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
+            <ofbiz:entityfield attribute="billingAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
+            <ofbiz:entityfield attribute="billingAddress" field="address1"/><br>
+            <ofbiz:entityfield attribute="billingAddress" field="address2" prefix="" suffix="<br>"/>
+            <ofbiz:entityfield attribute="billingAddress" field="city"/>,
+            <ofbiz:entityfield attribute="billingAddress" field="stateProvinceGeoId"/>
+            <ofbiz:entityfield attribute="billingAddress" field="postalCode"/>
+            <ofbiz:entityfield attribute="billingAddress" field="countryGeoId" prefix="<br>" suffix=""/>
           </div>
       </td>
     </tr>
-  </ofbiz:if --%>
+  </ofbiz:if> --%>
   </table>
           </td>
         </tr>
@@ -255,7 +259,6 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="1">
-    <%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
     <ofbiz:if name="shippingAddress">
     <tr>
       <td align="right" valign="top" width="15%">
@@ -264,13 +267,14 @@
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
           <div class="tabletext">
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
+            <ofbiz:entityfield attribute="shippingAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="address1"/><br>
+            <ofbiz:entityfield attribute="shippingAddress" field="address2" prefix="" suffix="<br>"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="city"/>,
+            <ofbiz:entityfield attribute="shippingAddress" field="stateProvinceGeoId"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="postalCode"/>
+            <ofbiz:entityfield attribute="shippingAddress" field="countryGeoId" prefix="<br>" suffix=""/>
           </div>
       </td>
     </tr>
@@ -284,9 +288,6 @@
       <td align="left" valign="top" width="80%">
           <div class="tabletext">
           <%=UtilFormatOut.checkNull(carrierPartyId)%> 
-          <%String shipMethDescription = "";%>
-          <%GenericValue shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));%>
-          <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
           <%=UtilFormatOut.checkNull(shipMethDescription)%>
           <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
           </div>
@@ -300,11 +301,10 @@
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
           <div class="tabletext">
-          <%if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);%>
-          <ofbiz:if name="maySplit" value="false" type="Boolean">
+          <ofbiz:unless name="maySplit">
           Please wait until the entire order is ready before shipping.
-          </ofbiz:if>
-          <ofbiz:if name="maySplit" value="true" type="Boolean">
+          </ofbiz:unless>
+          <ofbiz:if name="maySplit">
           Please ship items I ordered as they become available (may incur additional shipping charges).    
           </ofbiz:if>
           </div>
