@@ -1,5 +1,5 @@
 /*
- * $Id: FormStringRenderer.java,v 1.1 2003/08/17 08:40:13 ajzeneski Exp $
+ * $Id: FormStringRenderer.java,v 1.2 2003/11/05 00:15:48 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public interface FormStringRenderer {
@@ -93,4 +93,5 @@ public interface FormStringRenderer {
     public void renderDateFindField(StringBuffer buffer, Map context, ModelFormField.DateFindField textField);
     public void renderRangeFindField(StringBuffer buffer, Map context, ModelFormField.RangeFindField textField);
     public void renderLookupField(StringBuffer buffer, Map context, ModelFormField.LookupField textField);
+    public void renderFileField(StringBuffer buffer, Map context, ModelFormField.FileField textField);
 }
