@@ -1,5 +1,5 @@
 /*
- * $Id: editlayoutprep.bsh,v 1.3 2003/12/15 23:57:55 byersa Exp $
+ * $Id: editlayoutprep.bsh,v 1.4 2003/12/22 18:01:19 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
 
  */
@@ -88,7 +88,7 @@ request.setAttribute("drDataResourceId", null);
 
 //Locale locale = null;
 //wrapTemplateId = UtilProperties.getMessage("content", "wrapTemplateId", locale);
-wrapTemplateId = "11970";
+wrapTemplateId = "STDWRAP001";
 Debug.logInfo("in editlayoutprep, wrapTemplateId:" + wrapTemplateId,"");
 context.put("wrapTemplateId", wrapTemplateId);
 request.setAttribute("drDataResourceId", null);
