@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
  */
 
@@ -44,59 +44,32 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
 
 productId = request.getParameter("productId");
 
+quantitySummaryByFacility = new HashMap();
+// The warehouse list is selected
+facilityList = delegator.findByAnd("Facility", UtilMisc.toMap("facilityTypeId", "WAREHOUSE"));
+facilityIterator = facilityList.iterator();
+dispatcher = request.getAttribute("dispatcher");
+Map contextInput = null;
+Map resultOutput = null;
+// For every warehouse the product's atp and qoh 
+// are obtained (calling the "getInventoryAvailableByFacility" service)
+while (facilityIterator.hasNext()) {
+    facility = facilityIterator.next();
+    contextInput = UtilMisc.toMap("productId",productId, "facilityId", facility.getString("facilityId"));
+    resultOutput = dispatcher.runSync("getInventoryAvailableByFacility",contextInput);
+    quantitySummary = new HashMap();
+    quantitySummary.put("facilityId", facility.getString("facilityId"));
+    quantitySummary.put("facility", facility);
+    quantitySummary.put("totalQuantityOnHand", resultOutput.get("quantityOnHand"));
+    quantitySummary.put("totalAvailableToPromise", resultOutput.get("availableToPromise"));
+    quantitySummaryByFacility.put(facility.getString("facilityId"), quantitySummary);
+}
+
 product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 
 productInventoryItems = delegator.findByAnd("InventoryItem", 
         UtilMisc.toMap("productId", productId), 
         UtilMisc.toList("facilityId", "-receivedDate", "-inventoryItemId"));
-
-// loop through the inventory items and get totals of ATP and QOH per facility
-quantitySummaryByFacility = new HashMap();
-productInventoryItemIter = productInventoryItems.iterator();
-while (productInventoryItemIter.hasNext()) {
-	productInventoryItem = productInventoryItemIter.next();
-	facilityId = productInventoryItem.getString("facilityId");
-	facility = null;
-	if (UtilValidate.isNotEmpty(facilityId)) {
-		facility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", facilityId));
-	}
-	
-	quantitySummary = quantitySummaryByFacility.get(facilityId);
-	if (quantitySummary == null) {
-		quantitySummary = new HashMap();
-		quantitySummary.put("facilityId", facilityId);
-		quantitySummary.put("facility", facility);
-		quantitySummaryByFacility.put(facilityId, quantitySummary);
-	}
-	
-	totalQuantityOnHand = 0;
-	totalAvailableToPromise = 0;
-	if (quantitySummary.get("totalQuantityOnHand") != null) {
-		totalQuantityOnHand = quantitySummary.get("totalQuantityOnHand").doubleValue();
-	}
-	if (quantitySummary.get("totalAvailableToPromise") != null) {
-		totalAvailableToPromise = quantitySummary.get("totalAvailableToPromise").doubleValue();
-	}
-	
-	if ("SERIALIZED_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
-		if ("INV_AVAILABLE".equals(productInventoryItem.getString("statusId"))) {
-			totalQuantityOnHand += 1;
-                        totalAvailableToPromise += 1;
-		} else if ("INV_PROMISED".equals(productInventoryItem.getString("statusId"))) {
-			totalQuantityOnHand += 1;
-		}
-	} else if ("NON_SERIAL_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
-		if (productInventoryItem.get("availableToPromise") != null) {
-			totalAvailableToPromise += productInventoryItem.getDouble("availableToPromise").doubleValue();
-		}
-		if (productInventoryItem.get("quantityOnHand") != null) {
-			totalQuantityOnHand += productInventoryItem.getDouble("quantityOnHand").doubleValue();
-		}
-	}
-	
-	quantitySummary.put("totalQuantityOnHand", totalQuantityOnHand);
-	quantitySummary.put("totalAvailableToPromise", totalAvailableToPromise);
-}
 
 // TODO: get all incoming shipments not yet arrived coming into each facility that this product is in, use a view entity with ShipmentAndItem
 findIncomingShipmentsConds = new LinkedList();
