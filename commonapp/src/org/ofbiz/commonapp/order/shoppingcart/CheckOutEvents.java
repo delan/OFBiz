@@ -736,7 +736,7 @@ public class CheckOutEvents {
         GenericValue shippingAddressObj = cart.getShippingAddress();
         String shippingAddress = UtilFormatOut.checkNull(shippingAddressObj.getString("address1").toUpperCase());
         List exprs = UtilMisc.toList(new EntityExpr(
-                new EntityExpr("orderBlacklistString", true, EntityOperator.EQUALS, shippingAddress, true), EntityOperator.AND,                
+                new EntityExpr("blacklistString", true, EntityOperator.EQUALS, shippingAddress, true), EntityOperator.AND,                
                 new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
         
         List paymentMethods = cart.getPaymentMethods();
@@ -758,15 +758,13 @@ public class CheckOutEvents {
                 if (creditCard != null) {
                     String creditCardNumber = UtilFormatOut.checkNull(creditCard.getString("cardNumber"));
                     exprs.add(new EntityExpr(
-                            new EntityExpr("orderBlacklistString", EntityOperator.EQUALS, creditCardNumber),
-                            EntityOperator.AND,
+                            new EntityExpr("blacklistString", EntityOperator.EQUALS, creditCardNumber), EntityOperator.AND,                            
                             new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_CREDITCARD")));
                 }
                 if (billingAddress != null) {
                     String address = UtilFormatOut.checkNull(billingAddress.getString("address1").toUpperCase());
                     exprs.add(new EntityExpr(
-                            new EntityExpr("orderBlacklistString", true, EntityOperator.EQUALS, address, true),
-                            EntityOperator.AND,
+                            new EntityExpr("blacklistString", true, EntityOperator.EQUALS, address, true), EntityOperator.AND,                            
                             new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
                 }  
             }
