@@ -68,7 +68,11 @@
         <td width="5">&nbsp;</td>
         <td align="left">
           <div class="tabletext">
-            <%=UtilFormatOut.checkNull(person.getString("firstName"))%> <%=UtilFormatOut.checkNull(person.getString("middleName"))%> <%=UtilFormatOut.checkNull(person.getString("lastName"))%>
+            <%=UtilFormatOut.checkNull(person.getString("personalTitle"))%>
+            <%=UtilFormatOut.checkNull(person.getString("firstName"))%>
+            <%=UtilFormatOut.checkNull(person.getString("middleName"))%>
+            <%=UtilFormatOut.checkNull(person.getString("lastName"))%>
+            <%=UtilFormatOut.checkNull(person.getString("suffix"))%>
           </div>
         </td>
     </tr>
@@ -102,8 +106,10 @@
                     <div class="tabletext">
                       <%=UtilFormatOut.checkNull(postalAddress.getString("address1"))%><br>
                       <%if(postalAddress.getString("address2") != null && postalAddress.getString("address2").length() != 0){%> <%= postalAddress.getString("address2") %><br> <%}%>
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("city"))%><br>
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%> <%=UtilFormatOut.checkNull(postalAddress.getString("postalCode"))%> <%=UtilFormatOut.checkNull(postalAddress.getString("countryGeoId"))%><br>
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("city"))%>, 
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%> 
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("postalCode"))%> 
+                      <%=UtilFormatOut.checkNull(postalAddress.getString("countryGeoId"))%><br>
                     </div>
                   </td>
                   <td width="5">&nbsp;</td>

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/30 07:23:40  jonesde
+ * First mostly working revision of the new customer and view profile pages and new customer event.
+ *
  * Revision 1.1  2001/08/30 00:27:49  jonesde
  * Added initial revision of customer information maintenance.
  *
@@ -60,14 +63,33 @@ public class CustomerEvents
     String firstName = request.getParameter("USER_FIRST_NAME");
     String middleName = request.getParameter("USER_MIDDLE_NAME");
     String lastName = request.getParameter("USER_LAST_NAME");
-    String personalTitle = "";
-    String suffix = "";
+    String personalTitle = request.getParameter("USER_TITLE");
+    String suffix = request.getParameter("USER_SUFFIX");
 
-    String homePhone = request.getParameter("CUSTOMER_HOME_PHONE");
-    String workPhone = request.getParameter("CUSTOMER_WORK_PHONE");
-    String faxPhone = request.getParameter("CUSTOMER_FAX_PHONE");
-    String mobilePhone = request.getParameter("CUSTOMER_MOBILE_PHONE");
+    String homeCountryCode = request.getParameter("CUSTOMER_HOME_COUNTRY");
+    String homeAreaCode = request.getParameter("CUSTOMER_HOME_AREA");
+    String homeContactNumber = request.getParameter("CUSTOMER_HOME_CONTACT");
+    String homeExt = request.getParameter("CUSTOMER_HOME_EXT");
+    String homeAllowSolicitation = request.getParameter("CUSTOMER_HOME_ALLOW_SOL");
+    
+    String workCountryCode = request.getParameter("CUSTOMER_WORK_COUNTRY");
+    String workAreaCode = request.getParameter("CUSTOMER_WORK_AREA");
+    String workContactNumber = request.getParameter("CUSTOMER_WORK_CONTACT");
+    String workExt = request.getParameter("CUSTOMER_WORK_EXT");
+    String workAllowSolicitation = request.getParameter("CUSTOMER_WORK_ALLOW_SOL");
+
+    String faxCountryCode = request.getParameter("CUSTOMER_FAX_COUNTRY");
+    String faxAreaCode = request.getParameter("CUSTOMER_FAX_AREA");
+    String faxContactNumber = request.getParameter("CUSTOMER_FAX_CONTACT");
+    String faxAllowSolicitation = request.getParameter("CUSTOMER_FAX_ALLOW_SOL");
+
+    String mobileCountryCode = request.getParameter("CUSTOMER_MOBILE_COUNTRY");
+    String mobileAreaCode = request.getParameter("CUSTOMER_MOBILE_AREA");
+    String mobileContactNumber = request.getParameter("CUSTOMER_MOBILE_CONTACT");
+    String mobileAllowSolicitation = request.getParameter("CUSTOMER_MOBILE_ALLOW_SOL");
+
     String email = request.getParameter("CUSTOMER_EMAIL");
+    String emailAllowSolicitation = request.getParameter("CUSTOMER_EMAIL_ALLOW_SOL");
 
     String address1 = request.getParameter("CUSTOMER_ADDRESS1");
     String address2 = request.getParameter("CUSTOMER_ADDRESS2");
@@ -76,61 +98,24 @@ public class CustomerEvents
     String postalCode = request.getParameter("CUSTOMER_POSTAL_CODE");
     String country = request.getParameter("CUSTOMER_COUNTRY");
     String directions = "";
+    String addressAllowSolicitation = request.getParameter("CUSTOMER_ADDRESS_ALLOW_SOL");
 
-    if(firstName == null || firstName.length() <= 0)
-    {
-      errMsg = errMsg + "<li>First name missing.";
-    }
-    if(lastName == null || lastName.length() <= 0)
-    {
-      errMsg = errMsg + "<li>Last name missing.";
-    }
-    if(address1 == null || address1.length() <= 0)
-    {
-      errMsg = errMsg + "<li>Address line 1 missing.";
-    }
-    if(city == null || city.length() <= 0)
-    {
-      errMsg = errMsg + "<li>City missing.";
-    }
-    if(state == null || state.length() <= 0)
-    {
-      errMsg = errMsg + "<li>State missing.";
-    }
-    if(postalCode == null || postalCode.length() <= 0)
-    {
-      errMsg = errMsg + "<li>Zip/Postal Code missing.";
-    }
-    if(email == null || email.length() <= 0)
-    {
-      errMsg = errMsg + "<li>Email missing.";
-    }
-    else
-    {
-      //validate email address format
-      int atindex = email.indexOf("@");
-      int dotindex = email.lastIndexOf(".");
-      int length = email.length();
-      if(atindex < 0)
-        errMsg = errMsg + "<li>Email format invalid: \"@\" missing. Need full \"user@hostname.ext\".";
-      if(dotindex < 0 || atindex > dotindex)
-        errMsg = errMsg + "<li>Email format invalid: \".\" missing in hostname. Need full \"user@hostname.ext\".";
-      if(length <= dotindex+1)
-        errMsg = errMsg + "<li>Email format invalid: no extension in hostname. Need full \"user@hostname.ext\".";
-    }
-    if(username == null || username.length() <= 0)
-    {
-      errMsg = errMsg + "<li>Username missing.";
-    }
-    if((password == null || password.length() <= 0 ||
-            confirm_password == null || confirm_password.length() <= 0)  && UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true"))
-    {
-      errMsg = errMsg + "<li>Password(s) missing.";
-    }
-    else if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true") && password.compareTo(confirm_password) != 0)
-    {
-      errMsg = errMsg + "<li>Passwords did not match.";
-    }
+    if(!UtilValidate.isNotEmpty(firstName)) errMsg += "<li>First name missing.";
+    if(!UtilValidate.isNotEmpty(lastName)) errMsg += "<li>Last name missing.";
+    if(!UtilValidate.isNotEmpty(address1)) errMsg += "<li>Address Line 1 missing.";
+    if(!UtilValidate.isNotEmpty(city)) errMsg += "<li>City missing.";
+    if(!UtilValidate.isNotEmpty(state)) errMsg += "<li>State missing.";
+    if(!UtilValidate.isNotEmpty(postalCode)) errMsg += "<li>Zip/Postal Code missing.";
+    if(!UtilValidate.isNotEmpty(email)) errMsg += "<li>Email missing.";
+    if(!UtilValidate.isEmail(email)) errMsg += "<li>" + UtilValidate.isEmailMsg;
+
+    if(!UtilValidate.isNotEmpty(username)) errMsg += "<li>Username missing.";
+    if((!UtilValidate.isNotEmpty(password) || !UtilValidate.isNotEmpty(confirm_password))
+      && UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true"))
+    { errMsg += "<li>Password(s) missing."; }
+    else if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true") 
+      && password.compareTo(confirm_password) != 0)
+    { errMsg += "<li>Passwords did not match."; }
 
     if(username != null && username.length() > 0)
     {
@@ -138,7 +123,7 @@ public class CustomerEvents
       if(userLogin != null)
       {
         //UserLogin record found, user does exist: go back to new user page...
-        errMsg = errMsg + "<li>Username in use, please choose another.";
+        errMsg += "<li>Username in use, please choose another.";
       }
     }
 
@@ -159,9 +144,10 @@ public class CustomerEvents
     tempUserLogin.preStoreOther(helper.makeValue("PartyRole", UtilMisc.toMap("partyId", username, "roleTypeId", "CUSTOMER")));
     tempUserLogin.preStoreOther(helper.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName, "personalTitle", personalTitle, "suffix", suffix)));
     
+    Long newCMId = null;
     //make address
-    Long newCMId = helper.getNextSeqId("ContactMech");
-    if(newCMId == null) { errMsg = "<li>ERROR: Could not create new customer. Please contact customer service."; return "error"; }
+    newCMId = helper.getNextSeqId("ContactMech");
+    if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
     tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "POSTAL_ADDRESS")));
     Map addrFields = new HashMap();
     addrFields.put("contactMechId", newCMId.toString());
@@ -175,10 +161,39 @@ public class CustomerEvents
     addrFields.put("countryGeoId", country);
     //addrFields.put("postalCodeGeoId", postalCodeGeoId);
     tempUserLogin.preStoreOther(helper.makeValue("PostalAddress", addrFields));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "nonSolicitationIndicator", "Y")));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
 
+    //make home phone number
+    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+    tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
+    
+    //make work phone number
+    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+    tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
+    
+    //make fax number
+    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+    tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
+    
+    //make mobile phone number
+    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+    tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
+    
+    //make email
+    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
+    
     newUserLogin = helper.create(tempUserLogin);
-    if(newUserLogin == null) { errMsg = "<li>ERROR: Could not create new customer. Please contact customer service."; return "error"; }
+    if(newUserLogin == null) { errMsg = "<li>ERROR: Could not create new account (create failure). Please contact customer service."; return "error"; }
 
     if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) request.getSession().setAttribute(SiteDefs.USER_LOGIN, newUserLogin);
     return "success";
@@ -274,24 +289,24 @@ public class CustomerEvents
 
     if(address1 == null || address1.length() <= 0)
     {
-      errMsg = errMsg + "<li>Address line 1 missing.";
+      errMsg += "<li>Address line 1 missing.";
     }
     if(city == null || city.length() <= 0)
     {
-      errMsg = errMsg + "<li>City missing.";
+      errMsg += "<li>City missing.";
     }
     if(state == null || state.length() <= 0)
     {
-      errMsg = errMsg + "<li>State missing.";
+      errMsg += "<li>State missing.";
     }
     if(postalCode == null || postalCode.length() <= 0)
     {
-      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+      errMsg += "<li>Zip/Postal Code missing.";
     }
     / *
      * if(email == null || email.length() <= 0)
      * {
-     * errMsg = errMsg + "<li>Email missing.";
+     * errMsg += "<li>Email missing.";
      * }
      * else
      * {
@@ -301,15 +316,15 @@ public class CustomerEvents
      * int length = email.length();
      * if(atindex < 0)
      * {
-     * errMsg = errMsg + "<li>Email format invalid: \"@\" missing. Need full \"user@hostname.ext\".";
+     * errMsg += "<li>Email format invalid: \"@\" missing. Need full \"user@hostname.ext\".";
      * }
      * if(dotindex < 0 || atindex > dotindex)
      * {
-     * errMsg = errMsg + "<li>Email format invalid: \".\" missing in hostname. Need full \"user@hostname.ext\".";
+     * errMsg += "<li>Email format invalid: \".\" missing in hostname. Need full \"user@hostname.ext\".";
      * }
      * if(length <= dotindex + 1)
      * {
-     * errMsg = errMsg + "<li>Email format invalid: no extension in hostname. Need full \"user@hostname.ext\".";
+     * errMsg += "<li>Email format invalid: no extension in hostname. Need full \"user@hostname.ext\".";
      * }
      * }
      * /
@@ -413,15 +428,15 @@ public class CustomerEvents
 
     if(firstName == null || firstName.length() <= 0)
     {
-      errMsg = errMsg + "<li>First name missing.";
+      errMsg += "<li>First name missing.";
     }
     if(lastName == null || lastName.length() <= 0)
     {
-      errMsg = errMsg + "<li>Last name missing.";
+      errMsg += "<li>Last name missing.";
     }
     if(email == null || email.length() <= 0)
     {
-      errMsg = errMsg + "<li>Email missing.";
+      errMsg += "<li>Email missing.";
     }
     else
     {
@@ -431,15 +446,15 @@ public class CustomerEvents
       int length = email.length();
       if(atindex < 0)
       {
-        errMsg = errMsg + "<li>Email format invalid: \"@\" missing. Need full \"user@hostname.ext\".";
+        errMsg += "<li>Email format invalid: \"@\" missing. Need full \"user@hostname.ext\".";
       }
       if(dotindex < 0 || atindex > dotindex)
       {
-        errMsg = errMsg + "<li>Email format invalid: \".\" missing in hostname. Need full \"user@hostname.ext\".";
+        errMsg += "<li>Email format invalid: \".\" missing in hostname. Need full \"user@hostname.ext\".";
       }
       if(length <= dotindex + 1)
       {
-        errMsg = errMsg + "<li>Email format invalid: no extension in hostname. Need full \"user@hostname.ext\".";
+        errMsg += "<li>Email format invalid: no extension in hostname. Need full \"user@hostname.ext\".";
       }
     }
 
@@ -602,19 +617,19 @@ public class CustomerEvents
 
     if(address1 == null || address1.length() <= 0)
     {
-      errMsg = errMsg + "<li>Address line 1 missing.";
+      errMsg += "<li>Address line 1 missing.";
     }
     if(city == null || city.length() <= 0)
     {
-      errMsg = errMsg + "<li>City missing.";
+      errMsg += "<li>City missing.";
     }
     if(state == null || state.length() <= 0)
     {
-      errMsg = errMsg + "<li>State missing.";
+      errMsg += "<li>State missing.";
     }
     if(postalCode == null || postalCode.length() <= 0)
     {
-      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+      errMsg += "<li>Zip/Postal Code missing.";
     }
 
     if(errMsg.length() > 0)
@@ -735,19 +750,19 @@ public class CustomerEvents
 
     if(address1 == null || address1.length() <= 0)
     {
-      errMsg = errMsg + "<li>Address line 1 missing.";
+      errMsg += "<li>Address line 1 missing.";
     }
     if(city == null || city.length() <= 0)
     {
-      errMsg = errMsg + "<li>City missing.";
+      errMsg += "<li>City missing.";
     }
     if(state == null || state.length() <= 0)
     {
-      errMsg = errMsg + "<li>State missing.";
+      errMsg += "<li>State missing.";
     }
     if(postalCode == null || postalCode.length() <= 0)
     {
-      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+      errMsg += "<li>Zip/Postal Code missing.";
     }
 
     if(errMsg.length() > 0)
@@ -901,15 +916,15 @@ public class CustomerEvents
 
     if(ccType == null || ccType.length() <= 0)
     {
-      errMsg = errMsg + "<li>Card type missing.";
+      errMsg += "<li>Card type missing.";
     }
     if(ccHolder == null || ccHolder.length() <= 0)
     {
-      errMsg = errMsg + "<li>Name on card missing.";
+      errMsg += "<li>Name on card missing.";
     }
     if(ccNumber == null || ccNumber.length() <= 0)
     {
-      errMsg = errMsg + "<li>Card number missing.";
+      errMsg += "<li>Card number missing.";
     }
     else
     {
@@ -917,7 +932,7 @@ public class CustomerEvents
       if(!CreditCard.isValid(longCCNumber))
       {
         //Credit Card number invalid
-        errMsg = errMsg + "<li>Credit card number " + longCCNumber + " was not valid.";
+        errMsg += "<li>Credit card number " + longCCNumber + " was not valid.";
       }
       else
       {
@@ -925,17 +940,17 @@ public class CustomerEvents
         if(ccType != null && recVendor.compareToIgnoreCase(ccType) != 0)
         {
           //Credit Card type (vendor) invalid
-          errMsg = errMsg + "<li>Credit card number " + longCCNumber + " was not valid for the vendor " + ccType + ", it appears to be a number from " + recVendor + ".";
+          errMsg += "<li>Credit card number " + longCCNumber + " was not valid for the vendor " + ccType + ", it appears to be a number from " + recVendor + ".";
         }
       }
     }
     if(ccMonth == null || ccMonth.length() <= 0)
     {
-      errMsg = errMsg + "<li>Expiration month missing.";
+      errMsg += "<li>Expiration month missing.";
     }
     if(ccYear == null || ccYear.length() <= 0)
     {
-      errMsg = errMsg + "<li>Expiration year missing.";
+      errMsg += "<li>Expiration year missing.";
     }
     else if(ccMonth != null && ccMonth.length() > 0)
     {
@@ -949,33 +964,33 @@ public class CustomerEvents
       }
       catch(Exception e)
       {
-        errMsg = errMsg + "<li>Specified month(" + ccMonth + ") or year(" + ccYear + ") were not valid numbers.";
+        errMsg += "<li>Specified month(" + ccMonth + ") or year(" + ccYear + ") were not valid numbers.";
       }
       finally
       {
         if(calendarNow.after(calendarCC))
         {
           //Expiration date specified is after the current date
-          errMsg = errMsg + "<li>Credit card expiration date " + calendarCC.getTime() + " is BEFORE todays date " + calendarNow.getTime() + ".";
+          errMsg += "<li>Credit card expiration date " + calendarCC.getTime() + " is BEFORE todays date " + calendarNow.getTime() + ".";
         }
       }
     }
 
     if(address1 == null || address1.length() <= 0)
     {
-      errMsg = errMsg + "<li>Address line 1 missing.";
+      errMsg += "<li>Address line 1 missing.";
     }
     if(city == null || city.length() <= 0)
     {
-      errMsg = errMsg + "<li>City missing.";
+      errMsg += "<li>City missing.";
     }
     if(state == null || state.length() <= 0)
     {
-      errMsg = errMsg + "<li>State missing.";
+      errMsg += "<li>State missing.";
     }
     if(postalCode == null || postalCode.length() <= 0)
     {
-      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+      errMsg += "<li>Zip/Postal Code missing.";
     }
 
     if(errMsg.length() > 0)
@@ -1168,15 +1183,15 @@ public class CustomerEvents
 
     if(ccType == null || ccType.length() <= 0)
     {
-      errMsg = errMsg + "<li>Card type missing.";
+      errMsg += "<li>Card type missing.";
     }
     if(ccHolder == null || ccHolder.length() <= 0)
     {
-      errMsg = errMsg + "<li>Name on card missing.";
+      errMsg += "<li>Name on card missing.";
     }
     if(ccNumber == null || ccNumber.length() <= 0)
     {
-      errMsg = errMsg + "<li>Card number missing.";
+      errMsg += "<li>Card number missing.";
     }
     else
     {
@@ -1184,7 +1199,7 @@ public class CustomerEvents
       if(!CreditCard.isValid(longCCNumber))
       {
         //Credit Card number invalid
-        errMsg = errMsg + "<li>Credit card number " + longCCNumber + " was not valid.";
+        errMsg += "<li>Credit card number " + longCCNumber + " was not valid.";
       }
       else
       {
@@ -1192,17 +1207,17 @@ public class CustomerEvents
         if(ccType != null && recVendor.compareToIgnoreCase(ccType) != 0)
         {
           //Credit Card type (vendor) invalid
-          errMsg = errMsg + "<li>Credit card number " + longCCNumber + " was not valid for the vendor " + ccType + ", it appears to be a number from " + recVendor + ".";
+          errMsg += "<li>Credit card number " + longCCNumber + " was not valid for the vendor " + ccType + ", it appears to be a number from " + recVendor + ".";
         }
       }
     }
     if(ccMonth == null || ccMonth.length() <= 0)
     {
-      errMsg = errMsg + "<li>Expiration month missing.";
+      errMsg += "<li>Expiration month missing.";
     }
     if(ccYear == null || ccYear.length() <= 0)
     {
-      errMsg = errMsg + "<li>Expiration year missing.";
+      errMsg += "<li>Expiration year missing.";
     }
     else if(ccMonth != null && ccMonth.length() > 0)
     {
@@ -1216,33 +1231,33 @@ public class CustomerEvents
       }
       catch(Exception e)
       {
-        errMsg = errMsg + "<li>Specified month(" + ccMonth + ") or year(" + ccYear + ") were not valid numbers.";
+        errMsg += "<li>Specified month(" + ccMonth + ") or year(" + ccYear + ") were not valid numbers.";
       }
       finally
       {
         if(calendarNow.after(calendarCC))
         {
           //Expiration date specified is after the current date
-          errMsg = errMsg + "<li>Credit card expiration date " + calendarCC.getTime() + " is BEFORE todays date " + calendarNow.getTime() + ".";
+          errMsg += "<li>Credit card expiration date " + calendarCC.getTime() + " is BEFORE todays date " + calendarNow.getTime() + ".";
         }
       }
     }
 
     if(address1 == null || address1.length() <= 0)
     {
-      errMsg = errMsg + "<li>Address line 1 missing.";
+      errMsg += "<li>Address line 1 missing.";
     }
     if(city == null || city.length() <= 0)
     {
-      errMsg = errMsg + "<li>City missing.";
+      errMsg += "<li>City missing.";
     }
     if(state == null || state.length() <= 0)
     {
-      errMsg = errMsg + "<li>State missing.";
+      errMsg += "<li>State missing.";
     }
     if(postalCode == null || postalCode.length() <= 0)
     {
-      errMsg = errMsg + "<li>Zip/Postal Code missing.";
+      errMsg += "<li>Zip/Postal Code missing.";
     }
 
     if(errMsg.length() > 0)
