@@ -490,6 +490,7 @@
       <prim-key field="partyId" />	
       <prim-key field="fixedAssetId" />	
       <prim-key field="statusId" />
+      <prim-key field="fromDate" />
     </entity>
 
   <!-- ========================================================= -->
@@ -864,6 +865,7 @@
       <field name="allocationPercentage" type="floating-point"></field>	
       <prim-key field="generalLedgerAccountId" />	
       <prim-key field="budgetItemTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="InternalAcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
@@ -890,6 +892,7 @@
       <prim-key field="generalLedgerAccountId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="SalesAcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
@@ -945,6 +948,7 @@
       <prim-key field="billingAccountId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId" />
       </relation>
@@ -1020,6 +1024,7 @@
       <prim-key field="finAccountId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="FinAccountTrans" 
             package-name="org.ofbiz.commonapp.accounting.payment"
@@ -1567,6 +1572,7 @@
       <prim-key field="contentId" />	
       <prim-key field="dataObjectId" />	
       <prim-key field="seqId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Content">
         <key-map field-name="contentId" />
       </relation>
@@ -1586,6 +1592,7 @@
       <prim-key field="contentId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="ContentType" 
             package-name="org.ofbiz.commonapp.content.content"
@@ -2236,6 +2243,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="partyId" />	
       <prim-key field="partyQualTypeId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="PartyQualType">
         <key-map field-name="partyQualTypeId" />
       </relation>
@@ -2340,6 +2348,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="PerformanceReviewItem" 
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -2365,6 +2374,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="partyId" />	
       <prim-key field="trainingClassTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="ResponsibilityType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -2419,12 +2429,14 @@
       <field name="partyIdFrom" type="id-ne"></field>
       <field name="partyIdTo" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <field name="terminationReasonId" type="id"></field>
       <field name="terminationTypeId" type="id"></field>	
       <prim-key field="roleTypeIdFrom" />	
       <prim-key field="roleTypeIdTo" />	
       <prim-key field="partyIdFrom" />	
       <prim-key field="partyIdTo" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="EmploymentApp" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2464,6 +2476,7 @@
       <prim-key field="partyIdFrom" />	
       <prim-key field="partyIdTo" />	
       <prim-key field="benefitTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="PayCheck" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2499,6 +2512,7 @@
       <prim-key field="roleTypeIdTo" />	
       <prim-key field="partyIdFrom" />	
       <prim-key field="partyIdTo" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="PayrollPreference" 
             package-name="org.ofbiz.commonapp.humanres.employment"
@@ -2606,6 +2620,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="positionId" />	
       <prim-key field="partyId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="EmplPositionReportingStruct" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2618,6 +2633,7 @@
       <field name="primaryFlag" type="indicator"></field>	
       <prim-key field="positionIdReportingTo" />	
       <prim-key field="positionIdManagedBy" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="EmplPositionResponsibility" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2629,6 +2645,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="positionId" />	
       <prim-key field="responsibilityTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="EmplPositionType" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2649,6 +2666,7 @@
       <field name="standardHoursPerWeek" type="floating-point"></field>	
       <prim-key field="positionTypeId" />	
       <prim-key field="positionClassTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="ValidResponsibility" 
             package-name="org.ofbiz.commonapp.humanres.position"
@@ -2660,6 +2678,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="positionTypeId" />	
       <prim-key field="responsibilityTypeId" />
+      <prim-key field="fromDate" />
     </entity>
 
   <!-- ========================================================= -->
@@ -3700,6 +3719,7 @@
       <prim-key field="requirementId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="RequirementStatus" 
             package-name="org.ofbiz.commonapp.order.request"
@@ -4490,6 +4510,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="partyId" />	
       <prim-key field="contactMechId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -4519,6 +4540,7 @@
       <prim-key field="partyId" />	
       <prim-key field="contactMechId" />	
       <prim-key field="contactMechPurposeTypeId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="PartyContactMech">
         <key-map field-name="partyId" />
         <key-map field-name="contactMechId" />
@@ -4733,6 +4755,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="partyId" />	
       <prim-key field="partyTypeId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
@@ -5104,6 +5127,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="productCategoryId" />	
       <prim-key field="productCategoryTypeId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
       </relation>
@@ -5127,6 +5151,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="productCategoryId" />	
       <prim-key field="productId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -5352,6 +5377,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="productId" />	
       <prim-key field="productFeatureId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductFeatureApplType">
         <key-map field-name="productFeatureApplTypeId" />
       </relation>
@@ -5941,6 +5967,7 @@
       <prim-key field="productId" />	
       <prim-key field="productIdTo" />	
       <prim-key field="productAssocTypeId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductAssocType">
         <key-map field-name="productAssocTypeId" />
       </relation>
@@ -5993,6 +6020,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="productId" />	
       <prim-key field="productTypeId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -6244,6 +6272,7 @@
       <field name="thruDate" type="date-time"></field>	
       <prim-key field="productCategoryId" />	
       <prim-key field="partyTypeId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
       </relation>
@@ -6301,6 +6330,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="productId" />	
       <prim-key field="partyId" />
+      <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -6761,6 +6791,7 @@
       <field name="rate" type="currency-amount"></field>	
       <prim-key field="partyId" />	
       <prim-key field="rateTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="RateType" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
@@ -6830,6 +6861,7 @@
       <prim-key field="rateTypeId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
+      <prim-key field="fromDate" />
     </entity>
 
   <!-- ========================================================= -->
@@ -7097,6 +7129,7 @@
       <field name="comment" type="comment"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="fixedAssetId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="WorkEffortFixedAssetStd" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -7149,6 +7182,7 @@
       <prim-key field="workEffortId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
+      <prim-key field="fromDate" />
     </entity>	
     <entity entity-name="WorkEffortSkillStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
