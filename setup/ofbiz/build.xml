@@ -811,8 +811,95 @@
         <delete><fileset dir="." includes="**/.nbattrs,**/*~,**/*.#*" /></delete>
     </target>
     
-    <target name="distro-apps" depends="distro-apps-jetty"/>
+    <target name="distro-apps" depends="distro-apps-jetty-embedded"/>
     
+    <target name="distro-apps-jetty-embedded" depends="">
+        <antcall target="clean" />
+        <antcall target="cleanextras" />
+        <antcall target="deploy" />
+
+        <property name="distro.temp.dir" value="../distrotemp" />
+        
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+        <echo message="[distro] NOTE before running this: manually remove data directory contents, start the server &amp; load data, stop server" />
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+
+        <delete dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}/ofbiz" />
+        
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="."/></copy>
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="${distro.temp.dir}/ofbiz/setup/ofbiz"/></copy>
+        
+        <!-- don't want the CVS directories in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/CVS" /></delete>
+
+        <!-- don't need the war file in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/*.war" /></delete>
+
+        <!-- the build directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/build" />
+        
+        <!-- the bin directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/bin" />
+        
+        <!-- temporary work & log files -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz/logs" includes="*" /></delete>
+
+        <!-- since there is a separate docs distro, remove all docs directories here -->
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/docs" />
+
+        <!-- can't delete core/docs, need some of the xmldefs for building -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz/core/docs" includes="*" /></delete>
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/examples" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/oagis" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/intuit" />
+                             
+        <!-- also since there is a separate docs distro, remove the website directory here -->
+        <delete dir="${distro.temp.dir}/ofbiz/website" />
+                                   
+        <!-- okay, build the archive -->
+        <delete file="../ofbiz-apps.zip" />
+        <zip destfile="../ofbiz-apps.zip" basedir="${distro.temp.dir}" />
+
+        <delete dir="${distro.temp.dir}" />
+
+        <!-- clean at the end again to leave everything in a "raw" state -->
+        <antcall target="clean" />
+    </target>
+
     <target name="distro-apps-jetty" depends="">
         <antcall target="clean" />
         <antcall target="cleanextras" />
@@ -856,6 +943,20 @@
         <delete dir="${distro.temp.dir}/ofbiz/marketing/build" />
         <delete dir="${distro.temp.dir}/ofbiz/ecommerce/build" />
         
+        <!-- the bin directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/bin" />
+        
         <!-- jetty files not needed -->
         <delete dir="${distro.temp.dir}/jetty/javadoc" />
         <delete dir="${distro.temp.dir}/jetty/contrib" />
@@ -867,8 +968,7 @@
         <delete dir="${distro.temp.dir}/jetty/win32" />
         
         <!-- temporary work & log files -->
-        <delete dir="${distro.temp.dir}/catalina/work/Standalone/localhost" />
-        <delete><fileset dir="${distro.temp.dir}/catalina/logs" includes="*" /></delete>
+        <delete><fileset dir="${distro.temp.dir}/jetty/logs" includes="*" /></delete>
 
         <!-- since there is a separate docs distro, remove all docs directories here -->
         <delete dir="${distro.temp.dir}/ofbiz/commonapp/docs" />
@@ -946,6 +1046,20 @@
         <delete dir="${distro.temp.dir}/ofbiz/accounting/build" />
         <delete dir="${distro.temp.dir}/ofbiz/marketing/build" />
         <delete dir="${distro.temp.dir}/ofbiz/ecommerce/build" />
+        
+        <!-- the bin directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/bin" />
         
         <!-- === some other misc things to savce space === -->
 
@@ -1059,5 +1173,5 @@
 
         <!-- clean at the end again to leave everything in a "raw" state -->
         <antcall target="clean" />
-    </target>    
+    </target>
 </project>
