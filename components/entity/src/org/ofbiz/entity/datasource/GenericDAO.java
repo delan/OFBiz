@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.11 2004/02/03 08:14:40 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.12 2004/02/27 10:38:17 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -1031,17 +1031,20 @@ public class GenericDAO {
             SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader);
         }
 
-        sqlP.executeQuery();
-        long count = 0;
+        
         try {
+            sqlP.executeQuery();
+            long count = 0;
             ResultSet resultSet = sqlP.getResultSet();
             if (resultSet.next()) {
                 count = resultSet.getLong(1);
             }
+            return count;
         } catch (SQLException e) {
             throw new GenericDataSourceException("Error getting count value", e);
+        } finally {
+            sqlP.close();
         }
-        return count;
     }
 
     /* ====================================================================== */
