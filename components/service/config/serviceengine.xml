@@ -30,6 +30,7 @@
     <engine name="jms" class="org.ofbiz.service.jms.JmsServiceEngine"/> 
     <engine name="jpython" class="org.ofbiz.service.engine.BSFEngine"/>
     <engine name="route" class="org.ofbiz.service.engine.RouteEngine"/>
+    <engine name="rmi" class="org.ofbiz.service.rmi.RmiServiceEngine"/>
     <engine name="simple" class="org.ofbiz.minilang.SimpleServiceEngine"/>
     <engine name="soap" class="org.ofbiz.service.engine.SOAPClientEngine"/>
     <engine name="workflow" class="org.ofbiz.workflow.WorkflowEngine"/>    
