@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<title>Move a Page</title>
+	<content>
+		<dialog>
+			<title>Move Successful</title>
+			<content>
+				<border>
+					The page $request.getParameter( 'sourcePath' ) has been
+					moved to $request.getParameter( 'destinationPath' ).
+				</border>
+			</content>
+		</dialog>
+	</content>
+</page>

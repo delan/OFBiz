@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml" onload="processText();">
+  <title>Revisions</title>
+  <content>
+    <html:script type="text/javascript">
+
+	function Check4Tab(el)
+	{
+	  // Run only in IE
+	  // and if tab key is pressed
+	  // and if the control key is pressed
+	  if ((document.all) &amp;&amp; (9==event.keyCode))
+	  {
+	      // Cache the selection
+	      el.selection=document.selection.createRange();
+	      el.selection.text=String.fromCharCode(9)
+	      event.returnValue=false
+	  }          
+	}
+	
+	// This is needed for when we're not using the fancy editors, but just plain
+	// old text areas.
+	
+	function saveOff()
+	{
+	}
+    </html:script>
+    
+    <dialog fill="yes">
+          #set ( $path = $request.getParameter( "path" ) )
+          #set ( $origURL = $request.getParameter( "origURL" ) )
+          #set ( $revisions = $session.getAttribute( "revisions" ) )
+      <title>Revisions - $origURL</title>
+      <content>
+        <box>
+
+          #if ( $origURL )
+              #set ( $postURL = $origURL )
+          #else
+              #set ( $postURL = $url_util.requestPath() )
+          #end
+          
+          #if ( $revisions )
+              <html:table>
+                <html:tr>
+                  <html:th>Revision Number</html:th>
+                  <html:th>Author</html:th>
+                  <html:th>Message</html:th>
+                </html:tr>
+                #set ( $index = 0 )
+                #foreach ( $revision in $revisions )
+                    <html:tr>
+                      <html:td>
+                        #if ( $index == 0 )
+                            $revision.number (current version)
+                        #else
+                            <html:a href="showrevision.html?path=${url_util.encode( $path )}&amp;revisionNumber=$revision.number">$revision.number</html:a>
+                        #end
+                      </html:td>
+                      <html:td>
+                      	$revision.author
+                      </html:td>
+                      <html:td>
+                      	$revision.message
+                      </html:td>
+                    </html:tr>
+                    #set( $index = $index + 1 )
+                #end
+              </html:table>
+          #else
+              (No revisions)
+          #end
+        </box>
+      </content>
+    </dialog>
+  </content>
+</page>

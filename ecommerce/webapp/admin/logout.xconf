@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+	<template />
+    <property name="title">Log Out</property>
+	<page-action>./logic/logout.js</page-action>
+
+	<generator name="velocity" />
+</page>

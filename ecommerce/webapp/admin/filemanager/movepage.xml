@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<title>Move a Page</title>
+	<content>
+		<wizard>
+			<title>Move a Page</title>
+			<content>
+				#set ( $sourcePath = $request.getParameter( "sourcePath" ) )
+				#set ( $slashPos = $sourcePath.lastIndexOf( "/" ) )
+				#if ( $slashPos >= 0 )
+					#set ( $destinationPath = "$sourcePath.substring( 0, $slashPos )/newpage.html" )
+				#else
+					#set ( $destinationPath = "/newpage.html" )
+				#end
+				<divided-box>
+					<item>
+						<header>Original page:</header>
+						<detail>
+							<html:input type="text" width="40" name="sourcePath" value="$sourcePath"/>
+						</detail>
+					</item>
+					<item>
+						<header>New page:</header>
+						<detail>
+							<html:input type="text" width="40" name="destinationPath" value="$destinationPath"/>
+						</detail>
+					</item>
+				</divided-box>
+			</content>
+			<buttons>
+				<finish href="movepage-finish.html"/>
+				<cancel href="/admin/blank.html"/>
+			</buttons>
+		</wizard>
+	</content>
+</page>

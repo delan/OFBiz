@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+  <title>Delete a Page</title>
+  <content>
+    <wizard>
+      <content>
+          #set ( $delete = $request.getParameter( "delete" ) )          
+
+            <border>Are you sure you want to delete this file?<br/>
+            <b>$delete</b>
+            </border>
+            <html:input type="hidden" name="delete" value="$delete" width="40"/>
+      </content>
+      <buttons>
+        <submit-button name="Yes" href="deletepage-finish.html"/>
+        <submit-button name="No" href="/admin/blank.html"/>
+      </buttons>
+    </wizard>
+  </content>
+</page>

@@ -1,0 +1,147 @@
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	font-size: 10pt; 
+	font-style: normal;
+	/* background-color: #c6d3de; */
+}
+
+.tree, .tab {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	text-decoration: none;
+    white-space: nowrap; /* Mozilla honors this, IE doesn't */
+}
+
+.tree a, .tab a:link, .tab a:visited {
+	color: black;
+	font-size: 8pt;
+	text-decoration: none;
+}
+
+.tree img {
+    border: 0px;
+    /* width: 19px; */
+    height: 16px;
+}
+
+.tab a:hover {
+	color: white;
+}
+
+.tab-pane {
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	background-color: #c6d3de;
+	padding: 5px; 
+
+}
+
+.tab-bar {
+	background: url(/admin/images/tab/bg-outside.gif); 
+}
+
+.editcell {
+	background-color: #FFFFFF;
+    border: #000000 0px solid;
+	font: 13px verdana, arial, helvetica, sans-serif;
+	padding: 3px; width: 100%;
+}
+
+.datacell {
+	background-color: #FFFFFF;
+	/* border: #000000 0px solid; */
+	width: 90%;
+	font: 13px verdana, arial, helvetica, sans-serif;
+	padding: 3px;
+}
+
+.datacell-header {
+	/* border: #000000 0px solid; */
+	text-align: left;
+	font: 13px verdana, arial, helvetica, sans-serif;
+	font-weight: bold;
+	padding: 3px;
+}
+
+.comment {
+	/* border: #000000 0px solid; */
+	text-align: left;
+	font: 13px verdana, arial, helvetica, sans-serif;
+	color: green;
+	padding: 3px;
+}
+
+.textcell-header {
+    /* border: #000000 4px solid; */
+	text-align: right;
+	vertical-align: top;
+	font: 13px verdana, arial, helvetica, sans-serif;
+	padding: 3px;	
+}
+
+.text-header-selected {
+	background-color: #FFFFAA;
+	border: #000000 0px solid;
+	font: 13px verdana, arial, helvetica, sans-serif;
+	font-weight: bold;
+	text-align: right;
+	vertical-align: top;
+	padding: 3px;
+}
+
+.toolbar {
+	background-color: transparent;
+ 	border: #000000 0px solid; 
+	layer-background-color: transparent;
+	font: 10px verdana, arial, helvetica, sans-serif; padding: 0px;
+	/* position: fixed; */
+	width: 17; 
+}
+
+.floatDialog {
+	background-color: #cccccc;
+	border-right: 2px solid gray;
+	border-bottom: 2px solid gray;
+	border-left: 2px solid white;
+	border-top: 2px solid white;
+
+	layer-background-color: #cccccc;
+	font: 10px verdana, arial, helvetica, sans-serif; padding: 0px;
+	position: absolute; top:30%; left: 30%; 
+}
+
+
+.selectedTable {
+	background-color: #FFFFAA;
+	font: 13px verdana, arial, helvetica, sans-serif;
+	font-weight: bold;
+	width: 100%;
+}
+
+.selectedAttributes {
+	text-align: right;
+	background-color: #FFFFAA;
+	font: 13px verdana, arial, helvetica, sans-serif;
+	font-weight: bold;
+}
+
+.normalTable {
+	margin-left: 15px; 
+	margin-bottom: 5px;
+	margin-right: 5px;
+	
+}
+
+.hide {
+	display: none;
+}
+
+.basic {
+	
+}
+
+#xml-render-area {
+	width: 100%;
+	margin-left: 21px;
+}

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<page>
+	<page-action>copyPage</page-action>
+	<property name="editable">false</property>
+</page>

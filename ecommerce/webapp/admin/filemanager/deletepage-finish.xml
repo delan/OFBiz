@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+	<title>Delete a Page</title>
+	<content>
+		<dialog>
+			<title>Delete Successful</title>
+			<content>
+				<border>
+					The page $request.getParameter( 'delete' ) has been deleted.
+				</border>
+			</content>
+		</dialog>
+	</content>
+</page>

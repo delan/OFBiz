@@ -1,0 +1,23 @@
+<news-index>
+	<topic>News</topic>
+	<item>
+		<title>"Move Your Business Technology to Open Source"</title>
+		<url>/demo/press/demotuesday.html</url>
+		<pdf>/demo/press/demotuesdaypdf.pdf</pdf>
+	</item>
+	<item>
+		<title>eInnovation Helps Cut the Ribbon for<br/> UC</title>
+		<url>/demo/press/opensource.html</url>
+		<pdf>/demo/press/opensourcepdf.pdf</pdf>
+	</item>
+	<item>
+		<title>eInnovation, Inc. Widens the "Welcome Mat"</title>
+		<url>/demo/press/ecommerce.html</url>
+		<pdf>/demo/press/ecommercepdf.pdf</pdf>
+	</item>
+	<item>
+		<title>eInnovation, Inc. and Dosson Ltd. Partner</title>
+		<url>/demo/press/intpartnership.html</url>
+		<pdf>/demo/press/intpartnershippdf.pdf</pdf>
+	</item>
+</news-index>

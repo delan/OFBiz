@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml" onload="processText();">
+  <title>Edit Page</title>
+  <content>
+    <html:script type="text/javascript">
+
+	function Check4Tab(el)
+	{
+	  // Run only in IE
+	  // and if tab key is pressed
+	  // and if the control key is pressed
+	  if ((document.all) &amp;&amp; (9==event.keyCode))
+	  {
+	      // Cache the selection
+	      el.selection=document.selection.createRange();
+	      el.selection.text=String.fromCharCode(9)
+	      event.returnValue=false
+	  }          
+	}
+	
+	// This is needed for when we're not using the fancy editors, but just plain
+	// old text areas.
+	
+	function saveOff()
+	{
+	}
+    </html:script>
+    
+    <dialog fill="yes">
+      <content>
+        <box>
+          #set ( $origURL = $request.getParameter( "origURL" ) )
+
+          #if ( $editableContentItems.size() == 0 )
+              <html:p>This page has no editable components.</html:p>
+          #else
+
+              ## Determine what the post URL should be.
+    
+              #if ( $origURL )
+                  #set ( $postURL = $origURL )
+              #else
+                  #set ( $postURL = $url_util.requestPath() )
+              #end
+
+              ## Determine what the "front" tab should be.
+              
+              ## editableContentItems is stuck in the Velocity context by the
+              ## getEditableContent page action.
+              
+              #set ( $frontTabName = $request.getParameter( "frontTabName" ) )
+
+              #foreach ( $contentItem in $editableContentItems )
+                  #if ( $frontTabName == $contentItem.contentRelationshipDisplayName )
+                      #set( $frontContentItem = $contentItem )
+                  #end
+              #end
+
+              #if ( ! $frontContentItem )
+                  #set ( $frontContentItem = $editableContentItems.get( 0 ) )
+              #end
+              
+              #set ( $isHtml = $frontContentItem.contentType.equalsIgnoreCase( "text/html" ) )
+              #set ( $isText = ($isHtml == false) && $frontContentItem.contentType.startsWith( "text/" ) )
+              #set ( $isXML = $frontContentItem.contentType.equals( "text/xml" ) || $frontContentItem.contentType.equals( "text/xsl" ) || $frontContentItem.contentType.equals( "application/xml" ) )
+              
+              <tab-pane>
+                <tabs>
+                  ## Output the tabs.
+                  #set ( $editURL = "$request.requestURI?path=$request.getParameter( 'path' )" )
+                  #if ( $origURL )
+                      #set ( $editURL = "$editURL&amp;origURL=$origURL" )
+                  #end
+                  #foreach ( $contentItem in $editableContentItems )
+                      #if ( $contentItem == $frontContentItem )
+                          <tab selected="yes">
+                            <name>$contentItem.contentRelationshipDisplayName</name>
+                          </tab>
+                      #else
+                          <tab url="$editURL&amp;frontTabName=$contentItem.contentRelationshipDisplayName">
+                            <name>$contentItem.contentRelationshipDisplayName</name>
+                          </tab>
+                      #end
+                  #end
+                </tabs>
+                <content>
+                <html:span class="editor">
+       				#if ( $editableContentItems.size() != 0 )
+					  <buttons>
+					    #if ($origURL)
+					    <html:input type="hidden" name="origURL" value="$origURL" />
+					    #end
+					    <html:input type="hidden" name="view" value="false" />
+					    #if ( $isXML )
+					        <submit-button name="Save" onclick="saveOff()" href="$postURL" />
+					        <!-- <submit-button name="View" onclick="saveOff()"  href="$postURL" /> -->
+					       	<submit-button name="Check Spelling" onclick="saveOff()" href="/admin/editors/xml/spellCheck.html" /> 
+					       						       	
+					    #elseif ( $isText )
+					        <submit-button name="Save" href="$postURL"/>
+					        <!-- <submit-button name="View" target="viewer" href="$postURL" />            -->
+					    #elseif ( $isHtml )
+					        <submit-button name="Save" onclick="saveOff()" href="$postURL"/>
+					        <!--<submit-button name="View" onclick="saveOff()" target="viewer" href="$postURL" /> -->
+	                    #end
+	                    <html:script>
+	                      function openUploadWindow()
+	                      {
+	                          window.open( "/admin/uploadFile.html?editingPath=$frontContentItem.path", 'upload',
+	                              'height=200, width=460, toolbars=no, resizeable=no' );
+	                      }
+	                    </html:script>
+	                    <button name="Upload" onclick="openUploadWindow()"/>
+					    
+					    #if ( $origURL )
+					        <cancel href="$origURL"/>
+					    #end
+						
+					
+					  </buttons>
+					#end
+
+				</html:span>
+                  <html:div class="editor">
+                    #set ( $params = $frontContentItem.requiredParameters )
+                    #foreach( $paramName in $params.keySet() )
+                        <html:input type="hidden" name="$paramName" value="$params.get( $paramName )" />
+                    #end
+                    #if ( $isXML )
+                        #if ( $browser.isXMLEditorCompatible() )
+                            $pages.get( "/admin/editors/xml/xmleditor.xml" , false)
+                            <html:textarea name="$frontContentItem.contentParameter" id="MyTab" class="hide" cols="60" rows="10"><![CDATA[$frontContentItem.content]]></html:textarea>
+                        #else
+                            <html:textarea name="$frontContentItem.contentParameter" id="MyTab" cols="80" rows="25"><![CDATA[$frontContentItem.content]]></html:textarea>
+                        #end
+                    #elseif ( $frontContentItem.contentType.startsWith( "image/" ) )
+                        <html:img src="$frontContentItem.path"/>
+                    #else
+                        <html:textarea name="$frontContentItem.contentParameter" id="MyTab" onkeydown="Check4Tab(this)"  cols="80" rows="25"><![CDATA[$frontContentItem.content]]></html:textarea> 
+                    #end
+
+                  </html:div>
+               
+                  <html:div class="revisions" align="right">
+                    #set ( $revisions = $session.getAttribute( "revisions" ) )
+                    #if ( $revisions )
+                        #set ( $index = 0 )
+                        #foreach ( $revision in $revisions )
+                            #if ( $index == 0 )                            	
+                                $revision.number (current version)
+                            #else
+                                | <html:a href="/admin/showrevision.html?path=$frontContentItem.path&amp;revisionNumber=$revision.number">$revision.number</html:a>
+                            #end
+                            #set( $index = $index + 1 )
+                        #end
+                    #else
+                        (No revisions)
+                    #end
+                  </html:div>
+                </content>
+              </tab-pane>
+          #end
+        </box>
+      </content>
+    </dialog>
+  </content>
+</page>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"    xmlns:html="http://www.w3.org/1999/xhtml">
+  <title>404 Error - file not found</title>
+  <content>
+ 	<dialog>
+ 	<content>
+ 	<border>
+ 		<p>
+      		Address <b>$url_util.requestPath()</b> does not exist..
+        </p>
+      	<p>Would you like to add this file? <br/></p>
+            <html:input type="hidden" name="path" value='$url_util.requestPath()' />
+     </border>
+     </content>
+     <buttons>
+        <next href="/admin/filemanager/addpage/addpage2.html"/>
+        <cancel href="javascript:window.back()"/>
+      </buttons>
+     </dialog>
+ </content>
+</page>

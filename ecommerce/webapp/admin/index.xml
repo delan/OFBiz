@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<title>WSP Administration</title>
+	<content>
+		<dialog>
+			<title>WSP Administration</title>
+			<content>
+				<border>
+					<html:p>
+					Welcome to the WSP administrative interface!  From here you
+					can access the following administrative screens:
+					</html:p>
+					<divided-box>
+						<item>
+							<header><html:img src="editors/images/filemanager.gif" alt="File Manager"/></header>
+							<detail><html:a href="filemanager/">File Manager</html:a></detail>
+						</item>
+						<item>
+							<header><html:img src="editors/images/usermanager.gif" alt="User Manager"/></header>
+							<detail><html:a href="usermanager/">User Manager</html:a></detail>
+						</item>
+					</divided-box>
+				</border>
+			</content>
+		</dialog>
+	</content>
+</page>

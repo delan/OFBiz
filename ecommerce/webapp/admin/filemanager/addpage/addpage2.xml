@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+  <title>Add a Page</title>
+  <content>
+    <wizard>
+      <content>
+      	#set( $newpage = $request.getParameter( "path" ) )
+
+        #foreach ( $parameterName in $request.parameterNames )
+            <html:input type="hidden" name="$parameterName" value="$request.getParameter( $parameterName )"/>
+        #end
+        <html:input type="hidden" name="destinationPath" value="$newpage"/>
+        
+        <divided-box>
+          <item>
+            <!-- the next page should ask us what style we want, the styles would be sub-sirectories with one of each of these in there -->
+            <header>
+              Type of web page to create:
+            </header>
+            <detail>
+              <html:input type="radio" name="sourcePath" checked="checked" value="/admin/filemanager/addpage/basic/blankhtml.html">HTML page</html:input><html:br/>
+              <html:input type="radio" name="sourcePath" value="/admin/filemanager/addpage/basic/blankxml.xml">XML page</html:input><html:br/>
+              <html:input type="radio" name="sourcePath" value="/admin/filemanager/addpage/basic/news.xml">News page in XML</html:input><html:br/>
+              <html:input type="radio" name="sourcePath" value="/admin/filemanager/addpage/basic/blankpdf.xml">PDF</html:input><html:br/>
+              <!--
+              <html:input type="radio" name="sourcePath" value="list">Survey</html:input><html:br/>
+              <html:input type="radio" name="sourcePath" value="list">Blog</html:input><html:br/>
+              -->
+              <html:input type="radio" name="sourcePath" value="/admin/filemanager/addpage/basic/feedback.html">Feedback Form</html:input><html:br/>
+            </detail>
+          </item>
+          <item>
+            <header>
+              Overwrite any existing files?
+            </header>
+            <detail>
+              <html:input type="radio" name="overwrite" checked="checked" value="true">Yes</html:input>
+              <html:input type="radio" name="overwrite" value="false">No</html:input>
+            </detail>
+          </item>
+        </divided-box>
+      </content>
+      <buttons>
+        <back onclick="window.back();"/>
+         <finish href="addpage-finish.html"/>
+      </buttons>
+    </wizard>
+  </content>
+</page>

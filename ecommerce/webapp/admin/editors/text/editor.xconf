@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="title">Edit Text Page</property>
+	<generator name="xslt">
+    	<stylesheet>../../stylesheets/normal.html.xsl</stylesheet>
+	    <generator name="velocity"/>
+	</generator>
+	<property name="editable">false</property>
+	<page-action>claimEditLock</page-action>
+</page>

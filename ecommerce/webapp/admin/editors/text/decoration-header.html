@@ -1,0 +1,9 @@
+<a href="#"
+onclick="if(!window.name)window.name='editor_parent';window.open('/admin/editors/text/editor.html?editPath=$url_util.encode( $editPage.path )&parentPage='+window.name)">
+<img src="/admin/editors/text/text.gif" border="0" title="Edit text document" /></a>
+
+<a href="#"
+onclick="if(!window.name)window.name='editor_parent';window.open( '/admin/editors/revisions/index.html?path=$url_util.encode( $editPage.path )&origURL=$url_util.encode( $request.requestURI )&parentPage='+window.name, 'editor','alwaysRaised=yes,menubar=no' )">
+<img src="/admin/editors/revisions/history_view.gif" border="0" width="16" height="16" title="View revisions" /></a>
+
+<div style="border: thin dashed #BCBCBC">

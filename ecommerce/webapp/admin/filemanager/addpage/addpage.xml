@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+  <title>Add a Page</title>
+  <content>
+    <wizard>
+      <content>
+        <divided-box>
+          <item>
+            <header>Please enter the address to have added: </header>
+            <detail><html:input type="text" name="path" size="70" value="/newpage.html" /></detail>
+          </item>
+        </divided-box>
+      </content>
+      <buttons>
+        <next href="addpage2.html"/>
+        
+      </buttons>
+    </wizard>
+  </content>
+</page>

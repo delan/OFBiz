@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="title">Show Revision</property>
+	<property name="group">welcome</property>
+	<property name="editable">false</property>
+	<generator name="velocity">
+		<generator name="xslt">
+			<stylesheet>../../stylesheets/normal.html.xsl</stylesheet>
+		</generator>
+	</generator>
+	<page-action>getRevisionContent</page-action>
+	<contentfile>/admin/editors/revisions/showrevision.xml</contentfile>
+</page>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+  <title>Add a Page Completed</title>
+  <content>
+    <wizard>
+      <content>
+        <border>
+          The page <b>$request.getParameter( 'path' )</b> has been created.
+        </border>
+      </content>
+      <buttons>
+        <button name="View" href="$request.getParameter( 'path' )"/>        
+      </buttons>
+    </wizard>
+  </content>
+</page>
