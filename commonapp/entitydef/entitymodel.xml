@@ -934,7 +934,7 @@
     <entity entity-name="WebUserPreference" 
             package-name="org.ofbiz.commonapp.content.preference"
             title="Web User Preference Entity">
-      <field name="userLoginId" type="id-ne"></field>
+      <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="webPreferenceTypeId" type="id-ne"></field>	
       <prim-key field="userLoginId" />	
@@ -1349,7 +1349,7 @@
             package-name="org.ofbiz.commonapp.security.securitygroup"
             title="Security Component - User Login Security Group Entity">
       <description>Defines a permission available to a security group</description>
-      <field name="userLoginId" type="id-ne"></field>
+      <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="groupId" type="id-ne"></field>	
       <prim-key field="userLoginId" />	
       <prim-key field="groupId" />
