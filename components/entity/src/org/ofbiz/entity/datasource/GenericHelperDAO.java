@@ -1,5 +1,5 @@
 /*
- * $Id: GenericHelperDAO.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
+ * $Id: GenericHelperDAO.java,v 1.2 2003/09/19 06:05:12 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class GenericHelperDAO implements GenericHelper {
@@ -146,12 +146,6 @@ public class GenericHelperDAO implements GenericHelper {
     public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         return genericDAO.selectByAnd(modelEntity, fields, orderBy);
     }
-
-    /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
-    public List findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
-        return genericDAO.selectByClause(modelEntity, entityClauses, fields, orderBy);
-    }
-     */
 
     /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file

@@ -1,5 +1,5 @@
 /*
- * $Id: MemoryHelper.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
+ * $Id: MemoryHelper.java,v 1.2 2003/09/19 06:05:12 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -327,12 +327,6 @@ public class MemoryHelper implements GenericHelper {
     public List findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         return null;
     }
-
-    /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
-    public List findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
-        return null;
-    }
-    */
 
     public List findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         HashMap entityCache = (HashMap) cache.get(modelEntity.getEntityName());
