@@ -28,46 +28,80 @@
 import java.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.transaction.*;
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
+
 import org.ofbiz.widget.html.*;
 
-security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");
 
-facilityId = request.getParameter("facilityId");
-if (UtilValidate.isEmpty(facilityId)) {
-    facilityId = request.getAttribute("facilityId");
+action = request.getParameter("action");
+
+if (action != null) {
+
+    // ------------------------------
+    DynamicViewEntity prodView = new DynamicViewEntity();
+    Map conditionMap = UtilMisc.toMap("facilityId", facilityId);
+
+    prodView.addMemberEntity("PRFA", "ProductFacility");
+    prodView.addAliasAll("PRFA", null);
+
+    if (productTypeId != null && productTypeId.length() > 0) {
+        prodView.addMemberEntity("PROD", "Product");
+        prodView.addViewLink("PROD", "PRFA", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
+        prodView.addAlias("PROD", "productTypeId");
+        conditionMap.put("productTypeId", productTypeId);
+    }
+    if (productCategoryId != null && productCategoryId.length() > 0) {
+        prodView.addMemberEntity("PRCA", "ProductCategoryMember");
+        prodView.addViewLink("PRFA", "PRCA", Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
+        prodView.addAlias("PRCA", "productCategoryId");
+        conditionMap.put("productCategoryId", productCategoryId);
+    }
+
+    EntityCondition whereCondition = new EntityFieldMap(conditionMap, EntityOperator.AND);
+
+    boolean beganTransaction = false;
+    List prods = null;
+    try {
+        beganTransaction = TransactionUtil.begin();
+        prodsEli = delegator.findListIteratorByCondition(prodView, whereCondition, null, null, UtilMisc.toList("productId"), null);
+        prods = prodsEli.getCompleteList();
+        prodsEli.close();
+    } catch (GenericEntityException e) {
+        Debug.logError(e, "Failure in operation, rolling back transaction", "ViewFacilityInventoryByProduct");
+        try {
+            // only rollback the transaction if we started one...
+            TransactionUtil.rollback(beganTransaction);
+        } catch (GenericEntityException e2) {
+            Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), "ViewFacilityInventoryByProduct");
+        }
+        // after rolling back, rethrow the exception
+        throw e;
+    } finally {
+    // only commit the transaction if we started one... this will throw an exception if it fails
+    TransactionUtil.commit(beganTransaction);
 }
 
-if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
+    prodsIt = prods.iterator();
+    rows = new ArrayList();
+
+    while (prodsIt.hasNext()) {
+        oneProd = prodsIt.next();
+        contextInput = UtilMisc.toMap("productId",oneProd.getString("productId"), "facilityId", facilityId);
+        resultOutput = dispatcher.runSync("getInventoryAvailableByFacility",contextInput);
+        oneInventory = new HashMap();
+        oneInventory.put("productId", oneProd.getString("productId"));
+        oneInventory.put("minimumStock", oneProd.getString("minimumStock"));
+        oneInventory.put("reorderQuantity", oneProd.getString("reorderQuantity"));
+        oneInventory.put("daysToShip", oneProd.getString("daysToShip"));
+        oneInventory.put("totalQuantityOnHand", resultOutput.get("quantityOnHandTotal"));
+        oneInventory.put("totalAvailableToPromise", resultOutput.get("availableToPromiseTotal"));
+        rows.add(oneInventory);
+    }
+
+    context.put("inventoryByProduct", rows);
 }
-if (facilityId != null) context.put("facilityId", facilityId);
-GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
-if (facility != null) context.put("facility", facility);
-
-List prods = delegator.findByAnd("ProductFacility", UtilMisc.toMap("facilityId", facilityId));
-prodsIt = prods.iterator();
-rows = new ArrayList();
-
-while (prodsIt.hasNext()) {
-    oneProd = prodsIt.next();
-    contextInput = UtilMisc.toMap("productId",oneProd.getString("productId"), "facilityId", facilityId);
-    resultOutput = dispatcher.runSync("getInventoryAvailableByFacility",contextInput);
-    oneInventory = new HashMap();
-    oneInventory.put("productId", oneProd.getString("productId"));
-    oneInventory.put("minimumStock", oneProd.getString("minimumStock"));
-    oneInventory.put("reorderQuantity", oneProd.getString("reorderQuantity"));
-    oneInventory.put("daysToShip", oneProd.getString("daysToShip"));
-    oneInventory.put("totalQuantityOnHand", resultOutput.get("quantityOnHandTotal"));
-    oneInventory.put("totalAvailableToPromise", resultOutput.get("availableToPromiseTotal"));
-    rows.add(oneInventory);
-}
-
-HtmlFormWrapper inventoryWrapper = new HtmlFormWrapper("/facility/FacilityForms.xml", "ListFacilityInventoryByProduct", request, response);
-inventoryWrapper.putInContext("inventoryByProduct", rows);
-inventoryWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-context.put("inventoryWrapper", inventoryWrapper);
-context.put("inventoryRows", rows);

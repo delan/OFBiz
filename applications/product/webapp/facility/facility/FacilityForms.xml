@@ -23,6 +23,30 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <form name="FindFacilityInventoryByProduct" type="single" 
+            target="ViewFacilityInventoryByProduct" title="" 
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="facilityId"><hidden/></field>
+        <field name="action"><hidden value="SEARCH"/></field>
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductType" description="${description}"> <!-- [${productTypeId}] -->
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productCategoryId" title="${uiLabelMap.ProductCategory}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductCategory" key-field-name="productCategoryId" description="${description} [${productCategoryId}]">
+                    <entity-constraint name="showInSelect"  value="N" operator="not-equals"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
     <form name="ListFacilityInventoryByProduct" type="list" 
             target="" title="" list-name="inventoryByProduct"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">

@@ -72,6 +72,40 @@
         </section>
     </screen>
 
+    <screen name="ViewFacilityInventoryByProduct">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditFacilityInventoryItems"/>
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="EditFacilityInventoryItems"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="productTypeId" from-field="parameters.productTypeId"/>
+                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/ViewFacilityInventoryByProduct.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFacilityDecorator">
+                    <decorator-section name="body">
+
+                        <container>
+                            <label style="head1">Inventory Availability By Product for:</label>
+                            <label style="head2">${facility.facilityName} [${uiLabelMap.CommonId}:${facilityId}]</label>
+                        </container>
+                        <container>
+                            <link target="EditFacility" text="[${uiLabelMap.ProductNewFacility}]" style="buttontext"/>
+                            <link target="EditFacilityInventoryItems?facilityId=${facilityId}" text="[${uiLabelMap.ProductInventoryItems}]" style="buttontext"/>
+                        </container>
+
+                        <include-form name="FindFacilityInventoryByProduct" location="component://product/webapp/facility/facility/FacilityForms.xml"/>
+                        <include-form name="ListFacilityInventoryByProduct" location="component://product/webapp/facility/facility/FacilityForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="PicklistOptions">
         <section>
             <actions>
