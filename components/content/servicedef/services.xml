@@ -147,6 +147,7 @@
         <attribute mode="IN" name="statusId" optional="true" type="String"/>
         <attribute mode="IN" name="privilegeEnumId" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionStatus" optional="true" type="String"/>
+        <attribute mode="OUT" name="permissionRecorder" optional="true" type="org.ofbiz.content.content.PermissionRecorder"/>
     </service>
     <service name="findRelatedContent" default-entity-name="Content" engine="java"
             location="org.ofbiz.content.content.ContentServices.xml" invoke="findRelatedContent" auth="true">
@@ -182,7 +183,10 @@
         <attribute mode="IN" name="privilegeEnumId" optional="true" type="String"/>
         <attribute mode="IN" name="entityOperation" optional="true" type="String"/>
         <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
+        <attribute mode="IN" name="contentAssocPredicateId" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionStatus" optional="true" type="String"/>
+        <attribute mode="OUT" name="permissionRecorderTo" optional="true" type="org.ofbiz.content.content.PermissionRecorder"/>
+        <attribute mode="OUT" name="permissionRecorder" optional="true" type="org.ofbiz.content.content.PermissionRecorder"/>
     </service>
     <service name="assocContent"
         default-entity-name="ContentAssoc"
@@ -207,6 +211,9 @@
         <description>Create a ContentAssoc</description>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
     </service>
     <service name="updateContentAssoc" default-entity-name="ContentAssoc" engine="java"
@@ -214,12 +221,18 @@
         <description>Update a ContentAssoc</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
     </service>
     <service name="removeContentAssoc" default-entity-name="ContentAssoc" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml" invoke="removeContentAssoc" auth="true">
         <description>Remove ContentAssoc</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
     </service>
 
@@ -1084,6 +1097,29 @@
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
+    </service>
+
+    <service name="getAssocAndContentAndDataResourceCache" default-entity-name="ContentAssocDataResourceViewFrom"
+            engine="java"
+            location="org.ofbiz.content.content.ContentServicesComplex"
+            invoke="getAssocAndContentAndDataResourceCache" auth="false">
+        <description>Get a ContentAssocDataResourceView</description>
+        <auto-attributes entity-name="ContentAssocDataResourceViewFrom" include="all"
+            mode="OUT" optional="true">
+            <exclude field-name="contentIdStart"/>
+        </auto-attributes>
+        <attribute mode="IN" name="assocTypes" optional="true" type="List"/>
+        <attribute mode="IN" name="contentTypes" optional="true" type="List"/>
+        <attribute mode="IN" name="mapKey" optional="true" type="String"/>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="IN" name="direction" optional="true" type="String"/>
+        <attribute mode="IN" name="fromDateStr" optional="true" type="String"/>
+        <attribute mode="IN" name="thruDateStr" optional="true" type="String"/>
+        <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
+        <attribute mode="IN" name="thruDate" optional="true" type="Timestamp"/>
+        <attribute name="nullThruDatesOnly" type="Boolean" mode="IN" optional="true"/>
+        <attribute mode="IN" name="contentAssocPredicateId" optional="true" type="String"/>
+        <attribute mode="OUT" name="entityList" optional="true" type="List"/>
     </service>
 
     <service name="getAssocAndContentAndDataResource" default-entity-name="ContentAssocDataResourceViewFrom"
