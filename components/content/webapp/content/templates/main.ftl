@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      3.0
 -->
 
@@ -35,23 +35,24 @@
     <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
+    <link rel='stylesheet' href='<@ofbizContentUrl>/content/images/wrap.css</@ofbizContentUrl>' type='text/css'>    
 <#assign primaryHTMLField= page.getProperty("primaryHTMLField")?if_exists />
 <#assign secondaryHTMLField= page.getProperty("secondaryHTMLField")?if_exists />
 <#if primaryHTMLField?exists && (primaryHTMLField?length >0)>
     <script type="text/javascript" language="javascript"> 
-      _editor_url = "/content/images/htmlarea/"; // omit the final slash 
+      _editor_url = "/images/htmlarea/"; // omit the final slash 
     </script> 
 
-    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/htmlarea.js</@ofbizContentUrl>' 
+    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/htmlarea.js</@ofbizContentUrl>' 
                                                        type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/lang/en.js</@ofbizContentUrl>' 
+    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/lang/en.js</@ofbizContentUrl>' 
                                                        type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/dialog.js</@ofbizContentUrl>' 
+    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/dialog.js</@ofbizContentUrl>' 
                                                        type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>' 
+    <script language='javascript' src='<@ofbizContentUrl>/images/htmlarea/popupwin.js</@ofbizContentUrl>' 
                                                        type='text/javascript'></script>
     <style type="text/css">
-        @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
+        @import url(<@ofbizContentUrl>/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
     
         html, body {
           font-family: Verdana,sans-serif;
@@ -92,6 +93,55 @@
                 if (!obj_caller) return;
                 window.close();
                 obj_caller.target.value = value;
+        }
+        // function refreshes caller after posting new entry
+        function refresh_caller(value) {
+            var str = "/postSubContent";
+            <#assign separator="?"/>
+            <#if requestAttributes.contentId?exists>
+                str += '${separator}';
+                str += "contentId=" + "${requestAttributes.contentId}";
+                <#assign separator="&"/>
+            </#if>
+            <#if requestAttributes.mapKey?exists>
+                str += '${separator}';
+                str += "mapKey=" + "${requestAttributes.mapKey}";
+                <#assign separator="&"/>
+            </#if>
+                str += '${separator}';
+                str += value;
+            var requestStr = '"<@ofbizUrl>"' + escape(str)</@ofbizUrl> + '"';
+
+            window.opener.replace(requestStr);
+        }
+    </script>
+
+    <script language="JavaScript">
+        function lookupSubContent (viewName, contentId, mapKey, subDataResourceTypeId, subMimeTypeId) {
+	    var viewStr = viewName;
+            var my=20;
+            var mx=20;
+            var separator = "?";
+            if (contentId != null && (contentId.length > 0)) {
+                viewStr += separator + "contentIdTo=" + contentId;
+                separator = "&";
+            }
+            if (mapKey != null && mapKey.length > 0) {
+                viewStr += separator + "mapKey=" + mapKey;
+                separator = "&";
+            }
+            if (subDataResourceTypeId != null && subDataResourceTypeId.length > 0) {
+                viewStr += separator + "drDataResourceTypeId=" + subDataResourceTypeId;
+                separator = "&";
+            }
+            if (subMimeTypeId != null && subMimeTypeId.length > 0) {
+                viewStr += separator + "drMimeTypeId=" + subMimeTypeId;
+            }
+	    var obj_lookupwindow = window.open(viewStr, 'FieldLookup', 
+                'width=700,height=550,scrollbars=yes,status=no,top='
+                  +my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+	    obj_lookupwindow.opener = window;
+            obj_lookupwindow.focus();
         }
     </script>
 
@@ -136,7 +186,7 @@ ${pages.get("/includes/appbar.ftl")}
             <#assign subMenu=page.getProperty("subMenu")?if_exists />
             <#if subMenu?exists && (0 < subMenu?length ) >${pages.get(subMenu)}</#if>
             <#assign entityName= page.getProperty("entityName")?if_exists />
-            <#if entityName?exists>${entityName}</#if>
+            <#if entityName?exists><div class="head1">${entityName}</div></#if>
             <!--<hr align="left" width="25%" />-->
             <#assign operationTitle=page.getProperty("operationTitle")?if_exists />
             <#if operationTitle?exists>${operationTitle}</#if>
