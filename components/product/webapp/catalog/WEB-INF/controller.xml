@@ -1107,6 +1107,12 @@
         <response name="success" type="view" value="EditProductPromoCode"/>
         <response name="error" type="view" value="EditProductPromoCode"/>
     </request-map>
+    <request-map uri="createProductPromoCodeSet">
+    	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="createProductPromoCodeSet"/>
+    	<response name="success" type="view" value="EditProductPromoCode"/>
+        <response name="error" type="view" value="EditProductPromoCode"/>
+    </request-map>
 
     <!-- ================ Product Store Requests ============= -->
     <request-map uri="FindProductStore">
