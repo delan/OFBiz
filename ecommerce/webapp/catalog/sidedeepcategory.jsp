@@ -3,7 +3,7 @@
 <%@ page import="org.ofbiz.commonapp.product.category.*, org.ofbiz.ecommerce.catalog.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 
-<%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", CatalogWorker.getCatalogTopCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)));%>
+<%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", CatalogWorker.getCatalogTopCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)), true);%>
 <%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));%>
 <%CategoryWorker.setTrail(pageContext, curCategoryId);%>
 <BR>

@@ -9,7 +9,7 @@
                                 request.getParameter("TOP_CATEGORY") : 
                                 UtilProperties.getPropertyValue(application.getResource("/WEB-INF/catalog.properties"), "top.category.default");%>
 <%String currentTopCategoryId = CategoryWorker.getCatalogTopCategory(pageContext, defaultTopCategoryId);%>
-<%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", currentTopCategoryId);%>
+<%CategoryWorker.getRelatedCategories(pageContext, "topLevelList", currentTopCategoryId, false);%>
 <%GenericValue currentTopCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", currentTopCategoryId));%>
 <%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("PRODUCT_CATEGORY_ID"));%>
 <%CategoryWorker.setTrail(pageContext, curCategoryId);%>
@@ -81,7 +81,7 @@ public static void printSubCategories(GenericValue pcategory, GenericValue categ
 
     if (CategoryWorker.checkTrailItem(pageContext, category.getString("productCategoryId")) || 
             (curcatid != null && curcatid.equals(category.getString("productCategoryId")))) {
-        List subCatList = CategoryWorker.getRelatedCategoriesRet(pageContext, "subCatList", category.getString("productCategoryId"));
+        List subCatList = CategoryWorker.getRelatedCategoriesRet(pageContext, "subCatList", category.getString("productCategoryId"), false);
         if (subCatList != null && subCatList.size() > 0) {
             Iterator iter = subCatList.iterator();
             while (iter.hasNext()) {

@@ -390,7 +390,7 @@ public class CatalogWorker {
 
         if (CategoryWorker.checkTrailItem(pageContext, category.getString("productCategoryId")) || 
                 (curcatid != null && curcatid.equals(category.getString("productCategoryId")))) {
-            List subCatList = CategoryWorker.getRelatedCategoriesRet(pageContext, "subCatList", category.getString("productCategoryId"));
+            List subCatList = CategoryWorker.getRelatedCategoriesRet(pageContext, "subCatList", category.getString("productCategoryId"), true);
             if (subCatList != null && subCatList.size() > 0) {
                 Iterator iter = subCatList.iterator();
                 while (iter.hasNext()) {

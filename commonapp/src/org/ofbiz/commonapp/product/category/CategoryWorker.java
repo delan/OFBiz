@@ -240,7 +240,7 @@ public class CategoryWorker {
         pageContext.setAttribute(attributeName, results);
     }
 
-    public static void getRelatedCategories(PageContext pageContext, String attributeName) {
+    public static void getRelatedCategories(PageContext pageContext, String attributeName, boolean limitView) {
         ServletRequest request = pageContext.getRequest();
         String requestId = null;
         requestId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"),
@@ -249,16 +249,16 @@ public class CategoryWorker {
         if (requestId.equals(""))
             return;
         Debug.logInfo("[CatalogHelper.getRelatedCategories] RequestID: " + requestId);
-        getRelatedCategories(pageContext, attributeName, requestId);
+        getRelatedCategories(pageContext, attributeName, requestId, limitView);
     }
 
-    public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId) {
-        ArrayList categories = getRelatedCategoriesRet(pageContext, attributeName, parentId);
+    public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId, boolean limitView) {
+        ArrayList categories = getRelatedCategoriesRet(pageContext, attributeName, parentId, limitView);
         if (categories.size() > 0)
             pageContext.setAttribute(attributeName, categories);
     }
     
-    public static ArrayList getRelatedCategoriesRet(PageContext pageContext, String attributeName, String parentId) {
+    public static ArrayList getRelatedCategoriesRet(PageContext pageContext, String attributeName, String parentId, boolean limitView) {
         ArrayList categories = new ArrayList();
         ServletRequest request = pageContext.getRequest();
 
@@ -270,6 +270,9 @@ public class CategoryWorker {
             rollups = delegator.findByAndCache("ProductCategoryRollup",
                                                UtilMisc.toMap("parentProductCategoryId",parentId),
                                                UtilMisc.toList("sequenceNum"));
+            if (limitView) {
+                rollups = EntityUtil.filterByDate(rollups);
+            }
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             rollups = null;
