@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.25 2004/04/20 21:01:17 byersa Exp $
+ * $Id: ContentWorker.java,v 1.26 2004/05/11 14:42:47 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @since 2.2
  * 
  *  
@@ -633,9 +633,16 @@ public class ContentWorker {
             contentIdOtherField = "contentId";
         }
         
-            //if (Debug.infoOn()) Debug.logInfo("getContentAncestry, contentId:" + contentId, "");
+        if (Debug.infoOn()) Debug.logInfo("getContentAncestry, contentId:" + contentId, "");
+        if (Debug.infoOn()) Debug.logInfo("getContentAncestry, contentAssocTypeId:" + contentAssocTypeId, "");
+        Map andMap = null;
+        if (UtilValidate.isEmpty(contentAssocTypeId)) {
+            andMap = UtilMisc.toMap(contentIdField, contentId);
+        } else {
+            andMap = UtilMisc.toMap(contentIdField, contentId, "contentAssocTypeId", contentAssocTypeId);
+        }
         try {
-            List lst = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap(contentIdField, contentId, "contentAssocTypeId", contentAssocTypeId));
+            List lst = delegator.findByAndCache("ContentAssoc", andMap);
             //if (Debug.infoOn()) Debug.logInfo("getContentAncestry, lst:" + lst, "");
             List lst2 = EntityUtil.filterByDate(lst);
             //if (Debug.infoOn()) Debug.logInfo("getContentAncestry, lst2:" + lst2, "");
@@ -649,6 +656,28 @@ public class ContentWorker {
             return;
         }
         return;
+    }
+
+    public static List getContentAncestryNodeTrail(GenericDelegator delegator, String contentId, String contentAssocTypeId, String direction) throws GenericEntityException {
+
+         List contentAncestorList = new ArrayList();
+         List nodeTrail = new ArrayList();
+         getContentAncestry(delegator, contentId, contentAssocTypeId, direction, contentAncestorList);
+         Iterator contentAncestorListIter = contentAncestorList.iterator(); 
+         while (contentAncestorListIter.hasNext()) {
+             GenericValue value = (GenericValue) contentAncestorListIter.next();
+             Map thisNode = FreeMarkerWorker.makeNode(value);
+             nodeTrail.add(thisNode);
+         }
+         return nodeTrail;
+    }
+
+    public static String getContentAncestryNodeTrailCsv(GenericDelegator delegator, String contentId, String contentAssocTypeId, String direction) throws GenericEntityException {
+
+         List contentAncestorList = new ArrayList();
+         getContentAncestry(delegator, contentId, contentAssocTypeId, direction, contentAncestorList);
+         String csv = StringUtil.join(contentAncestorList, ",");
+         return csv;
     }
 
     public static void getContentAncestryValues(GenericDelegator delegator, String contentId, String contentAssocTypeId, String direction, List contentAncestorList) throws GenericEntityException {

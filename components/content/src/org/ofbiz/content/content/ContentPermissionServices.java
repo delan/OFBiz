@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.17 2004/05/03 14:01:34 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.18 2004/05/11 14:42:47 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -143,28 +143,42 @@ public class ContentPermissionServices {
         String entityAction = (String) context.get("entityOperation");
         if (entityAction == null) entityAction = "_ADMIN";
 
-
-        Map results = checkPermission( content, statusId,
-                                      userLogin, passedPurposes,
-                                      targetOperations, passedRoles,
-                                      delegator, security, entityAction, privilegeEnumId);
+        String quickCheckContentId = (String) context.get("quickCheckContentId");
+        Map results = checkPermission( content, statusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator, security, entityAction, privilegeEnumId, quickCheckContentId);
                 //Debug.logInfo("results(b):" + results, "");
                 PermissionRecorder r = (PermissionRecorder)results.get("permissionRecorder");
                 //Debug.logInfo("recorder(b):" + r, "");
+/*
+        String permissionStatus = null;
+        String quickCheckContentId = (String) context.get("quickCheckContentId");
+        if (UtilValidate.isNotEmpty(quickCheckContentId)) {
+            GenericValue quickCheckContent = null;
+            try {
+                quickCheckContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", quickCheckContentId); 
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("Error getting quickCheck content: " + e.toString());
+            }
+             results = checkPermission( quickCheckContent, statusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator, security, entityAction, privilegeEnumId);
+             permissionStatus = (String)results.get("permissionStatus");
+        }
+
+        if (results == null || permissionStatus == null || !permissionStatus.equals("granted")) {
+            results = checkPermission( content, statusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator, security, entityAction, privilegeEnumId);
+                //Debug.logInfo("results(b):" + results, "");
+                PermissionRecorder r = (PermissionRecorder)results.get("permissionRecorder");
+                //Debug.logInfo("recorder(b):" + r, "");
+        }
+*/
         return results;
     }
 
-    public static Map checkPermission(GenericValue content, String statusId,
-                                      GenericValue userLogin, List passedPurposes,
-                                      List targetOperations, List passedRoles,
-                                      GenericDelegator delegator ,
-                                      Security security, String entityAction
+    public static Map checkPermission(GenericValue content, String statusId, GenericValue userLogin, List passedPurposes, List targetOperations, List passedRoles, GenericDelegator delegator , Security security, String entityAction
         ) {
              String privilegeEnumId = null;
              return checkPermission( content, statusId,
                                       userLogin, passedPurposes,
                                       targetOperations, passedRoles,
-                                      delegator, security, entityAction, privilegeEnumId);
+                                      delegator, security, entityAction, privilegeEnumId, null);
         }
 
     public static Map checkPermission(GenericValue content, String statusId,
@@ -172,7 +186,7 @@ public class ContentPermissionServices {
                                       List targetOperations, List passedRoles,
                                       GenericDelegator delegator ,
                                       Security security, String entityAction,
-                                      String privilegeEnumId
+                                      String privilegeEnumId, String quickCheckContentId
         ) {
              List statusList = null;
              if (statusId != null) {
@@ -181,7 +195,7 @@ public class ContentPermissionServices {
              return checkPermission( content, statusList,
                                       userLogin, passedPurposes,
                                       targetOperations, passedRoles,
-                                      delegator, security, entityAction, privilegeEnumId);
+                                      delegator, security, entityAction, privilegeEnumId, quickCheckContentId);
         }
 
     public static Map checkPermission(GenericValue content, List statusList,
@@ -190,6 +204,20 @@ public class ContentPermissionServices {
                                       GenericDelegator delegator ,
                                       Security security, String entityAction,
                                       String privilegeEnumId
+        ) {
+             return checkPermission( content, statusList,
+                                      userLogin, passedPurposes,
+                                      targetOperations, passedRoles,
+                                      delegator, security, entityAction, privilegeEnumId, null);
+     }
+
+
+    public static Map checkPermission(GenericValue content, List statusList,
+                                      GenericValue userLogin, List passedPurposes,
+                                      List targetOperations, List passedRoles,
+                                      GenericDelegator delegator ,
+                                      Security security, String entityAction,
+                                      String privilegeEnumId, String quickCheckContentId
         ) {
 
         //Debug.logInfo("passedPurposes(c):" + passedPurposes, "");
@@ -295,16 +323,32 @@ public class ContentPermissionServices {
                 result.put("roleTypeList", roleIds);
 */
 
-            // This is a recursive query that looks for any "owner" content in the 
-            // ancestoral path that might have ContentRole associations that
-            // make a ContentPurposeOperation condition match.
-            Map thisResult = checkPermissionWithRoles(content, purposeIds, passedRoles, targetOperations, purposeOperations, userLogin, delegator, statusList, privilegeEnumId, recorder );
-            result.put("roleTypeList", thisResult.get("roleTypeList"));
-            result.put("permissionStatus", thisResult.get("permissionStatus"));
+            Map thisResult = null;
+            if (UtilValidate.isNotEmpty(quickCheckContentId)) {
+                GenericValue quickCheckContent = null;
+                try {
+                    quickCheckContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", quickCheckContentId)); 
+                } catch (GenericEntityException e) {
+                    return ServiceUtil.returnError("Error getting quickCheck content: " + e.toString());
+                }
+                thisResult = checkPermissionWithRoles(quickCheckContent, purposeIds, passedRoles, targetOperations, purposeOperations, userLogin, delegator, statusList, privilegeEnumId, recorder );
+                result.put("roleTypeList", thisResult.get("roleTypeList"));
+                result.put("permissionStatus", thisResult.get("permissionStatus"));
+                permissionStatus = (String)thisResult.get("permissionStatus");
+            }
+    
+            if (permissionStatus == null || !permissionStatus.equals("granted")) {
+                // This is a recursive query that looks for any "owner" content in the 
+                // ancestoral path that might have ContentRole associations that
+                // make a ContentPurposeOperation condition match.
+                thisResult = checkPermissionWithRoles(content, purposeIds, passedRoles, targetOperations, purposeOperations, userLogin, delegator, statusList, privilegeEnumId, recorder );
+                result.put("roleTypeList", thisResult.get("roleTypeList"));
+                result.put("permissionStatus", thisResult.get("permissionStatus"));
+            }
         }
-                //Debug.logInfo("result(a):" + result, "");
-                PermissionRecorder r = (PermissionRecorder)result.get("permissionRecorder");
-                //Debug.logInfo("recorder(a):" + r, "");
+                    //Debug.logInfo("result(a):" + result, "");
+                    PermissionRecorder r = (PermissionRecorder)result.get("permissionRecorder");
+                    //Debug.logInfo("recorder(a):" + r, "");
         return result;
 
     }
@@ -624,7 +668,7 @@ public class ContentPermissionServices {
             roleList.add("_OWNER_");
         }
     
-        Map resultsMap = checkPermission( null, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId);
+        Map resultsMap = checkPermission( null, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId, null);
         boolean isMatch = false;
         String permissionStatus = (String)resultsMap.get("permissionStatus");
         if(permissionStatus != null && permissionStatus.equals("granted") ) isMatch = true;
@@ -633,12 +677,12 @@ public class ContentPermissionServices {
         boolean isMatchFrom = false;
         if(!isMatch){
             roleList = (List)resultsMap.get("roleTypeList");
-            resultsMap = checkPermission( contentTo, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId);
+            resultsMap = checkPermission( contentTo, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId, null);
             permissionStatus = (String)resultsMap.get("permissionStatus");
             if(permissionStatus != null && permissionStatus.equals("granted") ) isMatchTo = true;
             results.putAll(resultsMap);
 
-            resultsMap = checkPermission( contentFrom, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId);
+            resultsMap = checkPermission( contentFrom, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId, null);
             permissionStatus = (String)resultsMap.get("permissionStatus");
             if(permissionStatus != null && permissionStatus.equals("granted") ) isMatchFrom = true;
             results.put("roleTypeList", resultsMap.get("roleTypeList"));
