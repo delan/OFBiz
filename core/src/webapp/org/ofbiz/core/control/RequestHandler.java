@@ -199,7 +199,7 @@ public class RequestHandler implements Serializable {
             request.setAttribute(SiteDefs.CURRENT_VIEW, tempView);
 
             // check the type of view (for velocity)
-            if (rm.getViewType(tempView).equals("velocity"))
+            if (rm.getViewType(tempView) != null && rm.getViewType(tempView).equals("velocity"))
                 velocity = true;
 
             tempView = rm.getViewPage(tempView);
