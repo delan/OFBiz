@@ -61,6 +61,7 @@
       <field name="orderAdjustmentTypeId" type="id"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
+      <field name="comments" type="comment"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="amountPerQuantity" type="currency-amount"></field>
       <field name="percentage" type="floating-point"></field>
