@@ -72,6 +72,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <field-type name="sapdb" loader="mainfile" location="fieldtypesapdb.xml"/>
     <field-type name="sybase" loader="mainfile" location="fieldtypesybase.xml"/>
     <field-type name="firebird" loader="mainfile" location="fieldtypefirebird.xml"/>
+    <field-type name="mssql" loader="mainfile" location="fieldtypemssql.xml"/>
 
     <!--
     For DAO/JDBC Helper: Tries:
@@ -214,6 +215,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-on-start="false"
             add-missing-on-start="false"
             join-style="ansi">
+        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
+        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
                 jdbc-driver="org.firebirdsql.jdbc.FBDriver"
                 jdbc-uri="jdbc:firebirdsql://localhost:3050//opt/interbase/data/ofbiz.gdb"
@@ -223,7 +226,25 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localfirebird" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
         <!-- <tyrex-dataSource dataSource-name="firebird" isolation-level="ReadCommitted"/>  -->    
     </datasource>
-    
+
+    <datasource name="localmssql"
+            helper-class="org.ofbiz.core.entity.GenericHelperDAO"
+            field-type-name="mssql"
+            check-on-start="true"
+            add-missing-on-start="true"
+            join-style="ansi"
+            use-fk-initially-deferred="false">
+        <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
+        <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <inline-jdbc
+                jdbc-driver="org.ofbiz.jdbc.sqlserver.SQLServerDriver"
+                jdbc-uri="jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=ofbiz"
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"
+                isolation-level="Serializable"/>
+        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localmssql" isolation-level="ReadCommitted"/> <!-- Orion Style JNDI name -->
+    </datasource>
+     
     <datasource name="localp6spy"
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
             field-type-name="oracle"
