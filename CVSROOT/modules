@@ -25,7 +25,7 @@
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
 
-root -d . /setup/ofbiz 
+root -d . setup/ofbiz *
 base -a lib core commonapp webtools setup 
 apps -a ecommerce catalog ordermgr partymgr workeffort accounting facility marketing content
 site -a website
