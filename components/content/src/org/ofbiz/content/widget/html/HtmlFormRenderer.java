@@ -399,6 +399,20 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(idName);
             buffer.append('"');
         }
+        
+        int otherFieldSize = dropDownField.getOtherFieldSize();
+        String otherFieldName = modelFormField.getName() + "_OTHER";
+        if (otherFieldSize > 0) {
+            //buffer.append(" onchange=\"alert('ONCHANGE, process_choice:' + process_choice)\"");
+            //buffer.append(" onchange='test_js()' ");
+            buffer.append(" onchange=\"process_choice(this,document.");
+            buffer.append(modelForm.getName());
+            buffer.append(".");
+            buffer.append(otherFieldName);
+            buffer.append(")\" "); 
+            /*
+            */
+        }
 
 
         buffer.append(" size=\"1\">");
@@ -453,6 +467,41 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append("</select>");
 
+        // Adapted from work by Yucca Korpela
+        // http://www.cs.tut.fi/~jkorpela/forms/combo.html
+        if (otherFieldSize > 0) {
+            
+            buffer.append("<noscript>");
+            buffer.append("<input type='text' name='");
+            buffer.append(otherFieldName);
+            buffer.append("'/> ");
+            buffer.append("</noscript>");
+            buffer.append("\n<script type='text/javascript' language='JavaScript'><!--");
+            buffer.append("\ndisa = ' disabled';");
+            buffer.append("\nif(other_choice(document.");
+            buffer.append(modelForm.getName());
+            buffer.append(".");
+            buffer.append(modelFormField.getName());
+            buffer.append(")) disa = '';");
+            buffer.append("\ndocument.write(\"<input type=");
+            buffer.append("'text' name='");
+            buffer.append(otherFieldName);
+            buffer.append("' size='");
+            buffer.append(otherFieldSize);
+            buffer.append("' ");
+            buffer.append("\" +disa+ \" onfocus='check_choice(document.");
+            buffer.append(modelForm.getName());
+            buffer.append(".");
+            buffer.append(modelFormField.getName());
+            buffer.append(")'/>\");");
+            buffer.append("\nif(disa && document.styleSheets)");
+            buffer.append(" document.");
+            buffer.append(modelForm.getName());
+            buffer.append(".");
+            buffer.append(otherFieldName);
+            buffer.append(".style.visibility  = 'hidden';");
+            buffer.append("\n//--></script>");
+        }
         this.makeHyperlinkString(buffer, dropDownField.getSubHyperlink(), context);
 
         this.appendTooltip(buffer, context, modelFormField);

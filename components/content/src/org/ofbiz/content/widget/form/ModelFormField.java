@@ -1162,6 +1162,14 @@ public class ModelFormField {
     public boolean getRequiredField() {
         return this.requiredField;
     }
+    
+    /**
+     * @param ModelForm
+     */
+    public void setModelForm(ModelForm modelForm) {
+        this.modelForm = modelForm;
+    }
+
 
     public static abstract class FieldInfo {
 
@@ -2212,6 +2220,7 @@ public class ModelFormField {
         protected String current;
         protected FlexibleStringExpander currentDescription;
         protected SubHyperlink subHyperlink;
+        protected int otherFieldSize = 0;
 
         protected DropDownField() {
             super();
@@ -2231,6 +2240,15 @@ public class ModelFormField {
             this.current = element.getAttribute("current");
             this.allowEmpty = "true".equals(element.getAttribute("allow-empty"));
             this.currentDescription = new FlexibleStringExpander(element.getAttribute("current-description"));
+
+            String sizeStr = element.getAttribute("other-field-size");
+            try {
+                this.otherFieldSize = Integer.parseInt(sizeStr);
+            } catch (Exception e) {
+                if (sizeStr != null && sizeStr.length() > 0) {
+                    Debug.logError("Could not parse the size value of the text element: [" + sizeStr + "], setting to the default of " + this.otherFieldSize, module);
+                }
+            }
 
             Element subHyperlinkElement = UtilXml.firstChildElement(element, "sub-hyperlink");
             if (subHyperlinkElement != null) {
@@ -2278,6 +2296,10 @@ public class ModelFormField {
         }
         public void setSubHyperlink(SubHyperlink newSubHyperlink) {
             this.subHyperlink = newSubHyperlink;
+        }
+        
+        public int getOtherFieldSize() {
+            return this.otherFieldSize;   
         }
     }
 

@@ -481,6 +481,16 @@
             <xs:annotation><xs:documentation>The key to mark as selected when there is no current entry value.</xs:documentation></xs:annotation>
         </xs:attribute>
         <xs:attribute type="xs:string" name="current-description"/>
+        <xs:attribute type="xs:positiveInteger" name="other-field-size" default="0">
+            <xs:annotation><xs:documentation>If non-zero, a text field will conditionally show
+               next to the select control to implement a crude "combo box".
+               In order for this to work there must be a option in the select as:
+              &lt;option key=&quot;_OTHER_&quot; description=&quot;Specify other&quot;/&gt;
+               - with '_OTHER_' being required and any 'description' allowed.
+              In order to use this feature, the javascript code contained in the file:
+              images/webapp/images/combobox.js must be included in the page.
+            </xs:documentation></xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="file" substitutionGroup="AllFields">
         <xs:complexType>

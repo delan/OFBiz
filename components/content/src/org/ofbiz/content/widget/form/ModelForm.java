@@ -222,6 +222,13 @@ public class ModelForm {
                 this.fieldMap = parent.fieldMap;
                 this.separateColumns = parent.separateColumns;
                 this.targetType = parent.targetType;
+                
+                // Update the parent's fields with this form
+                Iterator fieldListIter = this.fieldList.iterator();
+                while (fieldListIter.hasNext()) {
+                    ModelFormField childField = (ModelFormField)fieldListIter.next();
+                    childField.setModelForm(this);
+                }
             }
         }
 
