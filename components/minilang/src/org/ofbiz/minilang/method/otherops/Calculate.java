@@ -24,6 +24,8 @@
 package org.ofbiz.minilang.method.otherops;
 
 import java.util.*;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 
 import org.w3c.dom.*;
 import org.ofbiz.base.util.*;
@@ -34,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Calculates a result based on nested calcops.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class Calculate extends MethodOperation {
@@ -49,6 +51,7 @@ public class Calculate extends MethodOperation {
 
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
+    String formatString;
     String typeString;
     Calculate.SubCalc calcops[];
 
@@ -57,6 +60,7 @@ public class Calculate extends MethodOperation {
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
+        formatString = element.getAttribute("decimal-format");
         typeString = element.getAttribute("type");
 
         List calcopElements = UtilXml.childElementList(element);
@@ -104,8 +108,24 @@ public class Calculate extends MethodOperation {
             // Debug.logInfo("main total so far: " + resultValue, module);
         }
 
-        Object resultObj = null;
+        // run the decimal-formatting         
+        if (UtilValidate.isNotEmpty(formatString)) {
+            DecimalFormat df = new DecimalFormat(formatString);
+            try {
+                resultValue = ((Double) df.parse(df.format(resultValue))).doubleValue();
+            } catch (ParseException e) {
+                String errorMessage = "Unable to format [" + formatString + "] result [" + resultValue + "]";
+                Debug.logError(e, errorMessage, module);
+                if (methodContext.getMethodType() == MethodContext.EVENT) {
+                    methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errorMessage);
+                } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                    methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errorMessage);
+                }
+                return false;
+            }
+        }
 
+        Object resultObj = null;
         switch (type) {
         case TYPE_DOUBLE:
             resultObj = new Double(resultValue);
