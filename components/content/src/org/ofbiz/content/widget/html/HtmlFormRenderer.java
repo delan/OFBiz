@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.4 2003/11/05 00:15:48 byersa Exp $
+ * $Id: HtmlFormRenderer.java,v 1.5 2003/11/25 20:55:07 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -468,7 +468,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         // well, I don't know if this will be very useful... but here it is
 
         ModelFormField modelFormField = checkField.getModelFormField();
-        ModelForm modelForm = modelFormField.getModelForm();
+        // never used: ModelForm modelForm = modelFormField.getModelForm();
         String currentValue = modelFormField.getEntry(context);
 
         buffer.append("<span");
