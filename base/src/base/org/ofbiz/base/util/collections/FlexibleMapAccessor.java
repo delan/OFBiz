@@ -37,7 +37,7 @@ import org.ofbiz.base.util.UtilMisc;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class FlexibleMapAccessor {
@@ -261,7 +261,8 @@ public class FlexibleMapAccessor {
             if (this.subMapAccessor != null) {
                 base = this.subMapAccessor.getSubMap(base, forPut);
             }
-            if (this.isListReference) {
+            Object namedObj = base.get(this.extName);
+            if (this.isListReference && namedObj instanceof List) {
                 List lst = (List) base.get(this.extName);
                 if (lst == null) {
                     lst = new LinkedList();
@@ -278,8 +279,8 @@ public class FlexibleMapAccessor {
                 }
                 
                 return extMap;
-            } else {
-                Map extMap = (Map) base.get(this.extName);
+            } else if (namedObj instanceof Map) {
+                Map extMap = (Map) namedObj;
                 
                 // this code creates a new Map if none is missing, but for a get or remove this is a bad idea...
                 if (forPut && extMap == null) {
@@ -287,6 +288,8 @@ public class FlexibleMapAccessor {
                     base.put(this.extName, extMap);
                 }
                 return extMap;
+            } else {
+                return null;
             }
         }
     }
