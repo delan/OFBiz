@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 */
 
@@ -49,7 +49,7 @@ if (cart != null) {
         checkOutPaymentId = cart.getPaymentMethodTypeIds().get(0);
     }
 
-    shippingEstWpr = new ShippingEstimateWrapper(dispatcher, cart);
+    shippingEstWpr = new ShippingEstimateWrapper(dispatcher, cart, 0);
     context.put("shippingEstWpr", shippingEstWpr);
     context.put("carrierShipmentMethodList", shippingEstWpr.getShippingMethods());
 }

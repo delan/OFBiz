@@ -38,7 +38,7 @@ import java.util.Map;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:johan@ibibi.com">Johan Isacsson</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UtilDateTime {
@@ -567,6 +567,7 @@ public class UtilDateTime {
         mth.set(Calendar.HOUR_OF_DAY, 0);
         mth.set(Calendar.MINUTE, 0);
         mth.set(Calendar.SECOND, 0);
+        mth.set(Calendar.MILLISECOND, 0);
         mth.set(Calendar.AM_PM, Calendar.AM);
         return new java.sql.Timestamp(mth.getTime().getTime());
     }

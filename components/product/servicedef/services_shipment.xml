@@ -34,21 +34,13 @@
     
     <service name="quickShipEntireOrder" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipEntireOrder" auth="true">
-        <description>Quick Ships An Entire Order</description>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
-        <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>
-        <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
-    </service>
-    <service name="quickShipEntireOrderMultipleFacilities" engine="simple"
-            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipEntireOrderMultipleFacilities" auth="true">
         <description>Quick Ships An Entire Order Creating One Package Per Facility</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
         <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>
-        <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
+        <!-- A List of Maps, each with a shipmentId,a facilityId, and a shipGroupSeqId for each shipment created -->
+        <attribute name="shipmentShipGroupFacilityList" type="List" mode="OUT" optional="false"/>
     </service>
-
     <service name="quickShipOrderByItem" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipOrderByItem" auth="true">
         <description>Quick Ships An Order By Item</description>
@@ -299,11 +291,11 @@
         <attribute name="shipmentItemSeqId" type="String" mode="OUT" optional="false"/>
         <attribute name="itemIssuanceId" type="String" mode="OUT" optional="false"/>
     </service>
-    <service name="issueOrderItemInventoryResToShipment" engine="simple"
-            location="org/ofbiz/shipment/issuance/IssuanceServices.xml" invoke="issueOrderItemInventoryResToShipment" auth="true">
-        <description>Add an OrderItemInventoryRes to a Shipment - only for sales orders</description>
+    <service name="issueOrderItemShipGrpInvResToShipment" engine="simple"
+            location="org/ofbiz/shipment/issuance/IssuanceServices.xml" invoke="issueOrderItemShipGrpInvResToShipment" auth="true">
+        <description>Add an OrderItemShipGrpInvRes to a Shipment - only for sales orders</description>
         <auto-attributes entity-name="Shipment" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="OrderItemShipGrpInvRes" include="pk" mode="IN" optional="false"/>
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
         <attribute name="shipmentItemSeqId" type="String" mode="OUT" optional="false"/>
         <attribute name="itemIssuanceId" type="String" mode="OUT" optional="false"/>
@@ -470,8 +462,7 @@
     <service name="findStockMovesNeeded" engine="simple"
             location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="findStockMovesNeeded">
         <description>
-            Find all Stock Moves that need to be done
-            
+            Find all Stock Moves that need to be done.
             This service differs from the inventory transfer services in that it does not require 
             sufficient availableToPromise to move the stock, in fact it is generally triggered because
             some promised inventory is in a bulk location and needs to be moved to a pick location.
@@ -484,7 +475,7 @@
     <service name="findStockMovesRecommended" engine="simple"
             location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="findStockMovesRecommended">
         <description>
-            Find all Stock Moves that should be done based on minimum quantities on each Pick/Primary ProductFacilityLocation
+            Find all Stock Moves that should be done based on minimum quantities on each Pick/Primary ProductFacilityLocation.
         </description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="stockMoveHandled" type="Map" mode="IN" optional="true"/>
@@ -494,10 +485,9 @@
     <service name="processPhysicalStockMove" engine="simple"
             location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="processPhysicalStockMove">
         <description>
-            Process a Physical Stock Move from one FacilityLocation to another, in the same Facility
-            
+            Process a Physical Stock Move from one FacilityLocation to another, in the same Facility.
             This service will not only move quantities from one InventoryItem to another but it will
-            also reassign any existing OrderItemInventoryRes records to the new InventoryItem.
+            also reassign any existing OrderItemShipGrpInvRes records to the new InventoryItem.
         </description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>

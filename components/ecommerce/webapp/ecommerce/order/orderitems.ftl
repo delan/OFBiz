@@ -138,12 +138,15 @@
                 <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
                 <#list itemAdjustments as orderItemAdjustment>
                   <tr>
-                    <td align="right" colspan="4">
+                    <td align="right">
                       <div class="tabletext" style='font-size: xx-small;'>
                         <b><i>${requestAttributes.uiLabelMap.EcommerceAdjustment}</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
                       </div>
-                    </td>                    
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                     <td align="right">
                       <div class="tabletext" style='font-size: xx-small;'><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/></div>
                     </td>
@@ -151,6 +154,29 @@
                     <#if maySelectItems?default(false)><td>&nbsp;</td></#if>
                   </tr>
                 </#list>
+
+                <#-- show the order item ship group info -->
+                <#assign orderItemShipGroupAssocs = orderItem.getRelated("OrderItemShipGroupAssoc")?if_exists>
+                <#if orderItemShipGroupAssocs?has_content>
+                  <#list orderItemShipGroupAssocs as shipGroupAssoc>
+                    <#assign shipGroup = shipGroupAssoc.getRelatedOne("OrderItemShipGroup")>
+                    <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress")>
+                    <tr>
+                      <td align="right">
+                        <div class="tabletext" style="font-size: xx-small;"><b><i>Ship Group</i>:</b> [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1}</div>
+                      </td>
+                      <td align="right">
+                        <div class="tabletext" style="font-size: xx-small;">${shipGroupAssoc.quantity?string.number}</div>
+                      </td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </#list>
+                </#if>
+
                </#list>
                <#if orderItems?size == 0 || !orderItems?has_content>
                  <tr><td><font color="red">${requestAttributes.uiLabelMap.OrderSalesOrderLookupFailed}.</font></td></tr>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Order (ShoppingCart) Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <service name="assignItemShipGroup" engine="java" auth="false"
+            location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="assignItemShipGroup">
+        <description>Assign a ShoppingCartItem -> Quantity to a ship group</description>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
+        <attribute name="fromGroupIndex" type="Integer" mode="IN" optional="false"/>
+        <attribute name="toGroupIndex" type="Integer" mode="IN" optional="false"/>
+        <attribute name="itemIndex" type="Integer" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+    </service>
+
+    <service name="setCartShippingOptions" engine="java" auth="false"
+            location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="setShippingOptions">
+        <description>Sets The ShoppingCart Shipping Options</description>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
+        <attribute name="groupIndex" type="Integer" mode="IN" optional="false"/>
+        <attribute name="shippingContactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentMethodString" type="String" mode="IN" optional="false"/>
+        <attribute name="shippingInstructions" type="String" mode="IN" optional="true"/>
+        <attribute name="maySplit" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="isGift" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="giftMessage" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="setCartShippingAddress" engine="java" auth="false"
+            location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="setShippingOptions">
+        <description>Sets The ShoppingCart Shipping Options</description>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
+        <attribute name="groupIndex" type="Integer" mode="IN" optional="false"/>
+        <attribute name="shippingContactMechId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="setCartPaymentOptions" engine="java" auth="false"
+            location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="setPaymentOptions">
+        <description>Sets the ShoppingCart Payment Options</description>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
+        <attribute name="paymentInfoId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="IN" optional="true"/>
+        <attribute name="refNum" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="setCartOtherOptions" engine="java" auth="false"
+            location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="setOtherOptions">
+        <description>Sets the ShoppingCart Other Options (besided payment and shipping)</description>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
+        <attribute name="orderAdditionalEmails" type="String" mode="IN" optional="true"/>
+        <attribute name="correspondingPoId" type="String" mode="IN" optional="true"/>
+    </service>
+</services>

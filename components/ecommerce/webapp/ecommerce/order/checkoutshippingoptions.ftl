@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -137,7 +137,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td valign="top">
-                          <input type='radio' <#if !cart.getMaySplit()?default(false)>checked</#if> name='may_split' value='false'>
+                          <input type='radio' <#if "Y" != cart.getMaySplit()?default("N")>checked</#if> name='may_split' value='false'>
                         </td>
                         <td valign="top">
                           <div class="tabletext">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</div>
@@ -145,7 +145,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td valign="top">
-                          <input <#if cart.getMaySplit()?default(false)>checked</#if> type='radio' name='may_split' value='true'>
+                          <input <#if "Y" == cart.getMaySplit()?default("N")>checked</#if> type='radio' name='may_split' value='true'>
                         </td>
                         <td valign="top">
                           <div class="tabletext">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</div>
@@ -177,8 +177,8 @@ function toggleBillingAccount(box) {
                         <td colspan="2">
                           <div>
                             <span class="head2"><b>${uiLabelMap.OrderIsThisGift}?</b></span>
-                            <input type='radio' <#if cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='true'><span class='tabletext'>${uiLabelMap.CommonYes}</span>
-                            <input type='radio' <#if !cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='false'><span class='tabletext'>${uiLabelMap.CommonNo}</span>
+                            <input type='radio' <#if "Y" == cart.getIsGift()?default("N")>checked</#if> name='is_gift' value='true'><span class='tabletext'>${uiLabelMap.CommonYes}</span>
+                            <input type='radio' <#if "Y" != cart.getIsGift()?default("N")>checked</#if> name='is_gift' value='false'><span class='tabletext'>${uiLabelMap.CommonNo}</span>
                           </div>
                         </td>
                       </tr>

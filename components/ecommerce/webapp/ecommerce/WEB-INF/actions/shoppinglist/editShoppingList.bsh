@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1.1
  */
  
@@ -29,12 +29,17 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
+import org.ofbiz.order.shoppingcart.shipping.*;
+import org.ofbiz.order.shoppinglist.*;
+import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");
 userLogin = session.getAttribute("userLogin");
+party = userLogin.getRelatedOne("Party");
+
 productStoreId = ProductStoreWorker.getProductStoreId(request);
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
 webSiteId = CatalogWorker.getWebSiteId(request);
@@ -64,11 +69,15 @@ if (shoppingListId == null || shoppingListId.equals(""))
 
 // no passed shopping list id default to first list
 if (shoppingListId == null || shoppingListId.length() == 0) {
-    firstList = EntityUtil.getFirst(shoppingLists);
-    if (firstList != null) {
-        shoppingListId = firstList.getString("shoppingListId");
+    shoppingListId = session.getAttribute("currentShoppingListId");
+    if (shoppingListId == null || shoppingListId.length() == 0) {
+        firstList = EntityUtil.getFirst(shoppingLists);
+        if (firstList != null) {
+            shoppingListId = firstList.getString("shoppingListId");
+        }
     }
 }
+session.setAttribute("currentShoppingListId", shoppingListId);
 
 // if we passed a shoppingListId get the shopping list info
 if (shoppingListId != null) {
@@ -147,6 +156,35 @@ if (shoppingListId != null) {
         } else {
             context.put("canView", Boolean.FALSE);
         }
+
+        // auto-reorder info
+        if (shoppingListType != null && "SLT_AUTO_REODR".equals(shoppingListType.getString("shoppingListTypeId"))) {
+            recurrenceVo = shoppingList.getRelatedOne("RecurrenceInfo");
+            context.put("recurrenceInfo", recurrenceVo);
+
+            if (userLogin.getString("partyId").equals(shoppingList.getString("partyId"))) {
+                listCart = ShoppingListServices.makeShoppingListCart(dispatcher, shoppingListId, UtilHttp.getLocale(request));
+
+                // get customer's shipping & payment info
+                context.put("chosenShippingMethod", shoppingList.get("shipmentMethodTypeId") + '@' + shoppingList.get("carrierPartyId"));                
+                context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
+                context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, UtilMisc.toList("paymentMethodTypeId")), true));
+
+                shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shoppingList.get("contactMechId")));
+                if (shipAddress != null) {
+                    listCart = ShoppingListServices.makeShoppingListCart(dispatcher, shoppingListId, UtilHttp.getLocale(request));
+                    if (listCart != null) {
+                        shippingEstWpr = new ShippingEstimateWrapper(dispatcher, listCart, 0);
+                        carrierShipMeths = shippingEstWpr.getShippingMethods();
+                        context.put("listCart", listCart);
+                        context.put("shippingEstWpr", shippingEstWpr);
+                        context.put("carrierShipMethods", carrierShipMeths);
+                    }
+                }
+            }
+        }
+
+
     }
 }
  

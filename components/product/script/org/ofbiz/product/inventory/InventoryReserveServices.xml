@@ -119,6 +119,7 @@
                     <env-to-env env-name="lastNonSerInventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
                     <env-to-env env-name="parameters.orderId" to-env-name="createDetailMap.orderId"/>
                     <env-to-env env-name="parameters.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
+                    <env-to-env env-name="parameters.shipGroupSeqId" to-env-name="createDetailMap.shipGroupSeqId"/>
                     <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
                         <calcop field-name="parameters.quantityNotReserved" operator="negative"/>
                     </calculate>
@@ -139,17 +140,18 @@
                     return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));
                     ]]></call-bsh>
 
-                    <!-- create or update OrderItemInventoryRes record -->
-                    <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="inventoryItemId" map-name="lastNonSerInventoryItem" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantityNotAvailable" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
-                    <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
-                    <clear-field field-name="reserveOiiMap"/>
+                    <!-- create or update OrderItemShipGrpInvRes record -->
+                    <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="shipGroupSeqId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="inventoryItemId" map-name="lastNonSerInventoryItem" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="parameters.quantityNotReserved" to-field-name="reserveOisgirMap.quantity"/>
+                    <field-to-field field-name="parameters.quantityNotReserved" to-field-name="reserveOisgirMap.quantityNotAvailable"/>
+                    <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOisgirMap"/>
+                    <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOisgirMap"/>
+                    <clear-field field-name="reserveOisgirMap"/>
                 <else>
                     <!-- no non-ser inv item, create a non-ser InventoryItem with availableToPromise = -quantityNotReserved -->
                     <make-value entity-name="InventoryItem" value-name="newNonSerInventoryItem"/>
@@ -165,6 +167,7 @@
                     <env-to-env env-name="newNonSerInventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
                     <env-to-env env-name="parameters.orderId" to-env-name="createDetailMap.orderId"/>
                     <env-to-env env-name="parameters.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
+                    <env-to-env env-name="parameters.shipGroupSeqId" to-env-name="createDetailMap.shipGroupSeqId"/>
                     <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
                         <calcop field-name="parameters.quantityNotReserved" operator="negative"/>
                     </calculate>
@@ -185,17 +188,18 @@
                     return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));
                     ]]></call-bsh>
 
-                    <!-- create OrderItemInventoryRes record -->
-                    <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="inventoryItemId" map-name="newNonSerInventoryItem" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantityNotAvailable" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
-                    <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
-                    <clear-field field-name="reserveOiiMap"/>
+                    <!-- create OrderItemShipGrpInvRes record -->
+                    <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="shipGroupSeqId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="inventoryItemId" map-name="newNonSerInventoryItem" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantityNotAvailable" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOisgirMap"/>
+                    <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOisgirMap"/>
+                    <clear-field field-name="reserveOisgirMap"/>
                 </else>
                 </if-not-empty>
 
@@ -230,16 +234,17 @@
                     <string-to-field string="INV_PROMISED" field-name="statusId" map-name="inventoryItem"/>
                     <store-value value-name="inventoryItem"/>
 
-                    <!-- store OrderItemInventoryRes record -->
-                    <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
-                    <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
-                    <calculate field-name="quantity" map-name="reserveOiiMap"><number value="1"/></calculate>
-                    <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
-                    <clear-field field-name="reserveOiiMap"/>
+                    <!-- store OrderItemShipGrpInvRes record -->
+                    <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="shipGroupSeqId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                    <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOisgirMap"/>
+                    <calculate field-name="quantity" map-name="reserveOisgirMap"><number value="1"/></calculate>
+                    <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOisgirMap"/>
+                    <clear-field field-name="reserveOisgirMap"/>
 
                     <calculate field-name="parameters.quantityNotReserved">
                         <calcop field-name="parameters.quantityNotReserved" operator="subtract"><number value="1.0"/></calcop>
@@ -267,16 +272,17 @@
                         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
                         <clear-field field-name="createDetailMap"/>
                         
-                        <!-- create OrderItemInventoryRes record -->
-                        <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                        <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                        <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOiiMap"/>
-                        <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                        <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
-                        <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
-                        <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
-                        <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
-                        <clear-field field-name="reserveOiiMap"/>
+                        <!-- create OrderItemShipGrpInvRes record -->
+                        <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                        <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                        <field-to-field field-name="shipGroupSeqId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                        <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOisgirMap"/>
+                        <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                        <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOisgirMap"/>
+                        <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="reserveOisgirMap"/>
+                        <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOisgirMap"/>
+                        <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOisgirMap"/>
+                        <clear-field field-name="reserveOisgirMap"/>
 
                         <calculate field-name="quantityNotReserved" map-name="parameters">
                             <calcop operator="subtract" field-name="quantityNotReserved" map-name="parameters">
@@ -294,53 +300,58 @@
     </simple-method>
 
     <simple-method method-name="reserveOrderItemInventory" short-description="Reserve Order Item Inventory">
-        <make-value entity-name="OrderItemInventoryRes" value-name="newOiirEntity"/>
-        <set-pk-fields map-name="parameters" value-name="newOiirEntity"/>
-        <find-by-primary-key map-name="newOiirEntity" value-name="checkOiirEntity"/>
-        <if-empty field-name="checkOiirEntity">
-            <!-- create OrderItemInventoryRes record -->
-            <set-nonpk-fields map-name="parameters" value-name="newOiirEntity"/>
+        <make-value entity-name="OrderItemShipGrpInvRes" value-name="newOisgirEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newOisgirEntity"/>
+        <find-by-primary-key map-name="newOisgirEntity" value-name="checkOisgirEntity"/>
+        <if-empty field-name="checkOisgirEntity">
+            <!-- create OrderItemShipGrpInvRes record -->
+            <set-nonpk-fields map-name="parameters" value-name="newOisgirEntity"/>
             <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="createdDatetime" map-name="newOiirEntity"/>
-            <if-empty field-name="reservedDatetime" map-name="newOiirEntity">
-                <env-to-field env-name="nowTimestamp" field-name="reservedDatetime" map-name="newOiirEntity"/>
+            <env-to-field env-name="nowTimestamp" field-name="newOisgirEntity.createdDatetime"/>
+            <if-empty field-name="newOisgirEntity.reservedDatetime">
+                <env-to-field env-name="nowTimestamp" field-name="newOisgirEntity.reservedDatetime"/>
             </if-empty>
-            <create-value value-name="newOiirEntity"/>
+            <create-value value-name="newOisgirEntity"/>
         <else>
-            <calculate field-name="quantity" map-name="checkOiirEntity">
-                <calcop operator="add" field-name="quantity" map-name="checkOiirEntity">
-                    <calcop operator="get" field-name="quantity" map-name="parameters"/>
+            <calculate field-name="checkOisgirEntity.quantity">
+                <calcop operator="add" field-name="checkOisgirEntity.quantity">
+                    <calcop operator="get" field-name="parameters.quantity"/>
                 </calcop>
             </calculate>
-            <calculate field-name="quantityNotAvailable" map-name="checkOiirEntity">
-                <calcop operator="add" field-name="quantityNotAvailable" map-name="checkOiirEntity">
-                    <calcop operator="get" field-name="quantityNotAvailable" map-name="parameters"/>
+            <calculate field-name="checkOisgirEntity.quantityNotAvailable">
+                <calcop operator="add" field-name="checkOisgirEntity">
+                    <calcop operator="get" field-name="parameters"/>
                 </calcop>
             </calculate>
-            <store-value value-name="checkOiirEntity"/>
+            <store-value value-name="checkOisgirEntity"/>
         </else>
         </if-empty>
     </simple-method>
 
     <simple-method method-name="cancelOrderInventoryReservation" short-description="Cancel Inventory Reservation for an Order">
         <!--
-            Iterates through each OrderItemInventoryRes on each OrderItem for the order
+            Iterates through each OrderItemShipGrpInvRes on each OrderItem for the order
             with the given orderId and cancels the reservation by removing the
-            OrderItemInventoryRes and incrementing the corresponding non-serialized
+            OrderItemShipGrpInvRes and incrementing the corresponding non-serialized
             inventoryItem's availableToPromise quantity, or setting the status of the
             corresponding serialized inventoryItem to available.
         -->
-        <field-to-field field-name="orderId" map-name="parameters" to-map-name="oiirListLookupMap"/>
+        <field-to-field field-name="orderId" map-name="parameters" to-map-name="oisgirListLookupMap"/>
         <if-not-empty field-name="orderItemSeqId" map-name="parameters">
-            <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="oiirListLookupMap"/>
-            <log level="verbose" message="OIIR Cancel for single item : ${oiirListLookupMap}"/>
+            <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="oisgirListLookupMap"/>
+            <log level="verbose" message="OISGIR Cancel for single item : ${oisgirListLookupMap}"/>
         </if-not-empty>
-        <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
-        <iterate entry-name="oiir" list-name="oiirList">
-            <field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
-            <field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
-            <field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>
-            <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
+        <if-not-empty field-name="shipGroupSeqId" map-name="parameters">
+            <field-to-field field-name="shipGroupSeqId" map-name="parameters" to-map-name="oisgirListLookupMap"/>
+            <log level="verbose" message="OISGIR Cancel for single item : ${oisgirListLookupMap}"/>
+        </if-not-empty>
+        <find-by-and entity-name="OrderItemShipGrpInvRes" map-name="oisgirListLookupMap" list-name="oisgirList" use-cache="false"/>
+        <iterate entry-name="oisgir" list-name="oisgirList">
+            <field-to-field field-name="orderId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+            <field-to-field field-name="orderItemSeqId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+            <field-to-field field-name="shipGroupSeqId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+            <field-to-field field-name="inventoryItemId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+            <call-service service-name="cancelOrderItemShipGrpInvRes" in-map-name="cancelOisgirMap"/>
         </iterate>
     </simple-method>
     <simple-method method-name="cancelOrderItemInvResQty" short-description="Cancel Inventory Reservation Qty For An Item">
@@ -351,75 +362,75 @@
         <if-empty field-name="cancelQuantity" map-name="parameters">
             <field-to-field field-name="orderId" map-name="parameters" to-map-name="cancelMap"/>
             <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="cancelMap"/>
+            <field-to-field field-name="shipGroupSeqId" map-name="parameters" to-map-name="cancelMap"/>
             <call-service service-name="cancelOrderInventoryReservation" in-map-name="cancelMap"/>
         </if-empty>
         <if-not-empty field-name="cancelQuantity" map-name="parameters">
             <field-to-env field-name="cancelQuantity" map-name="parameters" env-name="toCancelAmount"/>
 
-            <field-to-field field-name="orderId" map-name="parameters" to-map-name="oiirListLookupMap"/>
-            <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="oiirListLookupMap"/>
-            <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
-            <iterate entry-name="oiir" list-name="oiirList">
+            <field-to-field field-name="orderId" map-name="parameters" to-map-name="oisgirListLookupMap"/>
+            <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="oisgirListLookupMap"/>
+            <field-to-field field-name="shipGroupSeqId" map-name="parameters" to-map-name="oisgirListLookupMap"/>
+            <find-by-and entity-name="OrderItemShipGrpInvRes" map-name="oisgirListLookupMap" list-name="oisgirList" use-cache="false"/>
+            <iterate entry-name="oisgir" list-name="oisgirList">
                 <if-compare field-name="toCancelAmount" operator="greater" value="0" type="Double">
-                    <if-compare-field field-name="quantity" map-name="oiir" operator="greater-equals" to-field-name="toCancelAmount" type="Double">
-                        <field-to-field field-name="toCancelAmount" to-field-name="cancelQuantity" to-map-name="cancelOiirMap"/>
+                    <if-compare-field field-name="oisgir.quantity" operator="greater-equals" to-field-name="toCancelAmount" type="Double">
+                        <env-to-env env-name="toCancelAmount" to-env-name="cancelOisgirMap.cancelQuantity"/>
                     </if-compare-field>
-                    <if-compare-field field-name="quantity" map-name="oiir" operator="less" to-field-name="toCancelAmount" type="Double">
-                        <field-to-field field-name="quantity" map-name="oiir" to-field-name="cancelQuantity" to-map-name="cancelOiirMap"/>
+                    <if-compare-field field-name="oisgir.quantity" operator="less" to-field-name="toCancelAmount" type="Double">
+                        <env-to-env env-name="oisgir.quantity" to-env-name="cancelOisgirMap.cancelQuantity"/>
                     </if-compare-field>
 
-                    <field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
-                    <field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
-                    <field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>
-
-
-                    <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
+                    <field-to-field field-name="orderId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+                    <field-to-field field-name="orderItemSeqId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+                    <field-to-field field-name="shipGroupSeqId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+                    <field-to-field field-name="inventoryItemId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+                    <call-service service-name="cancelOrderItemShipGrpInvRes" in-map-name="cancelOisgirMap"/>
                     <!-- update the toCancelAmount -->
                     <calculate field-name="toCancelAmount">
                         <calcop operator="subtract" field-name="toCancelAmount">
-                            <calcop operator="get" field-name="cancelQuantity" map-name="cancelOiirMap"/>
+                            <calcop operator="get" field-name="cancelOisgirMap.cancelQuantity"/>
                         </calcop>
                     </calculate>
                 </if-compare>
             </iterate>
         </if-not-empty>
     </simple-method>
-    <simple-method method-name="cancelOrderItemInventoryRes" short-description="Cancel An Inventory Reservation">
-        <make-value value-name="lookupPKMap" entity-name="OrderItemInventoryRes"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="OrderItemInventoryRes" map-name="lookupPKMap" value-name="orderItemInventoryRes"/>
+    <simple-method method-name="cancelOrderItemShipGrpInvRes" short-description="Cancel An Inventory Reservation">
+        <entity-one entity-name="OrderItemShipGrpInvRes" value-name="orderItemShipGrpInvRes"/>
 
-        <get-related-one relation-name="InventoryItem" value-name="orderItemInventoryRes" to-value-name="inventoryItem"/>
+        <get-related-one relation-name="InventoryItem" value-name="orderItemShipGrpInvRes" to-value-name="inventoryItem"/>
         <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
             <log level="verbose" message="Serialized inventory re-enabled."/>
             <string-to-field string="INV_AVAILABLE" field-name="statusId" map-name="inventoryItem"/>
-            <remove-value value-name="orderItemInventoryRes"/>
+            <remove-value value-name="orderItemShipGrpInvRes"/>
             <store-value value-name="inventoryItem"/>
         </if-compare>
         <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
             <log level="verbose" message="Non-Serialized inventory item incrementing availableToPromise."/>
             <env-to-env env-name="parameters.cancelQuantity" to-env-name="cancelQuantity"/>
             <if-empty field-name="cancelQuantity">
-                <env-to-env env-name="orderItemInventoryRes.quantity" to-env-name="cancelQuantity"/>
+                <env-to-env env-name="orderItemShipGrpInvRes.quantity" to-env-name="cancelQuantity"/>
             </if-empty>
 
             <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
             <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
             <env-to-env env-name="parameters.orderId" to-env-name="createDetailMap.orderId"/>
             <env-to-env env-name="parameters.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
+            <env-to-env env-name="parameters.shipGroupSeqId" to-env-name="createDetailMap.shipGroupSeqId"/>
             <env-to-env env-name="cancelQuantity" to-env-name="createDetailMap.availableToPromiseDiff"/>
             <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
             <clear-field field-name="createDetailMap"/>
 
-            <if-compare-field field-name="cancelQuantity" operator="less" to-field-name="quantity" to-map-name="orderItemInventoryRes" type="Double">
-                <calculate field-name="orderItemInventoryRes.quantity">
-                    <calcop operator="subtract" field-name="orderItemInventoryRes.quantity">
+            <if-compare-field field-name="cancelQuantity" operator="less" to-field-name="quantity" to-map-name="orderItemShipGrpInvRes" type="Double">
+                <calculate field-name="orderItemShipGrpInvRes.quantity">
+                    <calcop operator="subtract" field-name="orderItemShipGrpInvRes.quantity">
                         <calcop operator="get" field-name="cancelQuantity"/>
                     </calcop>
                 </calculate>
-                <store-value value-name="orderItemInventoryRes"/>
+                <store-value value-name="orderItemShipGrpInvRes"/>
             <else>
-                <remove-value value-name="orderItemInventoryRes"/>
+                <remove-value value-name="orderItemShipGrpInvRes"/>
             </else>
             </if-compare-field>
         </if-compare>

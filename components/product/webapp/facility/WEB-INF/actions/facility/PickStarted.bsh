@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -36,6 +36,6 @@ facilityId = request.getParameter("facilityId");
 context.put("facilityId", facilityId);
 
 condition = new EntityExpr(new EntityExpr("pickStartDate", EntityOperator.NOT_EQUAL, null), EntityOperator.AND, new EntityExpr("facilityId", EntityOperator.EQUALS, facilityId));
-orderItemInventoryResAndItemList = delegator.findByCondition("OrderItemInventoryResAndItem", condition, null, UtilMisc.toList("pickStartDate", "orderId", "orderItemSeqId", "inventoryItemId"));
-context.put("orderItemInventoryResAndItemList", orderItemInventoryResAndItemList);
+orderItemShipGrpInvResAndItemList = delegator.findByCondition("OrderItemShipGrpInvResAndItem", condition, null, UtilMisc.toList("pickStartDate", "orderId", "shipGroupSeqId, "orderItemSeqId", "inventoryItemId"));
+context.put("orderItemShipGrpInvResAndItemList", orderItemShipGrpInvResAndItemList);
 

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  */
 -->
 
@@ -60,6 +60,7 @@
       <field name="itemIssuanceId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="shipGroupSeqId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
@@ -70,9 +71,10 @@
       <relation type="one" fk-name="ITEM_ISS_INVITM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="OrderItemInventoryRes">
+      <relation type="one-nofk" rel-entity-name="OrderItemShipGrpInvRes">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="shipGroupSeqId"/>
         <key-map field-name="inventoryItemId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="Shipment">
@@ -300,6 +302,7 @@
       <field name="shipmentTypeId" type="id"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="primaryOrderId" type="id"></field>
+      <field name="primaryShipGroupSeqId" type="id"></field>
       <field name="estimatedReadyDate" type="date-time"></field>
       <field name="estimatedShipDate" type="date-time"></field>
       <field name="estimatedShipWorkEffId" type="id"></field>
@@ -363,6 +366,10 @@
       </relation>
       <relation type="one" fk-name="SHPMNT_PODR" title="Primary" rel-entity-name="OrderHeader">
         <key-map field-name="primaryOrderId" rel-field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" title="Primary" rel-entity-name="OrderItemShipGroup">
+        <key-map field-name="primaryOrderId" rel-field-name="orderId"/>
+        <key-map field-name="primaryShipGroupSeqId" rel-field-name="shipGroupSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
         <key-map field-name="shipmentTypeId"/>

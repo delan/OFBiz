@@ -204,15 +204,14 @@ public class PosTransaction implements Serializable {
     }
 
     public Map getPaymentInfo(int index) {
-        ShoppingCart.CartPaymentInfo inf = cart.getPaymentInfo(index);
-        GenericValue prefValue = inf.makeOrderPaymentPreference(session.getDelegator());
+        ShoppingCart.CartPaymentInfo inf = cart.getPaymentInfo(index);        
         GenericValue infValue = inf.getValueObject(session.getDelegator());
         GenericValue paymentPref = null;
         try {
             Map fields = new HashMap();
-            fields.put("paymentMethodTypeId", prefValue.get("paymentMethodTypeId"));
-            fields.put("paymentMethodId", prefValue.get("paymentMethodId"));
-            fields.put("maxAmount", prefValue.get("maxAmount"));
+            fields.put("paymentMethodTypeId", inf.paymentMethodTypeId);
+            fields.put("paymentMethodId", inf.paymentMethodId);
+            fields.put("maxAmount", inf.amount);
             fields.put("orderId", this.getOrderId());
 
             List paymentPrefs = session.getDelegator().findByAnd("OrderPaymentPreference", fields);

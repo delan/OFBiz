@@ -99,7 +99,7 @@ public class ShoppingCartHelper {
     public Map addToCart(String catalogId, String shoppingListId, String shoppingListItemSeqId, String productId,
             String productCategoryId, String itemType, String itemDescription, double price,
             double amount, double quantity, ProductConfigWrapper configWrapper, Map context) {
-        Map result;
+        Map result = null;
         Map attributes = null;
         String errMsg = null;
 	

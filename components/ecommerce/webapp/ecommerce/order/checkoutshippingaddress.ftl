@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -41,7 +41,7 @@ function submitForm(form, mode, value) {
         form.submit();
     } else if (mode == "EA") {
         // edit address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "NC") {
         // new credit card
@@ -104,7 +104,11 @@ function toggleBillingAccount(box) {
                     <table width="100%" border="0" cellpadding="1" cellspacing="0">
                       <tr>
                         <td colspan="2">
+                          <a href="<@ofbizUrl>/splitship</@ofbizUrl>" class="buttontext">[Split Shipment]</a>
                           <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
+                          <#if (cart.getShipGroupSize() > 1)>
+                            <div class="tabletext" style="color: red;">NOTE: Multiple shipments exist, use Split Shipment.</div>
+                          </#if>
                         </td>
                       </tr>
                        <#if context.shippingContactMechList?has_content>

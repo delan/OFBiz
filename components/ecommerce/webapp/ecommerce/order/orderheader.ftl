@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
@@ -315,6 +315,8 @@
     <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
     <#-- right side -->
     <td width='50%' valign='top' align='left'>
+      <#if orderItemShipGroups?has_content>
+
       <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
         <tr>
           <td width='100%'>
@@ -322,12 +324,7 @@
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderShippingInformation}</div>
-                </td>
-                <#if maySelectItems?default(false) && !maySplit?default(false)>
-                <td valign="middle" align="right">
-                  <a href="<@ofbizUrl>/allowordersplit?orderId=${orderHeader.orderId}&order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${requestAttributes.uiLabelMap.OrderAllowSplit}</a>
-                </td> 
-                </#if>               
+                </td>                              
               </tr>
             </table>
           </td>
@@ -338,11 +335,21 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
                 <td>
+                  <#assign groupIdx = 0>
+                  <#list orderItemShipGroups as shipGroup>
+                    <#if orderHeader?has_content>
+                      <#assign shippingAddress = shipGroup.getRelatedOne("PostalAddress")>
+                      <#assign groupNumber = shipGroup.shipGroupSeqId>
+                    <#else>
+                      <#assign shippingAddress = cart.getShippingAddress(groupIdx)>
+                      <#assign groupNumber = groupIdx + 1>
+                    </#if>
+
                   <table width="100%" border="0" cellpadding="1">
                     <#if shippingAddress?has_content>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderDestination}</b></div>
+                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderDestination}</b> [${groupNumber}]</div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -366,8 +373,16 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
+                          <#if orderHeader?has_content>
+                            <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType")?if_exists>
+                            <#assign carrierPartyId = shipGroup.carrierPartyId?if_exists>
+                          <#else>
+                            <#assign shipmentMethodType = cart.getShipmentMethodType(groupIdx)>
+                            <#assign carrierPartyId = cart.getCarrierPartyId(groupIdx)>
+                          </#if>
+
                           <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
-                          ${shipMethDescription?if_exists}
+                          ${(shipmentMethodType.description)?if_exists}
                           <#if shippingAccount?exists><br>${requestAttributes.uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>
                         </div>
                       </td>
@@ -382,8 +397,8 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
-                          <#if trackingNumber?has_content>
-                            <div class="tabletext">${trackingNumber}</div>
+                          <#if shipGroup.trackingNumber?has_content>
+                            <div class="tabletext">${shipGroup.trackingNumber}</div>
                           </#if>
                           <#if orderShipmentInfoSummaryList?has_content>
                             <#list orderShipmentInfoSummaryList as orderShipmentInfoSummary>
@@ -400,6 +415,11 @@
                     </#if>
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <#-- splitting preference -->
+                    <#if orderHeader?has_content>
+                      <#assign maySplit = shipGroup.maySplit?default("N")>
+                    <#else>
+                      <#assign maySplit = cart.getMaySplit(groupIdx)?default("N")>
+                    </#if>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderSplittingPreference}</b></div>
@@ -407,12 +427,18 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          <#if !maySplit?default(false)>${requestAttributes.uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
-                          <#if maySplit?default(false)>${requestAttributes.uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
+                          <#if maySplit?default("N") == "N">${requestAttributes.uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
+                          <#if maySplit?default("N") == "Y">${requestAttributes.uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
                         </div>
                       </td>
                     </tr>
                     <#-- shipping instructions -->
+                    <#if orderHeader?has_content>
+                      <#assign shippingInstructions = shipGroup.shippingInstructions?if_exists>
+                    <#else>
+                      <#assign shippingInstructions =  cart.getShippingInstructions(groupIdx)?if_exists>
+                    </#if>
+
                     <#if shippingInstructions?has_content>
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
@@ -427,6 +453,14 @@
                     </#if>
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <#-- gift settings -->
+                    <#if orderHeader?has_content>
+                      <#assign isGift = shipGroup.isGift?default("N")>
+                      <#assign giftMessage = shipGroup.giftMessage?if_exists>
+                    <#else>
+                      <#assign isGift = cart.getIsGift(groupIdx)?default("N")>
+                      <#assign giftMessage = cart.getGiftMessage(groupIdx)?if_exists>
+                    </#if>
+
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderGift}?</b></div>
@@ -434,8 +468,8 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          <#if !isGift?default(false)>${requestAttributes.uiLabelMap.OrderThisIsNotGift}.</#if>
-                          <#if isGift?default(false)>${requestAttributes.uiLabelMap.OrderThisIsGift}.</#if>
+                          <#if isGift?default("N") == "N">${requestAttributes.uiLabelMap.OrderThisIsNotGift}.</#if>
+                          <#if isGift?default("N") == "Y">${requestAttributes.uiLabelMap.OrderThisIsGift}.</#if>
                         </div>
                       </td>
                     </tr>
@@ -451,13 +485,22 @@
                         </td>
                       </tr>
                     </#if>
+                    <#if shipGroup_has_next>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                    </#if>
                   </table>
+
+                    <#assign groupIdx = groupIdx + 1>
+                  </#list>
                 </td>
               </tr>
             </table>
           </td>
         </tr>
       </table>
+
+      </#if>
     </td>
   </tr>
 </table>

@@ -194,6 +194,11 @@ if (orderHeader != null) {
     orderPaymentPreferences = delegator.findByAnd("OrderPaymentPreference", oppFields);
     context.put("orderPaymentPreferences", orderPaymentPreferences);
 
+    // ship groups
+    shipGroups = delegator.findByAnd("OrderItemShipGroup", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("shipGroupSeqId"));
+    context.put("shipGroups", shipGroups);
+    
+    /*
     shipmentPreference = null;
     carrierPartyId = null;
     shipmentMethodTypeId = null;
@@ -203,6 +208,7 @@ if (orderHeader != null) {
     maySplit = null;
     giftMessage = null;
     isGift = null;
+
 
     orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
     if (orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
@@ -225,6 +231,7 @@ if (orderHeader != null) {
     context.put("maySplit", maySplit);
     context.put("giftMessage", giftMessage);
     context.put("isGift", isGift);
+    */
 
     // get Shipment tracking info
     osisCond = new EntityFieldMap(UtilMisc.toMap("orderId", orderId), EntityOperator.AND);

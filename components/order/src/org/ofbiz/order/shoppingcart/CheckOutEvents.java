@@ -84,14 +84,14 @@ public class CheckOutEvents {
     }
 
     public static String cancelOrderItem(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String orderId = request.getParameter("order_id");
         String itemSeqId = request.getParameter("item_seq");
+        String groupSeqId = request.getParameter("group_seq");
         Locale locale = UtilHttp.getLocale(request);
 
-        Map fields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", itemSeqId, "userLogin", userLogin);
+        Map fields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", itemSeqId, "shipGroupSeqId", groupSeqId, "userLogin", userLogin);
         Map result = null;
         String errMsg = null;
 
@@ -99,7 +99,7 @@ public class CheckOutEvents {
             result = dispatcher.runSync("cancelOrderItem", fields);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            errMsg = UtilProperties.getMessage(resource, "checkevents.cannot_cancel_item", (cart != null ? cart.getLocale() : Locale.getDefault()));
+            errMsg = UtilProperties.getMessage(resource, "checkevents.cannot_cancel_item", locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 */
 
@@ -44,17 +44,15 @@ context.put("orderAdjustments", orderAdjustments);
 orderItems = cart.makeOrderItems();
 context.put("orderItems", orderItems);
 
-orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
+orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments, null);
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
+context.put("orderItemShipGroups", cart.getShipGroups());
 context.put("headerAdjustmentsToShow", OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false));
 
 orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments);
 context.put("orderSubTotal", orderSubTotal);
 context.put("placingCustomerPerson", userLogin == null ? null : userLogin.getRelatedOne("Person"));
-context.put("shippingAddress", cart.getShippingAddress());
-
-paymentMethods = cart.getPaymentMethods();
-context.put("paymentMethods", paymentMethods);
+context.put("paymentMethods", cart.getPaymentMethods());
 
 paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
 paymentMethodType = null;
@@ -94,15 +92,9 @@ if (shipmentMethodType != null) context.put("shipMethDescription", shipmentMetho
 
 OrderReadHelper orh = new OrderReadHelper(null, orderAdjustments, orderItems);
 context.put("localOrderReadHelper", orh);
-
-shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
-shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
-context.put("orderShippingTotal", shippingAmount);
-
-taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
-taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);
-context.put("orderTaxTotal", taxAmount);
-context.put("orderGrandTotal", OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments));
+context.put("orderShippingTotal", cart.getTotalShipping());
+context.put("orderTaxTotal", cart.getTotalSalesTax());
+context.put("orderGrandTotal", new Double(cart.getGrandTotal()));
 
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");

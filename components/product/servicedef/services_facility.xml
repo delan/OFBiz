@@ -124,6 +124,7 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
         <attribute name="reservedDatetime" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="false"/>
@@ -140,6 +141,7 @@
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
         <attribute name="reservedDatetime" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="false"/>
@@ -156,6 +158,7 @@
         <attribute name="containerId" type="String" mode="IN" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
         <attribute name="reservedDatetime" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="false"/>
@@ -164,9 +167,9 @@
     </service>
     <service name="reserveOrderItemInventory" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="reserveOrderItemInventory" auth="true">
-        <description>Create OrderItemInventoryRes or increment existing reserved quantity.</description>
-        <auto-attributes mode="IN" entity-name="OrderItemInventoryRes" include="pk" optional="false"/>
-        <auto-attributes mode="IN" entity-name="OrderItemInventoryRes" include="nonpk" optional="true">
+        <description>Create OrderItemShipGrpInvRes or increment existing reserved quantity.</description>
+        <auto-attributes mode="IN" entity-name="OrderItemShipGrpInvRes" include="pk" optional="false"/>
+        <auto-attributes mode="IN" entity-name="OrderItemShipGrpInvRes" include="nonpk" optional="true">
             <exclude field-name="createdDatetime"/>
         </auto-attributes>
         <override name="quantity" optional="false"/>
@@ -174,26 +177,28 @@
     <service name="cancelOrderInventoryReservation" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="cancelOrderInventoryReservation" auth="true">
         <description>
-            Iterates through each OrderItemInventoryRes on each OrderItem for the order
+            Iterates through each OrderItemShipGrpInvRes on each OrderItem for the order
             with the given orderId and cancels the reservation by changing the status
-            of the OrderItemInventoryRes and incrementing the corresponding non-serialized
+            of the OrderItemShipGrpInvRes and incrementing the corresponding non-serialized
             inventoryItem's availableToPromise quantity, or setting the status of the
             corresponding serialized inventoryItem to available.
         </description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="cancelOrderItemInvResQty" engine="simple"
             location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="cancelOrderItemInvResQty" auth="true">
         <description>Cancel a specific quantity for an order item</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="cancelQuantity" type="Double" mode="IN" optional="true"/>
     </service>
-    <service name="cancelOrderItemInventoryRes" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="cancelOrderItemInventoryRes" auth="true">
+    <service name="cancelOrderItemShipGrpInvRes" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="cancelOrderItemShipGrpInvRes" auth="true">
         <description>Cancels an inventory reservation</description>
-        <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="OrderItemShipGrpInvRes" include="pk" mode="IN" optional="false"/>
         <attribute name="cancelQuantity" type="Double" mode="IN" optional="true"/>
     </service>
 

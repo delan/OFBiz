@@ -271,10 +271,10 @@ document.lookuporder.order_id.focus();
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
-          <td width="5%" align="right"><div class="tableheadtext">Survey</div></td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderType}</div></td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderId}</div></td>
           <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.PartyUserLoginId}</div></td>
+          <td width="5%" align="right"><div class="tableheadtext">Survey</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsOrdered}</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsReturned}</div></td>
           <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderRemainingSubTotal}</div></td>

@@ -1,5 +1,5 @@
 <#--
- *    Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *    Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *    Permission is hereby granted, free of charge, to any person obtaining a 
  *    copy of this software and associated documentation files (the "Software"), 
@@ -22,7 +22,7 @@
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author         Andy Zeneski (jaz@ofbiz.org)
  *@author   	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version        $Rev:$
+ *@version        $Rev$
  *@since            2.2
 -->
 
@@ -48,19 +48,20 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                             <tr>
                                 <td><div class="tableheadtext">${uiLabelMap.ProductPickStarted}</div></td>
                                 <td><div class="tableheadtext">${uiLabelMap.OrderOrders}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.OrderShipGroup}</div></td>
                                 <td><div class="tableheadtext">${uiLabelMap.OrderOrderItem}</div></td>
                                 <td><div class="tableheadtext">${uiLabelMap.ProductInventoryItems}</div></td>
                                 <td><div class="tableheadtext">${uiLabelMap.ProductAvailable}</div></td>
                                 <td><div class="tableheadtext">${uiLabelMap.ProductNotAvailable}</div></td>
                             </tr>
-                            <#if orderItemInventoryResAndItemList?has_content>
-                                <#list orderItemInventoryResAndItemList as orderItemInventoryResAndItem>
+                            <#if orderItemShipGrpInvResAndItemList?has_content>
+                                <#list orderItemShipGrpInvResAndItemList as orderItemShipGrpInvResAndItem>
                                     <tr>
                                         <td>
                                             <div class="tabletext">
-                                                <#if !lastPickStartDate?exists || orderItemInventoryResAndItem.pickStartDate != lastPickStartDate>
-                                                    ${orderItemInventoryResAndItem.pickStartDate.toString()}
-                                                    <a href="<@ofbizUrl>/clearPickStarted?facilityId=${facilityId?if_exists}&pickStartDate=${orderItemInventoryResAndItem.pickStartDate.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductResetDate}]</a>
+                                                <#if !lastPickStartDate?exists || orderItemShipGrpInvResAndItem.pickStartDate != lastPickStartDate>
+                                                    ${orderItemShipGrpInvResAndItem.pickStartDate.toString()}
+                                                    <a href="<@ofbizUrl>/clearPickStarted?facilityId=${facilityId?if_exists}&pickStartDate=${orderItemShipGrpInvResAndItem.pickStartDate.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductResetDate}]</a>
                                                 <#else>
                                                     &nbsp;
                                                 </#if>
@@ -68,23 +69,22 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                         </td>
                                         <td>
                                             <div class="tabletext">
-                                                <#if !lastOrderId?exists || orderItemInventoryResAndItem.orderId != lastOrderId>
-                                                    ${orderItemInventoryResAndItem.orderId}
-                                                    <a href="<@ofbizUrl>/clearPickStarted?facilityId=${facilityId?if_exists}&pickStartDate=${orderItemInventoryResAndItem.pickStartDate.toString()}&orderId=${orderItemInventoryResAndItem.orderId}</@ofbizUrl>" class="buttontext">[Reset&nbsp;Order]</a>
+                                                <#if !lastOrderId?exists || orderItemShipGrpInvResAndItem.orderId != lastOrderId>
+                                                    ${orderItemShipGrpInvResAndItem.orderId}
+                                                    <a href="<@ofbizUrl>/clearPickStarted?facilityId=${facilityId?if_exists}&pickStartDate=${orderItemShipGrpInvResAndItem.pickStartDate.toString()}&orderId=${orderItemShipGrpInvResAndItem.orderId}</@ofbizUrl>" class="buttontext">[Reset&nbsp;Order]</a>
                                                 <#else>
                                                     &nbsp;
                                                 </#if>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="tabletext">${orderItemInventoryResAndItem.orderItemSeqId}</div>
-                                        </td>
-                                        <td><div class="tabletext">${orderItemInventoryResAndItem.inventoryItemId}</div></td>
-                                        <td><div class="tabletext">${orderItemInventoryResAndItem.quantity?default("&nbsp;")}</div></td>
-                                        <td><div class="tabletext">${orderItemInventoryResAndItem.quantityNotAvailable?default("&nbsp;")}</div></td>
+                                        <td><div class="tabletext">${orderItemShipGrpInvResAndItem.shipGroupSeqId}</div></td>
+                                        <td><div class="tabletext">${orderItemShipGrpInvResAndItem.orderItemSeqId}</div></td>
+                                        <td><div class="tabletext">${orderItemShipGrpInvResAndItem.inventoryItemId}</div></td>
+                                        <td><div class="tabletext">${orderItemShipGrpInvResAndItem.quantity?default("&nbsp;")}</div></td>
+                                        <td><div class="tabletext">${orderItemShipGrpInvResAndItem.quantityNotAvailable?default("&nbsp;")}</div></td>
                                     </tr>
-                                    <#assign lastPickStartDate = orderItemInventoryResAndItem.pickStartDate>
-                                    <#assign lastOrderId = orderItemInventoryResAndItem.orderId>
+                                    <#assign lastPickStartDate = orderItemShipGrpInvResAndItem.pickStartDate>
+                                    <#assign lastOrderId = orderItemShipGrpInvResAndItem.orderId>
                                 </#list>
                             <#else>
                                 <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductNoPicksStarted}.</div></td></tr>

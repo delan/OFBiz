@@ -2,7 +2,7 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -264,18 +264,33 @@
         <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="lookupShipmentPKMap"/>
         <find-by-primary-key entity-name="Shipment" map-name="lookupShipmentPKMap" value-name="shipment"/>
 
-        <if-empty field-name="primaryOrderId" map-name="shipment">
-            <!-- No primryOrderId specified, don't do anything -->
+        <if-empty field-name="shipment.primaryOrderId">
+            <!-- No primaryOrderId specified, don't do anything -->
+            <log level="info" message="Not running setShipmentSettingsFromPrimaryOrder, primaryOrderId is empty for shipmentId [${parameters.shipmentId}]"/>
             <return response-code="success"/>
         </if-empty>
 
-        <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderHeaderPKMap"/>
-        <find-by-primary-key entity-name="OrderHeader" map-name="lookupOrderHeaderPKMap" value-name="orderHeader"/>
+        <!-- TODO: we may not want to check this if, for example, Purchase Orders don't have any OrderItemShipGroups -->
+        <if-empty field-name="shipment.primaryShipGroupSeqId">
+            <!-- No primaryShipGroupSeqId specified, don't do anything -->
+            <log level="info" message="Not running setShipmentSettingsFromPrimaryOrder, primaryShipGroupSeqId is empty for shipmentId [${parameters.shipmentId}]"/>
+            <return response-code="success"/>
+        </if-empty>
 
-        <if-compare field-name="orderTypeId" map-name="orderHeader" operator="equals" value="SALES_ORDER">
+        <entity-one entity-name="OrderHeader" value-name="orderHeader">
+            <field-map field-name="orderId" env-name="shipment.primaryOrderId"/>
+        </entity-one>
+        <if-not-empty field-name="shipment.primaryShipGroupSeqId">
+            <entity-one entity-name="OrderItemShipGroup" value-name="orderItemShipGroup">
+                <field-map field-name="orderId" env-name="shipment.primaryOrderId"/>
+                <field-map field-name="shipGroupSeqId" env-name="shipment.primaryShipGroupSeqId"/>
+            </entity-one>
+        </if-not-empty>
+
+        <if-compare field-name="orderHeader.orderTypeId" operator="equals" value="SALES_ORDER">
             <string-to-field string="SALES_SHIPMENT" field-name="shipmentTypeId" map-name="shipment"/>
         </if-compare>
-        <if-compare field-name="orderTypeId" map-name="orderHeader" operator="equals" value="PURCHASE_ORDER">
+        <if-compare field-name="orderHeader.orderTypeId" operator="equals" value="PURCHASE_ORDER">
             <string-to-field string="PURCHASE_SHIPMENT" field-name="shipmentTypeId" map-name="shipment"/>
         </if-compare>
 
@@ -339,26 +354,27 @@
 
         <find-by-and entity-name="OrderContactMech" map-name="lookupOrderHeaderPKMap" list-name="orderContactMechs"/>
         <!-- destinationContactMechId -->
-        <if-empty field-name="destinationContactMechId" map-name="shipment">
+        <if-empty field-name="shipment.destinationContactMechId">
+            <!-- first try from orderContactMechs -->
             <string-to-field string="SHIPPING_LOCATION" field-name="contactMechPurposeTypeId" map-name="destinationContactMap"/>
             <filter-list-by-and list-name="orderContactMechs" map-name="destinationContactMap" to-list-name="destinationOrderContactMechs"/>
             <first-from-list entry-name="destinationOrderContactMech" list-name="destinationOrderContactMechs"/>
             <if-not-empty field-name="destinationOrderContactMech">
-                <field-to-field field-name="contactMechId" map-name="destinationOrderContactMech" to-field-name="destinationContactMechId" to-map-name="shipment"/>
+                <env-to-env env-name="destinationOrderContactMech.contactMechId" to-env-name="shipment.destinationContactMechId"/>
             </if-not-empty>
         </if-empty>
         <!-- originContactMechId -->
-        <if-empty field-name="originContactMechId" map-name="shipment">
+        <if-empty field-name="shipment.originContactMechId">
             <string-to-field string="SHIP_ORIG_LOCATION" field-name="contactMechPurposeTypeId" map-name="originContactMap"/>
             <filter-list-by-and list-name="orderContactMechs" map-name="originContactMap" to-list-name="originOrderContactMechs"/>
             <first-from-list entry-name="originOrderContactMech" list-name="originOrderContactMechs"/>
             <if-not-empty field-name="originOrderContactMech">
-                <field-to-field field-name="contactMechId" map-name="originOrderContactMech" to-field-name="originContactMechId" to-map-name="shipment"/>
+                <env-to-env env-name="originOrderContactMech.contactMechId" to-env-name="shipment.originContactMechId"/>
             </if-not-empty>
         </if-empty>
 
         <!-- destinationTelecomNumberId -->
-        <if-empty field-name="destinationTelecomNumberId" map-name="shipment">
+        <if-empty field-name="shipment.destinationTelecomNumberId">
             <string-to-field string="PHONE_SHIPPING" field-name="contactMechPurposeTypeId" map-name="destTelecomOrderContactMechMap"/>
             <filter-list-by-and list-name="orderContactMechs" map-name="destTelecomOrderContactMechMap" to-list-name="destTelecomOrderContactMechs"/>
             <first-from-list entry-name="destTelecomOrderContactMech" list-name="destTelecomOrderContactMechs"/>
@@ -367,7 +383,7 @@
             </if-not-empty>
         </if-empty>
         <!-- originTelecomNumberId -->
-        <if-empty field-name="originTelecomNumberId" map-name="shipment">
+        <if-empty field-name="shipment.originTelecomNumberId">
             <string-to-field string="PHONE_SHIP_ORIG" field-name="contactMechPurposeTypeId" map-name="originTelecomOrderContactMechMap"/>
             <filter-list-by-and list-name="orderContactMechs" map-name="originTelecomOrderContactMechMap" to-list-name="originTelecomOrderContactMechs"/>
             <first-from-list entry-name="originTelecomOrderContactMech" list-name="originTelecomOrderContactMechs"/>
@@ -375,6 +391,28 @@
                 <field-to-field field-name="contactMechId" map-name="originTelecomOrderContactMech" to-field-name="originTelecomNumberId" to-map-name="shipment"/>
             </if-not-empty>
         </if-empty>
+
+        <!-- NOTE: use new place to find source/destination location/addresses for new OrderItemShipGroup.contactMechId (destination address for sales orders, source address for purchase orders) -->
+        <!-- do this second so it will override the orderContactMech -->
+        <!-- TODO: maybe we should add a new entity for OrderItemShipGroup ContactMechs? -->
+        <if-not-empty field-name="orderItemShipGroup">
+            <if-compare field-name="orderHeader.orderTypeId" operator="equals" value="SALES_ORDER">
+                <if-empty field-name="shipment.destinationContactMechId">
+                    <env-to-env env-name="orderItemShipGroup.contactMechId" to-env-name="shipment.destinationContactMechId"/>
+                </if-empty>
+                <if-empty field-name="shipment.destinationTelecomNumberId">
+                    <env-to-env env-name="orderItemShipGroup.telecomContactMechId" to-env-name="shipment.destinationTelecomNumberId"/>
+                </if-empty>
+            </if-compare>
+            <if-compare field-name="orderHeader.orderTypeId" operator="equals" value="PURCHASE_ORDER">
+                <if-empty field-name="shipment.originContactMechId">
+                    <env-to-env env-name="orderItemShipGroup.contactMechId" to-env-name="shipment.originContactMechId"/>
+                </if-empty>
+                <if-empty field-name="shipment.originTelecomNumberId">
+                    <env-to-env env-name="orderItemShipGroup.telecomContactMechId" to-env-name="shipment.originTelecomNumberId"/>
+                </if-empty>
+            </if-compare>
+        </if-not-empty>
 
         <if-empty field-name="estimatedShipCost" map-name="shipment">
             <call-bsh><![CDATA[
@@ -394,7 +432,7 @@
         </if-empty>
 
         <!-- create a ShipmentRouteSegment with originFacilityId (if set on Shipment), destContactMechId,
-            and from OrderShipmentPreference shipmentMethodTypeId, carrierPartyId, etc -->
+            and from OrderItemShipGroup shipmentMethodTypeId, carrierPartyId, etc -->
         <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
         <find-by-and entity-name="ShipmentRouteSegment" map-name="shipmentRouteSegmentMap" list-name="shipmentRouteSegments"/>
         <if-empty field-name="shipmentRouteSegments">
@@ -409,12 +447,13 @@
             <field-to-field field-name="destinationContactMechId" map-name="shipment" to-field-name="destContactMechId" to-map-name="shipmentRouteSegmentMap"/>
             <field-to-field field-name="destinationTelecomNumberId" map-name="shipment" to-field-name="destTelecomNumberId" to-map-name="shipmentRouteSegmentMap"/>
 
-            <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderSpPKMap"/>
-            <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="lookupOrderSpPKMap"/>
-            <find-by-primary-key entity-name="OrderShipmentPreference" map-name="lookupOrderSpPKMap" value-name="orderShipmentPreference"/>
-            <if-not-empty field-name="orderShipmentPreference">
-                <field-to-field field-name="carrierPartyId" map-name="orderShipmentPreference" to-map-name="shipmentRouteSegmentMap"/>
-                <field-to-field field-name="shipmentMethodTypeId" map-name="orderShipmentPreference" to-map-name="shipmentRouteSegmentMap"/>
+            <entity-one entity-name="OrderItemShipGroup" value-name="orderItemShipGroup">
+                <field-map field-name="orderId" env-name="shipment.primaryOrderId"/>
+                <field-map field-name="shipGroupSeqId" env-name="shipment.primaryShipGroupSeqId"/>
+            </entity-one>
+            <if-not-empty field-name="orderItemShipGroup">
+                <field-to-field field-name="carrierPartyId" map-name="orderItemShipGroup" to-map-name="shipmentRouteSegmentMap"/>
+                <field-to-field field-name="shipmentMethodTypeId" map-name="orderItemShipGroup" to-map-name="shipmentRouteSegmentMap"/>
             </if-not-empty>
             <call-service service-name="createShipmentRouteSegment" in-map-name="shipmentRouteSegmentMap"/>
         </if-empty>
@@ -976,197 +1015,147 @@
         <set-nonpk-fields map-name="parameters" value-name="shipmentMethodType"/>
         <store-value value-name="shipmentMethodType"/>
     </simple-method>
-
-    <!-- quick ship entire order in single package -->
-    <simple-method method-name="quickShipEntireOrder" short-description="Quick ships an entire order">
+    
+    <!-- quick ship entire order in one package per facility & ship group -->
+    <simple-method method-name="quickShipEntireOrder" short-description="Quick ships an entire order from multiple facilities">
         <!-- first get the order header; make sure we have a product store -->
         <field-to-field field-name="orderId" map-name="parameters" to-map-name="ohpkmap"/>
         <find-by-primary-key entity-name="OrderHeader" map-name="ohpkmap" value-name="orderHeader"/>
-        <if-empty field-name="originFacilityId" map-name="parameters">
-            <if-empty field-name="productStoreId" map-name="orderHeader">
-                <!-- no store cannot use quick ship; throw error -->
-                <add-error><fail-message message="No ProductStore associated with order; cannot use Quick Ship"/></add-error>
-                <check-errors/>
-            </if-empty>
-            <if-not-empty field-name="productStoreId" map-name="orderHeader">
-                <!-- get the product store entity -->
-                <field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
-                <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
-                <if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
-                    <!-- no reservations; no shipment; cannot use quick ship -->
-                    <add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship"/></add-error>
-                </if-compare>
-                <if-compare field-name="oneInventoryFacility" map-name="productStore" operator="not-equals" value="Y">
-                    <!-- if we allow multiple facilities we cannot use quick ship; throw error -->
-                    <add-error><fail-message message="ProductStore [${productStore.productStoreId}] allows multiple facilities; cannot use Quick Ship"/></add-error>
-                    <check-errors/>
-                </if-compare>
-                <if-empty field-name="inventoryFacilityId" map-name="productStore">
-                    <!-- if no inventoryFacility is defined we cannot use quick ship; throw error -->
-                    <add-error><fail-message message="No inventory facility associated with ProductStore [${productStore.productStoreId}]; cannot use Quick Ship"/></add-error>
-                    <check-errors/>
-                </if-empty>
-            </if-not-empty>
-        </if-empty>
-
-        <!-- lookup all the approved items -->
-        <string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
-        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
-        <find-by-and entity-name="OrderItem" map-name="itemLookupMap" list-name="orderItems"/>
-
-        <!-- make sure we have something to ship -->
-        <if-empty field-name="orderItems">
-            <add-error><fail-message message="No items available to ship at this time"/></add-error>
+        <if-empty field-name="productStoreId" map-name="orderHeader">
+            <!-- no store cannot use quick ship; throw error -->
+            <add-error><fail-message message="No ProductStore associated with order; cannot use Quick Ship"/></add-error>
             <check-errors/>
         </if-empty>
 
-        <!-- we are all good to go; create the shipment -->
-        <if-not-empty field-name="originFacilityId" map-name="parameters">
-            <field-to-field field-name="originFacilityId" map-name="parameters" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
-        </if-not-empty>
-        <field-to-field field-name="orderId" map-name="orderHeader" to-field-name="primaryOrderId" to-map-name="shipmentContext"/>
-        <string-to-field field-name="statusId" map-name="shipmentContext" string="SHIPMENT_INPUT"/>
-        <call-service service-name="createShipment" in-map-name="shipmentContext">
-            <result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
-        </call-service>
-        <find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
+        <!-- get the product store entity -->
+        <field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
+        <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
+        <if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
+            <!-- no reservations; no shipment; cannot use quick ship -->
+            <add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship for Multiple Facilities"/></add-error>
+        </if-compare>
+        <if-compare field-name="explodeOrderItems" map-name="productStore" operator="equals" value="Y">
+            <!-- can't insert duplicate rows in shipmentPackageContent -->
+            <add-error><fail-message message="ProductStore [${productStore.productStoreID}] explodes order items; cannot use Quick Ship for Multiple Facilities"/></add-error>
+        </if-compare>
+        <!-- locate shipping facilities associated with order item rez's -->
+        <entity-condition entity-name="OrderItemAndShipGrpInvResAndItem" list-name="orderItemAndShipGrpInvResAndItemList">
+            <condition-list>
+                <condition-expr field-name="orderId" env-name="orderHeader.orderId"/>
+                <condition-expr field-name="statusId" value="ITEM_APPROVED"/>
+            </condition-list>
+        </entity-condition>
+        <iterate list-name="orderItemAndShipGrpInvResAndItemList" entry-name="orderItemAndShipGrpInvResAndItem">
+            <if>
+                <condition><not><if-compare-field field-name="orderItemShipGrpInvResFacilityIds" operator="contains" to-field-name="orderItemAndShipGrpInvResAndItem.facilityId"/></not></condition>
+                <then><field-to-list field-name="orderItemAndShipGrpInvResAndItem.facilityId" list-name="orderItemShipGrpInvResFacilityIds"/></then>
+            </if>
+        </iterate>
+            
+        <!-- lookup all the approved items, doing by item because the item must be approved before shipping -->
+        <string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
+        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
+        <find-by-and entity-name="OrderItemAndShipGroupAssoc" map-name="itemLookupMap" list-name="orderItemAndShipGroupAssocList"/>
 
-        <!-- issue all order items that are in approved status -->
-        <iterate list-name="orderItems" entry-name="orderItem">
-            <get-related value-name="orderItem" relation-name="OrderItemInventoryRes" list-name="itemReses"/>
-            <iterate list-name="itemReses" entry-name="itemRes">
-                <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
-                <field-to-field field-name="orderId" map-name="itemRes" to-map-name="issueContext"/>
-                <field-to-field field-name="orderItemSeqId" map-name="itemRes" to-map-name="issueContext"/>
-                <field-to-field field-name="inventoryItemId" map-name="itemRes" to-map-name="issueContext"/>
-                <field-to-field field-name="quantity" map-name="itemRes" to-map-name="issueContext"/>
-                <call-service service-name="issueOrderItemInventoryResToShipment" in-map-name="issueContext"/>
+        <!-- make sure we have something to ship -->
+        <if-empty field-name="orderItemAndShipGroupAssocList">
+            <add-error><fail-message message="No items available to ship at this time"/></add-error>
+            <check-errors/>
+        </if-empty>
+            
+        <!-- group orderItems (actually OrderItemAndShipGroupAssocs) by shipGroupSeqId in a Map with List values -->
+        <iterate list-name="orderItemAndShipGroupAssocList" entry-name="orderItemAndShipGroupAssoc">
+            <field-to-list field-name="orderItemAndShipGroupAssoc" list-name="orderItemListByShGrpMap.${orderItemAndShipGroupAssoc.shipGroupSeqId}"/>
+        </iterate>
+
+        <get-related relation-name="OrderItemShipGroup" value-name="orderHeader" list-name="orderItemShipGroupList"/>
+            
+        <!-- traverse facilities, instantiate shipment for each -->
+        <iterate list-name="orderItemShipGrpInvResFacilityIds" entry-name="orderItemShipGrpInvResFacilityId">
+            <!-- sanity check for valid facility -->
+            <env-to-env env-name="orderItemShipGrpInvResFacilityId" to-env-name="facilityLookupMap.facilityId"/>
+            <find-by-primary-key entity-name="Facility" map-name="facilityLookupMap" value-name="facility"/>
+            <!-- should never be empty - referential integrity enforced -->
+
+            <!-- for OrderItemShipGroup need to split all OISGIRs into their ship groups and create a shipment for each -->
+            <iterate list-name="orderItemShipGroupList" entry-name="orderItemShipGroup">
+                <!-- lookup all the approved items -->
+                <string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
+                <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
+                <field-to-field field-name="shipGroupSeqId" map-name="orderItemShipGroup" to-map-name="itemLookupMap"/>
+                <find-by-and entity-name="OrderItemAndShipGroupAssoc" map-name="itemLookupMap" list-name="orderItems"/>
+                    
+                <env-to-env env-name="orderItemListByShGrpMap.${orderItemShipGroup.shipGroupSeqId}" to-env-name="perShipGroupItemList"/>
+            
+                <!-- make sure we have something to ship -->
+                <if-empty field-name="perShipGroupItemList">
+                    <string-to-list string="No items available to ship at this time for ship group ID [${orderItemShipGroup.shipGroupSeqId}]" list-name="successMessageList"/>
+                <else>
+                    <!-- create the shipment for this facility and ship group combination -->
+                    <field-to-field field-name="orderHeader.orderId" to-field-name="shipmentContext.primaryOrderId"/>
+                    <field-to-field field-name="orderItemShipGroup.shipGroupSeqId" to-field-name="shipmentContext.primaryShipGroupSeqId"/>
+                    <field-to-field field-name="orderItemShipGrpInvResFacilityId" to-field-name="shipmentContext.originFacilityId"/>
+                    <string-to-field string="SHIPMENT_INPUT" field-name="statusId" map-name="shipmentContext"/>
+                    <call-service service-name="createShipment" in-map-name="shipmentContext">
+                        <result-to-field result-name="shipmentId" field-name="shipmentLookupMap.shipmentId"/>
+                    </call-service>
+                    <find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
+    
+                    <iterate list-name="perShipGroupItemList" entry-name="orderItemAndShipGroupAssoc">
+                        <!-- just get the OrderItemShipGrpInvResAndItem records for this facility and this ship group, since that is what this shipment is for -->
+                        <clear-field field-name="itemResFindMap"/>
+                        <env-to-env env-name="orderItemShipGrpInvResFacilityId" to-env-name="itemResFindMap.facilityId"/>
+                        <get-related value-name="orderItemAndShipGroupAssoc" relation-name="OrderItemShipGrpInvResAndItem" map-name="itemResFindMap" list-name="itemResList"/>
+                        <iterate list-name="itemResList" entry-name="itemRes">
+                            <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
+                            <field-to-field field-name="orderId" map-name="itemRes" to-map-name="issueContext"/>
+                            <field-to-field field-name="orderItemSeqId" map-name="itemRes" to-map-name="issueContext"/>
+                            <field-to-field field-name="shipGroupSeqId" map-name="itemRes" to-map-name="issueContext"/>
+                            <field-to-field field-name="inventoryItemId" map-name="itemRes" to-map-name="issueContext"/>
+                            <field-to-field field-name="quantity" map-name="itemRes" to-map-name="issueContext"/>
+                            <call-service service-name="issueOrderItemShipGrpInvResToShipment" in-map-name="issueContext"/>
+                        </iterate>
+                    </iterate>
+                        
+                    <!-- place all issued items into a single package -->
+                    <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueLookupMap"/>
+                    <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueLookupMap"/>
+                    <field-to-field field-name="shipGroupSeqId" map-name="orderItemShipGroup" to-map-name="issueLookupMap"/>
+                    <find-by-and entity-name="ItemIssuance" map-name="issueLookupMap" list-name="itemIssuances"/>
+                    
+                    <string-to-field string="New" field-name="packageSeqMap.packageId"/>
+                    <iterate list-name="itemIssuances" entry-name="itemIssuance">
+                        <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
+                        <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
+                        <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
+                        <field-to-field field-name="packageSeqMap.packageId" to-field-name="shipItemContext.shipmentPackageSeqId"/>
+                        <call-service service-name="addShipmentContentToPackage" in-map-name="shipItemContext">
+                            <result-to-field result-name="shipmentPackageSeqId" field-name="packageSeqMap.packageId"/>
+                        </call-service>
+                    </iterate>
+                    <!-- update the shipment status to packed -->
+                    <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
+                    <string-to-field string="SHIPMENT_PACKED" field-name="packedContext.statusId"/>
+                    <call-service service-name="updateShipment" in-map-name="packedContext"/>
+                    <!-- update the shipment status to shipped -->
+                    <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
+                    <string-to-field string="SHIPMENT_SHIPPED" field-name="packedContext.statusId"/>
+                    <call-service service-name="updateShipment" in-map-name="packedContext"/>
+
+                    <env-to-env env-name="shipment.shipmentId" to-env-name="shipmentShipGroupFacility.shipmentId"/>
+                    <env-to-env env-name="facility.facilityId" to-env-name="shipmentShipGroupFacility.facilityId"/>
+                    <env-to-env env-name="orderItemShipGroup.shipGroupSeqId" to-env-name="shipmentShipGroupFacility.shipGroupSeqId"/>
+                    <field-to-list field-name="shipmentShipGroupFacility" list-name="shipmentShipGroupFacilityList"/>
+                    <string-to-list string="Created shipment with ID [${shipmentShipGroupFacility.shipmentId}] for ship group ID [${shipmentShipGroupFacility.shipGroupSeqId}] for facility ID [${shipmentShipGroupFacility.facilityId}]" list-name="successMessageList"/>
+                    <clear-field field-name="shipmentShipGroupFacility"/>
+                </else>
+                </if-empty>
             </iterate>
         </iterate>
-        <!-- place all issued items into a single package -->
-        <field-to-field field-name="shipmentId" to-map-name="issueLookupMap"/>
-        <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueLookupMap"/>
-        <find-by-and entity-name="ItemIssuance" map-name="issueLookupMap" list-name="itemIssuances"/>
-        <string-to-field field-name="packageId" map-name="packageSeqMap" string="New"/>
-        <iterate list-name="itemIssuances" entry-name="itemIssuance">
-            <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
-            <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
-            <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
-            <field-to-field field-name="packageId" map-name="packageSeqMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
-            <call-service service-name="addShipmentContentToPackage" in-map-name="shipItemContext">
-                <result-to-field result-name="shipmentPackageSeqId" field-name="packageId" map-name="packageSeqMap"/>
-            </call-service>
-        </iterate>
-        <!-- update the shipment status to packed -->
-        <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
-        <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_PACKED"/>
-        <call-service service-name="updateShipment" in-map-name="packedContext"/>
-        <!-- update the shipment status to shipped -->
-        <if-empty map-name="parameters" field-name="setPackedOnly">
-              <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
-            <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
-            <call-service service-name="updateShipment" in-map-name="packedContext"/>
-        </if-empty>
-        <field-to-result field-name="shipmentId" map-name="shipment" result-name="shipmentId"/>
-    </simple-method>	 	
-
-	<!-- quick ship entire order in one package per facility -->
-	<simple-method method-name="quickShipEntireOrderMultipleFacilities" short-description="Quick ships an entire order from multiple facilities">
-		<!-- first get the order header; make sure we have a product store -->
-		<field-to-field field-name="orderId" map-name="parameters" to-map-name="ohpkmap"/>
-		<find-by-primary-key entity-name="OrderHeader" map-name="ohpkmap" value-name="orderHeader"/>
-		<if-empty field-name="productStoreId" map-name="orderHeader">
-			<!-- no store cannot use quick ship; throw error -->
-			<add-error><fail-message message="No ProductStore associated with order; cannot use Quick Ship"/></add-error>
-			<check-errors/>
-		</if-empty>
-		<if-not-empty field-name="productStoreId" map-name="orderHeader">
-			<!-- get the product store entity -->
-			<field-to-field field-name="productStoreId" map-name="orderHeader" to-map-name="storeLookup"/>
-			<find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
-			<if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
-				<!-- no reservations; no shipment; cannot use quick ship -->
-				<add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship"/></add-error>
-			</if-compare>
-			<if-compare field-name="explodeOrderItems" map-name="productStore" operator="equals" value="Y">
-				<!-- can't insert duplicate rows in shipmentPackageContent -->
-				<add-error><fail-message message="ProductStore [${productStore.productStoreID}] explodes order items; cannot use Quick Ship"/></add-error>
-			</if-compare>
-
-			<!-- locate shipping facilities associated with order item rez's -->
-			<call-class-method class-name="org.ofbiz.order.order.OrderReadHelper" method-name="getOrderItemInventoryResFacilityIds" ret-field-name="orderItemInventoryResFacilityIds">
-			 	<field field-name="orderHeader" type="org.ofbiz.entity.GenericValue"/>
-			</call-class-method>
-			<field-to-list field-name="orderItemInventoryResFacilityIds" list-name="orderItemInventoryResFacilityIds"/>
-
-			<!-- lookup all the approved items -->
-			<string-to-field field-name="statusId" map-name="itemLookupMap" string="ITEM_APPROVED"/>
-			<field-to-field field-name="orderId" map-name="orderHeader" to-map-name="itemLookupMap"/>
-			<find-by-and entity-name="OrderItem" map-name="itemLookupMap" list-name="orderItems"/>
-
-            <!-- make sure we have something to ship -->
-            <if-empty field-name="orderItems">
-                <add-error><fail-message message="No items available to ship at this time"/></add-error>
-                <check-errors/>
-            </if-empty>
-
-			<!-- traverse facilities, instantiate shipment for each -->
-			<iterate list-name="orderItemInventoryResFacilityIds" entry-name="orderItemInventoryResFacilityId">
-				<!-- sanity check for valid facility -->
-				<string-to-field string="${orderItemInventoryResFacilityId}" field-name="facilityId" map-name="facilityLookupMap"/>
-				<find-by-primary-key entity-name="Facility" map-name="facilityLookupMap" value-name="facility"/>
-				<if-not-empty field-name="facilityId" map-name="facility">
-
-					<!-- create the shipment for this facility -->
-					<field-to-field field-name="orderId" map-name="orderHeader" to-field-name="primaryOrderId" to-map-name="shipmentContext"/>
-					<string-to-field field-name="statusId" map-name="shipmentContext" string="SHIPMENT_INPUT"/>
-					<field-to-field field-name="facilityId" map-name="facility" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
-					<call-service service-name="createShipment" in-map-name="shipmentContext">
-						<result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
-					</call-service>
-					<find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
-			
-					<!-- issue items by reservation facility to facility shipment -->
-					<iterate list-name="orderItems" entry-name="orderItem">
-						<get-related value-name="orderItem" relation-name="OrderItemInventoryRes" list-name="itemReses"/>
-						<iterate list-name="itemReses" entry-name="itemRes">
-							<get-related-one value-name="itemRes" relation-name="InventoryItem" to-value-name="inventoryItem"/>
-							<if-compare field-name="facilityId" map-name="inventoryItem" operator="equals" value="${orderItemInventoryResFacilityId}">
-								<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
-								<field-to-field field-name="orderId" map-name="itemRes" to-map-name="issueContext"/>
-								<field-to-field field-name="orderItemSeqId" map-name="itemRes" to-map-name="issueContext"/>
-								<field-to-field field-name="inventoryItemId" map-name="itemRes" to-map-name="issueContext"/>
-								<field-to-field field-name="quantity" map-name="itemRes" to-map-name="issueContext"/>
-								<call-service service-name="issueOrderItemInventoryResToShipment" in-map-name="issueContext"/>
-							</if-compare>
-						</iterate>
-					</iterate>
-					<!-- place all issued items into a single package -->
-					<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueLookupMap"/>
-					<field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueLookupMap"/>
-					<find-by-and entity-name="ItemIssuance" map-name="issueLookupMap" list-name="itemIssuances"/>
-					<string-to-field field-name="packageId" map-name="packageSeqMap" string="New"/>
-					<iterate list-name="itemIssuances" entry-name="itemIssuance">
-						<field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
-						<field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
-						<field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
-						<field-to-field field-name="packageId" map-name="packageSeqMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
-						<call-service service-name="addShipmentContentToPackage" in-map-name="shipItemContext">
-							<result-to-field result-name="shipmentPackageSeqId" field-name="packageId" map-name="packageSeqMap"/>
-						</call-service>
-					</iterate>
-					<!-- update the shipment status to packed -->
-					<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
-					<string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_PACKED"/>
-					<call-service service-name="updateShipment" in-map-name="packedContext"/>
-					<!-- update the shipment status to shipped -->
-					<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
-					<string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
-					<call-service service-name="updateShipment" in-map-name="packedContext"/>	
-				</if-not-empty>
-			</iterate>
-		</if-not-empty>
-	</simple-method>   
+        
+        <field-to-result field-name="shipmentShipGroupFacilityList"/>
+        <field-to-result field-name="successMessageList"/>
+    </simple-method>   
 
     <!-- quick ship order using multiple packages per tracking number -->
     <!-- The input list contains a Map with four keys: orderItemSeqId, inventoryItemId, qtyShipped, trackingNum -->
@@ -1212,10 +1201,10 @@
 
         <!-- we are all good to go; create the shipment -->
         <if-not-empty field-name="originFacilityId" map-name="parameters">
-            <field-to-field field-name="originFacilityId" map-name="parameters" to-field-name="originFacilityId" to-map-name="shipmentContext"/>
+            <field-to-field field-name="originFacilityId" map-name="parameters" to-map-name="shipmentContext"/>
         </if-not-empty>
-        <field-to-field field-name="orderId" map-name="orderHeader" to-field-name="primaryOrderId" to-map-name="shipmentContext"/>
-        <string-to-field field-name="statusId" map-name="shipmentContext" string="SHIPMENT_INPUT"/>
+        <field-to-field field-name="orderHeader.orderId" to-field-name="shipmentContext.primaryOrderId"/>
+        <string-to-field string="SHIPMENT_INPUT" field-name="shipmentContext.statusId"/>
         <call-service service-name="createShipment" in-map-name="shipmentContext">
             <result-to-field result-name="shipmentId" field-name="shipmentId" map-name="shipmentLookupMap"/>
         </call-service>
@@ -1228,9 +1217,10 @@
             <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
             <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="issueContext"/>
             <field-to-field field-name="orderItemSeqId" map-name="itemMap" to-map-name="issueContext"/>
+            <field-to-field field-name="shipGroupSeqId" map-name="itemMap" to-map-name="issueContext"/>
             <field-to-field field-name="inventoryItemId" map-name="itemMap" to-map-name="issueContext"/>
             <field-to-field field-name="qtyShipped" map-name="itemMap" to-field-name="quantity" to-map-name="issueContext"/>
-            <call-service service-name="issueOrderItemInventoryResToShipment" in-map-name="issueContext">
+            <call-service service-name="issueOrderItemShipGrpInvResToShipment" in-map-name="issueContext">
                 <result-to-field result-name="itemIssuanceId" field-name="itemIssuanceId" map-name="itemMap"/>
             </call-service>
             <clear-field field-name="issueContext"/>
@@ -1284,7 +1274,7 @@
             <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
             <call-service service-name="updateShipment" in-map-name="packedContext"/>
         </if-empty>
-        <field-to-result field-name="shipmentId" map-name="shipment" result-name="shipmentId"/>
+        <field-to-result field-name="shipment.shipmentId" result-name="shipmentId"/>
     </simple-method>
     
     <simple-method method-name="deleteShipmentPlan" short-description="Delete a ShipmentPlan entry">
@@ -1295,7 +1285,6 @@
         <check-permission permission="FACILITY" action="_UPDATE">
             <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
-        <!-- get orderItemInventoryRes -->
         <make-value entity-name="ShipmentPlan" value-name="shipmentPlanLookupPk"/>
         <set-pk-fields value-name="shipmentPlanLookupPk" map-name="parameters"/>
         <remove-value value-name="shipmentPlanLookupPk"/>
@@ -1378,3 +1367,4 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 -->
+

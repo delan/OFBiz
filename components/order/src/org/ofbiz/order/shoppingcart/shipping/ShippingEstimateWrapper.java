@@ -61,18 +61,22 @@ public class ShippingEstimateWrapper {
     protected double shippableWeight = 0;
     protected double shippableTotal = 0;
 
-    public ShippingEstimateWrapper(LocalDispatcher dispatcher, ShoppingCart cart) {
+    public static ShippingEstimateWrapper getWrapper(LocalDispatcher dispatcher, ShoppingCart cart, int shipGroup) {
+        return new ShippingEstimateWrapper(dispatcher, cart, shipGroup);
+    }
+
+    public ShippingEstimateWrapper(LocalDispatcher dispatcher, ShoppingCart cart, int shipGroup) {
         this.dispatcher = dispatcher;
         this.delegator = cart.getDelegator();
 
-        this.shippableItemFeatures = cart.getFeatureIdQtyMap();
-        this.shippableItemSizes = cart.getShippableSizes();
-        this.shippableItemInfo = cart.getShippableItemInfo();
+        this.shippableItemFeatures = cart.getFeatureIdQtyMap(shipGroup);
+        this.shippableItemSizes = cart.getShippableSizes(shipGroup);
+        this.shippableItemInfo = cart.getShippableItemInfo(shipGroup);
+        this.shippableQuantity = cart.getShippableQuantity(shipGroup);
+        this.shippableWeight = cart.getShippableWeight(shipGroup);
+        this.shippableTotal = cart.getShippableTotal(shipGroup);
+        this.shippingAddress = cart.getShippingAddress(shipGroup);
         this.productStoreId = cart.getProductStoreId();
-        this.shippableQuantity = cart.getShippableQuantity();
-        this.shippableWeight = cart.getShippableWeight();
-        this.shippableTotal = cart.getShippableTotal();
-        this.shippingAddress = cart.getShippingAddress();
 
         this.loadShippingMethods();
         this.loadEstimates();
@@ -98,7 +102,7 @@ public class ShippingEstimateWrapper {
                 String carrierPartyId = shipMethod.getString("partyId");
                 String shippingCmId = shippingAddress != null ? shippingAddress.getString("contactMechId") : null;
 
-                Map estimateMap = ShippingEvents.getShipEstimate(dispatcher, delegator, "SALES_ORDER",
+                Map estimateMap = ShippingEvents.getShipGroupEstimate(dispatcher, delegator, "SALES_ORDER",
                         shippingMethodTypeId, carrierPartyId, carrierRoleTypeId, shippingCmId, productStoreId,
                         shippableItemInfo, shippableWeight, shippableQuantity, shippableTotal);
 

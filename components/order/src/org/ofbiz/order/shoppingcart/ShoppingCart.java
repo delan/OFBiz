@@ -25,7 +25,6 @@ package org.ofbiz.order.shoppingcart;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -55,11 +54,12 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.service.LocalDispatcher;
 
+import org.apache.commons.collections.map.LinkedMap;
+
 /**
  * Shopping Cart Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Rev:$
  * @since      2.0
@@ -68,7 +68,6 @@ public class ShoppingCart implements Serializable {
 
     public static final String module = ShoppingCart.class.getName();
 
-    private List paymentInfo = new LinkedList();
     private String orderType = "SALES_ORDER"; // default orderType
     private String poNumber = null;
     private String orderId = null;
@@ -80,7 +79,6 @@ public class ShoppingCart implements Serializable {
     private String defaultItemDeliveryDate = null;
     private String defaultItemComment = null;
 
-    private GenericValue orderShipmentPreference = null;
     private String orderAdditionalEmails = null;
     private boolean viewCartOnAdd = false;
 
@@ -89,7 +87,9 @@ public class ShoppingCart implements Serializable {
 
     /** Holds value of order adjustments. */
     private List adjustments = new LinkedList();
-    private List cartLines = new ArrayList();
+    private List cartLines = new LinkedList();
+    private List paymentInfo = new LinkedList();
+    private List shipInfo = new LinkedList();
     private Map contactMechIdsMap = new HashMap();
     
     /** contains a list of partyId for each roleTypeId (key) */
@@ -112,6 +112,171 @@ public class ShoppingCart implements Serializable {
         public String getProductPromoCodeId() { return this.productPromoCodeId; }
         public double getTotalDiscountAmount() { return this.totalDiscountAmount; }
         public double getQuantityLeftInActions() { return this.quantityLeftInActions; }
+    }
+
+    public static class CartShipInfo implements Serializable {
+        public LinkedMap shipItemInfo = new LinkedMap();
+        public List shipTaxAdj = new LinkedList();
+        public String contactMechId = null;
+        public String shipmentMethodTypeId = null;
+        public String carrierRoleTypeId = null;
+        public String carrierPartyId = null;
+        public String giftMessage = null;
+        public String shippingInstructions = null;
+        public String maySplit = "N";
+        public String isGift = "N";
+        public double shipEstimate = 0.00;
+
+        public List makeItemShipGroupAndAssoc(GenericDelegator delegator, ShoppingCart cart, long groupIndex) {
+            String shipGroupSeqId = UtilFormatOut.formatPaddedNumber(groupIndex, 5);
+            List values = new LinkedList();
+
+            // create order contact mech for shipping address
+            GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
+            orderCm.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
+            orderCm.set("contactMechId", contactMechId);
+            values.add(orderCm);
+
+            // create the ship group
+            GenericValue shipGroup = delegator.makeValue("OrderItemShipGroup", null);
+            shipGroup.set("shipmentMethodTypeId", shipmentMethodTypeId);
+            shipGroup.set("carrierRoleTypeId", carrierRoleTypeId);
+            shipGroup.set("carrierPartyId", carrierPartyId);
+            shipGroup.set("shippingInstructions", shippingInstructions);
+            shipGroup.set("giftMessage", giftMessage);
+            shipGroup.set("contactMechId", contactMechId);
+            shipGroup.set("maySplit", new String(maySplit));
+            shipGroup.set("isGift", new String(isGift));
+            shipGroup.set("shipGroupSeqId", shipGroupSeqId);
+            Debug.log("Created Ship Group - " + shipGroup, module);
+            values.add(shipGroup);
+
+            // create the shipping estimate adjustments
+            GenericValue shipAdj = delegator.makeValue("OrderAdjustment", null);
+            shipAdj.set("orderAdjustmentTypeId", "SHIPPING_CHARGES");
+            shipAdj.set("amount", new Double(shipEstimate));
+            shipAdj.set("shipGroupSeqId", shipGroupSeqId);
+            Debug.log("Created Ship Group Shipping Adjustment - " + shipAdj, module);
+            values.add(shipAdj);
+
+            // create the top level tax adjustments
+            Iterator ti = shipTaxAdj.iterator();
+            while (ti.hasNext()) {
+                GenericValue taxAdj = (GenericValue) ti.next();
+                taxAdj.set("shipGroupSeqId", shipGroupSeqId);
+                Debug.log("Created Ship Group Tax Adjustment - " + taxAdj, module);
+                values.add(taxAdj);
+            }
+
+            // create the ship group item associations
+            Debug.log("Creating associations - " + shipItemInfo.size(), module);
+            Iterator i = shipItemInfo.keySet().iterator();
+            while (i.hasNext()) {
+                ShoppingCartItem item = (ShoppingCartItem) i.next();
+                CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
+
+                GenericValue assoc = delegator.makeValue("OrderItemShipGroupAssoc", null);
+                assoc.set("orderItemSeqId", item.getOrderItemSeqId());
+                assoc.set("shipGroupSeqId", shipGroupSeqId);
+                assoc.set("quantity", new Double(itemInfo.quantity));
+                Debug.log("Created ShipGroupAssoc - " + assoc, module);
+                values.add(assoc);
+
+                // create the item tax adjustment
+                Debug.log("Item Tax Adj - " + itemInfo.itemTaxAdj, module);
+                Iterator iti = itemInfo.itemTaxAdj.iterator();
+                while (iti.hasNext()) {
+                    GenericValue taxAdj = (GenericValue) iti.next();
+                    taxAdj.set("orderItemSeqId", item.getOrderItemSeqId());
+                    taxAdj.set("shipGroupSeqId", shipGroupSeqId);
+                    Debug.log("Created Item Tax Adj - " + taxAdj, module);
+                    values.add(taxAdj);
+                }
+            }
+
+            return values;
+        }
+
+        public CartShipItemInfo setItemInfo(ShoppingCartItem item, double quantity, List taxAdj) {
+            CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
+            if (itemInfo == null) {
+                itemInfo = new CartShipItemInfo();
+                itemInfo.item = item;
+                shipItemInfo.put(item, itemInfo);
+            }
+            itemInfo.quantity = quantity;
+            itemInfo.itemTaxAdj.clear();
+            itemInfo.itemTaxAdj.addAll(taxAdj);
+            return itemInfo;
+        }
+
+        public CartShipItemInfo setItemInfo(ShoppingCartItem item, List taxAdj) {
+            CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
+            if (itemInfo == null) {
+                itemInfo = new CartShipItemInfo();
+                itemInfo.item = item;
+                shipItemInfo.put(item, itemInfo);
+            }
+            itemInfo.itemTaxAdj.clear();
+            itemInfo.itemTaxAdj.addAll(taxAdj);
+            return itemInfo;
+        }
+
+        public CartShipItemInfo setItemInfo(ShoppingCartItem item, double quantity) {
+            CartShipItemInfo itemInfo = (CartShipItemInfo) shipItemInfo.get(item);
+            if (itemInfo == null) {
+                itemInfo = new CartShipItemInfo();
+                itemInfo.item = item;
+                shipItemInfo.put(item, itemInfo);
+            }
+            itemInfo.quantity = quantity;
+            return itemInfo;
+        }
+
+        public CartShipItemInfo getShipItemInfo(ShoppingCartItem item) {
+            return (CartShipItemInfo) shipItemInfo.get(item);
+        }
+
+        public Set getShipItems() {
+            return shipItemInfo.keySet();
+        }
+
+        public double getTotalTax(ShoppingCart cart) {
+            double taxTotal = 0.00;
+            for (int i = 0; i < shipTaxAdj.size(); i++) {
+                GenericValue v = (GenericValue) shipTaxAdj.get(i);
+                taxTotal += OrderReadHelper.calcOrderAdjustment(v, cart.getSubTotal());
+            }
+
+            Iterator iter = shipItemInfo.values().iterator();
+            while (iter.hasNext()) {
+                CartShipItemInfo info = (CartShipItemInfo) iter.next();
+                taxTotal += info.getItemTax(cart);
+            }
+
+            return taxTotal;
+        }
+
+        public static class CartShipItemInfo implements Serializable {
+            public List itemTaxAdj = new LinkedList();
+            public ShoppingCartItem item = null;
+            public double quantity = 0;
+
+            public double getItemTax(ShoppingCart cart) {
+                double itemTax = 0.00;
+
+                for (int i = 0; i < itemTaxAdj.size(); i++) {
+                    GenericValue v = (GenericValue) itemTaxAdj.get(i);
+                    itemTax += OrderReadHelper.calcItemAdjustment(v, new Double(quantity), new Double(item.getBasePrice()));
+                }
+
+                return itemTax;
+            }
+
+            public double getItemQuantity() {
+                return this.quantity;
+            }
+        }
     }
 
     public static class CartPaymentInfo implements Serializable, Comparable {
@@ -142,32 +307,72 @@ public class ShoppingCart implements Serializable {
             return null;
         }
 
-        public GenericValue makeOrderPaymentPreference(GenericDelegator delegator) {
+        public List makeOrderPaymentInfos(GenericDelegator delegator) {
             GenericValue valueObj = this.getValueObject(delegator);
-            GenericValue p = null;
+            List values = new LinkedList();
             if (valueObj != null) {
-                p = delegator.makeValue("OrderPaymentPreference", new HashMap());
-                p.set("paymentMethodTypeId", valueObj.getString("paymentMethodTypeId"));
-                p.set("paymentMethodId", paymentMethodId);
-                p.set("billingPostalCode", postalCode);
-                p.set("maxAmount", amount);
+                // first create a BILLING_LOCATION for the payment method address if there is one
+                if ("PaymentMethod".equals(valueObj.getEntityName())) {
+                    String paymentMethodTypeId = valueObj.getString("paymentMethodTypeId");
+                    String paymentMethodId = valueObj.getString("paymentMethodId");
+                    Map lookupFields = UtilMisc.toMap("paymentMethodId", paymentMethodId);
+                    String billingAddressId = null;
+
+                    Debug.log("Doing billing location lookup for - " + valueObj, module);
+                    // billing account, credit card, gift card, eft account all have postal address
+                    try {
+                        GenericValue pmObj = null;
+                        if ("CREDIT_CARD".equals(paymentMethodTypeId)) {
+                            pmObj = delegator.findByPrimaryKey("CreditCard", lookupFields);
+                        } else if ("GIFT_CARD".equals(paymentMethodTypeId)) {
+                            pmObj = delegator.findByPrimaryKey("GiftCard", lookupFields);
+                        } else if ("EFT_ACCOUNT".equals(paymentMethodTypeId)) {
+                            pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
+                        } else if ("EXT_BILLACT".equals(paymentMethodTypeId)) {
+                            pmObj = delegator.findByPrimaryKey("BillingAccount", lookupFields);
+                        }
+                        if (pmObj != null) {
+                            Debug.log("Found PaymentMethod - " + pmObj, module);
+                            billingAddressId = pmObj.getString("contactMechId");
+                        } else {
+                            Debug.log("No PaymentMethod Object Found - " + paymentMethodId, module);
+                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e ,module);
+                    }
+                    if (UtilValidate.isNotEmpty(billingAddressId)) {
+                        GenericValue orderCm = delegator.makeValue("OrderContactMech", null);
+                        orderCm.set("contactMechPurposeTypeId", "BILLING_LOCATION");
+                        orderCm.set("contactMechId", billingAddressId);
+                        values.add(orderCm);
+                    }
+                }
+
+                // create the OrderPaymentPreference record
+                GenericValue opp = delegator.makeValue("OrderPaymentPreference", new HashMap());
+                opp.set("paymentMethodTypeId", valueObj.getString("paymentMethodTypeId"));
+                opp.set("paymentMethodId", paymentMethodId);
+                opp.set("billingPostalCode", postalCode);
+                opp.set("maxAmount", amount);
                 if (refNum != null) {
-                    p.set("manualRefNum", refNum[0]);
-                    p.set("manualAuthCode", refNum[1]);
+                    opp.set("manualRefNum", refNum[0]);
+                    opp.set("manualAuthCode", refNum[1]);
                 }
                 if (paymentMethodId != null) {
-                    p.set("statusId", "PAYMENT_NOT_AUTH");
+                    opp.set("statusId", "PAYMENT_NOT_AUTH");
                 } else if (paymentMethodTypeId != null) {
                     // external payment method types require notification when received
                     // internal payment method types are assumed to be in-hand
                     if (paymentMethodTypeId.startsWith("EXT_")) {
-                        p.set("statusId", "PAYMENT_NOT_RECEIVED");
+                        opp.set("statusId", "PAYMENT_NOT_RECEIVED");
                     } else {
-                        p.set("statusId", "PAYMENT_RECEIVED");
+                        opp.set("statusId", "PAYMENT_RECEIVED");
                     }
                 }
+                values.add(opp);
             }
-            return p;
+
+            return values;
         }
 
         public int compareTo(Object o) {
@@ -261,7 +466,6 @@ public class ShoppingCart implements Serializable {
         this.orderId = cart.getOrderId();
         this.firstAttemptOrderId = cart.getFirstAttemptOrderId();
         this.billingAccountId = cart.getBillingAccountId();
-        this.orderShipmentPreference = cart.getOrderShipmentPreference();
         this.orderAdditionalEmails = cart.getOrderAdditionalEmails();
         this.adjustments = new LinkedList(cart.getAdjustments());
         this.contactMechIdsMap = new HashMap(cart.getOrderContactMechIds());
@@ -296,7 +500,6 @@ public class ShoppingCart implements Serializable {
         this.productStoreId = productStoreId;
         this.webSiteId = webSiteId;
         this.currencyUom = currencyUom;
-        this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
         this.locale = locale;
         if (this.locale == null) {
             this.locale = Locale.getDefault();
@@ -467,6 +670,7 @@ public class ShoppingCart implements Serializable {
             ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
 
             if (cartItem.getQuantity() == 0.0) {
+                this.clearItemShipInfo(cartItem);
                 cartLines.remove(i);
             } else {
                 i++;
@@ -660,16 +864,12 @@ public class ShoppingCart implements Serializable {
         this.poNumber = null;
         this.orderId = null;
 
-        this.orderShipmentPreference.remove("shippingInstructions");
-        this.orderShipmentPreference.remove("maySplit");
-        this.orderShipmentPreference.remove("giftMessage");
-        this.orderShipmentPreference.remove("isGift");
-
         this.orderAdditionalEmails = null;
         this.freeShippingProductPromoActions.clear();
         this.desiredAlternateGiftByAction.clear();
         this.productPromoUseInfoList.clear();
         this.productPromoCodes.clear();
+        this.shipInfo.clear();
         this.clearPayments();
         
         this.adjustments.clear();
@@ -1099,80 +1299,345 @@ public class ShoppingCart implements Serializable {
     }
 
     // =======================================================================
-    // Shipping Method
+    // Shipping Charges
     // =======================================================================
-
-    /** Sets the shipping contact mech id. */
-    public void setShippingContactMechId(String shippingContactMechId) {
-        // set the shipping address
-        this.addContactMech("SHIPPING_LOCATION", shippingContactMechId);
-    }
-
-    /** Returns the shipping message string. */
-    public String getShippingContactMechId() {
-        return this.getContactMech("SHIPPING_LOCATION");
-    }
 
     /** Returns the order level shipping amount */
     public double getOrderShipping() {
         return OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), this.getSubTotal(), false, false, true);
     }
 
-    /** Sets the shipment method type. */
-    public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
-        orderShipmentPreference.set("shipmentMethodTypeId", shipmentMethodTypeId);
+    // ----------------------------------------
+    // Ship Group Methods
+    // ----------------------------------------
+
+    public List getShipGroups() {
+        return this.shipInfo;
     }
 
-    /** Returns the shipment method type */
+    public Map getShipGroups(ShoppingCartItem item) {
+        Map shipGroups = new LinkedMap();
+        if (item != null) {
+            for (int i = 0; i < shipInfo.size(); i++) {
+                CartShipInfo csi = (CartShipInfo) shipInfo.get(i);
+                CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) csi.shipItemInfo.get(item);
+                if (csii != null) {
+                    if (this.checkShipItemInfo(csi, csii)) {
+                        shipGroups.put(new Integer(i), new Double(csii.quantity));
+                    }
+                }
+            }
+        }
+        return shipGroups;
+    }
+
+    public Map getShipGroups(int itemIndex) {
+        return this.getShipGroups(this.findCartItem(itemIndex));
+    }
+
+    public CartShipInfo getShipInfo(int idx) {
+        if (idx == -1 ) {
+            return null;
+        }
+
+        if (shipInfo.size() == 0) {
+            shipInfo.add(new CartShipInfo());
+        }
+
+        return (CartShipInfo) shipInfo.get(idx);
+    }
+
+    public int getShipGroupSize() {
+        return this.shipInfo.size();
+    }
+
+    /** Returns the ShoppingCartItem (key) and quantity (value) associated with the ship group */
+    public Map getShipGroupItems(int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        Map qtyMap = new HashMap();
+        Iterator i = csi.shipItemInfo.keySet().iterator();
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) csi.shipItemInfo.get(item);
+            qtyMap.put(item, new Double(csii.quantity));
+        }
+        return qtyMap;
+    }
+
+    public void clearItemShipInfo(ShoppingCartItem item) {
+        for (int i = 0; i < shipInfo.size(); i++) {
+            CartShipInfo csi = this.getShipInfo(i);
+            csi.shipItemInfo.remove(item);
+            Debug.log("Removed item from ShipInfo - " + i + " / " + item.getProductId(), module);
+        }
+        this.cleanUpShipGroups();
+    }
+
+    public void setItemShipGroupEstimate(double amount, int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        csi.shipEstimate = amount;
+    }
+
+    public double getItemShipGroupEstimate(int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        return csi.shipEstimate;
+    }
+
+    public void setItemShipGroupQty(int itemIndex, double quantity, int idx) {
+        this.setItemShipGroupQty(this.findCartItem(itemIndex), itemIndex, quantity, idx);
+    }
+
+    public void setItemShipGroupQty(ShoppingCartItem item, double quantity, int idx) {
+        this.setItemShipGroupQty(item, this.getItemIndex(item), quantity, idx);
+    }
+
+    public void setItemShipGroupQty(ShoppingCartItem item, int itemIndex, double quantity, int idx) {
+        if (itemIndex > -1) {
+            CartShipInfo csi = this.getShipInfo(idx);
+            Debug.log("Adding item qty - (" + itemIndex + " / " + item.getProductId() + ") " + idx + " / " + quantity, module);
+
+            // never set less than zero
+            if (quantity < 0) {
+                quantity = 0;
+            }
+
+            // never set more than quantity ordered
+            if (quantity > item.getQuantity()) {
+                quantity = item.getQuantity();
+            }
+            CartShipInfo.CartShipItemInfo csii = csi.setItemInfo(item, quantity);
+            this.checkShipItemInfo(csi, csii);
+        } else {
+            Debug.log("Not setting quantity (" + quantity + ") item index = -1 : " + item.getProductId(), module);
+        }
+    }
+
+    public double getItemShipGroupQty(ShoppingCartItem item, int idx) {
+        if (item != null) {
+            CartShipInfo csi = this.getShipInfo(idx);
+            CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) csi.shipItemInfo.get(item);
+            if (csii != null) {
+                return csii.quantity;
+            }
+        }
+        return 0;
+    }
+
+    public double getItemShipGroupQty(int itemIndex, int idx) {
+        return this.getItemShipGroupQty(this.findCartItem(itemIndex), idx);
+    }
+
+    public void positionItemToGroup(int itemIndex, double quantity, int fromIndex, int toIndex) {
+        this.positionItemToGroup(this.findCartItem(itemIndex), quantity, fromIndex, toIndex);
+    }
+
+    public void positionItemToGroup(ShoppingCartItem item, double quantity, int fromIndex, int toIndex) {
+        if (fromIndex == toIndex || quantity <= 0) {
+            // do nothing
+            return;
+        }
+
+        // get the ship groups; create the TO group if needed
+        CartShipInfo fromGroup = this.getShipInfo(fromIndex);
+        CartShipInfo toGroup = null;
+        if (toIndex == -1) {
+            toGroup = new CartShipInfo();
+            shipInfo.add(toGroup);
+            toIndex = shipInfo.size() - 1;
+        } else {
+            toGroup = this.getShipInfo(toIndex);
+        }
+
+        // adjust the quantities
+        if (fromGroup != null && toGroup != null) {
+            double fromQty = this.getItemShipGroupQty(item, fromIndex);
+            double toQty = this.getItemShipGroupQty(item, toIndex);
+            if (fromQty > 0) {
+                if (quantity > fromQty) {
+                    quantity = fromQty;
+                }
+                Debug.log("Moving item (" + this.getItemIndex(item) + ") [" + quantity + "] from - " + fromIndex + " to - " + toIndex, module);
+                fromQty -= quantity;
+                toQty += quantity;
+                this.setItemShipGroupQty(item, fromQty, fromIndex);
+                this.setItemShipGroupQty(item, toQty, toIndex);
+            }
+
+            // remove any empty ship groups
+            this.cleanUpShipGroups();
+        }
+    }
+
+    // removes 0 quantity items
+    protected boolean checkShipItemInfo(CartShipInfo csi, CartShipInfo.CartShipItemInfo csii) {
+        if (csii.quantity == 0 || csii.item.getQuantity() == 0) {
+            csi.shipItemInfo.remove(csii.item);
+            return false;
+        }
+        return true;
+    }
+
+    protected void cleanUpShipGroups() {
+        for (int i = 0; i < shipInfo.size(); i++) {
+            CartShipInfo csi = this.getShipInfo(i);
+            Iterator si = csi.shipItemInfo.keySet().iterator();
+            while (si.hasNext()) {
+                ShoppingCartItem item = (ShoppingCartItem) si.next();
+                if (item.getQuantity() == 0.0) {
+                    si.remove();
+                }
+            }
+            if (csi.shipItemInfo.size() == 0) {
+                shipInfo.remove(csi);
+            }
+        }
+    }
+
+    /** Sets the shipping contact mech id. */
+    public void setShippingContactMechId(int idx, String shippingContactMechId) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        csi.contactMechId = shippingContactMechId;
+    }
+
+    public void setShippingContactMechId(String shippingContactMechId) {
+        this.setShippingContactMechId(0, shippingContactMechId);
+    }
+
+    /** Returns the shipping contact mech id. */
+    public String getShippingContactMechId(int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        return csi.contactMechId;
+    }
+
+    public String getShippingContactMechId() {
+        return this.getShippingContactMechId(0);
+    }
+
+    /** Sets the shipment method type. */
+    public void setShipmentMethodTypeId(int idx, String shipmentMethodTypeId) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        csi.shipmentMethodTypeId = shipmentMethodTypeId;
+    }
+
+    public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
+        this.setShipmentMethodTypeId(0, shipmentMethodTypeId);
+    }
+
+    /** Returns the shipment method type ID */
+    public String getShipmentMethodTypeId(int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        return csi.shipmentMethodTypeId;
+    }
+
     public String getShipmentMethodTypeId() {
-        return orderShipmentPreference.getString("shipmentMethodTypeId");
+        return this.getShipmentMethodTypeId(0);
+    }
+
+    /** Returns the shipment method type. */
+    public GenericValue getShipmentMethodType(int idx) {
+        String shipmentMethodTypeId = this.getShipmentMethodTypeId(idx);
+        if (UtilValidate.isNotEmpty(shipmentMethodTypeId)) {
+            try {
+                return delegator.findByPrimaryKey("ShipmentMethodType",
+                        UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+        return null;
     }
 
     /** Sets the shipping instructions. */
+    public void setShippingInstructions(int idx, String shippingInstructions) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        csi.shippingInstructions = shippingInstructions;
+    }
+
     public void setShippingInstructions(String shippingInstructions) {
-        orderShipmentPreference.set("shippingInstructions", shippingInstructions);
+        this.setShippingInstructions(0, shippingInstructions);
     }
 
     /** Returns the shipping instructions. */
+    public String getShippingInstructions(int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        return csi.shippingInstructions;
+    }
+
     public String getShippingInstructions() {
-        return orderShipmentPreference.getString("shippingInstructions");
+        return this.getShippingInstructions(0);
+    }
+
+    public void setMaySplit(int idx, Boolean maySplit) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        csi.maySplit = maySplit.booleanValue() ? "Y" : "N";
     }
 
     public void setMaySplit(Boolean maySplit) {
-        orderShipmentPreference.set("maySplit", maySplit);
+        this.setMaySplit(0, maySplit);
     }
 
     /** Returns Boolean.TRUE if the order may be split (null if unspecified) */
-    public Boolean getMaySplit() {
-        return orderShipmentPreference.getBoolean("maySplit");
+    public String getMaySplit(int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        return csi.maySplit;
+    }
+
+    public String getMaySplit() {
+        return this.getMaySplit(0);
+    }
+
+    public void setGiftMessage(int idx, String giftMessage) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        csi.giftMessage = giftMessage;
     }
 
     public void setGiftMessage(String giftMessage) {
-        orderShipmentPreference.set("giftMessage", giftMessage);
+        this.setGiftMessage(0, giftMessage);
+    }
+
+    public String getGiftMessage(int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        return csi.giftMessage;
     }
 
     public String getGiftMessage() {
-        return orderShipmentPreference.getString("giftMessage");
+        return this.getGiftMessage(0);
+    }
+
+    public void setIsGift(int idx, Boolean isGift) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        csi.isGift = isGift.booleanValue() ? "Y" : "N";
     }
 
     public void setIsGift(Boolean isGift) {
-        orderShipmentPreference.set("isGift", isGift);
+        this.setIsGift(0, isGift);
     }
 
-    public Boolean getIsGift() {
-        return orderShipmentPreference.getBoolean("isGift");
+    public String getIsGift(int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        return csi.isGift;
     }
 
-    public GenericValue getOrderShipmentPreference() {
-        return this.orderShipmentPreference;
+    public String getIsGift() {
+        return this.getIsGift(0);
+    }
+
+    public void setCarrierPartyId(int idx, String carrierPartyId) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        csi.carrierPartyId = carrierPartyId;
     }
 
     public void setCarrierPartyId(String carrierPartyId) {
-        orderShipmentPreference.set("carrierPartyId", carrierPartyId);
+        this.setCarrierPartyId(0, carrierPartyId);
+    }
+
+    public String getCarrierPartyId(int idx) {
+        CartShipInfo csi = this.getShipInfo(idx);
+        return csi.carrierPartyId;
     }
 
     public String getCarrierPartyId() {
-        return orderShipmentPreference.getString("carrierPartyId");
+        return this.getCarrierPartyId(0);
     }
 
     public void setOrderAdditionalEmails(String orderAdditionalEmails) {
@@ -1183,10 +1648,10 @@ public class ShoppingCart implements Serializable {
         return orderAdditionalEmails;
     }
 
-    public GenericValue getShippingAddress() {
-        if (this.getShippingContactMechId() != null) {
+    public GenericValue getShippingAddress(int idx) {
+        if (this.getShippingContactMechId(idx) != null) {
             try {
-                return getDelegator().findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.getShippingContactMechId()));
+                return getDelegator().findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.getShippingContactMechId(idx)));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString(), module);
                 return null;
@@ -1196,31 +1661,37 @@ public class ShoppingCart implements Serializable {
         }
     }
 
+    public GenericValue getShippingAddress() {
+        return this.getShippingAddress(0);
+    }
+
+    // Returns the tax amount for a ship group. */
+    public double getTotalSalesTax(int shipGroup) {
+        CartShipInfo csi = this.getShipInfo(shipGroup);
+        return csi.getTotalTax(this);
+    }
+
     /** Returns the tax amount from the cart object. */
     public double getTotalSalesTax() {
-        double tempTax = 0.0;
-        Iterator i = iterator();
-
-        while (i.hasNext()) {
-            tempTax += ((ShoppingCartItem) i.next()).getItemTax();
+        double totalTax = 0.00;
+        for (int i = 0; i < shipInfo.size(); i++) {
+            CartShipInfo csi = this.getShipInfo(i);
+            totalTax += csi.getTotalTax(this);
         }
-
-        tempTax += OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), false, true, false);
-
-        return tempTax;
+        return totalTax;
     }
 
     /** Returns the shipping amount from the cart object. */
     public double getTotalShipping() {
         double tempShipping = 0.0;
-        Iterator i = iterator();
 
-        while (i.hasNext()) {
-            tempShipping += ((ShoppingCartItem) i.next()).getItemShipping();
+        Iterator shipIter = shipInfo.iterator();
+        while (shipIter.hasNext()) {
+            CartShipInfo csi = (CartShipInfo) shipIter.next();
+            tempShipping += csi.shipEstimate;
+
         }
-
-        tempShipping += OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), false, false, true);
-
+                
         return tempShipping;
     }
 
@@ -1244,6 +1715,16 @@ public class ShoppingCart implements Serializable {
             itemsTotal += ((ShoppingCartItem) i.next()).getItemSubTotal();
         }
         return itemsTotal;
+    }
+
+    /** Returns the total from the cart, including tax/shipping. */
+    public double getGrandTotal() {
+        // sales tax and shipping are not stored as adjustments but rather as part of the ship group
+        return this.getSubTotal() + this.getTotalShipping() + this.getTotalSalesTax() + this.getOrderOtherAdjustmentTotal();
+    }
+
+    public double getOrderOtherAdjustmentTotal() {
+        return OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), true, false, false);
     }
 
     /** Returns the sub-total in the cart (item-total - discount). */
@@ -1336,102 +1817,6 @@ public class ShoppingCart implements Serializable {
         }
     }
 
-    public double getOrderOtherAdjustmentTotal() {
-        return OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), getSubTotal(), true, false, false);
-    }
-
-    /** Returns the total from the cart, including tax/shipping. */
-    public double getGrandTotal() {
-        List orderAdjustments = this.makeAllAdjustments();
-        List orderItems = this.makeOrderItems();
-        return OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
-    }
-
-    /** Returns the SHIPPABLE item-total in the cart. */
-    public double getShippableTotal() {
-        double itemTotal = 0.0;
-        Iterator i = iterator();
-
-        while (i.hasNext()) {
-            ShoppingCartItem item = (ShoppingCartItem) i.next();
-
-            if (item.shippingApplies())
-                itemTotal += item.getItemSubTotal();
-        }
-        return itemTotal;
-    }
-
-    /** Returns the total quantity in the cart. */
-    public double getTotalQuantity() {
-        double count = 0.0;
-        Iterator i = iterator();
-
-        while (i.hasNext()) {
-            count += ((ShoppingCartItem) i.next()).getQuantity();
-        }
-        return count;
-    }
-
-    /** Returns the total SHIPPABLE quantity in the cart. */
-    public double getShippableQuantity() {
-        double count = 0.0;
-        Iterator i = iterator();
-
-        while (i.hasNext()) {
-            ShoppingCartItem item = (ShoppingCartItem) i.next();
-
-            if (item.shippingApplies()) {
-                count += item.getQuantity();
-            }
-        }
-        return count;
-    }
-
-    /** Returns the total SHIPPABLE weight in the cart. */
-    public double getShippableWeight() {
-        double weight = 0.0;
-        Iterator i = iterator();
-
-        while (i.hasNext()) {
-            ShoppingCartItem item = (ShoppingCartItem) i.next();
-
-            if (item.shippingApplies()) {
-                weight += (item.getWeight() * item.getQuantity());
-            }
-        }
-        return weight;
-    }
-
-    /** Returns a List of shippable item's size. */
-    public List getShippableSizes() {
-        List shippableSizes = new LinkedList();
-        Iterator i = iterator();
-
-        while (i.hasNext()) {
-            ShoppingCartItem item = (ShoppingCartItem) i.next();
-
-            if (item.shippingApplies()) {
-                shippableSizes.add(new Double(item.getSize()));
-            }
-        }
-        return shippableSizes;
-    }
-
-    /** Returns a List of shippable item info (quantity, size, weight) */
-    public List getShippableItemInfo() {
-        List itemInfo = new LinkedList();
-        Iterator i = iterator();
-
-        while (i.hasNext()) {
-            ShoppingCartItem item = (ShoppingCartItem) i.next();
-
-            if (item.shippingApplies()) {
-                itemInfo.add(item.getItemProductInfo());
-            }
-        }
-        return itemInfo;        
-    }
-
     /** Returns the total weight in the cart. */
     public double getTotalWeight() {
         double weight = 0.0;
@@ -1445,14 +1830,128 @@ public class ShoppingCart implements Serializable {
         return weight;
     }
 
-    /** Returns a Map of all features applied to products in the cart with quantities. */
-    public Map getFeatureIdQtyMap() {
-        Map featureMap = new HashMap();
+    /** Returns the total quantity in the cart. */
+    public double getTotalQuantity() {
+        double count = 0.0;
         Iterator i = iterator();
+
+        while (i.hasNext()) {
+            count += ((ShoppingCartItem) i.next()).getQuantity();
+        }
+        return count;
+    }
+
+    /** Returns the SHIPPABLE item-total in the cart for a specific ship group. */
+    public double getShippableTotal(int idx) {
+        CartShipInfo info = this.getShipInfo(idx);
+        double itemTotal = 0.0;
+
+        Iterator i = info.shipItemInfo.keySet().iterator();
         while (i.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) i.next();
-            featureMap.putAll(item.getFeatureIdQtyMap());
+            CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) info.shipItemInfo.get(item);
+            if (csii != null && csii.quantity > 0) {
+                if (item.shippingApplies()) {
+                    itemTotal += item.getItemSubTotal(csii.quantity);
+                }
+            }
         }
+
+        return itemTotal;
+    }
+
+    /** Returns the total SHIPPABLE quantity in the cart for a specific ship group. */
+    public double getShippableQuantity(int idx) {
+        CartShipInfo info = this.getShipInfo(idx);
+        double count = 0.0;
+
+        Iterator i = info.shipItemInfo.keySet().iterator();
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) info.shipItemInfo.get(item);
+            if (csii != null && csii.quantity > 0) {
+                if (item.shippingApplies()) {
+                    count += csii.quantity;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    /** Returns the total SHIPPABLE weight in the cart for a specific ship group. */
+    public double getShippableWeight(int idx) {
+        CartShipInfo info = this.getShipInfo(idx);
+        double weight = 0.0;
+
+        Iterator i = info.shipItemInfo.keySet().iterator();
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) info.shipItemInfo.get(item);
+            if (csii != null && csii.quantity > 0) {
+                if (item.shippingApplies()) {
+                    weight += (item.getWeight() * csii.quantity);
+                }
+            }
+        }
+
+        return weight;
+    }
+
+    /** Returns a List of shippable item's size for a specific ship group. */
+    public List getShippableSizes(int idx) {
+        CartShipInfo info = this.getShipInfo(idx);
+        List shippableSizes = new LinkedList();
+
+        Iterator i = info.shipItemInfo.keySet().iterator();
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) info.shipItemInfo.get(item);
+            if (csii != null && csii.quantity > 0) {
+                if (item.shippingApplies()) {
+                    shippableSizes.add(new Double(item.getSize()));
+                }
+            }
+        }
+
+        return shippableSizes;
+    }
+
+    /** Returns a List of shippable item info (quantity, size, weight) for a specific ship group */
+    public List getShippableItemInfo(int idx) {
+        CartShipInfo info = this.getShipInfo(idx);
+        List itemInfos = new LinkedList();
+
+        Iterator i = info.shipItemInfo.keySet().iterator();
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) info.shipItemInfo.get(item);
+            if (csii != null && csii.quantity > 0) {
+                if (item.shippingApplies()) {
+                    Map itemInfo = item.getItemProductInfo();
+                    itemInfo.put("quantity", new Double(csii.quantity));
+                    itemInfos.add(itemInfo);
+                }
+            }
+        }
+
+        return itemInfos;
+    }
+
+    /** Returns a Map of all features applied to products in the cart with quantities for a specific ship group. */
+    public Map getFeatureIdQtyMap(int idx) {
+        CartShipInfo info = this.getShipInfo(idx);
+        Map featureMap = new HashMap();
+
+        Iterator i = info.shipItemInfo.keySet().iterator();
+        while (i.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            CartShipInfo.CartShipItemInfo csii = (CartShipInfo.CartShipItemInfo) info.shipItemInfo.get(item);
+            if (csii != null && csii.quantity > 0) {
+                featureMap.putAll(item.getFeatureIdQtyMap(csii.quantity));
+            }
+        }
+
         return featureMap;
     }
 
@@ -1646,6 +2145,7 @@ public class ShoppingCart implements Serializable {
         while (cartItemIter.hasNext()) {
             ShoppingCartItem checkItem = (ShoppingCartItem) cartItemIter.next();
             if (checkItem.getIsPromo()) {
+                this.clearItemShipInfo(checkItem);
                 cartItemIter.remove();
             } else {
                 // found a promo item with the productId, see if it has a matching adjustment on it
@@ -1788,31 +2288,15 @@ public class ShoppingCart implements Serializable {
         // now build the lines
         synchronized (cartLines) {
             List result = new LinkedList();
-            long cartLineSize = cartLines.size();
-            long seqId = 1;
             Iterator itemIter = cartLines.iterator();
+            long seqId = 1;
 
             while (itemIter.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
 
-                // format the string with enough leading zeroes for the number of cartLines
-                NumberFormat nf = NumberFormat.getNumberInstance();
-
-                if (cartLineSize > 9) {
-                    nf.setMinimumIntegerDigits(2);
-                } else if (cartLineSize > 99) {
-                    nf.setMinimumIntegerDigits(3);
-                } else if (cartLineSize > 999) {
-                    nf.setMinimumIntegerDigits(4);
-                } else if (cartLineSize > 9999) {
-                    // if it's more than 9999, something's up... hit the sky
-                    nf.setMinimumIntegerDigits(18);
-                }
-
-                String orderItemSeqId = nf.format(seqId);
-
-                seqId++;
+                String orderItemSeqId = UtilFormatOut.formatPaddedNumber(seqId, 5);
                 item.setOrderItemSeqId(orderItemSeqId);
+                seqId++;
 
                 // the initial status for all item types
                 String initialStatus = "ITEM_CREATED";
@@ -1860,6 +2344,8 @@ public class ShoppingCart implements Serializable {
                 while (fsppas.hasNext()) {
                     GenericValue productPromoAction = (GenericValue) fsppas.next();
 
+                    // TODO - we need to change the way free shipping promotions work
+                    /*
                     if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(this.getShipmentMethodTypeId())) &&
                         (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(this.getCarrierPartyId()))) {
                         Double shippingAmount = new Double(-OrderReadHelper.calcOrderAdjustment(orderAdjustment, getSubTotal()));
@@ -1877,6 +2363,7 @@ public class ShoppingCart implements Serializable {
                         // will only be compensated for once
                         break;
                     }
+                    */
                 }
             }
         }
@@ -1903,6 +2390,8 @@ public class ShoppingCart implements Serializable {
                         while (fsppas.hasNext()) {
                             GenericValue productPromoAction = (GenericValue) fsppas.next();
 
+                            // TODO - fix this!!
+                            /*
                             if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(item.getShipmentMethodTypeId())) &&
                                 (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(item.getCarrierPartyId()))) {
                                 Double shippingAmount = new Double(-OrderReadHelper.calcItemAdjustment(orderAdjustment, new Double(item.getQuantity()), new Double(item.getItemSubTotal())));
@@ -1920,6 +2409,7 @@ public class ShoppingCart implements Serializable {
                                 // will only be compensated for once
                                 break;
                             }
+                            */
                         }
                     }
                 }
@@ -1929,43 +2419,17 @@ public class ShoppingCart implements Serializable {
         return allAdjs;
     }
 
-    /** make a list of all OrderPaymentPreferences including all payment methods and types */
-    public List makeAllOrderPaymentPreferences() {
+    /** make a list of all OrderPaymentPreferences and Billing info including all payment methods and types */
+    public List makeAllOrderPaymentInfos() {
         List allOpPrefs = new LinkedList();
         Iterator i = paymentInfo.iterator();
         while (i.hasNext()) {
             CartPaymentInfo inf = (CartPaymentInfo) i.next();
-            allOpPrefs.add(inf.makeOrderPaymentPreference(this.getDelegator()));
+            allOpPrefs.addAll(inf.makeOrderPaymentInfos(this.getDelegator()));
 
         }
         
         return allOpPrefs;
-    }
-
-    /** make a list of all OrderShipmentPreferences including ones for the order and order lines */
-    public List makeAllOrderShipmentPreferences() {
-        List allOshPrefs = new LinkedList();
-
-        // if nothing has been put into the value, don't set it; must at least have a carrierPartyId and a shipmentMethodTypeId
-        if (this.orderShipmentPreference.size() > 1) {
-            allOshPrefs.add(this.orderShipmentPreference);
-        }
-
-        // add all of the item adjustments to this list too
-        Iterator itemIter = cartLines.iterator();
-
-        while (itemIter.hasNext()) {
-            ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
-            // if nothing has been put into the value, don't set it; must at least have a carrierPartyId and a shipmentMethodTypeId
-            GenericValue itemOrderShipmentPreference = item.getOrderShipmentPreference();
-
-            if (itemOrderShipmentPreference != null && itemOrderShipmentPreference.size() > 1) {
-                itemOrderShipmentPreference.set("orderItemSeqId", item.getOrderItemSeqId());
-                allOshPrefs.add(item.getOrderShipmentPreference());
-            }
-        }
-
-        return allOshPrefs;
     }
 
     /** make a list of OrderItemPriceInfos from the ShoppingCartItems */
@@ -2091,9 +2555,22 @@ public class ShoppingCart implements Serializable {
         return allOrderContactMechs;
     }
 
+    public List makeAllShipGroupInfos() {
+        List groups = new LinkedList();
+        Iterator grpIterator = shipInfo.iterator();
+        long seqId = 1;
+        while (grpIterator.hasNext()) {
+            CartShipInfo csi = (CartShipInfo) grpIterator.next();
+            groups.addAll(csi.makeItemShipGroupAndAssoc(delegator, this, seqId));
+            seqId++;
+        }
+        return groups;
+    }
+
     /** Returns a Map of cart values to pass to the storeOrder service */
     public Map makeCartMap(LocalDispatcher dispatcher, boolean explodeItems) {
         Map result = new HashMap();
+        Debug.log("Making cart map.", module);
 
         result.put("orderTypeId", this.getOrderType());
         result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
@@ -2103,8 +2580,8 @@ public class ShoppingCart implements Serializable {
 
         result.put("orderContactMechs", this.makeAllOrderContactMechs());
         result.put("orderItemContactMechs", this.makeAllOrderItemContactMechs());
-        result.put("orderPaymentPreferences", this.makeAllOrderPaymentPreferences());
-        result.put("orderShipmentPreferences", this.makeAllOrderShipmentPreferences());
+        result.put("orderPaymentInfo", this.makeAllOrderPaymentInfos());
+        result.put("orderItemShipGroupInfo", this.makeAllShipGroupInfos());
         result.put("orderItemSurveyResponses", this.makeAllOrderItemSurveyResponses());
         result.put("orderAdditionalPartyRoleMap", this.getAdditionalPartyRoleMap());
 

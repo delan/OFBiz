@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -68,12 +68,13 @@ public class OrderReadHelper {
     public static final String module = OrderReadHelper.class.getName();
 
     protected GenericValue orderHeader = null;
+    protected List orderItemAndShipGrp = null;
     protected List orderItems = null;
     protected List adjustments = null;
     protected List paymentPrefs = null;
     protected List orderStatuses = null;
     protected List orderItemPriceInfos = null;
-    protected List orderItemInventoryReses = null;
+    protected List orderItemShipGrpInvResList = null;
     protected List orderItemIssuances = null;
     protected List orderReturnItems = null;
     protected Double totalPrice = null;
@@ -193,6 +194,7 @@ public class OrderReadHelper {
         return (List) orderStatuses;
     }
 
+    /** @deprecated */
     public String getShippingMethod() {
         try {
             GenericValue shipmentPreference = null;
@@ -220,6 +222,31 @@ public class OrderReadHelper {
         return "";
     }
 
+    public String getShippingMethod(String shipGroupSeqId) {
+        try {
+            GenericValue shipGroup = orderHeader.getDelegator().findByPrimaryKey("OrderItemShipGroup",
+                    UtilMisc.toMap("orderId", orderHeader.getString("orderId"), "shipGroupSeqId", shipGroupSeqId));
+
+            if (shipGroup != null) {
+                GenericValue carrierShipmentMethod = shipGroup.getRelatedOne("CarrierShipmentMethod");
+
+                if (carrierShipmentMethod != null) {
+                    GenericValue shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType");
+
+                    if (shipmentMethodType != null) {
+                        return UtilFormatOut.checkNull(shipGroup.getString("carrierPartyId")) + " " +
+                                UtilFormatOut.checkNull(shipmentMethodType.getString("description"));
+                    }
+                }
+                return UtilFormatOut.checkNull(shipGroup.getString("carrierPartyId"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return "";
+    }
+
+    /** @deprecated */
     public String getShippingMethodCode() {
         try {
             GenericValue shipmentPreference = null;
@@ -247,13 +274,94 @@ public class OrderReadHelper {
         return "";
     }
 
+    public String getShippingMethodCode(String shipGroupSeqId) {
+        try {
+            GenericValue shipGroup = orderHeader.getDelegator().findByPrimaryKey("OrderItemShipGroup",
+                    UtilMisc.toMap("orderId", orderHeader.getString("orderId"), "shipGroupSeqId", shipGroupSeqId));
+
+            if (shipGroup != null) {
+                GenericValue carrierShipmentMethod = shipGroup.getRelatedOne("CarrierShipmentMethod");
+
+                if (carrierShipmentMethod != null) {
+                    GenericValue shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType");
+
+                    if (shipmentMethodType != null) {
+                        return UtilFormatOut.checkNull(shipmentMethodType.getString("shipmentMethodTypeId")) + "@" + UtilFormatOut.checkNull(shipGroup.getString("carrierPartyId"));
+                    }
+                }
+                return UtilFormatOut.checkNull(shipGroup.getString("carrierPartyId"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return "";
+    }
+
     public boolean hasShippingAddress() {
-        if (this.getShippingAddress() != null) {
+        if (UtilValidate.isNotEmpty(this.getShippingLocations())) {
             return true;
         }
         return false;
     }
 
+    public GenericValue getOrderItemShipGroup(String shipGroupSeqId) {
+        try {
+            return orderHeader.getDelegator().findByPrimaryKey("OrderItemShipGroup",
+                    UtilMisc.toMap("orderId", orderHeader.getString("orderId"), "shipGroupSeqId", shipGroupSeqId));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return null;
+    }
+
+    public List getOrderItemShipGroups() {
+        try {
+            return orderHeader.getRelated("OrderItemShipGroup", UtilMisc.toList("shipGroupSeqId"));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return null;
+    }
+
+    public List getShippingLocations() {
+        List shippingLocations = new LinkedList();
+        List shippingCms = this.getOrderContactMechs("SHIPPING_LOCATION");
+        if (shippingCms != null) {
+            Iterator i = shippingCms.iterator();
+            while (i.hasNext()) {
+                GenericValue ocm = (GenericValue) i.next();
+                if (ocm != null) {
+                    try {
+                        GenericValue addr = ocm.getDelegator().findByPrimaryKey("PostalAddress",
+                                UtilMisc.toMap("contactMechId", ocm.getString("contactMechId")));
+                        if (addr != null) {
+                            shippingLocations.add(addr);
+                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logWarning(e, module);
+                    }
+                }
+            }
+        }
+        return shippingLocations;
+    }
+
+    public GenericValue getShippingAddress(String shipGroupSeqId) {
+        try {
+            GenericValue shipGroup = orderHeader.getDelegator().findByPrimaryKey("OrderItemShipGroup",
+                    UtilMisc.toMap("orderId", orderHeader.getString("orderId"), "shipGroupSeqId", shipGroupSeqId));
+
+            if (shipGroup != null) {
+                return shipGroup.getRelatedOne("PostalAddress");
+
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return null;
+    }
+
+    /** @deprecated */
     public GenericValue getShippingAddress() {
         try {
             GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech", UtilMisc.toMap(
@@ -272,6 +380,30 @@ public class OrderReadHelper {
         return null;
     }
 
+    public List getBillingLocations() {
+        List billingLocations = new LinkedList();
+        List billingCms = this.getOrderContactMechs("BILLING_LOCATION");
+        if (billingCms != null) {
+            Iterator i = billingCms.iterator();
+            while (i.hasNext()) {
+                GenericValue ocm = (GenericValue) i.next();
+                if (ocm != null) {
+                    try {
+                        GenericValue addr = ocm.getDelegator().findByPrimaryKey("PostalAddress",
+                                UtilMisc.toMap("contactMechId", ocm.getString("contactMechId")));
+                        if (addr != null) {
+                            billingLocations.add(addr);
+                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logWarning(e, module);
+                    }
+                }
+            }
+        }
+        return billingLocations;
+    }
+
+    /** @deprecated */
     public GenericValue getBillingAddress() {
         GenericValue billingAddress = null;
         try {
@@ -321,6 +453,16 @@ public class OrderReadHelper {
             }
         }
         return billingAddress;
+    }
+
+    public List getOrderContactMechs(String purposeTypeId) {
+        try {
+            return orderHeader.getRelatedByAnd("OrderContactMech",
+                    UtilMisc.toMap("contactMechPurposeTypeId", purposeTypeId));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return null;
     }
 
     public String getCurrentStatusString() {
@@ -499,9 +641,9 @@ public class OrderReadHelper {
         return featureSet;
     }
 
-    public Map getFeatureIdQtyMap() {
+    public Map getFeatureIdQtyMap(String shipGroupSeqId) {
         Map featureMap = new HashMap();
-        List validItems = getValidOrderItems();
+        List validItems = getValidOrderItems(shipGroupSeqId);
         if (validItems != null) {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
@@ -558,9 +700,9 @@ public class OrderReadHelper {
         return featureMap;
     }
 
-    public double getShippableTotal() {
+    public double getShippableTotal(String shipGroupSeqId) {
         double shippableTotal = 0.00;
-        List validItems = getValidOrderItems();
+        List validItems = getValidOrderItems(shipGroupSeqId);
         if (validItems != null) {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
@@ -582,9 +724,9 @@ public class OrderReadHelper {
         return shippableTotal;
     }
 
-    public double getShippableQuantity() {
+    public double getShippableQuantity(String shipGroupSeqId) {
         double shippableQuantity = 0.00;
-        List validItems = getValidOrderItems();
+        List validItems = getValidOrderItems(shipGroupSeqId);
         if (validItems != null) {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
@@ -606,9 +748,9 @@ public class OrderReadHelper {
         return shippableQuantity;
     }
 
-    public double getShippableWeight() {
+    public double getShippableWeight(String shipGroupSeqId) {
         double shippableWeight = 0.00;
-        List validItems = getValidOrderItems();
+        List validItems = getValidOrderItems(shipGroupSeqId);
         if (validItems != null) {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
@@ -721,10 +863,10 @@ public class OrderReadHelper {
         return size;
     }
 
-   public List getShippableItemInfo() {
+   public List getShippableItemInfo(String shipGroupSeqId) {
         List shippableInfo = new LinkedList();
 
-        List validItems = getValidOrderItems();
+        List validItems = getValidOrderItems(shipGroupSeqId);
         if (validItems != null) {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
@@ -781,7 +923,11 @@ public class OrderReadHelper {
     }
 
     public List getOrderHeaderAdjustments() {
-        return getOrderHeaderAdjustments(getAdjustments());
+        return getOrderHeaderAdjustments(getAdjustments(), null);
+    }
+
+    public List getOrderHeaderAdjustments(String shipGroupSeqId) {
+        return getOrderHeaderAdjustments(getAdjustments(), shipGroupSeqId);
     }
 
     public List getOrderHeaderAdjustmentsToShow() {
@@ -828,7 +974,24 @@ public class OrderReadHelper {
                 Debug.logWarning(e, module);
             }
         }
-        return (List) orderItems;
+        return orderItems;
+    }
+
+    public List getOrderItemAndShipGroupAssoc() {
+        if (orderItemAndShipGrp == null) {
+            try {
+                orderItemAndShipGrp = orderHeader.getDelegator().findByAnd("OrderItemAndShipGroupAssoc",
+                        UtilMisc.toMap("orderId", orderHeader.getString("orderId")));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+        return orderItemAndShipGrp;
+    }
+
+    public List getOrderItemAndShipGroupAssoc(String shipGroupSeqId) {
+        List exprs = UtilMisc.toList(new EntityExpr("shipGroupSeqId", EntityOperator.EQUALS, shipGroupSeqId));
+        return EntityUtil.filterByAnd(getOrderItemAndShipGroupAssoc(), exprs);
     }
 
     public List getValidOrderItems() {
@@ -836,6 +999,15 @@ public class OrderReadHelper {
                 new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"),
                 new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
         return EntityUtil.filterByAnd(getOrderItems(), exprs);
+    }
+
+    public List getValidOrderItems(String shipGroupSeqId) {
+        if (shipGroupSeqId == null) return getValidOrderItems();
+        List exprs = UtilMisc.toList(
+                new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"),
+                new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"),
+                new EntityExpr("shipGroupSeqId", EntityOperator.EQUALS, shipGroupSeqId));
+        return EntityUtil.filterByAnd(getOrderItemAndShipGroupAssoc(), exprs);
     }
 
     public GenericValue getOrderItem(String orderItemSeqId) {
@@ -944,72 +1116,18 @@ public class OrderReadHelper {
         return EntityUtil.filterByAnd(this.orderItemPriceInfos, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
     }
 
-    public List getOrderItemInventoryReses(GenericValue orderItem) {
+    public List getOrderItemShipGrpInvResList(GenericValue orderItem) {
         if (orderItem == null) return null;
-        if (this.orderItemInventoryReses == null) {
+        if (this.orderItemShipGrpInvResList == null) {
             GenericDelegator delegator = orderItem.getDelegator();
-
             try {
-                orderItemInventoryReses = delegator.findByAnd("OrderItemInventoryRes", UtilMisc.toMap("orderId", orderItem.get("orderId")));
+                orderItemShipGrpInvResList = delegator.findByAnd("OrderItemShipGrpInvRes", UtilMisc.toMap("orderId", orderItem.get("orderId")));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Trouble getting OrderItemInventoryRes(s)", module);
+                Debug.logWarning(e, "Trouble getting OrderItemShipGrpInvRes List", module);
             }
         }
-        return EntityUtil.filterByAnd(orderItemInventoryReses, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));
+        return EntityUtil.filterByAnd(orderItemShipGrpInvResList, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));
     }
-
-    public static List getOrderItemInventoryResFacilityIds(GenericValue orderHeader) {
-        GenericDelegator delegator = orderHeader.getDelegator();
-        List orderItems = null;
-        List orderItemInventoryRes = new ArrayList();
-        List result = new ArrayList();
-
-        // filter for approved items only
-        try {
-            orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderHeader.getString("orderId"), "statusId", "ITEM_APPROVED"));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot locate OrderItems from OrderHeader " + orderHeader.getString("orderId"), module);
-        }
-        if (UtilValidate.isNotEmpty(orderItems)) {
-            Iterator oiIter = orderItems.iterator();
-            GenericValue orderItem = null;
-            List oiInventoryRes = null;
-
-            while (oiIter.hasNext()) {
-                orderItem = (GenericValue) oiIter.next();
-
-                try {
-                    oiInventoryRes = orderItem.getRelated("OrderItemInventoryRes");
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Cannot locate OrderItemInventoryRes from OrderItem " + orderItem.getString("orderId") + " sequenceNum " + orderItem.getString("orderItemSeqId"), module);
-                }
-
-                if (UtilValidate.isNotEmpty(oiInventoryRes)) {
-                    orderItemInventoryRes.addAll(oiInventoryRes);
-                }
-                if (oiInventoryRes.size() > 1) {
-                    Debug.logWarning("Warning - Should not use quickShip with more than one orderItemInventoryRes for order " + orderHeader.getString("orderId") + " item sequenceNum " + orderItem.get("orderItemsSeqId"), module);
-                }
-            }
-            if (UtilValidate.isNotEmpty(orderItemInventoryRes)) {
-                Iterator orderItemInventoryResIter = orderItemInventoryRes.iterator();
-                GenericValue anInventoryRes = null;
-
-                while (orderItemInventoryResIter.hasNext()) {
-                    anInventoryRes = (GenericValue) orderItemInventoryResIter.next();
-                    GenericValue inventoryItem = null;
-
-                    try {
-                        inventoryItem = delegator.findByPrimaryKey("InventoryItem", UtilMisc.toMap("inventoryItemId", anInventoryRes.getString("inventoryItemId")));
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "Cannot locate InventoryItem for ID " + anInventoryRes.getString("inventoryItemId"), module);
-                    }
-                    result.add(inventoryItem.getString("facilityId"));
-                }
-            }
-        }
-        return result;
-    }    
 
     public List getOrderItemIssuances(GenericValue orderItem) {
         if (orderItem == null) return null;
@@ -1166,7 +1284,7 @@ public class OrderReadHelper {
     public double getItemReservedQuantity(GenericValue orderItem) {
         double reserved = 0.00;
 
-        List reses = getOrderItemInventoryReses(orderItem);
+        List reses = getOrderItemShipGrpInvResList(orderItem);
         if (reses != null) {
             Iterator i = reses.iterator();
             while (i.hasNext()) {
@@ -1186,7 +1304,7 @@ public class OrderReadHelper {
         Timestamp shipDate = orderItem.getTimestamp("estimatedShipDate");
         Timestamp autoCancel = orderItem.getTimestamp("autoCancelDate");
 
-        List reses = getOrderItemInventoryReses(orderItem);
+        List reses = getOrderItemShipGrpInvResList(orderItem);
         if (reses != null) {
             Iterator i = reses.iterator();
             while (i.hasNext()) {
@@ -1344,11 +1462,20 @@ public class OrderReadHelper {
     }
 
     public static Double getOrderItemQuantity(GenericValue orderItem) {
-        Double cancelQty = orderItem.getDouble("cancelQuantity");
-        Double orderQty = orderItem.getDouble("quantity");
+        String cancelQtyField = "cancelQuantity";
+        String quantityField = "quantity";
+
+        if ("OrderItemAndShipGroupAssoc".equals(orderItem.getEntityName())) {
+            cancelQtyField = "shipGroupCancelQuantity";
+            quantityField = "shipGroupQuantity";
+        }
+
+        Double cancelQty = orderItem.getDouble(cancelQtyField);
+        Double orderQty = orderItem.getDouble(quantityField);
 
         if (cancelQty == null) cancelQty = new Double(0.0);
         if (orderQty == null) orderQty = new Double(0.0);
+        
         return new Double(orderQty.doubleValue() - cancelQty.doubleValue());
     }
 
@@ -1377,15 +1504,26 @@ public class OrderReadHelper {
         return total + adj;
     }
 
-    public static List getOrderHeaderAdjustments(List adjustments) {
+    public static List getOrderHeaderAdjustments(List adjustments, String shipGroupSeqId) {
         List contraints1 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null));
         List contraints2 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, DataModelConstants.SEQ_ID_NA));
         List contraints3 = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, ""));
+        List contraints4 = new LinkedList();
+        if (shipGroupSeqId != null) {
+            contraints4.add(new EntityExpr("shipGroupSeqId", EntityOperator.EQUALS, shipGroupSeqId));
+        }
+        List toFilter = null;
         List adj = new LinkedList();
 
-        adj.addAll(EntityUtil.filterByAnd(adjustments, contraints1));
-        adj.addAll(EntityUtil.filterByAnd(adjustments, contraints2));
-        adj.addAll(EntityUtil.filterByAnd(adjustments, contraints3));
+        if (shipGroupSeqId != null) {
+            toFilter = EntityUtil.filterByAnd(adjustments, contraints4);
+        } else {
+            toFilter = adjustments;
+        }
+
+        adj.addAll(EntityUtil.filterByAnd(toFilter, contraints1));
+        adj.addAll(EntityUtil.filterByAnd(toFilter, contraints2));
+        adj.addAll(EntityUtil.filterByAnd(toFilter, contraints3));
         return adj;
     }
 
@@ -1403,7 +1541,7 @@ public class OrderReadHelper {
     }
 
     public static double getOrderAdjustmentsTotal(List orderItems, List adjustments) {
-        return calcOrderAdjustments(getOrderHeaderAdjustments(adjustments), getOrderItemsSubTotal(orderItems, adjustments), true, true, true);
+        return calcOrderAdjustments(getOrderHeaderAdjustments(adjustments, null), getOrderItemsSubTotal(orderItems, adjustments), true, true, true);
     }
 
     public static List getOrderSurveyResponses(GenericValue orderHeader) {

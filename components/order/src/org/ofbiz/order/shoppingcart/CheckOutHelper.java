@@ -50,7 +50,6 @@ import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderChangeHelper;
-import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
@@ -541,78 +540,69 @@ public class CheckOutHelper {
             return;
         }
 
+        int shipGroups = this.cart.getShipGroupSize();
+        for (int i = 0; i < shipGroups; i++) {
+            Map serviceContext = this.makeTaxContext(i, shipAddress);
+            List taxReturn = this.getTaxAdjustments(dispatcher, "calcTax", serviceContext);
+
+            if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn, module);
+            ShoppingCart.CartShipInfo csi = cart.getShipInfo(i);
+            List orderAdj = (List) taxReturn.get(0);
+            List itemAdj = (List) taxReturn.get(1);
+
+            // set the item adjustments
+            if (itemAdj != null) {
+                for (int x = 0; x < itemAdj.size(); x++) {
+                    List adjs = (List) itemAdj.get(x);
+                    ShoppingCartItem item = (ShoppingCartItem) csi.shipItemInfo.get(x);
+                    csi.setItemInfo(item, adjs);
+                    Debug.log("Added item adjustments to ship group [" + i + " / " + x + "] - " + adjs, module);
+                }
+            }            
+
+            // need to manually clear the order adjustments
+            csi.shipTaxAdj.clear();
+            csi.shipTaxAdj.addAll(orderAdj);
+        }
+    }
+
+    private Map makeTaxContext(int shipGroup, GenericValue shipAddress) throws GeneralException {
         String productStoreId = cart.getProductStoreId();
-        List items = this.cart.makeOrderItems();
-        List adjs = this.cart.makeAllAdjustments();
-        if (shipAddress == null) {
-            shipAddress = this.cart.getShippingAddress();
+        ShoppingCart.CartShipInfo csi = cart.getShipInfo(shipGroup);
+        int totalItems = csi.shipItemInfo.size();
+
+        List product = new ArrayList(totalItems);
+        List amount = new ArrayList(totalItems);
+        List shipAmt = new ArrayList(totalItems);
+
+        Iterator iter = csi.shipItemInfo.keySet().iterator();
+        for (int i = 0; i < totalItems; i++) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) csi.shipItemInfo.get(i);                                
+            ShoppingCart.CartShipInfo.CartShipItemInfo itemInfo =
+                    (ShoppingCart.CartShipInfo.CartShipItemInfo) csi.shipItemInfo.get(cartItem);
+
+            product.add(i, cartItem.getProduct());
+            amount.add(i, new Double(cartItem.getItemSubTotal(itemInfo.quantity)));
+            shipAmt.add(i, new Double(0.00)); // no per item shipping
         }
 
+        Double shipAmount = new Double(csi.shipEstimate);
+        if (shipAddress == null) {
+            shipAddress = cart.getShippingAddress(shipGroup);
+        }
         if (shipAddress == null) {
             throw new GeneralException("Shipping address is not set in the shopping cart.");
         }
 
-        // remove old tax adjustments
-        this.cart.removeAdjustmentByType("SALES_TAX");
+        Map serviceContext = UtilMisc.toMap("productStoreId", productStoreId, "itemProductList", product, "itemAmountList", amount,
+                "itemShippingList", shipAmt, "orderShippingAmount", shipAmount, "shippingAddress", shipAddress);
 
-        // get the tax adjustments
-        List taxReturn = getTaxAdjustments(dispatcher, "calcTax", productStoreId, items, adjs, shipAddress);
+        return serviceContext;
 
-        if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn, module);
-
-        List orderAdj = (List) taxReturn.get(0);
-        List itemAdj = (List) taxReturn.get(1);
-
-        // pass the order adjustments back
-        if (orderAdj != null && orderAdj.size() > 0) {
-            Iterator oai = orderAdj.iterator();
-
-            while (oai.hasNext())
-                this.cart.addAdjustment((GenericValue) oai.next());
-        }
-
-        // return the order item adjustments
-        if (itemAdj != null && itemAdj.size() > 0) {
-            List cartItems = this.cart.items();
-
-            for (int i = 0; i < cartItems.size(); i++) {
-                ShoppingCartItem item = (ShoppingCartItem) cartItems.get(i);
-                List itemAdjustments = (List) itemAdj.get(i);
-                Iterator ida = itemAdjustments.iterator();
-
-                while (ida.hasNext())
-                    item.addAdjustment((GenericValue) ida.next());
-            }
-        }
     }
 
     // Calc the tax adjustments.
-    private List getTaxAdjustments(LocalDispatcher dispatcher, String taxService, String productStoreId,
-            List orderItems, List allAdjustments, GenericValue shipAddress) throws GeneralException {
-        List products = new ArrayList(orderItems.size());
-        List amounts = new ArrayList(orderItems.size());
-        List shipAmts = new ArrayList(orderItems.size());
-
-        double orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, allAdjustments);
-        List orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(allAdjustments);
-        Double cartShipping = new Double(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true));
-
-        // build up the list of tax calc service parameters
-        for (int i = 0; i < orderItems.size(); i++) {
-            GenericValue orderItem = (GenericValue) orderItems.get(i);
-
-            try {
-                products.add(i, orderItem.getRelatedOne("Product"));  // get the product entity
-                amounts.add(i, new Double(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments, true, false))); // get the item amount
-                shipAmts.add(i, new Double(OrderReadHelper.getOrderItemAdjustmentsTotal(orderItem, allAdjustments, false, false, true))); // get the shipping amount
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot read order item entity (" + e.getMessage() + ")", module);
-                throw new GeneralException("Cannot read the order item entity", e);
-            }
-        }
-        Map serviceContext = UtilMisc.toMap("productStoreId", productStoreId, "itemProductList", products, "itemAmountList", amounts,
-                "itemShippingList", shipAmts, "orderShippingAmount", cartShipping, "shippingAddress", shipAddress);
-
+    private List getTaxAdjustments(LocalDispatcher dispatcher, String taxService, Map serviceContext) throws GeneralException {
         Map serviceResult = null;
 
         try {

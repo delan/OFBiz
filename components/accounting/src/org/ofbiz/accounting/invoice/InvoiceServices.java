@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class InvoiceServices {
@@ -149,7 +149,7 @@ public class InvoiceServices {
         double totalItemsInOrder = orh.getTotalOrderItemsQuantity();
         
         // get some price totals
-        double shippableAmount = orh.getShippableTotal();
+        double shippableAmount = orh.getShippableTotal(null);
         double orderSubTotal = orh.getOrderItemsSubTotal();
 
         double invoiceShipProRateAmount = 0.00;
@@ -234,14 +234,18 @@ public class InvoiceServices {
                 invoiceRole.set("roleTypeId", "BILL_TO_CUSTOMER");
                 toStore.add(invoiceRole);
             }
-            
-            GenericValue billingAddress = orh.getBillingAddress();
-            if (billingAddress != null) {            
-                GenericValue billToContactMech = delegator.makeValue("InvoiceContactMech", UtilMisc.toMap("invoiceId", invoiceId));
-                billToContactMech.set("contactMechId", billingAddress.getString("contactMechId"));
-                billToContactMech.set("contactMechPurposeTypeId", "BILLING_LOCATION");
-                toStore.add(billToContactMech);
-            }              
+
+            List billingLocations = orh.getBillingLocations();
+            if (billingLocations != null) {
+                Iterator bli = billingLocations.iterator();
+                while (bli.hasNext()) {
+                    GenericValue ocm = (GenericValue) bli.next();
+                    GenericValue billToContactMech = delegator.makeValue("InvoiceContactMech", UtilMisc.toMap("invoiceId", invoiceId));
+                    billToContactMech.set("contactMechId", ocm.getString("contactMechId"));
+                    billToContactMech.set("contactMechPurposeTypeId", "BILLING_LOCATION");
+                    toStore.add(billToContactMech);
+                }
+            }                   
         }
                     
         // store the invoice first
