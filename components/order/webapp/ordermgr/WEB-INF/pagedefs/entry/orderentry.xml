@@ -3,6 +3,6 @@
     <template>main</template>
     <property name="title">Order Entry</property>
     <property name="headerItem">orderentry</property>
-    <page-action name="/entry/showcart.bsh"/>
-    <page-action name="/entry/showpromotext.bsh"/>
+    <content-action name="/entry/showcart.bsh"/>
+    <content-action name="/entry/showpromotext.bsh"/>
 </page>

@@ -4,5 +4,5 @@
     <property name="title">Edit Global GL Account(s)</property>
     <property name="titleProperty">PageTitleEditGlobalGlAccount</property>
     <property name="headerItem">chartofaccounts</property>
-    <page-action name="/chartofaccounts/EditGlobalGlAccount.bsh"/>
+    <content-action name="/chartofaccounts/EditGlobalGlAccount.bsh"/>
 </page>

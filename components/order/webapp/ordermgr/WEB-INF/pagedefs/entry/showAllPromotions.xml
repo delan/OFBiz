@@ -4,6 +4,6 @@
     <property name="title">Show All Promotions</property>
     <!-- <property name="title.property">PageTitleShowAllPromotions</property> -->
     <property name="leftbar">/includes/entry_left.ftl</property>
-    <page-action name="/entry/showcart.bsh"/>
-    <page-action name="/entry/showpromotext.bsh"/>
+    <content-action name="/entry/showcart.bsh"/>
+    <content-action name="/entry/showpromotext.bsh"/>
 </page>

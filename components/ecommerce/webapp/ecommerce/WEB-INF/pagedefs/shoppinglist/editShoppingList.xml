@@ -4,5 +4,5 @@
     <property name="title">Shopping List</property>
       <property name="title.property">PageTitleShoppingList</property>
     <property name="headerItem">Shopping List</property>
-    <page-action name="/shoppinglist/editShoppingList.bsh"/>
+    <content-action name="/shoppinglist/editShoppingList.bsh"/>
 </page>

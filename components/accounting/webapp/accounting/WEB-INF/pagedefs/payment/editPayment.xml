@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Edit Payment</property> 
     <property name="headerItem">payments</property>   
-    <page-action name="/payment/editPayment.bsh"/> 
+    <content-action name="/payment/editPayment.bsh"/> 
 </page>

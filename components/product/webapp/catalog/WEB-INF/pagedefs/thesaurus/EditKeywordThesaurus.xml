@@ -4,5 +4,5 @@
     <property name="title">Alternate Keyword Thesaurus</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">thesaurus</property>
-    <page-action name="/thesaurus/EditKeywordThesaurus.bsh"/>
+    <content-action name="/thesaurus/EditKeywordThesaurus.bsh"/>
 </page>

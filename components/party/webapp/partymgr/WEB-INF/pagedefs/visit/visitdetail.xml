@@ -4,5 +4,5 @@
     <property name="title">Visit Detail</property>
     <property name="title.property">PageTitleVisitDetail</property>
     <property name="headerItem">visits</property>
-    <page-action name="/visit/visitdetail.bsh"/>
+    <content-action name="/visit/visitdetail.bsh"/>
 </page>

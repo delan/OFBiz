@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">XPDL Repository</property>
     <property name="headerItem">main</property>
-    <page-action name="/repository/showRepository.bsh"/>
+    <content-action name="/repository/showRepository.bsh"/>
 </page>

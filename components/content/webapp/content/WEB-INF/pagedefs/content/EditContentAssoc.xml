@@ -12,6 +12,6 @@
     <property name="permissionType">simple</property>    
     <property name="entityOperation">_CREATE</property>    
     <page-action name="/includes/permprep.bsh"/>
-    <page-action name="/includes/currentvalprep.bsh" />
-    <page-action name="/content/contentassocprep.bsh" />
+    <content-action name="/includes/currentvalprep.bsh" />
+    <content-action name="/content/contentassocprep.bsh" />
 </page>

@@ -4,8 +4,8 @@
     <property name="title">Quick Ship Order</property>
     <property name="titleProperty">ProductQuickShipOrder</property>
     <property name="headerItem">shipment</property>
-    <page-action name="/shipment/QuickShipOrder.bsh"/>
-    <page-action name="/shipment/EditShipmentItems.bsh"/> 
-    <page-action name="/shipment/EditShipmentPackages.bsh"/> 
-    <page-action name="/shipment/EditShipmentRouteSegments.bsh"/>    
+    <content-action name="/shipment/QuickShipOrder.bsh"/>
+    <content-action name="/shipment/EditShipmentItems.bsh"/> 
+    <content-action name="/shipment/EditShipmentPackages.bsh"/> 
+    <content-action name="/shipment/EditShipmentRouteSegments.bsh"/>    
 </page>

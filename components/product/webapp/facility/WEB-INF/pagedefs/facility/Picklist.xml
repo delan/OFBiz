@@ -5,5 +5,5 @@
     <property name="titleProperty">PageTitlePickList</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">PicklistOptions</property>
-    <page-action name="/facility/Picklist.bsh"/> 
+    <content-action name="/facility/Picklist.bsh"/> 
 </page>

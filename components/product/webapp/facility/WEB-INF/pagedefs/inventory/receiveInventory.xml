@@ -5,5 +5,5 @@
     <property name="titleProperty">ProductReceiveInventory</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">ReceiveInventory</property>
-    <page-action name="/inventory/receiveInventory.bsh"/>
+    <content-action name="/inventory/receiveInventory.bsh"/>
 </page>

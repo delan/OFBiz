@@ -4,5 +4,5 @@
     <property name="title">Find Global GL Account(s)</property>
     <property name="titleProperty">PageTitleFindGlobalGlAccount</property>
     <property name="headerItem">chartofaccounts</property>
-    <page-action name="/chartofaccounts/FindGlobalGlAccount.bsh"/>
+    <content-action name="/chartofaccounts/FindGlobalGlAccount.bsh"/>
 </page>

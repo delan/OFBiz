@@ -4,6 +4,6 @@
     <property name="title">Shopping Cart</property>
     <property name="title.property">PageTitleShoppingCart</property>
     <property name="headerItem">Shopping Cart</property>
-    <page-action name="/cart/showcart.bsh"/>
-    <page-action name="/cart/showpromotext.bsh"/>
+    <content-action name="/cart/showcart.bsh"/>
+    <content-action name="/cart/showpromotext.bsh"/>
 </page>

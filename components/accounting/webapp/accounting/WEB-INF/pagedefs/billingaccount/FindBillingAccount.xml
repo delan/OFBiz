@@ -4,5 +4,5 @@
     <property name="title">Find Billing Account(s)</property>
     <property name="titleProperty">PageTitleFindBillingAccount</property>
     <property name="headerItem">billingaccount</property>   
-    <page-action name="/billingaccount/FindBillingAccount.bsh"/> 
+    <content-action name="/billingaccount/FindBillingAccount.bsh"/> 
 </page>

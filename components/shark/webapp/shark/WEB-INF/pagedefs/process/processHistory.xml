@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Process History</property>
     <property name="headerItem">main</property>
-    <page-action name="/process/processHistory.bsh"/>
+    <content-action name="/process/processHistory.bsh"/>
 </page>

@@ -5,5 +5,5 @@
     <property name="titleProperty">PageTitleEditShipmentPackages</property>
     <property name="headerItem">shipment</property>
     <property name="tabButtonItem">EditShipmentPackages</property>
-    <page-action name="/shipment/EditShipmentPackages.bsh"/> 
+    <content-action name="/shipment/EditShipmentPackages.bsh"/> 
 </page>

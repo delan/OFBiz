@@ -2,5 +2,5 @@
 <page>
     <template>main</template>
     <property name="title">Profile Survey</property>
-    <page-action name="/customer/customersurvey.bsh"/>
+    <content-action name="/customer/customersurvey.bsh"/>
 </page>

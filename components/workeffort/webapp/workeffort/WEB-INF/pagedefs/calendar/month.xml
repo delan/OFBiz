@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Calendar Month View</property>
     <property name="headerItem">calendar</property>
-    <page-action name="/calendar/month.bsh"/>
+    <content-action name="/calendar/month.bsh"/>
 </page>

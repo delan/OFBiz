@@ -6,5 +6,5 @@
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
     <property name="tabButtonItem">EditProductStoreTaxSetup</property>
-    <page-action name="/store/EditProductStoreTaxSetup.bsh"/>
+    <content-action name="/store/EditProductStoreTaxSetup.bsh"/>
 </page>

@@ -2,5 +2,5 @@
 <page>
     <template>main</template>
     <property name="title">Receive Offline Payment</property>
-    <page-action name="/order/receivepayment.bsh"/> 
+    <content-action name="/order/receivepayment.bsh"/> 
 </page>

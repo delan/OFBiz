@@ -3,5 +3,5 @@
     <template>main_right</template> 
     <property name="title">Order Status</property>
     <property name="title.property">PageTitleOrderStatus</property>
-    <page-action name="/order/orderstatus.bsh"/>
+    <content-action name="/order/orderstatus.bsh"/>
 </page>

@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Request Item Notes</property>
     <property name="headerItem">request</property>
-    <page-action name="/request/requestitemnotes.bsh"/>
+    <content-action name="/request/requestitemnotes.bsh"/>
 </page>

@@ -4,5 +4,5 @@
     <property name="title">Find Shipment</property>
     <property name="titleProperty">ProductFindShipment</property>
     <property name="headerItem">shipment</property>
-    <page-action name="/shipment/FindShipment.bsh"/> 
+    <content-action name="/shipment/FindShipment.bsh"/> 
 </page>

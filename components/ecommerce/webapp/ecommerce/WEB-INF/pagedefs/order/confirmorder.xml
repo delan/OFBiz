@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>main_right</template>
-    <page-action name="/order/checkoutreview.bsh"/>
+    <content-action name="/order/checkoutreview.bsh"/>
 </page>

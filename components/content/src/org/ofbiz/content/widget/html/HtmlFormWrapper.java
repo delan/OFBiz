@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormWrapper.java,v 1.5 2004/05/27 04:21:25 jonesde Exp $
+ * $Id: HtmlFormWrapper.java,v 1.6 2004/05/29 07:48:56 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.widget.form.FormFactory;
@@ -43,7 +44,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class HtmlFormWrapper {
@@ -91,6 +92,7 @@ public class HtmlFormWrapper {
         }
         
         Map uiLabelMap = (Map) request.getAttribute("uiLabelMap");
+        Debug.logInfo("Got uiLabelMap: " + uiLabelMap, module);
         if (uiLabelMap != null && uiLabelMap.size() > 0 && context.get("uiLabelMap") == null) {
             context.put("uiLabelMap", uiLabelMap);
         }

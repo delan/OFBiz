@@ -2,5 +2,5 @@
 <page>
     <template>main</template>
     <property name="title">Edit Contact Information</property>
-    <page-action name="/workeffort/editContactMech.bsh"/>
+    <content-action name="/workeffort/editContactMech.bsh"/>
 </page>

@@ -2,5 +2,5 @@
 <page>
     <template>popup</template> 
     <property name="title">Field lookup</property>
-    <page-action name="/includes/fieldlookup.bsh"/>
+    <content-action name="/includes/fieldlookup.bsh"/>
 </page>

@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Checkout Review</property>
     <property name="title.property">PageTitleCheckoutReview</property>
-    <page-action name="/order/checkoutreview.bsh"/>
+    <content-action name="/order/checkoutreview.bsh"/>
 </page>

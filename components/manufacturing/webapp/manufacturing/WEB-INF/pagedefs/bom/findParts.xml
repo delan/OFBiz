@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?><page>    <template>main</template>    <property name="title">Find parts</property>     <property name="headerItem">bom</property>       <property name="tabButtonItem">findParts</property>    <page-action name="/bom/findParts.bsh"/></page>
+<?xml version="1.0" encoding="UTF-8"?><page>    <template>main</template>    <property name="title">Find parts</property>     <property name="headerItem">bom</property>       <property name="tabButtonItem">findParts</property>    <content-action name="/bom/findParts.bsh"/></page>

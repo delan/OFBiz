@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Request Roles</property>
     <property name="headerItem">request</property>
-    <page-action name="/request/requestroles.bsh"/>
+    <content-action name="/request/requestroles.bsh"/>
 </page>

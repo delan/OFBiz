@@ -2,5 +2,5 @@
 <page>
     <template>main_right</template>
     <property name="title">Billing Information</property>
-    <page-action name="/order/billsettings.bsh"/>
+    <content-action name="/order/billsettings.bsh"/>
 </page>

@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">List Requests</property>
     <property name="headerItem">request</property>
-    <page-action name="/request/requestlist.bsh"/>
+    <content-action name="/request/requestlist.bsh"/>
 </page>

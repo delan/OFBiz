@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="titleProperty">PageTitleFindCalendar</property>
     <property name="headerItem">calendar</property>   
-    <page-action name="/routing/FindCalendar.bsh"/> 
+    <content-action name="/routing/FindCalendar.bsh"/> 
 </page>

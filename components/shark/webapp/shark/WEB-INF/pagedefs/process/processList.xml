@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Process List</property>
     <property name="headerItem">main</property>
-    <page-action name="/process/processList.bsh"/>
+    <content-action name="/process/processList.bsh"/>
 </page>

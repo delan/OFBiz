@@ -3,6 +3,6 @@
     <template>main</template>
     <property name="title">Edit Credit Card</property>
     <property name="title.property">PageTitleEditCreditCard</property>
-    <page-action name="/customer/editpaymentmethod.bsh"/>
+    <content-action name="/customer/editpaymentmethod.bsh"/>
 </page>
 

@@ -5,5 +5,5 @@
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
     <property name="tabButtonItem">EditProductStoreKeywordOvrd</property>
-    <page-action name="/store/EditProductStoreKeywordOver.bsh"/>
+    <content-action name="/store/EditProductStoreKeywordOver.bsh"/>
 </page>

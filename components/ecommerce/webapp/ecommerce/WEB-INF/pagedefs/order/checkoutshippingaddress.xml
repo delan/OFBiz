@@ -3,5 +3,5 @@
     <template>main_right</template> 
     <property name="title">Checkout Options</property>
     <property name="title.property">PageTitleCheckoutOptions</property>
-    <page-action name="/order/checkoutshippingaddress.bsh"/>
+    <content-action name="/order/checkoutshippingaddress.bsh"/>
 </page>

@@ -4,5 +4,5 @@
     <property name="title">Security Groups List</property>
     <property name="title.property">PageTitleSecurityGroupsList</property>
     <property name="headerItem">security</property>
-    <page-action name="/security/FindSecurityGroup.bsh"/>
+    <content-action name="/security/FindSecurityGroup.bsh"/>
 </page>

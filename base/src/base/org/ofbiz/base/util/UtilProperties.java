@@ -1,7 +1,7 @@
 /*
- * $Id: UtilProperties.java,v 1.9 2004/01/21 14:00:33 jonesde Exp $
+ * $Id: UtilProperties.java,v 1.10 2004/05/29 07:48:51 jonesde Exp $
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,8 +25,6 @@ package org.ofbiz.base.util;
 
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,7 +36,7 @@ import java.util.ResourceBundle;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      1.0
  */
 public class UtilProperties {
@@ -455,10 +453,9 @@ public class UtilProperties {
         
         String resourceCacheKey = resource + "_" + locale.toString();        
         Map bundleMap = (Map) bundleLocaleCache.get(resourceCacheKey);
-
         if (bundleMap == null) {
             ResourceBundle bundle = getBaseResourceBundle(resource, locale);
-            bundleMap = resourceBundleToMap(bundle);
+            bundleMap = new ResourceBundleMapWrapper(bundle);
             if (bundleMap != null) {
                 bundleLocaleCache.put(resourceCacheKey, bundleMap);
             }
@@ -484,23 +481,6 @@ public class UtilProperties {
         }
         
         return bundle;
-    }
-    
-    protected static Map resourceBundleToMap(ResourceBundle bundle) {
-        if (bundle == null) {
-            return new HashMap();
-        }
-        // NOTE: this should return all keys, including keys from parent ResourceBundles, if not then something else must be done here...
-        Enumeration keyNum = bundle.getKeys();
-        Map resourceBundleMap = new HashMap();
-        while (keyNum.hasMoreElements()) {
-            String key = (String) keyNum.nextElement();
-            //resourceBundleMap.put(key, bundle.getObject(key));
-            Object value = bundle.getObject(key);
-            resourceBundleMap.put(key, value);
-        }
-        resourceBundleMap.put("_RESOURCE_BUNDLE_", bundle);
-        return resourceBundleMap;
     }
     
     /** Returns the specified resource/properties file

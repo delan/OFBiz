@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Requirements List</property>
     <property name="headerItem">requirement</property>
-    <page-action name="/requirement/requirementlist.bsh"/>
+    <content-action name="/requirement/requirementlist.bsh"/>
 </page>

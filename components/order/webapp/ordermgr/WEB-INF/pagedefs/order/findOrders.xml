@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Find Order(s)</property>
     <property name="headerItem">findorders</property>
-    <page-action name="/order/findOrders.bsh"/> 
+    <content-action name="/order/findOrders.bsh"/> 
 </page>

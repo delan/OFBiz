@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Order Reports</property>
     <property name="headerItem">reports</property> 
-    <page-action name="/reports/reportlist.bsh"/>  
+    <content-action name="/reports/reportlist.bsh"/>  
 </page>

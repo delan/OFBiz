@@ -5,5 +5,5 @@
     <property name="titleProperty">PageTitleEditProductStoreList</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <property name="headerItem">store</property>
-    <page-action name="/store/FindProductStore.bsh"/>
+    <content-action name="/store/FindProductStore.bsh"/>
 </page>

@@ -5,5 +5,5 @@
     <property name="titleProperty">PageTitleEditBillingAccount</property>
     <property name="headerItem">billingaccount</property>
     <property name="tabButtonItem">EditBillingAccount</property>
-    <page-action name="/billingaccount/EditBillingAccount.bsh"/>
+    <content-action name="/billingaccount/EditBillingAccount.bsh"/>
 </page>

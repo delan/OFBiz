@@ -2,5 +2,5 @@
 <page>
     <template>main</template>
     <property name="title">View/Edit Invoice</property>    
-    <page-action name="/invoice/editInvoice.bsh"/> 
+    <content-action name="/invoice/editInvoice.bsh"/> 
 </page>
