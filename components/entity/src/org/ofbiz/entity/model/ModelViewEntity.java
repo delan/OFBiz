@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.18 2004/07/07 09:10:59 doogie Exp $
+ * $Id: ModelViewEntity.java,v 1.19 2004/07/09 22:56:11 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -354,6 +354,7 @@ public class ModelViewEntity extends ModelEntity {
         for (int i = 0; i < aliases.size(); i++) {
             ModelAlias alias = (ModelAlias) aliases.get(i);
             ModelField field = new ModelField();
+            field.setModelEntity(this);
             field.name = alias.name;
 
             // if this is a groupBy field, add it to the groupBys list
