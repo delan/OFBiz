@@ -30,9 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import bsh.EvalError;
-import bsh.Interpreter;
-
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -44,6 +41,10 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.finder.EntityFinderUtil;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.util.EntityUtil;
@@ -51,8 +52,10 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
-
 import org.w3c.dom.Element;
+
+import bsh.EvalError;
+import bsh.Interpreter;
 
 /**
  * Widget Library - Form model class
@@ -1376,7 +1379,7 @@ public class ModelFormField {
         protected boolean cache = true;
         protected String filterByDate;
 
-        protected Map constraintMap = null;
+        protected List constraintList = null;
         protected List orderByList = null;
 
         public EntityOptions(FieldInfo fieldInfo) {
@@ -1392,11 +1395,11 @@ public class ModelFormField {
 
             List constraintElements = UtilXml.childElementList(entityOptionsElement, "entity-constraint");
             if (constraintElements != null && constraintElements.size() > 0) {
-                this.constraintMap = new HashMap();
+                this.constraintList = new LinkedList();
                 Iterator constraintElementIter = constraintElements.iterator();
                 while (constraintElementIter.hasNext()) {
                     Element constraintElement = (Element) constraintElementIter.next();
-                    constraintMap.put(constraintElement.getAttribute("name"), new FlexibleStringExpander(constraintElement.getAttribute("value")));
+                    constraintList.add(new EntityFinderUtil.ConditionExpr(constraintElement));
                 }
             }
 
@@ -1424,22 +1427,23 @@ public class ModelFormField {
 
         public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
             // first expand any conditions that need expanding based on the current context
-            Map expandedConstraintMap = null;
-            if (this.constraintMap != null) {
-                expandedConstraintMap = new HashMap();
-                Iterator constraintMapIter = this.constraintMap.entrySet().iterator();
-                while (constraintMapIter.hasNext()) {
-                    Map.Entry entry = (Map.Entry) constraintMapIter.next();
-                    expandedConstraintMap.put(entry.getKey(), ((FlexibleStringExpander) entry.getValue()).expandString(context));
+            EntityCondition findCondition = null;
+            if (this.constraintList != null && this.constraintList.size() > 0) {
+                List expandedConditionList = new LinkedList();
+                Iterator constraintIter = constraintList.iterator();
+                while (constraintIter.hasNext()) {
+                    EntityFinderUtil.Condition condition = (EntityFinderUtil.Condition) constraintIter.next();
+                    expandedConditionList.add(condition.createCondition(context, this.entityName, delegator));
                 }
+                findCondition = new EntityConditionList(expandedConditionList, EntityOperator.AND);
             }
-
+            
             try {
                 List values = null;
                 if (this.cache) {
-                    values = delegator.findByAndCache(this.entityName, expandedConstraintMap, this.orderByList);
+                    values = delegator.findByConditionCache(this.entityName, findCondition, null, this.orderByList);
                 } else {
-                    values = delegator.findByAnd(this.entityName, expandedConstraintMap, this.orderByList);
+                    values = delegator.findByCondition(this.entityName, findCondition, null, this.orderByList);
                 }
 
                 // filter-by-date if requested

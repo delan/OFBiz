@@ -170,7 +170,7 @@
         <!ELEMENT condition-expr EMPTY>
         <!ATTLIST condition-expr
             field-name CDATA #REQUIRED
-            operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) #REQUIRED
+            operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) "equals"
             env-name CDATA #IMPLIED
             value CDATA #IMPLIED
             ignore-if-null ( true | false ) "false"

@@ -236,7 +236,11 @@
 <!ELEMENT entity-constraint EMPTY>
 <!ATTLIST entity-constraint
     name CDATA #REQUIRED
-    value CDATA #REQUIRED
+    operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) "equals"
+    env-name CDATA #IMPLIED
+    value CDATA #IMPLIED
+    ignore-if-null ( true | false ) "false"
+    ignore-if-empty ( true | false ) "false"
 >
 <!ELEMENT entity-order-by EMPTY>
 <!ATTLIST entity-order-by
@@ -437,7 +441,7 @@
         <!ELEMENT condition-expr EMPTY>
         <!ATTLIST condition-expr
             field-name CDATA #REQUIRED
-            operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) #REQUIRED
+            operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) "equals"
             env-name CDATA #IMPLIED
             value CDATA #IMPLIED
             ignore-if-null ( true | false ) "false"
