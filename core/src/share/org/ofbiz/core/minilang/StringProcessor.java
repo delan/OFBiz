@@ -1,10 +1,12 @@
 package org.ofbiz.core.minilang;
 
 import java.net.*;
+import java.text.*;
 import java.util.*;
 import java.lang.reflect.*;
 
 import org.w3c.dom.*;
+import org.apache.oro.text.regex.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -127,11 +129,9 @@ public class StringProcessor {
                     } else if ("compare".equals(curOperElem.getNodeName())) {
                         stringOperations.add(new StringProcessor.Compare(curOperElem));
                     } else if ("regexp".equals(curOperElem.getNodeName())) {
-                        //stringOperations.add(new StringProcessor.Regexp(curOperElem));
+                        stringOperations.add(new StringProcessor.Regexp(curOperElem));
                     } else if ("not-empty".equals(curOperElem.getNodeName())) {
                         //stringOperations.add(new StringProcessor.NotEmpty(curOperElem));
-                    } else if ("equals".equals(curOperElem.getNodeName())) {
-                        //stringOperations.add(new StringProcessor.Equals(curOperElem));
                     } else if ("copy".equals(curOperElem.getNodeName())) {
                         //stringOperations.add(new StringProcessor.Copy(curOperElem));
                     } else if ("convert".equals(curOperElem.getNodeName())) {
@@ -246,63 +246,139 @@ public class StringProcessor {
             }
         }
     }
-/*
-<!ATTLIST compare
-    operator CDATA #REQUIRED
-    value CDATA #REQUIRED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
-    format CDATA #IMPLIED
->*/
+
     public static class Compare extends StringOperation {
-        String methodName;
-        String className;
-        
-        public Compare(String methodName, String className) {
-            this.methodName = methodName;
-            this.className = className;
-        }
+        String operator;
+        String value;
+        String type;
+        String format;
         
         public Compare(Element element) {
             super(element);
-            this.methodName = element.getAttribute("method");
-            this.className = element.getAttribute("class");
+            this.value = element.getAttribute("value");
+            this.operator = element.getAttribute("operator");
+            this.type = element.getAttribute("type");
+            this.format = element.getAttribute("format");
+            if (this.format == null || this.format.length() == 0) {
+                if ("Date".equals(type)) {
+                    this.format = "yyyy-MM-dd";
+                } else if ("Time".equals(type)) {
+                    this.format = "HH:mm:ss";
+                } else if ("Timestamp".equals(type)) {
+                    this.format = "yyyy-MM-dd HH:mm:ss";
+                }
+            }
         }
         
         public void exec(String fieldValue, Map results, List messages, Class contextClass) {
-            Class[] paramTypes = new Class[] {String.class};
-            Object[] params = new Object[] {fieldValue};
+            if (value == null)
+                return;
+            
+            if ("contains".equals(operator)) {
+                if ("String".equals(type)) {
+                    messages.add("Error in string-processor file: cannot do a contains compare with a non-String type");
+                    return;
+                }
+                
+                if (value.indexOf(fieldValue) < 0)
+                    addMessage(messages, contextClass);
+            }
+            
+            int result = 0;            
+            if ("String".equals(type)) {
+                result = value.compareTo(fieldValue);
+            } else if ("Number".equals(type)) {
+                NumberFormat nf = NumberFormat.getNumberInstance();
+                Number tempNum = null;
+                try {
+                    tempNum = nf.parse(value);
+                } catch (ParseException e) {
+                    messages.add("Could not parse comparison value \"" + value + "\" for validation: " + e.getMessage());
+                    return;
+                }
+                double valueDouble = tempNum.doubleValue();
 
-            Class valClass;
+                try {
+                    tempNum = nf.parse(fieldValue);
+                } catch (ParseException e) {
+                    messages.add("Could not parse field value \"" + fieldValue + "\" for validation: " + e.getMessage());
+                    return;
+                }
+                double fieldDouble = tempNum.doubleValue();
+
+                if (valueDouble < fieldDouble)
+                    result = -1;
+                else if (valueDouble < fieldDouble)
+                    result = 1;
+                else
+                    result = 0;
+            } else if ("Date".equals(type) || "Time".equals(type) || "Timestamp".equals(type)) {
+                SimpleDateFormat sdf = new SimpleDateFormat(format);
+                java.util.Date valueDate = null;
+                try {
+                    valueDate = sdf.parse(value);
+                } catch (ParseException e) {
+                    messages.add("Could not parse comparison value \"" + value + "\" for validation: " + e.getMessage());
+                    return;
+                }
+                
+                java.util.Date fieldDate = null;
+                try {
+                    fieldDate = sdf.parse(fieldValue);
+                } catch (ParseException e) {
+                    messages.add("Could not parse field value \"" + fieldValue + "\" for validation: " + e.getMessage());
+                    return;
+                }
+                result = valueDate.compareTo(fieldDate);
+            }
+            
+            if ("less".equals(operator)) {
+                if (result >= 0)
+                    addMessage(messages, contextClass);
+            } else if ("greater".equals(operator)) {
+                if (result <= 0)
+                    addMessage(messages, contextClass);
+            } else if ("less-equals".equals(operator)) {
+                if (result > 0)
+                    addMessage(messages, contextClass);
+            } else if ("greater-equals".equals(operator)) {
+                if (result < 0)
+                    addMessage(messages, contextClass);
+            } else if ("equals".equals(operator)) {
+                if (result != 0)
+                    addMessage(messages, contextClass);
+            } else if ("not-equals".equals(operator)) {
+                if (result == 0)
+                    addMessage(messages, contextClass);
+            } else {
+                //for now do nothing
+            }
+        }
+    }
+
+    public static class Regexp extends StringOperation {
+        static PatternMatcher matcher = new Perl5Matcher();
+        static PatternCompiler compiler = new Perl5Compiler();
+        Pattern pattern = null;
+        String expr;
+        
+        public Regexp(Element element) {
+            super(element);
+            expr = element.getAttribute("expr");
             try {
-                valClass = contextClass.forName(className);
-            } catch(ClassNotFoundException cnfe) {
-                String msg = "Could not find validation class: " + className;
-                messages.add(msg);
-                Debug.logError("[ValidateMethod.exec] " + msg);
+                pattern = compiler.compile(expr);
+            } catch (MalformedPatternException e) {
+                Debug.logError(e);
+            }
+        }
+        
+        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+            if (pattern == null) {
+                messages.add("Could not compile regular expression \"" + expr + "\" for validation");
                 return;
             }
-
-            Method valMethod;
-            try {
-                valMethod = valClass.getMethod(methodName, paramTypes);
-            } catch(NoSuchMethodException cnfe) {
-                String msg = "Could not find validation method: " + methodName + " of class " + className;
-                messages.add(msg);
-                Debug.logError("[ValidateMethod.exec] " + msg);
-                return;
-            }
-
-            Boolean resultBool = Boolean.FALSE;
-            try {
-                resultBool = (Boolean)valMethod.invoke(null,params);
-            } catch(Exception e) {
-                String msg = "Error in validation method " + methodName + " of class " + className + ": " + e.getMessage();
-                messages.add(msg);
-                Debug.logError("[ValidateMethod.exec] " + msg);
-                return;
-            }
-
-            if(!resultBool.booleanValue()) {
+            
+            if (!matcher.matches(fieldValue, pattern)) {
                 addMessage(messages, contextClass);
             }
         }
