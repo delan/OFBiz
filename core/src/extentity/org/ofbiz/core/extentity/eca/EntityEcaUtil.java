@@ -52,6 +52,7 @@ public class EntityEcaUtil {
         Map ecaCache = (Map) entityEcaReaders.get(entityEcaReaderName);
         if (ecaCache == null) {
             ecaCache = new HashMap();
+            readConfig(entityEcaReaderName, ecaCache);
             entityEcaReaders.put(entityEcaReaderName, ecaCache);
         }
         return ecaCache;
@@ -66,17 +67,11 @@ public class EntityEcaUtil {
         return delegatorInfo.entityEcaReader;
     }
     
-    public static Map readDelegatorConfig(String delegatorName) {
-        return EntityEcaUtil.readConfig(getEntityEcaReaderName(delegatorName));
-    }
-    
-    public static Map readConfig(String entityEcaReaderName) {
-        Map ecaCache = getEntityEcaCache(entityEcaReaderName);
-        
+    protected static void readConfig(String entityEcaReaderName, Map ecaCache) {
         EntityConfigUtil.EntityEcaReaderInfo entityEcaReaderInfo = EntityConfigUtil.getEntityEcaReaderInfo(entityEcaReaderName);
         if (entityEcaReaderInfo == null) {
             Debug.logError("BAD ERROR: Could not find entity-eca-reader config with name: " + entityEcaReaderName);
-            return null;
+            return;
         }
         
         Iterator eecaResourceIter = entityEcaReaderInfo.resourceElements.iterator();
@@ -85,10 +80,9 @@ public class EntityEcaUtil {
             ResourceHandler handler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, eecaResourceElement);
             addEcaDefinitions(handler, ecaCache);
         }
-        return ecaCache;
     }
 
-    public static void addEcaDefinitions(ResourceHandler handler, Map ecaCache) {
+    protected static void addEcaDefinitions(ResourceHandler handler, Map ecaCache) {
         Element rootElement = null;
         try {
             rootElement = handler.getDocument().getDocumentElement();

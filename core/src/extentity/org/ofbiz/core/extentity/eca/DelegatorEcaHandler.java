@@ -56,10 +56,13 @@ public class DelegatorEcaHandler implements EntityEcaHandler {
         this.delegatorName = delegator.getDelegatorName();
         this.entityEcaReaderName = EntityEcaUtil.getEntityEcaReaderName(this.delegatorName);
         this.dctx = EntityServiceFactory.getDispatchContext(delegator);
+        
+        //preload the cache
+        EntityEcaUtil.getEntityEcaCache(this.entityEcaReaderName);
     }
 
     public Map getEntityEventMap(String entityName) {
-        Map ecaCache = EntityEcaUtil.readConfig(this.entityEcaReaderName);
+        Map ecaCache = EntityEcaUtil.getEntityEcaCache(this.entityEcaReaderName);
         if (ecaCache == null) return null;
         return (Map) ecaCache.get(entityName);
     }
