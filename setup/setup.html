@@ -221,11 +221,14 @@ been provided which set some things up before calling catalina.sh or catalina.ba
 These ofbiz scripts should be put in <b>catalina/bin</b>, and you can
 use the run, start, stop, etc. parameters on the command line.</p>
 
-<p>The default data can be loaded by going to the following URL: <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/commonapp/control/main</a>,
-and then click on the link for data loading, or go to <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/commonapp/control/install</a>
+<p>The default data can be loaded by going to the following URL: 
+<a href="http://localhost:8080/webtools/control/main">http://localhost:8080/webtools/control/main</a>,
+and then click on the link for data loading, or go to 
+<a href="http://localhost:8080/webtools/control/install">http://localhost:8080/webtools/control/install</a>
 directly. Since there can be multiple servers depending on the name of the
 entity group, you must enter the entity group name so the JSP knows which files
-to load to which server, as setup in the entityengine.xml file. This JSP loads all .SQL files in the directories specified in the
+to load to which server, as setup in the entityengine.xml file. This JSP loads all 
+.sql and .xml files in the directories specified in the
 entityengine.xml file for the given group name. The default group name for all
 of the default entities in OFBiz is &quot;org.ofbiz.commonapp&quot;, which you
 will notice pre-populated in the form on the install page. Just click on
@@ -326,39 +329,46 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
         <td><b>Comments</b></td>
     </tr>
     <tr>
-        <td><a href='http://jakarta.apache.org'>Tomcat 4.0.1 - Catalina</a></td>
-        <td><a href='http://www.exolab.org'>Tyrex 0.9.8.5</a></td>
+        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later - Catalina</a></td>
+        <td><a href='http://tyrex.sf.net'>Tyrex 1.0</a></td>
         <td>Default config; freely available; comparatively slow</td>
     </tr>
     <tr>
         <td><a href='http://jetty.mortbay.com'>Jetty 4</a></td>
-        <td><a href='http://www.exolab.org'>Tyrex 0.9.8.5</a></td>
+        <td><a href='http://tyrex.sf.net'>Tyrex 1.0</a></td>
         <td>Freely available; also slow, Jetty appears to run even slower than Tomcat4</td>
     </tr>
     <tr>
-        <td><a href='http://jakarta.apache.org'>Tomcat 4.0.1 - Catalina</a></td>
-        <td><a href='http://www.jboss.org'>JBoss 2.4.4</a></td>
+        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later - Catalina</a></td>
+        <td><a href='http://www.jboss.org'>JBoss 2.4.4 or later, or many earlier too</a></td>
         <td>Freely available; same speed at Catalina/Tyrex, but can interoperate 
             with other JBoss resources like EJBs, etc</td>
     </tr>
     <tr>
-        <td><a href='http://www.caucho.com'>Caucho Resin 2.0.5</a></td>
-        <td><a href='http://www.exolab.org'>Tyrex 0.9.8.5</a></td>
+        <td><a href='http://www.caucho.com'>Caucho Resin 2.1.4</a></td>
+        <td><a href='http://tyrex.sf.net'>Tyrex 1.0</a></td>
         <td>Resin $500/server, Tyrex free; runs MUCH faster than Tomcat or Jetty</td>
     </tr>
     <tr>
-        <td><a href='http://www.orionserver.com'>Orion 1.5.3</a></td>
-        <td><a href='http://www.orionserver.com'>Orion 1.5.3</a> or 
-            <a href='http://www.exolab.org'>Tyrex 0.9.8.5</a></td>
+        <td><a href='http://www.orionserver.com'>Orion 1.5.2 or later</a></td>
+        <td><a href='http://www.orionserver.com'>Orion 1.5.2 or later</a></td>
         <td>Orion $1,500/server; OFBiz can interoperate with other Orion resources;
-            the fastest and best scaling container we have tested</td>
+            one of the fastest and best scaling container we have tested</td>
+    </tr>
+    <tr>
+        <td><a href='http://www.macromedia.com/software/jrun/'>JRun 4</a></td>
+        <td><a href='http://www.macromedia.com/software/jrun/'>JRun 4</a></td>
+        <td>$899/CPU; A good option all around. Has many features and appears to
+            be even faster than Orion on the serlvet/JSP side, but slower on the
+            transaction management side.</td>
     </tr>
     <tr>
         <td><a href='http://www.bea.com'>BEA Weblogic 6.1</a></td>
         <td><a href='http://www.bea.com'>BEA Weblogic 6.1</a></td>
         <td>Weblogic ~$10,000/CPU (used to be, I don't know how much it is now), 
             OFBiz can interoperate with other Weblogic resources, but is slower 
-            than Resin or Orion</td>
+            than Resin or Orion (this may not be true with the Weblogic 7 series
+            which has been optimized a lot)</td>
     </tr>
 </table>
 
