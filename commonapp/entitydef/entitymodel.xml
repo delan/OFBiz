@@ -665,7 +665,7 @@
         <key-map><col-name>INVOICE_ITEM_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>many</type>
+        <type>many</type>e
         <rel-table-name>INVOICE_ITEM_TYPE_ATTR</rel-table-name>
         <key-map><col-name>INVOICE_ITEM_TYPE_ID</col-name></key-map>
       </relation>
@@ -6181,14 +6181,14 @@
       <field><col-name>SUFFIX</col-name><type>name</type></field>
       <field><col-name>NICKNAME</col-name><type>name</type></field>
       <field><col-name>GENDER</col-name><type>indicator</type></field>
-      <field><col-name>BIRTH_DATE</col-name><type>date-time</type></field>
+      <field><col-name>BIRTH_DATE</col-name><type>date</type></field>
       <field><col-name>HEIGHT</col-name><type>floating-point</type></field>
       <field><col-name>WEIGHT</col-name><type>floating-point</type></field>
       <field><col-name>MOTHERS_MAIDEN_NAME</col-name><type>name</type></field>
       <field><col-name>MARITAL_STATUS</col-name><type>indicator</type></field>
       <field><col-name>SOCIAL_SECURITY_NUMBER</col-name><type>short-varchar</type></field>
       <field><col-name>PASSPORT_NUMBER</col-name><type>short-varchar</type></field>
-      <field><col-name>PASSPORT_EXPIRE_DATE</col-name><type>date-time</type></field>
+      <field><col-name>PASSPORT_EXPIRE_DATE</col-name><type>date</type></field>
       <field><col-name>TOTAL_YEARS_WORK_EXPERIENCE</col-name><type>floating-point</type></field>
       <field><col-name>COMMENT</col-name><type>comment</type></field>	
       <prim-key-col>PARTY_ID</prim-key-col>
