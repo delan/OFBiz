@@ -73,14 +73,14 @@
                     <td width='74%'>
                       <input type='hidden' name='currentStatusId' value='${workEffort.currentStatusId}'>
                       <span class='tabletext'>${currentStatusItem.description}</span>
-                      <span class='tabletext'> - Last Updated: ${workEffort.lastStatusUpdate?string}</span>
+                      <span class='tabletext'> - Last Updated: ${workEffort.lastStatusUpdate?if_exists?string}</span>
                     </td>
                   </tr>
 
                   <tr>
                     <td width='26%' align='right'><div class='tabletext'>Location</div></td>
                     <td>&nbsp;</td>
-                    <td width='74%'><input type='text' class='inputBox' size='60' maxlength='255' name="locationDesc" value="workEffort.locationDesc"></td>
+                    <td width='74%'><input type='text' class='inputBox' size='60' maxlength='255' name="locationDesc" value="${workEffort.locationDesc?if_exists}"></td>
                   </tr>
                   <tr>
                     <td width='26%' align='right'><div class='tabletext'>Description</div></td>
