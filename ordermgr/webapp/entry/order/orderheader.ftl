@@ -31,7 +31,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Order Confirmation</div>
+                  <div class="boxhead">&nbsp;Order Confirmation<#if orderHeader?exists>&nbsp;#${orderHeader.orderId}</#if></div>
                 </td>
                 <#if !orderHeader?exists>
                 <td align="right">
