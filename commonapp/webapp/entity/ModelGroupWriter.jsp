@@ -116,6 +116,7 @@
     while ( i.hasNext() ) {
       String entityName = (String)i.next();
       String groupName = groupReader.getEntityGroupName(entityName);
+      if(groupName == null) groupName = "";
 %>	
     <entity-group group="<%=groupName%>" entity="<%=entityName%>" /><%
     }

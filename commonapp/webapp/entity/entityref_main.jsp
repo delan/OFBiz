@@ -91,7 +91,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <%if(checkWarnings) {%>
   <A href='#WARNINGS'>View Warnings</A>
 <%}else{%>
-  <A href='<%=response.encodeURL(controlPath + "/entityref_main?CHECK_WARNINGS=true")%>'>View With Warnings Check</A>  
+  <A href='<%=response.encodeURL(controlPath + "/view/entityref_main?CHECK_WARNINGS=true")%>'>View With Warnings Check</A>  
 <%}%>
 <%
   Iterator piter = packageNames.iterator();
