@@ -97,14 +97,17 @@ public class ProductContentWrapper {
             if (outString.length() > 0) {
                 return outString;
             } else {
-                return product.getString(candidateFieldName);
+                String candidateOut = product.getModelEntity().isField(candidateFieldName) ? product.getString(candidateFieldName): "";
+                return candidateOut == null? "" : candidateOut;
             }
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
-            return product.getString(candidateFieldName);
+            String candidateOut = product.getModelEntity().isField(candidateFieldName) ? product.getString(candidateFieldName): "";
+            return candidateOut == null? "" : candidateOut;
         } catch (IOException e) {
             Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
-            return product.getString(candidateFieldName);
+            String candidateOut = product.getModelEntity().isField(candidateFieldName) ? product.getString(candidateFieldName): "";
+            return candidateOut == null? "" : candidateOut;
         }
     }
     
