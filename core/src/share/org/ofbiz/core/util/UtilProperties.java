@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.4  2001/09/27 06:45:15  jonesde
  * Added FlexibleProperties and updated UtilProperties to use it.
  *
@@ -119,4 +122,13 @@ public class UtilProperties {
     catch(Exception e) { Debug.log(e.getMessage()); }
     return value;
   }
+  
+  public static double getPropertyNumber(String resource, String name) {
+      String str = getPropertyValue(resource,name);
+      double strValue = 0.00000;
+      try { strValue = Double.parseDouble(str); }
+      catch ( NumberFormatException nfe ) {}
+      return strValue;
+  }
+          
 }
