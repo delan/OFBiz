@@ -73,7 +73,7 @@ public class ModelTree {
 
     protected String name;
     protected String rootNodeName;
-    protected String renderStyle;
+    protected String defaultRenderStyle;
     protected FlexibleStringExpander defaultWrapStyleExdr;
     protected List nodeList = new ArrayList();
     protected Map nodeMap = new HashMap();
@@ -97,7 +97,7 @@ public class ModelTree {
 
         this.name = treeElement.getAttribute("name");
         this.rootNodeName = treeElement.getAttribute("root-node-name");
-        this.renderStyle = UtilFormatOut.checkEmpty(treeElement.getAttribute("render-style"), "simple");
+        this.defaultRenderStyle = UtilFormatOut.checkEmpty(treeElement.getAttribute("default-render-style"), treeElement.getAttribute("render-style"), "simple");
         this.defaultWrapStyleExdr = new FlexibleStringExpander(treeElement.getAttribute("default-wrap-style"));
         this.expandCollapseRequestExdr = new FlexibleStringExpander(treeElement.getAttribute("expand-collapse-request"));
         this.trailNameExdr = new FlexibleStringExpander(UtilFormatOut.checkEmpty(treeElement.getAttribute("trail-name"), "trail"));
@@ -277,49 +277,9 @@ public class ModelTree {
     }
 
     public String getRenderStyle() {
-        return this.renderStyle;
+        return this.defaultRenderStyle;
     }
     
-    public boolean isExpandCollapse() {
-    	boolean isExpCollapse = false;
-        if (renderStyle != null && renderStyle.equals("expand-collapse"))
-            isExpCollapse = true;
-        
-        return isExpCollapse;
-    }
-    
-    public boolean isFollowTrail() {
-    	boolean isFollowTrail = false;
-        if (renderStyle != null && (renderStyle.equals("follow-trail") || renderStyle.equals("show-peers") || renderStyle.equals("follow-trail")))
-            isFollowTrail = true;
-        
-        return isFollowTrail;
-    }
-
-    public boolean showPeers(int currentDepth) {
-    
-    	int trailSize = 0;
-        if (trail != null)
-        	trailSize = trail.size();
-        	
-    	boolean showPeers = false;
-        if (renderStyle == null )
-            showPeers = true;
-        else if (!isFollowTrail() )
-            showPeers = true;
-        else if ((currentDepth < trailSize) && (renderStyle != null) &&  (renderStyle.equals("show-peers") || renderStyle.equals("expand-collapse")))
-            showPeers = true;
-        else if (openDepth >= currentDepth)
-            showPeers = true;
-        else {
-            
-            int depthAfterTrail = currentDepth - trailSize;
-            if (depthAfterTrail >= 0 && depthAfterTrail <= postTrailOpenDepth)
-            	showPeers = true;
-        }
-        
-        return showPeers;
-    }
 
     public static class ModelNode {
 
@@ -337,6 +297,7 @@ public class ModelTree {
         protected String expandCollapseStyle;
         protected FlexibleStringExpander wrapStyleExdr;
         protected ModelTreeCondition condition;
+        protected String renderStyle;
 
         public ModelNode() {}
 
@@ -346,6 +307,7 @@ public class ModelTree {
             this.name = nodeElement.getAttribute("name");
             this.expandCollapseStyle = nodeElement.getAttribute("expand-collapse-style");
             this.wrapStyleExdr = new FlexibleStringExpander(nodeElement.getAttribute("wrap-style"));
+            this.renderStyle = nodeElement.getAttribute("render-style");
     
             Element actionElement = UtilXml.firstChildElement(nodeElement, "entity-one");
             if (actionElement != null) {
@@ -474,8 +436,7 @@ public class ModelTree {
 							if (newDepth < targetNodeTrail.size()) {
 								targetEntityId = (String) targetNodeTrail .get(newDepth);
 							}
-							if ((targetEntityId != null && targetEntityId .equals(thisEntityId))
-									|| this.modelTree.showPeers(newDepth)) {
+							if ((targetEntityId != null && targetEntityId .equals(thisEntityId)) || this.showPeers(newDepth)) {
 								boolean lastNode = !nodeIter.hasNext();
 								node.renderNodeString(writer, newContext, treeStringRenderer, newDepth, lastNode);
 							}
@@ -578,6 +539,60 @@ public class ModelTree {
             return name;
         }
 
+        public String getRenderStyle() {
+        	String rStyle = this.renderStyle;
+            if (UtilValidate.isEmpty(rStyle))
+                rStyle = modelTree.getRenderStyle();
+        	return rStyle;
+    	}
+    
+        public boolean isExpandCollapse() {
+        	boolean isExpCollapse = false;
+        	String rStyle = getRenderStyle();
+            if (rStyle != null && rStyle.equals("expand-collapse"))
+                isExpCollapse = true;
+            
+            return isExpCollapse;
+        }
+        
+        public boolean isFollowTrail() {
+        	boolean isFollowTrail = false;
+        	String rStyle = getRenderStyle();
+            if (rStyle != null && (rStyle.equals("follow-trail") || rStyle.equals("show-peers") || rStyle.equals("follow-trail")))
+                isFollowTrail = true;
+            
+            return isFollowTrail;
+        }
+    
+        public boolean showPeers(int currentDepth) {
+        
+        	int trailSize = 0;
+            List trail = modelTree.getTrailList();
+            int openDepth = modelTree.getOpenDepth();
+            int postTrailOpenDepth = modelTree.getPostTrailOpenDepth();
+            if (trail != null)
+            	trailSize = trail.size();
+            	
+        	boolean showPeers = false;
+        	String rStyle = getRenderStyle();
+            if (rStyle == null )
+                showPeers = true;
+            else if (!isFollowTrail() )
+                showPeers = true;
+            else if ((currentDepth < trailSize) && (rStyle != null) &&  (rStyle.equals("show-peers") || rStyle.equals("expand-collapse")))
+                showPeers = true;
+            else if (openDepth >= currentDepth)
+                showPeers = true;
+            else {
+                
+                int depthAfterTrail = currentDepth - trailSize;
+                if (depthAfterTrail >= 0 && depthAfterTrail <= postTrailOpenDepth)
+                	showPeers = true;
+            }
+            
+            return showPeers;
+        }
+    
         public String getExpandCollapseStyle() {
             return expandCollapseStyle;
         }
