@@ -32,6 +32,13 @@ delegator = request.getAttribute("delegator");
 productStores = delegator.findAllCache("ProductStore", UtilMisc.toList("storeName"));
 context.put("productStores", productStores);
 
+// current store
+productStoreId = request.getParameter("productStoreId");
+if (productStoreId != null) {
+    productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+    context.put("currentStore", productStore);
+}
+
 // payment settings
 paymentSettings = delegator.findByAnd("Enumeration", UtilMisc.toMap("enumTypeId", "PRDS_PAYSVC"), UtilMisc.toList("sequenceId"));
 context.put("paymentSettings", paymentSettings);
@@ -39,6 +46,10 @@ context.put("paymentSettings", paymentSettings);
 // payment method (for auto-fill)
 paymentMethodId = request.getParameter("paymentMethodId");
 context.put("paymentMethodId", paymentMethodId);
+
+// payment method type
+paymentMethodTypeId = request.getParameter("paymentMethodTypeId");
+context.put("paymentMethodTypeId", paymentMethodTypeId);
 
 // service type (transaction type)
 txType = request.getParameter("transactionType");
@@ -51,6 +62,9 @@ if (txType != null) {
 if (paymentMethodId != null) {
     paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
     if (paymentMethod != null) {
+        // payment method type
+        paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
+
         // party information
         party = paymentMethod.getRelatedOne("Party");
         if (party != null && "PERSON".equals(party.getString("partyTypeId"))) {
@@ -69,6 +83,15 @@ if (paymentMethodId != null) {
             context.put("postalFields", postalAddress);
         }
 
-        // todo : add support for gift card / eft account
+        giftCard = paymentMethod.getRelatedOne("GiftCard");
+        context.put("giftCard", giftCard);
+
+        // todo add support for eft account
     }
+}
+
+if (paymentMethodTypeId != null) {
+    paymentMethodType = delegator.findByPrimaryKey("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId));
+    context.put("paymentMethodType", paymentMethodType);
+    context.put("paymentMethodTypeId", paymentMethodTypeId);
 }

@@ -20,50 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 -->
 
-<div class="head1">Manual Electronic Transaction</div>
-<br>
-
-<#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
-<#assign validTx = false>
-<form name="manualCcForm" method="get" action="<@ofbizUrl>/view/manualCcPay</@ofbizUrl>">
-  <#if requestParameters.paymentMethodId?exists>
-    <input type="hidden" name="paymentMethodId" value="${requestParameters.paymentMethodId}">
-  </#if>
-  <table border='0' cellpadding='2' cellspacing='0'>
-    <tr>
-      <td width="26%" align=right valign=middle><div class="tableheadtext">Product Store</div></td>
-      <td width="5">&nbsp;</td>
-      <td width='74%'>
-        <#assign currentStore = requestParameters.productStoreId?default("")>
-        <select name="productStoreId" class="selectBox">
-          <#list productStores as productStore>
-            <option value="${productStore.productStoreId}" <#if (productStore.productStoreId == currentStore)>selected</#if>>${productStore.storeName}</option>
-          </#list>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td width="26%" align=right valign=middle><div class="tableheadtext">Transaction Type</div></td>
-      <td width="5">&nbsp;</td>
-      <td width='74%'>
-        <#if currentTx?has_content>
-          <div class="tabletext">${currentTx.description}</div>
-        <#else>
-          <select name="transactionType" class="selectBox" onclick="javascript:document.manualCcForm.submit();">
-            <#list paymentSettings as setting>
-              <option value="${setting.enumId}">${setting.description}</option>
-            </#list>
-          </select>
-        </#if>
-      </td>
-    </tr>
-
     <#-- reference number -->
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_CAPTURE" || txType?default("") == "PRDS_PAY_RELEASE">
+      ${setRequestAttribute("validTx", "true")}
       <#assign validTx = true>
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
       <tr>
@@ -77,7 +40,7 @@
 
     <#-- manual credit card information -->
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">
-      <#assign validTx = true>
+      ${setRequestAttribute("validTx", "true")}
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
       <tr>
         <td width="26%" align=right valign=middle><div class="tableheadtext">Name on Card</div></td>
@@ -234,41 +197,4 @@
       </tr>
 
     </#if>
-    <#if validTx>
-      <tr><td colspan="3"><hr class="sepbar"></td></tr>
-
-      <#-- amount field -->
-      <#if txType != "PRDS_PAY_RELEASE">
-        <tr>
-          <td width="26%" align=right valign=middle><div class="tableheadtext">Amount</div></td>
-          <td width="5">&nbsp;</td>
-          <td width="74%">
-            <input type="text" class="inputBox" size="20" maxlength="30" name="amount">
-          *</td>
-        </tr>
-      </#if>
-
-      <#-- submit button -->
-      <tr>
-        <td width="26%" align=right valign=middle>&nbsp;</td>
-        <td width="5">&nbsp;</td>
-        <td width="74%">
-          <input type="submit" value="Submit">
-        </td>
-      </tr>
-    <#elseif txType?has_content>
-      <tr>
-        <td colspan="3" align="center">
-          <br>
-          <div class="head2">This transaction type is not yet supported</div>
-          <br>
-        </td>
-      </tr>
-    </#if>
-  </table>
-</form>
-
-<#else>
-<h3>You do not have permission for this function.</h3>
-</#if>
 

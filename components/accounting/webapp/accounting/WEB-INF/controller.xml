@@ -195,7 +195,7 @@
 
     <request-map uri="manualETx">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="manualCcPay"/>
+        <response name="success" type="view" value="manualTx"/>
     </request-map>
 
     <!-- end of request mappings -->
@@ -218,6 +218,6 @@
     
     <view-map name="findPayment" type="jpublish" page="/payment/findPayment.ftl"/>
     <view-map name="editPayment" type="jpublish" page="/payment/editPayment.ftl"/>
-    <view-map name="manualCcPay" type="jpublish" page="/payment/manualCCTx.ftl"/>
+    <view-map name="manualTx" type="jpublish" page="/payment/manualTx.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
