@@ -744,7 +744,7 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="region"/>
+    <view-map name="main" type="jpublish" page="/main.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
 
     <view-map name="FastLoadCache" type="region"/>
@@ -780,11 +780,11 @@
     <view-map name="EditFeatureCategoryFeatures" type="region"/>
 
     <view-map name="FindProdCatalog" type="region"/>
-    <view-map name="EditProdCatalog" type="region"/>
+    <view-map name="EditProdCatalog" type="jpublish" page="/catalog/EditProdCatalog.ftl"/>
     <view-map name="EditProdCatalogCategories" type="region"/>
     <view-map name="EditProdCatalogPromos" type="region"/>
     <view-map name="EditProdCatalogWebSites" type="region"/>
-    <view-map name="EditProdCatalogParties" type="region"/>
+    <view-map name="EditProdCatalogParties" type="jpublish" page="/catalog/EditProdCatalogParties.ftl"/>
 
     <view-map name="FindProductPromo" type="region"/>
     <view-map name="EditProductPromo" type="region"/>
