@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
 -->
 <simple-methods>
@@ -683,6 +683,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
+        <field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>  
     </simple-method>
     <simple-method method-name="updateShipmentPackageContent" short-description="Update ShipmentPackageContent">
         <check-permission permission="FACILITY" action="_UPDATE">
