@@ -1348,6 +1348,7 @@
       <field name="priority" type="numeric"></field>
       <field name="custRequestDate" type="date-time"></field>
       <field name="responseRequiredDate" type="date-time"></field>
+      <field name="custRequestName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
@@ -1393,6 +1394,7 @@
       <alias entity-alias="CR" name="priority"/>
       <alias entity-alias="CR" name="custRequestDate"/>
       <alias entity-alias="CR" name="responseRequiredDate"/>
+      <alias entity-alias="CR" name="custRequestName"/>
       <alias entity-alias="CR" name="description"/>
       <alias entity-alias="CR" name="createdDate"/>
       <alias entity-alias="CR" name="lastModifiedDate"/>
@@ -1458,9 +1460,9 @@
             title="Customer Request Item Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="custRequestItemSeqId" type="id-ne"></field>
-      <field name="priority" type="numeric"></field>
-      <field name="statusId" type="id"></field>
       <field name="custRequestResolutionId" type="id"></field>
+      <field name="statusId" type="id"></field>
+      <field name="priority" type="numeric"></field>
       <field name="requiredByDate" type="date-time"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="maximumAmount" type="currency-amount"></field>

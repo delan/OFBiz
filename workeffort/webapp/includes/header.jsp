@@ -43,6 +43,7 @@
           <td class="headerButtonLeft"><a href="<ofbiz:url>/mytasks</ofbiz:url>" class="headerbuttontext">Task&nbsp;List</a></td>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/month</ofbiz:url>" class="headerbuttontext">Calendar</a></td>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/projectlist</ofbiz:url>" class="headerbuttontext">Projects</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/requestlist</ofbiz:url>" class="headerbuttontext">Requests</a></td>
 
           <td width="90%" align=center class='headerCenter'>&nbsp;</td>
 

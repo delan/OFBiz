@@ -53,7 +53,6 @@
         <string-to-field string="REQ_REQUESTER" map-name="requesterMap" field-name="roleTypeId"/>
         <call-service service-name="createCustRequestRole" in-map-name="requesterMap"/>
     </simple-method>
-
     <simple-method method-name="updateCustRequest" short-description="Update Customer Request">
         <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="CustRequest" map-name="lookupPKMap" value-name="custRequest"/>
@@ -67,7 +66,6 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
-
     <simple-method method-name="updateCustRequestAttribute" short-description="Update Customer Request Attribute">
         <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
         <field-to-field field-name="attrName" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -82,7 +80,6 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
-
     <simple-method method-name="updateCustRequestItem" short-description="Update Customer Request Item">
         <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
         <field-to-field field-name="custRequestItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -104,7 +101,6 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
-
     <simple-method method-name="removeCustRequestRole" short-description="Remove Customer RequestRole">
         <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
         <field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -124,4 +120,16 @@
         <create-value value-name="newEntity"/>
     </simple-method>
 
+    <simple-method method-name="getCustRequestsByRole" short-description="Create Customer RequestItem Note">
+        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupMap"/>
+        <field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="lookupMap"/>
+        
+        <string-to-list string="priority" list-name="orderByList"/>
+        <string-to-list string="-responseRequiredDate" list-name="orderByList"/>
+        <string-to-list string="-custRequestDate" list-name="orderByList"/>
+        <string-to-list string="-createdDate" list-name="orderByList"/>
+        
+        <find-by-and entity-name="CustRequestAndRole" list-name="custRequestAndRoles" map-name="lookupMap" order-by-list-name="orderByList"/>
+        <field-to-result field-name="custRequestAndRoles" result-name="custRequestAndRoles"/>
+    </simple-method>
 </simple-methods>

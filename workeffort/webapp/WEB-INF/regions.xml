@@ -73,11 +73,14 @@
         <put section='content' content='/requirement/tasks.jsp'/>
     </define>
 
+    <define id='requestlist' region='MAIN_REGION'>
+        <put section='title'>Edit Request</put>
+        <put section='content' content='/request/requestlist.jsp'/>
+    </define>
     <define id='request' region='MAIN_REGION'>
         <put section='title'>Edit Request</put>
         <put section='content' content='/request/request.jsp'/>
     </define>
-
     <define id='requestitem' region='MAIN_REGION'>
         <put section='title'>Request Item Detail</put>
         <put section='content' content='/request/requestitem.jsp'/>

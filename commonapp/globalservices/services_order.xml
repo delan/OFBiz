@@ -135,24 +135,29 @@
     </service>
 
     <!-- Customer Request Services -->
+    <service name="interfaceCustRequest" engine="interface" location="" invoke="">
+        <description>CustRequest Interface</description>
+        <attribute name="custRequestTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="priority" type="Long" mode="IN" optional="true"/>
+        <attribute name="custRequestDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="responseRequiredDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="custRequestName" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
     <service name="createCustRequest" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequest" auth="true">
         <description>Create a custRequest record</description>
+        <implements service="interfaceCustRequest"/>
         <attribute name="custRequestId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="custRequestTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="custRequestDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="responseRequiredDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
-
     <service name="updateCustRequest" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="updateCustRequest" auth="true">
         <description>Update a custRequest record</description>
+        <implements service="interfaceCustRequest"/>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="custRequestDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="responseRequiredDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="createCustRequestAttribute" engine="simple"
@@ -171,26 +176,28 @@
         <attribute name="attrValue" type="String" mode="IN" optional="false"/>
     </service>
 
-    <service name="createCustRequestItem" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
-        <description>Create a CustRequestItem record</description>
-        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+    <service name="interfaceCustRequestItem" engine="interface" location="" invoke="">
+        <description>CustRequestItem Interface</description>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestResolutionId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="priority" type="Long" mode="IN" optional="true"/>
         <attribute name="requiredByDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="quantity" type="String" mode="IN" optional="true"/>
         <attribute name="maximumAmount" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
-
+    <service name="createCustRequestItem" engine="simple"
+            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
+        <description>Create a CustRequestItem record</description>
+        <implements service="interfaceCustRequestItem"/>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="updateCustRequestItem" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="updateCustRequestItem" auth="true">
         <description>Update a CustRequestItem record</description>
+        <implements service="interfaceCustRequestItem"/>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
-        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="requiredByDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="quantity" type="String" mode="IN" optional="true"/>
-        <attribute name="maximumAmount" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="createCustRequestRole" engine="simple"
@@ -217,17 +224,24 @@
         <attribute name="note" type="String" mode="IN" optional="false"/>
     </service>
 
+    <!-- Services for finding Associated CustRequests -->
+    <service name="getCustRequestsByRole" engine="simple"
+            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="getCustRequestsByRole" auth="true">
+        <description>Get CustRequests Associated By Role</description>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="custRequestAndRoles" type="java.util.List" mode="OUT" optional="false"/>
+    </service>
+    
   <!-- Requirement Services -->
-    <service name="createRequirement" engine="simple"
+    <service name="interfaceRequirement" engine="simple"
             location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="createRequirement">
-        <description>Create a new requirement</description>
+        <description>Requirement Interface</description>
         <attribute name="requirementTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="deliverableId" type="String" mode="IN" optional="true"/>
         <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="requiredByDate" type="String" mode="IN" optional="true"/>
         <attribute name="estimatedBudget" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="String" mode="IN" optional="true"/>
@@ -235,23 +249,17 @@
         <attribute name="reason" type="String" mode="IN" optional="true"/>
         <attribute name="requirementId" type="String" mode="OUT" optional="false"/>
     </service>
-
+    <service name="createRequirement" engine="simple"
+            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="createRequirement">
+        <description>Create a new requirement</description>
+        <implements service="interfaceRequirement"/>
+        <attribute name="requirementId" type="String" mode="OUT" optional="false"/>
+    </service>
     <service name="updateRequirement" engine="simple"
             location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="updateRequirement">
         <description>Update an existing requirement</description>
+        <implements service="interfaceRequirement"/>
         <attribute name="requirementId" type="String" mode="IN" optional="false"/>
-        <attribute name="requirementTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
-        <attribute name="deliverableId" type="String" mode="IN" optional="true"/>
-        <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="requiredByDate" type="String" mode="IN" optional="true"/>
-        <attribute name="estimatedBudget" type="String" mode="IN" optional="true"/>
-        <attribute name="quantity" type="String" mode="IN" optional="true"/>
-        <attribute name="story" type="String" mode="IN" optional="true"/>
-        <attribute name="reason" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="deleteRequirement" engine="simple"

@@ -38,8 +38,7 @@
     // check for a requestId and get the requst object
     String custRequestId = request.getParameter("custRequestId");
     GenericValue custRequest = null;
-    if (custRequestId == null)
-        custRequestId = (String) request.getSession().getAttribute("custRequestId");
+    if (custRequestId == null) custRequestId = (String) request.getSession().getAttribute("custRequestId");
     if (custRequestId != null) {
         custRequest = delegator.findByPrimaryKey("CustRequest", UtilMisc.toMap("custRequestId", custRequestId));
         if (custRequest != null) pageContext.setAttribute("custRequest", custRequest);
@@ -48,6 +47,10 @@
     pageContext.setAttribute("custRequestTypes", custRequestTypes);
     EntityField entityField = new EntityField(pageContext);
 %>
+
+<script language='JavaScript'>
+  function setCustRequestDate() { document.custRequestForm.custRequestDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
+</script>
 
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -71,25 +74,25 @@
                 <TR>
                   <TD>
                     <ofbiz:unless name="custRequest">
-                      <form method="post" action="<ofbiz:url>/createrequest</ofbiz:url>">
+                      <form method="post" action="<ofbiz:url>/createrequest</ofbiz:url>" name="custRequestForm">
                     </ofbiz:unless>
                     <ofbiz:if name="custRequest">
-                      <form method="post" action="<ofbiz:url>/updaterequest</ofbiz:url>">
+                      <form method="post" action="<ofbiz:url>/updaterequest</ofbiz:url>" name="custRequestForm">
                         <input type="hidden" name="custRequestId" value="<%=custRequestId%>">
                     </ofbiz:if>
                     <table width="100%" cellpadding="2" cellspacing="0" border="0">
                       <tr>
                         <td align="right">Request Date</td>
-                        <td><input type="text" name="custRequestDate" style="font-size: medium;" size="30" value="<%= custRequest != null ? custRequest.getString("custRequestDate") : UtilDateTime.nowTimestamp().toString()%>"></td>
+                        <td><input type="text" style="font-size: small;" size="23" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestDate" fullattrs="true"/>> <a href='#' onclick='setCustRequestDate()' class='buttontext'>[Now]</a></td>
                       </tr>
                       <tr>
                         <td align="right">Response Required Date</td>
-                        <td><input type="text" name="responseRequiredDate" style="font-size: medium;" size="30" value="<%= custRequest != null ? custRequest.getString("responseRequiredDate") : ""%>"></td>
+                        <td><input type="text" style="font-size: small;" size="23" <ofbiz:inputvalue entityAttr="custRequest" field="responseRequiredDate" fullattrs="true"/>></td>
                       </tr>
                       <tr>
                         <td align="right">RequestType</td>
                         <td>
-                          <select name="custRequestTypeId" style="font-size: medium;">
+                          <select name="custRequestTypeId" style="font-size: small;">
                             <ofbiz:iterator name="custRequestType" property="custRequestTypes">
                               <%if (custRequest != null && custRequest.getString("custRequestTypeId").equals(custRequestType.getString("custRequestTypeId"))) {%>
                                 <option SELECTED value="<%=custRequestType.getString("custRequestTypeId")%>"><%=custRequestType.getString("description")%></option>
@@ -101,23 +104,27 @@
                         </td>
                       </tr>
                       <tr>
+                        <td align="right">Name</td>
+                        <td><input type="text" style="font-size: small;" size="50" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestName" fullattrs="true"/>></td>
+                      </tr>
+                      <tr>
                         <td align="right">Description</td>
-                        <td><input type="text" name="description" style="font-size: medium;" size="50" value="<%= custRequest != null ? custRequest.getString("description") : ""%>"></td>
+                        <td><input type="text" style="font-size: small;" size="50"  <ofbiz:inputvalue entityAttr="custRequest" field="description" fullattrs="true"/>></td>
                       </tr>
 
                       <ofbiz:unless name="custRequest">
                       <tr>
                         <td align="right">Requesting Party</td>
-                        <td><input type="text" name="requestPartyId" style="font-size: medium;" size="50"></td>
+                        <td><input type="text" name="requestPartyId" style="font-size: small;" size="50"></td>
                       </tr>
                       </ofbiz:unless>
 
                       <tr>
                         <ofbiz:unless name="custRequest">
-                          <td align="right"><input type="submit" style="font-size: medium;" value="Create"></td>
+                          <td align="right"><input type="submit" style="font-size: small;" value="Create"></td>
                         </ofbiz:unless>
                         <ofbiz:if name="custRequest">
-                          <td align="right"><input type="submit" style="font-size: medium;" value="Update"></td>
+                          <td align="right"><input type="submit" style="font-size: small;" value="Update"></td>
                         </ofbiz:if>
                         <td>&nbsp</td>
                       </tr>
@@ -205,16 +212,16 @@
                         <tr>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
                           <td align="right">Party ID</td>
-                          <td><input type="text" name="partyId" style="font-size: medium;" size="30"></td>
+                          <td><input type="text" name="partyId" style="font-size: small;" size="30"></td>
                           <td align="right">Role Type ID</td>
                           <td>
-                            <select name="roleTypeId" style="font-size: medium;">
+                            <select name="roleTypeId" style="font-size: small;">
                               <option value="REQ_TAKER">Request Taker</option>
                               <option value="REQ_REQUESTER">Requesting Party</option>
                               <option value="REQ_MANAGER">Request Manager</option>
                             </select>
                           </td>
-                          <td align="center"><input type="submit" style="font-size: medium;" value="Add"></td>
+                          <td align="center"><input type="submit" style="font-size: small;" value="Add"></td>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
                         </tr>
                       </table>
@@ -295,27 +302,27 @@
                       <input type="hidden" name="custRequestItemSeqId" value="<%=nextSeqId%>">
                       <table width="100%" cellpadding="2" cellspacing="0" border="0">
                         <tr>
-                          <td align="right">Required Date</td>
-                          <td><input type="text" name="requiredByDate" style="font-size: medium;" size="30"></td>
+                          <td align="right">Response Required Date</td>
+                          <td><input type="text" name="requiredByDate" style="font-size: small;" size="30"></td>
                         </tr>
                         <tr>
                           <td align="right">Max Amount</td>
-                          <td><input type="text" name="maximumAmount" style="font-size: medium;" size="10" value=""></td>
+                          <td><input type="text" name="maximumAmount" style="font-size: small;" size="10" value=""></td>
                         </tr>
                         <tr>
                           <td align="right">Quantity</td>
-                          <td><input type="text" name="quantity" style="font-size: medium;" size="6" value=""></td>
+                          <td><input type="text" name="quantity" style="font-size: small;" size="6" value=""></td>
                         </tr>
                         <tr>
                           <td align="right">Description</td>
-                          <td><input type="text" name="description" style="font-size: medium;" size="50"></td>
+                          <td><input type="text" name="description" style="font-size: small;" size="50"></td>
                         </tr>
                         <tr>
                           <td align="right">Story</td>
-                          <td><textarea name="story" style="font-size: medium;" cols="60" rows="20"></textarea></td>
+                          <td><textarea name="story" style="font-size: small;" cols="60" rows="20"></textarea></td>
                         </tr>
                         <tr>
-                          <td align="right"><input type="submit" style="font-size: medium;" value="Create"></td>
+                          <td align="right"><input type="submit" style="font-size: small;" value="Create"></td>
                           <td>&nbsp;</td>
                         </tr>
                       </table>
