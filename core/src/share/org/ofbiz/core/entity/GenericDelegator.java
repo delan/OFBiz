@@ -889,7 +889,7 @@ public class GenericDelegator {
     if(sequencer == null) {
       synchronized(this) { 
         if(sequencer == null) {
-          String helperName = this.getEntityHelperName("Sequence");
+          String helperName = this.getEntityHelperName("SequenceValueItem");
           sequencer = new SequenceUtil(helperName);
         }
       }
