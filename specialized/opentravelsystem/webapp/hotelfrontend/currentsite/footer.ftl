@@ -1,22 +1,11 @@
-<br/>
-<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="1"><tr><td>
-<table width="775"  border="0" align="center" cellpadding="0" cellspacing="0" id="2"><tr><td>
-<table width="775"  border="0" align="center" cellpadding="0" cellspacing="0" id="3"><tr><td>
-<table width="100%"  border="0" align="center" cellpadding="0" cellspacing="0" id="4">
-              <tr>
-                <td width="100%" height="1" align="center" valign="top" bgcolor="#333366"><img src="/hotelfrontend/images/spacer.gif" width="0" height="1" border="0" align="absmiddle"></td>
-              </tr>
-              <tr>
-                <td width="100%" height="16" align="center" valign="top" bgcolor="#EEEEEE">&nbsp;</td>
-              </tr>
-              <tr>
-                <td width="100%" height="1" align="center" valign="top" bgcolor="#333366"><img src="/hotelfrontend/images/spacer.gif" width="0" height="1" border="0" align="absmiddle"></td>
-              </tr>
-            </table></td>
-            <td width="1" height="100%" bgcolor="#333366"><img src="/hotelfrontend/images/spacer.gif" width="1" height="0" border="0" align="absmiddle"></td>
-          </tr>
-        </table></td>
-      </tr>
-    </table></td>
-  </tr>
+<table class="footer-table" width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td class="footer-row1" colspan="2"><img src="/hotelfrontend/images/spacer.gif" width="1" height="1" border="0"></td>
+	</tr>
+	<tr>
+		<td class="footer-row2" align="center">| 2005<sup>&copy;</sup> - <a href="http://opentravelsystem.org" class="footer" target="_blank"> The Open Travel System</a> | Powered by <a href="http://www.ofbiz.org" class="footer" target="_blank">OFBiz</a> |</td>
+	</tr>
+	<tr>
+		<td class="footer-row1" colspan="2" style=""><img src="/hotelfrontend/images/spacer.gif" width="1" height="1" border="0"></td>
+	</tr>	
 </table>

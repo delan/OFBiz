@@ -42,4 +42,4 @@ ${pages.get("/currentsite/head.ftl")}
 
 	${pages.get("/currentsite/footer.ftl")}
 </div>
-<#if screens?exists>${screens.render("component://opentravelsystem/includes/footer.ftl")}</#if>
+<#if screens?exists>${screens.render("component://opentravelsystem/webapp/frontend/includes/footer.ftl")}</#if>
