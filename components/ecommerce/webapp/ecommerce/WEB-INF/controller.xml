@@ -25,6 +25,7 @@
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="autoLoginCheck"/>
         <event type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkTrackingCodeCookies"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="setDefaultStoreSettings"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="restoreAutoSaveList"/>
     </firstvisit>
 
     <!-- Events to run on every request before security (chains exempt) -->

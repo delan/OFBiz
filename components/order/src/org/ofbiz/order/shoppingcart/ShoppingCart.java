@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.44 2004/06/27 03:27:42 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.45 2004/06/29 19:03:46 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,6 +36,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
@@ -45,7 +46,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.44 $
+ * @version    $Revision: 1.45 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -482,6 +483,27 @@ public class ShoppingCart implements Serializable {
         this.adjustments.clear();
         this.expireSingleUsePayments();
         this.cartLines.clear();
+
+        // clear the auto-save info
+        if (org.ofbiz.product.store.ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
+            GenericValue ul = this.getUserLogin();
+            if (ul == null) {
+                ul = this.getAutoUserLogin();
+            }
+            String autoSaveListId = null;
+            try {
+                autoSaveListId = org.ofbiz.order.shoppinglist.ShoppingListEvents.getAutoSaveListId(delegator, null, ul);
+            } catch (GeneralException e) {
+                Debug.logError(e, module);
+            }
+            if (autoSaveListId != null) {
+                try {
+                    org.ofbiz.order.shoppinglist.ShoppingListEvents.clearListInfo(delegator, autoSaveListId);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
     }
 
     private void expireSingleUsePayments() {

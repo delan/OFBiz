@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  */
 -->
 
@@ -2368,7 +2368,7 @@
             package-name="org.ofbiz.order.shoppinglist"
             title="Shopping List Item Entity">
       <field name="shoppingListId" type="id-ne"></field>
-      <field name="shoppingListItemSeqId" type="id"></field>
+      <field name="shoppingListItemSeqId" type="id-ne"></field>
       <field name="productId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="quantityPurchased" type="floating-point"></field>
@@ -2379,6 +2379,26 @@
       </relation>
       <relation type="one" fk-name="SHLIST_ITEM_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ShoppingListItemSurvey"
+            package-name="org.ofbiz.order.shoppinglist"
+            title="Shopping List Item Entity">
+      <field name="shoppingListId" type="id-ne"></field>
+      <field name="shoppingListItemSeqId" type="id-ne"></field>
+      <field name="surveyResponseId" type="id-ne"></field>
+      <prim-key field="shoppingListId"/>
+      <prim-key field="shoppingListItemSeqId"/>
+      <prim-key field="surveyResponseId"/>
+      <relation type="one" fk-name="SHLIST_ITSUR_LIST" rel-entity-name="ShoppingList">
+        <key-map field-name="shoppingListId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_ITSUR_ITEM" rel-entity-name="ShoppingListItem">
+        <key-map field-name="shoppingListId"/>
+        <key-map field-name="shoppingListItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_ITSUR_RESP" rel-entity-name="SurveyResponse">
+        <key-map field-name="surveyResponseId"/>
       </relation>
     </entity>
     <entity entity-name="ShoppingListType"

@@ -53,6 +53,7 @@
   <ShoppingListType description="Gift Registry" shoppingListTypeId="SLT_GIFT_REG"/>
   <ShoppingListType description="Automatic Re-Orders" shoppingListTypeId="SLT_AUTO_REODR"/>
   <ShoppingListType description="Frequent Purchases" shoppingListTypeId="SLT_FREQ_PURCHASES"/>
+  <ShoppingListType description="Special Purpose" shoppingListTypeId="SLT_SPEC_PURP"/>
 
   <!-- order and order item status -->
   <StatusType description="Order" hasTable="N" parentTypeId="" statusTypeId="ORDER_STATUS"/>    
