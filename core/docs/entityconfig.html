@@ -309,8 +309,14 @@ sub-elements:</p>
 <tr>
     <td>check-fks-on-start</td><td>N</td>
     <td>Check foreign keys at startup and add missing as needed? Must be true or false, defaults to false.
-    Some databases have a hard time with this and do not return a full list of foreign keys.</td>
+    Some databases have a hard time with this and do not return a full list of foreign keys
+    resulting in duplicate foreign keys being added to the database.</td>
 </tr>
+<tr>
+    <td>check-fk-indices-on-start</td><td>N</td>
+    <td>Check foreign key indices at startup and add missing as needed? Must be true or false, defaults to false.</td>
+</tr>
+
 <tr>
     <td>use-pk-constraint-names</td><td>N</td>
     <td>Use constraint names for Primary Keys? Some databases have a problem

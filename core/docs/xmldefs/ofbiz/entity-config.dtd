@@ -112,6 +112,7 @@
     use-foreign-keys ( true | false ) "true"
     use-foreign-key-indices ( true | false ) "true"
     check-fks-on-start ( true | false ) "false"
+    check-fk-indices-on-start ( true | false ) "false"
     use-pk-constraint-names ( true | false ) "true"
     constraint-name-clip-length CDATA "30"
 >

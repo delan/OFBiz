@@ -78,7 +78,7 @@ public class DatabaseUtil {
 
         boolean useFks = true;
         if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for use-foreign-keys (true)");
+            Debug.logWarning("datasource def not found with name " + helperName + ", using default for use-foreign-keys (true)");
         } else {
             //anything but false is true
             useFks = !"false".equals(datasourceElement.getAttribute("use-foreign-keys"));
@@ -86,7 +86,7 @@ public class DatabaseUtil {
         
         boolean useFkIndices = true;
         if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using defaults use-foreign-key-indices (true)");
+            Debug.logWarning("datasource def not found with name " + helperName + ", using default use-foreign-key-indices (true)");
         } else {
             //anything but false is true
             useFkIndices = !"false".equals(datasourceElement.getAttribute("use-foreign-key-indices"));
@@ -94,15 +94,23 @@ public class DatabaseUtil {
         
         boolean checkForeignKeysOnStart = false;
         if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for check-fks-on-start (false)");
+            Debug.logWarning("datasource def not found with name " + helperName + ", using default for check-fks-on-start (false)");
         } else {
             //anything but true is false
             checkForeignKeysOnStart = "true".equals(datasourceElement.getAttribute("check-fks-on-start"));
         }
         
+        boolean checkFkIndicesOnStart = false;
+        if (datasourceElement == null) {
+            Debug.logWarning("datasource def not found with name " + helperName + ", using default for check-fk-indices-on-start (false)");
+        } else {
+            //anything but true is false
+            checkFkIndicesOnStart = "true".equals(datasourceElement.getAttribute("check-fk-indices-on-start"));
+        }
+        
         boolean usePkConstraintNames = true;
         if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for use-pk-constraint-names (true)");
+            Debug.logWarning("datasource def not found with name " + helperName + ", using default for use-pk-constraint-names (true)");
         } else {
             //anything but false is true
             usePkConstraintNames = !"false".equals(datasourceElement.getAttribute("use-pk-constraint-names"));
@@ -110,7 +118,7 @@ public class DatabaseUtil {
         
         int constraintNameClipLength = 30;
         if (datasourceElement == null) {
-            Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for constraint-name-clip-length (30)");
+            Debug.logWarning("datasource def not found with name " + helperName + ", using default for constraint-name-clip-length (30)");
         } else {
             try {
                 constraintNameClipLength = Integer.parseInt(datasourceElement.getAttribute("constraint-name-clip-length"));
@@ -125,6 +133,7 @@ public class DatabaseUtil {
         //get ALL tables from this database
         TreeSet tableNames = this.getTableNames(messages);
         TreeSet fkTableNames = new TreeSet(tableNames);
+        TreeSet indexTableNames = new TreeSet(tableNames);
 
         if (tableNames == null) {
             String message = "Could not get table name information from the database, aborting.";
@@ -443,83 +452,189 @@ public class DatabaseUtil {
             Map refTableInfoMap = this.getReferenceInfo(fkTableNames, messages);
             //Debug.logVerbose("Ref Info Map: " + refTableInfoMap);
             
-            Iterator refModelEntityIter = modelEntityList.iterator();
-            while (refModelEntityIter.hasNext()) {
-                ModelEntity entity = (ModelEntity) refModelEntityIter.next();
-                String entityName = entity.getEntityName();
-                //if this is a view entity, do not check it...
-                if (entity instanceof ModelViewEntity) {
-                    String entMessage = "NOT Checking View Entity " + entity.getEntityName();
+            if (refTableInfoMap == null) {
+                //uh oh, something happened while getting info...
+            } else {
+                Iterator refModelEntityIter = modelEntityList.iterator();
+                while (refModelEntityIter.hasNext()) {
+                    ModelEntity entity = (ModelEntity) refModelEntityIter.next();
+                    String entityName = entity.getEntityName();
+                    //if this is a view entity, do not check it...
+                    if (entity instanceof ModelViewEntity) {
+                        String entMessage = "NOT Checking View Entity " + entity.getEntityName();
 
-                    Debug.logVerbose(entMessage, module);
-                    if (messages != null) {
-                        messages.add(entMessage);
-                    }
-                    continue;
-                }
-                
-                //get existing FK map for this table
-                Map rcInfoMap = (Map) refTableInfoMap.get(entity.getTableName());
-                //Debug.logVerbose("Got ref info for table " + entity.getTableName() + ": " + rcInfoMap);
-                
-                //go through each relation to see if an FK already exists
-                Iterator relations = entity.getRelationsIterator();
-                boolean createdConstraints = false;
-                while (relations.hasNext()) {
-                    ModelRelation modelRelation = (ModelRelation) relations.next();
-                    if (!"one".equals(modelRelation.getType())) {
+                        Debug.logVerbose(entMessage, module);
+                        if (messages != null) {
+                            messages.add(entMessage);
+                        }
                         continue;
                     }
-                    
-                    ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
-                    
-                    String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
-                    ReferenceCheckInfo rcInfo = null;
-                    if (rcInfoMap != null) {
-                        rcInfo = (ReferenceCheckInfo) rcInfoMap.get(relConstraintName);
-                    }
-                    
-                    if (rcInfo != null) {
-                        rcInfoMap.remove(relConstraintName);
-                    } else {
-                        //if not, create one
-                        Debug.logVerbose("No Foreign Key Constraint " + relConstraintName + " found in entity " + entityName);
-                        String errMsg = createForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength);
-                        if (errMsg != null && errMsg.length() > 0) {
-                            String message = "Could not create foreign key " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
 
-                            Debug.logError(message, module);
-                            if (messages != null) messages.add(message);
-                            Debug.logError(errMsg, module);
-                            if (messages != null) messages.add(errMsg);
+                    //get existing FK map for this table
+                    Map rcInfoMap = (Map) refTableInfoMap.get(entity.getTableName());
+                    //Debug.logVerbose("Got ref info for table " + entity.getTableName() + ": " + rcInfoMap);
+
+                    //go through each relation to see if an FK already exists
+                    Iterator relations = entity.getRelationsIterator();
+                    boolean createdConstraints = false;
+                    while (relations.hasNext()) {
+                        ModelRelation modelRelation = (ModelRelation) relations.next();
+                        if (!"one".equals(modelRelation.getType())) {
+                            continue;
+                        }
+
+                        ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
+
+                        String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
+                        ReferenceCheckInfo rcInfo = null;
+                        if (rcInfoMap != null) {
+                            rcInfo = (ReferenceCheckInfo) rcInfoMap.get(relConstraintName);
+                        }
+
+                        if (rcInfo != null) {
+                            rcInfoMap.remove(relConstraintName);
                         } else {
-                            String message = "Created foreign key " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
+                            //if not, create one
+                            Debug.logVerbose("No Foreign Key Constraint " + relConstraintName + " found in entity " + entityName);
+                            String errMsg = createForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength);
+                            if (errMsg != null && errMsg.length() > 0) {
+                                String message = "Could not create foreign key " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
 
-                            Debug.logVerbose(message, module);
-                            if (messages != null) messages.add(message);
-                            
-                            createdConstraints = true;
-                            numFksCreated++;
+                                Debug.logError(message, module);
+                                if (messages != null) messages.add(message);
+                                Debug.logError(errMsg, module);
+                                if (messages != null) messages.add(errMsg);
+                            } else {
+                                String message = "Created foreign key " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
+
+                                Debug.logVerbose(message, module);
+                                if (messages != null) messages.add(message);
+
+                                createdConstraints = true;
+                                numFksCreated++;
+                            }
+                        }
+                    }
+                    if (createdConstraints) {
+                        String message = "Created foreign key(s) for entity \"" + entity.getEntityName() + "\"";
+                        Debug.logImportant(message, module);
+                        if (messages != null) messages.add(message);
+                    }
+
+                    //show foreign key references that exist but are unknown
+                    if (rcInfoMap != null) {
+                        Iterator rcInfoKeysLeft = rcInfoMap.keySet().iterator();
+                        while (rcInfoKeysLeft.hasNext()) {
+                            String rcKeyLeft = (String) rcInfoKeysLeft.next();
+                            Debug.logImportant("Unknown Foreign Key Constraint " + rcKeyLeft + " found in table " + entity.getTableName());
                         }
                     }
                 }
-                if (createdConstraints) {
-                    String message = "Created foreign key(s) for entity \"" + entity.getEntityName() + "\"";
-                    Debug.logImportant(message, module);
-                    if (messages != null) messages.add(message);
-                }
-                
-                //show foreign key references that exist but are unknown
-                if (rcInfoMap != null) {
-                    Iterator rcInfoKeysLeft = rcInfoMap.keySet().iterator();
-                    while (rcInfoKeysLeft.hasNext()) {
-                        String rcKeyLeft = (String) rcInfoKeysLeft.next();
-                        Debug.logImportant("Unknown Foreign Key Constraint " + rcKeyLeft + " found in table " + entityName);
-                    }
-                }
-             
             }
             Debug.logInfo("Created " + numFksCreated + " fk refs");
+        }
+        
+        //make sure each one-relation has an index
+        if (useFkIndices && checkFkIndicesOnStart) {
+            int numIndicesCreated = 0;
+            //TODO: check each key-map to make sure it exists in the index, if any differences warn and then remove the index and recreate it
+            
+            //get ALL column info, put into hashmap by table name
+            Map tableIndexListMap = this.getIndexInfo(indexTableNames, messages);
+            //Debug.logVerbose("Ref Info Map: " + refTableInfoMap);
+            
+            if (tableIndexListMap == null) {
+                //uh oh, something happened while getting info...
+            } else {
+                Iterator refModelEntityIter = modelEntityList.iterator();
+                while (refModelEntityIter.hasNext()) {
+                    ModelEntity entity = (ModelEntity) refModelEntityIter.next();
+                    String entityName = entity.getEntityName();
+                    //if this is a view entity, do not check it...
+                    if (entity instanceof ModelViewEntity) {
+                        String entMessage = "NOT Checking View Entity " + entity.getEntityName();
+
+                        Debug.logVerbose(entMessage, module);
+                        if (messages != null) {
+                            messages.add(entMessage);
+                        }
+                        continue;
+                    }
+
+                    //get existing index list for this table
+                    TreeSet tableIndexList = (TreeSet) tableIndexListMap.get(entity.getTableName());
+                    //Debug.logVerbose("Got ind info for table " + entity.getTableName() + ": " + tableIndexList);
+                    
+                    if (tableIndexList == null) {
+                        //evidently no indexes in the database for this table, do the create all
+                        String indErrMsg = this.createForeignKeyIndices(entity, constraintNameClipLength);
+                        if (indErrMsg != null && indErrMsg.length() > 0) {
+                            String message = "Could not create foreign key indices for entity \"" + entity.getEntityName() + "\"";
+
+                            Debug.logError(message, module);
+                            if (messages != null) messages.add(message);
+                            Debug.logError(indErrMsg, module);
+                            if (messages != null) messages.add(indErrMsg);
+                        } else {
+                            String message = "Created foreign key indices for entity \"" + entity.getEntityName() + "\"";
+
+                            Debug.logImportant(message, module);
+                            if (messages != null) messages.add(message);
+                        }
+                    } else {
+                        //go through each relation to see if an FK already exists
+                        boolean createdConstraints = false;
+                        Iterator relations = entity.getRelationsIterator();
+                        while (relations.hasNext()) {
+                            ModelRelation modelRelation = (ModelRelation) relations.next();
+                            if (!"one".equals(modelRelation.getType())) {
+                                continue;
+                            }
+
+                            String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
+
+                            if (tableIndexList.contains(relConstraintName)) {
+                                tableIndexList.remove(relConstraintName);
+                            } else {
+                                //if not, create one
+                                Debug.logVerbose("No Index " + relConstraintName + " found for entity " + entityName);
+                                String errMsg = createForeignKeyIndex(entity, modelRelation, constraintNameClipLength);
+                                if (errMsg != null && errMsg.length() > 0) {
+                                    String message = "Could not create foreign key index " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
+
+                                    Debug.logError(message, module);
+                                    if (messages != null) messages.add(message);
+                                    Debug.logError(errMsg, module);
+                                    if (messages != null) messages.add(errMsg);
+                                } else {
+                                    String message = "Created foreign key index " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
+
+                                    Debug.logVerbose(message, module);
+                                    if (messages != null) messages.add(message);
+
+                                    createdConstraints = true;
+                                    numIndicesCreated++;
+                                }
+                            }
+                        }
+                        if (createdConstraints) {
+                            String message = "Created foreign key index/indices for entity \"" + entity.getEntityName() + "\"";
+                            Debug.logImportant(message, module);
+                            if (messages != null) messages.add(message);
+                        }
+                    }
+
+                    //show foreign key references that exist but are unknown
+                    if (tableIndexList != null) {
+                        Iterator tableIndexListIter = tableIndexList.iterator();
+                        while (tableIndexListIter.hasNext()) {
+                            String indexLeft = (String) tableIndexListIter.next();
+                            Debug.logImportant("Unknown Index " + indexLeft + " found in table " + entity.getTableName());
+                        }
+                    }
+                }
+            }
+            Debug.logInfo("Created " + numIndicesCreated + " indices");
         }
         
         timer.timerString("Finished Checking Entity Database");
@@ -872,7 +987,8 @@ public class DatabaseUtil {
 
         try {
             //ResultSet rsCols = dbData.getCrossReference(null, null, null, null, null, null);
-            ResultSet rsCols = dbData.getImportedKeys(null, null, null);
+            String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
+            ResultSet rsCols = dbData.getImportedKeys(null, userName, null);
             
             int totalFkRefs = 0;
             
@@ -957,6 +1073,130 @@ public class DatabaseUtil {
         return refInfo;
     }
 
+    public Map getIndexInfo(Set tableNames, Collection messages) {
+        Connection connection = null;
+
+        try {
+            connection = getConnection();
+        } catch (SQLException sqle) {
+            String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
+
+            Debug.logError(message, module);
+            if (messages != null)
+                messages.add(message);
+            return null;
+        } catch (GenericEntityException e) {
+            String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
+
+            Debug.logError(message, module);
+            if (messages != null)
+                messages.add(message);
+            return null;
+        }
+        
+        DatabaseMetaData dbData = null;
+
+        try {
+            dbData = connection.getMetaData();
+        } catch (SQLException sqle) {
+            String message = "Unable to get database meta data... Error was:" + sqle.toString();
+
+            Debug.logError(message, module);
+            if (messages != null)
+                messages.add(message);
+            
+            try {
+                connection.close();
+            } catch (SQLException sqle2) {
+                String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
+
+                Debug.logError(message2, module);
+                if (messages != null)
+                    messages.add(message2);
+            }
+            return null;
+        }
+        Map indexInfo = new HashMap();
+
+        try {
+            int totalIndices = 0;
+            Iterator tableNamesIter = tableNames.iterator();
+            while (tableNamesIter.hasNext()) {
+                String curTableName = (String) tableNamesIter.next();
+                
+                //false for unique, we don't really use unique indexes
+                //true for approximate, don't really care if stats are up-to-date
+                String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
+                ResultSet rsCols = dbData.getIndexInfo(null, userName, curTableName, false, true);
+
+                while (rsCols.next()) {
+                    //NOTE: The code in this block may look funny, but it is designed so that the wrapping loop can be removed
+                    try {
+                        //skip all index info for statistics
+                        if (rsCols.getShort("TYPE") == DatabaseMetaData.tableIndexStatistic) continue;
+
+                        //HACK: for now skip all "unique" indexes since our foreign key indices are not unique, but the primary key ones are
+                        if (!rsCols.getBoolean("NON_UNIQUE")) continue;
+                        
+                        String tableName = rsCols.getString("TABLE_NAME");
+                        tableName = (tableName == null) ? null : tableName.toUpperCase();
+                        if (!tableNames.contains(tableName)) continue;
+
+                        String indexName = rsCols.getString("INDEX_NAME");
+                        indexName = (indexName == null) ? null : indexName.toUpperCase();
+
+                        TreeSet tableIndexList = (TreeSet) indexInfo.get(tableName);
+                        if (tableIndexList == null) {
+                            tableIndexList = new TreeSet();
+                            indexInfo.put(tableName, tableIndexList);
+                            Debug.logVerbose("Adding new Map for table: " + tableName);
+                        }
+                        if (!tableIndexList.contains(indexName)) totalIndices++;
+                        tableIndexList.add(indexName);
+                    } catch (SQLException sqle) {
+                        String message = "Error getting fk reference info for table. Error was:" + sqle.toString();
+
+                        Debug.logError(message, module);
+                        if (messages != null)
+                            messages.add(message);
+                        continue;
+                    }
+                }
+
+                //Debug.logInfo("There are " + totalIndices + " indices in the database");
+                try {
+                    rsCols.close();
+                } catch (SQLException sqle) {
+                    String message = "Unable to close ResultSet for fk reference list, continuing anyway... Error was:" + sqle.toString();
+
+                    Debug.logError(message, module);
+                    if (messages != null)
+                        messages.add(message);
+                }
+            }
+            Debug.logInfo("There are " + totalIndices + " indices in the database");
+            
+        } catch (SQLException sqle) {
+            String message = "Error getting fk reference meta data Error was:" + sqle.toString() + ". Not checking fk refs.";
+
+            Debug.logError(message, module);
+            if (messages != null)
+                messages.add(message);
+            indexInfo = null;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException sqle) {
+                String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
+
+                Debug.logError(message, module);
+                if (messages != null)
+                    messages.add(message);
+            }
+        }
+        return indexInfo;
+    }
+
     /* ====================================================================== */
     /* ====================================================================== */
     public String createTable(ModelEntity entity, Map modelEntities, boolean addFks, boolean usePkConstraintNames, int constraintNameClipLength) {
@@ -1014,6 +1254,8 @@ public class DatabaseUtil {
         sqlBuf.append(")");
         
         if (addFks) {
+            //NOTE: This is kind of a bad idea anyway since ordering table creations is crazy, if not impossible
+            
             //go through the relationships to see if any foreign keys need to be added
             Iterator relationsIter = entity.getRelationsIterator();
 
