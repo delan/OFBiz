@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.25 2004/01/28 05:37:18 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.26 2004/01/28 14:00:15 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -238,6 +238,7 @@ public class ProductUtilServices {
         dve.addViewLink("PVIRT", "PVA", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("productId", "productId")));
         //dve.addViewLink("PVA", "PVAR", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("productIdTo", "productId")));
         dve.addAlias("PVIRT", "productId", null, null, null, Boolean.TRUE, null);
+        dve.addAlias("PVIRT", "salesDiscontinuationDate", null, null, null, null, null);
         dve.addAlias("PVA", "productAssocTypeId", null, null, null, null, null);
         dve.addAlias("PVA", "fromDate", null, null, null, null, null);
         dve.addAlias("PVA", "thruDate", null, null, null, null, null);
@@ -246,7 +247,8 @@ public class ProductUtilServices {
         
         try {
             EntityCondition condition = new EntityConditionList(UtilMisc.toList(
-                    new EntityExpr("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_VARIANT")
+                    new EntityExpr("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_VARIANT"),
+                    new EntityExpr(new EntityExpr("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("salesDiscontinuationDate", EntityOperator.GREATER_THAN, nowTimestamp))
                     ), EntityOperator.AND);
             EntityCondition havingCond = new EntityExpr("productIdToCount", EntityOperator.EQUALS, new Long(1));
             EntityListIterator eliOne = delegator.findListIteratorByCondition(dve, condition, havingCond, UtilMisc.toList("productId", "productIdToCount"), null, null);
@@ -267,8 +269,11 @@ public class ProductUtilServices {
                 if (paList.size() != 1) {
                     Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
                 } else {
+                    if (numWithOneOnly < 100) {
+                        Debug.logInfo("Virtual product ID to make stand-alone: " + productId, module);
+                    }
                     // for all virtuals with one variant move all info from virtual to variant and remove virtual, make variant as not a variant
-                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.TRUE, "userLogin", userLogin));
+                    //dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.TRUE, "userLogin", userLogin));
                     
                     numWithOneOnly++;
                     if (numWithOneOnly % 100 == 0) {
@@ -279,6 +284,7 @@ public class ProductUtilServices {
             
             EntityCondition conditionWithDates = new EntityConditionList(UtilMisc.toList(
                     new EntityExpr("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_VARIANT"),
+                    new EntityExpr(new EntityExpr("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("salesDiscontinuationDate", EntityOperator.GREATER_THAN, nowTimestamp)),
                     new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp),
                     new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
                     ), EntityOperator.AND);
@@ -302,7 +308,7 @@ public class ProductUtilServices {
                     Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
                 } else {
                     // for all virtuals with one valid variant move info from virtual to variant, put variant in categories from virtual, remove virtual from all categories but leave "family" otherwise intact, mark variant as not a variant
-                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.FALSE, "userLogin", userLogin));
+                    //dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.FALSE, "userLogin", userLogin));
                     
                     numWithOneValid++;
                     if (numWithOneValid % 100 == 0) {
@@ -316,10 +322,10 @@ public class ProductUtilServices {
             String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
-        } catch (GenericServiceException e) {
-            String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
+        //} catch (GenericServiceException e) {
+        //    String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
+        //    Debug.logError(e, errMsg, module);
+        //    return ServiceUtil.returnError(errMsg);
         }
         
         return ServiceUtil.returnSuccess();
