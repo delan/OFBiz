@@ -1180,6 +1180,11 @@ public class GenericDelegator {
      *@param fields The fields of the named entity to query by with their corresponging values
      */
     public void clearCacheLine(String entityName, Map fields) {
+        //if no fields passed, do the all cache quickly and return
+        if (fields == null && allCache != null) {
+            allCache.remove(entityName);
+        }
+        
         ModelEntity entity = this.getModelEntity(entityName);
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.clearCacheLine] could not find entity for entityName: " + entityName);
@@ -1198,6 +1203,11 @@ public class GenericDelegator {
      */
     public void clearCacheLineFlexible(GenericEntity dummyPK) {
         if (dummyPK != null) {
+            //always auto clear the all cache too, since we know it's messed up in any case
+            if (allCache != null) {
+                allCache.remove(dummyPK.getEntityName());
+            }
+            
             //check to see if passed fields names exactly make the primary key...
             if (dummyPK.isPrimaryKey()) {
                 //findByPrimaryKey
@@ -1205,12 +1215,7 @@ public class GenericDelegator {
                     primaryKeyCache.remove(dummyPK);
                 }
             } else {
-                if (dummyPK.size() == 0) {
-                    //findAll
-                    if (allCache != null) {
-                        allCache.remove(dummyPK.getEntityName());
-                    }
-                } else {
+                if (dummyPK.size() > 0) {
                     //findByAnd
                     if (andCache != null) {
                         andCache.remove(dummyPK);
@@ -1225,14 +1230,18 @@ public class GenericDelegator {
      *@param primaryKey The primary key to clear by.
      */
     public void clearCacheLine(GenericPK primaryKey) {
+        //always auto clear the all cache too, since we know it's messed up in any case
+        if (allCache != null) {
+            allCache.remove(primaryKey.getEntityName());
+        }
+            
         if (primaryKey != null && primaryKeyCache != null) {
             primaryKeyCache.remove(primaryKey);
         }
     }
 
     public void clearAllCacheLines(Collection dummyPKs) {
-        if (dummyPKs == null)
-            return;
+        if (dummyPKs == null) return;
         Iterator iter = dummyPKs.iterator();
         while (iter.hasNext()) {
             GenericEntity entity = (GenericEntity) iter.next();
@@ -1241,8 +1250,7 @@ public class GenericDelegator {
     }
 
     public void clearAllCacheLinesByValue(Collection values) {
-        if (values == null)
-            return;
+        if (values == null) return;
         Iterator iter = values.iterator();
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
