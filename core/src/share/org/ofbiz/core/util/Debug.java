@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/01/31 03:56:50  jonesde
+ * Added Log4J stuff - pretty cool
+ *
  * Revision 1.3  2002/01/31 00:47:39  jonesde
  * Major refactoring and improvements for the Debug class, preparing to use Log4J to finish it off
  *
@@ -75,7 +78,7 @@ public final class Debug {
     
     public static final String[] levels = {"Always", "Verbose", "Timing", "Info", "Warning", "Error", "Fatal"};
     public static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.warning", "print.error", "print.fatal"};
-    public static final Priority[] levelObjs = {Priority.DEBUG, Priority.DEBUG, Priority.INFO, Priority.INFO, Priority.WARN, Priority.ERROR, Priority.FATAL};
+    public static final Priority[] levelObjs = {Priority.FATAL, Priority.DEBUG, Priority.DEBUG, Priority.INFO, Priority.WARN, Priority.ERROR, Priority.FATAL};
 
     protected static PrintStream printStream = System.out;
     protected static PrintWriter printWriter = new PrintWriter(printStream);
@@ -135,42 +138,52 @@ public final class Debug {
         }
     }
     
+    public static boolean isOn(int level) {
+        return (level == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[level], "true"));
+    }
+    
     public static void log(String msg) { log(Debug.ALWAYS, null, msg, null); }
     public static void log(String msg, String module) { log(Debug.ALWAYS, null, msg, module); }
     public static void log(Throwable t) { log(Debug.ALWAYS, t, null, null); }
     public static void log(Throwable t, String msg) { log(Debug.ALWAYS, t, msg, null); }
     public static void log(Throwable t, String msg, String module) { log(Debug.ALWAYS, t, msg, module); }
     
+    public static boolean verboseOn() { return isOn(Debug.VERBOSE); }
     public static void logVerbose(String msg) { log(Debug.VERBOSE, null, msg, null); }
     public static void logVerbose(String msg, String module) { log(Debug.VERBOSE, null, msg, module); }
     public static void logVerbose(Throwable t) { log(Debug.VERBOSE, t, null, null); }
     public static void logVerbose(Throwable t, String msg) { log(Debug.VERBOSE, t, msg, null); }
     public static void logVerbose(Throwable t, String msg, String module) { log(Debug.VERBOSE, t, msg, module); }
     
+    public static boolean timingOn() { return isOn(Debug.TIMING); }
     public static void logTiming(String msg) { log(Debug.TIMING, null, msg, null); }
     public static void logTiming(String msg, String module) { log(Debug.TIMING, null, msg, module); }
     public static void logTiming(Throwable t) { log(Debug.TIMING, t, null, null); }
     public static void logTiming(Throwable t, String msg) { log(Debug.TIMING, t, msg, null); }
     public static void logTiming(Throwable t, String msg, String module) { log(Debug.TIMING, t, msg, module); }
 
+    public static boolean infoOn() { return isOn(Debug.INFO); }
     public static void logInfo(String msg) { log(Debug.INFO, null, msg, null); }
     public static void logInfo(String msg, String module) { log(Debug.INFO, null, msg, module); }
     public static void logInfo(Throwable t) { log(Debug.INFO, t, null, null); }
     public static void logInfo(Throwable t, String msg) { log(Debug.INFO, t, msg, null); }
     public static void logInfo(Throwable t, String msg, String module) { log(Debug.INFO, t, msg, module); }
 
+    public static boolean warningOn() { return isOn(Debug.WARNING); }
     public static void logWarning(String msg) { log(Debug.WARNING, null, msg, null); }
     public static void logWarning(String msg, String module) { log(Debug.WARNING, null, msg, module); }
     public static void logWarning(Throwable t) { log(Debug.WARNING, t, null, null); }
     public static void logWarning(Throwable t, String msg) { log(Debug.WARNING, t, msg, null); }
     public static void logWarning(Throwable t, String msg, String module) { log(Debug.WARNING, t, msg, module); }
 
+    public static boolean errorOn() { return isOn(Debug.ERROR); }
     public static void logError(String msg) { log(Debug.ERROR, null, msg, null); }
     public static void logError(String msg, String module) { log(Debug.ERROR, null, msg, module); }
     public static void logError(Throwable t) { log(Debug.ERROR, t, null, null); }
     public static void logError(Throwable t, String msg) { log(Debug.ERROR, t, msg, null); }
     public static void logError(Throwable t, String msg, String module) { log(Debug.ERROR, t, msg, module); }
 
+    public static boolean fatalOn() { return isOn(Debug.FATAL); }
     public static void logFatal(String msg) { log(Debug.FATAL, null, msg, null); }
     public static void logFatal(String msg, String module) { log(Debug.FATAL, null, msg, module); }
     public static void logFatal(Throwable t) { log(Debug.FATAL, t, null, null); }
