@@ -121,14 +121,14 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonStartDateTime}</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="estimatedStartDate" value='${(workEffort.estimatedStartDate.toString())?if_exists}'>
-                  <a href="javascript:call_cal(document.eventform.estimatedStartDate, <@quoteIfExists str=(workEffort.estimatedStartDate.toString())?if_exists/>);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a></td>
+                  <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="estimatedStartDate" value='${(estimatedStartDate)?if_exists}'>
+                  <a href="javascript:call_cal(document.eventform.estimatedStartDate, <@quoteIfExists str=(estimatedStartDate)?if_exists/>);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonEndDateTime}</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="estimatedCompletionDate" value='${(workEffort.estimatedCompletionDate.toString())?if_exists}'>
-                  <a href="javascript:call_cal(document.eventform.estimatedCompletionDate, <@quoteIfExists str=(workEffort.estimatedCompletionDate.toString())?if_exists/>);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a></td>
+                  <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="estimatedCompletionDate" value='${(estimatedCompletionDate)?if_exists}'>
+                  <a href="javascript:call_cal(document.eventform.estimatedCompletionDate, <@quoteIfExists str=(estimatedCompletionDate)?if_exists/>);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a></td>
                 </tr>
 
                 <#if workEffort?has_content>

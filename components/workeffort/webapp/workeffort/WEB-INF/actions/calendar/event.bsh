@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Johan Isacsson
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -58,3 +58,10 @@ result = dispatcher.runSync("getStatusItems",serviceCtx);
 
 context.put("eventStatusItems",result.get("statusItems"));
 
+if (result.get("workEffort") != null) {
+    context.put("estimatedStartDate",result.get("workEffort").getString("estimatedStartDate"));
+    context.put("estimatedCompletionDate",result.get("workEffort").getString("estimatedCompletionDate"));
+} else {
+    context.put("estimatedStartDate",request.getParameter("estimatedStartDate"));
+    context.put("estimatedCompletionDate",request.getParameter("estimatedCompletionDate"));
+}
