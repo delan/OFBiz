@@ -19,6 +19,7 @@
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
+    <handler name="fop" type="view" class="org.ofbiz.content.webapp.view.FopPdfViewHandler"/>
     
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
@@ -75,6 +76,10 @@
     <request-map uri="main">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="main"/>
+    </request-map>
+    
+    <request-map uri="fonts.pdf">
+        <response name="success" type="view" value="fonts.fo"/>
     </request-map>
     
     <request-map uri="changeDelegator">
@@ -798,6 +803,7 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.ftl" type="jpublish"/>
     <view-map name="login" page="/login.ftl" type="jpublish"/>
+    <view-map name="fonts.fo" page="/fonts.fo.ftl" type="fop"/>
     
     <view-map name="FindWebSite" page="/website/FindWebSite.ftl" type="jpublish"/>
     <view-map name="EditWebSite" page="/website/EditWebSite.ftl" type="jpublish"/>    
