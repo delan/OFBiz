@@ -68,7 +68,8 @@ if (true) {
     // now do the filtering
     if (lookupErrorMessage == null) {        
         roleType = request.getParameter("roleTypeId");
-        orderType = request.getParameter("orderTypeId");
+        // orderType = request.getParameter("orderTypeId");
+        orderType = "SALES_ORDER";
         orderStatus = request.getParameter("orderStatusId");
         webSiteId = request.getParameter("webSiteId");
         createdBy = request.getParameter("createdBy");
