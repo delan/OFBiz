@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
   <Party partyId="admin" partyTypeId="PERSON"/>
+  <PartyRole partyId="admin" roleTypeId="admins"/>
   <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
   <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
-  
+
   <SecurityPermission description="Permission to View the Server Statistics pages." permissionId="SERVER_STATS_VIEW"/>
   <SecurityPermission description="Permission to Use the Data File Maintenance pages." permissionId="DATAFILE_MAINT"/>
   <SecurityPermission description="Permission to Use the Entity Maintenance pages." permissionId="ENTITY_MAINT"/>
@@ -11,19 +12,19 @@
   <SecurityPermission description="Permission to Use the Workflow Maintenance pages." permissionId="WORKFLOW_MAINT"/>
   <SecurityPermission description="Permission to View a UtilCache instance." permissionId="UTIL_CACHE_VIEW"/>
   <SecurityPermission description="Permission to Edit a UtilCache instance." permissionId="UTIL_CACHE_EDIT"/>
-  
+
   <SecurityPermission description="Permission to do View operations on the Catalog." permissionId="CATALOG_VIEW"/>
   <SecurityPermission description="Permission to do Create operations on the Catalog." permissionId="CATALOG_CREATE"/>
   <SecurityPermission description="Permission to do Update operations on the Catalog." permissionId="CATALOG_UPDATE"/>
   <SecurityPermission description="Permission to do Delete operations on the Catalog." permissionId="CATALOG_DELETE"/>
   <SecurityPermission description="Permission to do ALL operations on the Catalog." permissionId="CATALOG_ADMIN"/>
-  
+
   <SecurityPermission description="Permission to do View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
   <SecurityPermission description="Permission to do Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
   <SecurityPermission description="Permission to do Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
   <SecurityPermission description="Permission to do Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
   <SecurityPermission description="Permission to do ALL operations in the Party Manager." permissionId="PARTYMGR_ADMIN"/>
-  
+
   <SecurityPermission description="Permission to do View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
   <SecurityPermission description="Permission to do Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
   <SecurityPermission description="Permission to do Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
@@ -35,7 +36,7 @@
   <SecurityPermission description="Permission to do Update operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_UPDATE"/>
   <SecurityPermission description="Permission to do Delete operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_DELETE"/>
   <SecurityPermission description="Permission to do ALL operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_ADMIN"/>
-  
+
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_UPDATE"/>
