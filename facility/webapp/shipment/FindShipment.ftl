@@ -116,7 +116,7 @@ function lookupShipments() {
                 <td width="25%" align="right"><div class="tableheadtext">Status:</div></td>
                 <td width="5%">&nbsp;</td>
                 <td>
-                  <select name="shipmentStatusId" class="selectBox"> 
+                  <select name="statusId" class="selectBox"> 
                     <#if currentStatus?has_content>
                     <option value="${currentStatus.statusId}">${currentStatus.description}</option>
                     <option value="${currentStatus.statusId}">---</option>
