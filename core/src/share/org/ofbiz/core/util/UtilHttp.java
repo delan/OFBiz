@@ -48,22 +48,23 @@ public class UtilHttp {
      */
     public static Map getParameterMap(HttpServletRequest request) {
         Map paramMap = new OrderedMap();        
-        // first add in all path info parameters /~name1=value1/~name2=value2/
-        // Note: this is called a lot, so not using split for performance reasons: List pathInfo = StringUtil.split(request.getPathInfo(), "/"); for (int i = 1; i < pathInfo.size(); i++) {
+        // first add in all path info parameters /~name1=value1/~name2=value2/        
         String pathInfoStr = request.getPathInfo();
         
-        // make sure string ends with a trailing '/' so we get all values
-        if (!pathInfoStr.endsWith("/")) pathInfoStr += "/";
-        
-        int current = pathInfoStr.indexOf('/');
-        int last = current;
-        while ((current = pathInfoStr.indexOf('/', last + 1)) != -1) {
-            String element = pathInfoStr.substring(last + 1, current);
-            last = current;
-            if (element.charAt(0) == '~' && element.indexOf('=') > -1) {
-                String name = element.substring(1, element.indexOf('='));
-                String value = element.substring(element.indexOf('=') + 1);
-                paramMap.put(name, value);
+        if (pathInfoStr != null && pathInfoStr.length() > 0) {                
+            // make sure string ends with a trailing '/' so we get all values
+            if (!pathInfoStr.endsWith("/")) pathInfoStr += "/";
+            
+            int current = pathInfoStr.indexOf('/');
+            int last = current;
+            while ((current = pathInfoStr.indexOf('/', last + 1)) != -1) {
+                String element = pathInfoStr.substring(last + 1, current);
+                last = current;
+                if (element.charAt(0) == '~' && element.indexOf('=') > -1) {
+                    String name = element.substring(1, element.indexOf('='));
+                    String value = element.substring(element.indexOf('=') + 1);
+                    paramMap.put(name, value);
+                }
             }
         }
         
