@@ -24,6 +24,43 @@
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+
+<#if getUsername>
+<script language="JavaScript">
+ <!--
+     lastFocusedName = null;
+     function setLastFocused(formElement) {
+         lastFocusedName = formElement.name;
+     }
+     function clickUsername() {
+         if (document.forms["newuserform"].elements["UNUSEEMAIL"].checked) {
+             if (lastFocusedName == "UNUSEEMAIL") {
+                 document.forms["newuserform"].elements["PASSWORD"].focus();
+             } else if (lastFocusedName == "PASSWORD") {
+                 document.forms["newuserform"].elements["UNUSEEMAIL"].focus();
+             } else {
+                 document.forms["newuserform"].elements["PASSWORD"].focus();
+             }
+         }
+     }
+     function changeEmail() {
+         if (document.forms["newuserform"].elements["UNUSEEMAIL"].checked) {
+             document.forms["newuserform"].elements["USERNAME"].value=document.forms["newuserform"].elements["CUSTOMER_EMAIL"].value;
+         }
+     }
+     function setEmailUsername() {
+         if (document.forms["newuserform"].elements["UNUSEEMAIL"].checked) {
+             document.forms["newuserform"].elements["USERNAME"].value=document.forms["newuserform"].elements["CUSTOMER_EMAIL"].value;
+             // don't disable, make the browser not submit the field: document.forms["newuserform"].elements["USERNAME"].disabled=true;
+         } else {
+             document.forms["newuserform"].elements["USERNAME"].value='';
+             // document.forms["newuserform"].elements["USERNAME"].disabled=false;
+         }
+     }
+ //-->
+</script>
+</#if>
+
 <p class="head1">${uiLabelMap.PartyRequestNewAccount}</p>
 <br/>
 <p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
@@ -284,7 +321,7 @@
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyEmailAddress}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
       <@fieldErrors fieldName="CUSTOMER_EMAIL"/>
-        <input type="text" class='inputBox' name="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL?if_exists}" size="60" maxlength="255"> *
+        <input type="text" class='inputBox' name="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL?if_exists}" size="60" maxlength="255" onChange="changeEmail()" onkeyup="changeEmail()"> *
         <br/>
         <select name="CUSTOMER_EMAIL_ALLOW_SOL" class='selectBox'>
           <option>${requestParameters.CUSTOMER_EMAIL_ALLOW_SOL?default("Y")}</option>
@@ -331,25 +368,12 @@
           <td>
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <#if getUsername>
-<script language="JavaScript">
- <!--
-     function setEmailUsername() {
-         if (document.forms["newuserform"].elements["UNUSEEMAIL"].checked) {
-             document.forms["newuserform"].elements["USERNAME"].value=document.forms["newuserform"].elements["CUSTOMER_EMAIL"].value;
-             document.forms["newuserform"].elements["USERNAME"].disabled=true;
-         } else {
-             document.forms["newuserform"].elements["USERNAME"].value='';
-             document.forms["newuserform"].elements["USERNAME"].disabled=false;
-         }
-     }
- //-->
- </script>
     <tr>
       <td width="26%"><div class="tabletext">${uiLabelMap.CommonUsername}</div></td>
       <td width="74%">
         <@fieldErrors fieldName="USERNAME"/>
-        <div class="tabletext">Use Email Address: <input type="CHECKBOX" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();"/></div>
-        <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50"/> *</div>
+        <div class="tabletext">Use Email Address: <input type="CHECKBOX" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);"/></div>
+        <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50" onFocus="clickUsername();" onChange="changeEmail();"/> *</div>
      </td>
     </tr>
     </#if>
@@ -360,7 +384,7 @@
         </td>
         <td width="74%">
           <@fieldErrors fieldName="PASSWORD"/>
-          <input type="password" class='inputBox' name="PASSWORD" value="" size="20" maxlength="50">
+          <input type="password" class='inputBox' name="PASSWORD" value="" size="20" maxlength="50" onFocus="setLastFocused(this);">
         * </td>
       </tr>
       <tr>
