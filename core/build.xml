@@ -130,6 +130,10 @@
     	<javac debug="on" destdir="${build.dir}/share" classpath="${classpath}">
     		<src path="${src.dir}/share" />
         </javac>
+        <!-- also put the DTDs in this jar file... -->
+        <copy todir="${build.dir}/share">
+            <fileset dir="${doc.dir}/xmldefs/ofbiz" includes="*.dtd" />
+        </copy>
 		
     	<javac debug="on" destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share">
     		<src path="${src.dir}/webapp" />
