@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -43,24 +43,27 @@
         <tr>
           <#list displayApps as display>
             <#assign thisApp = display.getContextRoot()>
-            <#if thisApp == contextPath>
+            <#assign permission = display.getBasePermission()>
+            <#if (permission == "NONE" || security.hasEntityPermission(permission, "_VIEW", session))>
+              <#if thisApp == contextPath>
                 <#assign class = selectedClass>
-            <#else>
+              <#else>
                 <#assign class = unselectedClass>
-            </#if>            
-            <td height="15" class="${class.col}">
-              <table width="100%" border="0" cellspacing="0" cellpadding="0">                
-                <tr>
-                  <td class="${class.left}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
-                  <td nowrap="nowrap" class="${class.center}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}">${display.title}</a></td>
-                  <td class="${class.right}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
-                </tr> 
-                <#if thisApp != contextPath>
-                  <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
-                  <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>                
-                </#if>
-              </table>
-            </td>
+              </#if>
+              <td height="15" class="${class.col}">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td class="${class.left}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
+                    <td nowrap="nowrap" class="${class.center}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}">${display.title}</a></td>
+                    <td class="${class.right}"><a href="${response.encodeURL(thisApp + "/control/main" + externalKeyParam)}" title="" class="${class.link}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
+                  </tr>
+                  <#if thisApp != contextPath>
+                    <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
+                    <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
+                  </#if>
+                </table>
+              </td>
+            </#if>
           </#list>
 		  <td><div class="appbarright"></div></td>            
           <td width="100%" class="appbarresize">
@@ -76,3 +79,4 @@
   </tr>
 </table>
 </#if>
+

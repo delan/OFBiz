@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.15 2003/12/06 17:24:47 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.16 2003/12/07 18:02:15 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -511,6 +511,7 @@ public class ComponentConfig {
         public String server;
         public String mountPoint;
         public String location;
+        public String basePermission;
         public boolean appBarDisplay;
 
         public WebappInfo(ComponentConfig componentConfig, Element element) {
@@ -522,6 +523,7 @@ public class ComponentConfig {
             this.server = element.getAttribute("server");
             this.mountPoint = element.getAttribute("mount-point");
             this.location = element.getAttribute("location");
+            this.basePermission = element.getAttribute("base-permission");
             this.appBarDisplay = !"false".equals(element.getAttribute("app-bar-display"));
             
             // default title is name w/ upper-cased first letter
@@ -533,7 +535,12 @@ public class ComponentConfig {
             if (UtilValidate.isEmpty(this.mountPoint)) {
                 this.mountPoint = this.name;
             }
-            
+
+            // default base permission 'NONE'
+            if (UtilValidate.isEmpty(this.basePermission)) {
+                this.basePermission = "NONE";
+            }
+
             // check the mount point and make sure it is properly formatted
             if (!"/".equals(this.mountPoint)) {
                 if (!this.mountPoint.startsWith("/")) {
@@ -574,7 +581,14 @@ public class ComponentConfig {
             }
             return mountPoint;
         }
-        
+
+        public String getBasePermission() {
+            if (this.basePermission.indexOf('_') != -1) {
+                return this.basePermission.substring(0, this.basePermission.indexOf('_'));
+            }
+            return this.basePermission;
+        }
+
         public String getTitle() {
             return title;
         }

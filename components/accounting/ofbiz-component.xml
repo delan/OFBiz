@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.6 2003/11/01 16:40:22 ajzeneski Exp $
+ *  $Id: ofbiz-component.xml,v 1.7 2003/12/07 18:02:15 ajzeneski Exp $
 -->
 
 <ofbiz-component name="accounting">
@@ -41,6 +41,7 @@
     	    title="Accounting"
     	    server="default-server"
     	    location="webapp/accounting"
+            base-permission="ACCOUNTING"
     	    mount-point="/accounting"/>
 </ofbiz-component>
 
