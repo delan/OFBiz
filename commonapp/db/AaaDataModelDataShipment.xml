@@ -49,6 +49,17 @@
     <StatusValidChange condition="" statusId="SHIPMENT_PICKED" statusIdTo="SHIPMENT_CANCELLED" transitionName="Cancel"/>
     <StatusValidChange condition="" statusId="SHIPMENT_PACKED" statusIdTo="SHIPMENT_CANCELLED" transitionName="Cancel"/>
 	
+	<!-- ShipmentRouteSegment CarrierService status -->
+	<StatusType description="ShipmentRouteSegment:CarrierService" hasTable="N" parentTypeId="" statusTypeId="SHPRTSG_CS_STATUS"/>
+	<StatusItem description="Not Started" sequenceId="01" statusCode="NOT_STARTED" statusId="SHRSCS_NOT_STARTED" statusTypeId="SHPRTSG_CS_STATUS"/>
+	<StatusItem description="Confirmed" sequenceId="02" statusCode="CONFIRMED" statusId="SHRSCS_CONFIRMED" statusTypeId="SHPRTSG_CS_STATUS"/>
+	<StatusItem description="Accepted" sequenceId="03" statusCode="ACCEPTED" statusId="SHRSCS_ACCEPTED" statusTypeId="SHPRTSG_CS_STATUS"/>
+	<StatusItem description="Voided" sequenceId="08" statusCode="VOIDED" statusId="SHRSCS_VOIDED" statusTypeId="SHPRTSG_CS_STATUS"/>
+    <StatusValidChange condition="" statusId="SHRSCS_NOT_STARTED" statusIdTo="SHRSCS_CONFIRMED" transitionName="Confirm"/>
+    <StatusValidChange condition="" statusId="SHRSCS_CONFIRMED" statusIdTo="SHRSCS_ACCEPTED" transitionName="Accept"/>
+    <StatusValidChange condition="" statusId="SHRSCS_CONFIRMED" statusIdTo="SHRSCS_VOIDED" transitionName="Void"/>
+    <!-- can go from accepted to voided? -->
+
 	<RejectionReason rejectionId="SRJ_DAMAGED" description="Damaged"/>
 	<RejectionReason rejectionId="SRJ_NOT_ORDERED" description="Not Ordered"/>
 	<RejectionReason rejectionId="SRJ_OVER_SHIPPED" description="Over Shipped"/>	
