@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -53,7 +53,18 @@
           <td>
             <form name="keywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch?VIEW_SIZE=25</@ofbizUrl>" style='margin: 0;'>
               <div class='tabletext'>${uiLabelMap.ProductKeywords}: <input type="text" class="inputBox" name="SEARCH_STRING" size="20" maxlength="50"></div>
-              <div class='tabletext'>${uiLabelMap.ProductCategoryId}: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20"></div>
+              <div class='tabletext'>
+                ${uiLabelMap.ProductCategoryId}:
+                <select class="selectBox" name="SEARCH_CATEGORY_ID">
+                    <#list productCategories as productCategory>
+                        <#assign displayDesc = productCategory.description>
+                        <#if 18 < displayDesc?length>
+                            <#assign displayDesc = displayDesc[0..15] + "...">
+                        </#if>
+                        <option value='${productCategory.productCategoryId}'>${displayDesc}</option>
+                    </#list>
+                </select>
+              </div>
               <div class='tabletext'>
                 ${uiLabelMap.CommonAny}<input type=RADIO name='SEARCH_OPERATOR' value='OR' checked>
                 ${uiLabelMap.CommonAll}<input type=RADIO name='SEARCH_OPERATOR' value='AND'>
