@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.2 2003/08/18 17:03:08 ajzeneski Exp $
+ * $Id: ProductWorker.java,v 1.3 2003/08/25 19:59:55 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.product.feature.ParametricSearch;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -58,6 +58,39 @@ public class ProductWorker {
         getProduct(pageContext, attributeName, null);
     }
 
+    public static boolean shippingApplies(GenericValue product) {
+        if (product != null) {
+            String productTypeId = product.getString("productTypeId");
+            if ("SERVICE".equals(productTypeId) || "DIGITAL_GOOD".equals(productTypeId)) {
+                // don't charge shipping on services or digital goods
+                return false;
+            }       
+            Boolean chargeShipping = product.getBoolean("chargeShipping");
+    
+            if (chargeShipping == null) {
+                return true;
+            } else {
+                return chargeShipping.booleanValue();
+            }
+        } else {
+            throw new IllegalArgumentException("Null Product Entity not valid");            
+        }                
+    }
+    
+    public static boolean taxApplies(GenericValue product) {
+        if (product != null) {        
+            Boolean taxable = product.getBoolean("taxable");
+    
+            if (taxable == null) {
+                return true;
+            } else {
+                return taxable.booleanValue();
+            }
+        } else {
+            throw new IllegalArgumentException("Null Product Entity not valid");            
+        }
+    }    
+    
     public static void getProduct(PageContext pageContext, String attributeName, String productId) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         ServletRequest request = pageContext.getRequest();

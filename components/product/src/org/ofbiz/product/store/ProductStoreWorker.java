@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.3 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.4 2003/08/25 19:59:55 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
 package org.ofbiz.product.store;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -36,6 +37,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -45,7 +47,7 @@ import org.ofbiz.service.ModelService;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -81,6 +83,35 @@ public class ProductStoreWorker {
         }
         return null;        
     }
+    
+    public static GenericValue getProductStorePaymentSetting(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId, String paymentServiceTypeEnumId) {
+        GenericValue storePayment = null;
+        try {
+            storePayment = delegator.findByPrimaryKeyCache("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId, "paymentServiceTypeEnumId", paymentServiceTypeEnumId));    
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems looking up store payment settings", module);
+        }
+        
+        if  (storePayment == null) {
+            try {
+                List storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId));
+                storePayment = EntityUtil.getFirst(storePayments);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems looking up store payment settings", module);
+            }
+        }
+        
+        if  (storePayment == null) {
+            try {
+                List storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId));
+                storePayment = EntityUtil.getFirst(storePayments);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems looking up store payment settings", module);
+            }
+        } 
+           
+        return storePayment;                          
+    }    
     
     public static boolean isStoreInventoryRequired(String productStoreId, String productId, GenericDelegator delegator) {
         GenericValue product = null;
