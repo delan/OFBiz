@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Entity Build Script.
- *  $Id: build.xml,v 1.2 2003/08/17 03:11:29 ajzeneski Exp $
+ *  $Id: build.xml,v 1.3 2003/08/17 03:36:17 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Entity" default="jar" basedir=".">
@@ -32,6 +32,7 @@
 
     <target name="init">                
         <property environment="env"/>
+        <property name="desc" value="Entity Component"/>
         <property name="name" value="ofbiz-entity"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
@@ -64,9 +65,7 @@
     <!-- ================================================================== -->
 
     <target name="prepare" depends="clean-lib">
-        <mkdir dir="${build.dir}/classes"/>
-        <mkdir dir="${build.dir}/classes/base/META-INF"/>
-        <mkdir dir="${build.dir}/classes/start/META-INF"/>        
+        <mkdir dir="${build.dir}/classes"/>         
         <mkdir dir="${build.dir}/lib"/>
     </target>
     
@@ -93,7 +92,7 @@
     </target>
     
     <target name="jar" depends="classes">
-        <jar jarfile="${build.dir}/lib/ofbiz-entity.jar" basedir="${build.dir}/classes"/>         
+        <jar jarfile="${build.dir}/lib/${name}.jar" basedir="${build.dir}/classes"/>         
     </target>    
     
     <!-- ================================================================== -->
@@ -101,12 +100,11 @@
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs">
-        <javadoc packagenames="org.ofbiz.base.*" 
+        <javadoc packagenames="org.ofbiz.entity.*" 
                  classpathref="local.class.path"
                  destdir="${build.dir}/javadocs" 
-                 Windowtitle="Open for Business - Base API">
-            <sourcepath path="${src.dir}/start"/>
-            <sourcepath path="${src.dir}/base"/>            
+                 Windowtitle="Open for Business - ${desc}">
+            <sourcepath path="${src.dir}"/>            
         </javadoc>
     </target>
     
