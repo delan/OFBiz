@@ -67,7 +67,23 @@ function lookupOrders() {
                 <td width='25%' align='right'><div class='tableheadtext'>Order ID:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='order_id'></td>
-              </tr>                    
+              </tr>             
+              <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>Role Type:</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td>
+                  <select name='roleTypeId' class='selectBox'> 
+                    <#if currentRole?has_content>
+                    <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
+                    <option value="${currentRole.roleTypeId}">---</option>
+                    </#if>                                     
+                    <option value="ANY">Any Role Type</option>                   
+                    <#list roleTypes as roleType>
+                      <option value="${roleType.roleTypeId}">${roleType.description}</option>
+                    </#list>
+                  </select>
+                </td>
+              </tr>                                      
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Party ID:</div></td>
                 <td width='5%'>&nbsp;</td>
