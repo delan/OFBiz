@@ -28,14 +28,14 @@
 
 <#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign includeHtmlArea=false>
-<#if "Y"=page.includeHtmlArea><#assign includeHtmlArea=true></#if>
+<#if "Y"=page.includeHtmlArea?if_exists><#assign includeHtmlArea=true/></#if>
 
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${(productStore.storeName)?if_exists}: ${page.title?if_exists}</title>
-    <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"/>
-    <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'/>
+    <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
+    <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
     <link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/images/maincss.css")}</@ofbizContentUrl>" type="text/css"/>
 
     <#-- Append CSS for catalog -->
@@ -68,15 +68,14 @@
               _editor_url = "/content/images/htmlarea/"; // omit the final slash
             </script> 
         
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/htmlarea.js</@ofbizContentUrl>" type="text/javascript"/>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/lang/en.js</@ofbizContentUrl>" type="text/javascript"/>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/dialog.js</@ofbizContentUrl>" type="text/javascript"/>
-            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>" type="text/javascript"/>
+            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/htmlarea.js</@ofbizContentUrl>" type="text/javascript"></script>
+            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/lang/en.js</@ofbizContentUrl>" type="text/javascript"></script>
+            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/dialog.js</@ofbizContentUrl>" type="text/javascript"></script>
+            <script language="javascript" src="<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>" type="text/javascript"></script>
             <style type="text/css">
                 @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
                 textarea { background-color: #fff; border: 1px solid 00f; }
             </style>
-        
             <script type="text/javascript">
                 var editor = null;
                 var summary = null;
@@ -91,7 +90,7 @@
     </#if>
 </head>
 
-<body class="ecbody" <#if includeHtmlArea>onLoad="init_all()"</#if>>
+<body class="ecbody"<#if includeHtmlArea> onLoad="init_all()"</#if>>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
   <tr>
