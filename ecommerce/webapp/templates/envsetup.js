@@ -43,14 +43,3 @@ if (errorMsgSes != null) {
     request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
     session.removeAttribute(SiteDefs.ERROR_MESSAGE);
 }
-
-//shopping cart prep
-var shoppingCart = session.getAttribute(SiteDefs.SHOPPING_CART);
-if (shoppingCart != null) {
-    request.setAttribute("shoppingCartSize", new Integer(shoppingCart.size()));
-    request.setAttribute("shoppingCartGrandTotal", new Double(shoppingCart.getGrandTotal()));
-    var cartLines = shoppingCart.items();
-    request.setAttribute("shoppingCartLines", cartLines);
-} else {
-    request.setAttribute("shoppingCartSize", new Integer(0));
-}

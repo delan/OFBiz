@@ -1,6 +1,11 @@
 
-<#assign shoppingCartSize = requestAttributes.shoppingCartSize>
-
+<#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
+<#if shoppingCart?exists>
+    <#assign shoppingCartSize = shoppingCart.size()>
+<#else>
+    <#assign shoppingCartSize = 0>
+</#if>
+    
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -30,7 +35,7 @@
       <td valign="bottom"><div class="tabletext"><b>Item<b></div></td>
       <td valign="bottom"><div class="tabletext"><b>Subtotal<b></div></td>
     </tr>
-    <#list requestAttributes.shoppingCartLines as cartLine>
+    <#list shoppingCart.items() as cartLine>
       <tr>
         <td valign="top"><div class="tabletext" nowrap>${cartLine.getQuantity()?string.number}</div>
         </td>
@@ -44,7 +49,7 @@
     </#list>
     <tr>
       <td colspan="3" align="right">
-        <div class="tabletext"><b>Total: ${requestAttributes.shoppingCartGrandTotal?string.currency}</b></div>
+        <div class="tabletext"><b>Total: ${shoppingCart.getGrandTotal()?string.currency}</b></div>
       </td>
     </tr>
     <tr>

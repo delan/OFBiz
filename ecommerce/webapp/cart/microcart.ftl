@@ -1,9 +1,14 @@
 
-<#assign shoppingCartSize = requestAttributes.shoppingCartSize>
+<#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
+<#if shoppingCart?exists>
+    <#assign shoppingCartSize = shoppingCart.size()>
+<#else>
+    <#assign shoppingCartSize = 0>
+</#if>
 
 <div class='insideHeaderText'>
 <#if (shoppingCartSize > 0)>
-  Cart has <b>${shoppingCartSize}</b> items, <b>${requestAttributes.shoppingCartGrandTotal?string.currency}</b>
+  Cart has <b>${shoppingCart.getTotalQuantity()}</b> items, <b>${shoppingCart.getGrandTotal()?string.currency}</b>
 <#else>
   Shopping Cart is <b>Empty</b>
 </#if>
