@@ -1354,6 +1354,7 @@ public class OrderServices {
     /** Simple tax calc service. */
     public static Map simpleTaxCalc(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
+        String productStoreId = (String) context.get("productStoreId");
         List itemProductList = (List) context.get("itemProductList");
         List itemAmountList = (List) context.get("itemAmountList");
         List itemShippingList = (List) context.get("itemShippingList");
@@ -1373,11 +1374,11 @@ public class OrderServices {
             GenericValue product = (GenericValue) itemProductList.get(i);
             Double itemAmount = (Double) itemAmountList.get(i);
             Double shippingAmount = (Double) itemShippingList.get(i);
-            List taxList = getTaxAmount(delegator, product, countryCode, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
+            List taxList = getTaxAmount(delegator, product, productStoreId, countryCode, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
             itemAdjustments.add(taxList);          
         }
         if (orderShippingAmount.doubleValue() > 0) {
-            List taxList = getTaxAmount(delegator, null, countryCode, stateCode, 0.00, orderShippingAmount.doubleValue());
+            List taxList = getTaxAmount(delegator, null, productStoreId, countryCode, stateCode, 0.00, orderShippingAmount.doubleValue());
             orderAdjustments.addAll(taxList);
         }
 
@@ -1387,9 +1388,12 @@ public class OrderServices {
 
     }
 
-    private static List getTaxAmount(GenericDelegator delegator, GenericValue item, String countryCode, String stateCode, double itemAmount, double shippingAmount) {                              
+    private static List getTaxAmount(GenericDelegator delegator, GenericValue item, String productStoreId, String countryCode, String stateCode, double itemAmount, double shippingAmount) {                              
         List adjustments = new ArrayList();
        
+        // store expr
+        EntityCondition storeCond = new EntityExpr("productStoreId", EntityOperator.EQUALS, productStoreId);
+        
         // build the country expressions
         List countryExprs = UtilMisc.toList(new EntityExpr("countryGeoId", EntityOperator.EQUALS, countryCode), new EntityExpr("countryGeoId", EntityOperator.EQUALS, "_NA_"));
         EntityCondition countryCond = new EntityConditionList(countryExprs, EntityOperator.OR);
@@ -1406,7 +1410,7 @@ public class OrderServices {
         EntityCondition taxCatCond = new EntityConditionList(taxCatExprs, EntityOperator.OR);
         
         // build the main condition clause
-        List mainExprs = UtilMisc.toList(countryCond, stateCond);
+        List mainExprs = UtilMisc.toList(storeCond, countryCond, stateCond);
         if (taxCatExprs.size() > 1) {
             mainExprs.add(taxCatCond);
         } else {

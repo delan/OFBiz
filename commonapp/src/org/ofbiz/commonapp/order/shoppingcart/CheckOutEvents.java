@@ -360,9 +360,12 @@ public class CheckOutEvents {
 
         // remove old tax adjustments
         cart.removeAdjustmentByType("SALES_TAX");
+        
+        // get the store id
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
 
         // get the tax adjustments
-        List taxReturn = getTaxAdjustments(dispatcher, "calcTax", items, adjs, shipAddress);
+        List taxReturn = getTaxAdjustments(dispatcher, "calcTax", productStoreId, items, adjs, shipAddress);
 
         if (Debug.verboseOn()) Debug.logVerbose("ReturnList: " + taxReturn, module);
 
@@ -393,8 +396,7 @@ public class CheckOutEvents {
     }
 
     // Calc the tax adjustments.
-    private static List getTaxAdjustments(LocalDispatcher dispatcher, String taxService, List orderItems,
-        List allAdjustments, GenericValue shipAddress) throws GeneralException {
+    private static List getTaxAdjustments(LocalDispatcher dispatcher, String taxService, String productStoreId, List orderItems, List allAdjustments, GenericValue shipAddress) throws GeneralException {
         List products = new ArrayList(orderItems.size());
         List amounts = new ArrayList(orderItems.size());
         List shipAmts = new ArrayList(orderItems.size());
@@ -416,7 +418,7 @@ public class CheckOutEvents {
                 throw new GeneralException("Cannot read the order item entity", e);
             }
         }
-        Map serviceContext = UtilMisc.toMap("itemProductList", products, "itemAmountList", amounts,
+        Map serviceContext = UtilMisc.toMap("productStoreId", productStoreId, "itemProductList", products, "itemAmountList", amounts,
                 "itemShippingList", shipAmts, "orderShippingAmount", cartShipping, "shippingAddress", shipAddress);
 
         Map serviceResult = null;

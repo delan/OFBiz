@@ -342,6 +342,7 @@
     <service name="calcTax" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="simpleTaxCalc">
         <description>Calc Tax Service</description>
+        <attribute name="productStoreId" type="String" mode="IN"/>
         <attribute name="itemProductList" type="java.util.List" mode="IN"/>
         <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
         <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
@@ -354,6 +355,7 @@
     <service name="createTaxRate" engine="simple"
             location="org/ofbiz/commonapp/order/order/TaxRateServices.xml" invoke="createTaxRate">
         <description>Create a Tax Rate entry</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="taxCategory" type="String" mode="IN" optional="true"/>
@@ -368,6 +370,7 @@
     <service name="removeTaxRate" engine="simple"
             location="org/ofbiz/commonapp/order/order/TaxRateServices.xml" invoke="removeTaxRate">
         <description>Remove a Tax Rate entry</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="taxCategory" type="String" mode="IN" optional="false"/>

@@ -27,8 +27,23 @@
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
+security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
 
-taxItems = delegator.findAll("SimpleSalesTaxLookup", UtilMisc.toList("stateProvinceGeoId", "taxCategory", "-fromDate"));
-context.put("taxItems", taxItems);
+if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+productStoreId = request.getParameter("productStoreId");
+if (productStoreId != null) {
+    productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+    taxItems = delegator.findByAnd("SimpleSalesTaxLookup", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("stateProvinceGeoId", "taxCategory", "-fromDate"));
+    context.put("taxItems", taxItems);
+    context.put("productStoreId", productStoreId);
+    context.put("productStore", productStore);    
+}
+
+
 

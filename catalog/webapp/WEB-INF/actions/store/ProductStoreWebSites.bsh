@@ -30,16 +30,13 @@ import org.ofbiz.core.util.*;
 delegator = request.getAttribute("delegator");
 security = request.getAttribute("security");
 
-if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.TRUE);
 } else {
     context.put("hasPermission", Boolean.FALSE);
 }
 
 productStoreId = request.getParameter("productStoreId");
-if (productStoreId == null) {
-    productStoreId = request.getAttribute("productStoreId");
-}
 if (productStoreId != null) {
     productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
     storeWebSites = delegator.findByAnd("WebSite", UtilMisc.toMap("productStoreId", productStoreId));

@@ -27,10 +27,7 @@
 <div class='tabContainer'>
   <#if security.hasEntityPermission("SHIPRATE", "_VIEW", session)>
   <a href="<@ofbizUrl>/shipsetup</@ofbizUrl>" class='tabButtonSelected'>Ship&nbsp;Rate&nbsp;Setup</a>
-  </#if>
-  <#if security.hasEntityPermission("TAXRATE", "_VIEW", session)>
-  <a href="<@ofbizUrl>/taxsetup</@ofbizUrl>" class='tabButton'>Tax&nbsp;Rate&nbsp;Setup</a>
-  </#if>
+  </#if> 
   <#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
   <a href="<@ofbizUrl>/paysetup</@ofbizUrl>" class='tabButton'>Payment&nbsp;Setup</a>
   </#if>

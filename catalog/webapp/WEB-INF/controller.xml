@@ -909,6 +909,22 @@
         <response name="success" type="view" value="ProductStoreWebSites"/>
         <response name="error" type="view" value="ProductStoreWebSites"/>
     </request-map>
+    <request-map uri="ProductStoreTaxSetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProductStoreTaxSetup"/>
+    </request-map>
+    <request-map uri="storeCreateTaxRate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTaxRate"/>
+        <response name="success" type="view" value="ProductStoreTaxSetup"/>
+        <response name="error" type="view" value="ProductStoreTaxSetup"/>
+    </request-map>
+    <request-map uri="storeRemoveTaxRate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeTaxRate"/>
+        <response name="success" type="view" value="ProductStoreTaxSetup"/>
+        <response name="error" type="view" value="ProductStoreTaxSetup"/>
+    </request-map>    
 
     <!-- end of request mappings -->
 
@@ -970,5 +986,6 @@
     <view-map name="FindProductStore" type="jpublish" page="/store/FindProductStore.ftl"/>
     <view-map name="EditProductStore" type="jpublish" page="/store/EditProductStore.ftl"/>
     <view-map name="ProductStoreWebSites" type="jpublish" page="/store/ProductStoreWebSites.ftl"/>
+    <view-map name="ProductStoreTaxSetup" type="jpublish" page="/store/ProductStoreTaxSetup.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
