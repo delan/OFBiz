@@ -199,11 +199,16 @@ public class TrackingCodeEvents {
         // write trackingCode cookies with the value set to the trackingCodeId
         // NOTE: just write these cookies and if others exist from other tracking codes they will be overwritten, ie only keep the newest
         
+        String cookieDomain = UtilProperties.getPropertyValue("url", "cookie.domain", "");
+
         // if trackingCode.trackableLifetime not null and is > 0 write a trackable cookie with name in the form: TKCDT_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.trackableLifetime
         Long trackableLifetime = trackingCode.getLong("trackableLifetime");
         if (trackableLifetime != null && trackableLifetime.longValue() > 0) {
             Cookie trackableCookie = new Cookie("TKCDT_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
             trackableCookie.setMaxAge(trackableLifetime.intValue());
+            trackableCookie.setPath("/");
+            trackableCookie.setVersion(1);
+            if (cookieDomain.length() > 0) trackableCookie.setDomain(cookieDomain);
             response.addCookie(trackableCookie);
         }
         
@@ -212,6 +217,9 @@ public class TrackingCodeEvents {
         if (billableLifetime != null && billableLifetime.longValue() > 0) {
             Cookie billableCookie = new Cookie("TKCDB_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
             billableCookie.setMaxAge(billableLifetime.intValue());
+            billableCookie.setPath("/");
+            billableCookie.setVersion(1);
+            if (cookieDomain.length() > 0) billableCookie.setDomain(cookieDomain);
             response.addCookie(billableCookie);
         }
 
