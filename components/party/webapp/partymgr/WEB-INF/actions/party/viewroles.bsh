@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -79,5 +79,7 @@ context.put("roles", roles);
 
 party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
 context.put("party", party);
-context.put("lookupPerson", party.getRelatedOne("Person"));
-context.put("lookupGroup", party.getRelatedOne("PartyGroup"));
+if (party != null) {
+    context.put("lookupPerson", party.getRelatedOne("Person"));
+    context.put("lookupGroup", party.getRelatedOne("PartyGroup"));
+}
