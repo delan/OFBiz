@@ -956,18 +956,6 @@ public class GenericDAO {
      *@param entityCondition The EntityCondition object that specifies how to constrain this query
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
      *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
-     *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
-     */
-    public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
-        return this.selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
-    }
-    
-    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param entityCondition The EntityCondition object that specifies how to constrain this query
-     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
-     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@param specifyTypeAndConcur If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify 
      *      how the results will be used; if false the default values for the JDBC driver will be used
      *@param resultSetType Specified how the ResultSet will be traversed. Available values: ResultSet.TYPE_FORWARD_ONLY, 

@@ -26,6 +26,7 @@ package org.ofbiz.core.entity;
 
 import java.util.*;
 import java.net.*;
+import java.sql.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
@@ -781,7 +782,8 @@ public class GenericDelegator {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         if (entityCondition != null) entityCondition.checkCondition(modelEntity);
         GenericHelper helper = getEntityHelper(entityName);
-        return helper.findListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+        return helper.findListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, 
+                true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
     }
     
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
