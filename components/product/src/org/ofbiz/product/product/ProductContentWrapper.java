@@ -1,5 +1,5 @@
 /*
- * $Id: ProductContentWrapper.java,v 1.6 2003/12/23 07:24:06 jonesde Exp $
+ * $Id: ProductContentWrapper.java,v 1.7 2004/01/08 07:39:42 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Product Content Worker: gets product content to display
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
  */
 public class ProductContentWrapper {
@@ -84,6 +84,10 @@ public class ProductContentWrapper {
         return getProductContentAsText(product, productContentTypeId, UtilHttp.getLocale(request), "text/html", product.getDelegator());
     }
 
+    public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale) {
+        return getProductContentAsText(product, productContentTypeId, locale, null, null);
+    }
+    
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, GenericDelegator delegator) {
         String candidateFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
         try {
