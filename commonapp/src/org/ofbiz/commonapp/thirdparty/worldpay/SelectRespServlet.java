@@ -55,6 +55,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
     private GenericValue userLogin = null;
     
     protected void doRequest(SelectServletRequest request, SelectServletResponse response) throws ServletException, IOException {
+        Debug.logInfo("Request receive from worldpay..", module);
         // get the needed components
         sctx = this.getServletContext();
         delegator = this.getDelegator();
@@ -71,13 +72,17 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             Debug.logWarning(e, "Cannot find webSitePayment Settings", module);
         }
         if (configString == null)
-        configString = "payment.properties";        
+        configString = "payment.properties";    
+        Debug.logInfo("Got the payment configuration", module);    
+        
+        String orderId = request.getParameter(SelectDefs.SEL_cartId);
+        String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
         
         // store some stuff for calling existing events
         request.setAttribute("servletContext", sctx);
         request.setAttribute("delegator", delegator);
         request.setAttribute("dispatcher", dispatcher);
-        request.setAttribute("order_id", request.getParameter(SelectDefs.SEL_cartId));
+        request.setAttribute("order_id", orderId);
         request.setAttribute(SiteDefs.CONTROL_PATH, UtilProperties.getPropertyValue(configString, "payment.general.controlpath", "/control"));
         
         // load the order.properties file.        
@@ -87,13 +92,13 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             Debug.logWarning(e, "Problems loading order.properties", module);
         }    
         
-        String orderId = request.getParameter(SelectDefs.SEL_cartId);
-        String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
         if (transStatus.equalsIgnoreCase("Y")) {
             // order was approved
-            approveOrder(orderId);           
+            Debug.logInfo("Order #" + orderId + " approved", module);
+            approveOrder(orderId);                       
         } else {
             // order was cancelled
+            Debug.logInfo("Order #" + orderId + " cancelled", module);
             cancelOrder(orderId);
         }
         
