@@ -57,7 +57,7 @@
 	field CDATA #REQUIRED >
     <!ELEMENT relation ( key-map+ )>
     <!-- ================== view-entity ===================== -->
-    <!ELEMENT view-entity ( description?, member-entity+, alias+, view-link+, relation* )>
+    <!ELEMENT view-entity ( description?, member-entity+, alias+, view-link*, relation* )>
     <!-- see the children of entitymodel section for description, etc. -->
     <!ATTLIST view-entity
 	entity-name CDATA #REQUIRED
