@@ -67,47 +67,20 @@
             </widgets>
         </section>
     </screen>
-    
-    <screen name="leftbar">
+
+    <screen name="login">
         <section>
             <widgets>
-                <container style="column-left">
-                    <include-screen name="choosecatalog"/>
-                    <include-screen name="keywordsearchbox"/>
-                    <include-screen name="sidedeepcategory"/>
-                </container>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://common/webcommon/login.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
-    <screen name="keywordsearchbox">
-        <section>
-            <actions>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/keywordsearchoptions.bsh"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/keywordsearchbox.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="choosecatalog">
-        <section>
-            <actions>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/choosecatalog.bsh"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/choosecatalog.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="sidedeepcategory">
-        <section>
-            <actions>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/sidedeepcategory.bsh"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/sidedeepcategory.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
+
 </screens>
 
