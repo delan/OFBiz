@@ -57,6 +57,8 @@ public final class SiteDefs {
     public static final String PREVIOUS_REQUEST = "_PREVIOUS_REQUEST_";
     /** Used in session object to store previous parameters */
     public static final String PREVIOUS_PARAMS = "_PREVIOUS_PARAMS_";
+    /** Used in request object to note that a login has passed */
+    public static final String LOGIN_PASSED = "_LOGIN_PASSED_";
 
     /** Used in session object to pass around the protocol, server name, and port */
     public static final String SERVER_ROOT_URL = "_SERVER_ROOT_URL_";

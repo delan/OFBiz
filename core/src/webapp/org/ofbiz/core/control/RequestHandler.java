@@ -164,8 +164,8 @@ public class RequestHandler implements Serializable {
 
         // get the previous request info
         String previousRequest = (String) request.getSession().getAttribute(SiteDefs.PREVIOUS_REQUEST);
-        boolean loginPassed = requestUri.equals(SiteDefs.LOGIN_REQUEST_URI) &&
-                eventReturnString.equalsIgnoreCase("success") ? true : false;
+        String loginPass = (String) request.getAttribute(SiteDefs.LOGIN_PASSED);
+        Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")", module);
 
         // check for a chain request.
         if (nextView != null && nextView.startsWith("request:")) {
@@ -175,7 +175,7 @@ public class RequestHandler implements Serializable {
         }
 
         // if previous request exists, and a login just succeeded, do that now.
-        else if (loginPassed && previousRequest != null) {
+        else if (previousRequest != null && loginPass != null && loginPass.equalsIgnoreCase("TRUE")) {
             request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
             Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
             doRequest(request, response, previousRequest, userLogin, delegator);

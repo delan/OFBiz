@@ -27,6 +27,7 @@ package org.ofbiz.core.region;
 
 import java.util.*;
 import java.net.*;
+
 import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
@@ -40,16 +41,17 @@ import org.ofbiz.core.config.*;
  *@version    1.0
  */
 public class RegionManager {
+
     public static Region getRegion(URL regionFile, String regionName) {
         if (regionFile == null) return null;
-        
+
         Map regions = getRegions(regionFile);
         return (Region) regions.get(regionName);
     }
-    
+
     public static void putRegion(URL regionFile, Region region) {
         if (regionFile == null) throw new IllegalArgumentException("regionFile cannot be null");
-        
+
         Map regions = getRegions(regionFile);
         regions.put(region.getId(), region);
     }
@@ -63,10 +65,10 @@ public class RegionManager {
         }
         return regions;
     }
-    
+
     public static Map readRegionXml(URL regionXmlLocation) {
         Map regions = new HashMap();
-        
+
         Document document = null;
         try {
             document = UtilXml.readXmlDocument(regionXmlLocation, true);
@@ -77,37 +79,37 @@ public class RegionManager {
         } catch (javax.xml.parsers.ParserConfigurationException e) {
             Debug.logError(e);
         }
-        
+
         if (document == null) return regions;
-        
+
         Element rootElement = document.getDocumentElement();
-        
+
         List defineElements = UtilXml.childElementList(rootElement, "define");
         Iterator defineIter = defineElements.iterator();
         while (defineIter.hasNext()) {
             Element defineElement = (Element) defineIter.next();
             addRegion(regionXmlLocation, defineElement, regions);
         }
-        
+
         return regions;
     }
 
     protected static void addRegion(URL regionFile, Element defineElement, Map regions) {
         Region newRegion = null;
-        
+
         String idAttr = defineElement.getAttribute("id");
         String templateAttr = defineElement.getAttribute("template");
         String regionAttr = defineElement.getAttribute("region");
         if (UtilValidate.isNotEmpty(templateAttr) && UtilValidate.isNotEmpty(regionAttr)) {
             throw new IllegalArgumentException("Cannot use both template and region attributes");
         }
-        
+
         if (UtilValidate.isNotEmpty(templateAttr)) {
             newRegion = new Region(idAttr, templateAttr, null);
         } else {
             if (UtilValidate.isNotEmpty(regionAttr)) {
                 Region parentRegion = (Region) regions.get(regionAttr);
-                if(parentRegion == null) {
+                if (parentRegion == null) {
                     throw new IllegalArgumentException("can't find page definition attribute with this key: " + regionAttr);
                 }
                 newRegion = new Region(idAttr, parentRegion.getContent(), parentRegion.getSections());
@@ -117,7 +119,7 @@ public class RegionManager {
         }
 
         regions.put(idAttr, newRegion);
-        
+
         List putElements = UtilXml.childElementList(defineElement, "put");
         Iterator putIter = putElements.iterator();
         while (putIter.hasNext()) {
@@ -131,18 +133,18 @@ public class RegionManager {
         String section = putElement.getAttribute("section");
         String content = putElement.getAttribute("content");
         String direct = putElement.getAttribute("direct");
-        
+
         if (UtilValidate.isEmpty(direct)) direct = "false";
-        
+
         if (UtilValidate.isNotEmpty(bodyContent) && UtilValidate.isNotEmpty(content)) {
             throw new IllegalArgumentException("Cannot use both content attribute and tag body text");
         }
-        
+
         if (UtilValidate.isNotEmpty(bodyContent)) {
             content = bodyContent;
             direct = "true";
         }
-        
+
         return new Section(section, content, direct, readerFile);
     }
 }

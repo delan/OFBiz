@@ -32,6 +32,7 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
@@ -46,15 +47,16 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class Region extends Content {
-    public static final String regionsFileName = "/WEB-INF/regions.xml"; 
-    
+
+    public static final String regionsFileName = "/WEB-INF/regions.xml";
+
     private Map sections = new HashMap();
     protected String id;
-    
+
     public Region(String id, String content) {
         this(id, content, null); // content is the name of a template
     }
-    
+
     public Region(String id, String content, Map sections) {
         super(content);
         this.id = id;
@@ -62,16 +64,29 @@ public class Region extends Content {
             this.sections.putAll(sections);
     }
 
-    public String getId() { return this.id; }
-    
-    public void put(Section section) { sections.put(section.getName(), section); }
-    public void putAll(Map newSections) { sections.putAll(newSections); }
-    public Section get(String name) { return (Section) sections.get(name); }
-    public Map getSections() { return sections; }
-    
+    public String getId() {
+        return this.id;
+    }
+
+    public void put(Section section) {
+        sections.put(section.getName(), section);
+    }
+
+    public void putAll(Map newSections) {
+        sections.putAll(newSections);
+    }
+
+    public Section get(String name) {
+        return (Section) sections.get(name);
+    }
+
+    public Map getSections() {
+        return sections;
+    }
+
     public void render(PageContext pageContext) throws JspException {
         Debug.logVerbose("Rendering " + this.toString());
-        
+
         try {
             pageContext.include(content);
         } catch (Exception ex) {
@@ -79,27 +94,27 @@ public class Region extends Content {
             throw new JspException(ex.getMessage());
         }
     }
-    
+
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
         Debug.logVerbose("Rendering " + this.toString());
-        
+
         //this render method does not come from a page tag so some setup needs to happen here
         RegionStack.push(request, this);
-        
+
         RequestDispatcher rd = request.getRequestDispatcher(content);
         if (rd == null)
             throw new IllegalArgumentException("Source returned a null dispatcher (" + content + ")");
         rd.include(request, response);
     }
-    
+
     public String toString() {
         String s = "Region: " + content.toString() + "<br/>";
         int indent = 4;
         Iterator iter = sections.values().iterator();
-        
+
         while (iter.hasNext()) {
             Section section = (Section) iter.next();
-            for (int i=0; i < indent; ++i) {
+            for (int i = 0; i < indent; ++i) {
                 s += "&nbsp;";
             }
             s += section.toString() + "<br/>";
