@@ -173,9 +173,9 @@ public class ObjectType {
             if ("Date".equals(type)) {
                 format = "yyyy-MM-dd";
             } else if ("Time".equals(type)) {
-                format = "HH:mm:ss";
+                format = "HH:mm:ss.SSS";
             } else if ("Timestamp".equals(type)) {
-                format = "yyyy-MM-dd HH:mm:ss";
+                format = "yyyy-MM-dd HH:mm:ss.SSS";
             }
         }
         
