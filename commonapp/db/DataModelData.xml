@@ -171,11 +171,36 @@
   <Enumeration description="No restriction on network structure (DEFAULT)" enumCode="NON_BLOCKED" enumId="WGC_NON_BLOCKED" sequenceId="01" enumTypeId="WORKFLOW_GRAPH_CONF"/>
   <Enumeration description="Network structure restricted to proper nesting of LOOP" enumCode="LOOP_BLOCKED" enumId="WGC_LOOP_BLOCKED" sequenceId="02" enumTypeId="WORKFLOW_GRAPH_CONF"/>
   <Enumeration description="Network structure restricted to proper nesting of SPLIT/JOIN and LOOP" enumCode="FULL_BLOCKED" enumId="WGC_FULL_BLOCKED" sequenceId="03" enumTypeId="WORKFLOW_GRAPH_CONF"/>
+  <Enumeration description="Input Parameter" enumCode="IN" enumId="WPM_IN" sequenceId="01" enumTypeId="WORKFLOW_PARAM_MODE"/>
+  <Enumeration description="Output Parameter" enumCode="OUT" enumId="WPM_OUT" sequenceId="02" enumTypeId="WORKFLOW_PARAM_MODE"/>
+  <Enumeration description="Parameter Used for Input and Output" enumCode="INOUT" enumId="WPM_INOUT" sequenceId="03" enumTypeId="WORKFLOW_PARAM_MODE"/>
+  <Enumeration description="Automatic Mode" enumCode="Automatic" enumId="WAM_AUTOMATIC" sequenceId="01" enumTypeId="WFLOW_ACTIVITY_MODE"/>
+  <Enumeration description="Manual Mode" enumCode="Manual" enumId="WAM_MANUAL" sequenceId="02" enumTypeId="WFLOW_ACTIVITY_MODE"/>
+  <Enumeration description="Activity can only be instantiated once (DEFAULT)" enumCode="ONCE" enumId="WFI_ONCE" sequenceId="01" enumTypeId="WFLOW_INSTANTIATION"/>
+  <Enumeration description="Activity can be instantiated multiple times" enumCode="MULTIPLE" enumId="WFI_MULTIPLE" sequenceId="02" enumTypeId="WFLOW_INSTANTIATION"/>
+  <Enumeration description="Synchronize all incoming transitions (wait for all)" enumCode="AND" enumId="WJT_AND" sequenceId="01" enumTypeId="WORKFLOW_JOIN_TYPE"/>
+  <Enumeration description="No incoming synchronization required (start on first)" enumCode="XOR" enumId="WJT_XOR" sequenceId="02" enumTypeId="WORKFLOW_JOIN_TYPE"/>
+  <Enumeration description="Allow concurrent outgoing transitions" enumCode="AND" enumId="WST_AND" sequenceId="01" enumTypeId="WORKFLOW_SPLIT_TYPE"/>
+  <Enumeration description="Only allow a single outgoing transition" enumCode="XOR" enumId="WST_XOR" sequenceId="02" enumTypeId="WORKFLOW_SPLIT_TYPE"/>
+  <Enumeration description="Application" enumCode="APPLICATION" enumId="WTT_APPLICATION" sequenceId="01" enumTypeId="WORKFLOW_TOOL_TYPE"/>
+  <Enumeration description="Procedure" enumCode="PROCEDURE" enumId="WTT_PROCEDURE" sequenceId="02" enumTypeId="WORKFLOW_TOOL_TYPE"/>
+  <Enumeration description="Asynchronous Execution" enumCode="ASYNCHR" enumId="WSE_ASYNCHR" sequenceId="01" enumTypeId="WORKFLOW_SUB_EXEC"/>
+  <Enumeration description="Synchronous Execution" enumCode="SYNCHR" enumId="WSE_SYNCHR" sequenceId="02" enumTypeId="WORKFLOW_SUB_EXEC"/>
+  <Enumeration description="While loop - go until condition evaluates to false" enumCode="WHILE" enumId="WLK_WHILE" sequenceId="01" enumTypeId="WORKFLOW_LOOP_KIND"/>
+  <Enumeration description="Repeat Until loop - go until condition evaluates to true" enumCode="REPEAT_UNTIL" enumId="WLK_REPEAT_UNTIL" sequenceId="02" enumTypeId="WORKFLOW_LOOP_KIND"/>
   <EnumerationType description="Parent Type for all Work Effort enum types" enumTypeId="WORK_EFFORT" hasTable="N" parentTypeId=""/>
   <EnumerationType description="Work Effort Expectations" enumTypeId="WORK_EFF_EXPECT" hasTable="N" parentTypeId="WORK_EFFORT"/>
   <EnumerationType description="Work Effort Scope Classifications" enumTypeId="WORK_EFF_SCOPE" hasTable="N" parentTypeId="WORK_EFFORT"/>
   <EnumerationType description="Parent Type for all Workflow enum types" enumTypeId="WORKFLOW" hasTable="N" parentTypeId=""/>
   <EnumerationType description="Workflow Graph Conformance Classifications" enumTypeId="WORKFLOW_GRAPH_CONF" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow Formal Parameter Mode" enumTypeId="WORKFLOW_PARAM_MODE" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow Activity Mode" enumTypeId="WFLOW_ACTIVITY_MODE" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow Instantiation" enumTypeId="WFLOW_INSTANTIATION" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow Join Type" enumTypeId="WORKFLOW_JOIN_TYPE" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow Split Type" enumTypeId="WORKFLOW_SPLIT_TYPE" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow Tool Type" enumTypeId="WORKFLOW_TOOL_TYPE" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow SubFlow Execution" enumTypeId="WORKFLOW_SUB_EXEC" hasTable="N" parentTypeId="WORKFLOW"/>
+  <EnumerationType description="Workflow Loop Kind" enumTypeId="WORKFLOW_LOOP_KIND" hasTable="N" parentTypeId="WORKFLOW"/>
   <FacilityType description="" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>
   <FacilityType description="" facilityTypeId="ROOM" hasTable="N" parentTypeId=""/>
   <FacilityType description="" facilityTypeId="PLANT" hasTable="N" parentTypeId=""/>
@@ -527,6 +552,12 @@
     parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_CONCURRENCY"/>
   <WorkEffortAssocType description="" hasTable="N"
     parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_PRECEDENCY"/>
+  <WorkflowParticipantType description="A set of resource" hasTable="N" parentTypeId="" participantTypeId="WFPART_RESOURCE_SET" typeCode="RESOURCE_SET"/>
+  <WorkflowParticipantType description="A specific resource agent" hasTable="N" parentTypeId="" participantTypeId="WFPART_RESOURCE" typeCode="RESOURCE"/>
+  <WorkflowParticipantType description="Specifies a role that may map to a group of humans" hasTable="N" parentTypeId="" participantTypeId="WFPART_ROLE" typeCode="ROLE"/>
+  <WorkflowParticipantType description="Department or other unit in an organization" hasTable="N" parentTypeId="" participantTypeId="WFPART_ORG_UNIT" typeCode="ORGANIZATIONAL_UNIT"/>
+  <WorkflowParticipantType description="Human interacting with the system through an application" hasTable="N" parentTypeId="" participantTypeId="WFPART_HUMAN" typeCode="HUMAN"/>
+  <WorkflowParticipantType description="An automatic agent" hasTable="N" parentTypeId="" participantTypeId="WFPART_SYSTEM" typeCode="SYSTEM"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PROGRAM"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PHASE"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PROJECT"/>
