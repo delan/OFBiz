@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/11/16 15:54:56  jonesde
+ * Initial checkin of XML serialization stuff
+ *
  *
  */
 
@@ -8,6 +11,7 @@ package org.ofbiz.core.serialize;
 
 import java.io.*;
 import java.net.*;
+import java.text.*;
 import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -70,122 +74,221 @@ public class XmlSerializer {
     Element element = (Element)curChild;
     return deserializeSingle(element, delegator);
   }
-  
+
   public static Element serializeSingle(Object object, Document document) throws SerializeException {
-    if(object == null) return null;
     if(document == null) return null;
     
-    Element element = null;
+    if(object == null) return document.createElement("null");
     
-    if(object instanceof String) {
-      String value = (String)object;
-      element = document.createElement("std-String");
-      element.setAttribute("value", value);
-    }
-    else if(object instanceof Integer) {
-      Integer value = (Integer)object;
-      element = document.createElement("std-Integer");
-      element.setAttribute("value", value.toString());
-    }
-    else if(object instanceof Long) {
-      Long value = (Long)object;
-      element = document.createElement("std-Long");
-      element.setAttribute("value", value.toString());
-    }
-    else if(object instanceof Float) {
-      Float value = (Float)object;
-      element = document.createElement("std-Float");
-      element.setAttribute("value", value.toString());
-    }
-    else if(object instanceof Double) {
-      Double value = (Double)object;
-      element = document.createElement("std-Double");
-      element.setAttribute("value", value.toString());
-    }
-    else if(object instanceof java.sql.Timestamp) {
-      java.sql.Timestamp value = (java.sql.Timestamp)object;
-      element = document.createElement("std-Timestamp");
-      element.setAttribute("value", value.toString());
-    }
-    else if(object instanceof java.sql.Date) {
-      java.sql.Date value = (java.sql.Date)object;
-      element = document.createElement("std-Date");
-      element.setAttribute("value", value.toString());
-    }
-    else if(object instanceof java.sql.Time) {
-      java.sql.Time value = (java.sql.Time)object;
-      element = document.createElement("std-Time");
-      element.setAttribute("value", value.toString());
-    }
-    //for collections go try from most restricted to least to keep as much data as possible
-    else if(object instanceof SortedSet) {
-      SortedSet value = (SortedSet)object;
-      element = document.createElement("col-SortedSet");
-      Iterator iter = value.iterator();
-      while(iter.hasNext()) {
-        element.appendChild(serializeSingle(iter.next(), document));
-      }
-    }
-    else if(object instanceof Set) {
-      Set value = (Set)object;
-      element = document.createElement("col-Set");
-      Iterator iter = value.iterator();
-      while(iter.hasNext()) {
-        element.appendChild(serializeSingle(iter.next(), document));
-      }
-    }
-    else if(object instanceof List) {
-      List value = (List)object;
-      element = document.createElement("col-List");
-      Iterator iter = value.iterator();
-      while(iter.hasNext()) {
-        element.appendChild(serializeSingle(iter.next(), document));
-      }
-    }
+    // - Standard Objects -
+    if(object instanceof String) return makeElement("std-String", object, document);
+    else if(object instanceof Integer) return makeElement("std-Integer", object, document);
+    else if(object instanceof Long) return makeElement("std-Long", object, document);
+    else if(object instanceof Float) return makeElement("std-Float", object, document);
+    else if(object instanceof Double) return makeElement("std-Double", object, document);
+    else if(object instanceof Boolean) return makeElement("std-Boolean", object, document);
+    else if(object instanceof java.util.Date) return makeElement("std-Date", object, document);
+    // - SQL Objects -
+    else if(object instanceof java.sql.Timestamp) return makeElement("sql-Timestamp", object, document);
+    else if(object instanceof java.sql.Date) return makeElement("sql-Date", object, document);
+    else if(object instanceof java.sql.Time) return makeElement("sql-Time", object, document);
+    // - Collections -
     else if(object instanceof Collection) {
+      String elementName = null;
+      //these ARE order sensitive; for instance Stack extends Vector, so if Vector were first we would lose the stack part
+      if(object instanceof ArrayList) elementName = "col-ArrayList";
+      else if(object instanceof LinkedList) elementName = "col-LinkedList";
+      else if(object instanceof Stack) elementName = "col-Stack";
+      else if(object instanceof Vector) elementName = "col-Vector";
+      else if(object instanceof TreeSet) elementName = "col-TreeSet";
+      else if(object instanceof HashSet) elementName = "col-HashSet";
+      if(elementName == null) return serializeCustom(object, document);
+      
       Collection value = (Collection)object;
-      element = document.createElement("col-Collection");
+      Element element = document.createElement(elementName);
       Iterator iter = value.iterator();
       while(iter.hasNext()) {
         element.appendChild(serializeSingle(iter.next(), document));
       }
+      return element;
     }
-    //Handle Maps
+    // - Maps -
     else if(object instanceof Map) {
+      String elementName = null;
+      //these ARE order sensitive; for instance Properties extends Hashtable, so if Hashtable were first we would lose the Properties part
+      if(object instanceof HashMap) elementName = "map-HashMap";
+      else if(object instanceof Properties) elementName = "map-Properties";
+      else if(object instanceof Hashtable) elementName = "map-Hashtable";
+      else if(object instanceof WeakHashMap) elementName = "map-WeakHashMap";
+      else if(object instanceof TreeMap) elementName = "map-TreeMap";
+      if(elementName == null) return serializeCustom(object, document);
+
+      Element element = document.createElement(elementName);
       Map value = (Map)object;
-      element = document.createElement("col-Map");
       Iterator iter = value.entrySet().iterator();
       while(iter.hasNext()) {
         Map.Entry entry = (Map.Entry)iter.next();
-        Element key = document.createElement("col-Key");
-        element.appendChild(key);
+        
+        Element entryElement = document.createElement("map-Entry");
+        element.appendChild(entryElement);
+        
+        Element key = document.createElement("map-Key");
+        entryElement.appendChild(key);
         key.appendChild(serializeSingle(entry.getKey(), document));
-        Element mapValue = document.createElement("col-Value");
-        element.appendChild(mapValue);
+        Element mapValue = document.createElement("map-Value");
+        entryElement.appendChild(mapValue);
         mapValue.appendChild(serializeSingle(entry.getValue(), document));
       }
+      return element;
     }
-    //Do GenericValue objects as a special case, use std XML import/export routines
-    else if(object instanceof GenericEntity) {
-      GenericEntity value = (GenericEntity)object;
-      element = value.makeXmlElement(document);
+    //Do GenericEntity objects as a special case, use std XML import/export routines
+    else if(object instanceof GenericPK) {
+      GenericPK value = (GenericPK)object;
+      return value.makeXmlElement(document, "eepk-");
     }
-    else {
-      //TODO: if nothing else, try looking up a class for the type in the properties file, the class should implement an interface or have a certain static method on it
-      throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
+    else if(object instanceof GenericValue) {
+      GenericValue value = (GenericValue)object;
+      return value.makeXmlElement(document, "eeval-");
     }
-    return element;
+
+    return serializeCustom(object, document);
   }
 
+  public static Element serializeCustom(Object object, Document document) throws SerializeException {
+    //TODO: if nothing else, try looking up a class for the type in the properties file, the class should implement an interface or have a certain static method on it
+    throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
+  }
+  
+  public static Element makeElement(String elementName, Object value, Document document) {
+    if(value == null) return document.createElement("null");
+    Element element = document.createElement(elementName);
+    element.setAttribute("value", value.toString());
+    return element;
+  }
+  
   public static Object deserializeSingle(Element element, GenericDelegator delegator) throws SerializeException {
-    Object object = null;
-    
-    if("std-String".equals(element.getTagName())) {
+    String tagName = element.getTagName();
+
+    if(tagName.equals("null")) return null;
+
+    // - Standard Objects -
+    if(tagName.startsWith("std-")) {
+      if("std-String".equals(tagName)) {
+        return element.getAttribute("value");
+      }
+      else if("std-Integer".equals(tagName)) {
+        String valStr = element.getAttribute("value");
+        return Integer.valueOf(valStr);
+      }
+      else if("std-Long".equals(tagName)) {
+        String valStr = element.getAttribute("value");
+        return Long.valueOf(valStr);
+      }
+      else if("std-Float".equals(tagName)) {
+        String valStr = element.getAttribute("value");
+        return Float.valueOf(valStr);
+      }
+      else if("std-Double".equals(tagName)) {
+        String valStr = element.getAttribute("value");
+        return Double.valueOf(valStr);
+      }
+      else if("std-Boolean".equals(tagName)) {
+        String valStr = element.getAttribute("value");
+        return Boolean.valueOf(valStr);
+      }
+      else if("std-Date".equals(tagName)) {
+        String valStr = element.getAttribute("value");
+        DateFormat formatter = DateFormat.getDateTimeInstance();
+        java.util.Date value = null;
+        try { value = formatter.parse(valStr); }
+        catch(ParseException e) { throw new SerializeException("Could not parse date String: " + valStr, e); }
+        return value;
+      }
     }
-    else {
-      throw new SerializeException("Cannot deserialize element named ");
+    // - SQL Objects -
+    else if(tagName.startsWith("sql-")) {
+      if("sql-Timestamp".equals(tagName)) {
+        String valStr = element.getAttribute("value");
+        return java.sql.Timestamp.valueOf(valStr);
+      }
+      else if("sql-Date".equals(tagName)) {
+        String valStr = element.getAttribute("value");
+        return java.sql.Date.valueOf(valStr);
+      }
+      else if("sql-Time".equals(tagName)) {
+        String valStr = element.getAttribute("value");
+        return java.sql.Time.valueOf(valStr);
+      }
     }
-    
-    return object;
+    // - Collections -
+    else if(tagName.startsWith("col-")) {
+      Collection value = null;
+      if("col-ArrayList".equals(tagName)) value = new ArrayList();
+      else if("col-LinkedList".equals(tagName)) value = new LinkedList();
+      else if("col-Stack".equals(tagName)) value = new Stack();
+      else if("col-Vector".equals(tagName)) value = new Vector();
+      else if("col-TreeSet".equals(tagName)) value = new TreeSet();
+      else if("col-HashSet".equals(tagName)) value = new HashSet();
+      
+      if(value == null) {
+        return deserializeCustom(element);
+      }
+      else {
+        Node curChild = element.getFirstChild();
+        while(curChild != null) {
+          if(curChild.getNodeType() == Node.ELEMENT_NODE) {
+            value.add(deserializeSingle((Element)curChild, delegator));
+          }
+          curChild = curChild.getNextSibling();
+        }
+        return value;
+      }
+    }
+    // - Maps -
+    else if(tagName.startsWith("map-")) {
+      Map value = null;
+      if("map-HashMap".equals(tagName)) value = new HashMap();
+      else if("map-Properties".equals(tagName)) value = new Properties();
+      else if("map-Hashtable".equals(tagName)) value = new Hashtable();
+      else if("map-WeakHashMap".equals(tagName)) value = new WeakHashMap();
+      else if("map-TreeMap".equals(tagName)) value = new TreeMap();
+      
+      if(value == null) {
+        return deserializeCustom(element);
+      }
+      else {
+        Node curChild = element.getFirstChild();
+        while(curChild != null) {
+          if(curChild.getNodeType() == Node.ELEMENT_NODE) {
+            Element curElement = (Element)curChild;
+            if("map-Entry".equals(curElement.getTagName())) {
+              NodeList tempList = curElement.getElementsByTagName("map-Key");
+              if(tempList.getLength() != 1) throw new SerializeException("There were " + tempList.getLength() + " map-Key elements, expected 1");
+              Element keyElement = (Element)tempList.item(0);
+              
+              tempList = curElement.getElementsByTagName("map-Value");
+              if(tempList.getLength() != 1) throw new SerializeException("There were " + tempList.getLength() + " map-Value elements, expected 1");
+              Element valueElement = (Element)tempList.item(0);
+              
+              value.put(deserializeSingle(keyElement, delegator), deserializeSingle(valueElement, delegator));
+            }
+          }
+          curChild = curChild.getNextSibling();
+        }
+        return value;
+      }
+    }
+    else if(tagName.startsWith("eepk-")) {
+      return delegator.makePK(element);
+    }
+    else if(tagName.startsWith("eeval-")) {
+      return delegator.makeValue(element);
+    }
+
+    return deserializeCustom(element);
+  }
+
+  public static Object deserializeCustom(Element element) throws SerializeException {
+    throw new SerializeException("Cannot deserialize element named " + element.getTagName());
   }
 }
