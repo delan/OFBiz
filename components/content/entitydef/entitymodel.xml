@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  */
 -->
 
@@ -207,25 +207,59 @@
     <view-entity entity-name="ContentAssocViewFrom"
                 package-name="org.ofbiz.commonapp.content"
                 title="Main Assoc To">
-      <member-entity entity-alias="AS1" entity-name="ContentAssoc"/>
-      <member-entity entity-alias="SI" entity-name="Content"/>
-      <alias-all entity-alias="AS1"/>
-      <alias-all entity-alias="SI"/>
-      <alias entity-alias="AS1" name="contentId_START" field="contentIdTo"/>
-      <view-link entity-alias="AS1" rel-entity-alias="SI">
+      <member-entity entity-alias="AS" entity-name="ContentAssoc"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <alias-all entity-alias="AS"/>
+      <alias-all entity-alias="CO"/>
+      <alias entity-alias="AS" name="contentId_START" field="contentIdTo"/>
+      <view-link entity-alias="AS" rel-entity-alias="CO">
           <key-map field-name="contentId" rel-field-name="contentId"/>
         </view-link>
     </view-entity>
     <view-entity entity-name="ContentAssocViewTo"
                 package-name="org.ofbiz.commonapp.content"
                 title="Main Assoc To">
-      <member-entity entity-alias="AS1" entity-name="ContentAssoc"/>
-      <member-entity entity-alias="SI" entity-name="Content"/>
-      <alias-all entity-alias="AS1"/>
-      <alias-all entity-alias="SI"/>
-      <alias entity-alias="AS1" name="contentId_START" field="contentId"/>
-      <view-link entity-alias="AS1" rel-entity-alias="SI">
+      <member-entity entity-alias="AS" entity-name="ContentAssoc"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <alias-all entity-alias="AS"/>
+      <alias-all entity-alias="CO"/>
+      <alias entity-alias="AS" name="contentId_START" field="contentId"/>
+      <view-link entity-alias="AS" rel-entity-alias="CO">
         <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="ContentAssocDataResourceViewFrom"
+                package-name="org.ofbiz.commonapp.content"
+                title="Main Assoc To and DataResource">
+      <member-entity entity-alias="AS" entity-name="ContentAssoc"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <alias-all entity-alias="AS"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="DR"/>
+      <alias entity-alias="AS" name="contentId_START" field="contentIdTo"/>
+      <view-link entity-alias="AS" rel-entity-alias="CO">
+        <key-map field-name="contentId" rel-field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="DR">
+        <key-map field-name="dataResourceId" rel-field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="ContentAssocDataResourceViewTo"
+                package-name="org.ofbiz.commonapp.content"
+                title="Main Assoc To and DataResource">
+      <member-entity entity-alias="AS" entity-name="ContentAssoc"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <alias-all entity-alias="AS"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="DR"/>
+      <alias entity-alias="AS" name="contentId_START" field="contentId"/>
+      <view-link entity-alias="AS" rel-entity-alias="CO">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="DR">
+        <key-map field-name="dataResourceId" rel-field-name="dataResourceId"/>
       </view-link>
     </view-entity>
     <entity entity-name="ContentAttribute"
