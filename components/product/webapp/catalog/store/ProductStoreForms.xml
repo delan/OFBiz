@@ -148,7 +148,7 @@
 		<field name="fromAddress"></field>
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="removeProductStoreEmail?productStoreId=${procuctStoreId}&amp;emailType=${emailType}"
+			<hyperlink target="removeProductStoreEmail?productStoreId=${productStoreId}&amp;emailType=${emailType}"
 				description="[Delete]" also-hidden="false"/>
 		</field>			
 	</form>		
