@@ -18,6 +18,17 @@
               <%EntityField.run("layoutSettings", "companySubtitle", "<br><span class='headerCompanySubtitle'>", "</span>", pageContext);%>
           </TD>
           <TD align=right width='1%' nowrap <%EntityField.run("layoutSettings", "headerRightBackgroundUrl", "background='", "'", pageContext);%>>
+              <ofbiz:if name="person">
+                <div class="insideHeaderText">Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</div>
+              </ofbiz:if>
+              <ofbiz:unless name="person">
+                <ofbiz:if name="partyGroup">
+                  <div class="insideHeaderText">Welcome<%EntityField.run("partyGroup", "groupName", "", "", pageContext);%>!</div>
+                </ofbiz:if>
+                <ofbiz:unless name="partyGroup">
+                  <div class="insideHeaderText">Welcome!</div>
+                </ofbiz:unless>
+              </ofbiz:unless>
             <div class="insideHeaderText">&nbsp;<%=UtilDateTime.nowTimestamp().toString()%></div>
           </td>
         </tr>
@@ -28,21 +39,18 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/tasklist</ofbiz:url>" class="buttontext">Task&nbsp;List</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/month</ofbiz:url>" class="buttontext">Calendar</a></td>
+
+          <td width="90%" align=center class='headerCenter'>&nbsp;</td>
+
           <ofbiz:unless name="userLogin">
-            <td class="headerButtonLeft"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
+            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
           </ofbiz:unless>
           <ofbiz:if name="userLogin">
-            <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
+            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
           </ofbiz:if>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-          <ofbiz:unless name="person">
-            <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
-          </ofbiz:unless>
-          <ofbiz:if name="person">
-            <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
-          </ofbiz:if>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/tasklist</ofbiz:url>" class="buttontext">Task&nbsp;List</a></td>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/month</ofbiz:url>" class="buttontext">Calendar</a></td>
         </TR>
       </TABLE>
     </TD>
