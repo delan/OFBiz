@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE"
+ content="text/html; charset=windows-1252">
+  <title>Open Source for Business Seminar Outline</title>
+  <style>
+DIV,LI {
+font-size: 11px;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+  </style>
+</head>
+<body lang="en-US">
+<center>
+<h2>Planning for Projects with OFBiz</h2>
+</center>
+<div>Written By: David E. Jones</div>
+<div>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a></div>
+<div><a href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173" width="88"
+ height="31" border="0" alt="SourceForge Logo"></a></div>
+<div>Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
+</div>
+<div>Last Updated: 3 April 2004<br>
+</div>
+<hr>
+<br>
+<ol>
+  <li>Primary Constraints Identification</li>
+  <ol>
+    <li>Time</li>
+    <li>Money</li>
+    <li>Feature &amp; Requirements</li>
+  </ol>
+  <li>People &amp; Companies Involved</li>
+  <ol>
+    <li>General Activities<br>
+    </li>
+    <ol>
+      <li>Specification &amp; Requirements</li>
+      <li>Design</li>
+      <li>Development Planning</li>
+      <li>Management &amp; Tracking<br>
+      </li>
+      <li>Implementation<br>
+      </li>
+      <li>Testing &amp; Qualification</li>
+      <li>Issue Research &amp; Resolution</li>
+      <li>End-user &amp; Technical Training<br>
+      </li>
+      <li>End-user &amp; Technical Support<br>
+      </li>
+    </ol>
+    <li>End-user Company</li>
+    <ol>
+      <li>Desired level of involvement</li>
+      <li>Expertise available for project<br>
+      </li>
+      <li>Feelings about open source software and proprietary versus
+open source results</li>
+    </ol>
+    <li>Service Providers</li>
+    <ol>
+      <li>Existing and/or trusted third party service providers</li>
+      <li>Initial Design, Development, Training, et cetera<br>
+      </li>
+      <li>Long Term Services (such as hosting, technical support, etc)</li>
+      <li>Contract Structure<br>
+      </li>
+      <ol>
+        <li>Fixed rate service over time (like hosting, some types of
+support)</li>
+        <li>Fixed rate for a one-time fixed service (fixed bid)</li>
+        <li>Hourly service, to make sure services are available may
+purchase hours in advance or agree on a certain number of hours over a
+period of time<br>
+        </li>
+        <li>Progressive fixed-bid, perhaps with a contract for work
+over a certain period of time (works well with Agile and XP
+methodologies)</li>
+      </ol>
+      <li>When using one or more service providers make sure it is
+understood who will do what, and who is responsible for unplanned needs
+that come up. For example, is the solution provider offering a
+"complete package", and what does that mean, or a only specific
+functionality and services?<br>
+      </li>
+    </ol>
+  </ol>
+  <li>Load &amp; Scale Planning</li>
+  <ol>
+    <li>Visits &amp; Page Hits</li>
+    <ol>
+      <li>Typical &amp; Peak Loads</li>
+      <li>Estimate periodic peaks using lower numbers of time periods
+per day, for example 14 hours per day; these should be based on (if
+available) historic load distributions</li>
+    </ol>
+    <li>Orders, Customer Service Calls, Work Efforts, Catalog Changes,
+and so on</li>
+    <li>Total Products, Customers, etc</li>
+    <li>HTML &amp; Image sizing, bandwidth use</li>
+    <li>Use these for a rough estimate and as a basis for the
+pre-production load tests</li>
+  </ol>
+  <li>General Issues</li>
+  <ol>
+    <li>Business Process Analysis</li>
+    <ol>
+      <li>Existing Processes</li>
+      <li>Desired Processes</li>
+      <li>Design &amp; Optimize Processes</li>
+      <ol>
+        <li>Based on Physical and Business Constraints</li>
+        <li>Based on Software Constraints</li>
+        <li>As Preparation for Custom Software<br>
+        </li>
+      </ol>
+    </ol>
+    <li>User Interface (including administrative and customer facing)
+Design &amp; Specifications</li>
+    <li>System Analysis &amp; Division of Labor</li>
+    <ol>
+      <li>Old Systems to be Replaced</li>
+      <ol>
+        <li>Migrate data to new or existing systems</li>
+        <li>What did the system do, and what will replace it?<br>
+        </li>
+      </ol>
+      <li>Existing System to be Kept</li>
+      <ol>
+        <li>Integrate with new or existing systems</li>
+        <li>What will these systems do and what will new system(s) do?</li>
+        <li>Data Migrated to or from the System<br>
+        </li>
+      </ol>
+      <li>New System(s) to be Added</li>
+      <ol>
+        <li>Data Migrated to the System</li>
+        <li>Integration with Existing Systems</li>
+      </ol>
+      <li>Location and Responsibility for Systems<br>
+      </li>
+      <ol>
+        <li>End-user Internal</li>
+        <ol>
+          <li>May be ERP, fulfillment, CRM, reporting, system
+monitoring and many other types of systems<br>
+          </li>
+        </ol>
+        <li>Hosted on Behalf of End-user</li>
+        <ol>
+          <li>Common for eCommerce, System Monitoring<br>
+          </li>
+          <li>Sometimes used (especially with web based applications)
+for other types, including ERP, CRM, reporting, etc<br>
+          </li>
+        </ol>
+        <li>Third Party Systems</li>
+        <ol>
+          <li>Common for Payment Processing, System Montoring<br>
+          </li>
+          <li>Sometimes used for General Content, Catalog/Product
+Information, Shipping Calculation, reporting, and more<br>
+          </li>
+        </ol>
+      </ol>
+    </ol>
+  </ol>
+  <li>eCommerce and Retail Specific Issues</li>
+  <ol>
+    <li>Product Information</li>
+    <ol>
+      <li>Finding Products</li>
+      <ol>
+        <li>Browsing</li>
+        <li>Searching (keyword, parametric, in categories, sorting, etc)</li>
+      </ol>
+      <li>Describing Products</li>
+    </ol>
+    <li>Customer Information</li>
+    <li>Order Placement (check-out)<br>
+    </li>
+  </ol>
+</ol>
+<br>
+<br>
+</body>
+</html>
