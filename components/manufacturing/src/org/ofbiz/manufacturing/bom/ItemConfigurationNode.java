@@ -372,7 +372,7 @@ public class ItemConfigurationNode {
         }
     }
 
-    public void print(ArrayList arr, double quantity, int depth) {
+    public void print(ArrayList arr, double quantity, int depth, boolean excludePhantoms) {
         // Now we set the depth and quantity of the current node
         // in this breakdown.
         this.depth = depth;
@@ -387,8 +387,12 @@ public class ItemConfigurationNode {
         for (int i = 0; i < children.size(); i++) {
             oneChild = (GenericValue)children.get(i);
             oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
+            // FIXME: phantom flag?
+            if (excludePhantoms && "PHANTOM".equals(oneChildNode.getProduct().getString("productTypeId"))) {
+                continue;
+            }
             if (oneChildNode != null) {
-                oneChildNode.print(arr, this.quantity, depth);
+                oneChildNode.print(arr, this.quantity, depth, excludePhantoms);
             }
         }
     }
@@ -413,48 +417,44 @@ public class ItemConfigurationNode {
         }
     }
 
-    public void createManufacturingOrder(String orderId, String orderItemSeqId, String shipmentId, Date date, boolean useSubstitute, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
+    public void createManufacturingOrder(String workEffortId, String orderId, String orderItemSeqId, String shipmentId, String facilityId, Date date, boolean useSubstitute, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
         if (isManufactured()) {
+            String productionRunId = null;
             Timestamp startDate = UtilDateTime.toTimestamp(UtilDateTime.toDateTimeString(date));
             Map serviceContext = new HashMap();
             if (!useSubstitute) {
                 serviceContext.put("productId", getProduct().getString("productId"));
+                serviceContext.put("facilityId", getProduct().getString("facilityId"));
             } else {
                 serviceContext.put("productId", getSubstitutedNode().getProduct().getString("productId"));
+                serviceContext.put("facilityId", getSubstitutedNode().getProduct().getString("facilityId"));
             }
             serviceContext.put("pRQuantity", new Double(getQuantity()));
             serviceContext.put("startDate", startDate);
             serviceContext.put("userLogin", userLogin);
-            GenericValue routing = null;
-            routing = ProductHelper.getRouting(getProduct(), getQuantity(), startDate);
-            if (routing == null && getSubstitutedNode() != null) {
-                routing = ProductHelper.getRouting(getSubstitutedNode().getProduct(), getQuantity(), startDate);
+            Map resultService = null;
+            try {
+                resultService = dispatcher.runSync("createProductionRun", serviceContext);
+                productionRunId = (String)resultService.get("productionRunId");
+            } catch (GenericServiceException e) {
+                //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
             }
-            if (routing != null) {
-                serviceContext.put("routingId", routing.getString("workEffortId"));
-                Map resultService = null;
-                String productionRunId = null;
-                try {
-                    resultService = dispatcher.runSync("createProductionRun", serviceContext);
-                    productionRunId = (String)resultService.get("productionRunId");
-                } catch (GenericServiceException e) {
-                    //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
+            System.out.println("Production run #" + productionRunId + " created for " + getProduct().getString("productId"));
+            try {
+                if (productionRunId != null && orderId != null && orderItemSeqId != null) {
+                    delegator.create("WorkOrderItemFulfillment", UtilMisc.toMap("workEffortId", productionRunId, "orderId", orderId, "orderItemSeqId", orderItemSeqId));
                 }
-                System.out.println("Production run #" + productionRunId + " created for " + getProduct().getString("productId"));
-                try {
-                    if (productionRunId != null && orderId != null && orderItemSeqId != null) {
-                        delegator.create("WorkOrderItemFulfillment", UtilMisc.toMap("workEffortId", productionRunId, "orderId", orderId, "orderItemSeqId", orderItemSeqId));
-                    }
-                } catch (GenericEntityException e) {
-                    //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
+                if (productionRunId != null && workEffortId != null) {
+                    delegator.create("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", productionRunId, "workEffortIdTo", workEffortId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY"));
                 }
-                    
+            } catch (GenericEntityException e) {
+                //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
             }
             ItemConfigurationNode oneChildNode = null;
             for (int i = 0; i < childrenNodes.size(); i++) {
                 oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
                 if (oneChildNode != null) {
-                    oneChildNode.createManufacturingOrder(orderId, orderItemSeqId, shipmentId, date, false, delegator, dispatcher, userLogin);
+                    oneChildNode.createManufacturingOrder(productionRunId, null, null, shipmentId, facilityId, date, false, delegator, dispatcher, userLogin);
                 }
             }
         }
@@ -463,6 +463,9 @@ public class ItemConfigurationNode {
     public boolean isPurchased() {
         boolean isPurchased = false;
         try {
+            if ("PHANTOM".equals(getProduct().getString("productTypeId"))) {
+                return false;
+            }
             List pfs = getProduct().getRelatedCache("ProductFacility");
             Iterator pfsIt = pfs.iterator();
             GenericValue pf = null;

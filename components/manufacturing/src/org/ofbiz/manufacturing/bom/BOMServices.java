@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.10 2004/07/17 10:37:32 jacopo Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,6 +40,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -55,6 +56,7 @@ import org.ofbiz.service.ServiceUtil;
 public class BOMServices {
 
     public static final String module = BOMServices.class.getName();
+    public static final String resource = "ManufacturingUiLabels";
     
     /** Returns the product's low level code (llc) i.e. the maximum depth
      * in which the productId can be found in any of the
@@ -299,9 +301,12 @@ public class BOMServices {
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+
         String productId = (String) context.get("productId");
         Double quantity = (Double) context.get("quantity");
         String fromDateStr = (String) context.get("fromDate");
+        Boolean excludePhantoms = (Boolean) context.get("excludePhantoms");
         
         if (quantity == null) {
             quantity = new Double(1);
@@ -316,19 +321,45 @@ public class BOMServices {
         if (fromDate == null) {
             fromDate = new Date();
         }
+        if (excludePhantoms == null) {
+            excludePhantoms = new Boolean(true);
+        }
         
+        //
+        // Components
+        //
         ItemConfigurationTree tree = null;
         ArrayList components = new ArrayList();
         try {
             tree = new ItemConfigurationTree(productId, "MANUF_COMPONENT", fromDate, ItemConfigurationTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher);
             tree.setRootQuantity(quantity.doubleValue());
-            tree.print(components);
+            tree.print(components, excludePhantoms.booleanValue());
             if (components.size() > 0) components.remove(0);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
         }
+        //
+        // Product routing
+        //
+        String workEffortId = null;
+        try {
+            List workEffortProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("productId", productId, "statusId", "ROU_PROD_TEMPLATE"));
+            workEffortProducts = EntityUtil.filterByDate(workEffortProducts);
+            if (UtilValidate.isEmpty(workEffortProducts)) {
+                workEffortProducts = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("productId", tree.getRoot().getProduct().getString("productId"), "statusId", "ROU_PROD_TEMPLATE"));
+                workEffortProducts = EntityUtil.filterByDate(workEffortProducts);
+            }
+            GenericValue workEffortProduct = EntityUtil.getFirst(workEffortProducts);
+            if (workEffortProduct != null) {
+                workEffortId = workEffortProduct.getString("workEffortId");
+            }
+        } catch(GenericEntityException gee) {
+            Debug.logWarning(gee.getMessage(), module);
+        }
 
-        result.put("workEffortId", "???");
+        if (workEffortId != null) {
+            result.put("workEffortId", workEffortId);
+        }
         result.put("components", components);
 
         return result;
