@@ -1,197 +1,195 @@
-<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  To refer to this Schema in your XML file, use the following declaration:
+    *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+    *
+    *  Permission is hereby granted, free of charge, to any person obtaining a
+    *  copy of this software and associated documentation files (the "Software"),
+    *  to deal in the Software without restriction, including without limitation
+    *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    *  and/or sell copies of the Software, and to permit persons to whom the
+    *  Software is furnished to do so, subject to the following conditions:
+    *
+    *  The above copyright notice and this permission notice shall be included
+    *  in all copies or substantial portions of the Software.
+    *
+    *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+    *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+    *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    
+    *  Servlet Controller - Controller Request Definition DTD
+    *  $Id: site-conf.dtd 3661 2004-10-13 02:01:25Z jaz $
 -->
-
-<!--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included 
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *  Servlet Controller - Controller Request Definition DTD
- *
- *  $Id: $
--->
-
- <xsd:element name='site-conf'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='description' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='owner' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='errorpage'/>
-    <xsd:element ref='handler' maxOccurs='unbounded'/>
-    <xsd:element ref='firstvisit' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='preprocessor' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='postprocessor' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='request-map' maxOccurs='unbounded'/>
-    <xsd:element ref='view-map' maxOccurs='unbounded'/>
-   </xsd:sequence>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='description'>
-  <xsd:complexType>
-   <xsd:sequence>
-   <xsd:any namespace='http://www.w3.org/namespace/'/>
-   </xsd:sequence>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='owner' type='xsd:string'>
- </xsd:element>
-
- <xsd:element name='errorpage' type='xsd:string'>
- </xsd:element>
-
- <xsd:element name='handler'>
-  <xsd:complexType>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='type' default='request'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='view'/>
-      <xsd:enumeration value='request'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='class' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='firstvisit'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='event' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='preprocessor'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='event' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='postprocessor'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='event' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='request-map'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='description' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='security' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='event' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='response' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='uri' type='xsd:string' use='required'/>
-   <xsd:attribute name='edit' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='security'>
-  <xsd:complexType>
-   <xsd:attribute name='https' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='auth' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='external-view' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='direct-request' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='event'>
-  <xsd:complexType>
-   <xsd:attribute name='type' type='xsd:string' use='required'/>
-   <xsd:attribute name='path' type='xsd:string' use='optional'/>
-   <xsd:attribute name='invoke' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='response'>
-  <xsd:complexType>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='type' use='required'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='none'/>
-      <xsd:enumeration value='view'/>
-      <xsd:enumeration value='request'/>
-      <xsd:enumeration value='request-redirect'/>
-      <xsd:enumeration value='url'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='value' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='view-map'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='description' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='page' type='xsd:string' use='optional'/>
-   <xsd:attribute name='type' type='xsd:string' default='default'/>
-   <xsd:attribute name='info' type='xsd:string' use='optional'/>
-   <xsd:attribute name='content-type' type='xsd:string' use='optional'/>
-   <xsd:attribute name='encoding' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-</xsd:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="site-conf">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
+                <xs:element minOccurs="0" ref="owner"/>
+                <xs:element ref="errorpage"/>
+                <xs:element maxOccurs="unbounded" ref="handler"/>
+                <xs:element minOccurs="0" ref="firstvisit"/>
+                <xs:element minOccurs="0" ref="preprocessor"/>
+                <xs:element minOccurs="0" ref="postprocessor"/>
+                <xs:element maxOccurs="unbounded" ref="request-map"/>
+                <xs:element maxOccurs="unbounded" ref="view-map"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="description" type="any"/>
+    <xs:element name="owner" type="xs:string"/>
+    <xs:element name="errorpage" type="xs:string"/>
+    <xs:element name="handler">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.handler"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.handler">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="type" default="request">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="view"/>
+                    <xs:enumeration value="request"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="class" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="firstvisit">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="preprocessor">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="postprocessor">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="request-map">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
+                <xs:element minOccurs="0" ref="security"/>
+                <xs:element minOccurs="0" ref="event"/>
+                <xs:element maxOccurs="unbounded" ref="response"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.request-map"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.request-map">
+        <xs:attribute name="uri" use="required"/>
+        <xs:attribute name="edit" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="security">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.security"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.security">
+        <xs:attribute name="https" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="auth" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="external-view" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="direct-request" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="event">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.event"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.event">
+        <xs:attribute name="type" use="required"/>
+        <xs:attribute name="path"/>
+        <xs:attribute name="invoke"/>
+    </xs:attributeGroup>
+    <xs:element name="response">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.response"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.response">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="type" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="none"/>
+                    <xs:enumeration value="view"/>
+                    <xs:enumeration value="request"/>
+                    <xs:enumeration value="request-redirect"/>
+                    <xs:enumeration value="url"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="value"/>
+    </xs:attributeGroup>
+    <xs:element name="view-map">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.view-map"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.view-map">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="page"/>
+        <xs:attribute name="type" default="default"/>
+        <xs:attribute name="info"/>
+        <xs:attribute name="content-type"/>
+        <xs:attribute name="encoding"/>
+    </xs:attributeGroup>
+    <xs:complexType name="any" mixed="true">
+        <xs:sequence>
+            <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

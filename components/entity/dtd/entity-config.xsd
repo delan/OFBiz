@@ -1,386 +1,423 @@
-<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  To refer to this Schema in your XML file, use the following declaration:
+    *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+    *
+    *  Permission is hereby granted, free of charge, to any person obtaining a 
+    *  copy of this software and associated documentation files (the "Software"), 
+    *  to deal in the Software without restriction, including without limitation 
+    *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+    *  and/or sell copies of the Software, and to permit persons to whom the 
+    *  Software is furnished to do so, subject to the following conditions:
+    *
+    *  The above copyright notice and this permission notice shall be included 
+    *  in all copies or substantial portions of the Software.
+    *
+    *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+    *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+    *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+    *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+    *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+    *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+    *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    
+    *  This is the DTD for the Open For Business Entity Engine configuration XML file.
+    *  $Id: entity-config.dtd 3868 2004-11-04 22:43:35Z jonesde $
 -->
-
-<!--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included 
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *  This is the DTD for the Open For Business Entity Engine configuration XML file.
- *
- *  $Id: $
--->
-
-<!-- ====================== Root Element ======================= -->
- <xsd:element name='entity-config'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='resource-loader' maxOccurs='unbounded'/>
-    <xsd:element ref='transaction-factory'/>
-    <xsd:element ref='delegator' maxOccurs='unbounded'/>
-    <xsd:element ref='entity-model-reader' maxOccurs='unbounded'/>
-    <xsd:element ref='entity-group-reader' maxOccurs='unbounded'/>
-    <xsd:element ref='entity-eca-reader' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='entity-data-reader' minOccurs='0' maxOccurs='unbounded'/>
-    <xsd:element ref='field-type' maxOccurs='unbounded'/>
-    <xsd:element ref='datasource' maxOccurs='unbounded'/>
-   </xsd:sequence>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='resource-loader'>
-  <xsd:complexType>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='class' type='xsd:string' use='required'/>
-   <xsd:attribute name='prepend-env' type='xsd:string' use='optional'/>
-   <xsd:attribute name='prefix' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='transaction-factory'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='user-transaction-jndi' minOccurs='0' maxOccurs='1'/>
-    <xsd:element ref='transaction-manager-jndi' minOccurs='0' maxOccurs='1'/>
-   </xsd:sequence>
-   <xsd:attribute name='class' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='user-transaction-jndi'>
-  <xsd:complexType>
-   <xsd:attribute name='jndi-server-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='jndi-name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='transaction-manager-jndi'>
-  <xsd:complexType>
-   <xsd:attribute name='jndi-server-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='jndi-name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='delegator'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='group-map' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='entity-model-reader' type='xsd:string' use='required'/>
-   <xsd:attribute name='entity-group-reader' type='xsd:string' use='required'/>
-   <xsd:attribute name='entity-eca-reader' type='xsd:string' use='optional'/>
-   <xsd:attribute name='distributed-cache-clear-enabled' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='distributed-cache-clear-class-name' type='xsd:string' default='org.ofbiz.entityext.cache.EntityCacheServices'/>
-   <xsd:attribute name='distributed-cache-clear-user-login-id' type='xsd:string' default='admin'/>
-   <xsd:attribute name='sequenced-id-prefix' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='group-map'>
-  <xsd:complexType>
-   <xsd:attribute name='group-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='datasource-name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='entity-model-reader'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='resource' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='resource'>
-  <xsd:complexType>
-   <xsd:attribute name='loader' type='xsd:string' use='required'/>
-   <xsd:attribute name='location' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='entity-eca-reader'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='resource' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='entity-group-reader'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='resource' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='loader' type='xsd:string' use='optional'/>
-   <xsd:attribute name='location' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='entity-data-reader'>
-  <xsd:complexType>
-   <xsd:sequence>
-    <xsd:element ref='resource' minOccurs='0' maxOccurs='unbounded'/>
-   </xsd:sequence>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='field-type'>
-  <xsd:complexType>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='loader' type='xsd:string' use='required'/>
-   <xsd:attribute name='location' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <!-- main subelements of datasource are (sql-load-path*, (inline-jdbc | jndi-jdbc | tyrex-dataSource | ANY), but ANY must be used alone for certain XML parsers -->
- <xsd:element name='datasource'>
-  <xsd:complexType>
-   <xsd:sequence>
-   <xsd:any namespace='http://www.w3.org/namespace/'/>
-   </xsd:sequence>
-   <xsd:attribute name='name' type='xsd:string' use='required'/>
-   <xsd:attribute name='helper-class' type='xsd:string' use='required'/>
-   <xsd:attribute name='field-type-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='use-schemas' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='schema-name' type='xsd:string' use='optional'/>
-   <xsd:attribute name='check-on-start' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='add-missing-on-start' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='use-pk-constraint-names' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='constraint-name-clip-length' type='xsd:string' default='30'/>
-   <xsd:attribute name='use-proxy-cursor' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='proxy-cursor-name' type='xsd:string' default='p_cursor'/>
-   <xsd:attribute name='result-fetch-size' type='xsd:string' default='0'/>
-   <xsd:attribute name='use-foreign-keys' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='use-foreign-key-indices' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='check-fks-on-start' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='check-fk-indices-on-start' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='fk-style' default='name_constraint'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='name_constraint'/>
-      <xsd:enumeration value='name_fk'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='use-fk-initially-deferred' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='use-indices' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='check-indices-on-start' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='join-style' default='ansi'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='ansi'/>
-      <xsd:enumeration value='ansi-no-parenthesis'/>
-      <xsd:enumeration value='theta-oracle'/>
-      <xsd:enumeration value='theta-mssql'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='alias-view-columns' default='true'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='always-use-constraint-keyword' default='false'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='true'/>
-      <xsd:enumeration value='false'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='sql-load-path'>
-  <xsd:complexType>
-   <xsd:attribute name='path' type='xsd:string' use='required'/>
-   <xsd:attribute name='prepend-env' type='xsd:string' use='optional'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='read-data'>
-  <xsd:complexType>
-   <xsd:attribute name='reader-name' type='xsd:string' use='required'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='inline-jdbc'>
-  <xsd:complexType>
-   <xsd:attribute name='jdbc-driver' type='xsd:string' use='required'/>
-   <xsd:attribute name='jdbc-uri' type='xsd:string' use='required'/>
-   <xsd:attribute name='jdbc-username' type='xsd:string' use='required'/>
-   <xsd:attribute name='jdbc-password' type='xsd:string' use='required'/>
-   <xsd:attribute name='isolation-level' use='optional'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='None'/>
-      <xsd:enumeration value='ReadCommitted'/>
-      <xsd:enumeration value='ReadUncommitted'/>
-      <xsd:enumeration value='RepeatableRead'/>
-      <xsd:enumeration value='Serializable'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-   <xsd:attribute name='pool-maxsize' type='xsd:string' default='50'/>
-   <xsd:attribute name='pool-minsize' type='xsd:string' default='2'/>
-   <xsd:attribute name='pool-sleeptime' type='xsd:string' default='300000'/>
-   <xsd:attribute name='pool-lifetime' type='xsd:string' default='600000'/>
-   <xsd:attribute name='pool-deadlock-maxwait' type='xsd:string' default='300000'/>
-   <xsd:attribute name='pool-deadlock-retrywait' type='xsd:string' default='10000'/>
-   <xsd:attribute name='pool-jdbc-test-stmt' type='xsd:string' use='optional'/>
-   <xsd:attribute name='pool-xa-wrapper-class' type='xsd:string' default='org.enhydra.jdbc.standard.StandardXADataSource'/>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='jndi-jdbc'>
-  <xsd:complexType>
-   <xsd:attribute name='jndi-server-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='jndi-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='isolation-level' use='optional'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='None'/>
-      <xsd:enumeration value='ReadCommitted'/>
-      <xsd:enumeration value='ReadUncommitted'/>
-      <xsd:enumeration value='RepeatableRead'/>
-      <xsd:enumeration value='Serializable'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-
- <xsd:element name='tyrex-dataSource'>
-  <xsd:complexType>
-   <xsd:attribute name='dataSource-name' type='xsd:string' use='required'/>
-   <xsd:attribute name='isolation-level' use='optional'>
-    <xsd:simpleType>
-     <xsd:restriction base='xsd:string'>
-      <xsd:enumeration value='None'/>
-      <xsd:enumeration value='ReadCommitted'/>
-      <xsd:enumeration value='ReadUncommitted'/>
-      <xsd:enumeration value='RepeatableRead'/>
-      <xsd:enumeration value='Serializable'/>
-     </xsd:restriction>
-    </xsd:simpleType>
-   </xsd:attribute>
-  </xsd:complexType>
- </xsd:element>
-</xsd:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <!-- ====================== Root Element ======================= -->
+    <xs:element name="entity-config">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="resource-loader"/>
+                <xs:element ref="transaction-factory"/>
+                <xs:element maxOccurs="unbounded" ref="delegator"/>
+                <xs:element maxOccurs="unbounded" ref="entity-model-reader"/>
+                <xs:element maxOccurs="unbounded" ref="entity-group-reader"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="entity-eca-reader"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="entity-data-reader"/>
+                <xs:element maxOccurs="unbounded" ref="field-type"/>
+                <xs:element maxOccurs="unbounded" ref="datasource"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="resource-loader">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.resource-loader"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.resource-loader">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="class" use="required"/>
+        <xs:attribute name="prepend-env"/>
+        <xs:attribute name="prefix"/>
+    </xs:attributeGroup>
+    <xs:element name="transaction-factory">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="user-transaction-jndi"/>
+                <xs:element minOccurs="0" ref="transaction-manager-jndi"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.transaction-factory"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.transaction-factory">
+        <xs:attribute name="class" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="user-transaction-jndi">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.user-transaction-jndi"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.user-transaction-jndi">
+        <xs:attribute name="jndi-server-name" use="required"/>
+        <xs:attribute name="jndi-name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="transaction-manager-jndi">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.transaction-manager-jndi"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.transaction-manager-jndi">
+        <xs:attribute name="jndi-server-name" use="required"/>
+        <xs:attribute name="jndi-name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="delegator">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="group-map"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.delegator"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.delegator">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="entity-model-reader" use="required"/>
+        <xs:attribute name="entity-group-reader" use="required"/>
+        <xs:attribute name="entity-eca-reader"/>
+        <xs:attribute name="distributed-cache-clear-enabled" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="distributed-cache-clear-class-name" default="org.ofbiz.entityext.cache.EntityCacheServices"/>
+        <xs:attribute name="distributed-cache-clear-user-login-id" default="admin"/>
+        <xs:attribute name="sequenced-id-prefix"/>
+    </xs:attributeGroup>
+    <xs:element name="group-map">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.group-map"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.group-map">
+        <xs:attribute name="group-name" use="required"/>
+        <xs:attribute name="datasource-name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="entity-model-reader">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="resource"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-model-reader"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-model-reader">
+        <xs:attribute name="name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="resource">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.resource"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.resource">
+        <xs:attribute name="loader" use="required"/>
+        <xs:attribute name="location" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="entity-eca-reader">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="resource"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-eca-reader"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-eca-reader">
+        <xs:attribute name="name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="entity-group-reader">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="resource"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-group-reader"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-group-reader">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="loader"/>
+        <xs:attribute name="location"/>
+    </xs:attributeGroup>
+    <xs:element name="entity-data-reader">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="resource"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.entity-data-reader"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-data-reader">
+        <xs:attribute name="name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="field-type">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.field-type"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.field-type">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="loader" use="required"/>
+        <xs:attribute name="location" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="datasource">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="any">
+                    <xs:attributeGroup ref="attlist.datasource"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <!-- main subelements of datasource are (sql-load-path*, (inline-jdbc | jndi-jdbc | tyrex-dataSource | ANY), but ANY must be used alone for certain XML parsers -->
+    <xs:attributeGroup name="attlist.datasource">
+        <xs:attribute name="name" use="required"/>
+        <xs:attribute name="helper-class" use="required"/>
+        <xs:attribute name="field-type-name" use="required"/>
+        <xs:attribute name="use-schemas" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="schema-name"/>
+        <xs:attribute name="check-on-start" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="add-missing-on-start" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="use-pk-constraint-names" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="constraint-name-clip-length" default="30"/>
+        <xs:attribute name="use-proxy-cursor" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="proxy-cursor-name" default="p_cursor"/>
+        <xs:attribute name="result-fetch-size" default="0"/>
+        <xs:attribute name="use-foreign-keys" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="use-foreign-key-indices" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="check-fks-on-start" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="check-fk-indices-on-start" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="fk-style" default="name_constraint">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="name_constraint"/>
+                    <xs:enumeration value="name_fk"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="use-fk-initially-deferred" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="use-indices" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="check-indices-on-start" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="join-style" default="ansi">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="ansi"/>
+                    <xs:enumeration value="ansi-no-parenthesis"/>
+                    <xs:enumeration value="theta-oracle"/>
+                    <xs:enumeration value="theta-mssql"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="alias-view-columns" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="always-use-constraint-keyword" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="sql-load-path">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.sql-load-path"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.sql-load-path">
+        <xs:attribute name="path" use="required"/>
+        <xs:attribute name="prepend-env"/>
+    </xs:attributeGroup>
+    <xs:element name="read-data">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.read-data"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.read-data">
+        <xs:attribute name="reader-name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="inline-jdbc">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.inline-jdbc"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.inline-jdbc">
+        <xs:attribute name="jdbc-driver" use="required"/>
+        <xs:attribute name="jdbc-uri" use="required"/>
+        <xs:attribute name="jdbc-username" use="required"/>
+        <xs:attribute name="jdbc-password" use="required"/>
+        <xs:attribute name="isolation-level">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="None"/>
+                    <xs:enumeration value="ReadCommitted"/>
+                    <xs:enumeration value="ReadUncommitted"/>
+                    <xs:enumeration value="RepeatableRead"/>
+                    <xs:enumeration value="Serializable"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="pool-maxsize" default="50"/>
+        <xs:attribute name="pool-minsize" default="2"/>
+        <xs:attribute name="pool-sleeptime" default="300000"/>
+        <xs:attribute name="pool-lifetime" default="600000"/>
+        <xs:attribute name="pool-deadlock-maxwait" default="300000"/>
+        <xs:attribute name="pool-deadlock-retrywait" default="10000"/>
+        <xs:attribute name="pool-jdbc-test-stmt"/>
+        <xs:attribute name="pool-xa-wrapper-class" default="org.enhydra.jdbc.standard.StandardXADataSource"/>
+    </xs:attributeGroup>
+    <xs:element name="jndi-jdbc">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.jndi-jdbc"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.jndi-jdbc">
+        <xs:attribute name="jndi-server-name" use="required"/>
+        <xs:attribute name="jndi-name" use="required"/>
+        <xs:attribute name="isolation-level">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="None"/>
+                    <xs:enumeration value="ReadCommitted"/>
+                    <xs:enumeration value="ReadUncommitted"/>
+                    <xs:enumeration value="RepeatableRead"/>
+                    <xs:enumeration value="Serializable"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="tyrex-dataSource">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.tyrex-dataSource"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.tyrex-dataSource">
+        <xs:attribute name="dataSource-name" use="required"/>
+        <xs:attribute name="isolation-level">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="None"/>
+                    <xs:enumeration value="ReadCommitted"/>
+                    <xs:enumeration value="ReadUncommitted"/>
+                    <xs:enumeration value="RepeatableRead"/>
+                    <xs:enumeration value="Serializable"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:complexType name="any" mixed="true">
+        <xs:sequence>
+            <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
