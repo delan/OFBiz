@@ -35,8 +35,16 @@
                 <check-errors/>
             </else>
         </if-has-permission>
-        <check-errors/>
 
+        <make-value value-name="newEntity" entity-name="InventoryItem"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
+        <to-string field-name="inventoryItemId"/>
+        <env-to-field env-name="inventoryItemId" map-name="newEntity"/>
+        <field-to-result field-name="inventoryItemId" result-name="inventoryItemId"/>
+        
+        <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateInventoryItem" short-description="Update an InventoryItem">
         <if-has-permission permission="CATALOG" action="_UPDATE">
@@ -47,8 +55,11 @@
                 <check-errors/>
             </else>
         </if-has-permission>
-        <check-errors/>
 
+        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
+        <set-nonpk-fields map-name="parameters" value-name="inventoryItem"/>
+        <store-value value-name="inventoryItem"/>
     </simple-method>
     <simple-method method-name="deleteInventoryItem" short-description="Delete an InventoryItem">
         <if-has-permission permission="CATALOG" action="_DELETE">
@@ -59,7 +70,9 @@
                 <check-errors/>
             </else>
         </if-has-permission>
-        <check-errors/>
 
+        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
+        <remove-value value-name="inventoryItem"/>
     </simple-method>
 </simple-methods>
