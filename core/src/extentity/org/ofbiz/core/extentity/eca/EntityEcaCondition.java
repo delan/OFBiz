@@ -85,7 +85,7 @@ public class EntityEcaCondition {
             rhsValue = value.get(rhsValueName);
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("Comparing : " + lhsValue + " <> " + rhsValue);
+        if (Debug.verboseOn()) Debug.logVerbose("Comparing : " + lhsValue + " " + operator + " " + rhsValue);
 
         // evaluate the condition & invoke the action(s)
         List messages = new LinkedList();

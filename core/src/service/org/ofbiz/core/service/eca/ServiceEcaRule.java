@@ -95,8 +95,11 @@ public class ServiceEcaRule {
         while (c.hasNext()) {
             ServiceEcaCondition ec = (ServiceEcaCondition) c.next();
             if (!ec.eval(serviceName, dctx, context)) {
+                if (Debug.verboseOn()) Debug.logVerbose("Got false for condition: " + ec);
                 allCondTrue = false;
                 break;
+            } else {
+                if (Debug.verboseOn()) Debug.logVerbose("Got true for condition: " + ec);
             }
         }
 
@@ -107,6 +110,7 @@ public class ServiceEcaRule {
                 // in order to enable OR logic without multiple calls to the given service, 
                 //only execute a given service name once per service call phase 
                 if (!actionsRun.contains(ea.serviceName)) {
+                    if (Debug.infoOn()) Debug.logInfo("Running ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName);
                     ea.runAction(serviceName, dctx, context, result);
                     actionsRun.add(ea.serviceName);
                 }
