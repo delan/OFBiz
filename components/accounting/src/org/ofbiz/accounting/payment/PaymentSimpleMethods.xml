@@ -25,7 +25,7 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
 -->
 
@@ -292,6 +292,7 @@
         
         <set-nonpk-fields map-name="parameters" value-name="payment"/>
         <create-value value-name="payment"/>
+        <field-to-result field-name="paymentId" map-name="payment" result-name="paymentId"/>
     </simple-method>
     
     <simple-method method-name="updatePayment" short-description="Update a Payment">
