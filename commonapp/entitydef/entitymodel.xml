@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Thu Sep 20 12:55:33 PDT 2001
+ *@created    Tue Sep 25 07:36:03 MDT 2001
  *@version    1.0
  */
 -->
@@ -3779,6 +3779,63 @@
     </entity>
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.order.shoppinglist -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="ShoppingList" 
+            package-name="org.ofbiz.commonapp.order.shoppinglist"
+            title="Shopping List Entity">
+      <field name="shoppingListId" type="id-ne"></field>
+      <field name="shoppingListTypeId" type="id"></field>
+      <field name="parentShoppingListId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="name" type="name"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="shoppingListId" />
+      <relation type="one" title="Parent" rel-entity-name="ShoppingList">
+        <key-map field-name="parentShoppingListId" rel-field-name="shoppingListId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ShoppingList">
+        <key-map field-name="shoppingListId" rel-field-name="parentShoppingListId" />
+      </relation>
+      <relation type="many" title="Sibling" rel-entity-name="ShoppingList">
+        <key-map field-name="parentShoppingListId" />
+      </relation>
+      <relation type="many" rel-entity-name="ShoppingListItem">
+        <key-map field-name="shoppingListId" />
+      </relation>
+      <relation type="one" rel-entity-name="ShoppingListType">
+        <key-map field-name="shoppingListTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShoppingListItem" 
+            package-name="org.ofbiz.commonapp.order.shoppinglist"
+            title="Shopping List Item Entity">
+      <field name="shoppingListId" type="id-ne"></field>
+      <field name="shoppingListItemSeqId" type="id"></field>
+      <field name="productId" type="id"></field>
+      <field name="quantity" type="floating-point"></field>	
+      <prim-key field="shoppingListId" />	
+      <prim-key field="shoppingListItemSeqId" />
+      <relation type="one" rel-entity-name="ShoppingList">
+        <key-map field-name="shoppingListId" />
+      </relation>
+      <relation type="one" rel-entity-name="Product">
+        <key-map field-name="productId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShoppingListType" 
+            package-name="org.ofbiz.commonapp.order.shoppinglist"
+            title="Shopping List Type Entity">
+      <field name="shoppingListTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="shoppingListTypeId" />
+      <relation type="many" rel-entity-name="ShoppingList">
+        <key-map field-name="shoppingListTypeId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.party.agreement -->
   <!-- ========================================================= -->
 	
@@ -4644,6 +4701,9 @@
       <relation type="many" title="Carrier" rel-entity-name="OrderShipmentPreference">
         <key-map field-name="partyId" rel-field-name="carrierPartyId" />
       </relation>
+      <relation type="many" rel-entity-name="ShipmentCostEstimate">
+        <key-map field-name="partyId" />
+      </relation>
     </entity>	
     <entity entity-name="PartyAttribute" 
             package-name="org.ofbiz.commonapp.party.party"
@@ -4830,6 +4890,10 @@
         <key-map field-name="partyId" rel-field-name="carrierPartyId" />
         <key-map field-name="roleTypeId" rel-field-name="carrierRoleTypeId" />
       </relation>
+      <relation type="many" rel-entity-name="ShipmentCostEstimate">
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
     </entity>	
     <entity entity-name="PartyType" 
             package-name="org.ofbiz.commonapp.party.party"
@@ -4938,6 +5002,9 @@
         <key-map field-name="roleTypeId" />
       </relation>
       <relation type="many" rel-entity-name="OrderRole">
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentCostEstimate">
         <key-map field-name="roleTypeId" />
       </relation>
     </entity>	
@@ -5791,11 +5858,11 @@
       <field name="weightUomId" type="id"></field>
       <field name="weight" type="floating-point"></field>
       <field name="taxable" type="indicator"></field>
-      <field name="showInSearch" type="indicator"></field>
       <field name="taxCategory" type="id"></field>
       <field name="taxVatCode" type="short-varchar"></field>
       <field name="taxDutyCode" type="short-varchar"></field>
-      <field name="chargeShipping" type="indicator"></field>	
+      <field name="chargeShipping" type="indicator"></field>
+      <field name="autoCreateKeywords" type="indicator"></field>	
       <prim-key field="productId" />
       <relation type="many" rel-entity-name="ProductClass">
         <key-map field-name="productId" />
@@ -5849,6 +5916,9 @@
         <key-map field-name="weightUomId" rel-field-name="uomId" />
       </relation>
       <relation type="many" rel-entity-name="ProductOrderItem">
+        <key-map field-name="productId" />
+      </relation>
+      <relation type="many" rel-entity-name="ShoppingListItem">
         <key-map field-name="productId" />
       </relation>
     </entity>	
@@ -5949,9 +6019,11 @@
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Keyword Entity">
       <field name="productId" type="id-ne"></field>
-      <field name="keyword" type="short-varchar"></field>	
+      <field name="keyword" type="short-varchar"></field>
+      <field name="groupName" type="id-ne"></field>	
       <prim-key field="productId" />	
-      <prim-key field="keyword" />
+      <prim-key field="keyword" />	
+      <prim-key field="groupName" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
@@ -6456,6 +6528,11 @@
         <key-map field-name="partyId" rel-field-name="carrierPartyId" />
         <key-map field-name="roleTypeId" rel-field-name="carrierRoleTypeId" />
       </relation>
+      <relation type="many" rel-entity-name="ShipmentCostEstimate">
+        <key-map field-name="shipmentMethodTypeId" />
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
     </entity>	
     <entity entity-name="PackagingContent" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -6510,6 +6587,46 @@
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
         <key-map field-name="name" />
+      </relation>
+    </entity>	
+    <entity entity-name="ShipmentCostEstimate" 
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Cost Estimate Entity">
+      <field name="shipmentCostEstimateId" type="id-ne"></field>
+      <field name="shipmentMethodTypeId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="weightUomId" type="id"></field>
+      <field name="weightUnitPrice" type="currency-amount"></field>
+      <field name="geoIdTo" type="id"></field>
+      <field name="geoIdFrom" type="id"></field>
+      <field name="orderFlatPrice" type="currency-amount"></field>
+      <field name="orderPricePercent" type="floating-point"></field>
+      <field name="orderItemFlatPrice" type="currency-amount"></field>	
+      <prim-key field="shipmentCostEstimateId" />
+      <relation type="one" rel-entity-name="CarrierShipmentMethod">
+        <key-map field-name="shipmentMethodTypeId" />
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyRole">
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="Uom">
+        <key-map field-name="weightUomId" rel-field-name="uomId" />
+      </relation>
+      <relation type="one" title="To" rel-entity-name="Geo">
+        <key-map field-name="geoIdTo" rel-field-name="geoId" />
+      </relation>
+      <relation type="one" title="From" rel-entity-name="Geo">
+        <key-map field-name="geoIdFrom" rel-field-name="geoId" />
       </relation>
     </entity>	
     <entity entity-name="ShipmentItem" 

@@ -365,6 +365,14 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkRequirementFulfillment" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.order.shoppinglist -->
+  <!-- ========================================================= -->
+	
+    <entity-group group="org.ofbiz.commonapp" entity="ShoppingList" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ShoppingListItem" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ShoppingListType" />	
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.party.agreement -->
   <!-- ========================================================= -->
 	
@@ -587,6 +595,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="PackagingContent" />	
     <entity-group group="org.ofbiz.commonapp" entity="Shipment" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentAttribute" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ShipmentCostEstimate" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentItemBilling" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentItemFeature" />	
