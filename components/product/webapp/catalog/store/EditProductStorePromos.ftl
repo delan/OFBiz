@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -47,11 +47,11 @@
         <tr valign="middle">
             <td><a href="<@ofbizUrl>/EditProductPromo?productPromoId=${(productStorePromoAppl.productPromoId)?if_exists}</@ofbizUrl>" class="buttontext"><#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if> [${(productStorePromoAppl.productPromoId)?if_exists}]</a></td>
             <#assign hasntStarted = false>
-            <#if productStorePromoAppl.getTimestamp("fromDate")?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true> </#if>
+            <#if productStorePromoAppl.getTimestamp("fromDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true> </#if>
             <td><div class="tabletext" <#if hasntStarted> style="color: red;"</#if> >${productStorePromoAppl.getTimestamp("fromDate").toString()}</div></td>
             <td align="center">
                 <#assign hasExpired = false>
-                <#if productStorePromoAppl.getTimestamp("thruDate")?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
+                <#if productStorePromoAppl.getTimestamp("thruDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                 <FORM method=POST action="<@ofbizUrl>/updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
                     <input type=hidden name="productStoreId" value="${(productStorePromoAppl.productStoreId)?if_exists}">
                     <input type=hidden name="productPromoId" value="${(productStorePromoAppl.productPromoId)?if_exists}">
@@ -63,7 +63,7 @@
                 </FORM>
             </td>
             <td align="center">
-            <a href="<@ofbizUrl>/deleteProductStorePromoAppl?productStoreId=${(productStorePromoAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(productStorePromoAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+            <a href="<@ofbizUrl>/deleteProductStorePromoAppl?productStoreId=${(productStorePromoAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
             [Delete]</a>
             </td>
         </tr>

@@ -1,5 +1,5 @@
 /*
- * $Id: OFBizSecurity.java,v 1.2 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: OFBizSecurity.java,v 1.3 2003/08/19 20:54:12 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class OFBizSecurity extends org.ofbiz.security.Security {
@@ -81,7 +81,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }
 
     /**
-     * @see org.ofbiz.core.security.Security#findUserLoginSecurityGroupByUserLoginId(java.lang.String)
+     * @see org.ofbiz.security.Security#findUserLoginSecurityGroupByUserLoginId(java.lang.String)
      */   
     public Iterator findUserLoginSecurityGroupByUserLoginId(String userLoginId) {
         List collection = (List) userLoginSecurityGroupByUserLoginId.get(userLoginId);
@@ -102,7 +102,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }
 
     /**
-     * @see org.ofbiz.core.security.Security#securityGroupPermissionExists(java.lang.String, java.lang.String)
+     * @see org.ofbiz.security.Security#securityGroupPermissionExists(java.lang.String, java.lang.String)
      */   
     public boolean securityGroupPermissionExists(String groupId, String permission) {
         GenericValue securityGroupPermissionValue = delegator.makeValue("SecurityGroupPermission",
@@ -125,7 +125,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }
 
     /**
-     * @see org.ofbiz.core.security.Security#hasPermission(java.lang.String, javax.servlet.http.HttpSession)
+     * @see org.ofbiz.security.Security#hasPermission(java.lang.String, javax.servlet.http.HttpSession)
      */    
     public boolean hasPermission(String permission, HttpSession session) {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -136,7 +136,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }
 
     /**
-     * @see org.ofbiz.core.security.Security#hasPermission(java.lang.String, org.ofbiz.core.entity.GenericValue)
+     * @see org.ofbiz.security.Security#hasPermission(java.lang.String, org.ofbiz.entity.GenericValue)
      */    
     public boolean hasPermission(String permission, GenericValue userLogin) {
         if (userLogin == null) return false;
@@ -153,7 +153,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }
 
     /**
-     * @see org.ofbiz.core.security.Security#hasEntityPermission(java.lang.String, java.lang.String, javax.servlet.http.HttpSession)
+     * @see org.ofbiz.security.Security#hasEntityPermission(java.lang.String, java.lang.String, javax.servlet.http.HttpSession)
      */    
     public boolean hasEntityPermission(String entity, String action, HttpSession session) {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -163,7 +163,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }
 
     /**
-     * @see org.ofbiz.core.security.Security#hasEntityPermission(java.lang.String, java.lang.String, org.ofbiz.core.entity.GenericValue)
+     * @see org.ofbiz.security.Security#hasEntityPermission(java.lang.String, java.lang.String, org.ofbiz.entity.GenericValue)
      */   
     public boolean hasEntityPermission(String entity, String action, GenericValue userLogin) {
         if (userLogin == null) return false;
@@ -188,7 +188,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }
     
     /**
-     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.lang.String, javax.servlet.http.HttpSession)
+     * @see org.ofbiz.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.lang.String, javax.servlet.http.HttpSession)
      */
     public boolean hasRolePermission(String application, String action, String primaryKey, String role, HttpSession session) {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -196,7 +196,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }
     
     /**
-     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.ofbiz.core.entity.GenericValue)
+     * @see org.ofbiz.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.ofbiz.entity.GenericValue)
      */
     public boolean hasRolePermission(String application, String action, String primaryKey, String role, GenericValue userLogin) {
         List roles = null;
@@ -206,7 +206,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }    
                 
     /**
-     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.util.List, javax.servlet.http.HttpSession)
+     * @see org.ofbiz.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.util.List, javax.servlet.http.HttpSession)
      */
     public boolean hasRolePermission(String application, String action, String primaryKey, List roles, HttpSession session) {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -214,7 +214,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
     }    
     
     /**
-     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.util.List, org.ofbiz.core.entity.GenericValue)
+     * @see org.ofbiz.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.util.List, org.ofbiz.entity.GenericValue)
      */
     public boolean hasRolePermission(String application, String action, String primaryKey, List roles, GenericValue userLogin) {
         String entityName = null;

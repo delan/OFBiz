@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -52,14 +52,14 @@
       <td><div class="tabletext">&nbsp;${rule.isSale?if_exists}</div></td>
       <td>
         <#assign hasntStarted = false>
-        <#if rule.fromDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(rule.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
+        <#if rule.fromDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(rule.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
         <div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>
             &nbsp;${rule.fromDate?if_exists}
         </div>
       </td>
       <td>
         <#assign hasExpired = false>
-        <#if rule.thruDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(rule.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
+        <#if rule.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(rule.getTimestamp("thruDate"))><#assign hasExpired = true></#if>
         <div class="tabletext"<#if hasExpired> style="color: red;"</#if>>
             &nbsp;${rule.thruDate?if_exists}
         </div>

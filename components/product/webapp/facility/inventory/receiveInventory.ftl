@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -36,7 +36,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
 
 <script language='JavaScript'>
-    function setNow(field) { eval('document.selectAllForm.' + field + '.value="${Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()}"'); }
+    function setNow(field) { eval('document.selectAllForm.' + field + '.value="${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}"'); }
 </script>
 
 <div>&nbsp;</div>
@@ -160,7 +160,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td width='6%' align='right' nowrap><div class="tabletext">Date Received</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='datetimeReceived_o_0' size='24' value="${Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()}" class="inputBox">
+          <input type='text' name='datetimeReceived_o_0' size='24' value="${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}" class="inputBox">
           <#-- <a href='#' onclick='setNow("datetimeReceived")' class='buttontext'>[Now]</a> -->
         </td>                
       </tr>	
@@ -277,7 +277,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">
     <input type="hidden" name="initialSelected" value="Y">
     <input type="hidden" name="_useRowSubmit" value="Y">
-    <#assign now = Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()>
+    <#assign now = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()>
     <#assign rowCount = 0>     
     <table width="100%" border='0' cellpadding='2' cellspacing='0'>
       <#if !purchaseOrderItems?exists || purchaseOrderItemsSize == 0>

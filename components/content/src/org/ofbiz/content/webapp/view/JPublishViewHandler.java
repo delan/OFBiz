@@ -1,5 +1,5 @@
 /*
- * $Id: JPublishViewHandler.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: JPublishViewHandler.java,v 1.2 2003/08/19 20:54:08 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.GeneralException;
  * Handles JPublish type view rendering
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class JPublishViewHandler implements ViewHandler {
@@ -48,7 +48,7 @@ public class JPublishViewHandler implements ViewHandler {
     protected JPublishWrapper wrapper = null;
 
     /**
-     * @see org.ofbiz.core.view.ViewHandler#init(javax.servlet.ServletContext)
+     * @see org.ofbiz.content.webapp.view.ViewHandler#init(javax.servlet.ServletContext)
      */
     public void init(ServletContext context) throws ViewHandlerException {
         this.servletContext = context;
@@ -58,7 +58,7 @@ public class JPublishViewHandler implements ViewHandler {
     }
 
     /**
-     * @see org.ofbiz.core.view.ViewHandler#render(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * @see org.ofbiz.content.webapp.view.ViewHandler#render(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         try {

@@ -1,5 +1,5 @@
 /*
- * $Id: contentassocprep.bsh,v 1.1 2003/08/18 19:54:17 jonesde Exp $
+ * $Id: contentassocprep.bsh,v 1.2 2003/08/19 20:54:08 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,24 +34,21 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.sql.Timestamp;
 
-import org.ofbiz.core.util.Debug;
-import org.ofbiz.core.util.GeneralException;
-import org.ofbiz.core.util.ObjectType;
-import org.ofbiz.core.widgetimpl.*;
-import org.ofbiz.core.widget.form.*;
+import org.ofbiz.content.widget.html.*;
+import org.ofbiz.content.widget.form.*;
 
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.entity.model.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.security.*;
+import org.ofbiz.service.*;
+import org.ofbiz.entity.model.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
 
  * This is a crude general script to find entity data based on the primary key.
@@ -67,7 +64,7 @@ Timestamp now = UtilDateTime.nowTimestamp();
 	String entityName		= page.getProperty("entityName");
 	String innerFtlName		= page.getProperty("innerFtlName");
 	context.put("innerFtlName", innerFtlName);
-org.ofbiz.core.util.Debug.log("innerFtlName:" + innerFtlName);
+org.ofbiz.base.util.Debug.log("innerFtlName:" + innerFtlName);
 
 	LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
        	GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -79,26 +76,26 @@ if(currentEntityMap == null){
 }
 
 GenericPK currentPK = currentEntityMap.get("Content");
-org.ofbiz.core.util.Debug.log("currentPK:" + currentPK);
+org.ofbiz.base.util.Debug.log("currentPK:" + currentPK);
 contentValue = delegator.findByPrimaryKey(currentPK);
 
-org.ofbiz.core.util.Debug.log("currentContent:" + contentValue);
+org.ofbiz.base.util.Debug.log("currentContent:" + contentValue);
 	context.put("contentValue", contentValue);
 	toList = contentValue.getRelatedCache("ToContentAssoc");
-org.ofbiz.core.util.Debug.log("toList size:" + toList.size());
+org.ofbiz.base.util.Debug.log("toList size:" + toList.size());
 	context.put("toList", toList);
 	fromList = contentValue.getRelatedCache("FromContentAssoc");
 	context.put("fromList", fromList);
-org.ofbiz.core.util.Debug.log("fromList size:" + fromList.size());
+org.ofbiz.base.util.Debug.log("fromList size:" + fromList.size());
 
         contentAssocValue = session.getAttribute("ContentAssoc");
 	context.put("contentAssocValue", contentAssocValue);
-org.ofbiz.core.util.Debug.log("contentAssocValue:" + contentAssocValue);
+org.ofbiz.base.util.Debug.log("contentAssocValue:" + contentAssocValue);
 
 
 	HtmlFormWrapper editWrapper = new HtmlFormWrapper(formDefFile, 
 					"EditContentAssoc", request, response);
-org.ofbiz.core.util.Debug.log("editWrapper:" + editWrapper);
+org.ofbiz.base.util.Debug.log("editWrapper:" + editWrapper);
 	editWrapper.putInContext("contentAssocValue", contentAssocValue);
 	context.put("editWrapper", editWrapper);
 
@@ -111,18 +108,18 @@ org.ofbiz.core.util.Debug.log("editWrapper:" + editWrapper);
 	addWrapper.putInContext("lastModifiedDate", now);
 	addWrapper.putInContext("createdByUserLogin", userLogin.get("userLoginId"));
 	addWrapper.putInContext("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-org.ofbiz.core.util.Debug.log("addWrapper:" + addWrapper);
+org.ofbiz.base.util.Debug.log("addWrapper:" + addWrapper);
 	context.put("addWrapper", addWrapper);
 
 	HtmlFormWrapper listToWrapper = new HtmlFormWrapper(formDefFile, 
 					"ListContentAssocTo", request, response);
-org.ofbiz.core.util.Debug.log("listToWrapper:" + listToWrapper);
+org.ofbiz.base.util.Debug.log("listToWrapper:" + listToWrapper);
 	listToWrapper.putInContext("toList", toList);
 	context.put("listToWrapper", listToWrapper);
 
 	HtmlFormWrapper listFromWrapper = new HtmlFormWrapper(formDefFile, 
 					"ListContentAssocFrom", request, response);
-org.ofbiz.core.util.Debug.log("listFromWrapper:" + listFromWrapper);
+org.ofbiz.base.util.Debug.log("listFromWrapper:" + listFromWrapper);
 	listFromWrapper.putInContext("fromList", fromList);
 	context.put("listFromWrapper", listFromWrapper);
 

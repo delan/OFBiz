@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -71,7 +71,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
     <input type="hidden" name="returnId" value="${requestParameters.returnId?if_exists}">   
     <input type="hidden" name="_useRowSubmit" value="Y">
-    <#assign now = Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()>
+    <#assign now = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()>
     <#assign rowCount = 0>     
     <table width="100%" border='0' cellpadding='2' cellspacing='0'>
       <#if !returnItems?exists || returnItems?size == 0>
@@ -111,7 +111,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                   <#if orderItem.productId?exists>
                     <#assign product = orderItem.getRelatedOne("Product")>
                     <#assign productId = product.productId>
-                    <#assign serializedInv = product.getRelatedByAnd("InventoryItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("inventoryItemTypeId", "SERIALIZED_INV_ITEM"))>
+                    <#assign serializedInv = product.getRelatedByAnd("InventoryItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("inventoryItemTypeId", "SERIALIZED_INV_ITEM"))>
                     <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}">                      
                     <td width="45%">
                       <div class="tabletext">

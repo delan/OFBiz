@@ -253,7 +253,7 @@
             </condition>
             <then>
             	<call-class-method class-name="org.ofbiz.commonapp.product.product.KeywordSearch" method-name="induceKeywords">
-            		<field field-name="productInstance" type="org.ofbiz.core.entity.GenericValue"/>
+            		<field field-name="productInstance" type="org.ofbiz.entity.GenericValue"/>
             	</call-class-method>
             </then>
         </if>

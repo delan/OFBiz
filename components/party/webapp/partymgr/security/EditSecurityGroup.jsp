@@ -25,11 +25,11 @@
 --%>
 <%try {%>
 <%@ page import="java.util.*, java.io.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.entity.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 
 <table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 

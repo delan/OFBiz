@@ -1,11 +1,11 @@
 
 <%@ page import="org.ofbiz.commonapp.product.catalog.*" %>
 <%@ page import="org.ofbiz.commonapp.product.product.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.entity.*" %>
+<%@ page import="org.ofbiz.base.util.*" %>
 <%@ page import="java.util.*" %>
 
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 
 <%
   Iterator prods = UtilMisc.toIterator(delegator.findByAnd("Product", null, null));

@@ -11,7 +11,7 @@
 		<attribute name="login.password" type="String" mode="IN"/>
 		<attribute name="visitId" type="String" mode="IN" optional="true"/>
 		<attribute name="isServiceAuth" type="Boolean" mode="IN" optional="true"/>
-		<attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+		<attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
 		<attribute name="userLoginSession" type="java.util.Map" mode="OUT" optional="true"/>
 	</service>
 	<service name="createUserLogin" engine="java" location="org.ofbiz.securityext.login.LoginServices" invoke="createUserLogin" auth="false">
@@ -25,7 +25,7 @@
 	<service name="updateUserLoginId" engine="java" location="org.ofbiz.securityext.login.LoginServices" invoke="updateUserLoginId" auth="true">
 		<description>Update a UserLoginId by creating a new one and expiring the old one</description>
 		<attribute name="userLoginId" type="String" mode="IN" optional="false"/>
-		<attribute name="newUserLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="false"/>
+		<attribute name="newUserLogin" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="false"/>
 	</service>
 	<service name="updatePassword" engine="java" location="org.ofbiz.securityext.login.LoginServices" invoke="updatePassword" auth="true">
 		<description>Update a UserLogin Password</description>
@@ -34,7 +34,7 @@
 		<attribute name="newPassword" type="String" mode="IN" optional="true"/>
 		<attribute name="newPasswordVerify" type="String" mode="IN" optional="true"/>
 		<attribute name="passwordHint" type="String" mode="IN" optional="true"/>
-		<attribute name="updatedUserLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="false"/>
+		<attribute name="updatedUserLogin" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="false"/>
 	</service>
 	<service name="updateUserLoginSecurity" engine="java" location="org.ofbiz.securityext.login.LoginServices" invoke="updateUserLoginSecurity" auth="true">
 		<description>Update UserLogin Security Settings</description>

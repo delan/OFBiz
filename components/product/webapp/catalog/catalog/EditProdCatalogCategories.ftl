@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -58,13 +58,13 @@
             <div class="buttontext"><#if productCategory?exists>${productCategory.description?if_exists}</#if>&nbsp;[${prodCatalogCategory.productCategoryId}]</div>
             </td>
             <#assign hasntStarted = false>
-            <#if prodCatalogCategory.getTimestamp("fromDate")?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(prodCatalogCategory.getTimestamp("fromDate"))>
+            <#if prodCatalogCategory.getTimestamp("fromDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(prodCatalogCategory.getTimestamp("fromDate"))>
                 <#assign hasntStarted = true>
             </#if>
             <td><div class="tabletext" <#if hasntStarted == true> style="color: red;"</#if>>${prodCatalogCategory.fromDate}</div></td>
             <td align="center">
                 <#assign hasExpired = false>
-                <#if prodCatalogCategory.getTimestamp("thruDate")?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(prodCatalogCategory.getTimestamp("thruDate"))>
+                <#if prodCatalogCategory.getTimestamp("thruDate")?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(prodCatalogCategory.getTimestamp("thruDate"))>
                     <#assign hasExpired = true>
                 </#if>
                 <FORM method=POST action="<@ofbizUrl>/updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm${line}">
