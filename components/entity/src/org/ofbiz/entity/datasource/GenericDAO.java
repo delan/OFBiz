@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.10 2003/12/24 01:57:36 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.11 2004/02/03 08:14:40 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -1167,16 +1167,14 @@ public class GenericDAO {
 
     /* ====================================================================== */
 
-    public void checkDb(Map modelEntities, Collection messages, boolean addMissing) {
+    public void checkDb(Map modelEntities, List messages, boolean addMissing) {
         DatabaseUtil dbUtil = new DatabaseUtil(this.helperName);
-
         dbUtil.checkDb(modelEntities, messages, addMissing);
     }
 
     /** Creates a list of ModelEntity objects based on meta data from the database */
     public List induceModelFromDb(Collection messages) {
         DatabaseUtil dbUtil = new DatabaseUtil(this.helperName);
-
         return dbUtil.induceModelFromDb(messages);
     }
 }

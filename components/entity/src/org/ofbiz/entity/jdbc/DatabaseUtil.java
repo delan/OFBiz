@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.11 2003/12/25 19:03:55 jonesde Exp $
+ * $Id: DatabaseUtil.java,v 1.12 2004/02/03 08:14:41 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -57,12 +57,16 @@ public class DatabaseUtil {
         connection.setAutoCommit(true);
         return connection;
     }
+    
+    public EntityConfigUtil.DatasourceInfo getDatasourceInfo() {
+        return this.datasourceInfo;
+    }
 
     /* ====================================================================== */
 
     /* ====================================================================== */
 
-    public void checkDb(Map modelEntities, Collection messages, boolean addMissing) {
+    public void checkDb(Map modelEntities, List messages, boolean addMissing) {
         UtilTimer timer = new UtilTimer();
         timer.timerString("Start - Before Get Database Meta Data");
 
@@ -301,16 +305,7 @@ public class DatabaseUtil {
             Iterator eaIter = entitiesAdded.iterator();
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
-                String errMsg = this.createForeignKeys(curEntity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred);
-                if (errMsg != null && errMsg.length() > 0) {
-                    String message = "Could not create foreign keys for entity \"" + curEntity.getEntityName() + "\": " + errMsg;
-                    Debug.logError(message, module);
-                    if (messages != null) messages.add(message);
-                } else {
-                    String message = "Created foreign keys for entity \"" + curEntity.getEntityName() + "\"";
-                    Debug.logImportant(message, module);
-                    if (messages != null) messages.add(message);
-                }
+                this.createForeignKeys(curEntity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, messages);
             }
         }
         // for each newly added table, add fk indices
@@ -1242,6 +1237,7 @@ public class DatabaseUtil {
     /* ====================================================================== */
 
     /* ====================================================================== */
+
     public String createTable(ModelEntity entity, Map modelEntities, boolean addFks, boolean usePkConstraintNames, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred) {
         if (entity == null) {
             return "ModelEntity was null and is required to create a table";
@@ -1349,6 +1345,64 @@ public class DatabaseUtil {
         return null;
     }
 
+    public void deleteTable(ModelEntity entity, List messages) {
+        if (entity == null) {
+            String errMsg = "ModelEntity was null and is required to delete a table";
+            Debug.logError(errMsg, module);
+            if (messages != null) messages.add(errMsg);
+            return;
+        }
+        if (entity instanceof ModelViewEntity) {
+            //String errMsg = "ERROR: Cannot delete table for a view entity";
+            //Debug.logError(errMsg, module);
+            //if (messages != null) messages.add(errMsg);
+            return;
+        }
+
+        Connection connection = null;
+        Statement stmt = null;
+        try {
+            connection = getConnection();
+        } catch (SQLException sqle) {
+            String errMsg = "Unable to esablish a connection with the database... Error was: " + sqle.toString();
+            Debug.logError(errMsg, module);
+            if (messages != null) messages.add(errMsg);
+            return;
+        } catch (GenericEntityException e) {
+            String errMsg = "Unable to esablish a connection with the database... Error was: " + e.toString();
+            Debug.logError(errMsg, module);
+            if (messages != null) messages.add(errMsg);
+            return;
+        }
+        
+        String message = "Deleting table for entity \"" + entity.getEntityName() + "\"";
+        Debug.logImportant(message, module);
+        if (messages != null) messages.add(message);
+        
+        StringBuffer sqlBuf = new StringBuffer("DROP TABLE ");
+        sqlBuf.append(entity.getTableName(datasourceInfo));
+        if (Debug.verboseOn()) Debug.logVerbose("[deleteTable] sql=" + sqlBuf.toString(), module);
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate(sqlBuf.toString());
+        } catch (SQLException sqle) {
+            String errMsg = "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + sqle.toString();
+            Debug.logError(errMsg, module);
+            if (messages != null) messages.add(errMsg);
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+            } catch (SQLException sqle) {
+                Debug.logError(sqle, module);
+            }
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException sqle) {
+                Debug.logError(sqle, module);
+            }
+        }
+    }
+    
     public String addColumn(ModelEntity entity, ModelField field) {
         if (entity == null || field == null)
             return "ModelEntity or ModelField where null, cannot add column";
@@ -1436,19 +1490,29 @@ public class DatabaseUtil {
     /* ====================================================================== */
 
     /* ====================================================================== */
-    public String createForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred) {
+    public void createForeignKeys(ModelEntity entity, Map modelEntities, List messages) {
+        this.createForeignKeys(entity, modelEntities, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, messages);
+    }
+    public void createForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred, List messages) {
         if (entity == null) {
-            return "ModelEntity was null and is required to create foreign keys for a table";
+            String errMsg = "ModelEntity was null and is required to create foreign keys for a table";
+            Debug.logError(errMsg, module);
+            if (messages != null) messages.add(errMsg);
+            return;
         }
         if (entity instanceof ModelViewEntity) {
-            return "ERROR: Cannot create foreign keys for a view entity";
+            //String errMsg = "ERROR: Cannot create foreign keys for a view entity";
+            //Debug.logError(errMsg, module);
+            //if (messages != null) messages.add(errMsg);
+            return;
         }
 
-        StringBuffer retMsgsBuffer = new StringBuffer();
-
+        String message = "Creating foreign keys for entity \"" + entity.getEntityName() + "\"";
+        Debug.logImportant(message, module);
+        if (messages != null) messages.add(message);
+        
         // go through the relationships to see if any foreign keys need to be added
         Iterator relationsIter = entity.getRelationsIterator();
-
         while (relationsIter.hasNext()) {
             ModelRelation modelRelation = (ModelRelation) relationsIter.next();
 
@@ -1456,28 +1520,24 @@ public class DatabaseUtil {
                 ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
 
                 if (relModelEntity == null) {
-                    Debug.logError("Error adding foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName(), module);
+                    String errMsg = "Error adding foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName();
+                    Debug.logError(errMsg, module);
+                    if (messages != null) messages.add(errMsg);
                     continue;
                 }
                 if (relModelEntity instanceof ModelViewEntity) {
-                    Debug.logError("Error adding foreign key: related entity is a view entity for related entity name " + modelRelation.getRelEntityName(), module);
+                    String errMsg = "Error adding foreign key: related entity is a view entity for related entity name " + modelRelation.getRelEntityName();
+                    Debug.logError(errMsg, module);
+                    if (messages != null) messages.add(errMsg);
                     continue;
                 }
 
                 String retMsg = createForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle, useFkInitiallyDeferred);
-
                 if (retMsg != null && retMsg.length() > 0) {
-                    if (retMsgsBuffer.length() > 0) {
-                        retMsgsBuffer.append("\n");
-                    }
-                    retMsgsBuffer.append(retMsg);
+                    Debug.logError(retMsg, module);
+                    if (messages != null) messages.add(retMsg);
                 }
             }
-        }
-        if (retMsgsBuffer.length() > 0) {
-            return retMsgsBuffer.toString();
-        } else {
-            return null;
         }
     }
 
@@ -1599,18 +1659,30 @@ public class DatabaseUtil {
         return sqlBuf.toString();
     }
 
-    public String deleteForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength) {
-        if (entity == null) {
-            return "ModelEntity was null and is required to delete foreign keys for a table";
+    public void deleteForeignKeys(ModelEntity entity, Map modelEntities, List messages) {
+        this.deleteForeignKeys(entity, modelEntities, datasourceInfo.constraintNameClipLength, messages);
+    }
+    
+    public void deleteForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength, List messages) {
+            if (entity == null) {
+            String errMsg = "ModelEntity was null and is required to delete foreign keys for a table";
+            if (messages != null) messages.add(errMsg);
+            Debug.logError(errMsg, module);
+            return;
         }
         if (entity instanceof ModelViewEntity) {
-            return "ERROR: Cannot delete foreign keys for a view entity";
+            //String errMsg = "ERROR: Cannot delete foreign keys for a view entity";
+            //if (messages != null) messages.add(errMsg);
+            //Debug.logError(errMsg, module);
+            return;
         }
 
+        String message = "Deleting foreign keys for entity \"" + entity.getEntityName() + "\"";
+        Debug.logImportant(message, module);
+        if (messages != null) messages.add(message);
+        
         // go through the relationships to see if any foreign keys need to be added
         Iterator relationsIter = entity.getRelationsIterator();
-        StringBuffer retMsgsBuffer = new StringBuffer();
-
         while (relationsIter.hasNext()) {
             ModelRelation modelRelation = (ModelRelation) relationsIter.next();
 
@@ -1618,28 +1690,24 @@ public class DatabaseUtil {
                 ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
 
                 if (relModelEntity == null) {
-                    Debug.logError("Error removing foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName(), module);
+                    String errMsg = "Error removing foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName();
+                    if (messages != null) messages.add(errMsg);
+                    Debug.logError(errMsg, module);
                     continue;
                 }
                 if (relModelEntity instanceof ModelViewEntity) {
-                    Debug.logError("Error removing foreign key: related entity is a view entity for related entity name " + modelRelation.getRelEntityName(), module);
+                    String errMsg = "Error removing foreign key: related entity is a view entity for related entity name " + modelRelation.getRelEntityName();
+                    if (messages != null) messages.add(errMsg);
+                    Debug.logError(errMsg, module);
                     continue;
                 }
 
                 String retMsg = deleteForeignKey(entity, modelRelation, relModelEntity, constraintNameClipLength);
-
                 if (retMsg != null && retMsg.length() > 0) {
-                    if (retMsgsBuffer.length() > 0) {
-                        retMsgsBuffer.append("\n");
-                    }
-                    retMsgsBuffer.append(retMsg);
+                    if (messages != null) messages.add(retMsg);
+                    Debug.logError(retMsg, module);
                 }
             }
-        }
-        if (retMsgsBuffer.length() > 0) {
-            return retMsgsBuffer.toString();
-        } else {
-            return null;
         }
     }
 
@@ -1833,7 +1901,7 @@ public class DatabaseUtil {
         indexSqlBuf.append(modelIndex.getName());
 
         String deleteIndexSql = indexSqlBuf.toString();
-        if (Debug.verboseOn()) Debug.logVerbose("[deleteForeignKeyIndex] index sql=" + deleteIndexSql, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[deleteDeclaredIndex] index sql=" + deleteIndexSql, module);
 
         try {
             stmt = connection.createStatement();

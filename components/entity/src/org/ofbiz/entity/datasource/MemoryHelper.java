@@ -1,5 +1,5 @@
 /*
- * $Id: MemoryHelper.java,v 1.3 2003/11/15 19:01:43 jonesde Exp $
+ * $Id: MemoryHelper.java,v 1.4 2004/02/03 08:14:41 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -420,6 +420,7 @@ public class MemoryHelper implements GenericHelper {
         return count;
     }
 
-    public void checkDataSource(Map modelEntities, Collection messages, boolean addMissing) throws GenericEntityException {
+    public void checkDataSource(Map modelEntities, List messages, boolean addMissing) throws GenericEntityException {
+        messages.add("checkDataSource not implemented for MemoryHelper");
     }
 }

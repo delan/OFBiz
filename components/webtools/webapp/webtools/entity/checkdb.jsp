@@ -27,7 +27,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.base.util.*" %>
 <%@ page import="org.ofbiz.entity.*, org.ofbiz.entity.util.*, org.ofbiz.entity.datasource.*" %>
-<%@ page import="org.ofbiz.entity.model.*" %>
+<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.jdbc.*" %>
 
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
@@ -35,46 +35,92 @@
 
 <%
 if(security.hasPermission("ENTITY_MAINT", session)) {
-  boolean addMissing = false;
-  String addMissingStr = request.getParameter("addMissing");
-  if("true".equalsIgnoreCase(addMissingStr)) addMissing = true;
-  
+  boolean addMissing = "true".equals(request.getParameter("addMissing"));
+  String option = request.getParameter("option");
   String groupName = request.getParameter("groupName");
   
   Iterator miter = null;
-
   if(groupName != null && groupName.length() > 0) {
     String helperName = delegator.getGroupHelperName(groupName);
 
-    Collection messages = new LinkedList();
-    GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+    List messages = new LinkedList();
+    //GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+    DatabaseUtil dbUtil = new DatabaseUtil(helperName);
     Map modelEntities = delegator.getModelEntityMapByGroup(groupName);
+    Set modelEntityNames = new TreeSet(modelEntities.keySet());
 
-    helper.checkDataSource(modelEntities, messages, addMissing);
+    if ("checkupdatetables".equals(option)) {
+      dbUtil.checkDb(modelEntities, messages, addMissing);
+    } else if ("removetables".equals(option)) {
+      Iterator modelEntityNameIter = modelEntityNames.iterator();
+      while (modelEntityNameIter.hasNext()) {
+      	String modelEntityName = (String) modelEntityNameIter.next();
+      	ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+        dbUtil.deleteTable(modelEntity, messages);
+      }
+    } else if ("createfks".equals(option)) {
+      Iterator modelEntityNameIter = modelEntityNames.iterator();
+      while (modelEntityNameIter.hasNext()) {
+      	String modelEntityName = (String) modelEntityNameIter.next();
+      	ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+        dbUtil.createForeignKeys(modelEntity, modelEntities, messages);
+      }
+    } else if ("removefks".equals(option)) {
+      Iterator modelEntityNameIter = modelEntityNames.iterator();
+      while (modelEntityNameIter.hasNext()) {
+      	String modelEntityName = (String) modelEntityNameIter.next();
+      	ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+        dbUtil.deleteForeignKeys(modelEntity, modelEntities, messages);
+      }
+    }
     miter = messages.iterator();
   }
 %>
 
 <H3>Check/Update Database</H3>
 
-<form method=post action='<%=response.encodeURL(controlPath + "/view/checkdb")%>'>
-  Group Name: <INPUT type=text class='inputBox' name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz"%>' size='60'>
-  <INPUT type=submit value='Check Only'>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="checkupdatetables"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Check Only"/>
 </form>
-<form method=post action='<%=response.encodeURL(controlPath + "/view/checkdb?addMissing=true")%>'>
-  Group Name: <INPUT type=text class='inputBox' name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz"%>' size='60'>
-  <INPUT type=submit value='Check and Add Missing'>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="checkupdatetables"/>
+  <input type="hidden" name="addMissing" value="true"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Check and Add Missing"/>
+</form>
+
+<p>NOTE: Use the following at your own risk; make sure you know what you are doing before running these...</p>
+
+<H3>Remove All Tables</H3>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="removetables"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Remove"/>
+</form>
+
+<H3>Create/Remove All Foreign Keys</H3>
+<p>NOTE: Foreign keys may also be created in the Check/Update database operation if the check-fks-on-start and other options on the datasource element are setup to do so.</p>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="createfks"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Create"/>
+</form>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="removefks"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Remove"/>
 </form>
 
 <hr>
-<UL>
-<%while(miter != null && miter.hasNext()){%>
-  <%String message = (String)miter.next();%>
-  <LI><%=message%>
+<ul>
+<%while (miter != null && miter.hasNext()) {%>
+  <%String message = (String) miter.next();%>
+  <li><%=message%></li>
 <%}%>
-</UL>
-<%}else{%>
+</ul>
+<%} else {%>
 <H3>Entity Editor</H3>
-
 ERROR: You do not have permission to use this page (ENTITY_MAINT needed)
 <%}%>
