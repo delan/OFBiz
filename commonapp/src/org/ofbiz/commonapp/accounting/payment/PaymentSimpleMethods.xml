@@ -115,18 +115,10 @@
         <if-not-empty field-name="badOrders">
             <string-to-field string="mail.smtp.host" field-name="sendType" map-name="emailParams" />
 
-            <call-bsh><![CDATA[
-            emailParams.put("sendVia", org.ofbiz.core.util.UtilProperties.getPropertyValue("payment.properties", "mailhost"));
-            ]]></call-bsh>
-            <call-bsh><![CDATA[
-            emailParams.put("sendTo", org.ofbiz.core.util.UtilProperties.getPropertyValue("payment.properties", "sendTo"));
-            ]]></call-bsh>  
-            <call-bsh><![CDATA[
-            emailParams.put("sendFrom", org.ofbiz.core.util.UtilProperties.getPropertyValue("payment.properties", "sendFrom"));
-            ]]></call-bsh> 
-            <call-bsh><![CDATA[
-            emailParams.put("subject", org.ofbiz.core.util.UtilProperties.getPropertyValue("payment.properties", "subject"));        
-            ]]></call-bsh>               
+            <property-to-field resource="payment" property="mailhost" field-name="sendVia" map-name="emailParams"/>
+            <property-to-field resource="payment" property="sendTo" field-name="sendTo" map-name="emailParams"/>
+            <property-to-field resource="payment" property="sendFrom" field-name="sendFrom" map-name="emailParams"/>
+            <property-to-field resource="payment" property="subject" field-name="subject" map-name="emailParams"/>
             <call-bsh><![CDATA[
             String body = "Bad orders: " + org.ofbiz.core.Util.StringUtils.join(badOrders, ", ");
             emailParams.put("body", body);
@@ -156,5 +148,4 @@
             </if-compare-field>
         </if-compare>
     </simple-method>
-
 </simple-methods>
