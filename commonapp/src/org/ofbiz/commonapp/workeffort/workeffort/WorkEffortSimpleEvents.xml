@@ -39,8 +39,9 @@
             <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
             <success-prefix><![CDATA[<ul>]]></success-prefix><success-suffix><![CDATA[</ul>]]></success-suffix>
             <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix>
-            <default-message><![CDATA[Work Effort successfully created.]]></default-message></service>
-    </simple-events>
+            <default-message><![CDATA[Work Effort successfully created.]]></default-message>
+            <result-to-request result-name="workEffortId"/></service>
+    </simple-event>
     <simple-event event-name="updateWorkEffort" short-description="Update Work Effort">
         <parameter-map map-name="parameters"/>
         <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcUpdate.xml" in-map-name="parameters" out-map-name="context"/>
@@ -52,7 +53,7 @@
             <success-prefix><![CDATA[<ul>]]></success-prefix><success-suffix><![CDATA[</ul>]]></success-suffix>
             <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix>
             <default-message>Work Effort successfully updated.</default-message></service>
-    </simple-events>
+    </simple-event>
     <simple-event event-name="deleteWorkEffort" short-description="Update Work Effort">
         <parameter-map map-name="parameters"/>
         <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcDelete.xml" in-map-name="parameters" out-map-name="context"/>
@@ -64,5 +65,5 @@
             <success-prefix><![CDATA[<ul>]]></success-prefix><success-suffix><![CDATA[</ul>]]></success-suffix>
             <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix>
             <default-message>Work Effort successfully deleted.</default-message></service>
-    </simple-events>
+    </simple-event>
 </simple-events>

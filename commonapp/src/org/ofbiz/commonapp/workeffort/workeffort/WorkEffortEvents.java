@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2002/01/03 18:16:54  jonesde
+ * Added locale support
+ *
  * Revision 1.14  2002/01/03 07:03:46  jonesde
  * Changed StringProcessor to SimpleMapProcessor
  *
@@ -90,6 +93,43 @@ public class WorkEffortEvents {
      *@return String specifying the exit status of this event
      */
     public static String updateWorkEffort(HttpServletRequest request, HttpServletResponse response) {
+        String updateMode = request.getParameter("UPDATE_MODE");
+        if (updateMode == null || updateMode.length() <= 0) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
+            Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Update Mode was not specified, but is required");
+            return "error";
+        }
+
+        if (updateMode.equals("CREATE")) {
+            try {
+                return SimpleEvent.runSimpleEvent("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml", "createWorkEffort", request);
+            } catch (MiniLangException e) {
+                Debug.logError(e);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not complete event: " + e.getMessage());
+                return "error";
+            }
+        } else if (updateMode.equals("UPDATE")) {
+            try {
+                return SimpleEvent.runSimpleEvent("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml", "updateWorkEffort", request);
+            } catch (MiniLangException e) {
+                Debug.logError(e);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not complete event: " + e.getMessage());
+                return "error";
+            }
+        } else if (updateMode.equals("DELETE")) {
+            try {
+                return SimpleEvent.runSimpleEvent("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml", "deleteWorkEffort", request);
+            } catch (MiniLangException e) {
+                Debug.logError(e);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not complete event: " + e.getMessage());
+                return "error";
+            }
+        } else {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
+            return "error";
+        }
+        
+/*        
         LocalDispatcher dispatcher = (LocalDispatcher) request.getSession().getServletContext().getAttribute("dispatcher");
         Security security = (Security) request.getAttribute("security");
 
@@ -180,6 +220,7 @@ public class WorkEffortEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
         }
+ */
     }
 
     /** Updates WorkEffortPartyAssignment information according to UPDATE_MODE parameter
