@@ -68,7 +68,7 @@
       <field name="productPromoRuleId" type="id"></field>
       <field name="productPromoActionSeqId" type="id"></field>
       <prim-key field="orderAdjustmentId"/>
-      <relation type="one" rel-entity-name="OrderAdjustmentType">
+      <relation type="one" fk-name="ORDER_ADJ_TYPE" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderAdjustmentTypeAttr">
@@ -77,14 +77,14 @@
       <relation type="many" rel-entity-name="OrderAdjustmentAttribute">
         <key-map field-name="orderAdjustmentId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ADJ_OHEAD" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductPromo">
+      <relation type="one" fk-name="ORDER_ADJ_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="ProductPromoRule">
@@ -105,7 +105,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="orderAdjustmentId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="OrderAdjustment">
+      <relation type="one" fk-name="ORDER_ADJ_ATTR" rel-entity-name="OrderAdjustment">
         <key-map field-name="orderAdjustmentId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderAdjustmentTypeAttr">
@@ -120,7 +120,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="orderAdjustmentTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="OrderAdjustmentType">
+      <relation type="one" fk-name="ORDER_ADJ_TYPPAR" title="Parent" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="parentTypeId" rel-field-name="orderAdjustmentTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="OrderAdjustmentType">
@@ -140,7 +140,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="orderAdjustmentTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="OrderAdjustmentType">
+      <relation type="one" fk-name="ORDER_ADJ_TYPATTR" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderAdjustmentAttribute">
@@ -158,7 +158,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="orderId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ATTR_HDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderTypeAttr">
@@ -174,13 +174,13 @@
       <prim-key field="contactMechId"/>
       <prim-key field="contactMechPurposeTypeId"/>
       <prim-key field="orderId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_CMECH_HDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="ORDER_CMECH_CM" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMechPurposeType">
+      <relation type="one" fk-name="ORDER_CMECH_CMPT" rel-entity-name="ContactMechPurposeType">
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
     </entity>
@@ -195,7 +195,7 @@
       <field name="statusId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <prim-key field="orderId"/>
-      <relation type="one" rel-entity-name="OrderType">
+      <relation type="one" fk-name="ORDER_HDR_TYPE" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderTypeAttr">
@@ -249,7 +249,7 @@
       <relation type="many" rel-entity-name="OrderShipmentPreference">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="BillingAccount">
+      <relation type="one" fk-name="ORDER_HDR_BACCT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderPaymentPreference">
@@ -266,10 +266,10 @@
       <field name="noteId" type="id-ne"></field>
       <prim-key field="orderId"/>
       <prim-key field="noteId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_HDRNT_HDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="NoteData">
+      <relation type="one" fk-name="ORDER_HDRNT_NOTE" rel-entity-name="NoteData">
         <key-map field-name="noteId"/>
       </relation>
     </entity>
@@ -317,7 +317,7 @@
       <field name="statusId" type="id"></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
-      <relation type="one" rel-entity-name="OrderItemType">
+      <relation type="one" fk-name="ORDER_ITEM_TYPE" rel-entity-name="OrderItemType">
         <key-map field-name="orderItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderItemTypeAttr">
@@ -331,7 +331,7 @@
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ITEM_HDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="many" title="Sales" rel-entity-name="OrderItemAssociation">
@@ -374,7 +374,7 @@
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="ORDER_ITEM_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderShipmentPreference">
@@ -393,14 +393,14 @@
       <prim-key field="soItemSeqId"/>
       <prim-key field="purchaseOrderId"/>
       <prim-key field="poItemSeqId"/>
-      <relation type="one" title="Sales" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ITASSC_SOHD" title="Sales" rel-entity-name="OrderHeader">
         <key-map field-name="salesOrderId" rel-field-name="orderId"/>
       </relation>
       <relation type="one-nofk" title="Sales" rel-entity-name="OrderItem">
         <key-map field-name="salesOrderId" rel-field-name="orderId"/>
         <key-map field-name="soItemSeqId" rel-field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" title="Purchase" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ITASSC_POHD" title="Purchase" rel-entity-name="OrderHeader">
         <key-map field-name="purchaseOrderId" rel-field-name="orderId"/>
       </relation>
       <relation type="one-nofk" title="Purchase" rel-entity-name="OrderItem">
@@ -418,7 +418,7 @@
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one" fk-name="ORDER_ITEM_ATTR" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
@@ -439,17 +439,17 @@
       <prim-key field="orderItemSeqId"/>
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ITBLNG_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one" fk-name="ORDER_ITBLNG_OITM" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="Invoice">
+      <relation type="one" fk-name="ORDER_ITBLNG_INV" rel-entity-name="Invoice">
         <key-map field-name="invoiceId"/>
       </relation>
-      <relation type="one" rel-entity-name="InvoiceItem">
+      <relation type="one" fk-name="ORDER_ITBLNG_IITM" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
       </relation>
@@ -465,17 +465,17 @@
       <prim-key field="contactMechPurposeTypeId"/>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ITCM_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one" fk-name="ORDER_ITCM_OITM" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="ORDER_ITCM_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="ContactMechPurposeType">
+      <relation type="one" fk-name="ORDER_ITCM_CMPT" rel-entity-name="ContactMechPurposeType">
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
     </entity>
@@ -489,14 +489,14 @@
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <prim-key field="inventoryItemId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ITIR_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one" fk-name="ORDER_ITIR_OITM" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="InventoryItem">
+      <relation type="one" fk-name="ORDER_ITCM_INVITM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
@@ -511,20 +511,20 @@
       <prim-key field="orderItemSeqId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ITRL_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one" fk-name="ORDER_ITRL_OITM" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="ORDER_ITRL_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="ORDER_ITRL_ROLE" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="ORDER_ITRL_PTRLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
@@ -537,7 +537,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="orderItemTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="OrderItemType">
+      <relation type="one" fk-name="ORDER_ITEM_TYPPAR" title="Parent" rel-entity-name="OrderItemType">
         <key-map field-name="parentTypeId" rel-field-name="orderItemTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="OrderItemType">
@@ -557,7 +557,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="orderItemTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="OrderItemType">
+      <relation type="one" fk-name="ORDER_ITEM_TYPATR" rel-entity-name="OrderItemType">
         <key-map field-name="orderItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderItemAttribute">
@@ -579,16 +579,16 @@
       <field name="authMessage" type="long-varchar"></field>
       <field name="statusId" type="id"></field>
       <prim-key field="orderPaymentPreferenceId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_PMPRF_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="PaymentMethodType">
+      <relation type="one" fk-name="ORDER_PMPRF_PMTP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="PaymentMethod">
+      <relation type="one" fk-name="ORDER_PMPRF_PMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="ORDER_PMPRF_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="CreditCard">
@@ -607,17 +607,17 @@
       <prim-key field="orderId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_ROLE_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="Party">
+      <relation type="one" fk-name="ORDER_ROLE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="ORDER_ROLE_PROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="RoleType">
+      <relation type="one" fk-name="ORDER_ROLE_ROLE" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderItem">
@@ -636,14 +636,14 @@
       <prim-key field="orderItemSeqId"/>
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentItemSeqId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_SHPMT_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="Shipment">
+      <relation type="one" fk-name="ORDER_SHPMT_SHPMT" rel-entity-name="Shipment">
         <key-map field-name="shipmentId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="ShipmentItem">
@@ -665,26 +665,26 @@
       <field name="isGift" type="indicator"></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
-      <relation type="one" rel-entity-name="CarrierShipmentMethod">
+      <relation type="one" fk-name="ORDER_SHPREF_CSHM" rel-entity-name="CarrierShipmentMethod">
         <key-map field-name="shipmentMethodTypeId"/>
         <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
         <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_SHPREF_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" title="Carrier" rel-entity-name="Party">
+      <relation type="one" fk-name="ORDER_SHPREF_CPRTY" title="Carrier" rel-entity-name="Party">
         <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" title="Carrier" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="ORDER_SHPREF_CPRLE" title="Carrier" rel-entity-name="PartyRole">
         <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
         <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="ShipmentMethodType">
+      <relation type="one" fk-name="ORDER_SHPREF_SHMTP" rel-entity-name="ShipmentMethodType">
         <key-map field-name="shipmentMethodTypeId"/>
       </relation>
     </entity>
@@ -697,10 +697,10 @@
       <field name="orderItemSeqId" type="id"></field>
       <field name="statusDatetime" type="date-time"></field>
       <prim-key field="orderStatusId"/>
-      <relation type="one" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="ORDER_STTS_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_STTS_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItem">
@@ -717,14 +717,14 @@
       <field name="orderItemSeqId" type="id"></field>
       <field name="termValue" type="numeric"></field>
       <prim-key field="orderTermId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="ORDER_TERM_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="TermType">
+      <relation type="one" fk-name="ORDER_TERM_TTYPE" rel-entity-name="TermType">
         <key-map field-name="termTypeId"/>
       </relation>
     </entity>
@@ -736,7 +736,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="orderTermId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="OrderTerm">
+      <relation type="one" fk-name="ORDER_TATTR_OTRM" rel-entity-name="OrderTerm">
         <key-map field-name="orderTermId"/>
       </relation>
       <relation type="many" rel-entity-name="TermTypeAttr">
@@ -751,7 +751,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="orderTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="OrderType">
+      <relation type="one" fk-name="ORDER_TYPE_PARENT" title="Parent" rel-entity-name="OrderType">
         <key-map field-name="parentTypeId" rel-field-name="orderTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="OrderType">
@@ -771,7 +771,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="orderTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="OrderType">
+      <relation type="one" fk-name="ORDER_TYPE_ATTR" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderAttribute">
@@ -800,10 +800,10 @@
       <field name="quantity" type="floating-point"></field>
       <prim-key field="picklistId"/>
       <prim-key field="inventoryItemId"/>
-      <relation type="one" rel-entity-name="Picklist">
+      <relation type="one" fk-name="PICKLIST_ITEM_PL" rel-entity-name="Picklist">
         <key-map field-name="picklistId"/>
       </relation>
-      <relation type="one" rel-entity-name="InventoryItem">
+      <relation type="one" fk-name="PICKLIST_ITEM_INV" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
@@ -819,20 +819,20 @@
       <prim-key field="orderItemSeqId"/>
       <prim-key field="engagementId"/>
       <prim-key field="engagementItemSeqId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="PROD_OITEM_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one" fk-name="PROD_OITEM_OITEM" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_OITEM_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" title="Engagement" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="PROD_OITEM_ENOHDR" title="Engagement" rel-entity-name="OrderHeader">
         <key-map field-name="engagementId" rel-field-name="orderId"/>
       </relation>
-      <relation type="one" title="Engagement" rel-entity-name="OrderItem">
+      <relation type="one" fk-name="PROD_OITEM_ENOITM" title="Engagement" rel-entity-name="OrderItem">
         <key-map field-name="engagementId" rel-field-name="orderId"/>
         <key-map field-name="engagementItemSeqId" rel-field-name="orderItemSeqId"/>
       </relation>
@@ -845,10 +845,10 @@
       <field name="productCategoryId" type="id"></field>
       <field name="salesTaxPercentage" type="floating-point"></field>
       <prim-key field="salesTaxLookupId"/>
-      <relation type="one" rel-entity-name="Geo">
+      <relation type="one" fk-name="STAX_LKUP_GEO" rel-entity-name="Geo">
         <key-map field-name="geoId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="STAX_LKUP_PCAT" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
@@ -861,14 +861,14 @@
       <prim-key field="workEffortId"/>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
-      <relation type="one" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="WORDER_ITFMT_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one" fk-name="WORDER_ITFMT_OITM" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="WORDER_ITFMT_WEFRT" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
     </entity>
@@ -888,7 +888,7 @@
       <field name="validThruDate" type="date-time"></field>
       <field name="description" type="description"></field>
       <prim-key field="quoteId"/>
-      <relation type="one" rel-entity-name="QuoteType">
+      <relation type="one" fk-name="QUOTE_TYPE" rel-entity-name="QuoteType">
         <key-map field-name="quoteTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="QuoteTypeAttr">
@@ -906,7 +906,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="quoteId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Quote">
+      <relation type="one" fk-name="QUOTE_ATTR" rel-entity-name="Quote">
         <key-map field-name="quoteId"/>
       </relation>
       <relation type="many" rel-entity-name="QuoteTypeAttr">
@@ -961,7 +961,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="quoteTermId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="QuoteTerm">
+      <relation type="one" fk-name="QUOTE_TERM_ATTR" rel-entity-name="QuoteTerm">
         <key-map field-name="quoteTermId"/>
       </relation>
       <relation type="many" rel-entity-name="TermTypeAttr">
@@ -976,7 +976,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="quoteTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="QuoteType">
+      <relation type="one" fk-name="QUOTE_TYPE_PAR" title="Parent" rel-entity-name="QuoteType">
         <key-map field-name="parentTypeId" rel-field-name="quoteTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="QuoteType">
@@ -996,7 +996,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="quoteTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="QuoteType">
+      <relation type="one" fk-name="QUOTE_TYPE_ATTR" rel-entity-name="QuoteType">
         <key-map field-name="quoteTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="QuoteAttribute">
@@ -1020,7 +1020,7 @@
       <field name="responseRequiredDate" type="date-time"></field>
       <field name="description" type="description"></field>
       <prim-key field="custRequestId"/>
-      <relation type="one" rel-entity-name="CustRequestType">
+      <relation type="one" fk-name="CUST_REQ_TYPE" rel-entity-name="CustRequestType">
         <key-map field-name="custRequestTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="CustRequestTypeAttr">
@@ -1038,7 +1038,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="custRequestId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="CustRequest">
+      <relation type="one" fk-name="CUST_REQ_ATTR" rel-entity-name="CustRequest">
         <key-map field-name="custRequestId"/>
       </relation>
       <relation type="many" rel-entity-name="CustRequestTypeAttr">
@@ -1075,7 +1075,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="custRequestTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="CustRequestType">
+      <relation type="one" fk-name="CUST_REQ_TYPE_PAR" title="Parent" rel-entity-name="CustRequestType">
         <key-map field-name="parentTypeId" rel-field-name="custRequestTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="CustRequestType">
@@ -1095,7 +1095,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="custRequestTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="CustRequestType">
+      <relation type="one" fk-name="CUST_REQ_TYPE_ATTR" rel-entity-name="CustRequestType">
         <key-map field-name="custRequestTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="CustRequestAttribute">
@@ -1139,7 +1139,7 @@
       <field name="quantity" type="floating-point"></field>
       <field name="reason" type="long-varchar"></field>
       <prim-key field="requirementId"/>
-      <relation type="one" rel-entity-name="RequirementType">
+      <relation type="one" fk-name="REQ_TYPE" rel-entity-name="RequirementType">
         <key-map field-name="requirementTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="RequirementTypeAttr">
@@ -1157,7 +1157,7 @@
       <field name="attrValue" type="value"></field>
       <prim-key field="requirementId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="Requirement">
+      <relation type="one" fk-name="REQ_ATTR" rel-entity-name="Requirement">
         <key-map field-name="requirementId"/>
       </relation>
       <relation type="many" rel-entity-name="RequirementTypeAttr">
@@ -1215,7 +1215,7 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="requirementTypeId"/>
-      <relation type="one" title="Parent" rel-entity-name="RequirementType">
+      <relation type="one" fk-name="REQ_TYPE_PARENT" title="Parent" rel-entity-name="RequirementType">
         <key-map field-name="parentTypeId" rel-field-name="requirementTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="RequirementType">
@@ -1235,7 +1235,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="requirementTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" rel-entity-name="RequirementType">
+      <relation type="one" fk-name="REQ_TYPE_ATTR" rel-entity-name="RequirementType">
         <key-map field-name="requirementTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="RequirementAttribute">
@@ -1289,7 +1289,7 @@
       <field name="listName" type="name"></field>
       <field name="description" type="description"></field>
       <prim-key field="shoppingListId"/>
-      <relation type="one" title="Parent" rel-entity-name="ShoppingList">
+      <relation type="one" fk-name="SHLIST_PARENT" title="Parent" rel-entity-name="ShoppingList">
         <key-map field-name="parentShoppingListId" rel-field-name="shoppingListId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ShoppingList">
@@ -1301,7 +1301,7 @@
       <relation type="many" rel-entity-name="ShoppingListItem">
         <key-map field-name="shoppingListId"/>
       </relation>
-      <relation type="one" rel-entity-name="ShoppingListType">
+      <relation type="one" fk-name="SHLIST_TYPE" rel-entity-name="ShoppingListType">
         <key-map field-name="shoppingListTypeId"/>
       </relation>
     </entity>
@@ -1314,10 +1314,10 @@
       <field name="quantity" type="floating-point"></field>
       <prim-key field="shoppingListId"/>
       <prim-key field="shoppingListItemSeqId"/>
-      <relation type="one" rel-entity-name="ShoppingList">
+      <relation type="one" fk-name="SHLIST_ITEM_LIST" rel-entity-name="ShoppingList">
         <key-map field-name="shoppingListId"/>
       </relation>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="SHLIST_ITEM_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
     </entity>
