@@ -31,7 +31,7 @@
 	  <attribute name="specialTerms" type="String" mode="IN" optional="true"/>
 	  <attribute name="timeTransparency" type="Long" mode="IN" optional="true"/>
 	  <attribute name="infoUrl" type="String" mode="IN" optional="true"/>
-	  <attribute name="workEffortId" type="String" mode="OUT" optional="false"/>
+	  <attribute name="workEffortId" type="String" mode="OUT" optional="true"/>
   </service>
   <service name="updateWorkEffort" engine="java"
     location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="updateWorkEffort">
