@@ -30,7 +30,6 @@ import org.w3c.dom.Element;
 
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.service.*;
 

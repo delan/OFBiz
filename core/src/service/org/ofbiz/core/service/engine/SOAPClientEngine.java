@@ -28,7 +28,6 @@ import java.net.*;
 import java.util.*;
 
 import org.apache.axis.client.*;
-import org.apache.axis.encoding.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 

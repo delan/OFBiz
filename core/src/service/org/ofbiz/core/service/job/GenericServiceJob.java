@@ -28,7 +28,6 @@ import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
-import org.ofbiz.core.service.engine.*;
 import org.ofbiz.core.util.*;
 
 /**

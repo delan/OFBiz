@@ -27,10 +27,6 @@ package org.ofbiz.core.service.job;
 import java.io.*;
 import java.util.*;
 
-import javax.xml.parsers.*;
-
-import org.xml.sax.*;
-
 import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.serialize.*;

@@ -28,7 +28,6 @@ import org.w3c.dom.*;
 
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.config.*;
 
 /**

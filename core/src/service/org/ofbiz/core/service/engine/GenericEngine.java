@@ -26,7 +26,6 @@ package org.ofbiz.core.service.engine;
 
 import java.util.*;
 
-import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 
 /**

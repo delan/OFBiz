@@ -25,11 +25,8 @@ package org.ofbiz.core.service.jms;
 
 import java.util.*;
 import java.lang.reflect.*;
-import javax.jms.*;
 
-import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.service.*;
 

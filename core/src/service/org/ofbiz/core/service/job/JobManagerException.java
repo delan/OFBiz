@@ -24,8 +24,6 @@
  */
 package org.ofbiz.core.service.job;
 
-import java.io.*;
-
 /**
  * Job Scheduler Exception
  *

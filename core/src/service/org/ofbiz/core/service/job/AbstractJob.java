@@ -24,11 +24,6 @@
  */
 package org.ofbiz.core.service.job;
 
-import java.util.*;
-
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
-
 /**
  * Abstract Service Job - Invokes a service
  *

@@ -23,7 +23,6 @@
  */
 package org.ofbiz.core.service.jms;
 
-import java.util.*;
 import javax.naming.*;
 import javax.jms.*;
 

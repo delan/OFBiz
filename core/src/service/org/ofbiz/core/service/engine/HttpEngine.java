@@ -24,9 +24,7 @@
 package org.ofbiz.core.service.engine;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;

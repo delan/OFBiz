@@ -36,9 +36,6 @@ import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.service.engine.*;
 import org.ofbiz.core.security.*;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 /**
  * Global Service Dispatcher
  *

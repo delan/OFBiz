@@ -24,8 +24,6 @@
  */
 package org.ofbiz.core.service;
 
-import java.util.*;
-
 /**
  * Generic Service Model Parameter
  *

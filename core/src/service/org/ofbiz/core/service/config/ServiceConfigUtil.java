@@ -24,14 +24,10 @@
  */
 package org.ofbiz.core.service.config;
 
-import java.util.*;
-import java.net.*;
-import java.io.*;
 import org.w3c.dom.*;
 
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.service.*;
 
 /**
  * Misc. utility method for dealing with the serviceengine.xml file
