@@ -20,33 +20,28 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign locale = requestAttributes.locale>
 
+<#if hasPermission>
+${pages.get("/routing/RoutingTabBar.ftl")}
 
-  <div class="head1">${uiLabelMap.ManufacturingRunningMrp}</div>
-  <form name="runningMrpform" method="post" action="<@ofbizUrl>/RunningMrpGo</@ofbizUrl>">
+	<div class="head1">${uiLabelMap.ManufacturingEditRoutingProductLink}&nbsp; 
+	</div>
+	${addRoutingProductLinkWrapper.renderFormString()} 
+		<hr class="sepbar">
+	<#if routingProductLink?has_content>
+			${updateRoutingProductLinkWrapper.renderFormString()}
+			<br>
+	</#if>
+	<#if allRoutingProductLinks?has_content>
+		${listRoutingProductLinkWrapper.renderFormString()}
+	</#if>
 
-  <br>
-  <table width="90%" border="0" cellpadding="2" cellspacing="0">
-    <tr>
-      <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.ManufacturingTimePeriod}</div></td>
-      <td width="5">&nbsp;</td>
-      <td width="74%">
-           <select class="selectBox" name="timePeriod">
-           <option value="${uiLabelMap.CommonWeek}" SELECTED>${uiLabelMap.CommonWeek}</option>
-           <option value="${uiLabelMap.CommonDay}">${uiLabelMap.CommonDay}</option>
-           <option value="${uiLabelMap.CommonHour}">${uiLabelMap.CommonHour}</option>
-        </select>
-    </tr>
-    <tr>
-      <td width="26%" align="right" valign="top">
-      <td width="5">&nbsp;</td>
-      <td width="74%"><input type="submit" value="${uiLabelMap.CommonSubmit}" class="smallSubmit"></td>
-    </tr>
-  </table>
-</form>
+<#else>
+ 	<h3>${uiLabelMap.ManufacturingMachinePermissionError}</h3>
+</#if>
+
 	

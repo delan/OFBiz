@@ -1,5 +1,5 @@
 /*
- * $Id: findprep.bsh,v 1.1 2003/11/20 17:05:54 jacopo Exp $
+ * $Id: findprep.bsh,v 1.2 2003/11/27 15:38:03 holivier Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
 
  * Calls performFind service to return an EntityListIterator of the
@@ -80,7 +80,8 @@ listIt = (ListIterator)result.get("listIt");
 request.setAttribute("listIt", listIt);
 
 
-HtmlFormWrapper queryWrapper = new HtmlFormWrapper(formDefFile,
-                        singleFormName, request, response);
+HtmlFormWrapper queryWrapper = new HtmlFormWrapper(formDefFile,singleFormName, request, response);
+queryWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+
 context.put("queryWrapper", queryWrapper);
 

@@ -25,6 +25,7 @@
  */
 
 
+import java.sql.Timestamp;
 import java.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
@@ -40,9 +41,10 @@ String workEffortIdTo = request.getParameter("workEffortIdTo");
 if (workEffortIdFrom == null)  workEffortIdFrom = request.getAttribute("workEffortIdFrom");
 if (workEffortIdFrom != null) {
 	List allRoutingTasks = delegator.findByAnd("WorkEffortAssocView",UtilMisc.toMap("workEffortIdFrom", workEffortIdFrom,"workEffortAssocTypeId", "ROUTING_COMPONENT"),UtilMisc.toList("sequenceNum", "fromDate"));
-	if (sequenceNum == null) sequenceNum = request.getAttribute("sequenceNum");
-	if (sequenceNum != null) {
-		routingTaskAssoc = delegator.findByPrimaryKey("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", workEffortIdFrom,"workEffortIdTo", workEffortIdTo,"workEffortAssocTypeId", "ROUTING_COMPONENT","sequenceNum",sequenceNum));
+//	if (workEffortIdTo == null) workEffortIdTo = request.getAttribute("workEffortIdTo");
+	if (workEffortIdTo != null) {
+		Timestamp fromDate = Timestamp.valueOf(request.getParameter("fromDate"));
+		routingTaskAssoc = delegator.findByPrimaryKey("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", workEffortIdFrom,"workEffortIdTo", workEffortIdTo,"workEffortAssocTypeId", "ROUTING_COMPONENT","fromDate",fromDate));
 		routingTask = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortIdTo));
 		machineGroups = delegator.findByAnd("FixedAsset", UtilMisc.toMap("fixedAssetTypeId", "GROUP_EQUIPMENT"));
 		allTaskPurposeTypes = delegator.findByLike("WorkEffortPurposeType", UtilMisc.toMap("workEffortPurposeTypeId", "ROU%"));

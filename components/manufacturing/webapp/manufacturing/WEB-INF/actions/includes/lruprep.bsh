@@ -1,5 +1,5 @@
 /*
- * $Id: lruprep.bsh,v 1.1 2003/11/20 17:05:54 jacopo Exp $
+ * $Id: lruprep.bsh,v 1.2 2003/11/27 15:38:03 holivier Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  * Builds a list of most recently used EntityValues from a session-kept cache
@@ -92,6 +92,7 @@ String formDefFile		= page.getProperty("formDefFile");
 String lruFormName		= page.getProperty("lruFormName");
 HtmlFormWrapper lruWrapper = new HtmlFormWrapper(formDefFile, lruFormName, request, response);
 lruWrapper.putInContext("lruList", lruList);
+lruWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 context.put("lruWrapper", lruWrapper);
 
