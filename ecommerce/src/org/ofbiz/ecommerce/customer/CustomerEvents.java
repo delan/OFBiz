@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.27  2001/09/26 03:10:50  jonesde
+ * Password checker now displays all errors possible.
+ *
  * Revision 1.26  2001/09/26 02:58:32  jonesde
  * Fix necessary to compile.
  *
@@ -393,7 +396,7 @@ public class CustomerEvents {
         String cmPurposeTypeId;
         try {
           GenericValue party = userLogin.getRelatedOne("Party");
-          if (UtilValidate.isEmpty(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", false))) {
+          if (UtilValidate.isEmpty(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", null, false))) {
             cmPurposeTypeId = "PRIMARY_EMAIL";
           } else {
             cmPurposeTypeId = "OTHER_EMAIL";
@@ -1127,7 +1130,7 @@ public class CustomerEvents {
     catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); party = null; }
     if(party != null) {
       //Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
-      Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", false));
+      Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", null, false));
       while(emailIter != null && emailIter.hasNext()) {
         GenericValue email = (GenericValue) emailIter.next();
         emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
