@@ -44,11 +44,8 @@ public class ProductServices {
      */
     public static Map prodFindAllVariants(DispatchContext dctx, Map context) {
         // * String productId      -- Parent (virtual) product ID
-        GenericDelegator delegator = dctx.getDelegator();
-        Map result = new HashMap();
-        String productId = (String) context.get("productId");
-
-        return result;
+        context.put("type", "PRODUCT_VARIANT");
+        return prodFindAssociatedByType(dctx, context);
     }
 
     /**
