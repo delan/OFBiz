@@ -42,7 +42,7 @@
         <tr>
           <td>
             <DIV class='tabletext'><br/><br/><br/><br/><br/><br/><br/><br/>
-            <center><h1> Catalog Section<br><br>Here you can maintain your categories, products and fixed assets</h1></center></DIV>  
+            <center><h2> Catalog Section</h2><br><br>Here you can maintain your categories, products and fixed assets</center></DIV>  
             <br/><br/><br/><br/><br/><br/><br/><br/>
           </td>
         </tr>
