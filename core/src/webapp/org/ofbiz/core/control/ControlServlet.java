@@ -188,7 +188,7 @@ public class ControlServlet extends HttpServlet {
             session.setAttribute(SiteDefs.CLIENT_USER_AGENT, initialUserAgent);
             session.setAttribute(SiteDefs.CLIENT_REFERER, initialUserAgent);
             
-            VisitHandler.setInitials(session, initialLocale, initialRequest, initialReferrer, initialUserAgent, webappName);
+            VisitHandler.setInitials(request, session, initialLocale, initialRequest, initialReferrer, initialUserAgent, webappName);
         }
 
         //setup chararcter encoding and content type, do before so that view can override

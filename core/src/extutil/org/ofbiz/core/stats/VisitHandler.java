@@ -45,7 +45,7 @@ public class VisitHandler {
     //Debug module name
     public static final String module = VisitHandler.class.getName();
     
-    public static void setInitials(HttpSession session, String initialLocale, String initialRequest, String initialReferrer, String initialUserAgent, String webappName) {
+    public static void setInitials(HttpServletRequest request, HttpSession session, String initialLocale, String initialRequest, String initialReferrer, String initialUserAgent, String webappName) {
         GenericValue visit = getVisit(session);
         if (visit != null) {
             visit.set("initialLocale", initialLocale);
@@ -53,6 +53,10 @@ public class VisitHandler {
             if (initialReferrer != null) visit.set("initialReferrer", initialReferrer.length() > 250 ? initialReferrer.substring(0, 250) : initialReferrer);
             if (initialUserAgent != null) visit.set("initialUserAgent", initialUserAgent.length() > 250 ? initialUserAgent.substring(0, 250) : initialUserAgent);
             visit.set("webappName", webappName);
+            visit.set("clientIpAddress", request.getRemoteAddr());
+            visit.set("clientHostName", request.getRemoteHost());
+            visit.set("clientUser", request.getRemoteUser());
+            
             try {
                 visit.store();
             } catch (GenericEntityException e) {
@@ -61,12 +65,14 @@ public class VisitHandler {
         }
     }
     
-    public static void setUserLogin(HttpSession session, GenericValue userLogin) {
+    public static void setUserLogin(HttpSession session, GenericValue userLogin, boolean userCreated) {
         if (userLogin == null) return;
         GenericValue visit = getVisit(session);
         if (visit != null) {
             visit.set("userLoginId", userLogin.get("userLoginId"));
             visit.set("partyId", userLogin.get("partyId"));
+            visit.set("userCreated", new Boolean(userCreated));
+            
             try {
                 visit.store();
             } catch (GenericEntityException e) {

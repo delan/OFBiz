@@ -171,7 +171,7 @@ public class LoginEvents {
             GenericValue userLogin = (GenericValue) result.get("userLogin");
             if (userLogin != null) {
                 session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
-                VisitHandler.setUserLogin(session, userLogin);
+                VisitHandler.setUserLogin(session, userLogin, false);
             }
         } else {
             String errMsg = (String) result.get(ModelService.ERROR_MESSAGE);

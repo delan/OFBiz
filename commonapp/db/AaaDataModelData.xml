@@ -298,6 +298,7 @@
   <OrderAdjustmentType description="Sales Tax" hasTable="N" orderAdjustmentTypeId="SALES_TAX" parentTypeId=""/>
   <OrderAdjustmentType description="Shipping and Handling" hasTable="N" orderAdjustmentTypeId="SHIPPING_CHARGES" parentTypeId=""/>
   <OrderAdjustmentType description="Surcharge" hasTable="N" orderAdjustmentTypeId="SURCHARGE_ADJUSTMENT" parentTypeId=""/>
+  <OrderAdjustmentType description="Additional Feature" hasTable="N" orderAdjustmentTypeId="ADDITIONAL_FEATURE" parentTypeId=""/>
 
   <OrderItemType description="Purchase" hasTable="N" orderItemTypeId="PURCHASE_ORDER_ITEM" parentTypeId=""/>
   <OrderItemType description="Sales" hasTable="N" orderItemTypeId="SALES_ORDER_ITEM" parentTypeId=""/>

@@ -63,12 +63,15 @@
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
       <field name="comments" type="comment"></field>
+      <field name="description" type="description"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="amountPerQuantity" type="currency-amount"></field>
       <field name="percentage" type="floating-point"></field>
       <field name="productPromoId" type="id"></field>
       <field name="productPromoRuleId" type="id"></field>
       <field name="productPromoActionSeqId" type="id"></field>
+      <field name="productFeatureId" type="id"></field>
+      <field name="sourceReferenceId" type="id"></field>
       <prim-key field="orderAdjustmentId"/>
       <relation type="one" fk-name="ORDER_ADJ_TYPE" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId"/>
