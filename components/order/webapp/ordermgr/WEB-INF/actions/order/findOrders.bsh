@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 */
 
@@ -120,10 +120,19 @@ paramList = "";
 
 orderHeaderList = null;
 if (lookupFlag != null) {
-    paramList = paramList + "&lookupFlag=" + lookupFlag;
+    showAll = request.getParameter("showAll") != null ? request.getParameter("showAll") : "N";
+    paramList = paramList + "&lookupFlag=" + lookupFlag + "&showAll=" + showAll;
+
     lookupErrorMessage = null;
     andExprs = new ArrayList();
     entityName = "OrderHeader";
+
+    // check for a orderId (happens in some browsers)
+    orderId = request.getParameter("order_id");
+    if (orderId != null && orderId.length() > 0) {
+        paramList = paramList + "&order_id=" + orderId;
+        andExprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, orderId));
+    }
 
     // find the orders for party
     partyId = request.getParameter("partyId");
@@ -197,7 +206,7 @@ if (lookupFlag != null) {
             andExprs.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, orderType));
         }
         paramList = paramList + "&orderStatusId=" + orderStatus;
-        if (!"ANY". equals(orderStatus)) {
+        if (!"ANY".equals(orderStatus)) {
             andExprs.add(new EntityExpr("statusId", EntityOperator.EQUALS, orderStatus));
         }
         if (billAcct != null && billAcct.length() > 0) {
@@ -221,7 +230,7 @@ if (lookupFlag != null) {
             andExprs.add(new EntityExpr("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(maxDate, "Timestamp", null, null)));
         }
 
-        if (andExprs.size() > 0) mainCond = new EntityConditionList(andExprs, EntityOperator.AND);
+        if (andExprs.size() > 0 || showAll.equalsIgnoreCase("Y")) mainCond = new EntityConditionList(andExprs, EntityOperator.AND);
 
     }
 
@@ -246,6 +255,11 @@ if (lookupFlag != null) {
 
         // converting to normal list; should replace with and add list iterator code to the view
         orderHeaderList = ohli.getCompleteList();
+
+        // close the list iterator
+        ohli.close();
+    } else {
+        orderHeaderList = new ArrayList();
     }
 
     context.put("orderHeaderList", orderHeaderList);

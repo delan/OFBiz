@@ -405,6 +405,10 @@
 
 
     <!-- Order Return Requests -->
+    <request-map uri="findreturn">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findreturn"/>
+    </request-map>
     <request-map uri="returnlist">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="returnlist"/>
