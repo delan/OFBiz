@@ -45,8 +45,8 @@
         <property name="facility-id" value="MyRetailStore"/>
         <property name="look-and-feel" value="org.gtk.java.swing.plaf.gtk.GtkLookAndFeel"/>
         <property name="devices">
-            <property name="CashDrawer.1" value="[DISABLED]"/>
-            <property name="Receipt" value="[DISABLED]"/>
+            <property name="CashDrawer.1" value="NullCashDrawer"/>
+            <property name="Receipt" value="NullReceipt"/>
             <property name="Keyboard" value="GenericKeyboard"/>
             <property name="Scanner" value="GenericScanner"/>
             <property name="Msr" value="GenericMsr"/>
