@@ -853,7 +853,7 @@ public class CheckOutEvents {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems getting payment preference. Cannot check external gateways!");
                 return "error";
             }
-            if (paymentPrefs != null) {
+            if (paymentPrefs != null && paymentPrefs.size() > 0) {
                 if (paymentPrefs.size() > 1) {
                     Debug.logError("Too many payment preferences, you cannot have more then one when using external gateways", module);
                 }
