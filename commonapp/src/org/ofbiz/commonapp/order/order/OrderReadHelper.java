@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/20 22:47:21  jonesde
+ * Fixed illegal use of getRelatedOne
+ *
  * Revision 1.6  2001/09/19 08:35:19  jonesde
  * Initial checkin of refactored entity engine.
  *
@@ -74,18 +77,10 @@ public class OrderReadHelper {
     return "";
   }
   
-  private static GenericValue getFirst(Collection values) {
-    if ((values != null) && (values.size() > 0)) {
-      return (GenericValue) values.iterator().next();
-    } else {
-      return null;
-    }
-  }
-  
   public GenericValue getShippingAddress() {
     GenericDelegator delegator = orderHeader.getDelegator();
     try {
-      GenericValue orderContactMech = getFirst(delegator.findByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId",
+      GenericValue orderContactMech = EntityUtil.getFirst(delegator.findByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId",
                                                "SHIPPING_LOCATION", "orderId", orderHeader.getString("orderId")), null));
       if (orderContactMech != null) {
         GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
@@ -101,7 +96,7 @@ public class OrderReadHelper {
   public GenericValue getBillingAddress() {
     GenericDelegator delegator = orderHeader.getDelegator();
     try {
-      GenericValue orderContactMech = getFirst(delegator.findByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId",
+      GenericValue orderContactMech = EntityUtil.getFirst(delegator.findByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId",
       "BILLING_LOCATION", "orderId", orderHeader.getString("orderId")), null));
       if (orderContactMech != null) {
         GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
@@ -153,7 +148,7 @@ public class OrderReadHelper {
   public GenericValue getBillToPerson() {
     GenericDelegator delegator = orderHeader.getDelegator();
     try {
-      GenericEntity billToRole = getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap(
+      GenericEntity billToRole = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap(
                                           "orderId", orderHeader.getString("orderId"),
                                           "roleTypeId", "BILL_TO_CUSTOMER"), null));
       if (billToRole != null) {
