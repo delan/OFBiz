@@ -68,7 +68,7 @@ public class GenericHelperDAO implements GenericHelper {
   public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
     if(primaryKey == null) { return null; }
     GenericValue genericValue = new GenericValue(primaryKey);
-    if(!genericDAO.select(genericValue)) return null;
+    genericDAO.select(genericValue);
     return genericValue;
   }
   

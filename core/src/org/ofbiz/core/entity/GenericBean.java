@@ -56,7 +56,10 @@ public class GenericBean extends GenericEntity implements EntityBean
   {
     if(primaryKey == null) { return null; }
     GenericValue genericValue = new GenericValue(primaryKey);
-    if(!genericDAO.select(genericValue)) throw new ObjectNotFoundException("GenericValue not found with primary key: " + primaryKey.toString());
+    try { genericDAO.select(genericValue); }
+    catch(GenericEntityException e) {
+      throw new ObjectNotFoundException("GenericValue not found with primary key: " + primaryKey.toString());
+    }
     return primaryKey;
   }
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
@@ -68,7 +71,10 @@ public class GenericBean extends GenericEntity implements EntityBean
   public Collection ejbFindByAnd(String entityName, Map fields, List orderBy) throws FinderException
   {
     ModelEntity modelEntity = modelReader.getModelEntity(entityName);
-    return entitiesToPKs(genericDAO.selectByAnd(modelEntity, fields, orderBy));
+    try { return entitiesToPKs(genericDAO.selectByAnd(modelEntity, fields, orderBy)); }
+    catch(GenericEntityException e) {
+      throw new FinderException("FindByAnd failed for entity: " + entityName);
+    }
   }
   private Collection entitiesToPKs(Collection col)
   {
@@ -93,7 +99,10 @@ public class GenericBean extends GenericEntity implements EntityBean
     this.modelEntity = modelReader.getModelEntity(entityName);
     this.fields = new HashMap(fields);
     if(genericDAO == null) throw new CreateException("Could not get default JDBC Data Access Object.");
-    if(!genericDAO.insert(this)) throw new CreateException("DAO Insert call failed.");
+    try { genericDAO.insert(this); }
+    catch(GenericEntityException e) {
+      throw new CreateException("DAO Insert call failed.");
+    }
     return this.getPrimaryKey();
   }
 
@@ -106,7 +115,10 @@ public class GenericBean extends GenericEntity implements EntityBean
    */
   public void ejbRemove() throws RemoveException
   {
-    if(!genericDAO.delete(this)) throw new RemoveException("DAO Delete call failed.");
+    try { genericDAO.delete(this); } 
+    catch(GenericEntityException e) {
+      throw new RemoveException("DAO Delete call failed.");
+    }
   }
 
   /** Called when the entity bean is activated. */
@@ -118,15 +130,21 @@ public class GenericBean extends GenericEntity implements EntityBean
   /** Called when the entity bean is loaded. */
   public void ejbLoad() 
   { 
-    if(!genericDAO.select(this)) {}
-    modified = false; 
+    try { 
+      genericDAO.select(this); 
+      modified = false; 
+    }
+    catch(GenericEntityException e) { }
   }
 
   /** Called when the entity bean is stored. */
   public void ejbStore()
   {
-    if(this.isModified()) { if(!genericDAO.update(this)) {} }
-    modified = false; 
+    try { 
+      if(this.isModified()) { genericDAO.update(this); }
+      modified = false; 
+    }
+    catch(GenericEntityException e) { }
   }
 
   /** Sets the EntityContext attribute of the GenericBean object
