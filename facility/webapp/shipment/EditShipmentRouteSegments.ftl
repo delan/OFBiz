@@ -150,7 +150,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         		<#elseif "SHRSCS_ACCEPTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
         			<a href="<@ofbizUrl>/upsTrackShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[Track UPS Shipment]</a>
         			<br/>
-        			<a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[Void UPS Shipment Confirmation]</a>
+        			<a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[Void UPS Shipment]</a>
         		</#if>
                 <br/>
         	</#if>
