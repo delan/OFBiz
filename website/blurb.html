@@ -46,11 +46,13 @@
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
-<p>The Open For Business Project released the newest version (2.0 Alpha 2) of its business automation 
-tools, components, and applications on Monday February 11, 2002. This is an alpha release
-because even though most of the components are stable, many are just being introduced. This
-release features the introduction of the service, workflow and rule engines, a couple of
-mini-languages, and major improvements to various existing applications and tools.
+<p>The Open For Business Project released the newest version (2.0 Beta 1) of its business automation 
+tools, components, and applications on Tuesday March 19, 2002. 
+
+This beta release represents the completion of all of the main components of the
+OFBiz framework. Other framework components will be added as the project progresses,
+but the most important architectural enablers are now in place.
+
 More information can be found on the Open For Business web site at http://www.ofbiz.org or on 
 the Open For Business SourceForge project site at http://sf.net/projects/ofbiz.
 <p>The vision of the Open For Business Project is to embrace and enable
@@ -106,13 +108,13 @@ effectors and integrates seamlessly with the Entity Engine to expand your knowle
 to all of the data in your relational database. The Rule Engine is only partially in place
 and certain features are still in planning.
 <li>-- <b>Mini-Languages</b> -- The OFBiz Mini-Languages are XML files that describe simple
-  processes making common operations fast and easy to write and maintain. At the moment
-  the existing languages make it easy to create events to validate and convert form input
-  and pass it on to a service. Future extensions will allow complete applications to be
-  written using JSP, XML Mini-Languages, and Entity and Service definitions. This will be
-  anywhere from 5-10 times as efficient as coding these common components in Java.
-<li>-- <b>Servlet Controller</b> -- A servlet controller to abstract non-presentation logic, security and
-  web application flow.
+processes making common operations fast and easy to write and maintain. 
+The existing languages make it easy to create events to validate and convert form input
+and pass it on to a service, and to create services the process data and perform entity engine operations. 
+This makes implementation from 5-10 times as efficient as coding these common components in Java.
+<li>-- <b>Webapp Framework</b> -- This components include a servlet controller to abstract non-presentation logic, 
+security and web application flow and includes tools to simplify the use of composite views and mutlitple
+types of views including JSP, Velocity, etc.
 <li>Core utilities to provide services such as input validation, output formatting, property file access and caching, conditional debug logging, and date and time handling
 <li>A cache utility which supports caches of limited or unlimited size, element expiration, least recently used (LRU) element removal, and a web based cache management application
 <li>The Open For Business Project currently has 9 developers involved from 

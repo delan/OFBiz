@@ -10,20 +10,83 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
 <h3>Table of Contents</h3>
 <ul>
-  <li><a href="#Release 2.0 Alpha 2">Release 2.0 Alpha 2 - February 11, 2002</a> 
-  <li><a href="#Release 2.0 Alpha 1">Release 2.0 Alpha 1 - January 16, 2002</a> 
-  <li><a href="#Release 1.0 Beta 1">Release 1.0 Beta 1 - October 29, 2001</a> 
-  <li><a href="#Release 2001.09.29">Release 2001.09.29</a> 
-  <li><a href="#Release 2001.07.20">Release 2001.07.20</a>
-  <li><a href="#Release 2001.06.30">Release 2001.06.30</a>
-  <li><a href="#Release 2001.06.22">Release 2001.06.22</a>
-  <li><a href="#Release 2001.06.01">Release 2001.06.01</a>
-  <li><a href="#Release 2001.05.28">Release 2001.05.28</a>
-  <li><a href="#Release 2001.05.24">Release 2001.05.24</a>
+  <li><a href="#2.0Beta1">Release 2.0 Beta 1 - March 19, 2002</a>
+  <li><a href="#2.0Alpha2">Release 2.0 Alpha 2 - February 11, 2002</a>
+  <li><a href="#2.0Alpha1">Release 2.0 Alpha 1 - January 16, 2002</a>
+  <li><a href="#1.0Beta1">Release 1.0 Beta 1 - October 29, 2001</a>
+  <li><a href="#2001.09.29">Release 2001.09.29</a>
+  <li><a href="#2001.07.20">Release 2001.07.20</a>
+  <li><a href="#2001.06.30">Release 2001.06.30</a>
+  <li><a href="#2001.06.22">Release 2001.06.22</a>
+  <li><a href="#2001.06.01">Release 2001.06.01</a>
+  <li><a href="#2001.05.28">Release 2001.05.28</a>
+  <li><a href="#2001.05.24">Release 2001.05.24</a>
 </ul>
 
 <hr>
-<h3><a name="Release 2.0 Alpha 2">Release 2.0 Alpha 2 - February 11, 2002</a></h3>
+<h3><a name="2.0Beta1">Release 2.0 Beta 1 - March 19, 2002</a></h3>
+<hr>
+<h4>Overview</h4>
+<p>This first beta release of version 2.0 represents the completion of all of the main components of the
+OFBiz framework. Other framework components will be added as the project progresses,
+but the most important architectural enablers are now in place.</p>
+
+<p>A number of people have contributed to this release that are regular users of
+Open For Business, including (in no particular order) Chris Nelson, Chris Worley, 
+Mike Cannon-Brookes, Victor Salaman, Dustin Caldwell, and Ian Pojman. In addition
+to these people we have received recommendations and feedback from dozens of users
+and enthusiasts of OFBiz. Thanks everyone!</p>
+
+<p>This release includes a number of bug fixes and cleanups that have been uncovered
+by use of the software in the project, and now that it is in beta we would like
+even more help making sure things work as expected, and as desired.</p>
+
+<h4>Configuration</h4>
+<p>There are a few changes in the way things work in this release. Both the Entity
+Engine and the Service Engine are now configured through XML files instead of 
+properties files, which makes the configuration easier, and enabled some additional
+options. One of the main additional options for both is the ability to load the
+entity and service definition files through various loaders, including file, URL
+and classpath loaders. This allows applications to be completely contained in
+JARs, WARs, and/or other archives.</p>
+
+<h4>Webapp Framework</h4>
+<p>The Webapp Framework now includes an implementation of the Composite View pattern
+with a Regions package very similar to the one in the book "Advanced Java Server Pages"
+by David M. Geary. Along with the addition of support for Velocity views that makes
+a total of three view types available: JSP, Velocity and Regions.</p>
+
+<p>The set of available events types now includes 4 options: java, soap, service 
+and simple. The simple-method MiniLang can now be used for both events and services.</p>
+
+<h4>MiniLang: simple-method</h4>
+<p>The simple-method MiniLang has been greatly expanded and improved. MiniLangs
+are Ant-like scripting languages used in OFBiz to perform high level tasks and tie
+together and simplify components.</p>
+
+<p>Simple methods can now be called as either Events or Services. Tags for 
+conditional execution, Entity Engine operations, executing BeanShell scripts, 
+executing inlined simple-map-processors (or external ones), performing various
+environment operations, and even calling other simple-methods in the same context
+have been added.</p>
+
+<h4>Workflow and Service Engines</h4>
+<p>A number of improvements have been made to the Workflow and Service Engines. A
+number of fixes and flexibility features have been added to the Workflow Engine. Both
+engines have improved support for scalability and running multiple identically
+configured servers against the same database. This includes support for having all
+servers in a "cluster" sharing the load of asynchronous execution of services and
+workflow processes.</p>
+
+<h4>Rule Engine</h4>
+<p>The Rule Engine is still not mature, but many features are complete and can
+be used for a number of purposes. Numerous examples of using the engine are 
+included and a document is now in place describing the Rule Engine, the concepts
+behind it, it's current state and future plans, and an explanation of how to use
+the API.</p>
+
+<hr>
+<h3><a name="2.0Alpha2">Release 2.0 Alpha 2 - February 11, 2002</a></h3>
 <hr>
 <h4>Overview</h4>
 <p>This release includes many cleanups and adds the capability of running on
@@ -59,7 +122,7 @@ to the many smaller refinements and changes that have been done. These tasks inc
 </ul>
 
 <hr>
-<h3><a name="Release 2.0 Alpha 1">Release 2.0 Alpha 1 - January 16, 2002</a></h3>
+<h3><a name="2.0Alpha1">Release 2.0 Alpha 1 - January 16, 2002</a></h3>
 <hr>
 <h4>Overview</h4>
 <p>The 2.0 Alpha 1 release represents a MAJOR step forward for Open For Business,
@@ -205,7 +268,7 @@ to the many smaller refinements and changes that have been done. These tasks inc
 </ul>
 
 <hr>
-<h3><a name="Release 1.0 Beta 1">Release 1.0 Beta 1 - October 29, 2001</a></h3>
+<h3><a name="1.0Beta1">Release 1.0 Beta 1 - October 29, 2001</a></h3>
 <hr>
 <h4>Major Cleanups and Feature Enhancements</h4>
 <p>This release includes a number of clean ups and refactorings in addition to
@@ -280,7 +343,7 @@ to the many smaller refinements and changes that have been done. These tasks inc
 </ul>
 
 <hr>
-<h3><a name="Release 2001.09.29">Release 2001.09.29</a></h3>
+<h3><a name="2001.09.29">Release 2001.09.29</a></h3>
 <hr>
 <h4>First Major Release</h4>
 <p>This release is the first major release of the Open For Business Project. The
@@ -325,7 +388,7 @@ files. These defined entities can be communicated over any interface and to or
 from any data source the has an implementation of the GenericHelper interface.
 Documentation for the Entity Engine is located in ofbiz/core/docs/entity.html.</p>
 <hr>
-<h3><a name="Release 2001.07.20">Release 2001.07.20</a></h3>
+<h3><a name="2001.07.20">Release 2001.07.20</a></h3>
 <hr>
 <h4>New Controller Servlet Added</h4>
 <p>The architecture used in commonapp for separating presentation logic from 
@@ -382,7 +445,7 @@ tasks. These include making EntityHelper generated classes more thread safe,
 and the use of the core.util.Debug class for logging debug messages.</p>
 
 <hr>
-<h3><a name="Release 2001.06.30">Release 2001.06.30</a></h3>
+<h3><a name="2001.06.30">Release 2001.06.30</a></h3>
 <hr>
 <h4>Added Cache to Speed Up the Entity Code Generator</h4>
 <p>Entitygen now uses a cache for each entity definition it reads from the XML data descriptor file.
@@ -424,7 +487,7 @@ with EntityWebEvent.java) and additions to the templates make deploying the
 generated entities into an application is much more simple.</p>
 
 <hr>
-<h3><a name="Release 2001.06.22">Release 2001.06.22</a></h3>
+<h3><a name="2001.06.22">Release 2001.06.22</a></h3>
 <hr>
 <p>It's been a while since the last release, but I assure you, this one will be
 worth the wait! Actually the biggest reason for the delay was my two week
@@ -482,7 +545,7 @@ EntityHelper and EntityBean files are changes so that they only update a field
 when it is not null. This is an easy way to specify whether or not each field
 should be updated. To set a field to null, simply use the field specific setter.</p>
 <hr>
-<h3><a name="Release 2001.06.01">Release 2001.06.01</a></h3>
+<h3><a name="2001.06.01">Release 2001.06.01</a></h3>
 <hr>
 <h4>New Versions of JBoss and Tomcat</h4>
 <p>This release includes updates for the new versions of JBoss and Tomcat. JBoss
@@ -534,7 +597,7 @@ NOTE: These have NOT been implemented yet. The relation data model is in place
 in the current release of ofbiz, but it is not used in any of the templates.</p>
 
 <hr>
-<h3><a name="Release 2001.05.28">Release 2001.05.28</a></h3>
+<h3><a name="2001.05.28">Release 2001.05.28</a></h3>
 <hr>
 <h4>No Cookie Session Management Support</h4>
 <p>A call to reponse.encodeURL has been added to all <font SIZE="2" COLOR="#0000c0">&lt;a
@@ -582,7 +645,7 @@ SecurityGroupPermission entity exists in the database, or false if it does not.<
 <p>All EntityPK, or primary key, classes now override the toString() method to make display of primary key information more simple and consistent.</p>
 
 <hr>
-<h3><a name="Release 2001.05.24">Release 2001.05.24</a></h3>
+<h3><a name="2001.05.24">Release 2001.05.24</a></h3>
 <hr>
 <h4>Initial Release</h4>
 <p>This initial release includes the first version of the Entity Code Generator (entitygen) module 
