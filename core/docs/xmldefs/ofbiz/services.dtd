@@ -35,7 +35,7 @@
 <!ELEMENT vendor (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT created (#PCDATA)>
-<!ELEMENT service (description?, namespace?, implements*, auto-attributes, attribute*)>
+<!ELEMENT service (description?, namespace?, implements*, auto-attributes*, attribute*, override*)>
 <!ATTLIST service
 	name CDATA #REQUIRED
 	engine CDATA #REQUIRED
@@ -58,26 +58,33 @@
 	type CDATA #REQUIRED
 	mode (IN|OUT|INOUT) #REQUIRED
 	form-label CDATA #IMPLIED
+	entity-name CDATA #IMPLIED
+	field-name CDATA #IMPLIED
 	form-display (true|false) "true"
 	optional (true|false) "false"
->
-<!ELEMENT override EMPTY>
-<!ATTLIST override
-    field-name CDATA #REQUIRED
-    mode (IN|OUT|INOUT) #REQUIRED
-    optional (true|false) "false"
 >
 <!ELEMENT exclude EMPTY>
 <!ATTLIST exclude
     field-name CDATA #REQUIRED
 >
-<!ELEMENT auto-attributes (override*, exclude*)>
+<!ELEMENT auto-attributes (exclude*)>
 <!ATTLIST auto-attributes
     entity-name CDATA #REQUIRED
     include (pk|nonpk|all) "all"
-    default-mode (IN|OUT|INOUT) #REQUIRED
-    default-optional (true|false) "false"
+    mode (IN|OUT|INOUT) #REQUIRED
+    form-display (true|false) "true"
+    optional (true|false) "false"
 >
-
+<!ELEMENT override EMPTY>
+<!ATTLIST override
+    name CDATA #REQUIRED
+    type CDATA #IMPLIED
+    entity-name CDATA #IMPLIED
+    field-name CDATA #IMPLIED
+    mode (IN|OUT|INOUT) #IMPLIED
+    form-label CDATA #IMPLIED
+    form-display (true|false) #IMPLIED
+    optional (true|false) #IMPLIED
+>
 
 
