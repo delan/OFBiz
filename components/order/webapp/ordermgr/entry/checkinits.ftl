@@ -87,12 +87,7 @@ function setOrderType(po) {
             <div class="boxhead">${uiLabelMap.OrderOrderEntry}</div>
           </td>
           <td valign="middle" align="right"> 
-            <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">${uiLabelMap.PartyFindParty}</a>
-            <#if productStores?has_content>
-            <a href="javascript:document.entryform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
-            <#else>
-            <span class="submenutextdisabled">${uiLabelMap.CommonContinue}</span>
-            </#if>
+            <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">${uiLabelMap.PartyFindParty}</a><a href="javascript:document.entryform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
           </td>
         </tr>
       </table>
@@ -123,12 +118,7 @@ function setOrderType(po) {
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
               <select class="selectBox" name="productStoreId"<#if sessionAttributes.orderMode?exists>${uiLabelMap.CommonDisabled}</#if>>
-<#--
-                <#if shoppingCart?exists>
-                    <#assign shoppingCartStore = shoppingCart.getProductStoreId()?default("NA")>
-                </#if>
-                <#assign currentStore = shoppingCartStore?default("NA")>
--->
+                <#assign currentStore = shoppingCart.getProductStoreId()?default("NA")>
                 <#list productStores as productStore>
                   <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> selected</#if>>${productStore.storeName}</option>
                 </#list>
@@ -145,12 +135,7 @@ function setOrderType(po) {
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
               <select class="selectBox" name="salesChannelEnumId">
-<#--
-                <#if shoppingCart?exists>
-                    <#assign shoppingCartChannel = shoppingCart.getChannelType()?default("")>
-                </#if>
-                <#assign currentChannel = shoppingCartChannel?default("")>               
--->
+                <#assign currentChannel = shoppingCart.getChannelType()?default("")>               
                 <option value="">No Channel</option>
                 <#list salesChannels as salesChannel>
                   <option value="${salesChannel.enumId}" <#if (salesChannel.enumId == currentChannel)>selected</#if>>${salesChannel.description}</option>
@@ -175,7 +160,7 @@ function setOrderType(po) {
               <select class="selectBox" name="supplierPartyId"<#if sessionAttributes.orderMode?default("") == "SALES_ORDER">${uiLabelMap.CommonDisabled}</#if>>
                 <option value="">${uiLabelMap.PartyNoSupplier}</option>
                 <#list suppliers as supplier>
-                  <option value="${supplier.partyId}"<#if supplier.partyId == thisPartyId> selected</#if>>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>
+                  <option value="${supplier.partyId}"<#if supplier.partyId == thisPartyId>${uiLabelMap.CommonSelected}</#if>>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>
                 </#list>
               </select>
             </div>
