@@ -107,8 +107,8 @@ public class FreeMarkerWorker {
     public static RenderSubContentAsText  renderSubContentAsText = new RenderSubContentAsText();
     public static RenderContentAsText  renderContentAsText = new RenderContentAsText();
 
-    // use soft references for this so that things from Content records don't kill all of our memory
-    public static UtilCache cachedTemplates = new UtilCache("template.ftl.general", 0, 0, true);
+    // use soft references for this so that things from Content records don't kill all of our memory, or maybe not for performance reasons... hmmm, leave to config file...
+    public static UtilCache cachedTemplates = new UtilCache("template.ftl.general", 0, 0, false);
     // these are mode "code" oriented so don't use soft references
     public static UtilCache cachedLocationTemplates = new UtilCache("template.ftl.location", 0, 0, false);
 
@@ -119,6 +119,9 @@ public class FreeMarkerWorker {
                 template = (Template) cachedTemplates.get(location);
                 if (template == null) {
                     URL locationUrl = FlexibleLocation.resolveLocation(location);
+                    if (locationUrl == null) {
+                        throw new IllegalArgumentException("FreeMarker file not found at location: " + location);
+                    }
                     Reader locationReader = new InputStreamReader(locationUrl.openStream());
                     
                     Configuration config = makeDefaultOfbizConfig();

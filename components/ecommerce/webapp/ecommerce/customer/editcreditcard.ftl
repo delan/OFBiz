@@ -20,11 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if canNotView>
   <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>
 &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
@@ -109,7 +108,7 @@
         <select name="cardType" class='selectBox'>
           <option>${creditCardData.cardType?if_exists}</option>
           <option></option>
-          ${pages.get("/includes/cctypes.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
         </select>
       *</td>
     </tr>
@@ -153,11 +152,11 @@
         </#if>
         <select name="expMonth" class='selectBox'>
           <option><#if tryEntity>${expMonth?if_exists}<#else>${requestParameters.expMonth?if_exists}</#if></option>
-          ${pages.get("/includes/ccmonths.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
         </select>
         <select name="expYear" class='selectBox'>
           <option><#if tryEntity>${expYear?if_exists}<#else>${requestParameters.expYear?if_exists}</#if></option>
-          ${pages.get("/includes/ccyears.ftl")}
+          ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
         </select>
       *</td>
     </tr>

@@ -23,7 +23,6 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if party?exists>
 <#-- Main Heading -->
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
@@ -442,7 +441,7 @@
 
 <br>
 <#-- only 5 messages will show; edit the viewprofile.bsh to change this number -->
-${pages.get("/customer/messagelist.ftl")}
+${screens.render("component://ecommerce/widget/CustomerScreens.xml#messagelist-include")}
 
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>

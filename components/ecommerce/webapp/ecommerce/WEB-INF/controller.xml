@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -1090,10 +1090,6 @@
     <view-map name="login" type="jpublish" page="/login.ftl"/>
     -->
 
-    <view-map name="contactus" type="jpublish" page="/customer/contactus.ftl"/>
-    <view-map name="survey" type="jpublish" page="/customer/survey.ftl"/>
-    <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
-
     <view-map name="editShoppingList" type="jpublish" page="/shoppinglist/editShoppingList.ftl"/>
     <view-map name="showcart" type="jpublish" page="/cart/showcart.ftl"/>
     <view-map name="showAllPromotions" type="jpublish" page="/cart/showAllPromotions.ftl"/>
@@ -1110,11 +1106,11 @@
     <view-map name="advancedsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#advancedsearch"/>
     <view-map name="tellafriend" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#tellafriend"/>
 
-    <view-map name="custsetting" type="jpublish" page="/order/custsettings.ftl"/>
-    <view-map name="shipsetting" type="jpublish" page="/order/shipsettings.ftl"/>
-    <view-map name="billsetting" type="jpublish" page="/order/billsettings.ftl"/>
-    <view-map name="optionsetting" type="jpublish" page="/order/optionsettings.ftl"/>
-    <view-map name="confirm" type="jpublish" page="/order/confirmorder.ftl"/>
+    <view-map name="custsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#custsettings"/>
+    <view-map name="shipsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#shipsettings"/>
+    <view-map name="billsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#billsettings"/>
+    <view-map name="optionsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#optionsettings"/>
+    <view-map name="confirm" type="screen" page="component://ecommerce/widget/OrderScreens.xml#confirmorder"/>
 
     <view-map name="quickcheckout" type="jpublish" page="/order/checkoutoptions.ftl"/>
     <view-map name="checkoutoptions" type="jpublish" page="/order/checkoutshippingaddress.ftl"/>
@@ -1125,26 +1121,31 @@
 
     <view-map name="checkout" type="jpublish" page="/order/checkoutreview.ftl"/>
     <view-map name="ordercomplete" type="jpublish" page="/order/ordercomplete.ftl"/>
-    <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
+    <view-map name="confirmorder" type="screen" page="component://ecommerce/widget/OrderScreens.xml#confirmorder"/> <!-- DEJ20050112 is this used? -->
     <view-map name="orderhistory" type="jpublish" page="/order/orderhistory.ftl"/>
     <view-map name="orderstatus" type="jpublish" page="/order/orderstatus.ftl"/>
     <view-map name="requestreturn" type="jpublish" page="/order/requestreturn.ftl"/>
 
-    <view-map name="viewprofile" type="jpublish" page="/customer/viewprofile.ftl"/>
-    <view-map name="newcustomer" type="jpublish" page="/customer/newcustomer.ftl"/>
-    <view-map name="editcontactmech" type="jpublish" page="/customer/editcontactmech.ftl"/>
-    <view-map name="editcreditcard" type="jpublish" page="/customer/editcreditcard.ftl"/>
-    <view-map name="editeftaccount" type="jpublish" page="/customer/editeftaccount.ftl"/>
-    <view-map name="editgiftcard" type="jpublish" page="/customer/editgiftcard.ftl"/>
-    <view-map name="changepassword" type="jpublish" page="/customer/changepassword.ftl"/>
-    <view-map name="editperson" type="jpublish" page="/customer/editperson.ftl"/>
-    <view-map name="giftcardbalance" type="jpublish" page="/customer/giftcardbalance.ftl"/>
-    <view-map name="giftcardlink" type="jpublish" page="/customer/giftcardlink.ftl"/>
-    <view-map name="profilesurvey" type="jpublish" page="/customer/customersurvey.ftl"/>
-    <view-map name="messagelist" type="jpublish" page="/customer/messagelist.ftl"/>
-    <view-map name="sentmessages" type="jpublish" page="/customer/sentmessages.ftl"/>    
-    <view-map name="messagedetail" type="jpublish" page="/customer/messagedetail.ftl"/>
-    <view-map name="messagecreate" type="jpublish" page="/customer/messagecreate.ftl"/>
+    <view-map name="survey" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#survey"/>
+    <view-map name="newcustomer" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#newcustomer"/>
+    <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
+
+    <view-map name="viewprofile" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#viewprofile"/>
+    <view-map name="editcontactmech" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcontactmech"/>
+    <view-map name="editcreditcard" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcreditcard"/>
+    <view-map name="editeftaccount" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editeftaccount"/>
+    <view-map name="editgiftcard" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editgiftcard"/>
+    <view-map name="changepassword" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#changepassword"/>
+    <view-map name="editperson" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editperson"/>
+    <view-map name="giftcardbalance" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#giftcardbalance"/>
+    <view-map name="giftcardlink" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#giftcardlink"/>
+    <view-map name="profilesurvey" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#customersurvey"/>
+
+    <view-map name="contactus" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#contactus"/>
+    <view-map name="messagelist" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagelist"/>
+    <view-map name="sentmessages" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#sentmessages"/>
+    <view-map name="messagedetail" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagedetail"/>
+    <view-map name="messagecreate" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagecreate"/>
 
     <view-map name="defaultcontent" type="jpublish" page="/content/defaultcontent.ftl"/>
 

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,10 +20,8 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
-
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if shipAddr?exists><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">${uiLabelMap.OrderChangeShippingAddress}</a><#if shipOptions?exists><a href="<@ofbizUrl>/setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">Change Shipping Options</a><#if billing?exists><a href="<@ofbizUrl>/setBilling?resetType=Y</@ofbizUrl>" class="${trailClass.paymentType}">${uiLabelMap.OrderChangePaymentInfo}</a></#if></#if></#if>

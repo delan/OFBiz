@@ -20,11 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#-- generic address information -->
 <#assign toName = (postalFields.toName)?if_exists>
 <#if !toName?has_content && person?exists && person?has_content>
@@ -82,7 +81,7 @@
       <#else>
         <option value="">${uiLabelMap.PartyNoState}</option>
       </#if>
-      ${pages.get("/includes/states.ftl")}
+      ${screens.render("component://common/widget/CommonScreens.xml#states")}
     </select>
   </td>
 </tr>
@@ -102,7 +101,7 @@
         <option>${postalFields.countryGeoId}</option>
         <option value="${postalFields.countryGeoId}">---</option>
       </#if>
-      ${pages.get("/includes/countries.ftl")}
+      ${screens.render("component://common/widget/CommonScreens.xml#countries")}
     </select>
   *</td>
 </tr>

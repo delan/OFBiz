@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,12 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
@@ -35,7 +34,7 @@
           </td>
           <td nowrap align="right">
             <div class="tabletext">
-              ${pages.get("/order/anonymoustrail.ftl")}
+              ${screens.render("component://ecommerce/widget/OrderScreens.xml#anonymoustrail")}
             </div>
           </td>
         </tr>
@@ -64,7 +63,7 @@
                 <td width="5">&nbsp;</td>
                 <td width="74%">&nbsp;</td>
               </tr>
-              ${pages.get("/order/genericaddress.ftl")}
+              ${screens.render("component://ecommerce/widget/OrderScreens.xml#genericaddress")}
               <tr>
                 <td colspan="3" align="center"><input type="submit" class="smallsubmit" value="${uiLabelMap.CommonContinue}"></td>
               </tr>
