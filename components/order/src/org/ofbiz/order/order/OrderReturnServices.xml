@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
 -->
 
@@ -41,16 +41,16 @@
     	  </then>
     	</if>
         <check-errors/>
-        
+
         <make-value value-name="newEntity" entity-name="ReturnHeader"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        
+
         <sequenced-id-to-env sequence-name="ReturnHeader" env-name="returnId"/>
         <to-string field-name="returnId"/>
         <env-to-field env-name="returnId" map-name="newEntity"/>
         <field-to-result field-name="returnId" result-name="returnId"/>
-        
+
         <if>
           <condition>
           	<not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
@@ -59,16 +59,16 @@
           	<string-to-field field-name="statusId" map-name="newEntity" string="RETURN_REQUESTED"/>
           	<env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
           </then>
-        </if>        
-        
-        <if-empty field-name="entryDate" map-name="newEntity">            
+        </if>
+
+        <if-empty field-name="entryDate" map-name="newEntity">
             <env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
-        </if-empty>        
-        
+        </if-empty>
+
         <if-empty field-name="statusId" map-name="newEntity">
             <string-to-field string="RETURN_REQUESTED" field-name="statusId" map-name="newEntity"/>
-        </if-empty>  
-        
+        </if-empty>
+
         <create-value value-name="newEntity"/>
         <string-to-field field-name="responseMessage" string="Return Request #${returnId} was created successfully."/>
         <field-to-result field-name="responseMessage" result-name="successMessage"/>
@@ -76,18 +76,18 @@
     <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
         <check-errors/>
-        
-        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>      
+
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
-        
+
         <set-nonpk-fields map-name="parameters" value-name="returnHeader"/>
-        <store-value value-name="returnHeader"/>        
+        <store-value value-name="returnHeader"/>
     </simple-method>
-    
+
     <simple-method method-name="createReturnItem" short-description="Create Return Item">
     	<field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
     	<find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
-    	
+
     	<if>
     	  <condition>
     	    <and>
@@ -99,46 +99,47 @@
     	    <add-error><fail-message message="Security Error: to run createReturnItem you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
     	  </then>
     	</if>
-        <check-errors/>    	        
-        
+        <check-errors/>
+
         <if-compare field-name="returnQuantity" map-name="parameters" operator="equals" value="0" type="Double">
         	<return response-code="success"/>
         </if-compare>
-        
+
         <make-value value-name="itemLookup" entity-name="OrderItem"/>
         <set-pk-fields map-name="parameters" value-name="itemLookup"/>
         <if-not-empty field-name="orderItemSeqId" map-name="parameters">
-            <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>                        
+            <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>
         </if-not-empty>
-        
-        <if>
-          <condition>
-          	<not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
-          </condition>
-          <then>
-          	<field-to-field field-name="unitPrice" map-name="orderItem" to-field-name="returnPrice" to-map-name="parameters"/>
-          </then>
-        </if>
-        	                    
+
         <if-not-empty field-name="orderItem">
             <field-to-field field-name="orderItem" to-map-name="serviceContext"/>
             <call-service service-name="getReturnableQuantity" in-map-name="serviceContext">
                 <result-to-field result-name="returnableQuantity" field-name="returnableQuantity"/>
+                <result-to-field result-name="returnablePrice" field-name="returnablePrice"/>
             </call-service>
-            
+
+            <if>
+                <condition>
+          	        <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+                </condition>
+                <then>
+          	        <field-to-field field-name="returnablePrice" to-field-name="returnPrice" to-map-name="parameters"/>
+                </then>
+            </if>
+
             <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="returnableQuantity" type="Double">
                 <add-error><fail-message message="Invalid return quantity; previous returns may exist."/></add-error>
             </if-compare-field>
-            
+
             <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
                 <add-error><fail-message message="Return quantity cannot exceed the ordered quantity."/></add-error>
             </if-compare-field>
-        
-            <if-compare-field field-name="returnPrice" map-name="parameters" operator="greater" to-field-name="unitPrice" to-map-name="orderItem" type="Double">
-                <add-error><fail-message message="Return price cannot exceed the ordered price."/></add-error>
+
+            <if-compare-field field-name="returnPrice" map-name="parameters" operator="greater" to-field-name="returnablePrice" type="Double">
+                <add-error><fail-message message="Return price cannot exceed the purchase price."/></add-error>
             </if-compare-field>
             <check-errors/>
-            
+
             <else>
                 <if-compare field-name="returnItemType" map-name="parameters" operator="not-equals" type="String" value="ADJUSTMENT">
                     <add-error><fail-message message="Illegal returnItemType passed."/></add-error>
@@ -146,65 +147,65 @@
                 </if-compare>
             </else>
         </if-not-empty>
-                    
+
         <make-value value-name="newEntity" entity-name="ReturnItem"/>
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="newEntity"/>
-        
+
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupMap"/>
         <string-to-list string="-returnItemSeqId" list-name="orderBy"/>
         <find-by-and entity-name="ReturnItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
         <if-empty field-name="currentItems">
-            <string-to-field string="1" field-name="returnItemSeqId" map-name="newEntity"/>                        
+            <string-to-field string="1" field-name="returnItemSeqId" map-name="newEntity"/>
         <else>
            <first-from-list entry-name="newestItem" list-name="currentItems"/>
            <calculate field-name="returnItemSeqId" map-name="newEntity" type="Integer">
                <calcop field-name="returnItemSeqId" map-name="newestItem" operator="add">
                    <number value="1"/>
                </calcop>
-           </calculate>           
-        </else>        
+           </calculate>
+        </else>
         </if-empty>
         <to-string field-name="returnItemSeqId" map-name="newEntity" numeric-padding="5"/>
-        
+
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-result field-name="returnItemSeqId" map-name="newEntity"/>
         <create-value value-name="newEntity"/>
-    </simple-method>       
+    </simple-method>
     <simple-method method-name="updateReturnItem" short-description="Update Return Item">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
         <check-errors/>
-        
+
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
         <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
-        
+
         <set-nonpk-fields map-name="parameters" value-name="returnItem"/>
-        <store-value value-name="returnItem"/>          
+        <store-value value-name="returnItem"/>
     </simple-method>
     <simple-method method-name="removeReturnItem" short-description="Remove Return Item">
         <check-permission permission="ORDERMGR" action="_DELETE"><fail-message message="Security Error: to run removeReturnItem you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/></check-permission>
         <check-errors/>
-        
+
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="headerPKMap"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="headerPKMap" value-name="returnHeader"/>
         <if-compare field-name="statusId" map-name="returnHeader" operator="not-equals" type="String" value="RETURN_REQUESTED">
             <add-error><fail-message message="Cannot remove items once return is approved"/></add-error>
             <check-errors/>
         </if-compare>
-        
+
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
         <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
-                
-        <remove-value value-name="returnItem"/>         
+
+        <remove-value value-name="returnItem"/>
     </simple-method>
-    
+
     <simple-method method-name="updateReturnStatusFromReceipt" short-description="Update Return Status From ShipmentReceipt">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
         <check-errors/>
-        
+
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>        
+        <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
         <find-by-and entity-name="ShipmentReceipt" map-name="lookupPKMap" list-name="shipmentReceipts"/>
         <iterate list-name="shipmentReceipts" entry-name="receipt">
           <if-empty field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
@@ -219,7 +220,7 @@
             </calcop>
           </calculate>
           <field-to-field field-name="returnId" map-name="receipt" to-map-name="newLookupMap"/>
-          <field-to-field field-name="returnItemSeqId" map-name="receipt" to-map-name="newLookupMap"/>          
+          <field-to-field field-name="returnItemSeqId" map-name="receipt" to-map-name="newLookupMap"/>
           <find-by-primary-key entity-name="ReturnItem" map-name="newLookupMap" value-name="returnItem"/>
           <if-compare-field field-name="returnQuantity" map-name="returnItem" operator="greater-equals" to-field-name="${receipt.returnItemSeqId}" to-map-name="totalsMap" type="Double">
             <!-- update the status for the item -->
@@ -229,18 +230,18 @@
             <make-value entity-name="ReturnStatus" value-name="newValue"/>
             <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
             <env-to-field env-name="returnStatusId" map-name="newValue"/>
-            
+
             <field-to-field field-name="returnItemSeqId" map-name="returnItem" to-map-name="newValue"/>
             <field-to-field field-name="returnId" map-name="returnItem" to-map-name="newValue"/>
             <field-to-field field-name="statusId" map-name="returnItem" to-map-name="newValue"/>
-            
+
             <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
-            
+
             <create-value value-name="newValue"/>
-          </if-compare-field>          
+          </if-compare-field>
         </iterate>
-        
+
         <!-- check to see if all items have been received -->
         <string-to-field string="true" field-name="allReceived"/>
         <find-by-and entity-name="ReturnItem" map-name="lookupPKMap" list-name="allReturnItems"/>
@@ -260,16 +261,16 @@
           <make-value entity-name="ReturnStatus" value-name="newValue"/>
           <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
           <env-to-field env-name="returnStatusId" map-name="newValue"/>
-            
+
           <field-to-field field-name="returnId" map-name="returnHeader" to-map-name="newValue"/>
           <field-to-field field-name="statusId" map-name="returnHeader" to-map-name="newValue"/>
-            
+
           <now-timestamp-to-env env-name="nowTimestamp"/>
           <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
-            
-          <create-value value-name="newValue"/>          
+
+          <create-value value-name="newValue"/>
         </if-compare>
-        
+
         <!-- return the current return header status -->
         <field-to-result field-name="statusId" map-name="returnHeader" result-name="returnHeaderStatus"/>
     </simple-method>

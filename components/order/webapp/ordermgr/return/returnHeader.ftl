@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
@@ -37,6 +37,7 @@
 <#if returnHeader?exists>
 <form name="returnhead" method="post" action="<@ofbizUrl>/updateReturn</@ofbizUrl>">
 <input type="hidden" name="returnId" value="${returnHeader.returnId}">
+<input type="hidden" name="currentStatusId" value="${returnHeader.statusId?if_exists}">
 <#else>
 <form name="returnhead" method="post" action="<@ofbizUrl>/createReturn</@ofbizUrl>">
 </#if>
@@ -121,15 +122,11 @@
             <option value="${currentStatus.statusId}">---</option>
           </#if>
           <#list returnStatus as status>
-            <option value="${status.statusId}">${status.description}</option>
+            <option value="${status.statusIdTo}">${status.description}</option>
           </#list>
         </select>
       </td>
     </tr>
-  <#else>
-    <input type="hidden" name="statusId" value="RETURN_REQUESTED">
-  </#if>
-  <#if returnHeader?has_content>    
     <tr>
       <td width='14%'>&nbsp;</td>
       <td width='6%' align='right' valign='top' nowrap><div class="tabletext">Return From Address:</div></td>
@@ -162,7 +159,8 @@
         <input type="submit" class="standardButton" value="Update">      
       </td>
     </tr>     
-  <#else>  
+  <#else>
+  <input type="hidden" name="statusId" value="RETURN_REQUESTED">
   <tr>
     <td width='14%'>&nbsp;</td>
     <td width='6%'>&nbsp;</td>
