@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.19 2003/11/27 17:46:12 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.20 2003/11/27 18:47:38 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -987,12 +987,14 @@ public class ShoppingCartItem implements java.io.Serializable {
             // all non-product items are unique
             return false;
         }
-
         if (!this.productId.equals(productId)) {
             return false;
         }
 
-        if (!this.prodCatalogId.equals(prodCatalogId)) {
+        if ((this.prodCatalogId == null && prodCatalogId != null) || (this.prodCatalogId != null && prodCatalogId == null)) {
+            return false;
+        }
+        if (this.prodCatalogId != null && prodCatalogId != null && !this.prodCatalogId.equals(prodCatalogId)) {
             return false;
         }
 
@@ -1058,7 +1060,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         return this._parentProduct;
     }
-    
+
     public String getParentProductId() {
         GenericValue parentProduct = this.getParentProduct();
         if (parentProduct != null) {
