@@ -70,15 +70,17 @@ public class KeywordSearch {
             intraKeywordOperator = "OR";
         }
         
+        boolean removeStems = UtilProperties.propertyValueEquals("general", "remove.stems", "true");
+
         ArrayList pbkList = new ArrayList(100);
 
         List keywordFirstPass = makeKeywordList(keywordsString);
-        List keywordList = fixKeywords(keywordFirstPass, anyPrefix, anySuffix, intraKeywordOperator);
+        List keywordList = fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, intraKeywordOperator);
         if (keywordList.size() == 0) {
             return null;
         }
         
-        List params = new LinkedList();
+        List params = new ArrayList();
         String sql = getSearchSQL(keywordList, params, useCategory, intraKeywordOperator);
         if (sql == null) {
             return null;
@@ -104,7 +106,7 @@ public class KeywordSearch {
                 pbkList.add(resultSet.getString("PRODUCT_ID"));
                 //Debug.logInfo("PRODUCT_ID=" + resultSet.getString("PRODUCT_ID") + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"));
             }
-            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix);
+            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems);
             
             try {
                 GenericValue productKeywordResult = delegator.makeValue("ProductKeywordResult", null);
@@ -116,11 +118,12 @@ public class KeywordSearch {
                 productKeywordResult.set("intraKeywordOperator", intraKeywordOperator);
                 productKeywordResult.set("anyPrefix", new Boolean(anyPrefix));
                 productKeywordResult.set("anySuffix", new Boolean(anySuffix));
+                productKeywordResult.set("removeStems", new Boolean(removeStems));
                 productKeywordResult.set("numResults", new Long(pbkList.size()));
                 productKeywordResult.create();
             } catch (Exception e) {
                 Debug.logError(e, "Error saving keyword result stats");
-                Debug.logError("[KeywordSearch] Stats are: got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix);
+                Debug.logError("[KeywordSearch] Stats are: got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems);
             }
             
             if (pbkList.size() == 0) {
@@ -161,7 +164,7 @@ public class KeywordSearch {
         return keywords;
     }
 
-    protected static List fixKeywords(List keywords, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
+    protected static List fixKeywords(List keywords, boolean anyPrefix, boolean anySuffix, boolean removeStems, String intraKeywordOperator) {
         if (keywords == null) {
             return null;
         }
@@ -173,7 +176,6 @@ public class KeywordSearch {
             stopWordBag = UtilProperties.getPropertyValue("general", "stop.word.bag.or");
         }
         
-        boolean removeStems = UtilProperties.propertyValueEquals("general", "remove.stems", "true");
         String stemBag = UtilProperties.getPropertyValue("general", "stem.bag");
         List stemList = new ArrayList(10);
         if (UtilValidate.isNotEmpty(stemBag)) {

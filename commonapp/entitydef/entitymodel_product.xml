@@ -1299,6 +1299,7 @@
       <field name="intraKeywordOperator" type="very-short"></field>
       <field name="anyPrefix" type="indicator"></field>
       <field name="anySuffix" type="indicator"></field>
+      <field name="removeStems" type="indicator"></field>
       <field name="numResults" type="numeric"></field>
       <prim-key field="productKeywordResultId"/>
       <relation type="one" fk-name="PROD_KWDRES_VST" rel-entity-name="Visit">
