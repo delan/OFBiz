@@ -230,7 +230,7 @@
     <service name="deletePartyContactMech" engine="simple"
             location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="deletePartyContactMech" auth="true">
         <description>Delete a PartyContactMech</description>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="createPostalAddress" engine="simple"
