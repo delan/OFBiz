@@ -871,6 +871,7 @@
       <field name="defaultPriceUomId" type="id"></field>
       <field name="quantityUomId" type="id"></field>
       <field name="quantityIncluded" type="floating-point"></field>
+      <field name="piecesIncluded" type="numeric"></field>
       <field name="weightUomId" type="id"></field>
       <field name="weight" type="floating-point"></field>
       <field name="taxable" type="indicator"></field>
