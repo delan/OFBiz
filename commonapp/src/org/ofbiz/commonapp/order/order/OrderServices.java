@@ -205,7 +205,7 @@ public class OrderServices {
         }
         
         String initialStatus = "ORDER_ORDERED";
-        if ("SALES_ORDER".equals(orderTypeId)) {
+        if ("PURCHASE_ORDER".equals(orderTypeId)) {
             initialStatus = "ORDER_CREATED";
         }
 
