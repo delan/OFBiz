@@ -25,6 +25,7 @@
 -->
 
 <div class="head1">Billing Accounts</div>
+<div><a href="<@ofbizUrl>/editBillingAccount</@ofbizUrl>" class="buttontext">[New Account]</a></div>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
