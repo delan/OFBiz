@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.13 2003/11/08 20:54:17 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.14 2003/11/12 07:46:19 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1259,5 +1259,40 @@ public class ShoppingCart implements java.io.Serializable {
     protected void finalize() throws Throwable {
         this.clear();
         super.finalize();
+    }
+
+    public List getLineListOrderedByBasePrice(boolean ascending) {
+        List result = new ArrayList(this.cartLines);
+        Collections.sort(result, new BasePriceOrderComparator(ascending));
+        return result;
+    }
+
+    static class BasePriceOrderComparator implements Comparator {
+
+        private boolean ascending = false;
+
+        BasePriceOrderComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        public int compare(java.lang.Object obj, java.lang.Object obj1) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) obj;
+            ShoppingCartItem cartItem1 = (ShoppingCartItem) obj1;
+
+            int compareValue = new Double(cartItem.getBasePrice()).compareTo(new Double(cartItem1.getBasePrice()));
+            if (this.ascending) {
+                return compareValue;
+            } else {
+                return -compareValue;
+            }
+        }
+
+        public boolean equals(java.lang.Object obj) {
+            if (obj instanceof BasePriceOrderComparator) {
+                return this.ascending == ((BasePriceOrderComparator) obj).ascending;
+            } else {
+                return false;
+            }
+        }
     }
 }
