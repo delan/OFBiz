@@ -92,7 +92,7 @@ ERRORS:
       <description><%=entity.getDescription()%></description><%}%><%
   for (int y = 0; y < entity.getFieldsSize(); y++) {
     ModelField field = entity.getField(y);%>
-      <field name="<%=field.getName()%>"<%if(!field.getName().equals(ModelUtil.dbNameToVarName(field.getColName()))){
+      <field name="<%=field.getName()%>"<%if(!field.getColName().equals(ModelUtil.javaNameToDbName(field.getName()))){
       %> col-name="<%=field.getColName()%>"<%}%> type="<%=field.getType()%>"><%
     for (int v = 0; v<field.getValidatorsSize(); v++) {
       String valName = (String) field.getValidator(v);

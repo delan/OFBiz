@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.10 2003/11/21 18:44:39 jonesde Exp $
+ * $Id: DatabaseUtil.java,v 1.11 2003/12/25 19:03:55 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -551,17 +551,70 @@ public class DatabaseUtil {
         // for each entity make corresponding ModelField objects
         // then print out XML for the entities/fields
         List newEntList = new LinkedList();
-
+        
+        boolean isCaseSensitive = false;
+        DatabaseMetaData dbData = this.getDatabaseMetaData(null, messages);
+        if (dbData != null) {
+            try {
+                isCaseSensitive = dbData.supportsMixedCaseIdentifiers();
+            } catch (SQLException e) {
+                Debug.logError(e, "Error getting db meta data about case sensitive", module);
+            }
+        }
+        
         // iterate over the table names is alphabetical order
         Iterator tableNamesIter = new TreeSet(colInfo.keySet()).iterator();
         while (tableNamesIter.hasNext()) {
             String tableName = (String) tableNamesIter.next();
             List colList = (ArrayList) colInfo.get(tableName);
-            ModelEntity newEntity = new ModelEntity(tableName, colList, modelFieldTypeReader);
+            ModelEntity newEntity = new ModelEntity(tableName, colList, modelFieldTypeReader, isCaseSensitive);
             newEntList.add(newEntity);
         }
 
         return newEntList;
+    }
+    
+    public DatabaseMetaData getDatabaseMetaData(Connection connection, Collection messages) {
+        if (connection == null) {
+            try {
+                connection = getConnection();
+            } catch (SQLException sqle) {
+                String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
+                Debug.logError(message, module);
+                if (messages != null) messages.add(message);
+                return null;
+            } catch (GenericEntityException e) {
+                String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
+                Debug.logError(message, module);
+                if (messages != null) messages.add(message);
+                return null;
+            }
+        }
+
+        if (connection == null) {
+            String message = "Unable to esablish a connection with the database, no additional information available.";
+            Debug.logError(message, module);
+            if (messages != null) messages.add(message);
+            return null;
+        }
+
+        DatabaseMetaData dbData = null;
+        try {
+            dbData = connection.getMetaData();
+        } catch (SQLException sqle) {
+            String message = "Unable to get database meta data... Error was:" + sqle.toString();
+            Debug.logError(message, module);
+            if (messages != null) {
+                messages.add(message);
+            }
+            return null;
+        }
+
+        if (dbData == null) {
+            Debug.logWarning("Unable to get database meta data; method returned null", module);
+        }
+        
+        return dbData;
     }
 
     public void printDbMiscData(DatabaseMetaData dbData) {
@@ -651,20 +704,9 @@ public class DatabaseUtil {
             return null;
         }
 
-        DatabaseMetaData dbData = null;
-        try {
-            dbData = connection.getMetaData();
-        } catch (SQLException sqle) {
-            String message = "Unable to get database meta data... Error was:" + sqle.toString();
-
-            Debug.logError(message, module);
-            if (messages != null)
-                messages.add(message);
-            return null;
-        }
-
+        DatabaseMetaData dbData = this.getDatabaseMetaData(connection, messages);
         if (dbData == null) {
-            Debug.logWarning("Unable to get database meta data; method returned null", module);
+            return null;
         }
 
         printDbMiscData(dbData);
