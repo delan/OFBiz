@@ -1,5 +1,5 @@
 /*
- * $Id: UtilValidate.java,v 1.2 2003/11/26 20:55:37 ajzeneski Exp $
+ * $Id: UtilValidate.java,v 1.3 2003/12/06 23:28:44 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Collection;
  * See detailed description below.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      1.0
  *
  *
@@ -868,8 +868,9 @@ public class UtilValidate {
     public static boolean isValueLinkCard(String stPassed) {
         if (isEmpty(stPassed)) return defaultEmptyOK;
         String st = stripCharsInBag(stPassed, creditCardDelimiters);
-        if (st.length() == 16 && st.startsWith("7006"))
+        if (st.length() == 16 && (st.startsWith("7") || st.startsWith("6"))) {
             return true;
+        }
         return false;
     }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.15 2003/12/06 17:24:48 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.16 2003/12/06 23:28:44 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.base.util.UtilValidate;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.15 $
+  *@version    $Revision: 1.16 $
  * @since      3.0
  */
 public class ComponentContainer implements Container {
@@ -130,11 +130,11 @@ public class ComponentContainer implements Container {
             Thread.currentThread().setContextClassLoader(cl);
         }
 
-        Debug.logInfo("All components loaded.", module);
+        Debug.logInfo("All components loaded", module);
     }
     
     private void loadComponentDirectory(String directoryName) {
-        Debug.logInfo("Auto-Loading component directory [" + directoryName + "]...", module);
+        Debug.logInfo("Auto-Loading component directory : [" + directoryName + "]", module);
         File parentPath = new File(directoryName);
         if (!parentPath.exists() || !parentPath.isDirectory()) {
             Debug.logError("Auto-Load Component directory not found : " + directoryName, module);
@@ -170,7 +170,7 @@ public class ComponentContainer implements Container {
     }
     
     private void loadComponent(ComponentConfig config) {
-        Debug.logInfo("Loading component [" + config.getComponentName() + "]...", module);
+        Debug.logInfo("Loading component : [" + config.getComponentName() + "]", module);
         List classpathInfos = config.getClasspathInfos();
         String configRoot = config.getRootLocation();
         configRoot = configRoot.replace('\\', '/');
