@@ -590,7 +590,7 @@
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
     <request-map uri="viewShipmentPackageRouteSegLabelImage"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.core.shipment.shipment.ShipmentEvents" invoke="viewShipmentPackageRouteSegLabelImage"/>
+        <event type="java" path="org.ofbiz.shipment.shipment.ShipmentEvents" invoke="viewShipmentPackageRouteSegLabelImage"/>
         <response name="success" type="none" value=""/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>

@@ -23,9 +23,9 @@
  * @version 1.0
 --%>
 
-<%@ page import="java.util.*, java.net.*, org.ofbiz.entity.transaction.*" %>
+<%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.workflow.definition.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
+<%@ page import="org.ofbiz.workflow.definition.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*, org.ofbiz.entity.transaction.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 

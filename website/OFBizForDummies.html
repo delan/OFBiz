@@ -338,7 +338,7 @@ The ofbiz imports at the top.
 </pre>
 This provides some handy tags.
 <pre>
-&lt;jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /&gt;
+&lt;jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" /&gt;
 </pre>
 This does the entire security validation and login stuff.
 <pre>
@@ -359,9 +359,9 @@ I used the NetBeans properties editor so it was easy to create.
 Then in the MailRoute I put some code...
 
 <pre>
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.service.*;
+import org.ofbiz.base.util.*;
 ...
     public String sourceServer;
     public String sourceLogin;
@@ -446,7 +446,7 @@ Second, you can get an object from the entity engine, called a GenericValue
 from the delegator.
 The delegator is gotten in the JSP with...
 <pre>
-&lt;jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /&gt;
+&lt;jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" /&gt;
 </pre>
 With this bean included then the variable delegator is defined.
 The line in the JSP that calls this getHTMLSubscriptionList method is...
@@ -478,10 +478,10 @@ import javax.servlet.http.*;
 import com.sun.mail.pop3.*;
 import com.sun.mail.smtp.*;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.security.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.service.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.security.*;
 
 public class MailRouteWorker {
     public final static String checkBoxPrefix = "mailrouteProdCB";
