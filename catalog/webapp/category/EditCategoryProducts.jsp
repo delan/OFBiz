@@ -165,6 +165,7 @@
         <%boolean hasExpired = false;%>
         <%if (productCategoryMember.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryMember.getTimestamp("thruDate"))) { hasExpired = true; }%>
         <FORM method=POST action='<ofbiz:url>/updateCategoryProductMember?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%></ofbiz:url>' name='lineForm<%=line%>'>
+            <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
@@ -176,7 +177,7 @@
         </FORM>
     </td>
     <td align="center">
-      <a href='<ofbiz:url>/removeCategoryProductMember?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%>&productId=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>&productCategoryId=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/removeCategoryProductMember?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%>&productId=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>&productCategoryId=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%>&activeOnly=<%=new Boolean(activeOnly).toString()%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
@@ -206,6 +207,7 @@
 <form method="POST" action="<ofbiz:url>/addCategoryProductMember</ofbiz:url>" style='margin: 0;' name='addProductCategoryMemberForm'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="useValues" value="true">
+  <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'>
 
   <script language='JavaScript'>
       function setPcmFromDate() { document.addProductCategoryMemberForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
@@ -220,6 +222,7 @@
 <form method="POST" action="<ofbiz:url>/copyCategoryProductMembers</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="useValues" value="true">
+  <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'>
 
   <div class='head2'>Copy ProductCategoryMembers to Another Category:</div>
   <div class='tabletext'>
@@ -245,6 +248,7 @@
 <form method="POST" action="<ofbiz:url>/expireAllCategoryProductMembers</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="useValues" value="true">
+  <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'>
 
   <div class='head2'>Expire All Product Members:</div>
   <div class='tabletext'>
@@ -255,6 +259,7 @@
 <form method="POST" action="<ofbiz:url>/removeExpiredCategoryProductMembers</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="useValues" value="true">
+  <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'>
 
   <div class='head2'>Remove Expired Product Members:</div>
   <div class='tabletext'>
