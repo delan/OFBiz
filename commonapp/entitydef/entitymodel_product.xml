@@ -1979,6 +1979,7 @@
       <field name="facilityName" type="name"></field>
       <field name="primaryFacilityGroupId" type="id"></field>
       <field name="squareFootage" type="numeric"></field>
+      <field name="productStoreId" type="id"></field>
       <field name="openedDate" type="date-time"></field>
       <field name="closedDate" type="date-time"></field>
       <field name="description" type="description"></field>
@@ -1988,6 +1989,9 @@
       </relation>
       <relation type="one" fk-name="FACILITY_PGRP" rel-entity-name="FacilityGroup">
         <key-map field-name="primaryFacilityGroupId" rel-field-name="facilityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityGroupMember">
         <key-map field-name="facilityId"/>
@@ -2319,10 +2323,21 @@
       <field name="reserveInventory" type="indicator"></field>
       <field name="reserveOrderEnumId" type="id"></field>
       <field name="requireInventory" type="indicator"></field>
+      <field name="defaultLocaleString" type="very-short"></field>
+      <field name="defaultCurrencyUomId" type="id"></field>
+      <field name="allowPassword" type="indicator"></field>
+      <field name="defaultPassword" type="long-varchar"></field>
+      <field name="explodeOrderItems" type="indicator"></field>
+      <field name="headerApprovedStatus" type="id"></field>
+      <field name="itemApprovedStatus" type="id"></field>
+      <field name="headerDeclinedStatus" type="id"></field>
+      <field name="itemDeclinedStatus" type="id"></field>
+      <field name="headerCancelStatus" type="id"></field>
+      <field name="itemCancelStatus" type="id"></field>
+      <field name="declinedMessage" type="long-varchar"></field>
+      <field name="rejectedMessage" type="long-varchar"></field>
       <field name="styleSheet" type="url"></field>
-      <field name="headerLogo" type="url"></field>
-      <field name="contentPathPrefix" type="long-varchar"></field>
-      <field name="templatePathPrefix" type="long-varchar"></field>
+      <field name="headerLogo" type="url"></field>    
       <prim-key field="productStoreId"/>
       <relation type="one" fk-name="PROD_STR_FACILITY" rel-entity-name="Facility">
         <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>
@@ -2370,45 +2385,23 @@
     <entity entity-name="ProductStorePaymentSetting"
             package-name="org.ofbiz.commonapp.product.store"
             title="Product Store Payment Settings Entity">
-      <field name="productStoreId" type="id-ne"></field>
+      <field name="productStoreId" type="id-ne"></field>      
       <field name="paymentMethodTypeId" type="id-ne"></field>
-      <field name="paymentAuthService" type="value"></field>
-      <field name="paymentReAuthService" type="value"></field>
-      <field name="paymentCaptureService" type="value"></field>
-      <field name="paymentRefundService" type="value"></field>
-      <field name="paymentConfiguration" type="value"></field>
+      <field name="paymentServiceEnumId" type="id-ne"></field>      
+      <field name="paymentPropertiesPath" type="value"></field>
       <prim-key field="productStoreId"/>
       <prim-key field="paymentMethodTypeId"/>
+      <prim-key field="paymentServiceEnumId"/>
       <relation type="one" fk-name="PRDS_PS_PRDS" rel-entity-name="ProductStore">
         <key-map field-name="productStoreId"/>
       </relation>
       <relation type="one" fk-name="PRDS_PS_PMNTTP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
+      <relation type="one" fk-name="PRDS_PS_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="paymentServiceEnumId" rel-field-name="enumId"/>
+      </relation>      
     </entity>
-    <view-entity entity-name="ProductStorePaymentSettingView"
-            package-name="org.ofbiz.commonapp.product.store"
-            never-cache="true"
-            title="Product Store Payment Settings View Entity">
-      <member-entity entity-alias="PS" entity-name="ProductStore"/>
-      <member-entity entity-alias="PSPS" entity-name="ProductStorePaymentSetting"/>
-      <member-entity entity-alias="PMT" entity-name="PaymentMethodType"/>
-      <alias entity-alias="PS" name="productStoreId"/>
-      <alias entity-alias="PS" name="storeName"/>
-      <alias entity-alias="PSPS" name="paymentAuthService"/>
-      <alias entity-alias="PSPS" name="paymentReAuthService"/>
-      <alias entity-alias="PSPS" name="paymentCaptureService"/>
-      <alias entity-alias="PSPS" name="paymentRefundService"/>
-      <alias entity-alias="PSPS" name="paymentConfiguration"/>
-      <alias entity-alias="PMT" name="paymentMethodTypeId"/>
-      <alias entity-alias="PMT" name="description"/>
-      <view-link entity-alias="PS" rel-entity-alias="PSPS">
-        <key-map field-name="productStoreId"/>
-      </view-link>
-      <view-link entity-alias="PSPS" rel-entity-alias="PMT">
-        <key-map field-name="paymentMethodTypeId"/>
-      </view-link>
-    </view-entity>
     <entity entity-name="ProductStorePromoAppl"
             package-name="org.ofbiz.commonapp.product.store"
             title="Product Store Promotion Applicability Entity">
