@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceConfigUtil.java,v 1.3 2003/09/24 00:20:08 ajzeneski Exp $
+ * $Id: ServiceConfigUtil.java,v 1.4 2003/09/25 20:38:28 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ServiceConfigUtil {
@@ -95,8 +95,8 @@ public class ServiceConfigUtil {
         return readPools;
     }
     
-    public static int getDaysToKeepJobs() {
-        String days = getElementAttr("thread-pool", "purge-old-jobs");
+    public static int getPurgeJobDays() {
+        String days = getElementAttr("thread-pool", "purge-job-days");
         int purgeDays = 0;
         try {
             purgeDays = Integer.parseInt(days);
@@ -105,5 +105,5 @@ public class ServiceConfigUtil {
             purgeDays = 0;
         }
         return purgeDays;
-    }            
+    }              
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.3 2003/09/24 00:20:08 ajzeneski Exp $
+ * $Id: ServiceUtil.java,v 1.4 2003/09/25 20:38:28 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -231,7 +231,7 @@ public class ServiceUtil {
     
     public static Map purgeOldJobs(DispatchContext dctx, Map context) {
         String sendPool = ServiceConfigUtil.getSendPool();
-        int daysToKeep = ServiceConfigUtil.getDaysToKeepJobs();
+        int daysToKeep = ServiceConfigUtil.getPurgeJobDays();
         GenericDelegator delegator = dctx.getDelegator();
         
         Timestamp now = UtilDateTime.nowTimestamp();
