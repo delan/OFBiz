@@ -66,7 +66,7 @@ public class CheckOutEvents {
 
     public static String setPartialCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
         String resp = setCheckOutOptions(request, response);
-        request.setAttribute(SiteDefs.ERROR_MESSAGE, "");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, null);
         return "success";
     }            
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {

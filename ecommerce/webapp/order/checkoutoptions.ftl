@@ -373,10 +373,10 @@ function submitForm(form, mode, value) {
 <table width="100%">
   <tr valign="top">
     <td align="left">
-      &nbsp;<a href="javascript:void(0);" onClick="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[Back to Shopping Cart]</a>
+      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[Back to Shopping Cart]</a>
     </td>
     <td align="right">
-      <a href="javascript:void(0);" onClick="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[Continue to Final Order Review]</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[Continue to Final Order Review]</a>
     </td>
   </tr>
 </table>
