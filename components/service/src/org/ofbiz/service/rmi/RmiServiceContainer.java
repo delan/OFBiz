@@ -1,5 +1,5 @@
 /*
- * $Id: RmiServiceContainer.java,v 1.1 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: RmiServiceContainer.java,v 1.2 2004/04/01 18:11:51 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import java.rmi.server.RMIServerSocketFactory;
  * RMI Service Engine Container / Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class RmiServiceContainer implements Container {
@@ -54,7 +54,9 @@ public class RmiServiceContainer implements Container {
     public boolean start(String configFile) throws ContainerException {
         // get the container config
         ContainerConfig.Container cfg = ContainerConfig.getContainer("rmi-dispatcher", configFile);
-        ContainerConfig.Container.Property lookupNameProp = cfg.getProperty("lookup-name");
+        ContainerConfig.Container.Property lookupHostProp = cfg.getProperty("bound-host");
+        ContainerConfig.Container.Property lookupPortProp = cfg.getProperty("bound-port");
+        ContainerConfig.Container.Property lookupNameProp = cfg.getProperty("bound-name");
         ContainerConfig.Container.Property delegatorProp = cfg.getProperty("delegator-name");
         ContainerConfig.Container.Property clientProp = cfg.getProperty("client-factory");
         ContainerConfig.Container.Property serverProp = cfg.getProperty("server-factory");
@@ -70,6 +72,9 @@ public class RmiServiceContainer implements Container {
         if (delegatorProp == null || delegatorProp.value == null || delegatorProp.value.length() == 0) {
             throw new ContainerException("Invalid delegator-name defined in container configuration");
         }
+
+        String host = lookupHostProp == null || lookupHostProp.value == null ? "localhost" : lookupHostProp.value;
+        String port = lookupPortProp == null || lookupPortProp.value == null ? "1099" : lookupPortProp.value;
 
         // setup the factories
         RMIClientSocketFactory csf = null;
@@ -111,7 +116,7 @@ public class RmiServiceContainer implements Container {
 
         // bind this object in JNDI
         try {
-            Naming.rebind(name, remote);
+            Naming.rebind("//" + host + ":" + port + "/" + name, remote);
         } catch (RemoteException e) {
             throw new ContainerException("Unable to bind object", e);
         } catch (java.net.MalformedURLException e) {
