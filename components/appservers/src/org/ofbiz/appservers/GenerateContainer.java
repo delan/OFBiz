@@ -1,25 +1,19 @@
 /*
- * $Id: GenerateContainer.java,v 1.5 2004/06/22 19:00:44 ajzeneski Exp $
+ * $Id: GenerateContainer.java,v 1.6 2004/06/30 19:20:43 ajzeneski Exp $
  *
  */
 package org.ofbiz.appservers;
-
-import freemarker.template.TemplateException;
 
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Collection;
 import java.util.Iterator;
 import java.io.*;
 
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerException;
-import org.ofbiz.base.container.ComponentContainer;
-import org.ofbiz.base.util.StartInfoLoader;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.start.Start;
 import org.ofbiz.base.start.Classpath;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
@@ -30,7 +24,7 @@ import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
  * ** This container requires the ComponentContainer to be loaded first.
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.1
  */
 public class GenerateContainer implements Container {
