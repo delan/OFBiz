@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.HashMap;
 
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.util.EntityUtil;
 
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericDelegator;
@@ -27,17 +28,20 @@ public class ItemConfigurationTree {
     
     ItemConfigurationNode root;
     float rootQuantity;
-    Date fromDate;
+    Date inDate;
     String bomTypeId;
     
-    public ItemConfigurationTree(String productId, String bomTypeId, Date fromDate, GenericDelegator delegator) throws GenericEntityException {
-        this(productId, bomTypeId, fromDate, true, delegator);
+    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, GenericDelegator delegator) throws GenericEntityException {
+        this(productId, bomTypeId, inDate, true, delegator);
     }
     
     /** Creates a new instance of ItemConfigurationTree */
-    public ItemConfigurationTree(String productId, String bomTypeId, Date fromDate, boolean explosion, GenericDelegator delegator) throws GenericEntityException {
+    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, boolean explosion, GenericDelegator delegator) throws GenericEntityException {
         // If the parameters are not valid, return.
-        if (productId == null || bomTypeId == null || fromDate == null || delegator == null) return;
+        if (productId == null || bomTypeId == null || delegator == null) return;
+        // If the date is null, set it to today.
+        if (inDate == null) inDate = new Date();
+        
         String productIdForRules = productId;
         // The selected product features are loaded
         List productFeatures = delegator.findByAnd("ProductFeatureAppl",
@@ -46,7 +50,7 @@ public class ItemConfigurationTree {
 
         // If the product is manufactured as a different product,
         // load the new product
-        GenericValue manufacturedAsProduct = manufacturedAsProduct(productId, delegator);
+        GenericValue manufacturedAsProduct = manufacturedAsProduct(productId, inDate, delegator);
         // We load the information about the product that needs to be manufactured
         // from Product entity
         GenericValue product = delegator.findByPrimaryKey("Product", 
@@ -56,15 +60,16 @@ public class ItemConfigurationTree {
         // If the product hasn't a bill of materials we try to retrieve
         // the bill of materials of its virtual product (if the current
         // product is variant).
-        if (!hasBom(product) && product.get("isVariant")!=null && 
+        if (!hasBom(product, inDate) && product.get("isVariant")!=null && 
                 product.getString("isVariant").equals("Y")) {
             List virtualProducts = product.getRelatedByAnd("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
+            virtualProducts = EntityUtil.filterByDate(virtualProducts, inDate);
             if (virtualProducts != null && virtualProducts.size() > 0) {
                 GenericValue virtualProduct = (GenericValue)virtualProducts.get(0);
                 // If the virtual product is manufactured as a different product,
                 // load the new product
                 productIdForRules = virtualProduct.getString("productId");
-                manufacturedAsProduct = manufacturedAsProduct(virtualProduct.getString("productId"), delegator);
+                manufacturedAsProduct = manufacturedAsProduct(virtualProduct.getString("productId"), inDate, delegator);
                 product = delegator.findByPrimaryKey("Product", 
                                             UtilMisc.toMap("productId", 
                                             (manufacturedAsProduct != null? manufacturedAsProduct.getString("productIdTo"): virtualProduct.get("productId"))));
@@ -75,23 +80,23 @@ public class ItemConfigurationTree {
             root = new ItemConfigurationNode(product);
             root.setProductForRules(productIdForRules);
             if (explosion) {
-                root.loadChildren(bomTypeId, fromDate, productFeatures);
+                root.loadChildren(bomTypeId, inDate, productFeatures);
             } else {
-                root.loadParents(bomTypeId, fromDate, productFeatures);
+                root.loadParents(bomTypeId, inDate, productFeatures);
             }
         } catch(GenericEntityException gee) {
             root = null;
         }
         this.bomTypeId = bomTypeId;
-        this.fromDate = fromDate;
+        this.inDate = inDate;
         rootQuantity = 1;
     }
 
-    private GenericValue manufacturedAsProduct(String productId, GenericDelegator delegator) throws GenericEntityException {
+    private GenericValue manufacturedAsProduct(String productId, Date inDate, GenericDelegator delegator) throws GenericEntityException {
         List manufacturedAsProducts = delegator.findByAnd("ProductAssoc", 
                                          UtilMisc.toMap("productId", productId,
-                                         //"fromDate", fromDate,
                                          "productAssocTypeId", "PRODUCT_MANUFACTURED"));
+        manufacturedAsProducts = EntityUtil.filterByDate(manufacturedAsProducts, inDate);
         GenericValue manufacturedAsProduct = null;
         if (manufacturedAsProducts != null && manufacturedAsProducts.size() > 0) {
             manufacturedAsProduct = (GenericValue)manufacturedAsProducts.get(0);
@@ -99,8 +104,9 @@ public class ItemConfigurationTree {
         return manufacturedAsProduct;
     }
     
-    private boolean hasBom(GenericValue product) throws GenericEntityException {
+    private boolean hasBom(GenericValue product, Date inDate) throws GenericEntityException {
         List children = product.getRelatedByAnd("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", bomTypeId));
+        children = EntityUtil.filterByDate(children, inDate);
         return (children != null && children.size() > 0);
     }
 
@@ -135,12 +141,12 @@ public class ItemConfigurationTree {
         return root;
     }    
     
-    /** Getter for property fromDate.
-     * @return Value of property fromDate.
+    /** Getter for property inDate.
+     * @return Value of property inDate.
      *
      */
-    public Date getFromDate() {
-        return fromDate;
+    public Date getInDate() {
+        return inDate;
     }
     
     /** Getter for property bomTypeId.
