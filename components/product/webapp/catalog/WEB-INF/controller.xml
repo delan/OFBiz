@@ -674,17 +674,28 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFeatureCategoryFeatures"/>
     </request-map>
-    <request-map uri="CreateProductFeature">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createProductFeature"/>
-        <response name="success" type="view" value="EditFeatureCategoryFeatures"/>
-        <response name="error" type="view" value="EditFeatureCategoryFeatures"/>
-    </request-map>
-    <request-map uri="UpdateProductFeature">
+    <request-map uri="UpdateProductFeatureInCategory">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProductFeature"/>
         <response name="success" type="view" value="EditFeatureCategoryFeatures"/>
         <response name="error" type="view" value="EditFeatureCategoryFeatures"/>
+    </request-map>
+
+    <request-map uri="EditFeature">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFeature"/>
+    </request-map>
+    <request-map uri="createProductFeature">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFeature"/>
+        <response name="success" type="view" value="EditFeature"/>
+        <response name="error" type="view" value="EditFeature"/>
+    </request-map>
+    <request-map uri="updateProductFeature">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductFeature"/>
+        <response name="success" type="view" value="EditFeature"/>
+        <response name="error" type="view" value="EditFeature"/>
     </request-map>
 
     <request-map uri="EditFeatureGroups">
@@ -1472,6 +1483,7 @@
 
     <view-map name="QuickAddVariants" type="jpublish" page="/product/QuickAddVariants.ftl"/>
 
+    <view-map name="EditFeature" type="jpublish" page="/feature/EditFeature.ftl"/>
     <view-map name="EditFeatureCategories" type="jpublish" page="/feature/EditFeatureCategories.ftl"/>
     <view-map name="EditFeatureCategoryFeatures" type="jpublish" page="/feature/EditFeatureCategoryFeatures.ftl"/>
     <view-map name="EditFeatureGroups" type="jpublish" page="/feature/EditFeatureGroups.ftl"/>

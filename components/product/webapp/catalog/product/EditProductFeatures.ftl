@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,18 +30,19 @@
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">${uiLabelMap.ProductFeatures} <span class='head2'>${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductFeatures} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.internalName)?if_exists} </#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
     <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
-        <a href="/ecommerce/control/product?product_id=${productId}" class='buttontext' target='_blank'>[${uiLabelMap.ProductProductPage}]</a>
+        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <br>
     <br>
     
     <#if productId?exists>    
-        <table border="1" cellpadding='2' cellspacing='0'>
+        <table border="1" cellpadding="2" cellspacing="0">
         <tr>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonDescription}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductType}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductCategory}</b></div></td>
@@ -57,13 +58,14 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#assign curProductFeatureCategory = productFeatureAndAppl.getRelatedOneCache("ProductFeatureCategory")>
 <!--            <#if curProductFeatureCategory?exists> pageContext.setAttribute("curProductFeatureCategory", curProductFeatureCategory)</#if>	-->
             <tr valign="middle">
-                <form method=POST action='<@ofbizUrl>/UpdateFeatureToProductApplication</@ofbizUrl>' name='lineForm${line}'>
+                <form method=POST action="<@ofbizUrl>/UpdateFeatureToProductApplication</@ofbizUrl>" name="lineForm${line}">
                 <input type=hidden name="productId" value="${(productFeatureAndAppl.productId)?if_exists}">
                 <input type=hidden name="productFeatureId" value="${(productFeatureAndAppl.productFeatureId)?if_exists}">
                 <input type=hidden name="fromDate" value="${(productFeatureAndAppl.fromDate)?if_exists}">
-                <td><div class='tabletext'>${(productFeatureAndAppl.description)?if_exists}</div></td>
-                <td><div class='tabletext'>${(curProductFeatureType.description)?default((productFeatureAndAppl.productFeatureTypeId)?if_exists)}</div></td>
-                <td><a href='<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}&productId=${(productFeatureAndAppl.productId)?if_exists}</@ofbizUrl>' class='buttontext'>
+                <td><div class="tabletext">${(productFeatureAndAppl.productFeatureId)?if_exists}</div></td>
+                <td><div class="tabletext">${(productFeatureAndAppl.description)?if_exists}</div></td>
+                <td><div class="tabletext">${(curProductFeatureType.description)?default((productFeatureAndAppl.productFeatureTypeId)?if_exists)}</div></td>
+                <td><a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}&productId=${(productFeatureAndAppl.productId)?if_exists}</@ofbizUrl>" class="buttontext">
                     ${(curProductFeatureCategory.description)?if_exists}
                     [${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}]</a></td>
                 <#assign hasntStarted = false>
@@ -107,7 +109,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </select>
         <input type="submit" value="Add" style='font-size: x-small;'>
         </form>
+
         <br>
+
         <form method="POST" action="<@ofbizUrl>/ApplyFeatureToProductFromTypeAndCode</@ofbizUrl>" style='margin: 0;' name='addFeatureByTypeIdCode'>
         <input type="hidden" name="productId" value="${productId}">
         <div class='head2'>${uiLabelMap.ProductAddProductFeatureTypeId}:</div>
@@ -131,6 +135,27 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <a href="javascript:call_cal(document.addFeatureByTypeIdCode.thruDate, '${nowTimestampString}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
         <span class='tabletext'>${uiLabelMap.CommonSequence} : </span><input type=text size='5' name='sequenceNum' class='inputBox'>
         <input type="submit" value="Add" style='font-size: x-small;'>
+        </form>
+
+        <br>
+
+        <form method="POST" action="<@ofbizUrl>/ApplyFeatureToProduct</@ofbizUrl>" style="margin: 0;" name="addFeatureById">
+        <input type="hidden" name="productId" value="${productId}">
+        <div class="head2">Add Product Feature with ID:</div>
+        <br>
+        <span class="tabletext">${uiLabelMap.CommonId}: </span><input type=text size="10" name="productFeatureId" value="" class="inputBox">
+        <span class="tabletext">${uiLabelMap.ProductFeatureApplicationType}: </span><select class="selectBox" name="productFeatureApplTypeId" size=1>
+            <#list productFeatureApplTypes as productFeatureApplType>
+            <option value="${(productFeatureApplType.productFeatureApplTypeId)?if_exists}">${(productFeatureApplType.description)?if_exists} </option>
+            </#list>
+        </select>
+        <br>
+        <span class="tabletext">${uiLabelMap.CommonFrom} : </span><input type=text size="25" name="fromDate" class="inputBox">
+        <a href="javascript:call_cal(document.addFeatureById.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+        <span class="tabletext">${uiLabelMap.CommonThru} : </span><input type=text size="25" name="thruDate" class="inputBox">
+        <a href="javascript:call_cal(document.addFeatureById.thruDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+        <span class="tabletext">${uiLabelMap.CommonSequence} : </span><input type=text size="5" name="sequenceNum" class="inputBox">
+        <input type="submit" value="Add" style="font-size: x-small;">
         </form>
     </#if>
     <br>

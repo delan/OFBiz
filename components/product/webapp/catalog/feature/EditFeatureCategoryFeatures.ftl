@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
@@ -30,6 +30,7 @@
 
 ${pages.get("/feature/FeatureTabBar.ftl")}
 <div class="head1">${uiLabelMap.ProductEditFeaturesForFeatureCategory} "${(curProductFeatureCategory.description)?if_exists}"</div>
+<a href="<@ofbizUrl>/EditFeature?productFeatureCategoryId=${productFeatureCategoryId}</@ofbizUrl>" class="buttontext">[Create New Feature]</a>
 <#if productId?has_content>
 <div class="head2">${uiLabelMap.ProductAndApplyFeaturesToProductWithId} "${productId}"</div>
 <div>
@@ -42,6 +43,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
 <p class="head2">${uiLabelMap.ProductProductFeatureMaintenance}</p>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr class='viewOneTR1'>
+    <td><div class="tabletext"><b>${uiLabelMap.CommonId}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.CommonDescription}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductFeatureType}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductFeatureCategory}</b></div></td>
@@ -56,6 +58,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
       </tr>
       <tr class='viewOneTR2'>
         <td><div class="tabletext">&nbsp;</div></td>
+        <td><div class="tabletext">&nbsp;</div></td>
         <td><div class="tabletext"><b>${uiLabelMap.ProductApplType}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
@@ -67,9 +70,10 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
 <#list productFeatures as productFeature>
   <#assign curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType")>
   <tr valign="middle" class='viewOneTR1'>
-    <form method='POST' action='<@ofbizUrl>/UpdateProductFeature</@ofbizUrl>'>
+    <form method='POST' action='<@ofbizUrl>/UpdateProductFeatureInCategory</@ofbizUrl>'>
         <#if productId?has_content><input type="hidden" name="productId" value="${productId}"></#if>
         <input type="hidden" name="productFeatureId" value="${productFeature.productFeatureId}">
+      <td><a href="<@ofbizUrl>/EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="buttontext">${productFeature.productFeatureId}</a></td>
       <td><input type="text" class='inputBox' size='15' name="description" value="${productFeature.description}"></td>
       <td><select name='productFeatureTypeId' size=1 class='selectBox'>
         <#if productFeature.productFeatureTypeId?has_content>
@@ -122,66 +126,6 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
   </tr>
 </#list>
 </table>
-<br>
-<form method="POST" action="<@ofbizUrl>/CreateProductFeature</@ofbizUrl>" style='margin: 0;'>
-  <#if productId?has_content><input type="hidden" name="productId" value="${productId}"></#if>
-  <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}">
-  <div class='head2'>${uiLabelMap.ProductCreateProductFeatureInThisCategory}:</div>
-  <br>
-  <table>
-    <tr>
-      <td><div class='tabletext'>${uiLabelMap.ProductFeatureType}:</div></td>
-      <td>
-        <select name='productFeatureTypeId' size=1 class='selectBox'>
-        <#list productFeatureTypes as productFeatureType>
-          <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.description}</option>
-        </#list>
-        </select>
-      </td>
-    </tr>
-<#-- This will always be the same, ie we will use the productFeatureCategoryId for this page
-    <tr>
-      <td><div class='tabletext'>Feature Category:</div></td>
-      <td><select name='productFeatureCategoryId' size=1 class='selectBox'>
-        <#list productFeatureCategories as productFeatureCategory>
-          <option value='${productFeatureCategory.productFeatureCategoryId}'>${productFeatureCategory.description} [${productFeatureCategory.productFeatureCategoryId}]</option>
-        </#list>
-      </select></td>
-    </tr>
--->
-    <tr>
-      <td><div class='tabletext'>${uiLabelMap.CommonDescription}:</div></td>
-      <td><input type=text size='30' name='description' class='inputBox' value=''></td>
-    </tr>
-    <tr>
-      <td><div class='tabletext'>${uiLabelMap.ProductUnitOfMeasureId}:</div></td>
-      <td><input type=text size='10' name='uomId' class='inputBox' value=''></td>
-    </tr>
-    <tr>
-      <td><div class='tabletext'>${uiLabelMap.ProductNumberQuantity}:</div></td>
-      <td><input type=text size='10' name='numberSpecified' class='inputBox' value=''></td>
-    </tr>
-    <tr>
-      <td><div class='tabletext'>${uiLabelMap.ProductDefaultAmount}:</div></td>
-      <td><input type=text size='10' name='defaultAmount' class='inputBox' value=''></td>
-    </tr>
-    <tr>
-      <td><div class='tabletext'>${uiLabelMap.ProductDefaultSequenceNumber}:</div></td>
-      <td><input type=text size='10' name='defaultSequenceNum' class='inputBox' value=''></td>
-    </tr>
-    <tr>
-      <td><div class='tabletext'>${uiLabelMap.ProductIdCode}:</div></td>
-      <td><input type=text size='10' name='idCode' class='inputBox' value=''></td>
-    </tr>
-    <tr>
-      <td><div class='tabletext'>${uiLabelMap.ProductAbbreviation}:</div></td>
-      <td><input type=text size='10' name='abbrev' class='inputBox' value=''></td>
-    </tr>
-    <tr>
-      <td colspan='2'><input type="submit" value="${uiLabelMap.CommonCreate}"></td>
-    </tr>
-  </table>
-</form>
 <br>
 <#else>
   <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
