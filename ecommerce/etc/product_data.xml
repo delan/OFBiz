@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
   <ProductCategory description="Primary Catalog"
-    longDescription="Product Catalog" productCategoryId="CATALOG1"/>
+    longDescription="Product Catalog" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Gizmos"
     longDescription="long description of Gizmos"
-    primaryParentCategoryId="CATALOG1" productCategoryId="100"/>
+    primaryParentCategoryId="CATALOG1" productCategoryId="100" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Widgets"
     longDescription="long description of Widgets"
-    primaryParentCategoryId="CATALOG1" productCategoryId="200"/>
+    primaryParentCategoryId="CATALOG1" productCategoryId="200" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Small Gizmos"
     longDescription="long description of Small Gizmos"
-    primaryParentCategoryId="100" productCategoryId="101"/>
+    primaryParentCategoryId="100" productCategoryId="101" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Large Gizmos"
     longDescription="long description of Large Gizmos"
-    primaryParentCategoryId="100" productCategoryId="102"/>
+    primaryParentCategoryId="100" productCategoryId="102" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Small Widgets"
     longDescription="long description of Small Widgets"
-    primaryParentCategoryId="200" productCategoryId="201"/>
+    primaryParentCategoryId="200" productCategoryId="201" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Large Widgets"
     longDescription="long description of Large Widgets"
-    primaryParentCategoryId="200" productCategoryId="202"/>
+    primaryParentCategoryId="200" productCategoryId="202" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Mini Widgets"
     longDescription="long description of Mini Widgets"
-    primaryParentCategoryId="201" productCategoryId="2011"/>
+    primaryParentCategoryId="201" productCategoryId="2011" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Other Mini Widgets"
     longDescription="long description of Other Mini Widgets"
-    primaryParentCategoryId="201" productCategoryId="2012"/>
+    primaryParentCategoryId="201" productCategoryId="2012" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Micro Widgets"
     longDescription="long description of Micro Widgets"
-    primaryParentCategoryId="2011" productCategoryId="20111"/>
-  <ProductCategory description="Featured Products" productCategoryId="PROMOTIONS"/>
+    primaryParentCategoryId="2011" productCategoryId="20111" productCategoryTypeId="CATALOG_CATEGORY"/>
+  <ProductCategory description="Featured Products" productCategoryId="PROMOTIONS" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Catalog1 Search Products"
     longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1"
-    productCategoryId="CATALOG1_SEARCH"/>
+    productCategoryId="CATALOG1_SEARCH" productCategoryTypeId="SEARCH_CATEGORY"/>
   <ProductCategory description="Main Quick Add Products"
-    longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1"/>
+    longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1" productCategoryTypeId="QUICKADD_CATEGORY"/>
   <ProductCategory description="Widget Quick Add Products"
-    longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2"/>
+    longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2" productCategoryTypeId="QUICKADD_CATEGORY"/>
 
   <Product defaultPrice="47.99" listPrice="48.0" description="Round Gizmo w/ Lights"
     longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact."
