@@ -1235,7 +1235,7 @@
         transaction-timout="72000" 
             location="org.ofbiz.content.ContentManagementServices" invoke="persistContentAndAssoc" auth="true">
         <description>Create a Content, DataResource and/or ContentAssoc</description>
-        <auto-attributes entity-name="Content" include="all" mode="IN" optional="true">
+        <auto-attributes entity-name="ContentDataResourceView" include="all" mode="IN" optional="true">
             <exclude field-name="contentId"/>
         </auto-attributes>
         <auto-attributes entity-name="DataResource" include="all" mode="IN" optional="true">
@@ -1259,6 +1259,7 @@
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentAssocTypeId" optional="true" type="String"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="fromDate" optional="true" type="Timestamp"/>
 
+        <attribute mode="INOUT" entity-name="DataResource" name="drDataResourceId" optional="true" type="String"/>
         <attribute mode="INOUT" name="caContentIdTo" optional="true" type="String"/>
         <attribute mode="INOUT" name="caContentAssocTypeId" optional="true" type="String"/>
         <attribute mode="INOUT" name="caFromDate" optional="true" type="Timestamp"/>
@@ -1271,6 +1272,8 @@
         <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
         <attribute mode="IN" name="imageData" optional="true" type="org.ofbiz.entity.util.ByteWrapper"/>
+        <attribute mode="IN" name="_imageData_contentType" optional="true" type="String"/>
+        <attribute mode="IN" name="_imageData_fileName" optional="true" type="String"/>
         <attribute mode="IN" name="deactivateExisting" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
