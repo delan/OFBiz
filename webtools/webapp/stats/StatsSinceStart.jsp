@@ -36,9 +36,18 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %> 
 
+<%
+    if ("true".equals(request.getParameter("clear"))) {
+        ServerHitBin.requestSinceStarted.clear();
+        ServerHitBin.eventSinceStarted.clear();
+        ServerHitBin.viewSinceStarted.clear();
+    }
+%>
+
 <br>
 <h2 style='margin:0;'>Server Statistics Since Start Page</h2>
-
+<div><a href="<ofbiz:url>/StatsSinceStart?clear=true</ofbiz:url>" class='buttontext'>Reset Since Start Stats</A></div>
+<div class='tabletext'>Current Time: <%=UtilDateTime.nowTimestamp().toString()%></div>
 <%if (security.hasPermission("SERVER_STATS_VIEW", session)) {%>
 <%
   String rowColor1 = "99CCFF";
