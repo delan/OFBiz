@@ -32,7 +32,8 @@
 
 <div class="apptitle">&nbsp;Content Manager Application&nbsp;</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>
+  <div class="col"><a href="<@ofbizUrl>/FindWebSite</@ofbizUrl>" class="${selectedLeftClassMap.FindWebSite?default(unselectedLeftClassName)}">WebSites</a></div>
 
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">Logout</a></div>

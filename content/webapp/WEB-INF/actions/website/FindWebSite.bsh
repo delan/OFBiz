@@ -1,4 +1,4 @@
-<#--
+/*
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -19,33 +19,24 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones
  *@version    $Revision$
- *@since      2.2
--->
+ *@since      2.1
+ */
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Content Manager Main Page</div>
-          </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>            
-            <DIV class='tabletext'>Welcome to the Content Manager. Check back often more functionality.</DIV>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+//webSites
+webSites = delegator.findAll("WebSite");
+context.put("webSites", webSites);
+

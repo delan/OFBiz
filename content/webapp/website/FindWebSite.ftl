@@ -19,33 +19,33 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Revision$
- *@since      2.2
+ *@since      2.1
 -->
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Content Manager Main Page</div>
-          </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>            
-            <DIV class='tabletext'>Welcome to the Content Manager. Check back often more functionality.</DIV>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+<#if hasPermission>
+
+<div class="head1">Product Catalogs List</div>
+<div><a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[Create New WebSite]</a></div>
+<br>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td><div class="tabletext"><b>Site&nbsp;Name&nbsp;[ID]</b></div></td>
+    <td><div class="tabletext">&nbsp;</div></td>
+  </tr>
+<#list webSites as webSite>
+  <tr valign="middle">
+    <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">${webSite.siteName} [${webSite.webSiteId}]</a></div></td>
+    <td>
+      <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">
+      [Edit]</a>
+    </td>
+  </tr>
+</#list>
+</table>
+<br>
+
+<#else>
+  <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
+</#if>

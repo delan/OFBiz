@@ -19,33 +19,32 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Revision$
- *@since      2.2
+ *@since      2.1
 -->
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Content Manager Main Page</div>
-          </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>            
-            <DIV class='tabletext'>Welcome to the Content Manager. Check back often more functionality.</DIV>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+<#if hasPermission>
+
+<#if webSiteId?has_content>
+  <div class='tabContainer'>
+  <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Catalog</a>
+  <a href="<@ofbizUrl>/EditWebSiteParties?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButtonSelected">Parties</a>
+  </div>
+</#if>
+
+<div class="head1">Parties <span class='head2'>for <#if (webSite.siteName)?has_content>"${webSite.siteName}"</#if> [ID:${webSiteId?if_exists}]</span></div>
+
+<a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[New WebSite]</a>
+<br>
+<br>
+<#if webSiteId?has_content>
+${updateWebSiteRoleWrapper.renderFormString()}
+<br>
+${addWebSiteRoleWrapper.renderFormString()}
+</#if>
+<br>
+
+<#else>
+ <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
+</#if>
