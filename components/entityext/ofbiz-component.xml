@@ -21,10 +21,12 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.1 2003/08/17 06:44:25 jonesde Exp $
+ *  $Id: ofbiz-component.xml,v 1.2 2003/08/17 06:58:16 jonesde Exp $
 -->
 
 <ofbiz-component name="entityext">
     <resource-loader name="main" type="component"/>    
     <classpath type="jar" loader="main" location="build/lib/*"/>
+    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+    <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
 </ofbiz-component>

@@ -10,7 +10,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             
     <!-- the transaction factory class to use, one is needed for each way of getting JTA interfaces -->
     <!-- Use this one for JOTM -->
-    <transaction-factory class="org.ofbiz.entity.transaction.JotmFactory"/>    
+    <transaction-factory class="org.ofbiz.entity.transaction.JotmFactory"/>
     
     <!-- Use this one for JNDI -->
     <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties -->    

@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  This is the DTD for the Open For Business Entity Engine configuration XML file.
- *  $Id: entity-config.dtd,v 1.2 2003/08/16 23:22:10 ajzeneski Exp $
+ *  $Id: entity-config.dtd,v 1.3 2003/08/17 06:58:16 jonesde Exp $
 -->
 
 <!-- ====================== Root Element ======================= -->
@@ -63,7 +63,7 @@
     entity-group-reader CDATA #REQUIRED
     entity-eca-reader CDATA #IMPLIED
     distributed-cache-clear-enabled ( true | false ) "false"
-    distributed-cache-clear-class-name CDATA "org.ofbiz.core.extentity.EntityCacheServices"
+    distributed-cache-clear-class-name CDATA "org.ofbiz.entityext.cache.EntityCacheServices"
     distributed-cache-clear-user-login-id CDATA "admin"
 >
     <!ELEMENT group-map EMPTY>
