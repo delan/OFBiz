@@ -74,6 +74,11 @@
   <Enumeration description="Pick/Primary" enumCode="PICKLOC" enumId="FLT_PICKLOC" enumTypeId="FACLOC_TYPE" sequenceId="01"/>
   <Enumeration description="Bulk" enumCode="BULK" enumId="FLT_BULK" enumTypeId="FACLOC_TYPE" sequenceId="02"/>
 
+  <EnumerationType description="Keyword Override Target Type" enumTypeId="KWOVRD_TRGT_TYPE" hasTable="N" parentTypeId=""/>
+  <Enumeration description="Product Category" enumCode="PRODCAT" enumId="KOTT_PRODCAT" enumTypeId="KWOVRD_TRGT_TYPE" sequenceId="01"/>
+  <Enumeration description="Relative URL" enumCode="RURL" enumId="KOTT_RURL" enumTypeId="KWOVRD_TRGT_TYPE" sequenceId="02"/>
+  <Enumeration description="Absolute URL" enumCode="AURL" enumId="KOTT_AURL" enumTypeId="KWOVRD_TRGT_TYPE" sequenceId="03"/>
+
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
   <FacilityType description="Office" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>

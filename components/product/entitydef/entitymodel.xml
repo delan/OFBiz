@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  */
 -->
 
@@ -2643,6 +2643,25 @@
       <prim-key field="productStoreGroupTypeId"/>
       <relation type="many" rel-entity-name="ProductStoreGroup">
         <key-map field-name="productStoreGroupTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreKeywordOvrd"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Inventory Facility Applicability Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="keyword" type="short-varchar"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="target" type="long-varchar"></field>
+      <field name="targetTypeEnumId" type="id"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="keyword"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PRDSTRKWO_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRKWO_ENM" rel-entity-name="Enumeration">
+        <key-map field-name="targetTypeEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
     <entity entity-name="ProductStorePaymentSetting"
