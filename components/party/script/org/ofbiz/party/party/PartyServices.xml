@@ -179,4 +179,104 @@
         <set-nonpk-fields value-name="ppDefs" map-name="parameters" set-if-null="false"/>
         <store-value value-name="ppDefs"/>
     </simple-method>
+    
+    <!-- create party content -->
+    <simple-method method-name="createPartyContent" short-description="Creates Party Associated Content" login-required="false">
+        <!-- make sure we are logged in when passing a partyId -->
+        <if-not-empty field-name="partyId" map-name="parameters">
+            <if-empty field-name="userLogin" map-name="parameters">
+                <add-error><fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/></add-error>
+                <check-errors/>
+            </if-empty>
+        </if-not-empty>
+
+        <!-- check permission when creating content on behalf of another party -->
+        <if-empty field-name="partyId" map-name="parameters">
+            <if-not-empty field-name="userLogin" map-name="parameters">
+                <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
+                <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
+                    <check-permission permission="PARTYMGR" action="_UPDATE">
+				        <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
+                    </check-permission>
+                </if-compare-field>
+            </if-not-empty>
+        </if-empty>
+
+
+        <!-- find the sub directory file location -->
+        <call-class-method class-name="org.ofbiz.content.data.DataResourceWorker" method-name="getDataResourceContentUploadPath" ret-field-name="uploadPath"/>
+        <log level="always" message="[createPartyContent] - Found Subdir : ${uploadPath}"/>
+
+        <!-- locate the file extension to use based on mime-type -->
+        <field-to-field field-name="_uploadedFile_contentType" map-name="parameters" to-field-name="mimeTypeId" to-map-name="extenLookup"/>
+        <find-by-and entity-name="FileExtension" map-name="extenLookup" list-name="extensions"/>
+        <first-from-list entry-name="extension" list-name="extensions"/>
+
+        <!-- create the data resource object -->
+        <sequenced-id-to-env sequence-name="DataResource" env-name="dataResourceId"/>
+        <make-value value-name="dataResource" entity-name="DataResource"/>
+        <env-to-field env-name="dataResourceId" map-name="dataResource"/>
+        <field-to-field field-name="_uploadedFile_fileName" map-name="parameters" to-field-name="dataResourceName" to-map-name="dataResource"/>
+        <field-to-field field-name="_uploadedFile_contentType" map-name="parameters" to-field-name="mimeTypeId" to-map-name="dataResource"/>
+        <field-to-field field-name="dataCategoryId" map-name="parameters" to-map-name="dataResource"/>
+        <field-to-field field-name="statusId" map-name="parameters" to-map-name="dataResource"/>
+
+        <string-to-field string="${uploadPath}/${dataResource.dataResourceId}" field-name="objectInfo" map-name="dataResource"/>
+        <if-not-empty field-name="extension">
+            <string-to-field string="${uploadPath}/${dataResource.dataResourceId}.${extension.fileExtensionId}" field-name="objectInfo" map-name="dataResource"/>
+        </if-not-empty>
+
+        <string-to-field string="LOCAL_FILE" field-name="dataResourceTypeId" map-name="dataResource"/>
+        <create-value value-name="dataResource"/>
+
+        <!-- create content record -->
+        <sequenced-id-to-env sequence-name="Content" env-name="contentId"/>
+        <make-value value-name="content" entity-name="Content"/>
+        <env-to-field env-name="contentId" map-name="content"/>
+        <field-to-field field-name="_uploadedFile_fileName" map-name="parameters" to-field-name="contentName" to-map-name="content"/>
+        <field-to-field field-name="_uploadedFile_contentType" map-name="parameters" to-field-name="mimeTypeId" to-map-name="content"/>
+        <field-to-field field-name="dataResourceId" map-name="dataResource" to-map-name="content"/>
+        <field-to-field field-name="contentTypeId" map-name="parameters" to-map-name="content"/>
+        <field-to-field field-name="statusId" map-name="parameters" to-map-name="content"/>
+        <string-to-field string="${parameters.locale}" field-name="localeString" map-name="content"/>
+        <create-value value-name="content"/>
+
+        <!-- create the content role -->
+        <if-not-empty field-name="partyId" map-name="parameters">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <make-value value-name="contentRole" entity-name="ContentRole"/>
+            <field-to-field field-name="contentId" map-name="content" to-map-name="contentRole"/>
+            <field-to-field field-name="partyId" map-name="parameters" to-map-name="contentRole"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="contentRole"/>
+            <string-to-field string="OWNER" field-name="roleTypeId" map-name="contentRole"/>
+
+            <!-- check party role -->
+            <make-value value-name="partyRole" entity-name="PartyRole"/>
+            <set-pk-fields value-name="partyRole" map-name="contentRole"/>
+            <find-by-and entity-name="PartyRole" map-name="partyRole" list-name="pRoles"/>
+            <if-empty field-name="pRoles">
+                <create-value value-name="partyRole"/>
+            </if-empty>
+            <create-value value-name="contentRole"/>
+        </if-not-empty>
+
+        <!-- if no user login lets create a dummy to store the file -->
+        <if-empty field-name="userLogin">
+            <string-to-field string="anonymous" field-name="userLoginId" map-name="ulLookup"/>
+            <find-by-primary-key map-name="ulLookup" value-name="anUserLogin" entity-name="UserLogin"/>
+            <field-to-field field-name="partyId" map-name="parameters" to-map-name="anUserLogin"/>
+            <if-empty field-name="partyId" map-name="userLogin">
+                <string-to-field string="_NA_" field-name="partyId" map-name="anUserLogin"/>
+            </if-empty>
+            <set-current-user-login value-name="anUserLogin"/>
+        </if-empty>
+
+        <!-- store the file -->
+        <field-to-field field-name="uploadedFile" map-name="parameters" to-field-name="binData" to-map-name="fileCtx"/>
+        <field-to-field field-name="dataResource" to-map-name="fileCtx"/>
+        <env-to-field env-name="userLogin" map-name="fileCtx"/>
+        <call-service service-name="createFile" in-map-name="fileCtx" include-user-login="true"/>
+
+        <field-to-result field-name="contentId" map-name="content"/> 
+    </simple-method>
 </simple-methods>

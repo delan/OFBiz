@@ -473,4 +473,17 @@
         <description>Marks a communication event as read if in the entered/pending status</description>
         <attribute name="messageId" type="String" mode="IN" optional="false"/>
     </service>
+
+    <service name="createPartyContent" engine="simple"
+            location="org/ofbiz/party/party/PartyServices.xml" invoke="createPartyContent" auth="false">
+        <description>Create Party Associated Content</description>
+        <attribute name="uploadedFile" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="false"/>
+        <attribute name="_uploadedFile_fileName" type="String" mode="IN" optional="false"/>
+        <attribute name="_uploadedFile_contentType" type="String" mode="IN" optional="false"/>
+        <attribute name="contentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="dataCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="contentId" type="String" mode="OUT" optional="false"/>
+    </service>
 </services>
