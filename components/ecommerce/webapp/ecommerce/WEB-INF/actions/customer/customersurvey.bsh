@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  */
 
@@ -32,12 +32,12 @@ import org.ofbiz.product.store.ProductStoreSurveyWrapper;
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 partyId = userLogin.getString("partyId");
+paramMap = UtilHttp.getParameterMap(request);
 
-productStoreSurveyId = request.getParameter("productStoreSurveyId");
+productStoreSurveyId = paramMap.get("productStoreSurveyId");
 if (productStoreSurveyId == null) {
     productStoreSurveyId = request.getAttribute("productStoreSurveyId");
 }
-paramMap = UtilHttp.getParameterMap(request);
 
 surveyAppl = delegator.findByPrimaryKey("ProductStoreSurveyAppl", UtilMisc.toMap("productStoreSurveyId", productStoreSurveyId));
 if (surveyAppl != null) {

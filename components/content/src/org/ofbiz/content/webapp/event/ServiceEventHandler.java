@@ -159,6 +159,9 @@ public class ServiceEventHandler implements EventHandler {
             }
         }
 
+        // store the multi-part map as an attribute so we can access the parameters
+        request.setAttribute("multiPartMap", multiPartMap);
+
         // we have a service and the model; build the context
         Map serviceContext = new HashMap();
         Iterator modelParmInIter = model.getInModelParamList().iterator();

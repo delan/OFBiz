@@ -92,6 +92,14 @@ public class UtilHttp {
             String name = (String) e.nextElement();
             paramMap.put(name, request.getParameter(name));
         }
+
+        if (paramMap.size() == 0) {
+            // nothing found in the parameters; maybe we read the stream instead
+            Map multiPartMap = (Map) request.getAttribute("multiPartMap");
+            if (multiPartMap != null && multiPartMap.size() > 0) {
+                paramMap.putAll(multiPartMap);
+            }
+        }
         return paramMap;
     }
 
