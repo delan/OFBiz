@@ -164,6 +164,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         if (!isLocked) {
             this.setEnabled(true);
             this.setVisible(true);
+            journal.refresh(this);
             input.clearInput();
             operator.refresh();
             if (updateOutput) {
@@ -171,22 +172,17 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
                     output.print(Output.CHANGE + UtilFormatOut.formatPrice(trans.getTotalDue() * -1));
                 } else if (input.isFunctionSet("TOTAL")) {
                     if (trans.getTotalDue() > 0) {
-                        journal.refresh(this);
                         output.print(Output.TOTALD + UtilFormatOut.formatPrice(trans.getTotalDue()));
                     } else {
-                        journal.refresh(this);
                         output.print(Output.PAYFIN);
                     }
                 } else {
-                    journal.refresh(this);
                     if (PosTransaction.getCurrentTx(session).isOpen()) {
                         output.print(Output.ISOPEN);
                     } else {
                         output.print(Output.ISCLOSED);
                     }
                 }
-            } else {
-                journal.refresh(this);
             }
         } else {
             output.print(Output.ULOGIN);
