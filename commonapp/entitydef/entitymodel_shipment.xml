@@ -512,6 +512,7 @@
             title="Shipment Method Type Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
+      <field name="sequenceNumber" type="numeric"></field> 	
       <prim-key field="shipmentMethodTypeId"/>
       <relation type="many" rel-entity-name="OrderShipmentPreference">
         <key-map field-name="shipmentMethodTypeId"/>
