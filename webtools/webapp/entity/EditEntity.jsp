@@ -48,7 +48,6 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
   String errorMsg = "";
   ResourceHandler entityResourceHandler = delegator.getModelReader().getEntityResourceHandler(entityName);
 
-  Debug.logInfo("running EditEntity event [" + event + "]");
   if ("addEntity".equals(event)) {
     if (entity == null) {
       entity = new ModelEntity();

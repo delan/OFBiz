@@ -235,7 +235,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       try {
       	relatedEntity = reader.getModelEntity(relation.getRelEntityName());
       } catch (GenericEntityException e) {
-      	Debug.logError("Entity referred to in relation is not defined: " + relation.getRelEntityName());
+      	Debug.log("Entity referred to in relation is not defined: " + relation.getRelEntityName());
       }
       if (relatedEntity != null) {
         //if relation is of type one, make sure keyMaps match the PK of the relatedEntity

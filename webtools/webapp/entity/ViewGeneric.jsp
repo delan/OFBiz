@@ -623,4 +623,4 @@ Displaying <%=relatedLoopCount%> entities.
 <%}else{%>
   <h3>You do not have permission to view this page (<%=entity.getPlainTableName()%>_ADMIN, or <%=entity.getPlainTableName()%>_VIEW needed).</h3>
 <%}%>
-<%} catch (Exception e) { Debug.logError(e); throw e; }%>
+<%} catch (Exception e) { Debug.log(e); throw e; }%>

@@ -163,12 +163,12 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
     int rowsChanged = 0;
 
     if(dataFile.getName().toLowerCase().endsWith(".xml")) {
-      Debug.logInfo("[install.loadData] Loading XML File: \"" + dataFile.getAbsolutePath() + "\"");
+      Debug.log("[install.loadData] Loading XML File: \"" + dataFile.getAbsolutePath() + "\"");
       URL url = null;
       try { url = dataFile.toURL(); }
       catch(java.net.MalformedURLException e) {
         String xmlError = "[install.loadData]: Error loading XML file \"" + dataFile.getAbsolutePath() + "\"; Error was: " + e.getMessage();
-        errorMessages.add(xmlError); Debug.logWarning(xmlError);
+        errorMessages.add(xmlError); Debug.log(xmlError);
       }
 
       try {
@@ -182,11 +182,11 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
       } catch(Exception e) {
         String xmlError = "[install.loadData]: Error loading XML file \"" + dataFile.getAbsolutePath() + "\"; Error was: " + e.getMessage();
         errorMessages.add(xmlError);
-        Debug.logWarning(xmlError);
-        Debug.logWarning(e);
+        Debug.log(xmlError);
+        Debug.log(e);
       }
     } else if(dataFile.getName().toLowerCase().endsWith(".sql")) {
-      Debug.logInfo("[install.loadData] Loading SQL File: \"" + dataFile.getAbsolutePath() + "\"");
+      Debug.log("[install.loadData] Loading SQL File: \"" + dataFile.getAbsolutePath() + "\"");
       Connection connection = null; 
       Statement stmt = null;
       try {
@@ -212,13 +212,13 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
               sql = sql.trim();
               if(sql.startsWith("INSERT") || sql.startsWith("insert"))
               {
-                //Debug.logInfo("[install.loadData] Running found insert sql: \"" + sql + "\"");
+                //Debug.log("[install.loadData] Running found insert sql: \"" + sql + "\"");
                 try {
                   rowsChanged += stmt.executeUpdate(sql);
                 } catch (SQLException sqle) {
                   String sqlError = "[install.loadData]: Error running sql:\"" + sql + "\"; Error was: " + sqle.getMessage();
                   errorMessages.add(sqlError);
-                  Debug.logWarning(sqlError);
+                  Debug.log(sqlError);
                 }
               }
 
@@ -234,7 +234,7 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
       } catch (Exception e) { 
         String errorMsg = "[install.loadData]: Load error:" +  e.getMessage();
         errorMessages.add(errorMsg);
-        Debug.logWarning(errorMsg);
+        Debug.log(errorMsg);
       } finally {
         try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
         try { if (connection != null) connection.close(); } catch (SQLException sqle) { }

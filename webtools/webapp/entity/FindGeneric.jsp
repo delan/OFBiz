@@ -89,8 +89,8 @@
 //--------------
   String resultArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
   if (resultArray == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0) {
-    Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
-    Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
+    Debug.log("-=-=-=-=- Current Array not found in session, getting new one...");
+    Debug.log("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
     if ("true".equals(find)) {
       resultCol = delegator.findByAnd(findByEntity.entityName, findByEntity.getAllFields(), null);
@@ -111,7 +111,7 @@
   int arraySize = 0;
   if (resultArray!=null) arraySize = resultArray.length;
   if (arraySize<highIndex) highIndex=arraySize;
-  //Debug.logInfo("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
+  //Debug.log("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
 <h3 style='margin:0;'>Find <%=modelEntity.getEntityName()%>s</h3>
 <%-- Note: you may use the '%' character as a wildcard for String fields. --%>
@@ -267,4 +267,4 @@
 <%} else {%>
   <h3>You do not have permission to view this page (<%=modelEntity.getPlainTableName()%>_ADMIN, or <%=modelEntity.getPlainTableName()%>_VIEW needed).</h3>
 <%}%>
-<%} catch (Exception e) { Debug.logError(e); throw e; }%>
+<%} catch (Exception e) { Debug.log(e); throw e; }%>
