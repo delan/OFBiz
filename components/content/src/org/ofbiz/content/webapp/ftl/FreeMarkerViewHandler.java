@@ -28,10 +28,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.jpublish.view.freemarker.JPublishTemplateLoader;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.content.webapp.view.ViewHandler;
+import org.ofbiz.content.webapp.view.ViewHandlerException;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.jsp.TaglibFactory;
@@ -42,10 +48,6 @@ import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.WrappingTemplateModel;
-
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.content.webapp.view.ViewHandler;
-import org.ofbiz.content.webapp.view.ViewHandlerException;
 
 
 /**
@@ -64,7 +66,14 @@ public class FreeMarkerViewHandler implements ViewHandler {
 
     public void init(ServletContext context) throws ViewHandlerException {
         this.servletContext = context;
-        config = Configuration.getDefaultConfiguration();
+
+        config = new freemarker.template.Configuration();
+
+        JPublishTemplateLoader templateLoader = new JPublishTemplateLoader();
+        //templateLoader.setSiteContext(siteContext);
+        config.setTemplateLoader(templateLoader);
+        config.setLocalizedLookup(false);
+        
         //nice thought, but doesn't do auto reloading with this: config.setServletContextForTemplateLoading(context, "/");
         try {
             config.setDirectoryForTemplateLoading(new File(context.getRealPath("/")));
