@@ -207,6 +207,7 @@
   <ProductType description="Subassembly" hasTable="N" parentTypeId="GOOD" productTypeId="SUBASSEMBLY"/>
   <ProductType description="Finished Good" hasTable="N" parentTypeId="GOOD" productTypeId="FINISHED_GOOD"/>
   <ProductType description="Digital Good" hasTable="N" parentTypeId="GOOD" productTypeId="DIGITAL_GOOD"/>
+  <ProductType description="Finished/Digital Good" hasTable="N" parentTypeId="GOOD" productTypeId="FINDIG_GOOD"/>
 
   <!-- inventory item status -->
   <StatusType description="Inventory Item" hasTable="N" parentTypeId="" statusTypeId="INVENTORY_ITEM_STTS"/>
