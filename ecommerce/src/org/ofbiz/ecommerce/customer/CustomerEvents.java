@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.36  2001/12/15 21:20:59  jonesde
+ * A few fixes related to tighter restrictions in the entity engine on makeValue
+ *
  * Revision 1.35  2001/10/19 16:45:32  azeneski
  * Moved party, contact and login related events out.
  *
@@ -54,7 +57,8 @@ public class CustomerEvents {
      *@return String specifying the exit status of this event
      */
     public static String createCustomer(HttpServletRequest request, HttpServletResponse response) {
-        GenericValue newUserLogin = null;
+        Collection toBeStored = new LinkedList();
+        
         String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = request.getSession().getServletContext();
@@ -137,6 +141,7 @@ public class CustomerEvents {
         }
         
         GenericValue tempUserLogin = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "partyId", username));
+        toBeStored.add(tempUserLogin);
         if(UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) {
             errMsg += LoginEvents.setPassword(tempUserLogin, password, confirmPassword, passwordHint);
         }
@@ -149,20 +154,21 @@ public class CustomerEvents {
         }
         
         //UserLogin with username does not exist: create new user...
-        if(!UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) password = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "default.customer.password", "ungssblepswd");
+        if(!UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true"))
+            password = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "default.customer.password", "ungssblepswd");
         
         Timestamp now = UtilDateTime.nowTimestamp();
         
         // create Party, PartyClass, Person, ContactMechs for Address, phones
-        tempUserLogin.preStoreOther(delegator.makeValue("Party", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON")));
-        tempUserLogin.preStoreOther(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", username, "roleTypeId", "CUSTOMER")));
-        tempUserLogin.preStoreOther(delegator.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName, "personalTitle", personalTitle, "suffix", suffix)));
+        toBeStored.add(delegator.makeValue("Party", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON")));
+        toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", username, "roleTypeId", "CUSTOMER")));
+        toBeStored.add(delegator.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName, "personalTitle", personalTitle, "suffix", suffix)));
         
         Long newCmId = null;
         //make address
         newCmId = delegator.getNextSeqId("ContactMech");
         if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
-        tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "POSTAL_ADDRESS")));
+        toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "POSTAL_ADDRESS")));
         GenericValue newAddr = delegator.makeValue("PostalAddress", null);
         newAddr.set("contactMechId", newCmId.toString());
         newAddr.set("toName", firstName + " " + lastName);
@@ -174,61 +180,62 @@ public class CustomerEvents {
         newAddr.set("stateProvinceGeoId", state);
         newAddr.set("countryGeoId", country);
         //newAddr.set("postalCodeGeoId", postalCodeGeoId);
-        tempUserLogin.preStoreOther(newAddr);
-        tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
-        tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "fromDate", now)));
+        toBeStored.add(newAddr);
+        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
+        toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "fromDate", now)));
         
         //make home phone number
         if(UtilValidate.isNotEmpty(homeContactNumber)) {
             newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
-            tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-            tempUserLogin.preStoreOther(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
-            tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
-            tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_HOME", "fromDate", now)));
+            toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
+            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
+            toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_HOME", "fromDate", now)));
         }
         
         //make work phone number
         if(UtilValidate.isNotEmpty(workContactNumber)) {
             newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
-            tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-            tempUserLogin.preStoreOther(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
-            tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
-            tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_WORK", "fromDate", now)));
+            toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
+            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
+            toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_WORK", "fromDate", now)));
         }
         
         //make fax number
         if(UtilValidate.isNotEmpty(faxContactNumber)) {
             newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
-            tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-            tempUserLogin.preStoreOther(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
-            tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
-            tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "FAX_NUMBER", "fromDate", now)));
+            toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
+            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
+            toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "FAX_NUMBER", "fromDate", now)));
         }
         
         //make mobile phone number
         if(UtilValidate.isNotEmpty(mobileContactNumber)) {
             newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
-            tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
-            tempUserLogin.preStoreOther(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
-            tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
-            tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_MOBILE", "fromDate", now)));
+            toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
+            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
+            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
+            toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_MOBILE", "fromDate", now)));
         }
         
         //make email
         newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
-        tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)));
-        tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
-        tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PRIMARY_EMAIL", "fromDate", now)));
+        toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)));
+        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
+        toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PRIMARY_EMAIL", "fromDate", now)));
         
-        try { newUserLogin = delegator.create(tempUserLogin); }
-        catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newUserLogin = null; }
-        if(newUserLogin == null) {
+        try {
+            delegator.storeAll(toBeStored);
+        }
+        catch(GenericEntityException e) {
             request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not create new account (create failure). Please contact customer service.");
             return "error";
         }
         
-        if(UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) request.getSession().setAttribute(SiteDefs.USER_LOGIN, newUserLogin);
+        if(UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) 
+            request.getSession().setAttribute(SiteDefs.USER_LOGIN, tempUserLogin);
         return "success";
     }
-        
 }
