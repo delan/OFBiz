@@ -215,6 +215,15 @@ public class UtilMisc {
         return (Map) paramMap;
     }
 
+	/** Given a request, returns the application name or "root" if deployed on root */
+	public static String getApplicationName(HttpServletRequest request) {
+		String appName = "root";
+		if (request.getContextPath().length() > 1) {
+			appName = request.getContextPath().substring(1);
+		}		
+		return appName;
+	}	
+	
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
     protected static class SimpleMap implements Map, java.io.Serializable {
         protected Map realMapIfNeeded = null;
@@ -382,5 +391,6 @@ public class UtilMisc {
                 return realMapIfNeeded.values();
             }
         }
+		
     }
 }
