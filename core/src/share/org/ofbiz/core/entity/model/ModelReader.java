@@ -268,6 +268,14 @@ public class ModelReader {
         return (Collection) fileNameEntities.get(entityFileName);
     }
 
+    public void addEntityToFile(String entityName, String filename) {
+        entityFile.put(entityName, filename);
+    }
+    
+    public String getEntityFileName(String entityName) {
+        return (String) entityFile.get(entityName);
+    }
+    
     /** Gets an Entity object based on a definition from the specified XML Entity descriptor file.
      * @param entityName The entityName of the Entity definition to use.
      * @return An Entity object describing the specified entity of the specified descriptor file.

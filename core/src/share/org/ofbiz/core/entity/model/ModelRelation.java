@@ -95,7 +95,7 @@ public class ModelRelation {
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
     public int getKeyMapsSize() { return this.keyMaps.size(); }
     public ModelKeyMap getKeyMap(int index) { return (ModelKeyMap) this.keyMaps.get(index); }
-    public void addKeyMaps(ModelKeyMap keyMap) { this.keyMaps.add(keyMap); }
+    public void addKeyMap(ModelKeyMap keyMap) { this.keyMaps.add(keyMap); }
     public ModelKeyMap removeKeyMap(int index) { return (ModelKeyMap) this.keyMaps.remove(index); }
     
     /** Find a KeyMap with the specified fieldName */
