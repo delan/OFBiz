@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To refer to this DTD in your XML file, use the following declaration:
+<!DOCTYPE string-processor PUBLIC "-//OFBiz//DTD String Processor//EN" "http://www.ofbiz.org/dtds/string-processor.dtd">
+-->
+
+<!--
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*This is the DTD for the Open For Business String Processor definition XML file.
+-->
+
+<!ELEMENT string-processor ( string-process* )>
+<!ELEMENT string-process ( ( validate-method | compare | regexp | not-empty | equals | copy | convert )* )>
+<!ATTLIST string-process
+    field CDATA #REQUIRED
+>
+
+<!-- 
+    String Operations 
+-->
+
+<!-- validate-method calls a static Java method that takes a String and returns a boolean -->
+<!ELEMENT validate-method ( fail-message | fail-property )>
+<!ATTLIST validate-method
+    method CDATA #REQUIRED
+    class CDATA "org.ofbiz.core.util.UtilValidate"
+>
+
+<!ELEMENT compare ( fail-message | fail-property )>
+<!ATTLIST compare
+    operator CDATA #REQUIRED
+    value CDATA #REQUIRED
+    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+>
+
+<!ELEMENT regexp ( fail-message | fail-property )>
+<!ATTLIST regexp
+    expr CDATA #REQUIRED
+>
+
+<!ELEMENT not-empty ( fail-message | fail-property )>
+
+<!ELEMENT equals ( fail-message | fail-property )>
+<!ATTLIST equals
+    value CDATA #REQUIRED
+    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+>
+
+<!ELEMENT copy EMPTY>
+<!ATTLIST copy
+    to-field CDATA #REQUIRED
+    replace ( true | false ) "true"
+>
+
+<!ELEMENT convert ( fail-message | fail-property )>
+<!ATTLIST convert
+    to-field CDATA #REQUIRED
+    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) #REQUIRED
+    replace ( true | false ) "true"
+>
+
+<!-- 
+    Failure stuff: inline message or from a properties file 
+-->
+<!ELEMENT fail-message EMPTY>
+<!ATTLIST fail-message
+    message CDATA #REQUIRED
+>
+
+<!ELEMENT fail-property EMPTY>
+<!ATTLIST fail-property
+    resource CDATA #REQUIRED
+    property CDATA #REQUIRED
+>
