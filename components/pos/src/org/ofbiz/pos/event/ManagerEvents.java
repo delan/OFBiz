@@ -36,10 +36,12 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.pos.device.impl.Receipt;
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.pos.component.Input;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -58,6 +60,44 @@ public class ManagerEvents {
 
     public static final String module = ManagerEvents.class.getName();
     public static boolean mgrLoggedIn = false;
+
+    public static void modifyPrice(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        String sku = null;
+        try {
+            sku = MenuEvents.getSelectedItem(pos);
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        if (sku == null) {
+            pos.getOutput().print("Invalid Selection!");
+            pos.getJournal().refresh(pos);
+            pos.getInput().clear();
+        }
+
+        Input input = pos.getInput();
+        String value = input.value();
+        if (UtilValidate.isNotEmpty(value)) {
+            double price = 0.00;
+            boolean parsed = false;
+            try {
+                price = Double.parseDouble(value);
+                parsed = true;
+            } catch (NumberFormatException e) {
+            }
+
+            if (parsed) {
+                price = price / 100;
+                trans.modifyPrice(sku, price);
+
+                // re-calc tax
+                trans.calcTax();
+            }
+        }
+
+        // refresh the other components
+        pos.refresh();
+    }
 
     public static void openDrawer(PosScreen pos) {
         if (!mgrLoggedIn) {

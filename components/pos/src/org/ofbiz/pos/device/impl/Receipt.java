@@ -168,7 +168,7 @@ public class Receipt extends GenericDevice implements DialogCallback {
                     this.printReceipt(trans, storeReceipt, 1, info);
                 }
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(3000);
                 } catch (Exception e) {
                 }
             }                        

@@ -16,6 +16,7 @@ $Id$
     <event button-name="numNine" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerNine" disable-lock="true"/>
     <event button-name="numZero" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerZero" disable-lock="true"/>
     <event button-name="numDZero" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerDZero" disable-lock="true"/>
+    <event button-name="numPercent" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerPercent" disable-lock="true"/>
 
     <!-- character events -->
     <event button-name="charShift" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerShift" disable-lock="false"/>
@@ -57,6 +58,9 @@ $Id$
     <event button-name="menuVoidItem" class-name="org.ofbiz.pos.event.MenuEvents" method-name="voidItem" disable-lock="false"/>
     <event button-name="menuVoidAll" class-name="org.ofbiz.pos.event.MenuEvents" method-name="voidAll" disable-lock="false"/>
     <event button-name="menuChgQty" class-name="org.ofbiz.pos.event.MenuEvents" method-name="changeQty" disable-lock="false"/>
+    <event button-name="menuItemDisc" class-name="org.ofbiz.pos.event.MenuEvents" method-name="itemDiscount" disable-lock="false"/>
+    <event button-name="menuSaleDisc" class-name="org.ofbiz.pos.event.MenuEvents" method-name="saleDiscount" disable-lock="false"/>
+    <event button-name="menuClrDisc" class-name="org.ofbiz.pos.event.MenuEvents" method-name="clearDiscounts" disable-lock="false"/>
 
     <!-- payment events -->
     <event button-name="payCash" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="payCash" disable-lock="false"/>
@@ -81,6 +85,7 @@ $Id$
 
     <!-- pos mgr menu events -->
     <event button-name="mgrPopDrwr" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="openDrawer" disable-lock="false"/>
+    <event button-name="mgrPriceChg" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="modifyPrice" disable-lock="false"/>
     <event button-name="mgrTotals" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="totalsReport" disable-lock="false"/>
     <event button-name="mgrCacheClear" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="clearCache" disable-lock="false"/>
     <event button-name="mgrResetXui" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="resetXui" disable-lock="false"/>

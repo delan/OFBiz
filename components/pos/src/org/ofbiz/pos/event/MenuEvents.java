@@ -240,6 +240,71 @@ public class MenuEvents {
         pos.refresh();
     }
 
+    public static void saleDiscount(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        Input input = pos.getInput();
+        String value = input.value();
+        if (UtilValidate.isNotEmpty(value)) {
+            double amount = 0.00;
+            boolean percent = false;
+            if (value.endsWith("%")) {
+                percent = true;
+                value = value.substring(0, value.length() - 1);
+            }
+            try {
+                amount = Double.parseDouble(value);
+            } catch (NumberFormatException e) {
+            }
+
+            amount = (amount / 100) * -1;
+            trans.addDiscount(null, amount, percent);
+            trans.calcTax();
+        }
+        pos.refresh();
+    }
+
+    public static void itemDiscount(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        String sku = null;
+        try {
+            sku = getSelectedItem(pos);
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+
+        if (sku == null) {
+            pos.getOutput().print("Invalid Selection!");
+            pos.getJournal().refresh(pos);
+            pos.getInput().clear();
+        }
+
+        Input input = pos.getInput();
+        String value = input.value();
+        if (UtilValidate.isNotEmpty(value)) {
+            double amount = 0.00;
+            boolean percent = false;
+            if (value.endsWith("%")) {
+                percent = true;
+                value = value.substring(0, value.length() - 1);
+            }
+            try {
+                amount = Double.parseDouble(value);
+            } catch (NumberFormatException e) {
+            }
+
+            amount = (amount / 100) * -1;
+            trans.addDiscount(sku, amount, percent);
+            trans.calcTax();
+        }
+        pos.refresh();
+    }
+
+    public static void clearDiscounts(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        trans.clearDiscounts();
+        trans.calcTax();
+        pos.refresh();
+    }
+
     public static void calcTotal(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         trans.calcTax();
@@ -279,7 +344,7 @@ public class MenuEvents {
         pos.refresh();
     }
 
-    private static String getSelectedItem(PosScreen pos) {
+    public static String getSelectedItem(PosScreen pos) {
         Journal journal = pos.getJournal();
         return journal.getSelectedSku();
     }

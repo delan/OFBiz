@@ -80,6 +80,10 @@ public class NumericEvents {
     public static void triggerDZero(PosScreen pos) {
         pos.getInput().appendString("00");
     }
+
+    public static void triggerPercent(PosScreen pos) {
+        pos.getInput().appendString("%");
+    }
 }
 
 

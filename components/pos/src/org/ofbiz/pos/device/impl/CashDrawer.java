@@ -56,7 +56,7 @@ public class CashDrawer extends GenericDevice implements Runnable {
     public void openDrawer() {
         try {
             ((jpos.CashDrawer) control).openDrawer();
-            this.startWaiter();
+            //this.startWaiter();
         } catch (JposException e) {
             Debug.logError(e, module);
             PosScreen.currentScreen.showDialog("main/dialog/error/drawererror");
@@ -73,7 +73,7 @@ public class CashDrawer extends GenericDevice implements Runnable {
         return false;
     }
 
-    private synchronized void startWaiter() {
+    protected synchronized void startWaiter() {
         if (!this.isDrawerOpen()) {
             this.waiter = new Thread(this);
             this.waiter.setDaemon(false);
