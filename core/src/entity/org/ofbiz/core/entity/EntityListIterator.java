@@ -44,6 +44,7 @@ public class EntityListIterator implements ListIterator {
     protected ModelFieldTypeReader modelFieldTypeReader;
     protected boolean closed = false;
     protected boolean haveMadeValue = false;
+    protected GenericDelegator delegator = null;
     
     public EntityListIterator(SQLProcessor sqlp, ModelEntity modelEntity, List selectFields, ModelFieldTypeReader modelFieldTypeReader) {
         this.sqlp = sqlp;
@@ -51,6 +52,10 @@ public class EntityListIterator implements ListIterator {
         this.modelEntity = modelEntity;
         this.selectFields = selectFields;
         this.modelFieldTypeReader = modelFieldTypeReader;
+    }
+    
+    public void setDelegator(GenericDelegator delegator) {
+        this.delegator = delegator;
     }
 
     /** Sets the cursor position to just after the last result so that previous() will return the last result */
@@ -91,6 +96,7 @@ public class EntityListIterator implements ListIterator {
         }
 
         value.modified = false;
+        value.setDelegator(this.delegator);
         this.haveMadeValue = true;
         return value;
     }

@@ -779,10 +779,7 @@ public class GenericDelegator {
      */
     public EntityListIterator findListIteratorByCondition(String entityName, EntityCondition entityCondition, 
             Collection fieldsToSelect, List orderBy) throws GenericEntityException {
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        if (entityCondition != null) entityCondition.checkCondition(modelEntity);
-        GenericHelper helper = getEntityHelper(entityName);
-        return helper.findListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, 
+        return this.findListIteratorByCondition(entityName, entityCondition, fieldsToSelect, orderBy, 
                 true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
     }
     
@@ -809,8 +806,10 @@ public class GenericDelegator {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         if (entityCondition != null) entityCondition.checkCondition(modelEntity);
         GenericHelper helper = getEntityHelper(entityName);
-        return helper.findListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, 
+        EntityListIterator eli = helper.findListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, 
                 specifyTypeAndConcur, resultSetType, resultSetConcurrency, distinct);
+        eli.setDelegator(this);
+        return eli;
     }
     
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
