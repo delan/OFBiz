@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  */
 
@@ -56,14 +56,16 @@ context.put("facility", facility);
 UtilHttp.parametersToAttributes(request);
 List foundLocations = null;
 if (lookup != null) {
-    Map paramMap = UtilHttp.getParameterMap(request);
+    Map reqParamMap = UtilHttp.getParameterMap(request);
+    Map paramMap = new HashMap(reqParamMap);
     paramMap.remove("look_up");
-    Iterator i = paramMap.keySet().iterator();
+    Iterator i = reqParamMap.keySet().iterator();
     while (i.hasNext()) {
         Object key = i.next();
         String value = (String) paramMap.get(key);
-        if (value == null || value.length() == 0)
+        if (value == null || value.length() == 0) {
             paramMap.remove(key);
+        }
     }
     foundLocations = delegator.findByAnd("FacilityLocation", paramMap);
     if (foundLocations != null && foundLocations.size() > 0) {
