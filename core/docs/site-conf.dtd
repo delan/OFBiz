@@ -57,9 +57,10 @@
 	type (none|view|request) #REQUIRED
 	value CDATA #IMPLIED
 >
-<!ELEMENT view-map EMPTY>
+<!ELEMENT view-map (description?)>
 <!ATTLIST view-map
 	name CDATA #REQUIRED
 	page CDATA #REQUIRED
 	type CDATA #IMPLIED
 >
+
