@@ -162,8 +162,10 @@
       <field name="productCategoryTypeId" type="id"></field>
       <field name="primaryParentCategoryId" type="id"></field>
       <field name="description" type="description"></field>
-      <field name="categoryImageUrl" type="long-varchar"></field>
       <field name="longDescription" type="very-long"></field>
+      <field name="categoryImageUrl" type="url"></field>
+      <field name="linkImageUrlOne" type="url"></field>
+      <field name="linkImageUrlTwo" type="url"></field>
       <prim-key field="productCategoryId"/>
       <relation type="many" rel-entity-name="ProductCategoryAttribute">
         <key-map field-name="productCategoryId"/>

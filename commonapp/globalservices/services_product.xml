@@ -95,6 +95,88 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
+    <!-- Product Category Services -->
+    <service name="createProductCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="createProductCategory" auth="true">
+        <description>Create an ProductCategory</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="primaryParentCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="longDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="categoryImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="linkImageUrlOne" type="String" mode="IN" optional="true"/>
+        <attribute name="linkImageUrlTwo" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="updateProductCategory" auth="true">
+        <description>Update an ProductCategory</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="primaryParentCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="longDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="categoryImageUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="linkImageUrlOne" type="String" mode="IN" optional="true"/>
+        <attribute name="linkImageUrlTwo" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="addProductToCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
+        <description>Add Product To Category</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductToCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="updateProductToCategory" auth="true">
+        <description>Add Product To Category</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProductFromCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="removeProductFromCategory" auth="true">
+        <description>Remove Product From Category</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+
+    <service name="addProductCategoryToCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="addProductCategoryToCategory" auth="true">
+        <description>Add ProductCatalog To Catalog</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductCategoryToCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="updateProductCategoryToCategory" auth="true">
+        <description>Add ProductCatalog To Catalog</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProductCategoryFromCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="removeProductCategoryFromCategory" auth="true">
+        <description>Remove ProductCatalog From Catalog</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+
     <!-- Product Promotion Services -->
     <service name="createProductPromo" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromo" auth="true">

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ * Copyright (c) 2001 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on April 2, 2002
+ -->
+<simple-methods>
+    <simple-method method-name="createProductCategory" short-description="Create an ProductCategory">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductCategory"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+
+        <!-- if setting the primaryParentCategoryId, create a rollup entity too -->
+        <if-not-empty field-name="primaryParentCategoryId" map-name="newEntity">
+            <make-value entity-name="ProductCategoryRollup" value-name="newRollup"/>
+            <field-to-field field-name="productCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newRollup"/>
+            <field-to-field field-name="primaryParentCategoryId" map-name="newEntity" to-field-name="parentProductCategoryId" to-map-name="newRollup"/>
+            <now-timestamp-to-env env-name="nowStamp"/>
+            <env-to-field env-name="nowStamp" field-name="fromDate" map-name="newRollup"/>
+            <create-value value-name="newRollup"/>
+            
+            <field-to-field field-name="parentProductCategoryId" map-name="newRollup" to-map-name="cacheClearMap"/>
+            <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
+        </if-not-empty>
+    </simple-method>
+    <simple-method method-name="updateProductCategory" short-description="Update an ProductCategory">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductCategory you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductCategory" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <!-- save this value before overwriting it so we can compare it later -->
+        <field-to-field field-name="primaryParentCategoryId" map-name="newEntity" to-map-name="saveIdMap"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+
+        <!-- if setting the primaryParentCategoryId, create a rollup entity too -->
+        <if-not-empty field-name="primaryParentCategoryId" map-name="newEntity">
+            <if-compare-field field-name="primaryParentCategoryId" map-name="newEntity" operator="equals" to-map-name="saveIdMap">
+                <!-- TODO: check to see if already exists in a valid data range... -->
+                <make-value entity-name="ProductCategoryRollup" value-name="newRollup"/>
+                <field-to-field field-name="productCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newRollup"/>
+                <field-to-field field-name="primaryParentCategoryId" map-name="newEntity" to-field-name="parentProductCategoryId" to-map-name="newRollup"/>
+                <now-timestamp-to-env env-name="nowStamp"/>
+                <env-to-field env-name="nowStamp" field-name="fromDate" map-name="newRollup"/>
+                <create-value value-name="newRollup"/>
+
+                <field-to-field field-name="parentProductCategoryId" map-name="newRollup" to-map-name="cacheClearMap"/>
+                <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
+            </if-compare-field>
+        </if-not-empty>
+    </simple-method>
+
+    <!-- ProductCategoryMember Services -->
+    <simple-method method-name="addProductToCategory" short-description="Add Product to Category">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addProductToCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductCategoryMember"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductToCategory" short-description="Update Product to Category Application">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductToCategory you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductCategoryMember"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductCategoryMember" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeProductFromCategory" short-description="Remove Product From Category">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductFromCategory you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductCategoryMember"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductCategoryMember" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- ProductCategoryRollup Services -->
+    <simple-method method-name="addProductCategoryToCategory" short-description="Add ProductCategory to Category">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addProductCategoryToCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductCategoryRollup"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductCategoryToCategory" short-description="Update ProductCategory to Category Application">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProducCategorytToCategory you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductCategoryRollup"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductCategoryRollup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeProductCategoryFromCategory" short-description="Remove ProductCategory From Category">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductCategoryFromCategory you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductCategoryRollup"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductCategoryRollup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+</simple-methods>
