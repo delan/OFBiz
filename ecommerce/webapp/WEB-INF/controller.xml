@@ -541,7 +541,6 @@
     <view-map name="changepassword" type="region"/>
     <view-map name="editperson" type="region"/>
 
-    <view-map name="newAffiliate" type="region"/>
-    <view-map name="ftlTest" type="ftl" page="/freemarker_test.ftl"/>
+    <view-map name="newAffiliate" type="region"/>  
     <!-- End of View Mappings -->
 </site-conf>
