@@ -2,7 +2,6 @@
 <!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
 
 <service-eca>
-
     <!-- Inventory Transfer ECAs -->
     <eca service="createInventoryTransfer" event="invoke">  
     	<condition field-name="statusId" operator="not-equals" value="IXF_CANCELLED"/>  	
@@ -20,6 +19,15 @@
     <eca service="updateInventoryTransfer" event="commit">
     	<condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
         <action service="completeInventoryTransfer" mode="sync"/>
+    </eca>
+
+    <!-- Inventory Issue ECAs for Immediately Fulfilled Orders -->
+    <eca service="changeOrderStatus" event="commit" run-on-error="false">
+        <condition field-name="statusId" operator="equals" value="ORDER_COMPLETED"/>
+        <condition field-name="orderStatusId" operator="not-equals" value="ORDER_COMPLETED"/>
+        <condition field-name="needsInventoryIssuance" operator="is-not-empty"/>
+        <condition field-name="needsInventoryIssuance" operator="equals" value="Y"/>
+        <action service="issueImmediatelyFulfilledOrder" mode="sync"/>
     </eca>
 
     <!-- Product Price Change ECAs -->
