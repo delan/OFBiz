@@ -65,21 +65,21 @@ public class Section extends Content {
         Debug.logVerbose("Rendering " + this.toString());
         
         if(content != null) {
-            // see if this section's content is a region
-            Region region = RegionManager.getRegion(regionFile, content);
-            if (region != null) {
-                // render the content as a region
-                RegionStack.push(pageContext.getRequest(), region);
-                region.render(pageContext);
-                RegionStack.pop(pageContext.getRequest());
+            if (isDirect()) {
+                try {
+                    pageContext.getOut().print(content.toString());
+                } catch (java.io.IOException ex) {
+                    Debug.logError(ex, "Error writing direct content: ");
+                    throw new JspException("Error writing direct content: " + ex.getMessage());
+                }
             } else {
-                if (isDirect()) {
-                    try {
-                        pageContext.getOut().print(content.toString());
-                    } catch (java.io.IOException ex) {
-                        Debug.logError(ex, "Error writing direct content: ");
-                        throw new JspException("Error writing direct content: " + ex.getMessage());
-                    }
+                // see if this section's content is a region
+                Region region = RegionManager.getRegion(regionFile, content);
+                if (region != null) {
+                    // render the content as a region
+                    RegionStack.push(pageContext.getRequest(), region);
+                    region.render(pageContext);
+                    RegionStack.pop(pageContext.getRequest());
                 } else {
                     try {
                         pageContext.include(content.toString());
