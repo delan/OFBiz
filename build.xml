@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.30 2004/03/18 08:48:06 ajzeneski Exp $
+ *  $Id: build.xml,v 1.31 2004/03/19 21:46:51 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -84,6 +84,12 @@
         <echo message="[clean] ========== Cleaning minerva component ============"/>
         <echo message="[clean] ================================================="/>
         <ant dir="components/minerva" target="clean" inheritAll="false"/>
+
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning jotm component ============"/>
+        <echo message="[clean] ================================================="/>
+        <ant dir="components/jotm" target="clean" inheritAll="false"/>
 
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
@@ -244,6 +250,12 @@
 
         <echo message="[build]"/>
         <echo message="[build] ==============================================="/>
+        <echo message="[build] ========== Building jotm component =========="/>
+        <echo message="[build] ==============================================="/>
+        <ant dir="components/jotm" inheritAll="false"/>
+
+        <echo message="[build]"/>
+        <echo message="[build] ==============================================="/>
         <echo message="[build] ========== Building entity component =========="/>
         <echo message="[build] ==============================================="/>
         <ant dir="components/entity" inheritAll="false"/>
@@ -389,6 +401,12 @@
         <echo message="[docs] ========== Building minerva component =========="/>
         <echo message="[docs] ==============================================="/>
         <ant dir="components/minerva" target="docs" inheritAll="false"/>
+
+        <echo message="[docs]"/>
+        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] ========== Building jotm component =========="/>
+        <echo message="[docs] ==============================================="/>
+        <ant dir="components/jotm" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
         <echo message="[docs] ==============================================="/>
