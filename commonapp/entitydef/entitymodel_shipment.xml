@@ -652,7 +652,9 @@
       <member-entity entity-alias="OFAC" entity-name="Facility"/>
       <member-entity entity-alias="DFAC" entity-name="Facility"/>
       <member-entity entity-alias="OPAD" entity-name="PostalAddress"/>
+      <member-entity entity-alias="OTCN" entity-name="TelecomNumber"/>
       <member-entity entity-alias="DPAD" entity-name="PostalAddress"/>
+      <member-entity entity-alias="DTCN" entity-name="TelecomNumber"/>
       <member-entity entity-alias="CPER" entity-name="Person"/>
       <member-entity entity-alias="CPGP" entity-name="PartyGroup"/>
       <member-entity entity-alias="SHMT" entity-name="ShipmentMethodType"/>
@@ -682,7 +684,9 @@
       <alias entity-alias="SRTS" name="originFacilityId"/>
       <alias entity-alias="SRTS" name="destFacilityId"/>
       <alias entity-alias="SRTS" name="originContactMechId"/>
+      <alias entity-alias="SRTS" name="originTelecomNumberId"/>
       <alias entity-alias="SRTS" name="destContactMechId"/>
+      <alias entity-alias="SRTS" name="destTelecomNumberId"/>
       <alias entity-alias="SRTS" name="carrierPartyId"/>
       <alias entity-alias="SRTS" name="shipmentMethodTypeId"/>
       <alias entity-alias="SRTS" name="actualCost"/>
@@ -702,6 +706,9 @@
       <alias entity-alias="OPAD" name="originCountryGeoId" field="countryGeoId"/>
       <alias entity-alias="OPAD" name="originStateProvinceGeoId" field="stateProvinceGeoId"/>
       <alias entity-alias="OPAD" name="originPostalCodeGeoId" field="postalCodeGeoId"/>
+      <alias entity-alias="OTCN" name="originCountryCode" field="countryCode"/>
+      <alias entity-alias="OTCN" name="originAreaCode" field="areaCode"/>
+      <alias entity-alias="OTCN" name="originContactNumber" field="contactNumber"/>
       <alias entity-alias="DPAD" name="destToName" field="toName"/>
       <alias entity-alias="DPAD" name="destAttnName" field="attnName"/>
       <alias entity-alias="DPAD" name="destAddress1" field="address1"/>
@@ -712,6 +719,9 @@
       <alias entity-alias="DPAD" name="destCountryGeoId" field="countryGeoId"/>
       <alias entity-alias="DPAD" name="destStateProvinceGeoId" field="stateProvinceGeoId"/>
       <alias entity-alias="DPAD" name="destPostalCodeGeoId" field="postalCodeGeoId"/>
+      <alias entity-alias="DTCN" name="destCountryCode" field="countryCode"/>
+      <alias entity-alias="DTCN" name="destAreaCode" field="areaCode"/>
+      <alias entity-alias="DTCN" name="destContactNumber" field="contactNumber"/>
       <alias entity-alias="CPER" name="carrierFirstName" field="firstName"/>
       <alias entity-alias="CPER" name="carrierLastName" field="lastName"/>
       <alias entity-alias="CPGP" name="carrierGroupName" field="groupName"/>
@@ -751,8 +761,14 @@
       <view-link entity-alias="SRTS" rel-entity-alias="OPAD" rel-optional="true">
         <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
       </view-link>
+      <view-link entity-alias="SRTS" rel-entity-alias="OTCN" rel-optional="true">
+        <key-map field-name="originTelecomNumberId" rel-field-name="contactMechId"/>
+      </view-link>
       <view-link entity-alias="SRTS" rel-entity-alias="DPAD" rel-optional="true">
         <key-map field-name="destContactMechId" rel-field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="SRTS" rel-entity-alias="DTCN" rel-optional="true">
+        <key-map field-name="destTelecomNumberId" rel-field-name="contactMechId"/>
       </view-link>
       <view-link entity-alias="SRTS" rel-entity-alias="CPER" rel-optional="true">
         <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
