@@ -80,6 +80,26 @@ public class ProductServices {
     }
 
     /**
+     * Gets the product features of a product.
+     */
+    public static Map prodGetFeatures(DispatchContext dctx, Map context) {
+        // * String productId      -- Product ID to fond
+        GenericDelegator delegator = dctx.getDelegator();
+        Map result = new HashMap();
+        String productId = (String) context.get("productId");
+        Collection features = null;
+        try {
+            features = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productId", productId));
+            result.put("productFeatures", features);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (GenericEntityException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problem reading product feature entity: " + e.getMessage());
+        }
+        return result;
+    }
+
+    /**
      * Finds a product by product ID.
      */
     public static Map prodFindProduct(DispatchContext dctx, Map context) {
