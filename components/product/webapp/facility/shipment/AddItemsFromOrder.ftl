@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -21,10 +21,10 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
@@ -34,25 +34,26 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
 	<div class="tabletext">
         ${uiLabelMap.ProductOrderId} : <input type="text" class='inputBox' size="20" name="orderId" value="${orderId?if_exists}"/>
+        ${uiLabelMap.ProductOrderShipGroupId} : <input type="text" class='inputBox' size="20" name="shipGroupSeqId" value="${shipGroupSeqId?if_exists}"/>
         <input type="submit" value="Select" class="smallSubmit"/>
     </div>
 </form>
 
-<div class="head2">${uiLabelMap.ProductAddItemsShipment} [${shipmentId?if_exists}] ${uiLabelMap.ProductFromOrder} [${orderId?if_exists}]</div>
+<div class="head2">${uiLabelMap.ProductAddItemsShipment}: [${shipmentId?if_exists}]; ${uiLabelMap.OrderFromOrder}: [${orderId?if_exists}], ${uiLabelMap.OrderShipGroup}: [${shipGroupSeqId?if_exists}]</div>
 <#if orderId?has_content && !orderHeader?exists>
 	<div class="head3" style="color: red;"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</div>
 </#if>
 <#if orderHeader?exists>
-    <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId != "SALES_SHIPMENT">
+    <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId?if_exists != "SALES_SHIPMENT">
         <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, ${uiLabelMap.ProductNotSalesShipment}.</div>
-    <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && shipment.shipmentTypeId != "PURCHASE_SHIPMENT">
+    <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && shipment.shipmentTypeId?if_exists != "PURCHASE_SHIPMENT">
         <div class="head3" style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, ${uiLabelMap.ProductNotPurchaseShipment}.</div>
     <#else>
         <div class="head3">${uiLabelMap.ProductNoteOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
     </#if>
-    <#if shipment.shipmentTypeId == "SALES_SHIPMENT">
+    <#if shipment.shipmentTypeId?if_exists == "SALES_SHIPMENT">
 		<div class="head3">${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
-    <#elseif shipment.shipmentTypeId == "PURCHASE_SHIPMENT">
+    <#elseif shipment.shipmentTypeId?if_exists == "PURCHASE_SHIPMENT">
 		<div class="head3">${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility?exists>${destinationFacility.facilityName?if_exists} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
     </#if>
     <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
@@ -66,7 +67,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 <#if orderItemDatas?exists>
     <#assign rowCount = 0>
     <#if isSalesOrder>
-        <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="selectAllForm">
+        <form action="<@ofbizUrl>/issueOrderItemShipGrpInvResToShipment</@ofbizUrl>" name="selectAllForm">
     <#else>
         <form action="<@ofbizUrl>/issueOrderItemToShipment</@ofbizUrl>" name="selectAllForm">
     </#if>
@@ -74,7 +75,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <input type="hidden" name="_useRowSubmit" value="Y">
     <table width="100%" cellpadding="2" cellspacing="0" border="1">
         <tr>
-            <td><div class="tableheadtext">${uiLabelMap.ProductOrderId}/${uiLabelMap.ProductOrderItem}</div></td>
+            <td><div class="tableheadtext">${uiLabelMap.ProductOrderId}/Ship Group/${uiLabelMap.ProductOrderItem}</div></td>
             <td><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
             <#if isSalesOrder>
                 <td><div class="tableheadtext">${uiLabelMap.ProductItemsIssuedReserved}</div></td>
@@ -92,16 +93,16 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </td>
         </tr>
         <#list orderItemDatas?if_exists as orderItemData>
-            <#assign orderItem = orderItemData.orderItem>
+            <#assign orderItemAndShipGroupAssoc = orderItemData.orderItemAndShipGroupAssoc>
             <#assign product = orderItemData.product?if_exists>
             <#assign itemIssuances = orderItemData.itemIssuances>
             <#assign totalQuantityIssued = orderItemData.totalQuantityIssued>
-            <#assign orderItemInventoryResDatas = orderItemData.orderItemInventoryResDatas?if_exists>
+            <#assign orderItemShipGrpInvResDatas = orderItemData.orderItemShipGrpInvResDatas?if_exists>
             <#assign totalQuantityReserved = orderItemData.totalQuantityReserved?if_exists>
             <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved?if_exists>
             <tr>
-                <td><div class="tabletext">${orderItem.orderId} / ${orderItem.orderItemSeqId}</div></td>
-                <td><div class="tabletext">${(product.internalName)?if_exists} [${orderItem.productId?default("N/A")}]</div></td>
+                <td><div class="tabletext">${orderItemAndShipGroupAssoc.orderId} / ${orderItemAndShipGroupAssoc.shipGroupSeqId} / ${orderItemAndShipGroupAssoc.orderItemSeqId}</div></td>
+                <td><div class="tabletext">${(product.internalName)?if_exists} [${orderItemAndShipGroupAssoc.productId?default("N/A")}]</div></td>
                 <td>
                     <#if itemIssuances?has_content>
                         <#list itemIssuances as itemIssuance>
@@ -114,19 +115,19 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 <td>
                     <div class="tabletext">
                         <#if isSalesOrder>
-                            <#if (totalQuantityIssuedAndReserved != orderItem.quantity)><span style="color: red;"><#else><span></#if>
+                            <#if (totalQuantityIssuedAndReserved != orderItemAndShipGroupAssoc.shipGroupQuantity)><span style="color: red;"><#else><span></#if>
                                 [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
                                 <b>
-                                    <#if (totalQuantityIssuedAndReserved > orderItem.quantity)>&gt;<#else><#if (totalQuantityIssuedAndReserved < orderItem.quantity)>&lt;<#else>=</#if></#if>
-                                    ${orderItem.quantity}
+                                    <#if (totalQuantityIssuedAndReserved > orderItemAndShipGroupAssoc.shipGroupQuantity)>&gt;<#else><#if (totalQuantityIssuedAndReserved < orderItemAndShipGroupAssoc.shipGroupQuantity)>&lt;<#else>=</#if></#if>
+                                    ${orderItemAndShipGroupAssoc.shipGroupQuantity}
                                 </b>
                             </span>
                         <#else>
-                            <#if (totalQuantityIssued > orderItem.quantity)><span style="color: red;"><#else><span></#if>
+                            <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.shipGroupQuantity)><span style="color: red;"><#else><span></#if>
                                 ${totalQuantityIssued}
                                 <b>
-                                    <#if (totalQuantityIssued > orderItem.quantity)>&gt;<#else><#if (totalQuantityIssued < orderItem.quantity)>&lt;<#else>=</#if></#if>
-                                    ${orderItem.quantity}
+                                    <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.shipGroupQuantity)>&gt;<#else><#if (totalQuantityIssued < orderItemAndShipGroupAssoc.shipGroupQuantity)>&lt;<#else>=</#if></#if>
+                                    ${orderItemAndShipGroupAssoc.shipGroupQuantity}
                                 </b>
                             </span>
                         </#if>
@@ -138,12 +139,13 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                     <td><div class="tabletext">&nbsp;</div></td>
                     <td><div class="tabletext">&nbsp;</div></td>
                 <#else>
-                    <#assign quantityNotIssued = orderItem.quantity - totalQuantityIssued>
+                    <#assign quantityNotIssued = orderItemAndShipGroupAssoc.shipGroupQuantity - totalQuantityIssued>
                     <#if (quantityNotIssued > 0)>
                         <td>
                             <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipmentId}"/>
-                            <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
-                            <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
+                            <input type="hidden" name="orderId_o_${rowCount}" value="${orderItemAndShipGroupAssoc.orderId}"/>
+                            <input type="hidden" name="shipGroupSeqId_o_${rowCount}" value="${orderItemAndShipGroupAssoc.shipGroupSeqId}"/>
+                            <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItemAndShipGroupAssoc.orderItemSeqId}"/>
                             <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${quantityNotIssued}"/>
                         </td>
                         <td align="right">              
@@ -157,11 +159,11 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 </#if>
             </tr>
             <#if isSalesOrder>
-                <#list orderItemInventoryResDatas as orderItemInventoryResData>
-                    <#assign orderItemInventoryRes = orderItemInventoryResData.orderItemInventoryRes>
-                    <#assign inventoryItem = orderItemInventoryResData.inventoryItem>
-                    <#assign inventoryItemFacility = orderItemInventoryResData.inventoryItemFacility>
-                    <#assign availableQuantity = orderItemInventoryRes.quantity - (orderItemInventoryRes.quantityNotAvailable?default(0))>
+                <#list orderItemShipGrpInvResDatas as orderItemShipGrpInvResData>
+                    <#assign orderItemShipGrpInvRes = orderItemShipGrpInvResData.orderItemShipGrpInvRes>
+                    <#assign inventoryItem = orderItemShipGrpInvResData.inventoryItem>
+                    <#assign inventoryItemFacility = orderItemShipGrpInvResData.inventoryItemFacility>
+                    <#assign availableQuantity = orderItemShipGrpInvRes.quantity - (orderItemShipGrpInvRes.quantityNotAvailable?default(0))>
                     <#if availableQuantity < 0>
                         <#assign availableQuantity = 0>
                     </#if>
@@ -170,7 +172,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                         <td><div class="tabletext">&nbsp;</div></td>
                         <td>
                             <div class="tabletext">
-                                ${orderItemInventoryRes.inventoryItemId}
+                                ${orderItemShipGrpInvRes.inventoryItemId}
                                 <#if inventoryItem.facilityId?has_content>
                                     <span<#if originFacility?exists && originFacility.facilityId != inventoryItem.facilityId> style="color: red;"</#if>>[${(inventoryItemFacility.facilityName)?default(inventoryItem.facilityId)}]</span>
                                 <#else>
@@ -179,15 +181,16 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                             </div>
                         </td>
                         <td><div class="tabletext">&nbsp;</div></td>
-                        <td><div class="tabletext">${orderItemInventoryRes.quantity}</div></td>
-                        <td><div class="tabletext">${orderItemInventoryRes.quantityNotAvailable?default("&nbsp;")}</div></td>
+                        <td><div class="tabletext">${orderItemShipGrpInvRes.quantity}</div></td>
+                        <td><div class="tabletext">${orderItemShipGrpInvRes.quantityNotAvailable?default("&nbsp;")}</div></td>
                         <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId?if_exists>
                             <td>
                                 <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipmentId}"/>
-                                <input type="hidden" name="orderId_o_${rowCount}" value="${orderItemInventoryRes.orderId}"/>
-                                <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItemInventoryRes.orderItemSeqId}"/>
-                                <input type="hidden" name="inventoryItemId_o_${rowCount}" value="${orderItemInventoryRes.inventoryItemId}"/>
-                                <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${(orderItemInventoryResData.shipmentPlanQuantity)?default(availableQuantity)}"/>
+                                <input type="hidden" name="orderId_o_${rowCount}" value="${orderItemShipGrpInvRes.orderId}"/>
+                                <input type="hidden" name="shipGroupSeqId_o_${rowCount}" value="${orderItemShipGrpInvRes.shipGroupSeqId}"/>
+                                <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItemShipGrpInvRes.orderItemSeqId}"/>
+                                <input type="hidden" name="inventoryItemId_o_${rowCount}" value="${orderItemShipGrpInvRes.inventoryItemId}"/>
+                                <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${(orderItemShipGrpInvResData.shipmentPlanQuantity)?default(availableQuantity)}"/>
                             </td>
                             <td align="right">              
                               <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">

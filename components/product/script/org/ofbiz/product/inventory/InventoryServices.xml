@@ -408,7 +408,7 @@
                         </or>
                     </condition>
                     <then>
-                        <get-related value-name="item" relation-name="OrderItemInventoryRes" list-name="relatedRes"/>
+                        <get-related value-name="item" relation-name="OrderItemShipGrpInvRes" list-name="relatedRes"/>
                         <list-to-list list-name="relatedRes" to-list-name="reservations"/>
                     </then>
                 </if>
@@ -417,22 +417,22 @@
             <!-- sort the list by date -->
             <order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
 
-            <iterate list-name="reservations" entry-name="oiir">
+            <iterate list-name="reservations" entry-name="oisgir">
                 <!-- cancel the reservation -->
-                <field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
-                <field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
-                <field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>
-                <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
-                <clear-field field-name="cancelOiirMap"/>
+                <field-to-field field-name="orderId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+                <field-to-field field-name="orderItemSeqId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+                <field-to-field field-name="inventoryItemId" map-name="oisgir" to-map-name="cancelOisgirMap"/>
+                <call-service service-name="cancelOrderItemShipGrpInvRes" in-map-name="cancelOisgirMap"/>
+                <clear-field field-name="cancelOisgirMap"/>
 
                 <!-- re-reserve the cancelled item -->
                 <!-- require inventory is N because it had to be N to begin with to have a negative ATP -->
                 <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="resMap"/>
-                <field-to-field field-name="orderId" map-name="oiir" to-map-name="resMap"/>
-                <field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="resMap"/>
-                <field-to-field field-name="quantity" map-name="oiir" to-map-name="resMap"/>
-                <field-to-field field-name="reservedDatetime" map-name="oiir" to-map-name="resMap"/>
-                <field-to-field field-name="reserveOrderEnumId" map-name="oiir" to-map-name="resMap"/>
+                <field-to-field field-name="orderId" map-name="oisgir" to-map-name="resMap"/>
+                <field-to-field field-name="orderItemSeqId" map-name="oisgir" to-map-name="resMap"/>
+                <field-to-field field-name="quantity" map-name="oisgir" to-map-name="resMap"/>
+                <field-to-field field-name="reservedDatetime" map-name="oisgir" to-map-name="resMap"/>
+                <field-to-field field-name="reserveOrderEnumId" map-name="oisgir" to-map-name="resMap"/>
                 <string-to-field field-name="requireInventory" map-name="resMap" string="N"/>
                 <call-service service-name="reserveProductInventory" in-map-name="resMap"/>
                 <clear-field field-name="resMap"/>

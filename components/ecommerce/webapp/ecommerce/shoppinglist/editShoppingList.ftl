@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -130,7 +130,18 @@
                         <option>N</option>
                       </select>
                     </td>
-                  </tr>                           
+                  </tr>
+                  <tr>
+                    <td><div class="tableheadtext">${uiLabelMap.EcommerceActive}?</div></td>
+                    <td>
+                      <select name="isActive" class="selectBox">
+                        <option>${shoppingList.isActive}</option>
+                        <option value="${shoppingList.isActive}">--</option>
+                        <option>Y</option>
+                        <option>N</option>
+                      </select>
+                    </td>
+                  </tr>
                   <tr>
                     <td><div class="tableheadtext">${uiLabelMap.EcommerceParentList}</div></td>
                     <td>
@@ -162,6 +173,152 @@
     </TD>
   </TR>
 </TABLE>
+
+<#if shoppingListType?exists && shoppingListType.shoppingListTypeId == "SLT_AUTO_REODR">
+  <#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].monthBegin()>
+  <br/>
+  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <TR>
+      <TD width='100%'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <tr>
+            <td valign="middle" align="left">
+              <div class="boxhead">
+                &nbsp;${uiLabelMap.EcommerceShoppingListReorder} - ${shoppingList.listName}
+                <#if shoppingList.isActive?default("N") == "N">
+                  <font color="yellow">[Not Active]</font>
+                </#if>
+              </div>
+            </td>
+            <td valign="middle" align="right">
+              <a href="javascript:document.reorderinfo.submit();" class="submenutextright">${uiLabelMap.CommonSave}</a>
+            </td>
+          </tr>
+        </table>
+      </TD>
+    </TR>
+    <TR>
+      <TD width='100%'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <tr>
+            <td>
+              <form name="reorderinfo" method="post" action="<@ofbizUrl>/updateShoppingList</@ofbizUrl>">
+                <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}">
+                <table width="100%" cellspacing="0" cellpadding="1" border="0">
+                  <tr>
+                    <td><div class="tableheadtext">Recurrence</div></td>
+                    <td>
+                      <select name="intervalNumber" class="selectBox">
+                        <option value="1">Every</option>
+                        <option value="2">Every Other</option>
+                        <option value="3">Every 3rd</option>
+                        <option value="6">Every 6th</option>
+                        <option value="9">Every 9th</option>
+                      </select>
+                      &nbsp;
+                      <select name="frequency" class="selectBox">
+                        <option value="5">Week</option>
+                        <option value="6">Month</option>
+                        <option value="7">Year</option>
+                      </select>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td><div class="tableheadtext">Start-Date</div></td>
+                    <td>
+                      <input type="text" class="textBox" name="startDateTime" size="20">
+                      <a href="javascript:call_cal(document.reorderinfo.startDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td><div class="tableheadtext">End-Date</div></td>
+                    <td>
+                      <input type="text" class="textBox" name="endDateTime" size="20">
+                      <a href="javascript:call_cal(document.reorderinfo.endDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+                    </td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr><td colspan="9"><hr class="sepbar"></td></tr>
+                  <tr>
+                    <td><div class="tableheadtext">Ship-To</div></td>
+                    <td>
+                      <select name="contactMechId" class="selectBox" onchange="javascript:document.reorderinfo.submit()">
+                        <option value="">Select A Shipping Address</option>
+                        <#if shippingContactMechList?has_content>
+                          <#list shippingContactMechList as shippingContactMech>
+                            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
+                            <option value="${shippingContactMech.contactMechId}"<#if (listCart.getShippingContactMechId())?default("") == shippingAddress.contactMechId> selected</#if>>${shippingAddress.address1}</option>
+                          </#list>
+                        <#else>
+                          <option value="">No Addresses Available</option>
+                        </#if>
+                      </select>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td><div class="tableheadtext">Ship-Via</div></td>
+                    <td>
+                      <select name="shippingMethodString" class="selectBox">
+                        <option value="">Select A Shipping Method</option>
+                        <#if carrierShipMethods?has_content>
+                          <#list carrierShipMethods as shipMeth>
+                            <#assign shippingEst = shippingEstWpr.getShippingEstimate(shipMeth)?default(-1)>
+                            <#assign shippingMethod = shipMeth.shipmentMethodTypeId + "@" + shipMeth.partyId>
+                            <option value="${shippingMethod}"<#if shippingMethod == chosenShippingMethod> selected</#if>>
+                              <#if shipMeth.partyId != "_NA_">
+                                ${shipMeth.partyId?if_exists}&nbsp;
+                              </#if>
+                              ${shipMeth.description?if_exists}
+                              <#if shippingEst?has_content>
+                                &nbsp;-&nbsp;
+                                <#if (shippingEst > -1)?exists>
+                                  <@ofbizCurrency amount=shippingEst isoCode=listCart.getCurrency()/>
+                                <#else>
+                                  Calculated Offline
+                                </#if>
+                              </#if>
+                            </option>
+                          </#list>
+                        <#else>
+                          <option value="">Select Address First</option>
+                        </#if>
+                      </select>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td><div class="tableheadtext">Pay-By</div></td>
+                    <td>
+                      <select name="paymentMethodId" class="selectBox">
+                        <option value="">Select A Payment Method</option>
+                        <#list paymentMethodList as paymentMethod>
+                          <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
+                            <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
+                            <option value="${paymentMethod.paymentMethodId}" <#if (listCart.isPaymentSelected(paymentMethod.paymentMethodId))?default(false)>selected</#if>>CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</option>
+                          <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
+                            <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
+                            <option value="${paymentMethod.paymentMethodId}">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</option>
+                          </#if>
+                        </#list>
+                      </select>
+                    </td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr><td colspan="9"><hr class="sepbar"></td></tr>
+                  <tr>
+                    <td align="right" colspan="9">
+                      <div class="tabletext">
+                        <a href="javascript:document.reorderinfo.submit();" class="buttonText">[Save]</a>
+                        <a href="<@ofbizUrl>/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttonText">[New Address]</a>
+                        <a href="<@ofbizUrl>/editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttonText">[New Credit Card]</a>
+                        <a href="<@ofbizUrl>/editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttonText">[New EFT Account]</a>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </td>
+          </tr>
+        </table>
+      </TD>
+    </TR>
+  </TABLE>
+</#if>
 
 <#if childShoppingListDatas?has_content>
 <br/>
@@ -364,30 +521,30 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table width='100%' border='0' cellspacing='1' cellpadding='1' class='boxbottom'>
         <tr>
-          <td align="left" width="5%">
+          <td align="left" width="5%" NOWRAP>
           	<div class="tabletext">${uiLabelMap.EcommerceChildListTotalPrice}</div>
           </td>
-          <td align="right" width="5%">
+          <td align="right" width="5%" NOWRAP>
           	<div class="tabletext"><@ofbizCurrency amount=shoppingListChildTotal isoCode=currencyUomId/></div>
           </td>
           <td width="90%"><div class="tabletext">&nbsp;</div></td>
         </tr>
         <tr>
-          <td align="left">
+          <td align="left" NOWRAP>
           	<div class="tabletext">${uiLabelMap.EcommerceListItemsTotalPrice}&nbsp;</div>
           </td>
-          <td align="right">
+          <td align="right" NOWRAP>
           	<div class="tabletext"><@ofbizCurrency amount=shoppingListItemTotal isoCode=currencyUomId/></div>
           </td>
           <td><div class="tabletext">&nbsp;</div></td>
         </tr>
         <tr>
-          <td align="left">
+          <td align="left" NOWRAP>
           	<div class="tableheadtext">${uiLabelMap.OrderGrandTotal}</div>
           </td>
-          <td align="right">
+          <td align="right" NOWRAP>
           	<div class="tableheadtext"><@ofbizCurrency amount=shoppingListTotalPrice isoCode=currencyUomId/></div>
           </td>
           <td><div class="tabletext">&nbsp;</div></td>

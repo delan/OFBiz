@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
   <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -47,6 +47,11 @@
         <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductPrimaryOrderId}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${shipment.primaryOrderId?if_exists}</span></td>
+      </tr>
+      <tr>
+        <td width="20%" align="right"><span class="tableheadtext">Primary Ship Group Seq ID</span></td>
+        <td><span class="tabletext">&nbsp;</span></td>
+        <td width="80%" align="left"><span class="tabletext">${shipment.primaryShipGroupSeqId?if_exists}</span></td>
       </tr>
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductEstimatedDates}</span></td>

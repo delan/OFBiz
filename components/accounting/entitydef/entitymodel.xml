@@ -1383,13 +1383,13 @@
       <field name="suffixOnCard" type="name"></field>
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="paymentMethodId"/>
-      <relation type="one" fk-name="CREDCART_PMNTMETH" rel-entity-name="PaymentMethod">
+      <relation type="one" fk-name="CREDCARD_PMNTMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" fk-name="CREDCART_CMECH" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="CREDCARD_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" fk-name="CREDCART_PADDR" rel-entity-name="PostalAddress">
+      <relation type="one" fk-name="CREDCARD_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
@@ -1601,13 +1601,13 @@
       <field name="expireDate" type="credit-card-date"></field>
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="paymentMethodId"/>
-      <relation type="one" fk-name="GIFTCART_PMNTMETH" rel-entity-name="PaymentMethod">
+      <relation type="one" fk-name="GIFTCARD_PMNTMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" fk-name="GIFTCART_CMECH" rel-entity-name="ContactMech">
+      <relation type="one" fk-name="GIFTCARD_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" fk-name="GIFTCART_PADDR" rel-entity-name="PostalAddress">
+      <relation type="one" fk-name="GIFTCARD_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>

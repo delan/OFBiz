@@ -142,6 +142,23 @@
     </eca>
 
     <!-- ShoppingList ECAs -->
+    <eca service="createShoppingList" event="in-validate">
+        <condition field-name="shippingMethodString" operator="is-not-empty"/>
+        <action service="splitShipmentMethodString" mode="sync" result-to-context="true"/>
+    </eca>
+    <eca service="updateShoppingList" event="in-validate">
+        <condition field-name="shippingMethodString" operator="is-not-empty"/>
+        <action service="splitShipmentMethodString" mode="sync" result-to-context="true"/>
+    </eca>
+    <eca service="createShoppingList" event="in-validate">
+        <condition field-name="frequency" operator="is-not-empty"/>
+        <action service="createShoppingListRecurrence" mode="sync" result-to-context="true"/>
+    </eca>
+    <eca service="updateShoppingList" event="in-validate">
+        <condition field-name="frequency" operator="is-not-empty"/>
+        <action service="createShoppingListRecurrence" mode="sync" result-to-context="true"/>
+    </eca>
+
     <eca service="createShoppingListItem" event="in-validate">
         <condition field-name="shoppingListId" operator="is-empty"/>
         <action service="createShoppingList" mode="sync" result-to-context="true"/>

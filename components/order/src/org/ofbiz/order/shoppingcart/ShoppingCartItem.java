@@ -91,9 +91,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private double listPrice = 0.0;
     private double selectedAmount = 0.0;
     private Map attributes = null;
-    private String orderItemSeqId = null;
-    private GenericValue orderShipmentPreference = null;
-    
+    private String orderItemSeqId = null;       
     private Locale locale = null;
 
     private Map contactMechIdsMap = new HashMap();
@@ -267,6 +265,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             newItem.setQuantity(quantity, dispatcher, cart, doPromotions);
         } catch (CartItemModifyException e) {
             cart.removeCartItem(cart.getItemIndex(newItem), dispatcher);
+            cart.clearItemShipInfo(newItem);
             cart.removeEmptyCartItems();
             throw e;
         }
@@ -347,7 +346,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.quantityUsedPerPromoFailed = new HashMap(item.quantityUsedPerPromoFailed);
         this.quantityUsedPerPromoActual = new HashMap(item.quantityUsedPerPromoActual);
         this.orderItemSeqId = item.getOrderItemSeqId();
-        this.orderShipmentPreference = new GenericValue(item.getOrderShipmentPreference());
+        //this.orderShipmentPreference = new GenericValue(item.getOrderShipmentPreference());
         this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
                 null : new HashMap(item.getAdditionalProductFeatureAndAppls());
         this.attributes = item.getAttributes() == null ? null : new HashMap(item.getAttributes());
@@ -376,7 +375,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.attributes = attributes;
         this.delegator = _product.getDelegator();
         this.delegatorName = _product.getDelegator().getDelegatorName();
-        this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
+        //this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
         this.addAllProductFeatureAndAppls(additionalProductFeatureAndAppls);
         this.locale = locale;
         this.configWrapper = configWrapper;
@@ -472,6 +471,10 @@ public class ShoppingCartItem implements java.io.Serializable {
                 Debug.logWarning(e, "Unable to store auto-save cart", module);
             }
         }
+
+        // set the item ship group
+        cart.clearItemShipInfo(this);
+        cart.setItemShipGroupQty(this, quantity, 0);
     }
 
     public void updatePrice(LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
@@ -730,6 +733,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     public void setOrderItemSeqId(String orderItemSeqId) {
+        Debug.log("Setting orderItemSeqId - " + orderItemSeqId, module);
         this.orderItemSeqId = orderItemSeqId;
     }
 
@@ -946,7 +950,6 @@ public class ShoppingCartItem implements java.io.Serializable {
     public Map getItemProductInfo() {
         Map itemInfo = new HashMap();
         itemInfo.put("productId", this.getProductId());
-        itemInfo.put("quantity", new Double(this.getQuantity()));
         itemInfo.put("weight", new Double(this.getWeight()));
         itemInfo.put("size",  new Double(this.getSize()));
         itemInfo.put("piecesIncluded", new Long(this.getPiecesIncluded()));
@@ -974,30 +977,14 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** Returns the total line price. */
-    public double getItemSubTotal() {
+    public double getItemSubTotal(double quantity) {
         return (getBasePrice() * quantity) + getOtherAdjustments();
     }
 
-    /** Returns the total line price for tax calculation purposes. */
-    public double getItemSubTotalForTax() {
-        return (getBasePrice() * quantity) + OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), true, false, false, true, false);
+    public double getItemSubTotal() {
+        return this.getItemSubTotal(quantity);
     }
-
-    /** Returns the total line price for shipping calculation purposes. */
-    public double getItemSubTotalForShipping() {
-        return (getBasePrice() * quantity) + OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), true, false, false, false, true);
-    }
-
-    /** Returns the tax adjustments. */
-    public double getItemTax() {
-        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), false, true, false, false, false);
-    }
-
-    /** Returns the shipping adjustments. */
-    public double getItemShipping() {
-        return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), false, false, true, false, false);
-    }
-
+        
     public void addAllProductFeatureAndAppls(Map productFeatureAndApplsToAdd) {
         if (productFeatureAndApplsToAdd == null) return;
         Iterator productFeatureAndApplsToAddIter = productFeatureAndApplsToAdd.values().iterator();
@@ -1052,7 +1039,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.additionalProductFeatureAndAppls;
     }
 
-    public Map getFeatureIdQtyMap() {
+    public Map getFeatureIdQtyMap(double quantity) {
         Map featureMap = new HashMap();
         GenericValue product = this.getProduct();
         if (product != null) {
@@ -1073,7 +1060,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                     if (lastQuantity == null) {
                         lastQuantity = new Double(0);
                     }
-                    Double newQuantity = new Double(lastQuantity.doubleValue() + this.getQuantity());
+                    Double newQuantity = new Double(lastQuantity.doubleValue() + quantity);
                     featureMap.put(appl.getString("productFeatureId"), newQuantity);
                 }
             }
@@ -1086,7 +1073,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                 if (lastQuantity == null) {
                     lastQuantity = new Double(0);
                 }
-                Double newQuantity = new Double(lastQuantity.doubleValue() + this.getQuantity());
+                Double newQuantity = new Double(lastQuantity.doubleValue() + quantity);
                 featureMap.put(appl.getString("productFeatureId"), newQuantity);
             }
         }
@@ -1184,63 +1171,6 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
     public void setAlternativeOptionProductIds(List alternativeOptionProductIds) {
         this.alternativeOptionProductIds = alternativeOptionProductIds;
-    }
-        
-    public GenericValue getOrderShipmentPreference() {
-        return orderShipmentPreference;
-    }
-
-    /** Sets the shipment method type. */
-    public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
-        orderShipmentPreference.set("shipmentMethodTypeId", shipmentMethodTypeId);
-    }
-
-    /** Returns the shipment method type */
-    public String getShipmentMethodTypeId() {
-        return orderShipmentPreference.getString("shipmentMethodTypeId");
-    }
-
-    /** Sets the shipping instructions. */
-    public void setShippingInstructions(String shippingInstructions) {
-        orderShipmentPreference.set("shippingInstructions", shippingInstructions);
-    }
-
-    /** Returns the shipping instructions. */
-    public String getShippingInstructions() {
-        return orderShipmentPreference.getString("shippingInstructions");
-    }
-
-    public void setMaySplit(Boolean maySplit) {
-        orderShipmentPreference.set("maySplit", maySplit);
-    }
-
-    /** Returns Boolean.TRUE if the order may be split (null if unspecified) */
-    public Boolean getMaySplit() {
-        return orderShipmentPreference.getBoolean("maySplit");
-    }
-
-    public void setGiftMessage(String giftMessage) {
-        orderShipmentPreference.set("giftMessage", giftMessage);
-    }
-
-    public String getGiftMessage() {
-        return orderShipmentPreference.getString("giftMessage");
-    }
-
-    public void setIsGift(Boolean isGift) {
-        orderShipmentPreference.set("isGift", isGift);
-    }
-
-    public Boolean getIsGift() {
-        return orderShipmentPreference.getBoolean("isGift");
-    }
-
-    public void setCarrierPartyId(String carrierPartyId) {
-        orderShipmentPreference.set("carrierPartyId", carrierPartyId);
-    }
-
-    public String getCarrierPartyId() {
-        return orderShipmentPreference.getString("carrierPartyId");
     }
 
     /** Compares the specified object with this cart item. */

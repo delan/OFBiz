@@ -2,7 +2,7 @@
 <!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
 
 <services>
-    <description>Common Application Components Order Services</description>
+    <description>Order Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
@@ -28,22 +28,10 @@
         <attribute name="orderTaxTotal" type="Double" mode="OUT" optional="false"/>
         <attribute name="orderGrandTotal" type="Double" mode="OUT" optional="false"/>
         <attribute name="placingCustomerPerson" type="GenericValue" mode="OUT" optional="true"/>
-        <attribute name="shippingAddress" type="GenericValue" mode="OUT" optional="true"/>
         <attribute name="billingAccount" type="GenericValue" mode="OUT" optional="true"/>
-        <attribute name="paymentMethods" type="List" mode="OUT" optional="true"/>
-        <attribute name="paymentMethodType" type="GenericValue" mode="OUT" optional="true"/>
+        <attribute name="orderPaymentPreferences" type="List" mode="OUT" optional="true"/>
         <attribute name="orderShipmentInfoSummaryList" type="List" mode="OUT" optional="true"/>
-        <attribute name="creditCard" type="GenericValue" mode="OUT" optional="true"/>
-        <attribute name="formattedCardNumber" type="String" mode="OUT" optional="true"/>
-        <attribute name="eftAccount" type="GenericValue" mode="OUT" optional="true"/>
-        <attribute name="carrierPartyId" type="String" mode="OUT" optional="true"/>
-        <attribute name="shipmentMethodTypeId" type="String" mode="OUT" optional="true"/>
-        <attribute name="shipMethDescription" type="String" mode="OUT" optional="true"/>
-        <attribute name="shippingInstructions" type="String" mode="OUT" optional="true"/>
-        <attribute name="maySplit" type="Boolean" mode="OUT" optional="true"/>
-        <attribute name="giftMessage" type="String" mode="OUT" optional="true"/>
-        <attribute name="isGift" type="Boolean" mode="OUT" optional="true"/>
-        <attribute name="trackingNumber" type="String" mode="OUT" optional="true"/>
+        <attribute name="orderItemShipGroups" type="List" mode="OUT" optional="true"/>
         <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="prepareOrderEmail" engine="java"
@@ -165,8 +153,8 @@
         <attribute name="currencyUom" type="String" mode="IN" optional="false"/>
         <attribute name="grandTotal" type="Double" mode="IN" optional="true"/>
         <attribute name="taxAmount" type="Double" mode="IN" optional="true"/>
-        <attribute name="orderShipmentPreferences" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="orderPaymentPreferences" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderItemShipGroupInfo" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderPaymentInfo" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderContactMechs" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemContactMechs" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemPriceInfos" type="java.util.List" mode="IN" optional="true"/>
@@ -215,7 +203,7 @@
             location="org.ofbiz.order.order.OrderServices" invoke="updateTrackingNumber">
         <description>Sets the tracking number on a shipment preference</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="trackingNumber" type="String" mode="IN" optional="false"/>
     </service>
 
@@ -267,6 +255,7 @@
     	<description>Cancel an Order Item Quantity</description>
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>
     	<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
     	<attribute name="cancelQuantity" type="Double" mode="IN" optional="true"/>
     </service>
 
@@ -293,7 +282,7 @@
             location="org.ofbiz.order.order.OrderServices" invoke="allowOrderSplit">
         <description>Set the Allow Split Flag To 'Y' (true)</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="addOrderRole" engine="java"
@@ -452,9 +441,8 @@
     </service>
 
     <!-- Tax Services -->
-    <service name="calcTax" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="simpleTaxCalc">
-        <description>Simple Calc Tax Service</description>
+    <service name="calcTaxInterface" engine="interface" location="" invoke="">
+        <description>Tax Calc Service Interface</description>
         <attribute name="productStoreId" type="String" mode="IN"/>
         <attribute name="itemProductList" type="java.util.List" mode="IN"/>
         <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
@@ -463,6 +451,12 @@
         <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN"/>
         <attribute name="orderAdjustments" type="java.util.List" mode="OUT"/>
         <attribute name="itemAdjustments" type="java.util.List" mode="OUT"/>
+    </service>
+
+    <service name="calcTax" engine="java"
+            location="org.ofbiz.order.order.OrderServices" invoke="simpleTaxCalc">
+        <description>Simple Calc Tax Service</description>
+        <implements service="calcTaxInterface"/>
     </service>
 
     <service name="createTaxRate" engine="simple"
@@ -502,14 +496,7 @@
     <service name="_calcTax" engine="java"
             location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="flatTaxCalc">
         <description>Zip Sales Calc Tax Service - change this to calcTax to run</description>
-        <attribute name="productStoreId" type="String" mode="IN"/>
-        <attribute name="itemProductList" type="java.util.List" mode="IN"/>
-        <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
-        <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="orderShippingAmount" type="Double" mode="IN" optional="true"/>
-        <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN"/>
-        <attribute name="orderAdjustments" type="java.util.List" mode="OUT"/>
-        <attribute name="itemAdjustments" type="java.util.List" mode="OUT"/>
+        <implements service="calcTaxInterface"/>
     </service>
 
     <!-- Customer Request Services -->
@@ -670,17 +657,20 @@
     <!-- Shopping List Services -->
     <service name="shoppingListInterface" engine="interface" location="" invoke="">
         <description>Shopping List Interface</description>
-        <auto-attributes mode="IN" entity-name="ShoppingList" include="nonpk" optional="true"/>        
+        <auto-attributes mode="IN" entity-name="ShoppingList" include="nonpk" optional="true"/>
+        <attribute name="shippingMethodString" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createShoppingList" engine="simple" auth="true"
             location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingList">
         <description>Create a shopping list entity</description>
+        <implements service="createShoppingListRecurrence"/>
         <implements service="shoppingListInterface"/>
         <attribute name="shoppingListId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateShoppingList" engine="simple" auth="true"
             location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="updateShoppingList">
         <description>Update a shopping list entity</description>
+        <implements service="createShoppingListRecurrence"/>
         <implements service="shoppingListInterface"/>
         <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
     </service>
@@ -701,6 +691,23 @@
         <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
         <attribute name="autoUserLogin" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="totalPrice" type="Double" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="createShoppingListRecurrence" engine="java" auth="true"
+            location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="splitShipmentMethodString">
+        <description>Creates Recurrence Info For Auto-Reorder Lists</description>
+        <attribute name="startDateTime" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="endDateTime" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="frequency" type="Integer" mode="IN" optional="true"/>
+        <attribute name="intervalNumber" type="Integer" mode="IN" optional="true"/>
+        <attribute name="recurrenceInfoId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="splitShipmentMethodString" engine="java" auth="false"
+            location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="splitShipmentMethodString">
+        <description>Splits the shipping method string</description>
+        <attribute name="shippingMethodString" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentMethodTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="carrierPartyId" type="String" mode="OUT" optional="true"/>
     </service>
 
     <service name="shoppingListItemInterface" engine="interface" location="" invoke="">
@@ -747,22 +754,6 @@
         <attribute name="totalSubRemainingAmount" type="Double" mode="OUT" optional="false"/>
     </service>
     
-    <service name="getOrderInformation" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="getOrderInformation">
-        <description>Get basic order information.</description>
-        <attribute name="orderId" type="String" mode="INOUT"/>
-        <attribute name="orderHeader" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
-        <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
-        <attribute name="billingAddress" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
-        <attribute name="billToPerson" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
-        <attribute name="orderItems" type="java.util.Collection" mode="OUT"/>
-        <attribute name="totalItems" type="Double" mode="OUT"/>
-        <attribute name="totalPrice" type="Double" mode="OUT"/>
-        <attribute name="affiliateId" type="String" mode="OUT"/>
-        <attribute name="distributorId" type="String" mode="OUT"/>
-        <attribute name="statusString" type="String" mode="OUT"/>
-    </service>
-
     <service name="getOrderHeaderInformation" engine="java" validate="false"
             location="org.ofbiz.order.order.OrderServices" invoke="getOrderHeaderInformation">
         <description>Get basic order header information.</description>

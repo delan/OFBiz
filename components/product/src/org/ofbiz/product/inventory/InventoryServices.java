@@ -333,7 +333,7 @@ public class InventoryServices {
             // get the reservations in order of newest first
             List reservations = null;
             try {
-                reservations = inventoryItem.getRelated("OrderItemInventoryRes", null, UtilMisc.toList("-reservedDatetime"));
+                reservations = inventoryItem.getRelated("OrderItemShipGrpInvRes", null, UtilMisc.toList("-reservedDatetime"));
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problem getting related reservations", module);
                 return ServiceUtil.returnError("Problem getting related reservations");
@@ -457,7 +457,9 @@ public class InventoryServices {
             String orderId = (String) orderIter.next();
             Map backOrderedItems = (Map) ordersToUpdate.get(orderId);
             Map cancelItems = (Map) ordersToCancel.get(orderId);
-                                    
+            
+            // TODO: change to get all OrderItemShipGroup records for the order, then get items per ship group
+            
             GenericValue orderShipPref = null;
             List orderItems = null;
             try {

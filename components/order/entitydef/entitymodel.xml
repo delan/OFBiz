@@ -65,6 +65,7 @@
       <field name="orderAdjustmentTypeId" type="id"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
+      <field name="shipGroupSeqId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
       <field name="amount" type="currency-amount"></field>
@@ -91,6 +92,15 @@
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItemShipGroup">
+        <key-map field-name="orderId"/>
+        <key-map field-name="shipGroupSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItemShipGroupAssoc">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="shipGroupSeqId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ADJ_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
@@ -286,6 +296,9 @@
       <relation type="many" rel-entity-name="OrderHeaderNoteView">
         <key-map field-name="orderId"/>
       </relation>
+      <relation type="many" rel-entity-name="OrderItemAndShipGroupAssoc">
+        <key-map field-name="orderId"/>
+      </relation>
     </entity>
     <entity entity-name="OrderHeaderNote"
             package-name="org.ofbiz.order.order"
@@ -467,35 +480,6 @@
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderItemInventoryRes"
-            package-name="org.ofbiz.order.order"
-            never-cache="true"
-            title="Order Item Inventory Reservation Entity">
-      <field name="orderId" type="id-ne"></field>
-      <field name="orderItemSeqId" type="id-ne"></field>
-      <field name="inventoryItemId" type="id-ne"></field>
-      <field name="reserveOrderEnumId" type="id-ne"></field>
-      <field name="quantity" type="floating-point"></field>
-      <field name="quantityNotAvailable" type="floating-point"></field>
-      <field name="reservedDatetime" type="date-time"></field>
-      <field name="createdDatetime" type="date-time"></field>
-      <field name="promisedDatetime" type="date-time"></field>
-      <field name="currentPromisedDate" type="date-time"></field>
-      <field name="pickStartDate" type="date-time"></field>
-      <prim-key field="orderId"/>
-      <prim-key field="orderItemSeqId"/>
-      <prim-key field="inventoryItemId"/>
-      <relation type="one-nofk" rel-entity-name="OrderHeader">
-        <key-map field-name="orderId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_ITIR_OITM" rel-entity-name="OrderItem">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_ITIR_INVITM" rel-entity-name="InventoryItem">
-        <key-map field-name="inventoryItemId"/>
-      </relation>
-    </entity>
     <entity entity-name="OrderItemPriceInfo"
             package-name="org.ofbiz.order.order"
             never-cache="true"
@@ -551,6 +535,119 @@
       <relation type="one" fk-name="ORDER_ITRL_PTRLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="OrderItemShipGroup"
+            package-name="org.ofbiz.order.order"
+            title="Order Item Ship Group">
+      <field name="orderId" type="id-ne"></field>
+      <field name="shipGroupSeqId" type="id-ne"></field>
+      <field name="shipmentMethodTypeId" type="id"></field>
+      <field name="carrierPartyId" type="id"></field>
+      <field name="carrierRoleTypeId" type="id"></field>
+      <field name="contactMechId" type="id"></field>
+      <field name="telecomContactMechId" type="id"></field>
+      <field name="trackingNumber" type="short-varchar"></field>
+      <field name="shippingInstructions" type="long-varchar"></field>
+      <field name="maySplit" type="indicator"></field>
+      <field name="giftMessage" type="long-varchar"></field>
+      <field name="isGift" type="indicator"></field>
+      <field name="shipAfterDate" type="date-time"></field>
+      <field name="shipByDate" type="date-time"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="shipGroupSeqId"/>
+      <relation type="one" fk-name="ORDER_ITSG_ORDH" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITSG_CSHM" rel-entity-name="CarrierShipmentMethod">
+        <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITSG_CPRTY" title="Carrier" rel-entity-name="Party">
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITSG_CPRLE" title="Carrier" rel-entity-name="PartyRole">
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITSG_SHMTP" rel-entity-name="ShipmentMethodType">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITSG_CNTM" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITSG_PADR" rel-entity-name="PostalAddress">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITSG_TCNT" title="Telecom" rel-entity-name="ContactMech">
+        <key-map field-name="telecomContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITSG_TCNB" title="Telecom" rel-entity-name="TelecomNumber">
+        <key-map field-name="telecomContactMechId" rel-field-name="contactMechId"/>
+      </relation>
+    </entity>
+    <entity entity-name="OrderItemShipGroupAssoc"
+            package-name="org.ofbiz.order.order"
+            title="Order Item Package Association">
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="shipGroupSeqId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="cancelQuantity" type="floating-point"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="orderItemSeqId"/>
+      <prim-key field="shipGroupSeqId"/>
+      <relation type="one" fk-name="ORDER_ISGA_ORDH" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ISGA_ORDI" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ISGA_OISG" rel-entity-name="OrderItemShipGroup">
+        <key-map field-name="orderId"/>
+        <key-map field-name="shipGroupSeqId"/>
+      </relation>
+    </entity>
+    <entity entity-name="OrderItemShipGrpInvRes"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Item Inventory Reservation Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="shipGroupSeqId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="reserveOrderEnumId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="quantityNotAvailable" type="floating-point"></field>
+      <field name="reservedDatetime" type="date-time"></field>
+      <field name="createdDatetime" type="date-time"></field>
+      <field name="promisedDatetime" type="date-time"></field>
+      <field name="currentPromisedDate" type="date-time"></field>
+      <field name="pickStartDate" type="date-time"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="shipGroupSeqId"/>
+      <prim-key field="orderItemSeqId"/>
+      <prim-key field="inventoryItemId"/>
+      <relation type="one-nofk" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITIR_OITM" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItemShipGroup">
+        <key-map field-name="orderId"/>
+        <key-map field-name="shipGroupSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItemShipGroupAssoc">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="shipGroupSeqId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITIR_INVITM" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemType"
@@ -692,47 +789,6 @@
       <relation type="one-nofk" rel-entity-name="ShipmentItem">
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentItemSeqId"/>
-      </relation>
-    </entity>
-    <entity entity-name="OrderShipmentPreference"
-            package-name="org.ofbiz.order.order"
-            never-cache="true"
-            title="The Order Shipment Preference Entity">
-      <field name="orderId" type="id-ne"></field>
-      <field name="orderItemSeqId" type="id-ne"></field>
-      <field name="shipmentMethodTypeId" type="id"></field>
-      <field name="carrierPartyId" type="id"></field>
-      <field name="carrierRoleTypeId" type="id"></field>
-      <field name="trackingNumber" type="short-varchar"></field>
-      <field name="shippingInstructions" type="long-varchar"></field>
-      <field name="maySplit" type="indicator"></field>
-      <field name="giftMessage" type="long-varchar"></field>
-      <field name="isGift" type="indicator"></field>
-      <field name="shipAfterDate" type="date-time"></field>
-      <field name="shipBeforeDate" type="date-time"></field>
-      <prim-key field="orderId"/>
-      <prim-key field="orderItemSeqId"/>
-      <relation type="one" fk-name="ORDER_SHPREF_CSHM" rel-entity-name="CarrierShipmentMethod">
-        <key-map field-name="shipmentMethodTypeId"/>
-        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
-        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_SHPREF_OHDR" rel-entity-name="OrderHeader">
-        <key-map field-name="orderId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="OrderItem">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_SHPREF_CPRTY" title="Carrier" rel-entity-name="Party">
-        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_SHPREF_CPRLE" title="Carrier" rel-entity-name="PartyRole">
-        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
-        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_SHPREF_SHMTP" rel-entity-name="ShipmentMethodType">
-        <key-map field-name="shipmentMethodTypeId"/>
       </relation>
     </entity>
     <entity entity-name="OrderStatus"
@@ -965,7 +1021,7 @@
         <key-map field-name="returnId"/>
         <key-map field-name="returnItemSeqId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrderItemInventoryRes">
+      <relation type="many" rel-entity-name="OrderItemShipGrpInvRes">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
@@ -1128,14 +1184,20 @@
       <field name="picklistBinId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="shipGroupSeqId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
       <prim-key field="picklistBinId"/>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
+      <prim-key field="shipGroupSeqId"/>
       <prim-key field="inventoryItemId"/>
       <relation type="one" fk-name="PCKLST_ITM_BIN" rel-entity-name="PicklistBin">
         <key-map field-name="picklistBinId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_ITM_OISG" rel-entity-name="OrderItemShipGroup">
+        <key-map field-name="orderId"/>
+        <key-map field-name="shipGroupSeqId"/>
       </relation>
       <relation type="one" fk-name="PCKLST_ITM_ODIT" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
@@ -1147,10 +1209,11 @@
       <relation type="one" fk-name="PCKLST_ITM_INV" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="OrderItemInventoryRes">
-      	<!-- This is a nofk so that the OrderItemInventoryRes can be removed -->
+      <relation type="one-nofk" rel-entity-name="OrderItemShipGrpInvRes">
+      	<!-- This is a nofk so that the OrderItemShipGrpInvRes can be removed -->
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="shipGroupSeqId"/>
         <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
@@ -1813,11 +1876,15 @@
       <field name="listName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="isPublic" type="indicator"></field>
+      <field name="isActive" type="indicator"></field>
+      <field name="currencyUom" type="id"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
       <field name="carrierPartyId" type="id"></field>
       <field name="carrierRoleTypeId" type="id"></field>
       <field name="contactMechId" type="id"></field>
+      <field name="paymentMethodId" type="id"></field>
       <field name="recurrenceInfoId" type="id"></field>
+      <field name="lastOrderedDate" type="date-time"></field>
       <field name="lastAdminModified" type="date-time"></field>
       <prim-key field="shoppingListId"/>
       <relation type="one" fk-name="SHLIST_PARENT" title="Parent" rel-entity-name="ShoppingList">
@@ -1848,6 +1915,9 @@
       </relation>
       <relation type="one-nofk" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_PYMETH" rel-entity-name="PaymentMethod">
+        <key-map field-name="paymentMethodId"/>
       </relation>
       <relation type="one" fk-name="SHLIST_RECINFO" rel-entity-name="RecurrenceInfo">
         <key-map field-name="recurrenceInfoId"/>

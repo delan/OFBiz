@@ -16,7 +16,6 @@
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/>
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
-    <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
 
@@ -367,13 +366,25 @@
         <response name="error" type="view" value="main"/>
     </request-map>
 
+    <request-map uri="splitship">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="splitship"/>
+    </request-map>
+    <request-map uri="updatesplit">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="assignItemShipGroup"/>
+        <response name="success" type="view" value="splitship"/>
+        <response name="error" type="view" value="splitship"/>
+    </request-map>
+
     <request-map uri="checkout">
       <security https="true" auth="true"/>
       <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
       <response name="success" type="request" value="setOptions"/>
       <response name="error" type="view" value="showcart"/>
     </request-map>
-  
+
+    <!-- old checkout options events -->
     <request-map uri="updateCheckoutOptions">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setPartialCheckOutOptions"/>
@@ -385,6 +396,20 @@
         <security https="true" auth="true" direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutOptions"/>
         <response name="success" type="request" value="calcShipping"/>
+        <response name="error" type="request" value="checkouterror"/>
+    </request-map>
+
+    <!-- new checkout option services -->
+    <request-map uri="updateShippingAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setCartShippingAddress"/>
+        <response name="success" type="view" value="checkoutoptions"/>
+        <response name="error" type="request" value="checkouterror"/>
+    </request-map>
+    <request-map uri="updateShippingOptions">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setCartShippingOptions"/>
+        <response name="success" type="view" value="checkoutoptions"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
 
@@ -1060,6 +1085,7 @@
 
     <view-map name="quickcheckout" type="jpublish" page="/order/checkoutoptions.ftl"/>
     <view-map name="checkoutoptions" type="jpublish" page="/order/checkoutshippingaddress.ftl"/>
+    <view-map name="splitship" type="jpublish" page="/order/splitship.ftl"/>
     <view-map name="checkoutshippingaddress" type="jpublish" page="/order/checkoutshippingaddress.ftl"/>
     <view-map name="checkoutshippingoptions" type="jpublish" page="/order/checkoutshippingoptions.ftl"/>
     <view-map name="checkoutpayment" type="jpublish" page="/order/checkoutpayment.ftl"/>

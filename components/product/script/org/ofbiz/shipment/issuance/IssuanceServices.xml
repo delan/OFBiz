@@ -120,7 +120,7 @@
         
         <!-- make sure the order is NOT of orderTypeId: SALES_ORDER -->
         <if-compare field-name="orderTypeId" map-name="orderHeader" operator="equals" value="SALES_ORDER">
-            <string-to-list string="Not issuing Order Item to shipment [${parameters.shipmentId}] because the order is a Sales Order for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}] (should call the issueOrderItemInventoryResToShipment service)" list-name="error_list"/>
+            <string-to-list string="Not issuing Order Item to shipment [${parameters.shipmentId}] because the order is a Sales Order for order [${orderHeader.orderId}] order item [${parameters.orderItemSeqId}] (should call the issueOrderItemShipGrpInvResToShipment service)" list-name="error_list"/>
         </if-compare>
         <check-errors/>
 
@@ -138,8 +138,8 @@
         <call-simple-method method-name="associateIssueRoles"/>
     </simple-method>
     
-    <simple-method method-name="issueOrderItemInventoryResToShipment" short-description="Issue OrderItemInventoryRes to Shipment">
-        <string-to-field string="Issue OrderItemInventoryRes to Shipment" field-name="operationName"/>
+    <simple-method method-name="issueOrderItemShipGrpInvResToShipment" short-description="Issue OrderItemShipGrpInvRes to Shipment">
+        <string-to-field string="Issue OrderItemShipGrpInvRes to Shipment" field-name="operationName"/>
         <check-permission permission="FACILITY" action="_CREATE">
             <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
@@ -148,10 +148,10 @@
         </check-permission>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
 
-        <!-- get orderItemInventoryRes -->
-        <make-value entity-name="OrderItemInventoryRes" value-name="orderItemInventoryResLookupPk"/>
-        <set-pk-fields value-name="orderItemInventoryResLookupPk" map-name="parameters"/>
-        <find-by-primary-key map-name="orderItemInventoryResLookupPk" value-name="orderItemInventoryRes"/>
+        <!-- get orderItemShipGrpInvRes -->
+        <make-value entity-name="OrderItemShipGrpInvRes" value-name="OrderItemShipGrpInvResLookupPk"/>
+        <set-pk-fields value-name="OrderItemShipGrpInvResLookupPk" map-name="parameters"/>
+        <find-by-primary-key map-name="OrderItemShipGrpInvResLookupPk" value-name="orderItemShipGrpInvRes"/>
         <!-- get orderHeader -->
         <make-value entity-name="OrderHeader" value-name="orderHeaderLookupPk"/>
         <set-pk-fields value-name="orderHeaderLookupPk" map-name="parameters"/>
@@ -159,20 +159,20 @@
         
         <!-- make sure the order is of orderTypeId: SALES_ORDER -->
         <if-compare field-name="orderTypeId" map-name="orderHeader" operator="not-equals" value="SALES_ORDER">
-            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the order is not a Sales Order for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}] (should call the issueOrderItemToShipment service)" list-name="error_list"/>
+            <string-to-list string="Not issuing Order Item Ship Group Inventory Reservation to shipment [${parameters.shipmentId}] because the order is not a Sales Order for order [${orderItemShipGrpInvRes.orderId}] order item [${orderItemShipGrpInvRes.orderItemSeqId}] inventoryItem [${orderItemShipGrpInvRes.inventoryItemId}] (should call the issueOrderItemToShipment service)" list-name="error_list"/>
         </if-compare>
 
         <!-- make sure specified quantity is not empty -->
         <if-empty field-name="parameters.quantity">
-            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue is empty for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
+            <string-to-list string="Not issuing Order Item Ship Group Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue is empty for order [${orderItemShipGrpInvRes.orderId}] order item [${orderItemShipGrpInvRes.orderItemSeqId}] inventoryItem [${orderItemShipGrpInvRes.inventoryItemId}]" list-name="error_list"/>
         </if-empty>
         <!-- make sure specified quantity is not less than or equal to 0 -->
         <if-compare field-name="parameters.quantity" operator="less-equals" value="0" type="Double">
-            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is less than or equal to 0 for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
+            <string-to-list string="Not issuing Order Item Ship Group Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is less than or equal to 0 for order [${orderItemShipGrpInvRes.orderId}] order item [${orderItemShipGrpInvRes.orderItemSeqId}] inventoryItem [${orderItemShipGrpInvRes.inventoryItemId}]" list-name="error_list"/>
         </if-compare>
-        <!-- make sure specified quantity is not greater than reserved quantity left to be issued, ie orderItemInventoryRes.quantity -->
-        <if-compare-field field-name="parameters.quantity" operator="greater" to-field-name="orderItemInventoryRes.quantity" type="Double">
-            <string-to-list string="Not issuing Order Item Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is greater than the quantity left to issue [${orderItemInventoryRes.quantity}] for order [${orderItemInventoryRes.orderId}] order item [${orderItemInventoryRes.orderItemSeqId}] inventoryItem [${orderItemInventoryRes.inventoryItemId}]" list-name="error_list"/>
+        <!-- make sure specified quantity is not greater than reserved quantity left to be issued, ie orderItemShipGrpInvRes.quantity -->
+        <if-compare-field field-name="parameters.quantity" operator="greater" to-field-name="orderItemShipGrpInvRes.quantity" type="Double">
+            <string-to-list string="Not issuing Order Item Ship Group Inventory Reservation to shipment [${parameters.shipmentId}] because the quantity to issue [${parameters.quantity}] is greater than the quantity left to issue [${orderItemShipGrpInvRes.quantity}] for order [${orderItemShipGrpInvRes.orderId}] order item [${orderItemShipGrpInvRes.orderItemSeqId}] inventoryItem [${orderItemShipGrpInvRes.inventoryItemId}]" list-name="error_list"/>
         </if-compare-field>
 
         <check-errors/>
@@ -195,17 +195,17 @@
         <call-simple-method method-name="associateIssueRoles"/>
         
         <!-- decrement quantity still reserved -->
-        <calculate field-name="quantity" map-name="orderItemInventoryRes">
+        <calculate field-name="orderItemShipGrpInvRes.quantity">
             <calcop operator="subtract">
-                <calcop operator="get" field-name="orderItemInventoryRes.quantity"/>
+                <calcop operator="get" field-name="orderItemShipGrpInvRes.quantity"/>
                 <calcop operator="get" field-name="parameters.quantity"/>
             </calcop>
         </calculate>
-        <if-compare value="0" operator="equals" field-name="quantity" map-name="orderItemInventoryRes" type="Double">
+        <if-compare value="0" operator="equals" field-name="orderItemShipGrpInvRes.quantity" type="Double">
             <!-- if none left reserved, remove OIIR -->
-            <remove-value value-name="orderItemInventoryRes"/>
+            <remove-value value-name="orderItemShipGrpInvRes"/>
             <!-- if there are no more OIIRs for the orderItem, set the orderItem.statusId to ITEM_COMPLETED -->
-            <get-related value-name="orderItem" relation-name="OrderItemInventoryRes" list-name="otherOiirs"/>
+            <get-related value-name="orderItem" relation-name="OrderItemShipGrpInvRes" list-name="otherOiirs"/>
             <if-empty field-name="otherOiirs">
                 <string-to-field string="ITEM_COMPLETED" field-name="statusId" map-name="changeOrderItemStatusMap"/>
                 <field-to-field field-name="orderId" map-name="orderItem" to-map-name="changeOrderItemStatusMap"/>
@@ -213,7 +213,7 @@
                 <call-service service-name="changeOrderItemStatus" in-map-name="changeOrderItemStatusMap"/>
             </if-empty>
         <else>
-            <store-value value-name="orderItemInventoryRes"/>
+            <store-value value-name="orderItemShipGrpInvRes"/>
         </else>
         </if-compare>
         
@@ -222,6 +222,7 @@
         <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
         <env-to-env env-name="orderItem.orderId" to-env-name="createDetailMap.orderId"/>
         <env-to-env env-name="orderItem.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
+        <env-to-env env-name="orderItemShipGrpInvRes.shipGroupSeqId" to-env-name="createDetailMap.shipGroupSeqId"/>
         <env-to-env env-name="shipmentItem.shipmentId" to-env-name="createDetailMap.shipmentId"/>
         <env-to-env env-name="shipmentItem.shipmentItemSeqId" to-env-name="createDetailMap.shipmentItemSeqId"/>
         <env-to-env env-name="itemIssuanceId" to-env-name="createDetailMap.itemIssuanceId"/>
@@ -271,9 +272,10 @@
         <field-to-field field-name="shipmentItemSeqId" map-name="shipmentItem" to-map-name="itemIssuanceCreate"/>
         <field-to-field field-name="orderId" map-name="orderItem" to-map-name="itemIssuanceCreate"/>
         <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="itemIssuanceCreate"/>
-        <if-not-empty field-name="orderItemInventoryRes">
-            <!-- if this is coming from an OrderItem issue instead of an OrderItemInventoryRes issue, we won't have this info -->
-            <field-to-field field-name="inventoryItemId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
+        <if-not-empty field-name="orderItemShipGrpInvRes">
+            <!-- if this is coming from an OrderItem issue instead of an OrderItemShipGrpInvRes issue, we won't have this info -->
+            <field-to-field field-name="inventoryItemId" map-name="orderItemShipGrpInvRes" to-map-name="itemIssuanceCreate"/>
+            <field-to-field field-name="shipGroupSeqId" map-name="orderItemShipGrpInvRes" to-map-name="itemIssuanceCreate"/>
         </if-not-empty>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="issuedByUserLoginId" to-map-name="itemIssuanceCreate"/>
         <call-service service-name="createItemIssuance" in-map-name="itemIssuanceCreate" >

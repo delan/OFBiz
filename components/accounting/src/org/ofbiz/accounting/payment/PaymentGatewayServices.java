@@ -331,7 +331,7 @@ public class PaymentGatewayServices {
         processContext.put("userLogin", userLogin);
         processContext.put("orderId", orh.getOrderId());
         processContext.put("orderItems", orh.getOrderItems());
-        processContext.put("shippingAddress", orh.getShippingAddress());
+        processContext.put("shippingAddress", EntityUtil.getFirst(orh.getShippingLocations())); // TODO refactor the payment API to handle support all addresses
         processContext.put("paymentConfig", paymentConfig);
         processContext.put("currency", orh.getCurrency());
         processContext.put("cardSecurityCode", paymentPreference.get("securityCode"));

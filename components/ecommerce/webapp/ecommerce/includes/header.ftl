@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -32,6 +32,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${(productStore.storeName)?if_exists}: ${page.title?if_exists}</title>
     <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
+    <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
     <link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/images/maincss.css")}</@ofbizContentUrl>" type="text/css">
 
     <#-- Append CSS for catalog -->

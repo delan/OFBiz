@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Rev:$
+ *@version    $Rev$
  */
 
 import java.util.*;
@@ -71,7 +71,7 @@ if (shipmentPlans != null) {
     while (shipmentPlansIt.hasNext()) {
         shipmentPlan = shipmentPlansIt.next();
         oneRow = new HashMap(shipmentPlan);
-        //    oneRow.putAll(shipmentPlan.getRelatedOne("OrderItemInventoryRes"));
+        //    oneRow.putAll(shipmentPlan.getRelatedOne("OrderItemShipGrpInvRes"));
         orderItem = shipmentPlan.getRelatedOne("OrderItem");
         oneRow.put("productId", orderItem.getString("productId"));
         oneRow.put("totOrderedQuantity", orderItem.getString("quantity"));
@@ -130,7 +130,7 @@ if (shipmentPlans != null) {
         // Reserved and Not Available quantity
         reservedQuantity = 0.0;
         reservedNotAvailable = 0.0;
-        reservations = orderItem.getRelated("OrderItemInventoryRes");
+        reservations = orderItem.getRelated("OrderItemShipGrpInvRes");
         reservationsIt = reservations.iterator();
         while (reservationsIt.hasNext()) {
             reservation = reservationsIt.next();

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -32,6 +32,7 @@ delegator = request.getAttribute("delegator");
 
 shipmentId = request.getParameter("shipmentId");
 orderId = request.getParameter("orderId");
+shipGroupSeqId = request.getParameter("shipGroupSeqId");
 selectFromShipmentPlan = request.getParameter("selectFromShipmentPlan");
 
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
@@ -44,6 +45,9 @@ if (shipment != null) {
 if (UtilValidate.isEmpty(orderId) && shipment != null && selectFromShipmentPlan == null) {
     orderId = shipment.get("primaryOrderId");
 }
+if (UtilValidate.isEmpty(shipGroupSeqId) && shipment != null && selectFromShipmentPlan == null) {
+    shipGroupSeqId = shipment.get("primaryShipGroupSeqId");
+}
 
 if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
     orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -55,16 +59,26 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
         
         isSalesOrder = "SALES_ORDER".equals(orderHeader.getString("orderTypeId"));
         context.put("isSalesOrder", isSalesOrder);
-        
+
+        orderItemShipGroup = null;
+        if (UtilValidate.isNotEmpty(shipGroupSeqId)) {
+            orderItemShipGroup = delegator.findByPrimaryKey("OrderItemShipGroup", UtilMisc.toMap("orderId", orderId, "shipGroupSeqId", shipGroupSeqId));
+            context.put("orderItemShipGroup", orderItemShipGroup);
+        }
+
+        oiasgaLimitMap = null;
+        if (orderItemShipGroup != null) {
+            oiasgaLimitMap = UtilMisc.toMap("shipGroupSeqId", shipGroupSeqId);
+        }
+        orderItems = orderHeader.getRelated("OrderItemAndShipGroupAssoc", oiasgaLimitMap, UtilMisc.toList("shipGroupSeqId", "orderItemSeqId"));
         orderItemDatas = new LinkedList();
-        orderItems = orderHeader.getRelated("OrderItem");
         orderItemIter = orderItems.iterator();
         while (orderItemIter.hasNext()) {
             orderItemData = new HashMap();
-            orderItem = orderItemIter.next();
-            product = orderItem.getRelatedOne("Product");
+            orderItemAndShipGroupAssoc = orderItemIter.next();
+            product = orderItemAndShipGroupAssoc.getRelatedOne("Product");
             
-            itemIssuances = orderItem.getRelated("ItemIssuance");
+            itemIssuances = orderItemAndShipGroupAssoc.getRelated("ItemIssuance");
             totalQuantityIssued = 0;
             itemIssuanceIter = itemIssuances.iterator();
             while (itemIssuanceIter.hasNext()) {
@@ -75,30 +89,34 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
             }
 
             if (isSalesOrder) {
-                orderItemInventoryResList = orderItem.getRelated("OrderItemInventoryRes", null, UtilMisc.toList("reservedDatetime"));
-                orderItemInventoryResDatas = new LinkedList();
+                oisgirLimitMap = null;
+                if (orderItemShipGroup != null) {
+                    oisgirLimitMap = UtilMisc.toMap("shipGroupSeqId", shipGroupSeqId);
+                }
+                orderItemShipGrpInvResList = orderItemAndShipGroupAssoc.getRelated("OrderItemShipGrpInvRes", oisgirLimitMap, UtilMisc.toList("reservedDatetime"));
+                orderItemShipGrpInvResDatas = new LinkedList();
                 totalQuantityReserved = 0;
-                orderItemInventoryResIter = orderItemInventoryResList.iterator();
-                while (orderItemInventoryResIter.hasNext()) {
-                    orderItemInventoryRes = orderItemInventoryResIter.next();
-                    inventoryItem = orderItemInventoryRes.getRelatedOne("InventoryItem");
-                    orderItemInventoryResData = new HashMap();
-                    orderItemInventoryResData.put("orderItemInventoryRes", orderItemInventoryRes);
-                    orderItemInventoryResData.put("inventoryItem", inventoryItem);
-                    orderItemInventoryResData.put("inventoryItemFacility", inventoryItem.getRelatedOne("Facility"));
-                    orderItemInventoryResDatas.add(orderItemInventoryResData);
+                orderItemShipGrpInvResIter = orderItemShipGrpInvResList.iterator();
+                while (orderItemShipGrpInvResIter.hasNext()) {
+                    orderItemShipGrpInvRes = orderItemShipGrpInvResIter.next();
+                    inventoryItem = orderItemShipGrpInvRes.getRelatedOne("InventoryItem");
+                    orderItemShipGrpInvResData = new HashMap();
+                    orderItemShipGrpInvResData.put("orderItemShipGrpInvRes", orderItemShipGrpInvRes);
+                    orderItemShipGrpInvResData.put("inventoryItem", inventoryItem);
+                    orderItemShipGrpInvResData.put("inventoryItemFacility", inventoryItem.getRelatedOne("Facility"));
+                    orderItemShipGrpInvResDatas.add(orderItemShipGrpInvResData);
     
-                    if (orderItemInventoryRes.get("quantity") != null) {
-                        totalQuantityReserved += orderItemInventoryRes.getDouble("quantity");
+                    if (orderItemShipGrpInvRes.get("quantity") != null) {
+                        totalQuantityReserved += orderItemShipGrpInvRes.getDouble("quantity");
                     }
                 }
                 
-                orderItemData.put("orderItemInventoryResDatas", orderItemInventoryResDatas);
+                orderItemData.put("orderItemShipGrpInvResDatas", orderItemShipGrpInvResDatas);
                 orderItemData.put("totalQuantityReserved", totalQuantityReserved);
                 orderItemData.put("totalQuantityIssuedAndReserved", totalQuantityReserved + totalQuantityIssued);
             }
             
-            orderItemData.put("orderItem", orderItem);
+            orderItemData.put("orderItemAndShipGroupAssoc", orderItemAndShipGroupAssoc);
             orderItemData.put("product", product);
             orderItemData.put("itemIssuances", itemIssuances);
             orderItemData.put("totalQuantityIssued", totalQuantityIssued);
@@ -143,28 +161,28 @@ if (selectFromShipmentPlan != null && shipment != null) {
         if (plannedQuantity < 0) {
             plannedQuantity = 0;
         }
-        orderItemInventoryResList = orderItem.getRelated("OrderItemInventoryRes", null, UtilMisc.toList("reservedDatetime"));
-        orderItemInventoryResDatas = new LinkedList();
+        orderItemShipGrpInvResList = orderItem.getRelated("OrderItemShipGrpInvRes", null, UtilMisc.toList("reservedDatetime"));
+        orderItemShipGrpInvResDatas = new LinkedList();
         totalQuantityReserved = 0;
-        orderItemInventoryResIter = orderItemInventoryResList.iterator();
-        while (orderItemInventoryResIter.hasNext()) {
-            orderItemInventoryRes = orderItemInventoryResIter.next();
-            inventoryItem = orderItemInventoryRes.getRelatedOne("InventoryItem");
-            orderItemInventoryResData = new HashMap();
-            orderItemInventoryResData.put("orderItemInventoryRes", orderItemInventoryRes);
-            orderItemInventoryResData.put("inventoryItem", inventoryItem);
-            orderItemInventoryResData.put("inventoryItemFacility", inventoryItem.getRelatedOne("Facility"));
-            orderItemInventoryResDatas.add(orderItemInventoryResData);
+        orderItemShipGrpInvResIter = orderItemShipGrpInvResList.iterator();
+        while (orderItemShipGrpInvResIter.hasNext()) {
+            orderItemShipGrpInvRes = orderItemShipGrpInvResIter.next();
+            inventoryItem = orderItemShipGrpInvRes.getRelatedOne("InventoryItem");
+            orderItemShipGrpInvResData = new HashMap();
+            orderItemShipGrpInvResData.put("orderItemShipGrpInvRes", orderItemShipGrpInvRes);
+            orderItemShipGrpInvResData.put("inventoryItem", inventoryItem);
+            orderItemShipGrpInvResData.put("inventoryItemFacility", inventoryItem.getRelatedOne("Facility"));
+            orderItemShipGrpInvResDatas.add(orderItemShipGrpInvResData);
 
             reservedQuantity = 0.0;
             quantityNotAvailable = 0.0;
             proposedQuantity = 0.0;
-            if (orderItemInventoryRes.get("quantity") != null) {
-                reservedQuantity = orderItemInventoryRes.getDouble("quantity");
+            if (orderItemShipGrpInvRes.get("quantity") != null) {
+                reservedQuantity = orderItemShipGrpInvRes.getDouble("quantity");
                 totalQuantityReserved += reservedQuantity;
             }
-            if (orderItemInventoryRes.get("quantityNotAvailable") != null) {
-                quantityNotAvailable = orderItemInventoryRes.getDouble("quantityNotAvailable");
+            if (orderItemShipGrpInvRes.get("quantityNotAvailable") != null) {
+                quantityNotAvailable = orderItemShipGrpInvRes.getDouble("quantityNotAvailable");
             }
             proposedQuantity = reservedQuantity - quantityNotAvailable;
             if (plannedQuantity - totalProposedQuantity < proposedQuantity) {
@@ -174,10 +192,10 @@ if (selectFromShipmentPlan != null && shipment != null) {
                 proposedQuantity = 0.0;
             }
             totalProposedQuantity += proposedQuantity;
-            orderItemInventoryResData.put("shipmentPlanQuantity", proposedQuantity);
+            orderItemShipGrpInvResData.put("shipmentPlanQuantity", proposedQuantity);
         }
 
-        orderItemData.put("orderItemInventoryResDatas", orderItemInventoryResDatas);
+        orderItemData.put("orderItemShipGrpInvResDatas", orderItemShipGrpInvResDatas);
         orderItemData.put("totalQuantityReserved", totalQuantityReserved);
         orderItemData.put("totalQuantityIssuedAndReserved", totalQuantityReserved + totalQuantityIssued);
 
@@ -193,3 +211,5 @@ if (selectFromShipmentPlan != null && shipment != null) {
 context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);
 context.put("orderId", orderId);
+context.put("shipGroupSeqId", shipGroupSeqId);
+

@@ -131,7 +131,7 @@
                       <td>&nbsp;</td>
                       <td align="right" valign="top" nowrap>
                         <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED") || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && orderHeader.statusId != "ORDER_SENT")>
-                          <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[Cancel]</a></div>
+                          <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[Cancel All]</a></div>
                         <#else>
                           &nbsp;
                         </#if>
@@ -200,19 +200,50 @@
                     </#list>
                   </#if>
 
+                  <#-- now show ship group info per line item -->
+                  <#assign orderItemShipGroupAssocs = orderItem.getRelated("OrderItemShipGroupAssoc")?if_exists>
+                  <#if orderItemShipGroupAssocs?has_content>
+                    <tr><td>&nbsp;</td></tr>
+                    <#list orderItemShipGroupAssocs as shipGroupAssoc>
+                      <#assign shipGroup = shipGroupAssoc.getRelatedOne("OrderItemShipGroup")>
+                      <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress")>
+                      <tr>
+                        <td align="right" colspan="2">
+                          <div class="tabletext" style="font-size: xx-small;"><b><i>Ship Group</i>:</b> [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1}</div>
+                        </td>
+                        <td align="center">
+                          <div class="tabletext" style="font-size: xx-small;">${shipGroupAssoc.quantity?string.number}&nbsp;</div>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td align="right" valign="top" nowrap>
+                          <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)))>
+                          <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
+                            <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[Cancel]</a></div>
+                          <#else>
+                            &nbsp;
+                          </#if>
+                        </td>
+                      </tr>
+                    </#list>
+                  </#if>
+
                   <#-- now show inventory reservation info per line item -->
-                  <#assign orderItemInventoryReses = orderReadHelper.getOrderItemInventoryReses(orderItem)>
-                  <#if orderItemInventoryReses?exists && orderItemInventoryReses?has_content>
-                    <#list orderItemInventoryReses as orderItemInventoryRes>
+                  <#assign orderItemShipGrpInvResList = orderReadHelper.getOrderItemShipGrpInvResList(orderItem)>
+                  <#if orderItemShipGrpInvResList?exists && orderItemShipGrpInvResList?has_content>
+                    <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
                       <tr>
                         <td align="right" colspan="2">
                           <div class="tabletext" style="font-size: xx-small;">
                             <b><i>Inventory</i>:</b>
-                              <a href="/facility/control/EditInventoryItem?inventoryItemId=${orderItemInventoryRes.inventoryItemId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderItemInventoryRes.inventoryItemId}</a>
+                              <a href="/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderItemShipGrpInvRes.inventoryItemId}</a>
+                            <b><i>Ship Group</i>:</b> ${orderItemShipGrpInvRes.shipGroupSeqId}
                           </div>
                         </td>
                         <td align="center">
-                          <div class="tabletext" style="font-size: xx-small;">${orderItemInventoryRes.quantity?string.number}&nbsp;</div>
+                          <div class="tabletext" style="font-size: xx-small;">${orderItemShipGrpInvRes.quantity?string.number}&nbsp;</div>
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
@@ -250,15 +281,18 @@
               <tr><td colspan="8"><hr class="sepbar"></td></tr>
               <#list orderHeaderAdjustments as orderHeaderAdjustment>
                 <#assign adjustmentType = orderHeaderAdjustment.getRelatedOne("OrderAdjustmentType")>
-                <tr>
-                  <td align="right" colspan="5">
-                    <div class="tabletext"><b>${adjustmentType.description}</b> : ${orderHeaderAdjustment.comments?if_exists}</div>
-                  </td>
-                  <td align="right" nowrap>
-                    <div class="tabletext"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal) isoCode=currencyUomId/></div>
-                  </td>
-                  <td>&nbsp;</td>
-                </tr>
+                <#assign adjustmentAmount = Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal)>
+                <#if adjustmentAmount != 0>
+                  <tr>
+                    <td align="right" colspan="5">
+                      <div class="tabletext"><b>${adjustmentType.description}</b> : ${orderHeaderAdjustment.comments?if_exists}</div>
+                    </td>
+                    <td align="right" nowrap>
+                      <div class="tabletext"><@ofbizCurrency amount=adjustmentAmount isoCode=currencyUomId/></div>
+                    </td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </#if>
               </#list>
 
               <#-- add new adjustment -->

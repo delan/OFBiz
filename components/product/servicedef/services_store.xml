@@ -29,6 +29,7 @@
         <attribute name="quantity" type="Double" mode="IN" optional="false"></attribute>
         <attribute name="orderId" type="String" mode="IN" optional="true"></attribute>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"></attribute>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"></attribute>
         <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"></attribute>
     </service>
 

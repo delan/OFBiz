@@ -916,6 +916,7 @@
       <field name="availableToPromiseDiff" type="floating-point"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
+      <field name="shipGroupSeqId" type="id"></field>
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
       <field name="workEffortId" type="id"></field>
@@ -930,9 +931,10 @@
       <relation type="one" fk-name="INV_ITDTL_WEFF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="OrderItemInventoryRes">
+      <relation type="one-nofk" rel-entity-name="OrderItemShipGrpInvRes">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="shipGroupSeqId"/>
         <key-map field-name="inventoryItemId"/>
       </relation>
       <relation type="one" fk-name="INV_ITDTL_ITMIS" rel-entity-name="ItemIssuance">

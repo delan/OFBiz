@@ -171,7 +171,7 @@
 <#if orderHeaderInfoList?has_content>
     <#list orderHeaderInfoList as orderHeaderInfo>
         <#assign rowColor = "white">
-        <#-- orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemInventoryResList -->
+        <#-- orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemShipGrpInvResList -->
         <#assign orderHeader = orderHeaderInfo.orderHeader>
         <#assign orderItemInfoList = orderHeaderInfo.orderItemInfoList>
         <fo:page-sequence master-reference="main">
@@ -195,7 +195,7 @@
                     <#list orderItemInfoList as orderItemInfo>
                         <#assign orderItem = orderItemInfo.orderItem>
                         <#assign product = orderItemInfo.product>
-                        <#assign orderItemInventoryResList = orderItemInfo.orderItemInventoryResList>
+                        <#assign orderItemShipGrpInvResList = orderItemInfo.orderItemShipGrpInvResList>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <fo:block>${orderItem.orderItemSeqId}</fo:block>
@@ -211,8 +211,8 @@
                                 <fo:block>${orderItem.quantity}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <#list orderItemInventoryResList as orderItemInventoryRes>
-                                    <fo:block>${orderItemInventoryRes.inventoryItemId}:${orderItemInventoryRes.quantity}:${orderItemInventoryRes.quantityNotAvailable?if_exists}</fo:block>
+                                <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
+                                    <fo:block>${orderItemShipGrpInvRes.inventoryItemId}:${orderItemShipGrpInvRes.quantity}:${orderItemShipGrpInvRes.quantityNotAvailable?if_exists}</fo:block>
                                 </#list>
                             </fo:table-cell>
                         </fo:table-row>

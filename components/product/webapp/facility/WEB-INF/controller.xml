@@ -736,9 +736,9 @@
         <response name="success" type="view" value="AddItemsFromOrder"/>
         <response name="error" type="view" value="AddItemsFromOrder"/>
     </request-map>
-    <request-map uri="issueOrderItemInventoryResToShipment">
+    <request-map uri="issueOrderItemShipGrpInvResToShipment">
         <security https="true" auth="true"/>
-        <event type="service-multi" path="" invoke="issueOrderItemInventoryResToShipment"/>
+        <event type="service-multi" path="" invoke="issueOrderItemShipGrpInvResToShipment"/>
         <response name="success" type="view" value="AddItemsFromOrder"/>
         <response name="error" type="view" value="AddItemsFromOrder"/>
     </request-map>

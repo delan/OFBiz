@@ -203,13 +203,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <#if orderHeaderInfoList?has_content>
           <#assign rowClass = "viewManyTR2">
           <#list orderHeaderInfoList as orderHeaderInfo>
-    	    <#-- orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemInventoryResList -->
+    	    <#-- orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemShipGrpInvResList -->
             <#assign orderHeader = orderHeaderInfo.orderHeader>
             <#assign orderItemInfoList = orderHeaderInfo.orderItemInfoList>
             <#list orderItemInfoList as orderItemInfo>
               <#assign orderItem = orderItemInfo.orderItem>
               <#assign product = orderItemInfo.product>
-              <#assign orderItemInventoryResList = orderItemInfo.orderItemInventoryResList>
+              <#assign orderItemShipGrpInvResList = orderItemInfo.orderItemShipGrpInvResList>
               <tr class="${rowClass}">
                 <td valign="top">
                   <div class="tabletext"><b>${orderHeaderInfo_index+1}</b>-${orderItem.orderId}:${orderItem.orderItemSeqId}</div>
@@ -225,8 +225,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                   <div class="tabletext">${orderItem.quantity}</div>
                 </td>
                 <td valign="top">
-                  <#list orderItemInventoryResList as orderItemInventoryRes>
-                    <div class="tabletext">${orderItemInventoryRes.inventoryItemId}:${orderItemInventoryRes.quantity}:${orderItemInventoryRes.quantityNotAvailable?if_exists}</div>
+                  <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
+                    <div class="tabletext">${orderItemShipGrpInvRes.inventoryItemId}:${orderItemShipGrpInvRes.quantity}:${orderItemShipGrpInvRes.quantityNotAvailable?if_exists}</div>
                   </#list>
                 </td>
               </tr>

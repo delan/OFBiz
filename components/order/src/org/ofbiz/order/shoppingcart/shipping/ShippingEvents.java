@@ -31,18 +31,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
  * ShippingEvents - Events used for processing shipping fees
@@ -60,64 +59,45 @@ public class ShippingEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
-        Map result = getShipEstimate(dispatcher, delegator, cart, null);
-        ServiceUtil.getMessages(request, result, null, "", "", "", "", null, null);
-        if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
-            return "error";
-        }
+        int shipGroups = cart.getShipGroupSize();
+        for (int i = 0; i < shipGroups; i++) {
+            Map result = getShipGroupEstimate(dispatcher, delegator, cart, i);
+            ServiceUtil.getMessages(request, result, null, "", "", "", "", null, null);
+            if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+                return "error";
+            }
 
-        Double shippingTotal = (Double) result.get("shippingTotal");
-        // remove old shipping adjustments if there
-        cart.removeAdjustmentByType("SHIPPING_CHARGES");
-
-        // creat the new adjustment and add it to the cart
-        if (shippingTotal != null && shippingTotal.doubleValue() > 0) {
-            GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
-                    UtilMisc.toMap("orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingTotal));
-            cart.addAdjustment(orderAdjustment);
+            Double shippingTotal = (Double) result.get("shippingTotal");
+            cart.setItemShipGroupEstimate(shippingTotal.doubleValue(), i);
         }
 
         // all done
         return "success";
     }
 
-    public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, ShoppingCart cart, String shippingMethod) {
-        String shipmentMethodTypeId = null;
-        String carrierPartyId = null;
-        if (UtilValidate.isNotEmpty(shippingMethod)) {
-            int delimiterPos = shippingMethod.indexOf('@');
-            if (delimiterPos > 0) {
-                shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
-                carrierPartyId = shippingMethod.substring(delimiterPos + 1);
-            }
-        } else {
-            shipmentMethodTypeId = cart.getShipmentMethodTypeId();
-            carrierPartyId = cart.getCarrierPartyId();
-        }
-        return getShipEstimate(dispatcher, delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, null,
-                cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getShippableItemInfo(),
-                cart.getShippableWeight(), cart.getShippableQuantity(), cart.getShippableTotal());
+    public static Map getShipGroupEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, ShoppingCart cart, int groupNo) {
+        String shipmentMethodTypeId = cart.getShipmentMethodTypeId(groupNo);
+        String carrierPartyId = cart.getCarrierPartyId(groupNo);
+
+        return getShipGroupEstimate(dispatcher, delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, null,
+                cart.getShippingContactMechId(groupNo), cart.getProductStoreId(), cart.getShippableItemInfo(groupNo),
+                cart.getShippableWeight(groupNo), cart.getShippableQuantity(groupNo), cart.getShippableTotal(groupNo));
     }
 
-    public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, OrderReadHelper orh) {
-        String shippingMethod = orh.getShippingMethodCode();
-        String shipmentMethodTypeId = null;
-        String carrierPartyId = null;
-        if (UtilValidate.isNotEmpty(shippingMethod)) {
-            int delimiterPos = shippingMethod.indexOf('@');
-            if (delimiterPos > 0) {
-                shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
-                carrierPartyId = shippingMethod.substring(delimiterPos + 1);
-            }
-        }
-        GenericValue shipAddr = orh.getShippingAddress();
+    public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, OrderReadHelper orh, String shipGroupSeqId) {
+        GenericValue shipGroup = orh.getOrderItemShipGroup(shipGroupSeqId);
+        String shipmentMethodTypeId = shipGroup.getString("shipmentMethodTypeId");
+        String carrierRoleTypeId = shipGroup.getString("carrierRoleTypeId");
+        String carrierPartyId = shipGroup.getString("carrierPartyId");
+
+        GenericValue shipAddr = orh.getShippingAddress(shipGroupSeqId);
         String contactMechId = shipAddr.getString("contactMechId");
-        return getShipEstimate(dispatcher, delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, null,
-                contactMechId, orh.getProductStoreId(), orh.getShippableItemInfo(), orh.getShippableWeight(),
-                orh.getShippableQuantity(), orh.getShippableTotal());
+        return getShipGroupEstimate(dispatcher, delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId,
+                contactMechId, orh.getProductStoreId(), orh.getShippableItemInfo(shipGroupSeqId), orh.getShippableWeight(shipGroupSeqId),
+                orh.getShippableQuantity(shipGroupSeqId), orh.getShippableTotal(shipGroupSeqId));
     }
 
-    public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, String orderTypeId,
+    public static Map getShipGroupEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, String orderTypeId,
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, List itemInfo, double shippableWeight, double shippableQuantity,
             double shippableTotal) {

@@ -545,7 +545,8 @@ public class ModelService {
                             Object value = source.get(key);
     
                             try {
-                                value = ObjectType.simpleTypeConvert(value, param.type, null, null);
+                                // no need to fail on type conversion; the validator will catch this
+                                value = ObjectType.simpleTypeConvert(value, param.type, null, null, false);
                             } catch (GeneralException e) {
                                 String errMsg = "Type conversion of field [" + key + "] to type [" + param.type + "] failed for value \"" + value + "\": " + e.toString();
                                 Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);

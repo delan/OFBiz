@@ -36,6 +36,8 @@
   <!-- org.ofbiz.order.order -->
   <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz" entity="OldOrderItemInventoryRes" />
+    <entity-group group="org.ofbiz" entity="OldOrderShipmentPreference" />
     <entity-group group="org.ofbiz" entity="OrderAdjustment" />
     <entity-group group="org.ofbiz" entity="OrderAdjustmentAttribute" />
     <entity-group group="org.ofbiz" entity="OrderAdjustmentType" />
@@ -54,15 +56,19 @@
     <entity-group group="org.ofbiz" entity="OrderHeaderNote" />
     <entity-group group="org.ofbiz" entity="OrderHeaderNoteView" />
     <entity-group group="org.ofbiz" entity="OrderItem" />
+    <entity-group group="org.ofbiz" entity="OrderItemAndShipGroupAssoc" />
+    <entity-group group="org.ofbiz" entity="OrderItemAndShipGrpInvResAndItem" />
     <entity-group group="org.ofbiz" entity="OrderItemAssociation" />
     <entity-group group="org.ofbiz" entity="OrderItemAttribute" />
     <entity-group group="org.ofbiz" entity="OrderItemBilling" />
     <entity-group group="org.ofbiz" entity="OrderItemContactMech" />
-    <entity-group group="org.ofbiz" entity="OrderItemInventoryRes" />
-    <entity-group group="org.ofbiz" entity="OrderItemInventoryResAndItem" />
-    <entity-group group="org.ofbiz" entity="OrderItemInventoryResAndItemLocation" />
+    <entity-group group="org.ofbiz" entity="OrderItemShipGrpInvRes" />
+    <entity-group group="org.ofbiz" entity="OrderItemShipGrpInvResAndItem" />
+    <entity-group group="org.ofbiz" entity="OrderItemShipGrpInvResAndItemLocation" />
     <entity-group group="org.ofbiz" entity="OrderItemPriceInfo" />
     <entity-group group="org.ofbiz" entity="OrderItemRole" />
+    <entity-group group="org.ofbiz" entity="OrderItemShipGroup" />
+    <entity-group group="org.ofbiz" entity="OrderItemShipGroupAssoc" />
     <entity-group group="org.ofbiz" entity="OrderItemType" />
     <entity-group group="org.ofbiz" entity="OrderItemTypeAttr" />
     <entity-group group="org.ofbiz" entity="OrderNotification" />
@@ -72,7 +78,6 @@
     <entity-group group="org.ofbiz" entity="OrderReportView" />
     <entity-group group="org.ofbiz" entity="OrderRole" />
     <entity-group group="org.ofbiz" entity="OrderShipment" />
-    <entity-group group="org.ofbiz" entity="OrderShipmentPreference" />
     <entity-group group="org.ofbiz" entity="OrderStatus" />
     <entity-group group="org.ofbiz" entity="OrderSummaryEntry" />
     <entity-group group="org.ofbiz" entity="OrderTaskList" />

@@ -214,12 +214,6 @@
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="orderview"/>
     </request-map>
-    <request-map uri="quickShipOrderMultiFacility">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="quickShipEntireOrderMultipleFacilities"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="orderview"/>
-    </request-map>
 
     <!-- Order Note Requests -->
     <request-map uri="createnewnote">

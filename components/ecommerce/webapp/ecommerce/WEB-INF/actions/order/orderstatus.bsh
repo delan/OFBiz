@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 */
 
@@ -59,6 +59,7 @@ if (orderHeader != null) {
     orderAdjustments = orderReadHelper.getAdjustments();
     orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
     orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
+    orderItemShipGroups = orderReadHelper.getOrderItemShipGroups();
     headerAdjustmentsToShow = orderReadHelper.getOrderHeaderAdjustmentsToShow();
 
 	context.put("orderId", orderId);
@@ -68,7 +69,8 @@ if (orderHeader != null) {
     context.put("orderAdjustments", orderAdjustments);
     context.put("orderHeaderAdjustments", orderHeaderAdjustments);
     context.put("orderSubTotal", orderSubTotal);
-    context.put("headerAdjustmentsToShow", headerAdjustmentsToShow);
+    context.put("orderItemShipGroups", orderItemShipGroups);
+    context.put("headerAdjustmentsToShow", headerAdjustmentsToShow);    
     context.put("currencyUomId", orderReadHelper.getCurrency());
     
     shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
@@ -115,21 +117,7 @@ if (orderHeader != null) {
     payToPartyId = productStore.getString("payToPartyId");
     paymentAddress =  PaymentWorker.getPaymentAddress(delegator, payToPartyId);    
     if (paymentAddress != null) context.put("paymentAddress", paymentAddress);  
-       
-    orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
-    if (orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
-        shipmentPreference = orderShipmentPreferences.next();
-        context.put("carrierPartyId", shipmentPreference.getString("carrierPartyId"));
-        context.put("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId"));       
-        shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId")));
-        context.put("shipMethDescription", shipmentMethodType.getString("description"));       
-        context.put("shippingInstructions", shipmentPreference.getString("shippingInstructions"));
-        context.put("maySplit", shipmentPreference.getBoolean("maySplit"));
-        context.put("giftMessage", shipmentPreference.getString("giftMessage"));
-        context.put("isGift", shipmentPreference.getBoolean("isGift"));
-        context.put("trackingNumber", shipmentPreference.getString("trackingNumber"));
-    }
-    
+     
     // get Shipment tracking info
     osisCond = new EntityFieldMap(UtilMisc.toMap("orderId", orderId), EntityOperator.AND);
     osisOrder = UtilMisc.toList("shipmentId", "shipmentRouteSegmentId", "shipmentPackageSeqId");

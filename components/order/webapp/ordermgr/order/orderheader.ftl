@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,6 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Rev:$
  *@since      2.2
 -->
@@ -473,40 +474,57 @@
           </td>
         </tr>
       </table>
-      <br>
       </#if>
       <#-- end of contact box -->
 
       <#-- shipping info box -->
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-              <tr>
-                <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Shipment Information</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-              <tr>
-                <td>
+      <#if shipGroups?has_content>
+        <#list shipGroups as shipGroup>
+          <br>
+          <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType")?if_exists>
+          <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress")?if_exists>
+          <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+            <tr>
+              <td width="100%">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+                  <tr>
+                    <td valign="middle" align="left">
+                      <div class="boxhead">&nbsp;Shipment Information - ${shipGroup.shipGroupSeqId}</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td width="100%">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+                  <tr>
+                    <td>
+
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
-                  <#if shipmentPreference?has_content>
+
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Address</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <div class="tabletext">
+                          ${(shipGroupAddress.address1)?default("")}
+                        </div>
+                      </td>
+                    </tr>
+
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Method</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
-                        <#if carrierPartyId?has_content || shipmentMethodType?has_content>
+                        <#if shipGroup.carrierPartyId?has_content || shipmentMethodType?has_content>
                           <div class="tabletext">
-                            <#if carrierPartyId != "_NA_">
-                              ${carrierPartyId?if_exists}
+                            <#if shipGroup.carrierPartyId != "_NA_">
+                              ${shipGroup.carrierPartyId?if_exists}
                             </#if>
                             ${shipmentMethodType.description?default("")}
                           </div>
@@ -514,7 +532,7 @@
                       </td>
                     </tr>
                     <#-- tracking number -->
-                    <#if trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
+                    <#if shipGroup.trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -523,8 +541,8 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
-                          <#if trackingNumber?has_content>
-                            <div class="tabletext">${trackingNumber}</div>
+                          <#if shipGroup.trackingNumber?has_content>
+                            <div class="tabletext">${shipGroup.trackingNumber}</div>
                           </#if>
                           <#if orderShipmentInfoSummaryList?has_content>
                             <#list orderShipmentInfoSummaryList as orderShipmentInfoSummary>
@@ -539,7 +557,7 @@
                         </td>
                       </tr>
                     </#if>
-                    <#if maySplit?has_content>
+                    <#if shipGroup.maySplit?has_content>
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -548,10 +566,10 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if maySplit?upper_case == "N">
+                            <#if shipGroup.maySplit?upper_case == "N">
                                 Please wait until the entire order is ready before shipping.
                                 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                                  <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">[Allow&nbsp;Split]</a></#if>
+                                  <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED"><a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[Allow&nbsp;Split]</a></#if>
                                 </#if>
                             <#else>
                                 Please ship items I ordered as they become available (may incur additional shipping charges).
@@ -560,7 +578,7 @@
                         </td>
                       </tr>
                     </#if>
-                    <#if shippingInstructions?has_content>
+                    <#if shipGroup.shippingInstructions?has_content>
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -568,11 +586,11 @@
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
-                          <div class="tabletext">${shippingInstructions}</div>
+                          <div class="tabletext">${shipGroup.shippingInstructions}</div>
                         </td>
                       </tr>
                     </#if>
-                    <#if isGift?has_content>
+                    <#if shipGroup.isGift?has_content>
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -581,12 +599,12 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if isGift?upper_case == "N">This order is not a gift.<#else>This order is a gift.</#if>
+                            <#if shipGroup.isGift?upper_case == "N">This order is not a gift.<#else>This order is a gift.</#if>
                           </div>
                         </td>
                       </tr>
                     </#if>
-                    <#if giftMessage?has_content>
+                    <#if shipGroup.giftMessage?has_content>
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -594,12 +612,13 @@
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
-                          <div class="tabletext">${giftMessage}</div>
+                          <div class="tabletext">${shipGroup.giftMessage}</div>
                         </td>
                       </tr>
                     </#if>
-                  </#if>
-                  <#if allShipments?has_content>
+
+                   <#assign shipGroupShipments = shipGroup.getRelated("PrimaryShipment")>
+                   <#if shipGroupShipments?has_content>
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -607,37 +626,49 @@
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
-                            <#list allShipments as shipment>
+                            <#list shipGroupShipments as shipment>
                                 <div class="tabletext">#<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${shipment.shipmentId}</a></div>
                             </#list>
                         </td>
                       </tr>
-                  </#if>
-                      <tr><td colspan="7"><hr class="sepbar"></td></tr>
-                      <tr>
-                        <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;</div>
-                        </td>
-                        <td width="5">&nbsp;</td>
-                        <td align="left" valign="top" width="80%">
-                          <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                            <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
-                              <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
-                            </#if>
-                            <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
-                              <#if productStore?has_content && productStore.oneInventoryFacility?exists && productStore.oneInventoryFacility.equals("N")>
-                                <div class="tabletext"><a href="<@ofbizUrl>/quickShipOrderMultiFacility?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Order</a></div>
-                              <#else>
-                                <div class="tabletext"><a href="<@ofbizUrl>/quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Order</a></div>
-                              </#if>
-                              <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">New Shipment</a></div>
-                            </#if>
-                            <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session) && orderHeader.statusId == "ORDER_COMPLETED">
-                              <div class="tabletext"><a href="<@ofbizUrl>/quickreturn?order_id=${orderId}&party_id=${partyId?if_exists}</@ofbizUrl>" class="buttontext">Create Return</a></div>
-                            </#if>
-                          </#if>
-                        </td>
-                      </tr>
+                   </#if>
+                   <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                     <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
+                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                       <tr>
+                         <td align="right" valign="top" width="15%">
+                           <div class="tabletext">&nbsp;</div>
+                         </td>
+                         <td width="5">&nbsp;</td>
+                         <td align="left" valign="top" width="80%">
+                           <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&primaryShipGroupSeqId=${shipGroup.shipGroupSeqId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">New Shipment For Ship Group [${shipGroup.shipGroupSeqId}]</a></div>
+                         </td>
+                       </tr>
+                     </#if>
+                   </#if>
+
+                   <#if !shipGroup_has_next>
+                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                     <tr>
+                       <td align="right" valign="top" width="15%">
+                         <div class="tabletext">&nbsp;</div>
+                       </td>
+                       <td width="5">&nbsp;</td>
+                       <td align="left" valign="top" width="80%">
+                         <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                           <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
+                             <div class="tabletext"><a href="<@ofbizUrl>/quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Entire Order</a></div>
+                           </#if>
+                           <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
+                             <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
+                           </#if>
+                           <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session) && orderHeader.statusId == "ORDER_COMPLETED">
+                             <div class="tabletext"><a href="<@ofbizUrl>/quickreturn?order_id=${orderId}&party_id=${partyId?if_exists}</@ofbizUrl>" class="buttontext">Create Return</a></div>
+                           </#if>
+                         </#if>
+                       </td>
+                     </tr>
+                   </#if>
                   </table>
                 </td>
               </tr>
@@ -645,6 +676,8 @@
           </td>
         </tr>
       </table>
+      </#list>
+      </#if>
       <#-- end of shipping info box -->
     </td>
   </tr>

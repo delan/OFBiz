@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
@@ -37,31 +37,31 @@ function submitForm(form, mode, value) {
         form.submit();
     } else if (mode == "NA") {
         // new address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
         form.submit();
     } else if (mode == "EA") {
         // edit address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?contactMechId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&contactMechId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "NC") {
         // new credit card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout</@ofbizUrl>";
         form.submit();
     } else if (mode == "EC") {
         // edit credit card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "GC") {
         // edit gift card
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editgiftcard?paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editgiftcard?DONE_PAGE=quickcheckout&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "NE") {
         // new eft account
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout</@ofbizUrl>";
         form.submit();
     } else if (mode == "EE") {
         // edit eft account
-        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
     } else if (mode == "SP") {
         // split payment
@@ -118,9 +118,21 @@ function toggleBillingAccount(box) {
                     <table width="100%" border="0" cellpadding="1" cellspacing="0">
                       <tr>
                         <td colspan="2">
-                          <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>&nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
+                          <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
                         </td>
                       </tr>
+                      <#if (cart.getTotalQuantity() > 1)>
+                        <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                        <tr>
+                          <td colspan="2" align="center">
+                            <a href="<@ofbizUrl>/splitship</@ofbizUrl>" class="buttontext">Split Into Multiple Shipments</a>
+                            <#if (cart.getShipGroupSize() > 1)>
+                              <div class="tabletext" style="color: red;">NOTE: Multiple shipments exist, use Split Shipment.</div>
+                            </#if>
+                          </td>
+                        </tr>
+                      </#if>
                        <#if context.shippingContactMechList?has_content>
                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
                          <#list context.shippingContactMechList as shippingContactMech>
@@ -211,7 +223,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td valign="top">
-                          <input type='radio' <#if !cart.getMaySplit()?default(false)>checked</#if> name='may_split' value='false'>
+                          <input type='radio' <#if cart.getMaySplit()?default("N") == "N">checked</#if> name='may_split' value='false'>
                         </td>
                         <td valign="top">
                           <div class="tabletext">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</div>
@@ -219,7 +231,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td valign="top">
-                          <input <#if cart.getMaySplit()?default(false)>checked</#if> type='radio' name='may_split' value='true'>
+                          <input <#if cart.getMaySplit()?default("N") == "Y">checked</#if> type='radio' name='may_split' value='true'>
                         </td>
                         <td valign="top">
                           <div class="tabletext">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</div>
@@ -251,8 +263,8 @@ function toggleBillingAccount(box) {
                         <td colspan="2">
                           <div>
                             <span class="head2"><b>${uiLabelMap.OrderIsThisGift}?</b></span>
-                            <input type='radio' <#if cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='true'><span class='tabletext'>${uiLabelMap.CommonYes}</span>
-                            <input type='radio' <#if !cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='false'><span class='tabletext'>${uiLabelMap.CommonNo}</span>
+                            <input type='radio' <#if cart.getIsGift()?default("Y") == "Y">checked</#if> name='is_gift' value='true'><span class='tabletext'>${uiLabelMap.CommonYes}</span>
+                            <input type='radio' <#if cart.getIsGift()?default("N") == "N">checked</#if> name='is_gift' value='false'><span class='tabletext'>${uiLabelMap.CommonNo}</span>
                           </div>
                         </td>
                       </tr>
@@ -319,11 +331,19 @@ function toggleBillingAccount(box) {
                 <tr>
                   <td valign=top>
                     <table width="100%" cellpadding="1" cellspacing="0" border="0">
-                      <tr><td colspan="2">
-                        <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[${uiLabelMap.AccountingCreditCard}]</a>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.AccountingEftAccount}]</a>
-                      </td></tr>
+                      <tr>
+                        <td colspan="2">
+                          <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[${uiLabelMap.AccountingCreditCard}]</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.AccountingEftAccount}]</a>
+                        </td>
+                      </tr>
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                      <tr>
+                        <td colspan="2" align="center">
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="buttontext">[${uiLabelMap.AccountingSplitPayment}]</a>
+                        </td>
+                      </tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
                         <td width="1%" nowrap>
@@ -491,13 +511,6 @@ function toggleBillingAccount(box) {
                     </#if>
                   </td>
                 </tr>
-                <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                <tr>
-                  <td colspan="2" align="center" valign="top">
-                    <div class="tabletext" valign="top">
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="buttontext">[${uiLabelMap.AccountingSplitPayment}]</a>
-                    </div>
-                  </td>
               </table>
             </td>
           </tr>

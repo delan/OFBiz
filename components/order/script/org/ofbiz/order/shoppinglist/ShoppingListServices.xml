@@ -61,7 +61,16 @@
         
         <if-empty field-name="isPublic" map-name="newEntity">
             <string-to-field string="N" field-name="isPublic" map-name="newEntity"/>
-        </if-empty>        
+        </if-empty>
+        
+        <if-empty field-name="isActive" map-name="newEntity">
+            <if-compare field-name="shoppingListTypeId" map-name="newEntity" operator="equals" value="SLT_AUTO_REODR">
+                <string-to-field string="N" field-name="isActive" map-name="newEntity"/>
+            <else>
+                <string-to-field string="Y" field-name="isActive" map-name="newEntity"/>    
+            </else>
+            </if-compare>                        
+        </if-empty>
         
         <sequenced-id-to-env sequence-name="ShoppingList" env-name="shoppingListId"/>
         <to-string field-name="shoppingListId"/>
@@ -81,6 +90,15 @@
         <check-errors/>    	     
 
         <set-nonpk-fields map-name="parameters" value-name="shoppingList"/>
+        
+        <!-- don't let auto-reorders be active unless there is some recurrence info -->
+        <if-compare field-name="shoppingListTypeId" map-name="shoppingList" operator="equals" value="SLT_AUTO_REODR">
+            <if-empty field-name="recurrenceInfoId" map-name="shoppingList">
+                <string-to-field string="N" field-name="isActive" map-name="shoppingList"/>
+            </if-empty>
+        </if-compare>
+        
+        <log level="always" message="Parameters - ${parameters}"/>
         <store-value value-name="shoppingList"/>
     </simple-method>
     
