@@ -98,6 +98,12 @@ public class CategoryServices {
             }
         }
 
+        if (index == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Product not found in the current category.");
+            return result;
+        }
+
         result.put("category", values.get("category"));
 
         String previous = null;
