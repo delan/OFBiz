@@ -42,6 +42,7 @@
         <create-value value-name="newEntity"/>
 
         <!-- if setting the primaryParentCategoryId, create a rollup entity too -->
+        <!-- NOTE: this is commented out to disable because it is dangerous to add category rollups on a live site without being able to specify a fromDate
         <if-not-empty field-name="primaryParentCategoryId" map-name="newEntity">
             <make-value entity-name="ProductCategoryRollup" value-name="newRollup"/>
             <field-to-field field-name="productCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newRollup"/>
@@ -53,6 +54,7 @@
             <field-to-field field-name="parentProductCategoryId" map-name="newRollup" to-map-name="cacheClearMap"/>
             <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
         </if-not-empty>
+        -->
     </simple-method>
     <simple-method method-name="updateProductCategory" short-description="Update an ProductCategory">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductCategory you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -61,17 +63,17 @@
         <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategory" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <!-- save this value before overwriting it so we can compare it later -->
-        <field-to-field field-name="primaryParentCategoryId" map-name="newEntity" to-map-name="saveIdMap"/>
+        <field-to-field field-name="primaryParentCategoryId" map-name="lookedUpValue" to-map-name="saveIdMap"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
 
         <!-- if setting the primaryParentCategoryId, create a rollup entity too -->
-        <if-not-empty field-name="primaryParentCategoryId" map-name="newEntity">
-            <if-compare-field field-name="primaryParentCategoryId" map-name="newEntity" operator="equals" to-map-name="saveIdMap">
-                <!-- TODO: check to see if already exists in a valid data range... -->
+        <!-- NOTE: this is commented out to disable because it is dangerous to add category rollups on a live site without being able to specify a fromDate
+        <if-not-empty field-name="primaryParentCategoryId" map-name="lookedUpValue">
+            <if-compare-field field-name="primaryParentCategoryId" map-name="lookedUpValue" operator="equals" to-map-name="saveIdMap">
                 <make-value entity-name="ProductCategoryRollup" value-name="newRollup"/>
-                <field-to-field field-name="productCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newRollup"/>
-                <field-to-field field-name="primaryParentCategoryId" map-name="newEntity" to-field-name="parentProductCategoryId" to-map-name="newRollup"/>
+                <field-to-field field-name="productCategoryId" map-name="lookedUpValue" to-field-name="productCategoryId" to-map-name="newRollup"/>
+                <field-to-field field-name="primaryParentCategoryId" map-name="lookedUpValue" to-field-name="parentProductCategoryId" to-map-name="newRollup"/>
                 <now-timestamp-to-env env-name="nowStamp"/>
                 <env-to-field env-name="nowStamp" field-name="fromDate" map-name="newRollup"/>
                 <create-value value-name="newRollup"/>
@@ -80,6 +82,7 @@
                 <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
             </if-compare-field>
         </if-not-empty>
+        -->
     </simple-method>
 
     <!-- ================================================================ -->
