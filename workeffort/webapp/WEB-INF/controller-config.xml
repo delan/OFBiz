@@ -4,6 +4,9 @@
     <description>Work Manager Module Site Configuration File</description>
     <owner>The Open For Business Project (c) 2001 </owner>
     <errorpage>/error/error.jsp</errorpage>
+    
+    <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
+    <handler name="service" class="org.ofbiz.core.service.ServiceEventHandler"/>
 
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
