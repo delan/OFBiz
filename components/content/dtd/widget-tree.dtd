@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-tree.dtd,v 1.5 2004/07/27 20:30:24 byersa Exp $
+ *  $Id: widget-tree.dtd,v 1.6 2004/07/28 00:02:12 byersa Exp $
 -->
 
 <!ELEMENT trees ( tree+ )>
@@ -71,7 +71,7 @@
         width CDATA #IMPLIED
         height CDATA #IMPLIED
         border CDATA #IMPLIED
-        url-mode ( ofbiz | content | raw ) "ofbiz"
+        url-mode ( ofbiz | content | raw ) "content"
     >
 
     <!ELEMENT link (image?)>
