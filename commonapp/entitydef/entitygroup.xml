@@ -327,6 +327,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="OrderContactMech" />	
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeader" />	
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderNote" />	
+    <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderNoteView" />	
     <entity-group group="org.ofbiz.commonapp" entity="OrderItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemAssociation" />	
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemAttribute" />	

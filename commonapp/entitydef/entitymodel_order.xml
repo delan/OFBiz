@@ -239,7 +239,7 @@
       <relation type="many" rel-entity-name="OrderPaymentPreference">
         <key-map field-name="orderId" />
       </relation>
-      <relation type="many" rel-entity-name="OrderHeaderNote">
+      <relation type="many" rel-entity-name="OrderHeaderNoteView">
         <key-map field-name="orderId" />
       </relation>
     </entity>
@@ -253,7 +253,28 @@
       <relation type="one" rel-entity-name="NoteData">
         <key-map field-name="noteId" />
       </relation>
-    </entity>
+    </entity>	
+    <view-entity entity-name="OrderHeaderNoteView" 
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Order Header Note View Entity">	
+      <member-entity entity-alias="PR" entity-name="Person" />	
+      <member-entity entity-alias="OD" entity-name="OrderHeaderNote" />	
+      <member-entity entity-alias="ND" entity-name="NoteData" />
+      <alias entity-alias="OD" name="orderId" prim-key="true" />
+      <alias entity-alias="ND" name="noteId" prim-key="true" />
+      <alias entity-alias="ND" name="noteName" />
+      <alias entity-alias="ND" name="noteInfo" />
+      <alias entity-alias="ND" name="noteDateTime" />
+      <alias entity-alias="PR" name="partyId" />
+      <alias entity-alias="PR" name="firstName" />
+      <alias entity-alias="PR" name="lastName" />
+      <view-link entity-alias="OD" rel-entity-alias="ND">
+        <key-map field-name="noteId" />
+      </view-link>
+      <view-link entity-alias="ND" rel-entity-alias="PR">
+        <key-map field-name="noteParty" rel-field-name="partyId" />
+      </view-link>
+    </view-entity>
     <entity entity-name="OrderItem" 
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Entity">
