@@ -32,7 +32,7 @@ import org.ofbiz.core.util.*;
 /**
  * Product Services
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    1.0
  * @created    April 1, 2002
@@ -61,7 +61,25 @@ public class ProductServices {
      */
     public static Map prodFindProduct(DispatchContext dctx, Map context) {
         // * String productId      -- Product ID to find
-        return new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        Map result = new HashMap();
+        String productId = (String) context.get("productId");
+        if (productId == null || productId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Invalid productId passed.");
+            return result;
+        }
+
+        try {
+            GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+            result.put("product", product);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (GenericEntityException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problems reading product entity: " + e.getMessage());
+        }
+
+        return result;
     }
 
     /**
@@ -70,7 +88,37 @@ public class ProductServices {
     public static Map prodFindAssociatedByType(DispatchContext dctx, Map context) {
         // * String productId      -- Current Product ID
         // * String type           -- Type of association (ie PRODUCT_UPGRADE, PRODUCT_COMPLEMENT)
-        return new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        Map result = new HashMap();
+        String productId = (String) context.get("productId");
+        String type = (String) context.get("type");
+        GenericValue product = null;
+        try {
+            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+        } catch (GenericEntityException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problems reading product entity: " + e.getMessage());
+            return result;
+        }
+
+        if (product == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problems getting the product entity.");
+            return result;
+        }
+
+        try {
+            Collection c = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type));
+            c = EntityUtil.filterByDate(c);
+            result.put("assocProducts", c);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (GenericEntityException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Problems product association relation: " + e.getMessage());
+            return result;
+        }
+
+        return result;
     }
 
 }
