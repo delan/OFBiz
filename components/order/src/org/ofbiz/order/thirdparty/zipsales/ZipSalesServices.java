@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.3 2003/12/04 00:52:17 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.4 2003/12/04 02:42:52 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -36,10 +36,7 @@ import org.ofbiz.datafile.RecordIterator;
 import org.ofbiz.base.util.*;
 import org.ofbiz.security.Security;
 
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -54,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -238,7 +235,12 @@ public class ZipSalesServices {
         for (int i = 0; i < itemProductList.size(); i++) {
             GenericValue product = (GenericValue) itemProductList.get(i);
             Double itemAmount = (Double) itemAmountList.get(i);
-            itemAdjustments.add(getItemTaxList(delegator, product, postalCode, city, itemAmount.doubleValue(), false));
+            Double shippingAmount = (Double) itemShippingList.get(i);
+            itemAdjustments.add(getItemTaxList(delegator, product, postalCode, city, itemAmount.doubleValue(), shippingAmount.doubleValue(), false));
+        }
+        if (orderShippingAmount.doubleValue() > 0) {
+            List taxList = getItemTaxList(delegator, null, postalCode, city, 0.00, orderShippingAmount.doubleValue(), false);
+            orderAdjustments.addAll(taxList);
         }
 
         Map result = ServiceUtil.returnSuccess();
@@ -247,11 +249,11 @@ public class ZipSalesServices {
         return result;
     }
 
-    private static List getItemTaxList(GenericDelegator delegator, GenericValue item, String zipCode, String city, double itemAmount, boolean isUseTax) {
+    private static List getItemTaxList(GenericDelegator delegator, GenericValue item, String zipCode, String city, double itemAmount, double shippingAmount, boolean isUseTax) {
         List adjustments = new ArrayList();
 
         // check the item for tax status
-        if (item.get("taxable") != null && "N".equals(item.getString("taxable"))) {
+        if (item != null && item.get("taxable") != null && "N".equals(item.getString("taxable"))) {
             // item not taxable
             return adjustments;
         }
@@ -310,12 +312,144 @@ public class ZipSalesServices {
             return adjustments;
         }
 
+        // get state code
+        String stateCode = taxEntry.getString("stateCode");
+
+        // check if shipping is exempt
+        boolean taxShipping = true;
+
+        // look up the rules
+        List ruleLookup = null;
+        try {
+            ruleLookup = delegator.findByAnd("ZipSalesRuleLookup", UtilMisc.toMap("stateCode", stateCode), UtilMisc.toList("-fromDate"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        // filter out city
+        if (ruleLookup != null && ruleLookup.size() > 1) {
+            ruleLookup = EntityUtil.filterByAnd(ruleLookup, UtilMisc.toMap("city", city.toUpperCase()));
+        }
+
+        // no county captured; so filter by date
+        if (ruleLookup != null && ruleLookup.size() > 1) {
+            ruleLookup = EntityUtil.filterByDate(ruleLookup);
+        }
+
+        if (ruleLookup != null) {
+            Iterator ruleIterator = ruleLookup.iterator();
+            while (ruleIterator.hasNext()) {
+                if (!taxShipping) {
+                    // if we found an rule which passes no need to contine (all rules are ||)
+                    break;
+                }
+                GenericValue rule = (GenericValue) ruleIterator.next();
+                String idCode = rule.getString("idCode");
+                String taxable = rule.getString("taxable");
+                String condition = rule.getString("condition");
+                if ("T".equals(taxable))  {
+                    // this record is taxable
+                    continue;
+                } else {
+                    // except if conditions are met
+                    boolean qualify = false;
+                    char[] conditions = condition.toCharArray();
+                    for (int i = 0; i < conditions.length; i++) {
+                        switch (conditions[i]) {
+                            case 'A' :
+                                // SHIPPING CHARGE SEPARATELY STATED ON INVOICE
+                                qualify = true; // OFBiz does this by default
+                                break;
+                            case 'B' :
+                                // SHIPPING CHARGE SEPARATED ON INVOICE FROM HANDLING OR SIMILAR CHARGES
+                                qualify = false; // we do not support this currently
+                                break;
+                            case 'C' :
+                                // ITEM NOT SOLD FOR GUARANTEED SHIPPED PRICE
+                                qualify = false; // we don't support this currently
+                                break;
+                            case 'D' :
+                                // SHIPPING CHARGE IS COST ONLY
+                                qualify = false; // we assume a handling charge is included
+                                break;
+                            case 'E' :
+                                // SHIPPED DIRECTLY TO PURCHASER
+                                qualify = true; // this is true, unless gifts do not count?
+                                break;
+                            case 'F' :
+                                // SHIPPED VIA COMMON CARRIER
+                                qualify = true; // best guess default
+                                break;
+                            case 'G' :
+                                // SHIPPED VIA CONTRACT CARRIER
+                                qualify = false; // best guess default
+                                break;
+                            case 'H' :
+                                // SHIPPED VIA VENDOR EQUIPMENT
+                                qualify = false; // best guess default
+                                break;
+                            case 'I' :
+                                // SHIPPED F.O.B. ORIGIN
+                                qualify = false; // no clue
+                                break;
+                            case 'J' :
+                                // SHIPPED F.O.B. DESTINATION
+                                qualify = false; // no clue
+                                break;
+                            case 'K' :
+                                // F.O.B. IS PURCHASERS OPTION
+                                qualify = false; // no clue
+                                break;
+                            case 'L' :
+                                // SHIPPING ORIGINATES OR TERMINATES IN DIFFERENT STATES
+                                qualify = false; // not determined at order time, no way to know
+                                break;
+                            case 'M' :
+                                // PROOF OF VENDOR ACTING AS SHIPPING AGENT FOR PURCHASER
+                                qualify = false; // no clue
+                                break;
+                            case 'N' :
+                                // SHIPPED FROM VENDOR LOCATION
+                                qualify = true; // sure why not
+                                break;
+                            case 'O' :
+                                // SHIPPING IS BY PURCHASER OPTION
+                                qualify = false; // most online stores require shipping
+                                break;
+                            case 'P' :
+                                // CREDIT ALLOWED FOR SHIPPING CHARGE PAID BY PURCHASER TO CARRIER
+                                qualify = false; // best guess default
+                                break;
+                            default: break;
+                        }
+                    }
+
+                    if (qualify) {
+                        if (isUseTax) {
+                            if (idCode.indexOf('U') > 0) {
+                                taxShipping = false;
+                            }
+                        } else {
+                            if (idCode.indexOf('S') > 0) {
+                                taxShipping = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        double taxableAmount = itemAmount;
+        if (taxShipping) {
+            Debug.log("Taxing shipping", module);
+            taxableAmount += shippingAmount;
+        } else {
+            Debug.log("Shipping is not taxable", module);
+        }
+
         // calc tax amount
         double taxRate = comboTaxRate.doubleValue();
-        double taxCalc = itemAmount * taxRate;
-
-        // get state code for comment
-        String stateCode = taxEntry.getString("stateCode");
+        double taxCalc = taxableAmount * taxRate;
 
         // format the number
         Double taxAmount = new Double(formatCurrency(taxCalc));
