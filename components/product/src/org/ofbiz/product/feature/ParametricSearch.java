@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.2 2003/10/16 09:23:26 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.3 2003/10/18 05:13:07 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -45,7 +45,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class ParametricSearch {
@@ -171,8 +171,8 @@ public class ParametricSearch {
         }
     }
     
-    public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
-        ArrayList productIds = KeywordSearch.productsByKeywords(keywordsString, delegator, categoryId, visitId, anyPrefix, anySuffix, intraKeywordOperator);
+    public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
+        ArrayList productIds = KeywordSearch.productsByKeywords(keywordsString, delegator, categoryId, visitId, anyPrefix, anySuffix, isAnd);
         filterProductIdListByFeatures(productIds, featureIdByType, delegator);
         return productIds;
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.4 2003/10/17 11:09:53 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.5 2003/10/18 05:13:07 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -49,147 +49,12 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class KeywordSearch {
     
     public static final String module = KeywordSearch.class.getName();
-
-    /** Does a product search by keyword using the PRODUCT_KEYWORD table.
-     *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
-     *@param delegator The delegator to look up the name of the helper/server to get a connection to
-     *@param categoryId If not null the list of products will be restricted to those in this category
-     *@return Collection of productId Strings
-     */
-    public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, String visitId) {
-        return productsByKeywords(keywordsString, delegator, categoryId, visitId, false, false, "OR");
-    }
-
-    /** Does a product search by keyword using the PRODUCT_KEYWORD table.
-     *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
-     *@param delegator The delegator to look up the name of the helper/server to get a connection to
-     *@param categoryId If not null the list of products will be restricted to those in this category
-     *@param anyPrefix If true use a wildcard to allow any prefix to each keyword
-     *@param anySuffix If true use a wildcard to allow any suffix to each keyword
-     *@param intraKeywordOperator The operator to use inbetween the keywords, usually "AND" or "OR"
-     *@return ArrayList of productId Strings
-     */
-    public static ArrayList productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
-        if (delegator == null) {
-            return null;
-        }
-        String helperName = null;
-
-        helperName = delegator.getEntityHelperName("ProductKeyword");
-        boolean useCategory = (categoryId != null && categoryId.length() > 0) ? true : false;
-
-        intraKeywordOperator = intraKeywordOperator.toUpperCase();
-        if (intraKeywordOperator == null || (!"AND".equals(intraKeywordOperator) && !"OR".equals(intraKeywordOperator))) {
-            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR", module);
-            intraKeywordOperator = "OR";
-        }
-
-        boolean removeStems = UtilProperties.propertyValueEquals("prodsearch", "remove.stems", "true");
-
-        ArrayList pbkList = new ArrayList(100);
-
-        List keywordFirstPass = makeKeywordList(keywordsString);
-        List keywordList = fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, intraKeywordOperator);
-
-        if (keywordList.size() == 0) {
-            return null;
-        }
-
-        List params = new ArrayList();
-        String sql = getSearchSQL(keywordList, params, useCategory, intraKeywordOperator);
-
-        if (sql == null) {
-            return null;
-        }
-        if (useCategory) {
-            params.add(categoryId);
-            params.add(UtilDateTime.nowTimestamp());
-        }
-
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = ConnectionFactory.getConnection(helperName);
-            statement = connection.prepareStatement(sql);
-
-            for (int i = 0; i < params.size(); i++) {
-                Object param = params.get(i);
-                if (param instanceof String) {
-                    statement.setString(i + 1, (String) param);
-                } else if (param instanceof Timestamp) {
-                    statement.setTimestamp(i + 1, (Timestamp) param);
-                } else {
-                    //in this class we only put Strings and Timestamps in there, but warn anyway...
-                    Debug.logWarning("Found a keyword search query parameter with an unknown type: " + param.getClass().getName(), module);
-                }
-                if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] Params: " + (String) params.get(i), module);
-            }
-            resultSet = statement.executeQuery();
-            Set idSet = new HashSet();
-            while (resultSet.next()) {
-                //since there is a chance of duplicate IDs, check to see if the ID is already in the list to eliminate all but the first
-                String productId = resultSet.getString("PRODUCT_ID");
-                if (productId != null && !idSet.contains(productId)) {
-                    pbkList.add(productId);
-                    idSet.add(productId);
-                    // Debug.logInfo("PRODUCT_ID=" + productId + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"), module);
-                }
-            }
-            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems, module);
-            //if (Debug.infoOn()) Debug.logInfo("pbkList=" + pbkList, module);
-
-            try {
-                GenericValue productKeywordResult = delegator.makeValue("ProductKeywordResult", null);
-                Long nextPkrSeqId = delegator.getNextSeqId("ProductKeywordResult");
-
-                productKeywordResult.set("productKeywordResultId", nextPkrSeqId.toString());
-                productKeywordResult.set("visitId", visitId);
-                if (useCategory) productKeywordResult.set("productCategoryId", categoryId);
-                productKeywordResult.set("searchString", keywordsString);
-                productKeywordResult.set("intraKeywordOperator", intraKeywordOperator);
-                productKeywordResult.set("anyPrefix", new Boolean(anyPrefix));
-                productKeywordResult.set("anySuffix", new Boolean(anySuffix));
-                productKeywordResult.set("removeStems", new Boolean(removeStems));
-                productKeywordResult.set("numResults", new Long(pbkList.size()));
-                productKeywordResult.create();
-            } catch (Exception e) {
-                Debug.logError(e, "Error saving keyword result stats", module);
-                Debug.logError("[KeywordSearch] Stats are: got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems, module);
-            }
-
-            if (pbkList.size() == 0) {
-                return null;
-            } else {
-                return pbkList;
-            }
-        } catch (java.sql.SQLException sqle) {
-            Debug.logError(sqle, module);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-        } finally {
-            try {
-                if (resultSet != null)
-                    resultSet.close();
-            } catch (SQLException sqle) {}
-            try {
-                if (statement != null)
-                    statement.close();
-            } catch (SQLException sqle) {}
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException sqle) {}
-        }
-        return null;
-    }
 
     public static List makeKeywordList(String keywordsString) {
         StringTokenizer tokenizer = new StringTokenizer(keywordsString);
@@ -204,14 +69,14 @@ public class KeywordSearch {
         return keywords;
     }
 
-    public static List fixKeywords(List keywords, boolean anyPrefix, boolean anySuffix, boolean removeStems, String intraKeywordOperator) {
+    public static List fixKeywords(List keywords, boolean anyPrefix, boolean anySuffix, boolean removeStems, boolean isAnd) {
         if (keywords == null) {
             return null;
         }
 
         String stopWordBag = null;
 
-        if (intraKeywordOperator.equals("AND")) {
+        if (isAnd) {
             stopWordBag = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.and");
         } else {
             stopWordBag = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.or");
@@ -271,13 +136,139 @@ public class KeywordSearch {
         return fixedKeywords;
     }
 
-    protected static String getSearchSQL(List keywords, List params, boolean useCategory, String intraKeywordOperator) {
+    /** Does a product search by keyword using the PRODUCT_KEYWORD table.
+     *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
+     *@param delegator The delegator to look up the name of the helper/server to get a connection to
+     *@param categoryId If not null the list of products will be restricted to those in this category
+     *@return Collection of productId Strings
+     */
+    public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, String visitId) {
+        return productsByKeywords(keywordsString, delegator, categoryId, visitId, false, false, false);
+    }
+
+    /** Does a product search by keyword using the PRODUCT_KEYWORD table.
+     *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
+     *@param delegator The delegator to look up the name of the helper/server to get a connection to
+     *@param categoryId If not null the list of products will be restricted to those in this category
+     *@param anyPrefix If true use a wildcard to allow any prefix to each keyword
+     *@param anySuffix If true use a wildcard to allow any suffix to each keyword
+     *@param isAnd The operator to use inbetween the keywords true for "AND", false for "OR"
+     *@return ArrayList of productId Strings
+     */
+    public static ArrayList productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
+        if (delegator == null) {
+            return null;
+        }
+        String helperName = null;
+
+        helperName = delegator.getEntityHelperName("ProductKeyword");
+        boolean useCategory = (categoryId != null && categoryId.length() > 0) ? true : false;
+        boolean removeStems = UtilProperties.propertyValueEquals("prodsearch", "remove.stems", "true");
+
+        ArrayList pbkList = new ArrayList(100);
+
+        List keywordFirstPass = makeKeywordList(keywordsString);
+        List keywordList = fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, isAnd);
+
+        if (keywordList.size() == 0) {
+            return null;
+        }
+
+        List params = new ArrayList();
+        String sql = getSearchSQL(keywordList, params, useCategory, isAnd);
+
+        if (sql == null) {
+            return null;
+        }
+        if (useCategory) {
+            params.add(categoryId);
+            params.add(UtilDateTime.nowTimestamp());
+        }
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = ConnectionFactory.getConnection(helperName);
+            statement = connection.prepareStatement(sql);
+
+            for (int i = 0; i < params.size(); i++) {
+                Object param = params.get(i);
+                if (param instanceof String) {
+                    statement.setString(i + 1, (String) param);
+                } else if (param instanceof Timestamp) {
+                    statement.setTimestamp(i + 1, (Timestamp) param);
+                } else {
+                    //in this class we only put Strings and Timestamps in there, but warn anyway...
+                    Debug.logWarning("Found a keyword search query parameter with an unknown type: " + param.getClass().getName(), module);
+                }
+                if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] Params: " + (String) params.get(i), module);
+            }
+            resultSet = statement.executeQuery();
+            Set idSet = new HashSet();
+            while (resultSet.next()) {
+                //since there is a chance of duplicate IDs, check to see if the ID is already in the list to eliminate all but the first
+                String productId = resultSet.getString("PRODUCT_ID");
+                if (productId != null && !idSet.contains(productId)) {
+                    pbkList.add(productId);
+                    idSet.add(productId);
+                    // Debug.logInfo("PRODUCT_ID=" + productId + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"), module);
+                }
+            }
+            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is AND? [" + isAnd + "], categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems, module);
+            //if (Debug.infoOn()) Debug.logInfo("pbkList=" + pbkList, module);
+
+            try {
+                GenericValue productKeywordResult = delegator.makeValue("ProductKeywordResult", null);
+                Long nextPkrSeqId = delegator.getNextSeqId("ProductKeywordResult");
+
+                productKeywordResult.set("productKeywordResultId", nextPkrSeqId.toString());
+                productKeywordResult.set("visitId", visitId);
+                if (useCategory) productKeywordResult.set("productCategoryId", categoryId);
+                productKeywordResult.set("searchString", keywordsString);
+                productKeywordResult.set("intraKeywordOperator", (isAnd ? "AND" : "OR"));
+                productKeywordResult.set("anyPrefix", new Boolean(anyPrefix));
+                productKeywordResult.set("anySuffix", new Boolean(anySuffix));
+                productKeywordResult.set("removeStems", new Boolean(removeStems));
+                productKeywordResult.set("numResults", new Long(pbkList.size()));
+                productKeywordResult.create();
+            } catch (Exception e) {
+                Debug.logError(e, "Error saving keyword result stats", module);
+                Debug.logError("[KeywordSearch] Stats are: got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + (isAnd ? "AND" : "OR") + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems, module);
+            }
+
+            if (pbkList.size() == 0) {
+                return null;
+            } else {
+                return pbkList;
+            }
+        } catch (java.sql.SQLException sqle) {
+            Debug.logError(sqle, module);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        } finally {
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+            } catch (SQLException sqle) {}
+            try {
+                if (statement != null)
+                    statement.close();
+            } catch (SQLException sqle) {}
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {}
+        }
+        return null;
+    }
+
+    protected static String getSearchSQL(List keywords, List params, boolean useCategory, boolean isAnd) {
         if (keywords == null || keywords.size() <= 0)
             return null;
         StringBuffer sql = new StringBuffer();
         Iterator keywordIter = keywords.iterator();
-
-        boolean isAnd = intraKeywordOperator.equals("AND");
 
         // AND EXAMPLE:
         // SELECT DISTINCT P1.PRODUCT_ID, (P1.RELEVANCY_WEIGHT + P2.RELEVANCY_WEIGHT + P3.RELEVANCY_WEIGHT) AS TOTAL_WEIGHT FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
