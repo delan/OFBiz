@@ -1,5 +1,5 @@
 /*
- * $Id: ContentUrlTag.java,v 1.1 2003/08/17 08:40:11 ajzeneski Exp $
+ * $Id: ContentUrlTag.java,v 1.2 2003/08/26 18:45:06 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,12 +34,15 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilJ2eeCompat;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.website.WebSiteWorker;
+import org.ofbiz.entity.GenericValue;
 
 /**
  * ContentUrlTag - Creates a URL string prepending the content prefix from url.properties
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ContentUrlTag extends BodyTagSupport {
@@ -47,17 +50,24 @@ public class ContentUrlTag extends BodyTagSupport {
     public static final String module = UrlTag.class.getName();
 
     public static void appendContentPrefix(HttpServletRequest request, StringBuffer urlBuffer) {
+        GenericValue webSite = WebSiteWorker.getWebSite(request);
         if (request.isSecure()) {
-            String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.secure");
-
-            if (prefix != null) {
-                urlBuffer.append(prefix.trim());
+            if (webSite != null && UtilValidate.isNotEmpty(webSite.getString("secureContentPrefix"))) {
+                urlBuffer.append(webSite.getString("secureContentPrefix").trim());
+            } else {
+                String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.secure");
+                if (prefix != null) {
+                    urlBuffer.append(prefix.trim());
+                }
             }
         } else {
-            String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
-
-            if (prefix != null) {
-                urlBuffer.append(prefix.trim());
+            if (webSite != null && UtilValidate.isNotEmpty(webSite.getString("standardContentPrefix"))) {
+                urlBuffer.append(webSite.getString("standardContentPrefix").trim());
+            } else {
+                String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
+                if (prefix != null) {
+                    urlBuffer.append(prefix.trim());
+                }
             }
         }
     }

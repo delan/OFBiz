@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: RequestHandler.java,v 1.2 2003/08/26 18:45:06 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,6 +51,7 @@ import org.ofbiz.content.webapp.event.EventHandlerException;
 import org.ofbiz.content.webapp.view.ViewFactory;
 import org.ofbiz.content.webapp.view.ViewHandler;
 import org.ofbiz.content.webapp.view.ViewHandlerException;
+import org.ofbiz.content.website.WebSiteWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -61,7 +62,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -516,7 +517,7 @@ public class RequestHandler implements Serializable {
     
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");        
-        String webSiteId = (String) request.getSession().getAttribute("webSiteId");
+        String webSiteId = WebSiteWorker.getWebSiteId(request);
         
         String httpsPort = null;
         String httpsServer = null;
