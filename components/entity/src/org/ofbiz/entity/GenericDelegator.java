@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.8 2003/11/03 14:44:13 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.9 2003/11/14 22:17:48 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,10 +42,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityConditionList;
-import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.datasource.GenericHelper;
 import org.ofbiz.entity.datasource.GenericHelperFactory;
@@ -77,7 +74,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -947,7 +944,7 @@ public class GenericDelegator implements DelegatorInterface {
             Iterator fieldEntries = fields.entrySet().iterator();
             while (fieldEntries.hasNext()) {
                 Map.Entry fieldEntry = (Map.Entry) fieldEntries.next();
-                likeExpressions.add(new EntityExpr((String) fieldEntry.getKey(), EntityOperator.LIKE, fieldEntry.getValue()));
+                likeExpressions.add(new EntityExpr(fieldEntry.getKey(), EntityOperator.LIKE, fieldEntry.getValue()));
             }
         }
         EntityConditionList ecl = new EntityConditionList(likeExpressions, EntityOperator.AND);
@@ -1049,6 +1046,28 @@ public class GenericDelegator implements DelegatorInterface {
         eli.setDelegator(this);
 
         return eli;
+    }
+
+    public long findCountByAnd(String entityName, Map fields) throws GenericEntityException {
+        return findCountByCondition(entityName, new EntityFieldMap(fields, EntityOperator.AND), null);
+    }
+
+    public long findCountByCondition(String entityName, EntityCondition whereEntityCondition,
+            EntityCondition havingEntityCondition) throws GenericEntityException {
+        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericValue dummyValue = new GenericValue(modelEntity);
+        Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
+        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+
+        if (whereEntityCondition != null) whereEntityCondition.checkCondition(modelEntity);
+        if (havingEntityCondition != null) havingEntityCondition.checkCondition(modelEntity);
+
+        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+        GenericHelper helper = getEntityHelper(modelEntity.getEntityName());
+        long count = helper.findCountByCondition(modelEntity, whereEntityCondition, havingEntityCondition);
+
+        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+        return count;
     }
 
     /** Remove a Generic Entity corresponding to the primaryKey

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.6 2003/11/14 18:28:20 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.7 2003/11/14 22:17:48 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,6 +36,9 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
@@ -50,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -175,7 +178,6 @@ public class ProductPromoWorker {
 
                     // calculate low use limit for this "order", check per order, customer, promo
                     // always have a useLimit to avoid unlimited looping, default to 1 if no other is specified
-                    long useLimit = 1;
                     Long candidateUseLimit = null;
 
                     Long useLimitPerOrder = productPromo.getLong("useLimitPerOrder");
@@ -191,12 +193,8 @@ public class ProductPromoWorker {
                     Long useLimitPerCustomer = productPromo.getLong("useLimitPerCustomer");
                     if (useLimitPerCustomer != null && UtilValidate.isNotEmpty(partyId)) {
                         // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-                        if (productPromoUses == null) {
-                            // TODO: replace this query with a view-entity that does a count in the database
-                            productPromoUses = delegator.findByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId));
-                        }
-                        List productPromoCustomerUses = EntityUtil.filterByAnd(productPromoUses, UtilMisc.toMap("partyId", partyId));
-                        long perCustomerThisOrder = useLimitPerCustomer.longValue() - productPromoCustomerUses.size();
+                        long productPromoCustomerUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId, "partyId", partyId));
+                        long perCustomerThisOrder = useLimitPerCustomer.longValue() - productPromoCustomerUseSize;
 
                         if (candidateUseLimit == null || candidateUseLimit.longValue() > perCustomerThisOrder) {
                             candidateUseLimit = new Long(perCustomerThisOrder);
@@ -206,25 +204,35 @@ public class ProductPromoWorker {
                     Long useLimitPerPromotion = productPromo.getLong("useLimitPerPromotion");
                     if (useLimitPerPromotion != null) {
                         // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-                        if (productPromoUses == null) {
-                            // TODO: replace this query with a view-entity that does a count in the database
-                            productPromoUses = delegator.findByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId));
-                        }
-                        long perPromotionThisOrder = useLimitPerPromotion.longValue() - productPromoUses.size();
+                        long productPromoUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId));
+                        long perPromotionThisOrder = useLimitPerPromotion.longValue() - productPromoUseSize;
 
                         if (candidateUseLimit == null || candidateUseLimit.longValue() > perPromotionThisOrder) {
                             candidateUseLimit = new Long(perPromotionThisOrder);
                         }
                     }
 
-                    if (candidateUseLimit != null) {
-                        useLimit = candidateUseLimit.longValue();
-                    }
+                    long useLimit = candidateUseLimit == null ? 1 : candidateUseLimit.longValue();
 
-                    // TODO: check if promo code required
+                    boolean requireCode = "Y".equals(productPromo.getString("requireCode"));
                     Integer codeUseLimit = null;
                     String productPromoCodeId = null;
-                    // TODO: check promo code use limits, per customer, code
+                    // check if promo code required
+                    if (requireCode) {
+                        Set enteredCodes = cart.getProductPromoCodesEntered();
+                        if (enteredCodes.size() > 0) {
+                            // get all promo codes entered, do a query with an IN condition to see if any of those are related
+                            EntityCondition codeCondition = new EntityExpr(new EntityExpr("productPromoId", EntityOperator.EQUALS, productPromoId), EntityOperator.AND, new EntityExpr("productPromoCodeId", EntityOperator.IN, enteredCodes));
+                            // may want to sort by something else to decide which code to use if there is more than one candidate
+                            List productPromoCodeList = delegator.findByCondition("ProductPromoCode", codeCondition, null, UtilMisc.toList("productPromoCodeId"));
+                            Iterator productPromoCodeIter = productPromoCodeList.iterator();
+                            while (productPromoCodeIter.hasNext()) {
+                                GenericValue productPromoCode = (GenericValue) productPromoCodeIter.next();
+                                // TODO: check promo code use limits, per customer, code
+                                productPromoCodeId = productPromoCode.getString("productPromoCode");
+                            }
+                        }
+                    }
 
                     // TODO: support multiple promo codes for a single promo, ie if we run into a use limit for one code see if we can find another for this promo
 
@@ -233,7 +241,9 @@ public class ProductPromoWorker {
                     if (Debug.infoOn()) Debug.logInfo("Checking promotion [" + productPromoId + "], useLimit=" + useLimit + ", # of rules=" + productPromoRules.size(), module);
 
                     if (productPromoRules != null && productPromoRules.size() > 0) {
-                        while ((useLimit > cart.getProductPromoUseCount(productPromoId)) && (codeUseLimit == null || codeUseLimit.intValue() > cart.getProductPromoCodeUse(productPromoCodeId))) {
+                        while ((useLimit > cart.getProductPromoUseCount(productPromoId)) &&
+                                (!requireCode || UtilValidate.isNotEmpty(productPromoCodeId)) &&
+                                (codeUseLimit == null || codeUseLimit.intValue() > cart.getProductPromoCodeUse(productPromoCodeId))) {
                             boolean promoUsed = false;
 
                             Iterator promoRulesIter = productPromoRules.iterator();
