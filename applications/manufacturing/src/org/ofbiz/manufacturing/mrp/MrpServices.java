@@ -162,7 +162,7 @@ public class MrpServices {
             genericResult = (GenericValue) iteratorResult.next();
             String productId =  genericResult.getString("productId");
             Double eventQuantityTmp = new Double(-1.0 * genericResult.getDouble("quantity").doubleValue());
-            Timestamp estimatedShipDate = genericResult.getTimestamp("estimatedShipDate");
+            Timestamp estimatedShipDate = genericResult.getTimestamp("estimatedDeliveryDate");
             if (estimatedShipDate == null) {
                 estimatedShipDate = now;
             }
@@ -227,7 +227,7 @@ public class MrpServices {
                 estimatedShipDate = now;
             }
             
-            parameters = UtilMisc.toMap("productId", productId, "eventDate", estimatedShipDate, "inventoryEventPlanTypeId", "MRP_REQUIREMENT");
+            parameters = UtilMisc.toMap("productId", productId, "eventDate", estimatedShipDate, "inventoryEventPlanTypeId", "MANUF_ORDER_REQ");
             try {
                 InventoryEventPlannedServices.createOrUpdateInventoryEventPlanned(parameters, eventQuantityTmp, delegator);
             } catch (GenericEntityException e) {

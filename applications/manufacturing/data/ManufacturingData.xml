@@ -9,6 +9,7 @@
 
     <InventoryEventPlannedType inventoryEventPlanTypeId="MRP_REQUIREMENT" description="Mrp requirement" inOut="-"/>
     <InventoryEventPlannedType inventoryEventPlanTypeId="MANUF_ORDER_RECP" description="Manufacturing Order receipt" inOut="+"/>
+    <InventoryEventPlannedType inventoryEventPlanTypeId="MANUF_ORDER_REQ" description="Manufacturing Order requirement" inOut="-"/>
     <InventoryEventPlannedType inventoryEventPlanTypeId="PROP_MANUF_O_RECP" description="Proposed Manufacturing Order receipt" inOut="+"/>
     <InventoryEventPlannedType inventoryEventPlanTypeId="PUR_ORDER_RECP" description="Purchase Order receipt" inOut="+"/>
     <InventoryEventPlannedType inventoryEventPlanTypeId="PROP_PUR_O_RECP" description="Proposed Purchase Order receipt" inOut="+"/>
