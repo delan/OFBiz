@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/19 22:17:32  jonesde
+ * Changed servers.properties to entityengine.properties
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -46,37 +49,47 @@ import org.ofbiz.core.util.*;
  * Created on Sep 21, 2001
  */
 public final class JNDIContextFactory {
-  static Map contexts = new Hashtable();
-  
-  /** Return the initial context according to the entityengine.properties parameters that correspond to the given helper name
-   * @return the JNDI initial context
-   */
-  public static InitialContext getInitialContext(String helperName) {
-    InitialContext ic = (InitialContext)contexts.get(helperName);
-    
-    if(ic == null) {
-      String providerUrl;
-      String contextFactory;
-      String pkgPrefix;
+    static Map contexts = new Hashtable();
 
-      providerUrl = UtilProperties.getPropertyValue("entityengine", helperName + ".context.provider.url", "127.0.0.1:1099");
-      contextFactory = UtilProperties.getPropertyValue("entityengine", helperName + ".initial.context.factory", "com.sun.jndi.rmi.registry.RegistryContextFactory");
-      pkgPrefix = UtilProperties.getPropertyValue("entityengine", helperName + ".url.pkg.prefixes", "java.naming.rmi.security.manager");
+    /** Return the initial context according to the entityengine.properties parameters that correspond to the given helper name
+     * @return the JNDI initial context
+     */
+    public static InitialContext getInitialContext(String helperName) {
+        InitialContext ic = (InitialContext) contexts.get(helperName);
 
-      try {
-        Hashtable h = new Hashtable();
-        h.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory);
-        h.put(Context.PROVIDER_URL, providerUrl);
-        h.put(Context.URL_PKG_PREFIXES, pkgPrefix);
+        if (ic == null) {
+            String providerUrl;
+            String contextFactory;
+            String pkgPrefix;
 
-        ic = new InitialContext(h);
-      }
-      catch (Exception e) {
-        Debug.logWarning(e);
-      }
-      if(ic != null) contexts.put(helperName, ic);
+            providerUrl = UtilProperties.getPropertyValue("entityengine", helperName + ".context.provider.url", "127.0.0.1:1099");
+            contextFactory = UtilProperties.getPropertyValue("entityengine", helperName + ".initial.context.factory", "com.sun.jndi.rmi.registry.RegistryContextFactory");
+            pkgPrefix = UtilProperties.getPropertyValue("entityengine", helperName + ".url.pkg.prefixes");
+
+            String secPrincipal = UtilProperties.getPropertyValue("entityengine", helperName + ".security.principal");
+            String secCred = UtilProperties.getPropertyValue("entityengine", helperName + ".security.credentials");
+
+            try {
+                Hashtable h = new Hashtable();
+                h.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory);
+                h.put(Context.PROVIDER_URL, providerUrl);
+                if (pkgPrefix != null && pkgPrefix.length() > 0)
+                    h.put(Context.URL_PKG_PREFIXES, pkgPrefix);
+
+                if (secPrincipal != null && secPrincipal.length() > 0)
+                    h.put(Context.SECURITY_PRINCIPAL, secPrincipal);
+                if (secCred != null && secCred.length() > 0)
+                    h.put(Context.SECURITY_CREDENTIALS, secCred);
+
+                ic = new InitialContext(h);
+            } catch (Exception e) {
+                Debug.logWarning(e);
+            }
+            if (ic != null)
+                contexts.put(helperName, ic);
+        }
+
+        return ic;
     }
-    
-    return ic;
-  }
 }
+
