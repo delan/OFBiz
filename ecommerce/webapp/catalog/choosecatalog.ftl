@@ -24,9 +24,9 @@
  *@since      2.1
 -->
 
-<#assign catalogCol = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogIdsAvailable(request)>
-<#assign currentCatalogId = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCurrentCatalogId(request)>
-<#assign currentCatalogName = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogName(request, currentCatalogId)>
+<#assign catalogCol = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogIdsAvailable(request)?if_exists>
+<#assign currentCatalogId = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCurrentCatalogId(request)?if_exists>
+<#assign currentCatalogName = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogName(request, currentCatalogId)?if_exists>
 
 <#if 0 < catalogCol?size>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>

@@ -25,8 +25,8 @@
 -->
 
 <#-- variable setup and worker calls -->
-<#assign topLevelList = requestAttributes.topLevelList>
-<#assign curCategoryId = requestAttributes.curCategoryId>
+<#assign topLevelList = requestAttributes.topLevelList?if_exists>
+<#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
 
 <#-- looping macro -->
 <#macro categoryList parentCategory category>

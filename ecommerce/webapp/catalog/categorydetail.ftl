@@ -24,18 +24,13 @@
  *@since      2.1
 -->
 
-<#-- variable setup -->
-<#assign productCategory = requestAttributes.productCategory?if_exists>
-<#assign productCategoryMembers = requestAttributes.productCategoryMembers?if_exists>
-<#-- end variable setup -->
-
 <#if productCategory?exists>
 <table border="0" width="100%" cellpadding="3">
   <tr>
     <td colspan="2">
       <div class="head1">
         ${productCategory.description?if_exists}
-        <#if requestAttributes.hasQuantities?exists>
+        <#if hasQuantities?exists>
           <form method="POST" action="<@ofbizUrl>/addCategoryDefaults<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="thecategoryform" style='margin: 0;'>
             <input type='hidden' name='add_category_id' value='${productCategory.productCategoryId}'>            
             <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
@@ -66,19 +61,19 @@
 </table>
 </#if>
 
-<#if 0 < productCategoryMembers?size>
+<#if productCategoryMembers?exists && 0 < productCategoryMembers.size()>
 <table border="0" width="100%" cellpadding="2">
   <tr>
     <td align=right>
       <b>
-        <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.productCategoryId}/~VIEW_SIZE=${requestAttributes.viewSize}/~VIEW_INDEX=${requestAttributes.viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+        <#if 0 < viewIndex?int>
+          <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
-        <#if 0 < requestAttributes.listSize?int>
-          <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
+        <#if 0 < listSize?int>
+          <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
-        <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>
-          | <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.productCategoryId}/~VIEW_SIZE=${requestAttributes.viewSize}/~VIEW_INDEX=${requestAttributes.viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a> |
+        <#if highIndex?int < listSize?int>
+          | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a> |
         </#if>
       </b>
     </td>
@@ -87,11 +82,11 @@
 
 <center>
   <table width='100%' border='0' cellpadding='0' cellspacing='0'>    
-    <#assign startIndex = requestAttributes.viewSize * requestAttributes.viewIndex>
-    <#if requestAttributes.highIndex < requestAttributes.listSize>
-      <#assign endIndex = requestAttributes.highIndex - 1>
+    <#assign startIndex = viewSize * viewIndex>
+    <#if highIndex < listSize>
+      <#assign endIndex = highIndex - 1>
     <#else>
-      <#assign endIndex = requestAttributes.listSize - 1>
+      <#assign endIndex = listSize - 1>
     </#if>
     <#list productCategoryMembers[startIndex..endIndex] as productCategoryMember>              
       <tr><td><hr class='sepbar'></td></tr>
@@ -111,14 +106,14 @@
   <tr>
     <td align=right>
       <b>
-        <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+        <#if 0 < viewIndex?int>
+          <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
-        <#if 0 < requestAttributes.listSize?int>
-          <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
+        <#if 0 < listSize?int>
+          <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
-        <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>
-          | <a href="<@ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a> |
+        <#if highIndex?int < listSize?int>
+          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a> |
         </#if>
       </b>
     </td>

@@ -24,8 +24,8 @@
  *@since      2.1
 -->
 
-<#assign currentCatalogId = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCurrentCatalogId(request)>
-<#assign otherSearchProdCatalogCategories = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getProdCatalogCategories(request, currentCatalogId, "PCCT_OTHER_SEARCH")>
+<#assign currentCatalogId = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCurrentCatalogId(request)?if_exists>
+<#assign otherSearchProdCatalogCategories = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getProdCatalogCategories(request, currentCatalogId, "PCCT_OTHER_SEARCH")?if_exists>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>

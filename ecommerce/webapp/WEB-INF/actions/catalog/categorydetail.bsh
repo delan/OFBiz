@@ -34,7 +34,7 @@ defaultViewSize = request.getAttribute("defaultViewSize");
 if (defaultViewSize == null) {
     defaultViewSize = new java.lang.Integer(10);
 }
-request.setAttribute("defaultViewSize", defaultViewSize);
+context.put("defaultViewSize", defaultViewSize);
 
 // set the limit view
 Boolean limitViewObj = request.getAttribute("limitView");
@@ -42,7 +42,7 @@ limitView = Boolean.TRUE;
 if (limitViewObj != null) {
     limitView = limitViewObj;
 }
-request.setAttribute("limitView", limitView);
+context.put("limitView", limitView);
 
 
 // get the product category & members
@@ -51,32 +51,32 @@ catResult = dispatcher.runSync("getProductCategoryAndLimitedMembers", UtilMisc.t
         request.getAttribute("productCategoryId"), "viewIndexString", request.getParameter("VIEW_INDEX"),
         "viewSizeString", request.getParameter("VIEW_SIZE"), "defaultViewSize", defaultViewSize, "limitView", limitView));
        
+context.put("productCategoryId", request.getAttribute("productCategoryId"));
 if (catResult != null) {
-    request.setAttribute("productCategoryMembers", catResult.get("productCategoryMembers"));
-    request.setAttribute("productCategory", catResult.get("productCategory"));
-    request.setAttribute("viewIndex", catResult.get("viewIndex"));
-    request.setAttribute("viewSize", catResult.get("viewSize"));
-    request.setAttribute("lowIndex", catResult.get("lowIndex"));
-    request.setAttribute("highIndex", catResult.get("highIndex"));
-    request.setAttribute("listSize", catResult.get("listSize"));
+    context.put("productCategoryMembers", catResult.get("productCategoryMembers"));
+    context.put("productCategory", catResult.get("productCategory"));
+    context.put("viewIndex", catResult.get("viewIndex"));
+    context.put("viewSize", catResult.get("viewSize"));
+    context.put("lowIndex", catResult.get("lowIndex"));
+    context.put("highIndex", catResult.get("highIndex"));
+    context.put("listSize", catResult.get("listSize"));
 }
 
 // set the content path prefix
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request); 
-request.setAttribute("contentPathPrefix", contentPathPrefix);
+context.put("contentPathPrefix", contentPathPrefix);
 
 // little routine to see if any members have a quantity > 0 assigned
-members = request.getAttribute("productCategoryMembers");
-/*
+members = context.get("productCategoryMembers");
 if (members != null && members.size() > 0) {
     for (i = 0; i < members.size(); i++) {      
         productCategoryMember = (GenericValue) members.get(i);
         if (productCategoryMember.get("quantity") != null && productCategoryMember.getDouble("quantity").doubleValue() > 0.0) {            
-            request.setAttribute("hasQuantities", new Boolean(true));
+            context.put("hasQuantities", new Boolean(true));
             break;
         }        
     }    
 }
-*/
+
 
 
