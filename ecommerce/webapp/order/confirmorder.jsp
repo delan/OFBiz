@@ -83,6 +83,16 @@
     List orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
     double orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
 
+    GenericValue placingCustomerOrderRole = null;
+    if(orderId != null && orderId.length() > 0) {
+        orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        List placingCustomerOrderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
+        placingCustomerOrderRole = EntityUtil.getFirst(placingCustomerOrderRoles);
+    }
+    GenericValue placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
+    if (placingCustomerPerson != null) pageContext.setAttribute("placingCustomerPerson", placingCustomerPerson);
+
+
     GenericValue shippingAddress = orderReadHelper.getShippingAddress();
     GenericValue billingAddress = null;
     GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");

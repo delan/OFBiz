@@ -2,8 +2,8 @@
 <!DOCTYPE site-conf PUBLIC "-//OFBiz//DTD Request Config//EN" "http://www.ofbiz.org/dtds/site-conf.dtd">
 
 <site-conf>
-    <description>Open For Commerce Controller Configuration File</description>
-    <owner>The Open For Business Project (c) 2001 </owner>
+    <description>OFBiz: eCommerce Controller Configuration File</description>
+    <owner>The Open For Business Project Copyright (c) 2001</owner>
     <errorpage>/error/error.jsp</errorpage>
 
     <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
@@ -104,6 +104,7 @@
     </request-map>
 
     <request-map uri="addordertocart">
+        <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addToCartFromOrder"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="orderstatus"/>

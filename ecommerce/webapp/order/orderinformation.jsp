@@ -37,6 +37,7 @@
         <%localOrderHeader = (GenericValue) pageContext.getAttribute("orderHeader");%>
         <%localOrderReadHelper = new OrderReadHelper(localOrderHeader);%>
     </ofbiz:if>
+
     <%String distributorId = localOrderReadHelper != null ? localOrderReadHelper.getDistributorId() : (String) session.getAttribute(ThirdPartyEvents.DISTRIBUTOR_ID);%>
     <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
     <%if (paymentMethod != null) pageContext.setAttribute("paymentMethod", paymentMethod);%>
@@ -71,7 +72,7 @@
         <tr>
           <td>
               <table width="100%" border="0" cellpadding="1">
-               <ofbiz:if name="userLogin">
+               <ofbiz:if name="placingCustomerPerson">
                 <tr>
                   <td align="right" valign="top" width="15%">
                     <div class="tabletext">&nbsp;<b>Name</b></div>
@@ -79,9 +80,11 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <div class="tabletext">
-                    <ofbiz:if name="userLogin">
-                      <%=PartyHelper.getPartyName(person)%>
-                      <%EntityField.run("userLogin", "userLoginId", " (", ") ", pageContext);%>
+                    <ofbiz:if name="placingCustomerPerson">
+                      <%EntityField.run("placingCustomerPerson", "firstName", pageContext);%>
+                      <%EntityField.run("placingCustomerPerson", "middleName", pageContext);%>
+                      <%EntityField.run("placingCustomerPerson", "lastName", pageContext);%>
+                      <%-- Don't show this, it isn't necessarily the currently logged in user that placed the order... <%EntityField.run("userLogin", "userLoginId", " (", ") ", pageContext);%> --%>
                     </ofbiz:if>
                     </div>
                   </td>

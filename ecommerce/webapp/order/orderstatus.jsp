@@ -25,6 +25,7 @@
  *@version    1.0
 --%>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
@@ -34,10 +35,8 @@
 <%@ page import="org.ofbiz.commonapp.party.contact.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 
-<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
-<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
+<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />
 <%String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);%>
 
@@ -64,6 +63,15 @@
     List orderAdjustments = orderReadHelper.getAdjustments();
     List orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
     double orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
+
+    GenericValue placingCustomerOrderRole = null;
+    if(orderId != null && orderId.length() > 0) {
+        orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        List placingCustomerOrderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
+        placingCustomerOrderRole = EntityUtil.getFirst(placingCustomerOrderRoles);
+    }
+    GenericValue placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
+    if (placingCustomerPerson != null) pageContext.setAttribute("placingCustomerPerson", placingCustomerPerson);
 
     GenericValue shippingAddress = orderReadHelper.getShippingAddress();
     //GenericValue billingAddress = orderReadHelper.getBillingAddress();

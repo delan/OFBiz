@@ -46,14 +46,14 @@
           <div><a href="<ofbiz:url><%="/product?product_id=" + miniShoppingCartItem.getProductId()%></ofbiz:url>" class="buttontext">
           <%=miniShoppingCartItem.getName()%></a></div>
         </td>
-        <td align="right" valign="top"><div class="tabletext" nowrap>
-          <%=UtilFormatOut.formatPrice(miniShoppingCartItem.getItemSubTotal())%></div>
+        <td align="right" valign="top"><div class="tabletext" nowrap><ofbiz:format type="currency">
+          <%=UtilFormatOut.formatPrice(miniShoppingCartItem.getItemSubTotal())%></ofbiz:format></div>
         </td>
       </tr>
     <%}%>
     <tr>
       <td colspan="3" align="right">
-        <div class="tabletext"><b>Total: $<%=UtilFormatOut.formatPrice(miniShoppingCart.getGrandTotal())%></b></div>
+        <div class="tabletext"><b>Total: <ofbiz:format type="currency"><%=UtilFormatOut.formatPrice(miniShoppingCart.getGrandTotal())%></ofbiz:format></b></div>
       </td>
     </tr>
     <tr>

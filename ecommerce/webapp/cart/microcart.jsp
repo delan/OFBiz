@@ -7,7 +7,7 @@
 <%ShoppingCart microCart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART);%>
 <div class='insideHeaderText'>
 <%if(microCart != null && microCart.size() > 0){%>
-  Cart has <b><%=(int)microCart.getTotalQuantity()%></b> items, <b>$<%=UtilFormatOut.formatPrice(microCart.getGrandTotal())%></b>
+  Cart has <b><%=(int)microCart.getTotalQuantity()%></b> items, <b><ofbiz:format type="currency"><%=UtilFormatOut.formatPrice(microCart.getGrandTotal())%></ofbiz:format></b>
 <%}else{%>
   Shopping Cart is <b>Empty</b>
 <%}%>

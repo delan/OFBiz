@@ -71,12 +71,12 @@
           <td valign="middle" align="right">
             <div class='lightbuttontextdisabled'>
               <a href="<ofbiz:url>/main</ofbiz:url>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
-              <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
               <%if(cart != null && cart.size() > 0){%>
+                <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
                 <a href="<ofbiz:url>/emptycart</ofbiz:url>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
                 <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
               <%}else{%>
-                [Empty&nbsp;Cart] [Checkout]
+                [Recalculate&nbsp;Cart] [Empty&nbsp;Cart] [Checkout]
               <%}%>
             </div>
           </td>

@@ -35,8 +35,9 @@
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
 <%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
+
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
+<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />
 <%String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);%>
 
@@ -52,6 +53,9 @@
     List orderAdjustments = cart.makeAllAdjustments();
     List orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
     double orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments);
+
+    GenericValue placingCustomerPerson = userLogin == null ? null : userLogin.getRelatedOne("Person");
+    if (placingCustomerPerson != null) pageContext.setAttribute("placingCustomerPerson", placingCustomerPerson);
 
     GenericValue shippingAddress = cart.getShippingAddress();
     List paymentMethods = cart.getPaymentMethods();
