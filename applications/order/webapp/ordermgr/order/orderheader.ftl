@@ -90,7 +90,7 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Currency</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingCurrency}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -102,7 +102,7 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Sales Channel</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderSalesChannel}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -119,13 +119,13 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Product Store</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderProductStore}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
                           <#if orderHeader.productStoreId?has_content>
-                            <a href="/catalog/control/EditProductStore?productStoreId=${orderHeader.productStoreId}${requestAttributes.externalKeyParam}" target="catalogmgr" class="buttontext">${orderHeader.productStoreId}</a>
+                            <a href="/catalog/control/EditProductStore?productStoreId=${orderHeader.productStoreId}" target="catalogmgr" class="buttontext">${orderHeader.productStoreId}</a>
                           <#else>
                             N/A
                           </#if>
@@ -135,7 +135,7 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Origin Facility</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderOriginFacility}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -151,13 +151,13 @@
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Created By</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderCreatedBy}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
                           <#if orderHeader.createdBy?has_content>
-                            <a href="/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${orderHeader.createdBy}</a>
+                            <a href="/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}" target="partymgr" class="buttontext">${orderHeader.createdBy}</a>
                           <#else>
                             [Not Set]
                           </#if>
@@ -517,7 +517,7 @@
                             ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(displayParty)}
                           </#if>
                           <#if partyId?exists>
-                            &nbsp;(<a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${partyId}</a>)
+                            &nbsp;(<a href="/partymgr/control/viewprofile?party_id=${partyId}" target="partymgr" class="buttontext">${partyId}</a>)
                           </#if>
                         </div>
                       </td>
@@ -669,7 +669,7 @@
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderTrackingNumber}</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderTrackingNumber}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Payment Settings</property>
-    <property name="headerItem">setup</property>
-    <content-action name="/setup/paymentsetup.bsh"/>
-</page>

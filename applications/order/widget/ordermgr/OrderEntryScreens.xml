@@ -22,9 +22,7 @@
  *
  *  $Id: ProductScreens.xml 3273 2004-09-04 12:59:52Z jonesde $
 -->
-
-<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
     <screen name="CommonOrderEntryDecorator">
         <section>
             <actions>
@@ -43,13 +41,12 @@
                                 </platform-specific>
                                 <decorator-section-include name="body"/>
                             </widgets>
-                        </section>                    
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
     <screen name="RequirementsForSupplier">
         <section>
             <actions>
@@ -77,6 +74,17 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="OrderParty">
+        <section>
+            <actions>
+                <set field="title" value="Receive Offline Payment"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderparty.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderEntryDecorator">
+                    <decorator-section name="body"/>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
-

@@ -724,20 +724,21 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/order/findOrders.ftl"/>
+    <view-map name="main" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
     <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
     <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
-    
-    <view-map name="orderstats" type="jpublish" page="/order/orderstats.ftl"/>
-    <view-map name="findorders" type="jpublish" page="/order/findOrders.ftl"/>
-    <view-map name="OrderDeliveryScheduleInfo" type="jpublish" page="/order/OrderDeliveryScheduleInfo.ftl"/>
-    <view-map name="orderview" type="jpublish" page="/order/orderview.ftl"/>
-    <view-map name="ordertasklist" type="jpublish" page="/task/ordertasklist.ftl"/>
-    <view-map name="createnewnote" type="jpublish" page="/order/newnote.ftl"/>
-    <view-map name="receivepayment" type="jpublish" page="/order/receivepayment.ftl"/>
+
+    <view-map name="orderstats" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderStats"/>
+    <view-map name="findorders" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderFindOrder"/>
+    <!-- <view-map name="OrderDeliveryScheduleInfo" type="jpublish" page="/order/OrderDeliveryScheduleInfo.ftl"/> -->
+    <view-map name="OrderDeliveryScheduleInfo" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderDeliveryScheduleInfo"/>
+    <view-map name="orderview" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderHeaderView"/>
+    <view-map name="createnewnote" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderNewNote"/>
+    <view-map name="receivepayment" type="screen" page="component://order/widget/ordermgr/OrderViewScreens.xml#OrderReceivePayment"/>
+    <view-map name="ordertasklist" type="screen" page="component://order/widget/ordermgr/OrderTaskScreens.xml#OrderTaskList"/>
 
     <view-map name="orderentry" type="jpublish" page="/entry/orderentry.ftl"/>
     <view-map name="checkinits" type="jpublish" page="/entry/checkinits.ftl"/>
@@ -758,15 +759,15 @@
     <view-map name="showAllPromotions" type="jpublish" page="/entry/showAllPromotions.ftl"/>
     <view-map name="showPromotionDetails" type="jpublish" page="/entry/showPromotionDetails.ftl"/>
 
-    <view-map name="findreturn" type="jpublish" page="/return/findReturn.ftl"/>
-    <view-map name="returnlist" type="jpublish" page="/return/returnList.ftl"/>
-    <view-map name="returnhead" type="jpublish" page="/return/returnHeader.ftl"/>
-    <view-map name="returnitems" type="jpublish" page="/return/returnItems.ftl"/>
-    <view-map name="quickReturn" type="jpublish" page="/return/quickReturn.ftl"/>
+    <view-map name="findreturn" type="screen" page="component://order/widget/ordermgr/OrderReturnScreens.xml#OrderFindReturn"/>
+    <view-map name="returnlist" type="screen" page="component://order/widget/ordermgr/OrderReturnScreens.xml#OrderReturnList"/>
+    <view-map name="returnhead" type="screen" page="component://order/widget/ordermgr/OrderReturnScreens.xml#OrderReturnHeader"/>
+    <view-map name="returnitems" type="screen" page="component://order/widget/ordermgr/OrderReturnScreens.xml#OrderReturnItems"/>
+    <view-map name="quickReturn" type="screen" page="component://order/widget/ordermgr/OrderReturnScreens.xml#OrderQuickReturn"/>
 
-    <view-map name="paysetup" type="jpublish" page="/setup/paymentsetup.ftl"/>
+    <view-map name="paysetup" type="screen" page="component://order/widget/ordermgr/OrderSetupScreens.xml#OrderPaymentSetup"/>
 
-    <view-map name="orderreportlist" type="jpublish" page="/reports/reportlist.ftl"/>
+    <view-map name="orderreportlist" type="screen" page="component://order/widget/ordermgr/OrderReport.xml#OrderReportList"/>
     <view-map name="orderreportjasper" type="jasperreportspdf" page="/reports/orderreport.xml" content-type="application/pdf" encoding="none"/>
     <view-map name="orderitemreportjasper" type="jasperreportspdf" page="/reports/orderitemreport.xml" content-type="application/pdf" encoding="none"/>
 

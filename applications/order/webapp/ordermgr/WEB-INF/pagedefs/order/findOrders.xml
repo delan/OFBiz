@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Find Order(s)</property>
-    <property name="headerItem">findorders</property>
-    <content-action name="/order/findOrders.bsh"/> 
-</page>
