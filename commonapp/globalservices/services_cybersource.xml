@@ -14,10 +14,9 @@
         <attribute name="authResponse" type="String" mode="OUT"/>
     </service>
 
-    <service name="settleAuths" engine="java"
-            location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="settle">
+    <service name="settleAll" engine="java"
+            location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="settleAll">
         <description>Bill (Settle) Credit Card Authorization</description>
-        <attribute name="orderId" type="String" mode="IN"/>
-        <attribute name="billResponse" type="String" mode="OUT"/>
+        <attribute name="ordersProcessed" type="java.util.List" mode="OUT"/>
     </service>
 </services>
