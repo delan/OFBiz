@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.2 2003/08/25 20:17:04 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.3 2003/08/25 20:54:31 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -440,7 +440,7 @@ public class OrderReadHelper {
                     if (ProductWorker.shippingApplies(product)) {
                         Double weight = product.getDouble("weight");
                         String isVariant = product.getString("isVariant");
-                        if (weight == null && "Y".equals(isVariant)) {
+                        if (weight == null && isVariant != null && "Y".equals(isVariant)) {
                             // get the virtual product and check its weight
                             GenericValue virtual = null;
                             try {
