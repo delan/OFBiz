@@ -43,9 +43,10 @@ public class CashDrawer extends GenericDevice implements Runnable, DialogCallbac
     public static final String module = CashDrawer.class.getName();
 
     protected boolean openCalled = false;
-    protected boolean waiting = false;    
+    protected boolean waiting = false;
     protected Thread waiter = null;
     protected long startTime = -1;
+    protected int comError = 0;
 
     public CashDrawer(String deviceName, int timeout) {
         super(deviceName, timeout);
@@ -62,7 +63,15 @@ public class CashDrawer extends GenericDevice implements Runnable, DialogCallbac
         }
     }
 
+    public void resetComError() {
+        this.comError = 0;
+    }
+    
     public void openDrawer() {
+        if (this.comError > 2) {
+            // only attempt this 3 times
+            return;
+        }
         try {
             this.openCalled = true;
             ((jpos.CashDrawer) control).openDrawer();
@@ -70,6 +79,7 @@ public class CashDrawer extends GenericDevice implements Runnable, DialogCallbac
             //this.startWaiter();
         } catch (JposException e) {
             Debug.logError(e, module);
+            this.comError++;
             PosScreen.currentScreen.showDialog("dialog/error/drawererror", this);
         }
     }
