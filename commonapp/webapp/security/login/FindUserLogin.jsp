@@ -1,7 +1,7 @@
 
 <%
 /**
- *  Title: Person Component - Person Attribute Entity
+ *  Title: User Login Entity
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -24,12 +24,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon May 28 22:01:02 MDT 2001
+ *@created    Fri Jun 29 12:51:06 MDT 2001
  *@version    1.0
  */
 %>
 
-<%@ page import="org.ofbiz.commonapp.person.*" %>
+<%@ page import="org.ofbiz.commonapp.security.login.*" %>
 <%@ page import="java.text.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.commonapp.common.*" %>
@@ -39,15 +39,15 @@
 <%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
 <webevent:dispatch loginRequired="true" />
 
-<%pageContext.setAttribute("PageName", "FindPersonAttribute"); %>
+<%pageContext.setAttribute("PageName", "FindUserLogin"); %>
 
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 
-<%boolean hasViewPermission=Security.hasEntityPermission("PERSON_ATTRIBUTE", "_VIEW", session);%>
-<%boolean hasCreatePermission=Security.hasEntityPermission("PERSON_ATTRIBUTE", "_CREATE", session);%>
-<%boolean hasUpdatePermission=Security.hasEntityPermission("PERSON_ATTRIBUTE", "_UPDATE", session);%>
-<%boolean hasDeletePermission=Security.hasEntityPermission("PERSON_ATTRIBUTE", "_DELETE", session);%>
+<%boolean hasViewPermission=Security.hasEntityPermission("USER_LOGIN", "_VIEW", session);%>
+<%boolean hasCreatePermission=Security.hasEntityPermission("USER_LOGIN", "_CREATE", session);%>
+<%boolean hasUpdatePermission=Security.hasEntityPermission("USER_LOGIN", "_UPDATE", session);%>
+<%boolean hasDeletePermission=Security.hasEntityPermission("USER_LOGIN", "_DELETE", session);%>
 <%if(hasViewPermission){%>
 <%
   String rowColorTop1 = "99CCFF";
@@ -67,8 +67,8 @@
   String curFindString = "SEARCH_TYPE=" + searchType + "&SEARCH_PARAMETER1=" + searchParam1 + "&SEARCH_PARAMETER2=" + searchParam2 + "&SEARCH_PARAMETER3=" + searchParam3;
   curFindString = UtilFormatOut.encodeQuery(curFindString);
 
-  Collection personAttributeCollection = null;
-  Object[] personAttributeArray = (Object[])session.getAttribute("CACHE_SEARCH_RESULTS");
+  Collection userLoginCollection = null;
+  Object[] userLoginArray = (Object[])session.getAttribute("CACHE_SEARCH_RESULTS");
 %>
 <%
 //--------------
@@ -85,29 +85,31 @@
   catch (NumberFormatException nfe) { viewSize = 10; }
 
 //--------------
-  String personAttributeArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
-  if(personAttributeArray == null || personAttributeArrayName == null || curFindString.compareTo(personAttributeArrayName) != 0 || viewIndex == 0)
+  String userLoginArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
+  if(userLoginArray == null || userLoginArrayName == null || curFindString.compareTo(userLoginArrayName) != 0 || viewIndex == 0)
   {
     if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- Current Array not found in session, getting new one...");
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- curFindString:" + curFindString + " personAttributeArrayName:" + personAttributeArrayName);
+    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- curFindString:" + curFindString + " userLoginArrayName:" + userLoginArrayName);
 
-    if(searchType.compareTo("all") == 0) personAttributeCollection = PersonAttributeHelper.findAll();
+    if(searchType.compareTo("all") == 0) userLoginCollection = UserLoginHelper.findAll();
 
-    else if(searchType.compareTo("Username") == 0) personAttributeCollection = PersonAttributeHelper.findByUsername(searchParam1);
+    else if(searchType.compareTo("PartyId") == 0) userLoginCollection = UserLoginHelper.findByPartyId(searchParam1);
 
-    else if(searchType.compareTo("Name") == 0) personAttributeCollection = PersonAttributeHelper.findByName(searchParam1);
+    else if(searchType.compareTo("ContactMechanismId") == 0) userLoginCollection = UserLoginHelper.findByContactMechanismId(searchParam1);
+
+    else if(searchType.compareTo("CurrentUserId") == 0) userLoginCollection = UserLoginHelper.findByCurrentUserId(searchParam1);
 
     else if(searchType.compareTo("primaryKey") == 0)
     {
-      personAttributeCollection = new LinkedList();
-      PersonAttribute personAttributeTemp = PersonAttributeHelper.findByPrimaryKey(searchParam1, searchParam2);
-      if(personAttributeTemp != null) personAttributeCollection.add(personAttributeTemp);
+      userLoginCollection = new LinkedList();
+      UserLogin userLoginTemp = UserLoginHelper.findByPrimaryKey(searchParam1);
+      if(userLoginTemp != null) userLoginCollection.add(userLoginTemp);
     }
-    if(personAttributeCollection != null) personAttributeArray = personAttributeCollection.toArray();
+    if(userLoginCollection != null) userLoginArray = userLoginCollection.toArray();
 
-    if(personAttributeArray != null)
+    if(userLoginArray != null)
     {
-      session.setAttribute("CACHE_SEARCH_RESULTS", personAttributeArray);
+      session.setAttribute("CACHE_SEARCH_RESULTS", userLoginArray);
       session.setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
     }
   }
@@ -115,21 +117,20 @@
   int lowIndex = viewIndex*viewSize+1;
   int highIndex = (viewIndex+1)*viewSize;
   int arraySize = 0;
-  if(personAttributeArray!=null) arraySize = personAttributeArray.length;
+  if(userLoginArray!=null) arraySize = userLoginArray.length;
   if(arraySize<highIndex) highIndex=arraySize;
   if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
-<h3 style=margin:0;>Find PersonAttributes</h3>
+<h3 style=margin:0;>Find UserLogins</h3>
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
-    <form method="post" action="<%=response.encodeURL("FindPersonAttribute.jsp")%>" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindUserLogin.jsp")%>" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
 
           <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
-          <input type="text" name="SEARCH_PARAMETER2" value="" size="20">
           (Must be exact)
       </td>
       <td valign="top">
@@ -140,10 +141,10 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
-    <td valign="top">Username: </td>
-    <form method="post" action="<%=response.encodeURL("FindPersonAttribute.jsp")%>" style=margin:0;>
+    <td valign="top">PartyId: </td>
+    <form method="post" action="<%=response.encodeURL("FindUserLogin.jsp")%>" style=margin:0;>
       <td valign="top">
-        <input type="hidden" name="SEARCH_TYPE" value="Username">
+        <input type="hidden" name="SEARCH_TYPE" value="PartyId">
 
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
@@ -155,10 +156,25 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
-    <td valign="top">Name: </td>
-    <form method="post" action="<%=response.encodeURL("FindPersonAttribute.jsp")%>" style=margin:0;>
+    <td valign="top">ContactMechanismId: </td>
+    <form method="post" action="<%=response.encodeURL("FindUserLogin.jsp")%>" style=margin:0;>
       <td valign="top">
-        <input type="hidden" name="SEARCH_TYPE" value="Name">
+        <input type="hidden" name="SEARCH_TYPE" value="ContactMechanismId">
+
+        <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
+      </td>
+      <td valign="top">
+        <input type="submit" value="Find">
+      </td>
+    </form>
+  </tr>
+
+  
+  <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
+    <td valign="top">CurrentUserId: </td>
+    <form method="post" action="<%=response.encodeURL("FindUserLogin.jsp")%>" style=margin:0;>
+      <td valign="top">
+        <input type="hidden" name="SEARCH_TYPE" value="CurrentUserId">
 
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
@@ -170,7 +186,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
     <td valign="top">Display All: </td>
-    <form method="post" action="<%=response.encodeURL("FindPersonAttribute.jsp")%>" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL("FindUserLogin.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="all">
       </td>
@@ -180,10 +196,10 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 </table>
-<b>PersonAttributes found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
+<b>UserLogins found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPersonAttribute.jsp")%>" class="buttontext">[Create PersonAttribute]</a>
+  <a href="<%=response.encodeURL("EditUserLogin.jsp")%>" class="buttontext">[Create UserLogin]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -191,13 +207,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="<%=response.encodeURL("FindPersonAttribute.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL("FindUserLogin.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="<%=response.encodeURL("FindPersonAttribute.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL("FindUserLogin.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -208,9 +224,11 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr bgcolor="<%=rowColorResultHeader%>">
   
-      <td><div class="tabletext"><b><nobr>USERNAME</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>NAME</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>VALUE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>USER_LOGIN_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PARTY_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>CONTACT_MECHANISM_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>CURRENT_USER_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>CURRENT_PASSWORD</nobr></b></div></td>
       <td>&nbsp;</td>
       <%if(hasUpdatePermission){%>
         <td>&nbsp;</td>
@@ -220,14 +238,14 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <%}%>
     </tr>
 <%
- if(personAttributeArray != null && personAttributeArray.length > 0)
+ if(userLoginArray != null && userLoginArray.length > 0)
  {
   int loopIndex;
-  //for(loopIndex=personAttributeArray.length-1; loopIndex>=0 ; loopIndex--)
+  //for(loopIndex=userLoginArray.length-1; loopIndex>=0 ; loopIndex--)
   for(loopIndex=lowIndex; loopIndex<=highIndex; loopIndex++)
   {
-    PersonAttribute personAttribute = (PersonAttribute)personAttributeArray[loopIndex-1];
-    if(personAttribute != null)
+    UserLogin userLogin = (UserLogin)userLoginArray[loopIndex-1];
+    if(userLogin != null)
     {
 %>
     <%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
@@ -235,7 +253,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td>
         <div class="tabletext">
     
-      <%=UtilFormatOut.checkNull(personAttribute.getUsername())%>
+      <%=UtilFormatOut.checkNull(userLogin.getUserLoginId())%>
     
         &nbsp;</div>
       </td>
@@ -243,7 +261,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td>
         <div class="tabletext">
     
-      <%=UtilFormatOut.checkNull(personAttribute.getName())%>
+      <%=UtilFormatOut.checkNull(userLogin.getPartyId())%>
     
         &nbsp;</div>
       </td>
@@ -251,22 +269,38 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td>
         <div class="tabletext">
     
-      <%=UtilFormatOut.checkNull(personAttribute.getValue())%>
+      <%=UtilFormatOut.checkNull(userLogin.getContactMechanismId())%>
     
         &nbsp;</div>
       </td>
   
       <td>
-        <a href="<%=response.encodeURL("ViewPersonAttribute.jsp?" + "PERSON_ATTRIBUTE_USERNAME=" + personAttribute.getUsername() + "&" + "PERSON_ATTRIBUTE_NAME=" + personAttribute.getName())%>" class="buttontext">[View]</a>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(userLogin.getCurrentUserId())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+    
+      <%=UtilFormatOut.checkNull(userLogin.getCurrentPassword())%>
+    
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <a href="<%=response.encodeURL("ViewUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[View]</a>
       </td>
       <%if(hasUpdatePermission){%>
         <td>
-          <a href="<%=response.encodeURL("EditPersonAttribute.jsp?" + "PERSON_ATTRIBUTE_USERNAME=" + personAttribute.getUsername() + "&" + "PERSON_ATTRIBUTE_NAME=" + personAttribute.getName())%>" class="buttontext">[Edit]</a>
+          <a href="<%=response.encodeURL("EditUserLogin.jsp?" + "USER_LOGIN_USER_LOGIN_ID=" + userLogin.getUserLoginId())%>" class="buttontext">[Edit]</a>
         </td>
       <%}%>
       <%if(hasDeletePermission){%>
         <td>
-          <a href="<%=response.encodeURL("FindPersonAttribute.jsp?WEBEVENT=UPDATE_PERSON_ATTRIBUTE&UPDATE_MODE=DELETE&" + "PERSON_ATTRIBUTE_USERNAME=" + personAttribute.getUsername() + "&" + "PERSON_ATTRIBUTE_NAME=" + personAttribute.getName() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL("FindUserLogin.jsp?WEBEVENT=UPDATE_USER_LOGIN&UPDATE_MODE=DELETE&" + "USER_LOGIN_USER_LOGIN_ID=" + userLogin.getUserLoginId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -279,7 +313,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 %>
 <%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
 <td colspan="8">
-<h3>No PersonAttributes Found.</h3>
+<h3>No UserLogins Found.</h3>
 </td>
 </tr>
 <%}%>
@@ -291,13 +325,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="<%=response.encodeURL("FindPersonAttribute.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL("FindUserLogin.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="<%=response.encodeURL("FindPersonAttribute.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL("FindUserLogin.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -305,10 +339,10 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("EditPersonAttribute.jsp")%>" class="buttontext">[Create PersonAttribute]</a>
+  <a href="<%=response.encodeURL("EditUserLogin.jsp")%>" class="buttontext">[Create UserLogin]</a>
 <%}%>
 <%}else{%>
-  <h3>You do not have permission to view this page (PERSON_ATTRIBUTE_ADMIN, or PERSON_ATTRIBUTE_VIEW needed).</h3>
+  <h3>You do not have permission to view this page (USER_LOGIN_ADMIN, or USER_LOGIN_VIEW needed).</h3>
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Thu May 31 17:03:06 MDT 2001
+ *@created    Fri Jun 29 12:51:08 MDT 2001
  *@version    1.0
  */
 %>
@@ -54,9 +54,8 @@
   String rowColor2 = "CCFFFF";
   String rowColor = "";
 
-  String groupId = request.getParameter("SECURITY_GROUP_GROUP_ID");
+  String groupId = request.getParameter("SECURITY_GROUP_GROUP_ID");  
 
-  
 
   SecurityGroup securityGroup = SecurityGroupHelper.findByPrimaryKey(groupId);
 %>
@@ -104,6 +103,7 @@
       
         <input type="text" size="20" maxlength="20" name="SECURITY_GROUP_GROUP_ID" value="<%=UtilFormatOut.checkNull(groupId)%>">
       
+
       </td>
     </tr>
   <%}else{%>

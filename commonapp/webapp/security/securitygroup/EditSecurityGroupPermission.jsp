@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Thu May 31 17:03:38 MDT 2001
+ *@created    Fri Jun 29 12:51:09 MDT 2001
  *@version    1.0
  */
 %>
@@ -54,11 +54,9 @@
   String rowColor2 = "CCFFFF";
   String rowColor = "";
 
-  String groupId = request.getParameter("SECURITY_GROUP_PERMISSION_GROUP_ID");
-  String permissionId = request.getParameter("SECURITY_GROUP_PERMISSION_PERMISSION_ID");
+  String groupId = request.getParameter("SECURITY_GROUP_PERMISSION_GROUP_ID");  
+  String permissionId = request.getParameter("SECURITY_GROUP_PERMISSION_PERMISSION_ID");  
 
-  
-  
 
   SecurityGroupPermission securityGroupPermission = SecurityGroupPermissionHelper.findByPrimaryKey(groupId, permissionId);
 %>
@@ -106,6 +104,7 @@
       
         <input type="text" size="20" maxlength="20" name="SECURITY_GROUP_PERMISSION_GROUP_ID" value="<%=UtilFormatOut.checkNull(groupId)%>">
       
+
       </td>
     </tr>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
@@ -114,6 +113,7 @@
       
         <input type="text" size="60" maxlength="60" name="SECURITY_GROUP_PERMISSION_PERMISSION_ID" value="<%=UtilFormatOut.checkNull(permissionId)%>">
       
+
       </td>
     </tr>
   <%}else{%>

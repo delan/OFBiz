@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Thu May 31 17:03:23 MDT 2001
+ *@created    Fri Jun 29 12:51:08 MDT 2001
  *@version    1.0
  */
 %>
@@ -54,9 +54,8 @@
   String rowColor2 = "CCFFFF";
   String rowColor = "";
 
-  String permissionId = request.getParameter("SECURITY_PERMISSION_PERMISSION_ID");
+  String permissionId = request.getParameter("SECURITY_PERMISSION_PERMISSION_ID");  
 
-  
 
   SecurityPermission securityPermission = SecurityPermissionHelper.findByPrimaryKey(permissionId);
 %>
@@ -104,6 +103,7 @@
       
         <input type="text" size="60" maxlength="60" name="SECURITY_PERMISSION_PERMISSION_ID" value="<%=UtilFormatOut.checkNull(permissionId)%>">
       
+
       </td>
     </tr>
   <%}else{%>

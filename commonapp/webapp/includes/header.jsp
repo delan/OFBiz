@@ -1,5 +1,5 @@
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.person.*" %>
+<%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
 <%String pageName = (String)pageContext.getAttribute("PageName"); %>
 <html>
@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<%Person headerPerson = (Person)session.getAttribute("PERSON");%>
+<%UserLogin headerUserLogin = (UserLogin)session.getAttribute("USER_LOGIN");%>
 
 <TABLE width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='CCCCCC'>
   <TR>
@@ -61,7 +61,7 @@ function mClk(src){
       String loginUrl = request.getRequestURI() + "?" + queryString;
     %>
     <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL("/commonapp/main.jsp")%>" class="buttontext">Main</a></td>
-    <%if(headerPerson==null){%>
+    <%if(headerUserLogin==null){%>
       <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(loginUrl)%>" class="buttontext">Login</a></td>
     <%}else{%>
       <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL("/commonapp/main.jsp?WEBPREEVENT=logout")%>" class="buttontext">Logout</a></td>
