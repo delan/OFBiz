@@ -420,20 +420,16 @@ public class ModelForm {
             }
                 
             ModelFormField.FieldInfo fieldInfo = currentFormField.getFieldInfo();
-                
             if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
                 continue; 
             }
-            
             if (alreadyRendered.contains(currentFormField.getName())) {
                 continue;
             }
-
             //Debug.logInfo("In single form evaluating use-when for field " + currentFormField.getName() + ": " + currentFormField.getUseWhen());
             if (!currentFormField.shouldUse(context)) {
                 continue;
             }
-            
             alreadyRendered.add(currentFormField.getName());
                 
             boolean stayingOnRow = false;
@@ -804,7 +800,7 @@ public class ModelForm {
                 ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
                 if (displayField.getAlsoHidden() && modelFormField.shouldUse(context)) {
                     formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
-                    if (alreadyRendered != null) alreadyRendered.add(modelFormField.getName());
+                    // don't add to already rendered here, or the display won't ger rendered: if (alreadyRendered != null) alreadyRendered.add(modelFormField.getName());
                 }
                 break;
                     
@@ -812,7 +808,7 @@ public class ModelForm {
                 ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
                 if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(context)) {
                     formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
-                    if (alreadyRendered != null) alreadyRendered.add(modelFormField.getName());
+                    // don't add to already rendered here, or the hyperlink won't ger rendered: if (alreadyRendered != null) alreadyRendered.add(modelFormField.getName());
                 }
                 break;
             }
