@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -462,9 +465,8 @@ public class UtilValidate
 
     try 
     { 
-      double temp = Double.parseDouble(s); 
-      if(temp <= 0) return true;
-      return false;
+      double temp = Double.parseDouble(s);       
+      return true;
     }
     catch(Exception e) { return false; }
   }
