@@ -607,7 +607,7 @@ public class LoginEvents {
 
             //no key made yet for this request, create one
             while (externalKey == null || externalLoginKeys.containsKey(externalKey)) {
-                externalKey = "EL" + Long.toString(Math.round(Math.random() * 100000000));
+                externalKey = "EL" + Long.toString(Math.round(Math.random() * 1000000)) + Long.toString(Math.round(Math.random() * 1000000));
             }
 
             request.setAttribute(EXTERNAL_LOGIN_KEY_ATTR, externalKey);
