@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.11 2004/02/05 09:45:26 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.12 2004/02/17 19:51:01 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -137,9 +137,9 @@ public class KeywordIndex {
         // Variant Product IDs
         if ("Y".equals(product.getString("isVirtual"))) {
             if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.Variant.Product.productId", "1"))) {
-                Iterator variantProducts = UtilMisc.toIterator(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")));
-                while (variantProducts != null && variantProducts.hasNext()) {
-                    GenericValue variantProduct = (GenericValue) variantProducts.next();
+                Iterator variantProductAssocs = UtilMisc.toIterator(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")));
+                while (variantProductAssocs != null && variantProductAssocs.hasNext()) {
+                    GenericValue variantProductAssoc = (GenericValue) variantProductAssocs.next();
                     int weight = 1;
                     try {
                         weight = Integer.parseInt(UtilProperties.getPropertyValue("prodsearch", "index.weight.Variant.Product.productId", "1"));
@@ -147,7 +147,7 @@ public class KeywordIndex {
                         Debug.logWarning("Could not parse weight number: " + e.toString(), module);
                     }
                     for (int i = 0; i < weight; i++) {
-                        strings.add(variantProduct.getString("productId"));
+                        strings.add(variantProductAssoc.getString("productIdTo"));
                     }
                 }
             }
