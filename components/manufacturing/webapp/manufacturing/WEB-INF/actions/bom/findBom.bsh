@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 */
 
@@ -109,7 +109,17 @@ if (lookupFlag != null) {
                 }
                 paramList = paramList + "&partBomTypeId=" + partBomTypeId;
                 //tree = new ItemConfigurationTree(productId, partIdFor, partBomTypeId, new Date(), delegator);
-                tree = new ItemConfigurationTree(productId, partBomTypeId, new Date(), explosion, delegator);
+                dispatcher = request.getAttribute("dispatcher");
+                Map context = UtilMisc.toMap("productId",productId,
+                                             "bomType", partBomTypeId,
+                                             "fromDate", "" + new Date(),
+                                             "explosion", new Boolean(explosion));
+                Map result = null;
+                result = dispatcher.runSync("getItemConfigurationTree",context);
+                if (result != null)
+                    tree = (ItemConfigurationTree)result.get("tree");
+
+//                tree = new ItemConfigurationTree(productId, partBomTypeId, new Date(), explosion, delegator);
                 tree.setRootQuantity((float)rootQuantityFloat);
                 treeArray = new ArrayList();
                 tree.print(treeArray);
