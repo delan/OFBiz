@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.9 2004/02/06 22:43:52 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.10 2004/02/22 00:32:39 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.util.*;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -47,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -96,7 +97,8 @@ public class ShoppingCartHelper {
 
         // price sanity check
         if (productId == null && price < 0) {
-            result = ServiceUtil.returnError("Price must be a positive number.");
+            errMsg = UtilProperties.getMessage(resource,"cart.price_not_positive_number", this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
             return result;
         }
 
@@ -161,9 +163,11 @@ public class ShoppingCartHelper {
     public Map addToCartFromOrder(String catalogId, String orderId, String[] itemIds, boolean addAll) {
         ArrayList errorMsgs = new ArrayList();
         Map result;
+        String errMsg = null;
 
         if (orderId == null || orderId.length() <= 0) {
-            result = ServiceUtil.returnError("No order specified to add from.");
+            errMsg = UtilProperties.getMessage(resource,"cart.order_not_specified_to_add_from", this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
             return result;
         }
 
@@ -261,9 +265,11 @@ public class ShoppingCartHelper {
      */
     public Map addToCartBulk(String catalogId, String categoryId, Map context) {
         Map result = null;
+        String errMsg = null;
 
         if (categoryId == null || categoryId.length() <= 0) {
-            result = ServiceUtil.returnError("No category specified to add from.");
+            errMsg = UtilProperties.getMessage(resource,"cart.category_not_specified_to_add_from", this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
             return result;
         }
 
@@ -272,13 +278,18 @@ public class ShoppingCartHelper {
         try {
             prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", categoryId));
         } catch (GenericEntityException e) {
+            Map messageMap = UtilMisc.toMap("categoryId", categoryId);
+            messageMap.put("message", e.getMessage());
             Debug.logWarning(e.getMessage(), module);
-            result = ServiceUtil.returnError("Could not get products in category " + categoryId + " to add to cart (read error): " + e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"cart.could_not_get_products_in_category_cart", messageMap, this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
             return result;
         }
 
         if (prodCatMemberCol == null) {
-            result = ServiceUtil.returnError("Could not get products in category " + categoryId + " to add to cart (read error).");
+            Map messageMap = UtilMisc.toMap("categoryId", categoryId);
+            errMsg = UtilProperties.getMessage(resource,"cart.could_not_get_products_in_category", messageMap, this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
             return result;
         }
 
@@ -321,9 +332,12 @@ public class ShoppingCartHelper {
     public Map addCategoryDefaults(String catalogId, String categoryId) {
         ArrayList errorMsgs = new ArrayList();
         Map result = null;
+        String errMsg = null;
 
         if (categoryId == null || categoryId.length() <= 0) {
-            result = ServiceUtil.returnError("No category specified to add from.");
+            errMsg = UtilProperties.getMessage(resource,"cart.category_not_specified_to_add_from", this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
+//          result = ServiceUtil.returnError("No category specified to add from.");
             return result;
         }
 
@@ -333,12 +347,17 @@ public class ShoppingCartHelper {
             prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", categoryId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.toString(), module);
-            result = ServiceUtil.returnError("Could not get products in category " + categoryId + " to add to cart (read error): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("categoryId", categoryId);
+            messageMap.put("message", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"cart.could_not_get_products_in_category_cart", messageMap, this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
             return result;
         }
 
         if (prodCatMemberCol == null) {
-            result = ServiceUtil.returnError("Could not get products in category " + categoryId + " to add to cart (read error).");
+            Map messageMap = UtilMisc.toMap("categoryId", categoryId);
+            errMsg = UtilProperties.getMessage(resource,"cart.could_not_get_products_in_category", messageMap, this.cart.getLocale());
+            result = ServiceUtil.returnError(errMsg);
             return result;
         }
 
