@@ -399,6 +399,13 @@
         <response name="success" type="view" value="orderstatus"/>
         <response name="error" type="view" value="orderstatus"/>
     </request-map>
+    
+    <request-map uri="cancelOrderItem">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cancelOrderItem"/>
+        <response name="success" type="view" value="orderstatus"/>
+        <response name="error" type="view" value="orderstatus"/>
+    </request-map>    
 
     <request-map uri="newcustomer">
         <security https="true" auth="false"/>

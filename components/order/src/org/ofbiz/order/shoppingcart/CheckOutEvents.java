@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.4 2003/08/27 13:53:25 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.5 2003/09/03 04:34:28 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,12 +34,14 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.marketing.tracking.TrackingCodeEvents;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
@@ -51,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -67,6 +69,29 @@ public class CheckOutEvents {
             request.setAttribute("_ERROR_MESSAGE_", "Cart is empty.");
             return "error";
         }
+    }
+    
+    public static String cancelOrderItem(HttpServletRequest request, HttpServletResponse response) {
+    	LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+    	GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+    	String orderId = request.getParameter("order_id");
+    	String itemSeqId = request.getParameter("item_seq");
+    	Map fields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", itemSeqId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
+    	Map result = null;    	
+    	try {
+    		result = dispatcher.runSync("changeOrderItemStatus", fields);
+    	} catch (GenericServiceException e) {
+    		Debug.logError(e, module);
+    		request.setAttribute("_ERROR_MESSAGE_", "<li>Cannot cancel item at this time; please try again.");
+    		return "error";
+    	}
+    	
+    	if (result.containsKey(ModelService.ERROR_MESSAGE)) {
+    		request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
+    		return "error";
+    	}
+    	
+    	return "success";
     }
 
     public static String setPartialCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
