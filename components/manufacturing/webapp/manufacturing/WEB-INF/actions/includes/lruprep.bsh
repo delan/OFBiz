@@ -1,5 +1,5 @@
 /*
- * $Id: lruprep.bsh,v 1.2 2003/11/27 15:38:03 holivier Exp $
+ * $Id: lruprep.bsh,v 1.3 2003/12/09 21:45:06 holivier Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -22,10 +22,14 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+/* copy from content component /include/Iruprep.bsh 1.4
+		modification:
+			- UiLabelMigration line 101 adding the putInContext("uiLabelMap" .. 
+*/
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
 
  * Builds a list of most recently used EntityValues from a session-kept cache
