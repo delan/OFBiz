@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/11 17:27:14  epabst
+ * updated order process to be more complete
+ *
  * Revision 1.6  2001/09/10 21:56:22  epabst
  * updated/improved
  *
@@ -66,9 +69,11 @@ public class ShoppingCart {
     private String shippingContactMechId;
     private String billingAccountId;
     private String shippingInstructions;
+    private Boolean maySplit;
     
     /** stored in the format of <shipment method type id>@<carrier party id> */
-    private String shippingMethod;
+    private String shipmentMethodTypeId;
+    private String carrierPartyId;
     private String cartDiscountString;
     private String orderAdditionalEmails;
     private String taxString;
@@ -218,9 +223,17 @@ public class ShoppingCart {
         this.shippingInstructions = shippingInstructions;
     }
     
-    /** Sets the shipping instructions. */
-    public void setShippingMethod(String shippingMethod) {
-        this.shippingMethod = shippingMethod;
+    public void setMaySplit(Boolean maySplit) {
+        this.maySplit = maySplit;
+    }
+    
+    /** Sets the shipment method type. */
+    public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
+        this.shipmentMethodTypeId = shipmentMethodTypeId;
+    }
+    
+    public void setCarrierPartyId(String carrierPartyId) {
+        this.carrierPartyId = carrierPartyId;
     }
     
     public void setOrderAdditionalEmails(String orderAdditionalEmails) {
@@ -277,9 +290,18 @@ public class ShoppingCart {
         return shippingInstructions;
     }
     
-    /** Returns the shipping instructions. */
-    public String getShippingMethod() {
-        return shippingMethod;
+    /** Returns Boolean.TRUE if the order may be shipped (null if unspecified) */
+    public Boolean getMaySplit() {
+        return maySplit;
+    }
+    
+    /** Returns the shipment method type */
+    public String getShipmentMethodTypeId() {
+        return shipmentMethodTypeId;
+    }
+    
+    public String getCarrierPartyId() {
+        return carrierPartyId;
     }
     
     public String getOrderAdditionalEmails() {

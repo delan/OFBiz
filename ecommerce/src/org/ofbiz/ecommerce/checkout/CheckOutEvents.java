@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/12 17:18:40  epabst
+ * added SMTP sender
+ *
  * Revision 1.5  2001/09/11 21:11:06  jonesde
  * Improved error handling.
  *
@@ -36,7 +39,7 @@ import java.util.Set;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
-import org.ofbiz.commonapp.party.contact.ContactHelper;
+import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.ecommerce.shoppingcart.*;
 
 /**
@@ -76,9 +79,20 @@ public class CheckOutEvents {
             String correspondingPoId = request.getParameter("corresponding_po_id");
             String shippingInstructions = request.getParameter("shipping_instructions");
             String orderAdditionalEmails = request.getParameter("order_additional_emails");
+            String maySplit = request.getParameter("may_split");
 
-            cart.setShippingMethod(shippingMethod);
+            int delimiterPos = shippingMethod.indexOf('@');
+            String shipmentMethodTypeId = null;
+            String carrierPartyId = null;
+            if(delimiterPos > 0) {
+              shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
+              carrierPartyId = shippingMethod.substring(delimiterPos+1);
+            }
+            
+            cart.setShipmentMethodTypeId(shipmentMethodTypeId);
+            cart.setCarrierPartyId(carrierPartyId);
             cart.setShippingInstructions(shippingInstructions);
+            cart.setMaySplit(maySplit == null ? null : Boolean.valueOf(maySplit));
             cart.setOrderAdditionalEmails(orderAdditionalEmails);
 
             cart.setShippingContactMechId(shippingContactMechId);
@@ -121,17 +135,8 @@ public class CheckOutEvents {
             order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", helper.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SALES_TAX", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getSalesTax()))));
             order.preStoreOther(helper.makeValue("OrderContactMech", UtilMisc.toMap( "contactMechId", cart.getShippingContactMechId(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
             
-            String shippingMethod = cart.getShippingMethod();
-            int delimiterPos = shippingMethod.indexOf('@');
-            String shipmentMethodTypeId = "";
-            String carrierPartyId = "";
-            if(delimiterPos > 0) {
-              shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
-              carrierPartyId = shippingMethod.substring(delimiterPos+1);
-            }
-            
             String shipmentId = helper.getNextSeqId("Shipment").toString();
-            order.preStoreOther(helper.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER" /*XXX*/, "shippingInstructions", cart.getShippingInstructions())));
+            order.preStoreOther(helper.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", cart.getShipmentMethodTypeId(), "carrierPartyId", cart.getCarrierPartyId(), "carrierRoleTypeId", "CARRIER" /*XXX*/, "shippingInstructions", cart.getShippingInstructions())));
 
             Iterator itemIter = cart.iterator();
             int seqId = 1;
@@ -207,22 +212,32 @@ public class CheckOutEvents {
     }
 
     public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {        
-        final String SMTP_SERVER = UtilProperties.getPropertyValue("servers", "smtp.server");
-        final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue("servers", "smtp.sender.confirmorder");
-        GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        StringBuffer emails = new StringBuffer((String) request.getAttribute("orderAdditionalEmails"));
-        Iterator emailIter = ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false).iterator();
-        while (emailIter.hasNext()) {
-            GenericValue email = (GenericValue) emailIter.next();
-            emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
-        }
-
-        String content = (String) request.getAttribute("confirmorder");
         try {
-            SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, ORDER_SENDER_EMAIL, emails.toString(), content);
-            mail.send();
-            return "success";
-        } catch (Exception e) {
+            final String SMTP_SERVER = UtilProperties.getPropertyValue("servers", "smtp.server");
+            final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue("servers", "smtp.sender.confirmorder");
+            GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+            StringBuffer emails = new StringBuffer((String) request.getAttribute("orderAdditionalEmails"));
+            Iterator emailIter = ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false).iterator();
+            while (emailIter.hasNext()) {
+                GenericValue email = (GenericValue) emailIter.next();
+                emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
+            }
+
+            String content = (String) request.getAttribute("confirmorder");
+            try {
+                SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, ORDER_SENDER_EMAIL, emails.toString(), content);
+                mail.send();
+                return "success";
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "error e-mailing order confirmation, but it was created and will be processed.");
+                return "success"; //"error";
+            }
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "error e-mailing order confirmation, but it was created and will be processed.");
+            return "success"; //"error";
+        } catch (Error e) {
             e.printStackTrace();
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "error e-mailing order confirmation, but it was created and will be processed.");
             return "success"; //"error";
