@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.37 2004/05/22 21:16:31 ajzeneski Exp $
+ *  $Id: build.xml,v 1.38 2004/06/04 02:49:21 jonesde Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -32,6 +32,7 @@
                catalina/build.xml,jetty/build.xml,
                security/build.xml,service/build.xml,entityext/build.xml,
                datafile/build.xml,rules/build.xml,minilang/build.xml,
+               tests/build.xml,
                common/build.xml,workflow/build.xml,shark/build.xml,
                content/build.xml,appservers/build.xml,party/build.xml,
                workeffort/build.xml,product/build.xml,marketing/build.xml,

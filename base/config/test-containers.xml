@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: test-containers.xml,v 1.2 2004/05/04 16:24:01 ajzeneski Exp $
+ *  $Id: test-containers.xml,v 1.3 2004/06/04 02:49:22 jonesde Exp $
 -->
 
 <ofbiz-containers>
@@ -60,5 +60,6 @@
     <container name="junit-container" class="org.ofbiz.base.container.JunitContainer">
         <property name="base-test" value="org.ofbiz.base.test.BaseUnitTests"/>
         <property name="service-test" value="org.ofbiz.service.test.ServiceEngineTests"/>
+        <property name="jxunit-test" value="net.sourceforge.jxunit.JXTestCase"/>
     </container>
 </ofbiz-containers>
