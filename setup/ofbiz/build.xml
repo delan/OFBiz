@@ -213,7 +213,7 @@
         
         <!-- for this one only we will use ../catalina because in this case it must have come from the distro -->
         <copy file="../catalina/shared/lib/axis.jar" toDir="lib/share"/>
-        <copy file="../catalina/shared/lib/bsh-1.2b7.jar" toDir="lib/scripting"/>
+        <copy file="../catalina/shared/lib/bsh.jar" toDir="lib/scripting"/>
         <copy file="../catalina/shared/lib/clutil.jar" toDir="lib/share"/>
         <copy file="../catalina/shared/lib/wsdl4j.jar" toDir="lib/share"/>
         <copy file="../catalina/shared/lib/jakarta-oro-2.0.6.jar" toDir="lib/share"/>
