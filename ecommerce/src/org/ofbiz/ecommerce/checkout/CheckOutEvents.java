@@ -163,14 +163,22 @@ public class CheckOutEvents {
         // check for error message(s)
         if (result.containsKey(ModelService.ERROR_MESSAGE)) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,result.get(ModelService.ERROR_MESSAGE));
+            return "error";
         }
 
         // set the orderId for future use
         request.setAttribute("order_id", result.get("orderId"));
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
 
-        // return the result
-        return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
+        // get the payment method - return proper result
+        GenericValue paymentMethod = cart.getPaymentMethod(delegator);
+        if (paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD"))
+            return "cc";
+        else if (paymentMethod.getString("paymentMethodTypeId").equals("EFT"))
+            return "eft";
+        else
+            return "success";
+
     }
 
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
