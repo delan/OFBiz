@@ -10,6 +10,8 @@
       <font color="#006633"><%EntityField.run("miniProduct", "defaultPrice", pageContext);%></font>
     </b>
   </div>
+  <%GenericValue miniProd = (GenericValue) pageContext.getAttribute("miniProduct");%>
+  <%if (!"VIRTUAL_PRODUCT".equals(miniProd.getString("productTypeId"))) {%>
   <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="<%=miniProdFormName%>" style='margin: 0;'>
     <input type='hidden' name="add_product_id" value='<%EntityField.run("miniProduct", "productId", pageContext);%>'>
     <input type='hidden' name="quantity" value="<%=miniProdQuantity%>">
@@ -21,4 +23,5 @@
     <%=UtilFormatOut.ifNotEmpty(request.getParameter("SEARCH_CATEGORY_ID"), "<input type='hidden' name='SEARCH_CATEGORY_ID' value='", "'>")%>
     <a href="javascript:document.<%=miniProdFormName%>.submit()" class="buttontext"><nobr>[Add <%=miniProdQuantity%> to Cart]</nobr></a>
   </form>
+  <%}%>
 </ofbiz:if>
