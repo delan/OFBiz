@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerConfig.java,v 1.7 2004/05/22 22:09:48 ajzeneski Exp $
+ * $Id: ContainerConfig.java,v 1.8 2004/05/25 22:45:26 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilValidate;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -45,7 +47,7 @@ import org.xml.sax.SAXException;
  * ContainerConfig - Container configuration for ofbiz.xml
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ContainerConfig {
@@ -169,7 +171,10 @@ public class ContainerConfig {
             public Property(Element element) {
                 this.name = element.getAttribute("name");
                 this.value = element.getAttribute("value");
-                
+                if (UtilValidate.isEmpty(this.value)) {
+                    this.value = UtilXml.childElementValue(element, "property-value");                    
+                }
+
                 properties = new OrderedMap();
                 Iterator elementIter = UtilXml.childElementList(element, "property").iterator();
                 while (elementIter.hasNext()) {
