@@ -30,9 +30,13 @@ public class BOMTree {
     public static final int EXPLOSION_SINGLE_LEVEL = 1;
     public static final int EXPLOSION_MANUFACTURING = 2;
     public static final int IMPLOSION = 3;
-    
+
+    protected LocalDispatcher dispatcher = null;
+    protected GenericDelegator delegator = null;
+
     BOMNode root;
     double rootQuantity;
+    double rootAmount;
     Date inDate;
     String bomTypeId;
     GenericValue inputProduct;
@@ -49,8 +53,8 @@ public class BOMTree {
      * @throws GenericEntityException If a db problem occurs.
      *
      */
-    public BOMTree(String productId, String bomTypeId, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
-        this(productId, bomTypeId, inDate, EXPLOSION, delegator, dispatcher);
+    public BOMTree(String productId, String bomTypeId, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
+        this(productId, bomTypeId, inDate, EXPLOSION, delegator, dispatcher, userLogin);
     }
     
     /** Creates a new instance of BOMTree by reading
@@ -70,12 +74,15 @@ public class BOMTree {
      * @throws GenericEntityException If a db problem occurs.
      *
      */
-    public BOMTree(String productId, String bomTypeId, Date inDate, int type, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
+    public BOMTree(String productId, String bomTypeId, Date inDate, int type, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
         // If the parameters are not valid, return.
         if (productId == null || bomTypeId == null || delegator == null || dispatcher == null) return;
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
 
+        this.delegator = delegator;
+        this.dispatcher = dispatcher;
+        
         inputProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 
         String productIdForRules = productId;
@@ -93,14 +100,15 @@ public class BOMTree {
         }
         // If the product is manufactured as a different product,
         // load the new product
-        GenericValue manufacturedAsProduct = manufacturedAsProduct(productId, inDate, delegator);
+        GenericValue manufacturedAsProduct = manufacturedAsProduct(productId, inDate);
         // We load the information about the product that needs to be manufactured
         // from Product entity
         GenericValue product = delegator.findByPrimaryKey("Product", 
                                             UtilMisc.toMap("productId", 
                                             (manufacturedAsProduct != null? manufacturedAsProduct.getString("productIdTo"): productId)));
         if (product == null) return;
-        BOMNode originalNode = new BOMNode(product);
+        BOMNode originalNode = new BOMNode(product, dispatcher, userLogin);
+        originalNode.setTree(this);
         // If the product hasn't a bill of materials we try to retrieve
         // the bill of materials of its virtual product (if the current
         // product is variant).
@@ -113,7 +121,7 @@ public class BOMTree {
                     // If the virtual product is manufactured as a different product,
                     // load the new product
                     productIdForRules = virtualProduct.getString("productId");
-                    manufacturedAsProduct = manufacturedAsProduct(virtualProduct.getString("productId"), inDate, delegator);
+                    manufacturedAsProduct = manufacturedAsProduct(virtualProduct.getString("productId"), inDate);
                     product = delegator.findByPrimaryKey("Product", 
                                                 UtilMisc.toMap("productId", 
                                                 (manufacturedAsProduct != null? manufacturedAsProduct.getString("productIdTo"): virtualProduct.get("productId"))));
@@ -122,13 +130,14 @@ public class BOMTree {
         }
         if (product == null) return;
         try {
-            root = new BOMNode(product);
+            root = new BOMNode(product, dispatcher, userLogin);
+            root.setTree(this);
             root.setProductForRules(productIdForRules);
             root.setSubstitutedNode(originalNode);
             if (type == IMPLOSION) {
                 root.loadParents(bomTypeId, inDate, productFeatures);
             } else {
-                root.loadChildren(bomTypeId, inDate, productFeatures, type, dispatcher);
+                root.loadChildren(bomTypeId, inDate, productFeatures, type);
             }
         } catch(GenericEntityException gee) {
             root = null;
@@ -136,13 +145,14 @@ public class BOMTree {
         this.bomTypeId = bomTypeId;
         this.inDate = inDate;
         rootQuantity = 1;
+        rootAmount = 0;
     }
 
     public GenericValue getInputProduct() {
         return inputProduct;
     }
     
-    private GenericValue manufacturedAsProduct(String productId, Date inDate, GenericDelegator delegator) throws GenericEntityException {
+    private GenericValue manufacturedAsProduct(String productId, Date inDate) throws GenericEntityException {
         List manufacturedAsProducts = delegator.findByAnd("ProductAssoc", 
                                          UtilMisc.toMap("productId", productId,
                                          "productAssocTypeId", "PRODUCT_MANUFACTURED"));
@@ -188,6 +198,21 @@ public class BOMTree {
         this.rootQuantity = rootQuantity;
     }
 
+    /** Getter for property rootAmount.
+     * @return Value of property rootAmount.
+     *
+     */
+    public double getRootAmount() {
+        return rootAmount;
+    }
+    
+    /** Setter for property rootAmount.
+     * @param rootAmount New value of property rootAmount.
+     *
+     */
+    public void setRootAmount(double rootAmount) {
+        this.rootAmount = rootAmount;
+    }
     
     /** Getter for property root.
      * @return Value of property root.
@@ -286,7 +311,7 @@ public class BOMTree {
      * @param delegator The delegator used.
      * @throws GenericEntityException If a db problem occurs.
      */    
-    public void createManufacturingOrders(String orderId, String orderItemSeqId, String shipmentId, Date date, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin)  throws GenericEntityException {
+    public void createManufacturingOrders(String orderId, String orderItemSeqId, String shipmentId, Date date, GenericValue userLogin)  throws GenericEntityException {
         if (root != null) {
             String facilityId = null;
             if (orderId != null) {
@@ -297,7 +322,7 @@ public class BOMTree {
                 GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
                 facilityId = shipment.getString("originFacilityId");
             }
-            root.createManufacturingOrder(null, orderId, orderItemSeqId, shipmentId, facilityId, date, true, delegator, dispatcher, userLogin);
+            root.createManufacturingOrder(null, orderId, orderItemSeqId, shipmentId, facilityId, date, true);
         }
     }
 

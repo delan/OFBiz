@@ -1555,11 +1555,28 @@ public class ProductionRunServices {
         BOMTree tree = null;
         ArrayList components = new ArrayList();
         ArrayList productionRuns = new ArrayList();
+
+        Double amount = null;
+        if (orderId != null && orderItemSeqId != null) {
+            try {
+                GenericValue orderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
+                if (orderItem != null && orderItem.get("selectedAmount") != null) {
+                    amount = orderItem.getDouble("selectedAmount");
+                }
+            } catch(GenericEntityException gee) {
+                return ServiceUtil.returnError("Error reading the OrderItem: " + gee.getMessage());
+            }
+        }
+        if (amount == null) {
+            amount = new Double(0);
+        }
+
         try {
-            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
+            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
             tree.setRootQuantity(quantity.doubleValue());
+            tree.setRootAmount(amount.doubleValue());
             tree.print(components);
-            tree.createManufacturingOrders(orderId, orderItemSeqId, shipmentId, fromDate, delegator, dispatcher, userLogin);
+            tree.createManufacturingOrders(orderId, orderItemSeqId, shipmentId, fromDate, userLogin);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
         }

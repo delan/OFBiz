@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Jacopo Cappellato (tiz@sastau.it)
+ * @version    $Rev$
+ * @since      3.0
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+        
+    <simple-method method-name="linearComponentFormula" short-description="Formula that the number of linear components in bom">
+        <field-to-field field-name="parameters.arguments" to-field-name="arguments"/>
+        <calculate field-name="totQuantity">
+            <calcop operator="multiply">
+                <calcop operator="get" field-name="arguments.neededQuantity"/>
+                <calcop operator="get" field-name="arguments.amount"/>
+            </calcop>
+        </calculate>
+        <calculate field-name="quantityInt" type="Integer">
+            <calcop operator="divide">
+                <calcop operator="get" field-name="totQuantity"/>
+                <calcop operator="get" field-name="arguments.width"/>
+            </calcop>
+        </calculate>
+        <calculate field-name="quantityDou">
+            <calcop operator="divide">
+                <calcop operator="get" field-name="totQuantity"/>
+                <calcop operator="get" field-name="arguments.width"/>
+            </calcop>
+        </calculate>
+        <if-compare-field field-name="quantityInt" to-field-name="quantityDou" operator="less">
+            <calculate field-name="quantity">
+                <calcop operator="add">
+                    <calcop operator="get" field-name="quantityInt"/>
+                    <number value="1"/>
+                </calcop>
+            </calculate>
+        <else>
+            <calculate field-name="quantity">
+                <calcop operator="add">
+                    <calcop operator="get" field-name="quantityInt"/>
+                    <number value="0"/>
+                </calcop>
+            </calculate>
+        </else>
+        </if-compare-field>
+        <field-to-result field-name="quantity" result-name="quantity"/>
+    </simple-method>
+</simple-methods>

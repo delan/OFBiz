@@ -29,6 +29,11 @@ import org.ofbiz.service.LocalDispatcher;
 
 public class BOMNode {
 
+    protected LocalDispatcher dispatcher = null;
+    protected GenericDelegator delegator = null;
+    protected GenericValue userLogin = null;
+    
+    private BOMTree tree; // the tree to which this node belongs
     private BOMNode parentNode; // the parent node (null if it's not present)
     private BOMNode substitutedNode; // The virtual node (if any) that this instance substitutes
     private GenericValue ruleApplied; // The rule (if any) that that has been applied to configure the current node
@@ -44,8 +49,11 @@ public class BOMNode {
     private double quantity; // the quantity of this node in the current tree
     private String bomTypeId; // the type of the current tree
    
-    public BOMNode(GenericValue product) {
+    public BOMNode(GenericValue product, LocalDispatcher dispatcher, GenericValue userLogin) {
         this.product = product;
+        this.delegator = product.getDelegator();
+        this.dispatcher = dispatcher;
+        this.userLogin = userLogin;
         children = new ArrayList();
         childrenNodes = new ArrayList();
         parentNode = null;
@@ -58,18 +66,18 @@ public class BOMNode {
         quantity = 0;
     }
 
-    public BOMNode(String partId, GenericDelegator delegator) throws GenericEntityException {
-        this(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", partId)));
+    public BOMNode(String productId, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
+        this(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)), dispatcher, userLogin);
     }
 
-    protected void loadChildren(String partBomTypeId, Date inDate, List productFeatures, int type, LocalDispatcher dispatcher) throws GenericEntityException {
+    protected void loadChildren(String partBomTypeId, Date inDate, List productFeatures, int type) throws GenericEntityException {
         if (product == null) {
             throw new GenericEntityException("product is null");
         }
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
         bomTypeId = partBomTypeId;
-        GenericDelegator delegator = product.getDelegator();
+//        GenericDelegator delegator = product.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
                                             UtilMisc.toMap("productId", product.get("productId"), 
                                                        "productAssocTypeId", partBomTypeId),
@@ -92,17 +100,17 @@ public class BOMNode {
         while(childrenIterator.hasNext()) {
             oneChild = (GenericValue)childrenIterator.next();
             // Configurator
-            oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), inDate, delegator, dispatcher);
+            oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), inDate);
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
                 switch (type) {
                     case BOMTree.EXPLOSION:
-                        oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, BOMTree.EXPLOSION, dispatcher);
+                        oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, BOMTree.EXPLOSION);
                     break;
                     case BOMTree.EXPLOSION_MANUFACTURING:
                         if (!oneChildNode.isWarehouseManaged()) {
-                            oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, type, dispatcher);
+                            oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, type);
                         }
                     break;
                 }
@@ -111,7 +119,7 @@ public class BOMNode {
         }
     }
 
-    private BOMNode substituteNode(BOMNode oneChildNode, List productFeatures, List productPartRules, GenericDelegator delegator) throws GenericEntityException {
+    private BOMNode substituteNode(BOMNode oneChildNode, List productFeatures, List productPartRules) throws GenericEntityException {
         if (productPartRules != null) {
             GenericValue rule = null;
             for (int i = 0; i < productPartRules.size(); i++) {
@@ -147,7 +155,8 @@ public class BOMNode {
                         oneChildNode = null;
                     } else {
                         BOMNode origNode = oneChildNode;
-                        oneChildNode = new BOMNode(newPart, delegator);
+                        oneChildNode = new BOMNode(newPart, delegator, dispatcher, userLogin);
+                        oneChildNode.setTree(tree);
                         oneChildNode.setSubstitutedNode(tmpNode);
                         oneChildNode.setRuleApplied(rule);
                         oneChildNode.setProductAssoc(origNode.getProductAssoc());
@@ -167,8 +176,9 @@ public class BOMNode {
         return oneChildNode;
     }
     
-    private BOMNode configurator(GenericValue node, List productFeatures, String productIdForRules, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
-        BOMNode oneChildNode = new BOMNode((String)node.get("productIdTo"), delegator);
+    private BOMNode configurator(GenericValue node, List productFeatures, String productIdForRules, Date inDate) throws GenericEntityException {
+        BOMNode oneChildNode = new BOMNode((String)node.get("productIdTo"), delegator, dispatcher, userLogin);
+        oneChildNode.setTree(tree);
         oneChildNode.setProductAssoc(node);
         try {
             oneChildNode.setQuantityMultiplier(node.getDouble("quantity").doubleValue());
@@ -203,7 +213,7 @@ public class BOMNode {
                                                     "productIdIn", node.get("productIdTo"))));
             }
             productPartRules = EntityUtil.filterByDate(productPartRules, inDate);
-            newNode = substituteNode(oneChildNode, productFeatures, productPartRules, delegator);
+            newNode = substituteNode(oneChildNode, productFeatures, productPartRules);
             if (newNode == oneChildNode) {
                 // If no substitution has been done (no valid rule applied),
                 // we try to search for a generic link-rule
@@ -217,7 +227,7 @@ public class BOMNode {
                 }
                 genericLinkRules = EntityUtil.filterByDate(genericLinkRules, inDate);
                 newNode = null;
-                newNode = substituteNode(oneChildNode, productFeatures, genericLinkRules, delegator);
+                newNode = substituteNode(oneChildNode, productFeatures, genericLinkRules);
                 if (newNode == oneChildNode) {
                     // If no substitution has been done (no valid rule applied),
                     // we try to search for a generic node-rule
@@ -226,7 +236,7 @@ public class BOMNode {
                                                             UtilMisc.toList("ruleSeqId"));
                     genericNodeRules = EntityUtil.filterByDate(genericNodeRules, inDate);
                     newNode = null;
-                    newNode = substituteNode(oneChildNode, productFeatures, genericNodeRules, delegator);
+                    newNode = substituteNode(oneChildNode, productFeatures, genericNodeRules);
                     if (newNode == oneChildNode) {
                         // If no substitution has been done (no valid rule applied),
                         // we try to set the default (first) node-substitution
@@ -263,7 +273,8 @@ public class BOMNode {
                                     System.out.println("BOMNode.configurator(...): " + service);
                                 }
                                 if (variantProduct != null) {
-                                    newNode = new BOMNode(variantProduct);
+                                    newNode = new BOMNode(variantProduct, dispatcher, userLogin);
+                                    newNode.setTree(tree);
                                     newNode.setSubstitutedNode(oneChildNode);
                                     newNode.setQuantityMultiplier(oneChildNode.getQuantityMultiplier());
                                     newNode.setScrapFactor(oneChildNode.getScrapFactor());
@@ -288,7 +299,7 @@ public class BOMNode {
         if (inDate == null) inDate = new Date();
 
         bomTypeId = partBomTypeId;
-        GenericDelegator delegator = product.getDelegator();
+//        GenericDelegator delegator = product.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
                                             UtilMisc.toMap("productIdTo", product.get("productId"), 
                                                        "productAssocTypeId", partBomTypeId),
@@ -310,12 +321,13 @@ public class BOMNode {
         BOMNode oneChildNode = null;
         while(childrenIterator.hasNext()) {
             oneChild = (GenericValue)childrenIterator.next();
-            oneChildNode = new BOMNode(oneChild.getString("productId"), delegator);
+            oneChildNode = new BOMNode(oneChild.getString("productId"), delegator, dispatcher, userLogin);
             // Configurator
             //oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), delegator);
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
+                oneChildNode.setTree(tree);
                 oneChildNode.loadParents(partBomTypeId, inDate, productFeatures);
             }
             childrenNodes.add(oneChildNode);
@@ -374,7 +386,30 @@ public class BOMNode {
         // in this breakdown.
         this.depth = depth;
         //this.quantity = Math.floor(quantity * quantityMultiplier / scrapFactor + 0.5);
-        this.quantity = quantity * quantityMultiplier * scrapFactor;
+        if (this.productAssoc != null && this.productAssoc.getString("instruction") != null) {
+            Map resultContext = null;
+            Map arguments = UtilMisc.toMap("neededQuantity", new Double(quantity), "amount", new Double((tree!=null? tree.getRootAmount():0)));
+            Double width = null;
+            if (getProduct().get("productWidth") != null) {
+                width = getProduct().getDouble("productWidth");
+            }
+            if (width == null) {
+                width = new Double(0);
+            }
+            arguments.put("width", width);
+            Map inputContext = UtilMisc.toMap("arguments", arguments, "userLogin", userLogin);
+            try {
+                resultContext = dispatcher.runSync(this.productAssoc.getString("instruction"), inputContext);
+                Double calcQuantity = (Double)resultContext.get("quantity");
+                if (calcQuantity != null) {
+                    this.quantity = calcQuantity.doubleValue();
+                }
+            } catch (GenericServiceException e) {
+                //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
+            }
+        } else {
+            this.quantity = quantity * quantityMultiplier * scrapFactor;
+        }
         // First of all we visit the current node.
         arr.add(this);
         // Now (recursively) we visit the children.
@@ -424,7 +459,7 @@ public class BOMNode {
         BOMNode sameNode = (BOMNode)nodes.get(product.getString("productId"));
         // If the node is not found we create a new node for the current product
         if (sameNode == null) {
-            sameNode = new BOMNode(product);
+            sameNode = new BOMNode(product, dispatcher, userLogin);
             nodes.put(product.getString("productId"), sameNode);
         }
         // Now we add the current quantity to the node
@@ -439,7 +474,7 @@ public class BOMNode {
         }
     }
 
-    public void createManufacturingOrder(String workEffortId, String orderId, String orderItemSeqId, String shipmentId, String facilityId, Date date, boolean useSubstitute, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
+    public void createManufacturingOrder(String workEffortId, String orderId, String orderItemSeqId, String shipmentId, String facilityId, Date date, boolean useSubstitute) throws GenericEntityException {
         if (isManufactured()) {
             String productionRunId = null;
             Timestamp startDate = UtilDateTime.toTimestamp(UtilDateTime.toDateTimeString(date));
@@ -479,7 +514,7 @@ public class BOMNode {
             for (int i = 0; i < childrenNodes.size(); i++) {
                 oneChildNode = (BOMNode)childrenNodes.get(i);
                 if (oneChildNode != null) {
-                    oneChildNode.createManufacturingOrder(productionRunId, null, null, shipmentId, facilityId, date, false, delegator, dispatcher, userLogin);
+                    oneChildNode.createManufacturingOrder(productionRunId, null, null, shipmentId, facilityId, date, false);
                 }
             }
         }
@@ -694,6 +729,14 @@ public class BOMNode {
     public void setProductAssoc(org.ofbiz.entity.GenericValue productAssoc) {
         this.productAssoc = productAssoc;
     }
+
+    public void setTree(BOMTree tree) {
+        this.tree = tree;
+    }
     
+    public BOMTree getTree() {
+        return tree;
+    }
+
 }
 

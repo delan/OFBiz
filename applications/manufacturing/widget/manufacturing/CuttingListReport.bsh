@@ -92,20 +92,22 @@ if (shipmentPlans != null) {
         weId = EntityUtil.getFirst(weIds);
         ArrayList productionRunTree = new ArrayList();
         // TODO
-        getLinkedProductionRuns(weId.getString("workEffortId"), productionRunTree);
-        for (int i = 0; i < productionRunTree.size(); i++) {
-            ProductionRun oneProductionRun = (ProductionRun)productionRunTree.get(i);
-            if (hasTask(selectWorkEffortNameParameter, oneProductionRun.getGenericValue())) {
-                GenericValue product = oneProductionRun.getProductProduced();
-                String primaryCategory = product.getString("primaryProductCategoryId");
-                if (primaryCategory != null && selectPrimaryCategoryIdParameter.equals(primaryCategory)) {
-                    String productId = product.getString("productId");
-                    productIdToProduct.put(productId, product);
-                    if (!productIdToQuantity.containsKey(productId)) {
-                        productIdToQuantity.put(productId, new Double(0));
+        if (weId != null) {
+            getLinkedProductionRuns(weId.getString("workEffortId"), productionRunTree);
+            for (int i = 0; i < productionRunTree.size(); i++) {
+                ProductionRun oneProductionRun = (ProductionRun)productionRunTree.get(i);
+                if (hasTask(selectWorkEffortNameParameter, oneProductionRun.getGenericValue())) {
+                    GenericValue product = oneProductionRun.getProductProduced();
+                    String primaryCategory = product.getString("primaryProductCategoryId");
+                    if (primaryCategory != null && selectPrimaryCategoryIdParameter.equals(primaryCategory)) {
+                        String productId = product.getString("productId");
+                        productIdToProduct.put(productId, product);
+                        if (!productIdToQuantity.containsKey(productId)) {
+                            productIdToQuantity.put(productId, new Double(0));
+                        }
+                        Double qty = (Double)productIdToQuantity.get(productId);
+                        productIdToQuantity.put(productId, new Double(oneProductionRun.getGenericValue().getDouble("quantityToProduce").doubleValue() + qty.doubleValue()));
                     }
-                    Double qty = (Double)productIdToQuantity.get(productId);
-                    productIdToQuantity.put(productId, new Double(oneProductionRun.getGenericValue().getDouble("quantityToProduce").doubleValue() + qty.doubleValue()));
                 }
             }
         }

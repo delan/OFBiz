@@ -136,7 +136,8 @@
                 <set field="bomType" from-field="parameters.bomType"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="type" from-field="parameters.type"/>
-                <set field="rootQuantity" from-field="parameters.rootQuantity"/>
+                <set field="quantity" from-field="parameters.quantity"/>
+                <set field="amount" from-field="parameters.amount"/>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/BomSimulation.bsh"/>
             </actions>
             <widgets>
