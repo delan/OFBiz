@@ -51,86 +51,121 @@
         </if-empty>
 
 		<iterate entry-name="orderHeader" list-name="orderHeaderList">
-			<!-- TODO: only add to picklist if inventory is available (QOH) when splitting preference is wait until all available to ship -->
-			
             <!-- get the order items and the order item inventory res entries -->
+            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="orderShipmentPreferenceLkupMap"/>
+            <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="orderShipmentPreferenceLkupMap"/>
+            <find-by-primary-key entity-name="OrderShipmentPreference" map-name="orderShipmentPreferenceLkupMap" value-name="orderShipmentPreference"/>
+            
 			<get-related value-name="orderHeader" relation-name="OrderItemInventoryRes" list-name="orderItemInventoryResList"/>
 			<string-to-list string="+orderItemSeqId" list-name="orderItemOrdLst"/>
 			<get-related value-name="orderHeader" relation-name="OrderItem" list-name="orderItemList" order-by-list-name="orderItemOrdLst"/>
+
+			<!-- only add to picklist if inventory is not available (quantityNotAvailable on OIIR greater than 0) when maySplit is N (wait until all available to ship) -->
+            <string-to-field string="Y" field-name="pickThisOrder"/>
+            <if-compare field-name="maySplit"  map-name="orderShipmentPreference" operator="equals" value="N">
+                <!-- check all OIIRs and if quantityNotAvailable is not empty and > 0 for any, continue -->
+                <iterate entry-name="orderItemInventoryResList" list-name="orderItemInventoryRes">
+                    <if-not-empty field-name="quantityNotAvailable" map-name="orderItemInventoryRes">
+                        <if-compare field-name="quantityNotAvailable" map-name="orderItemInventoryRes" operator="greater" value="0" type="Double">
+                            <string-to-field string="N" field-name="pickThisOrder"/>
+                        </if-compare>
+                    </if-not-empty>
+                </iterate>
+            </if-compare>
 			
-			<iterate entry-name="orderItem" list-name="orderItemList">
-				<if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItem.statusId">
-					<calculate field-name="reservedQuantity" type="Double"><number value="0"/></calculate>
-					
-					<field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="itemFilterMap"/>
-					<filter-list-by-and to-list-name="perItemResList" map-name="itemFilterMap" list-name="orderItemInventoryResList"/>
-					<iterate entry-name="orderItemInventoryRes" list-name="perItemResList">
-						<field-to-env field-name="inventoryItemId" map-name="orderItemInventoryRes" env-name="inventoryItemId"/>
-				    	<!-- update reserved quantity per inventoryItem, keep track of orderItems this came from -->
-                        <field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
-                        <if-empty field-name="inventoryItem">
-                            <env-to-field env-name="inventoryItemId" map-name="invItmLookupMap"/>
-                            <find-by-primary-key value-name="inventoryItem" entity-name="InventoryItem" map-name="invItmLookupMap"/>
-                            <env-to-field env-name="inventoryItem" field-name="${inventoryItemId}" map-name="inventoryItems"/>
-                        </if-empty>
+            <if-compare field-name="pickThisOrder" operator="equals" value="Y">
+                <iterate entry-name="orderItem" list-name="orderItemList">
+                    <if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItem.statusId">
+                        <calculate field-name="reservedQuantity" type="Double"><number value="0"/></calculate>
                         
-                        <if-compare-field field-name="inventoryItem.facilityId" operator="equals" to-field-name="parameters.facilityId">
-                            <field-to-list field-name="orderItemInventoryRes" list-name="perItemResListValid"/>
+                        <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="itemFilterMap"/>
+                        <filter-list-by-and to-list-name="perItemResList" map-name="itemFilterMap" list-name="orderItemInventoryResList"/>
+                        <iterate entry-name="orderItemInventoryRes" list-name="perItemResList">
+                            <field-to-env field-name="inventoryItemId" map-name="orderItemInventoryRes" env-name="inventoryItemId"/>
+                            <!-- update reserved quantity per inventoryItem, keep track of orderItems this came from -->
+                            <field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
+                            <if-empty field-name="inventoryItem">
+                                <env-to-field env-name="inventoryItemId" map-name="invItmLookupMap"/>
+                                <find-by-primary-key value-name="inventoryItem" entity-name="InventoryItem" map-name="invItmLookupMap"/>
+                                <env-to-field env-name="inventoryItem" field-name="${inventoryItemId}" map-name="inventoryItems"/>
+                            </if-empty>
                             
-                            <field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
-                            <field-to-list field-name="orderItem" list-name="inventoryItemOrderItemList"/>
-                            <env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemInventoryRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
-                            <clear-field field-name="inventoryItemOrderItemList"/>
-                            <if-not-empty field-name="inventoryItemQuantities.${inventoryItemId}">
-                                <calculate field-name="inventoryItemQuantities.${inventoryItemId}" type="Double">
-                                    <calcop field-name="inventoryItemQuantities.${inventoryItemId}" operator="add">
-                                        <calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
-                                    </calcop>
-                                </calculate>
-                            <else>
-                                <env-to-field env-name="orderItemInventoryRes.quantity" field-name="inventoryItemQuantities.${inventoryItemId}"/>
-                            </else>
-                            </if-not-empty>
-                        </if-compare-field>
-                        <clear-field field-name="inventoryItem"/>
-					    <!-- update total quantity reserved, picked, etc per line item to check to see if all and not more is reserved -->
-                        <calculate field-name="reservedQuantity" type="Double">
-                            <calcop field-name="reservedQuantity" operator="add">
-                                <calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
+                            <if-compare-field field-name="inventoryItem.facilityId" operator="equals" to-field-name="parameters.facilityId">
+                                <field-to-list field-name="orderItemInventoryRes" list-name="perItemResListValid"/>
+                                
+                                <field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
+                                <field-to-list field-name="orderItem" list-name="inventoryItemOrderItemList"/>
+                                <env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemInventoryRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
+                                <clear-field field-name="inventoryItemOrderItemList"/>
+                                <if-not-empty field-name="inventoryItemQuantities.${inventoryItemId}">
+                                    <calculate field-name="inventoryItemQuantities.${inventoryItemId}" type="Double">
+                                        <calcop field-name="inventoryItemQuantities.${inventoryItemId}" operator="add">
+                                            <calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
+                                        </calcop>
+                                    </calculate>
+                                <else>
+                                    <env-to-field env-name="orderItemInventoryRes.quantity" field-name="inventoryItemQuantities.${inventoryItemId}"/>
+                                </else>
+                                </if-not-empty>
+                            </if-compare-field>
+                            <clear-field field-name="inventoryItem"/>
+                            <!-- update total quantity reserved, picked, etc per line item to check to see if all and not more is reserved -->
+                            <calculate field-name="reservedQuantity" type="Double">
+                                <calcop field-name="reservedQuantity" operator="add">
+                                    <calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
+                                </calcop>
+                            </calculate>
+                        </iterate>
+                        
+                        <if-not-empty field-name="perItemResListValid">
+                            <env-to-field env-name="orderItem" map-name="orderItemInfo"/>
+                            <env-to-field env-name="perItemResListValid" field-name="orderItemInventoryResList" map-name="orderItemInfo"/>
+                            <get-related-one value-name="orderItem" relation-name="Product" to-value-name="orderItemInfo.product"/>
+                            <field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
+                            <clear-field field-name="orderItemInfo"/>
+                        </if-not-empty>
+                        <clear-field field-name="perItemResListValid"/>
+                        
+                        <!-- warn if wrong inventory has been reserved+issued -->
+                        <!-- change to include issued items as well, otherwise can't really do an effective check... -->
+                        <get-related value-name="orderItem" relation-name="ItemIssuance" list-name="itemIssuances"/>
+                        <calculate field-name="issuedQuantity" type="Double"><number value="0"/></calculate>
+                        <iterate entry-name="itemIssuance" list-name="itemIssuances">
+                            <calculate field-name="issuedQuantity" type="Double">
+                                <calcop field-name="issuedQuantity" operator="add">
+                                    <calcop field-name="itemIssuance.quantity" operator="get"/>
+                                </calcop>
+                            </calculate>
+                        </iterate>
+                        <calculate field-name="reservedIssuedQuantity">
+                            <calcop operator="add">
+                                <calcop operator="get" field-name="reservedQuantity"/>
+                                <calcop operator="get" field-name="issuedQuantity"/>
                             </calcop>
                         </calculate>
-					</iterate>
-					
-					<if-not-empty field-name="perItemResListValid">
-						<env-to-field env-name="orderItem" map-name="orderItemInfo"/>
-						<env-to-field env-name="perItemResListValid" field-name="orderItemInventoryResList" map-name="orderItemInfo"/>
-						<get-related-one value-name="orderItem" relation-name="Product" to-value-name="orderItemInfo.product"/>
-						<field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
-						<clear-field field-name="orderItemInfo"/>
-					</if-not-empty>
-					<clear-field field-name="perItemResListValid"/>
-				</if-compare>
-				
-            	<!-- warn if not all inventory has been reserved, or too much is reserved -->
-                <!-- TODO: change to include issued items as well, otherwise can't really do an effective check... -->
-                <!--
-            	<if-compare-field field-name="reservedQuantity" operator="not-equals" to-field-name="orderItem.quantity" type="Double">
-            		<env-to-field env-name="orderItem" map-name="wrongQuantityReserved"/>
-            		<env-to-field env-name="reservedQuantity" map-name="wrongQuantityReserved"/>
-            		<field-to-list field-name="wrongQuantityReserved" list-name="wrongQuantityReservedList"/>
-            		<clear-field field-name="wrongQuantityReserved"/>
-            	</if-compare-field>
-                -->
-			</iterate>
-			
-			<!-- keep the order info for easy handling of order pack info -->
-			<if-not-empty field-name="orderItemInfoList">
-				<env-to-field env-name="orderHeader" map-name="orderHeaderInfo"/>
-				<env-to-field env-name="orderItemInfoList" map-name="orderHeaderInfo"/>
-				<field-to-list field-name="orderHeaderInfo" list-name="orderHeaderInfoList"/>
-			</if-not-empty>
-			<clear-field field-name="orderHeaderInfo"/>
-			<clear-field field-name="orderItemInfoList"/>
+                        <if-compare-field field-name="reservedIssuedQuantity" operator="not-equals" to-field-name="orderItem.quantity" type="Double">
+                            <env-to-field env-name="orderItem" map-name="wrongQuantityReserved"/>
+                            <env-to-field env-name="reservedQuantity" map-name="wrongQuantityReserved"/>
+                            <env-to-field env-name="issuedQuantity" map-name="wrongQuantityReserved"/>
+                            <env-to-field env-name="reservedIssuedQuantity" map-name="wrongQuantityReserved"/>
+                            <field-to-list field-name="wrongQuantityReserved" list-name="wrongQuantityReservedList"/>
+                            <clear-field field-name="wrongQuantityReserved"/>
+                        </if-compare-field>
+                    </if-compare>
+                </iterate>
+                
+                <!-- keep the order info for easy handling of order pack info -->
+                <if-not-empty field-name="orderItemInfoList">
+                    <env-to-field env-name="orderHeader" map-name="orderHeaderInfo"/>
+                    <env-to-field env-name="orderItemInfoList" map-name="orderHeaderInfo"/>
+                    <field-to-list field-name="orderHeaderInfo" list-name="orderHeaderInfoList"/>
+                </if-not-empty>
+            </if-compare>
+            <clear-field field-name="orderHeaderInfo"/>
+            <clear-field field-name="orderItemInfoList"/>
+            <clear-field field-name="orderShipmentPreference"/>
+            <clear-field field-name="orderShipmentPreferenceLkupMap"/>
+            <clear-field field-name="orderShipmentPreferenceLkupMap"/>
 		</iterate>
 
 	    <!-- go through all quantities and get inventoryItem and facilityLocation -->

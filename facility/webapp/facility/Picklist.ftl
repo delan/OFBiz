@@ -137,7 +137,7 @@
           <td width="10%" align="left"><div class="tableheadtext">OrderItem</div></td>
           <td width="40%" align="left"><div class="tableheadtext">Product [ID]</div></td>
           <td width="20%" align="left"><div class="tableheadtext">Quantity</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Inventory</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">Inventory:Avail:NotAvail</div></td>
         </tr>
         <tr>
           <td colspan="10"><hr class="sepbar"></td>
@@ -168,7 +168,7 @@
                 </td>
                 <td valign="top">
                   <#list orderItemInventoryResList as orderItemInventoryRes>
-                    <div class="tabletext">${orderItemInventoryRes.inventoryItemId}-${orderItemInventoryRes.quantity}</div>
+                    <div class="tabletext">${orderItemInventoryRes.inventoryItemId}:${orderItemInventoryRes.quantity}:${orderItemInventoryRes.quantityNotAvailable?if_exists}</div>
                   </#list>
                 </td>
               </tr>
@@ -223,9 +223,11 @@
           <#list wrongQuantityReservedList as wrongQuantityReserved>
             <#assign orderItem = wrongQuantityReserved.orderItem>
             <#assign reservedQuantity = wrongQuantityReserved.reservedQuantity>
+            <#assign issuedQuantity = wrongQuantityReserved.issuedQuantity>
+            <#assign reservedIssuedQuantity = wrongQuantityReserved.reservedIssuedQuantity>
               <tr class="${rowClass}">
                 <td>
-                  <div class="tabletext">Order Item ${orderItem.orderId}:${orderItem.orderItemSeqId} is for ${orderItem.quantity} of product ID [${orderItem.productId}] but ${reservedQuantity} was reserved.</div>
+                  <div class="tabletext">Order Item ${orderItem.orderId}:${orderItem.orderItemSeqId} is for ${orderItem.quantity} of product ID [${orderItem.productId}] but ${reservedQuantity} was reserved and ${issuedQuantity} has been issued. The total reserved and issued is ${reservedIssuedQuantity} which does not equal: ${orderItem.quantity} the order item quantity.</div>
                 </td>
               </tr>
               <#-- toggle the row color -->
