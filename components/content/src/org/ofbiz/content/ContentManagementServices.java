@@ -402,7 +402,7 @@ public class ContentManagementServices {
                                 return ServiceUtil.returnError(errorMsg);
                             }
                         } else {
-                            return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
+                            //return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
                         }
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
