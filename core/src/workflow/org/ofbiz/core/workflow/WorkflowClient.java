@@ -39,7 +39,7 @@ import org.ofbiz.core.util.*;
 public class WorkflowClient {
     
     // -------------------------------------------------------------------
-    // Client 'Services' Methods
+    // Client 'Service' Methods
     // -------------------------------------------------------------------
     
     /** Marks an activity as complete */
@@ -48,6 +48,12 @@ public class WorkflowClient {
         GenericDelegator delegator = ctx.getDelegator();
         
         String workEffortId = (String) context.get("workEffortId");
+        String partyId = (String) context.get("partyId");
+        String roleType = (String) context.get("roleTypeId");
+        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
+        }
         try {
             WfActivity activity = getActivity(delegator,workEffortId);
             try {
@@ -67,11 +73,17 @@ public class WorkflowClient {
     }
     
     /** Change the state of an activity */
-    public static Map changeState(DispatchContext ctx, Map context) {
+    public static Map changeActivityState(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         
         String workEffortId = (String) context.get("workEffortId");
+        String partyId = (String) context.get("partyId");
+        String roleType = (String) context.get("roleTypeId");
+        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
+        }
         try {
             WfActivity activity = getActivity(delegator,workEffortId);
             String newState = (String) context.get("newStatus");
@@ -98,6 +110,12 @@ public class WorkflowClient {
         GenericDelegator delegator = ctx.getDelegator();
         
         String workEffortId = (String) context.get("workEffortId");
+        String partyId = (String) context.get("partyId");
+        String roleType = (String) context.get("roleTypeId");
+        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
+        }
         try {
             WfActivity activity = getActivity(delegator,workEffortId);
             try {
@@ -124,12 +142,20 @@ public class WorkflowClient {
         
         String workEffortId = (String) context.get("workEffortId");
         String partyId = (String) context.get("partyId");
+        String roleType = (String) context.get("roleTypeId");
+        String newPartyId = (String) context.get("newPartyId");
+        String newRoleType = (String) context.get("newRoleTypeId");
         boolean removeOldAssign = context.get("removeOldAssignements").equals("true") ? true : false;
+        
+        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
+        }
         
         try {
             WfActivity activity = getActivity(delegator,workEffortId);
             try {
-                WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,null);
+                WfResource resource = WfFactory.getWfResource(delegator,null,null,newPartyId,newRoleType);
                 activity.assign(resource,removeOldAssign ? false : true);
             }
             catch ( WfException e ) {
