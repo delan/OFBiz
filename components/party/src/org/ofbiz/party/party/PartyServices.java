@@ -1,5 +1,5 @@
 /*
- * $Id: PartyServices.java,v 1.2 2003/08/20 01:18:29 ajzeneski Exp $
+ * $Id: PartyServices.java,v 1.3 2003/11/16 09:02:02 jonesde Exp $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,14 +55,14 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class PartyServices {
 
     public static final String module = PartyServices.class.getName();
     public static final String resource = "org.ofbiz.party.party.PackageMessages";
-    
+
     /**
      * Deletes a Party.
      * @param ctx The DispatchContext that this service is operating in.
@@ -101,6 +101,8 @@ public class PartyServices {
         Timestamp now = UtilDateTime.nowTimestamp();
         List toBeStored = new LinkedList();
         Locale locale = (Locale) context.get("locale");
+        // in most cases userLogin will be null, but get anyway so we can keep track of that info if it is available
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String partyId = (String) context.get("partyId");
 
@@ -135,7 +137,12 @@ public class PartyServices {
             }
         } else {
             // create a party if one doesn't already exist
-            party = delegator.makeValue("Party", UtilMisc.toMap("partyId", partyId, "partyTypeId", "PERSON"));
+            Map newPartyMap = UtilMisc.toMap("partyId", partyId, "partyTypeId", "PERSON", "createdDate", now, "lastModifiedDate", now);
+            if (userLogin != null) {
+                newPartyMap.put("createdByUserLogin", userLogin.get("userLoginId"));
+                newPartyMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+            }
+            party = delegator.makeValue("Party", newPartyMap);
             toBeStored.add(party);
         }
 
@@ -257,7 +264,7 @@ public class PartyServices {
 
             if (party != null) {
                 GenericValue partyType = party.getRelatedOneCache("PartyType");
-                
+
                 if (!EntityTypeUtil.isType(partyType, partyGroupPartyType)) {
                     return ServiceUtil.returnError("Cannot create party group, a party with the specified party ID " +
                             "already exists and is not a PARTY_GROUP type party, or a child of the PARTY_GROUP type");
@@ -265,7 +272,7 @@ public class PartyServices {
             } else {
                 // create a party if one doesn't already exist
                 String partyTypeId = "PARTY_GROUP";
-                
+
                 if (UtilValidate.isNotEmpty(((String) context.get("partyTypeId")))) {
                     GenericValue desiredPartyType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", context.get("partyTypeId")));
                     if (desiredPartyType != null && EntityTypeUtil.isType(desiredPartyType, partyGroupPartyType)) {
@@ -274,8 +281,13 @@ public class PartyServices {
                         return ServiceUtil.returnError("The specified partyTypeId [" + context.get("partyTypeId") + "] could not be found or is not a sub-type of PARTY_GROUP");
                     }
                 }
-                
-                party = delegator.makeValue("Party", UtilMisc.toMap("partyId", partyId, "partyTypeId", partyTypeId));
+
+                Map newPartyMap = UtilMisc.toMap("partyId", partyId, "partyTypeId", partyTypeId, "createdDate", now, "lastModifiedDate", now);
+                if (userLogin != null) {
+                    newPartyMap.put("createdByUserLogin", userLogin.get("userLoginId"));
+                    newPartyMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+                }
+                party = delegator.makeValue("Party", newPartyMap);
                 party.create();
             }
 
@@ -518,7 +530,7 @@ public class PartyServices {
 
     /**
      * Add a PartyNote.
-     * @param ctx The DispatchContext that this service is operating in.
+     * @param dctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters.
      * @return Map with the result of the service, the output parameters.
      */
@@ -559,7 +571,7 @@ public class PartyServices {
 
     /**
      * Get the party object(s) from an e-mail address
-     * @param ctx The DispatchContext that this service is operating in.
+     * @param dctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters.
      * @return Map with the result of the service, the output parameters.
      */
@@ -600,7 +612,7 @@ public class PartyServices {
 
     /**
      * Get the party object(s) from a user login ID
-     * @param ctx The DispatchContext that this service is operating in.
+     * @param dctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters.
      * @return Map with the result of the service, the output parameters.
      */
@@ -643,7 +655,7 @@ public class PartyServices {
 
     /**
      * Get the party object(s) from person information
-     * @param ctx The DispatchContext that this service is operating in.
+     * @param dctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters.
      * @return Map with the result of the service, the output parameters.
      */
@@ -692,7 +704,7 @@ public class PartyServices {
 
     /**
      * Get the party object(s) from party group name.
-     * @param ctx The DispatchContext that this service is operating in.
+     * @param dctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters.
      * @return Map with the result of the service, the output parameters.
      */

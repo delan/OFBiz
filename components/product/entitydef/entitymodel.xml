@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.39 $
+ * @version    $Revision: 1.40 $
  */
 -->
 
@@ -1986,6 +1986,12 @@
       <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="productPromoId"/>
+      <relation type="one" fk-name="PROD_PRMO_CUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRMO_LMCUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
       <relation type="many" rel-entity-name="ProductPromoRule">
         <key-map field-name="productPromoId"/>
       </relation>
@@ -2079,6 +2085,12 @@
       <prim-key field="productPromoCodeId"/>
       <relation type="one" fk-name="PROD_PRCOD_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCOD_CUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCOD_LMCUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductPromoCodeEmail">
         <key-map field-name="productPromoCodeId"/>
