@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/09/25 14:31:55  epabst
+ * added isEmpty(Collection) method
+ *
  * Revision 1.9  2001/09/18 22:30:58  jonesde
  * Fixed credit card number format exception bug
  *
@@ -176,6 +179,14 @@ public class UtilValidate
    * See http://www.usps.gov/ncsc/lookups/abbr_state.txt. */
   public static final String USStateCodes = "AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FM|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MH|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VI|VA|WA|WV|WI|WY|AE|AA|AE|AE|AP";
 
+  public static boolean areEqual(Object obj, Object obj2) {
+      if (obj == null) {
+          return obj2 == null;
+      } else {
+          return obj.equals(obj2);
+      }
+  }
+  
   /** Check whether string s is empty. */
   public static boolean isEmpty(String s) 
   {   
