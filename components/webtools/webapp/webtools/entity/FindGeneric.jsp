@@ -93,7 +93,7 @@
     Debug.log("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
     if ("true".equals(find)) {
-      resultCol = delegator.findByAnd(findByEntity.entityName, findByEntity.getAllFields(), null);
+      resultCol = delegator.findByAnd(findByEntity.getEntityName(), findByEntity.getAllFields(), null);
       if(resultCol != null) resultArray = resultCol.toArray();
     } else {
       resultCol = new LinkedList();
