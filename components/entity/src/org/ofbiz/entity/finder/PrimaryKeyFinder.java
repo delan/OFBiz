@@ -35,6 +35,7 @@ import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.w3c.dom.Element;
@@ -114,15 +115,23 @@ public class PrimaryKeyFinder {
         
         try {
             GenericValue valueOut = null;
-            if (useCacheBool) {
-                valueOut = delegator.findByPrimaryKeyCache(entityName, entityContext);
-            } else {
-                if (fieldsToSelect != null) {
-                    valueOut = delegator.findByPrimaryKeyPartial(delegator.makePK(entityName, entityContext), fieldsToSelect);
+            GenericPK entityPK = delegator.makePK(entityName, entityContext);
+
+            // make sure we have a full primary key, if any field is null then just log a warning and return null instead of blowing up
+            if (entityPK.containsPrimaryKey(true)) {
+                if (useCacheBool) {
+                    valueOut = delegator.findByPrimaryKeyCache(entityPK);
                 } else {
-                    valueOut = delegator.findByPrimaryKey(entityName, entityContext);
+                    if (fieldsToSelect != null) {
+                        valueOut = delegator.findByPrimaryKeyPartial(entityPK, fieldsToSelect);
+                    } else {
+                        valueOut = delegator.findByPrimaryKey(entityPK);
+                    }
                 }
+            } else {
+                Debug.logWarning("Returning null because found incomplete primary key in find: " + entityPK, module);
             }
+            
             //Debug.logInfo("PrimaryKeyFinder: valueOut=" + valueOut, module);
             //Debug.logInfo("PrimaryKeyFinder: going into=" + this.valueNameAcsr.getOriginalName(), module);
             if (valueNameAcsr != null) {
