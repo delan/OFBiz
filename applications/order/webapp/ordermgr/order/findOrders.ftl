@@ -24,7 +24,9 @@
  *@version    $Rev: 3227 $
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists>
+  <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <script language="JavaScript">
 <!-- //
@@ -346,7 +348,7 @@ document.lookuporder.order_id.focus();
               <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>
               <td>
                 <#if partyId != "_NA_">
-                  <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" class="buttontext">${partyId}</a>
+                  <a href="/partymgr/control/viewprofile?party_id=${partyId}" class="buttontext">${partyId}</a>
                 <#else>
                   <span class='tabletext'>N/A</span>
                 </#if>

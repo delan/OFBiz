@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Order Task List</property>
-    <property name="headerItem">orderlist</property>
-    <content-action name="/task/ordertasklist.bsh"/>
-</page>

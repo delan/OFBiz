@@ -25,8 +25,9 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
+<#if requestAttributes.uiLabelMap?exists>
+  <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>  
   <p class="head1">${uiLabelMap.OrderAddNote}</p>
