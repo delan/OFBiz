@@ -325,7 +325,7 @@
       <field name="productFeatureCategoryId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="uomId" type="id"></field>
-      <field name="numberSpecified" type="numeric"></field>
+      <field name="numberSpecified" type="floating-point"></field>
       <prim-key field="productFeatureId"/>
       <relation type="one" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId"/>
