@@ -490,7 +490,7 @@ public class ModelEntityChecker {
             "UID", "UNBUFFERED", "UNDER", "UNDO", "UNION", "UNIQUE", "UNKNOWN",
             "UNLISTEN", "UNLOAD", "UNLOADDATA", "UNLOADTABLE", "UNLOCK",
             "UNTIL", "UP", "UPDATE", "UPDATETEXT", "UPPER", "USAGE", "USE",
-            "USED_PGS", "USER", "USING",
+            "USED_PGS", "USER", "USING", "UTC_TIME",
 
             "VACUUM", "VALIDATE", "VALIDROW", "VALUE", "VALUES", "VARBINARY",
             "VARC", "VARCH", "VARCHA", "VARCHAR", "VARGRAPHIC", "VARIABLE",
@@ -501,7 +501,7 @@ public class ModelEntityChecker {
             "WHENEVER", "WHERE", "WHILE", "WINDOW", "WITH", "WITHOUT", "WORK",
             "WRAP", "WRITE", "WRITEPASS", "WRITETEXT",
 
-            "YEAR",
+            "YEAR", "YEARS",
 
             "ZEROFILL", "ZONE" };
 
