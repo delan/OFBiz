@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.16 2004/04/20 21:01:17 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.17 2004/05/03 14:01:34 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -111,7 +111,6 @@ public class ContentPermissionServices {
         GenericValue content = (GenericValue) context.get("currentContent"); 
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
 
-        Debug.logInfo("context(b):" + context, "");
         // I realized, belatedly, that I wanted to be able to pass parameters in as
         // strings so this service could be used in an action event directly,
         // so I had to write this code to handle both list and strings
@@ -251,7 +250,7 @@ public class ContentPermissionServices {
         purposeIds = getRelatedPurposes(content, passedPurposes );
         //if (Debug.infoOn()) Debug.logInfo("purposeIds:" + purposeIds, null);
         if (purposeIds == null || purposeIds.size() == 0) {
-            Debug.logWarning("No purposeIds.", module);
+            //Debug.logWarning("No purposeIds.", module);
         }
 
         // Do check of non-RoleType conditions
