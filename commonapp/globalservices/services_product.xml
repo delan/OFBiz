@@ -95,60 +95,131 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
-    <!-- Product Catalog Promotion Services -->
-    <service name="createProdCatalogPromo" engine="simple"
-                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="createProdCatalogPromo" auth="true">
-        <description>Create an ProdCatalogPromo</description>
-        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="prodCatalogPromoTypeId" type="String" mode="IN" optional="false"/>
+    <!-- Product Promotion Services -->
+    <service name="createProductPromo" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromo" auth="true">
+        <description>Create an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
         <attribute name="promoName" type="String" mode="IN" optional="false"/>
         <attribute name="promoText" type="String" mode="IN" optional="true"/>
-        <attribute name="promoDetailUrl" type="String" mode="IN" optional="true"/>
-        <attribute name="orderTotalBoundary" type="Double" mode="IN" optional="true"/>
-        <attribute name="discountQuantity" type="Double" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="singleUse" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="updateProdCatalogPromo" engine="simple"
-                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="updateProdCatalogPromo" auth="true">
-        <description>Update an ProdCatalogPromo</description>
-        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
-        <attribute name="prodCatalogPromoTypeId" type="String" mode="IN" optional="false"/>
+    <service name="updateProductPromo" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromo" auth="true">
+        <description>Update an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
         <attribute name="promoName" type="String" mode="IN" optional="false"/>
         <attribute name="promoText" type="String" mode="IN" optional="true"/>
-        <attribute name="promoDetailUrl" type="String" mode="IN" optional="true"/>
-        <attribute name="orderTotalBoundary" type="Double" mode="IN" optional="true"/>
-        <attribute name="discountQuantity" type="Double" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="singleUse" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="deleteProdCatalogPromo" engine="simple"
-                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="deleteProdCatalogPromo" auth="true">
-        <description>Delete an ProdCatalogPromo</description>
-        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+    <service name="deleteProductPromo" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="deleteProductPromo" auth="true">
+        <description>Delete an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
     </service>
 
-    <service name="addProdCatalogPromoToProdCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="addProdCatalogPromoToProdCatalog" auth="true">
-        <description>Add ProdCatalogPromo To ProdCatalog</description>
-        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+    <service name="createProductPromoRule" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromoRule" auth="true">
+        <description>Create an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="ruleName" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="updateProductPromoRule" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromoRule" auth="true">
+        <description>Update an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="ruleName" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteProductPromoRule" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="deleteProductPromoRule" auth="true">
+        <description>Delete an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPromoCond" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromoCond" auth="true">
+        <description>Create an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoCondSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="inputParamEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="operatorEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="condValue" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductPromoCond" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromoCond" auth="true">
+        <description>Update an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoCondSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="inputParamEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="operatorEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="condValue" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPromoCond" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="deleteProductPromoCond" auth="true">
+        <description>Delete an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoCondSeqId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPromoAction" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromoAction" auth="true">
+        <description>Create an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoActionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="actionLimit" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductPromoAction" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromoAction" auth="true">
+        <description>Update an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoActionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="actionLimit" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPromoAction" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="deleteProductPromoAction" auth="true">
+        <description>Delete an ProductPromo</description>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="false"/>
+    </service>
+                  
+    <service name="addProductPromoToProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="addProductPromoToProdCatalog" auth="true">
+        <description>Add ProductPromo To ProdCatalog</description>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
-    <service name="updateProdCatalogPromoToProdCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="addProdCatalogPromoToProdCatalog" auth="true">
-        <description>Add ProdCatalogPromo To ProdCatalog</description>
-        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+    <service name="updateProductPromoToProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="addProductPromoToProdCatalog" auth="true">
+        <description>Add ProductPromo To ProdCatalog</description>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
-    <service name="removeProdCatalogPromoFromProdCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="removeProdCatalogPromoFromProdCatalog" auth="true">
-        <description>Remove ProdCatalogPromo From ProdCatalog</description>
-        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+    <service name="removeProductPromoFromProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="removeProductPromoFromProdCatalog" auth="true">
+        <description>Remove ProductPromo From ProdCatalog</description>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
