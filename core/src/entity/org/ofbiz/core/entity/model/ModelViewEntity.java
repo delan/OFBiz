@@ -47,10 +47,6 @@ public class ModelViewEntity extends ModelEntity {
     /** Contains member-entity alias name definitions: key is alias, value is ModelMemberEntity */
     protected Map memberModelMemberEntities = new HashMap();
 
-    /** A list of ModelMemberEntity entries that are <b>required</b> for the join; there MUST be at least ONE of these (ie full joins not supported) */
-    protected List requiredModelMemberEntities = new LinkedList();
-    /** A list of ModelMemberEntity entries that are <b>optional</b> for the join */
-    protected List optionalModelMemberEntities = new LinkedList();
     /** A list of all ModelMemberEntity entries; this is mainly used to preserve the original order of member entities from the XML file */
     protected List allModelMemberEntities = new LinkedList();
     
@@ -79,21 +75,15 @@ public class ModelViewEntity extends ModelEntity {
             Element membEnt = (Element) membEntList.item(i);
             String alias = UtilXml.checkEmpty(membEnt.getAttribute("entity-alias"));
             String name = UtilXml.checkEmpty(membEnt.getAttribute("entity-name"));
-            //if anything but true will be false; ie defaults to false
-            boolean optional = "true".equals(membEnt.getAttribute("optional"));
 
             if (name.length() <= 0 || alias.length() <= 0) {
                 Debug.logError("[new ModelViewEntity] entity-alias or entity-name missing on member-entity element of the view-entity " + this.entityName, module);
             } else {
-                ModelMemberEntity modelMemberEntity = new ModelMemberEntity(alias, name, optional);
+                ModelMemberEntity modelMemberEntity = new ModelMemberEntity(alias, name);
                 this.addMemberModelMemberEntity(modelMemberEntity);
             }
         }
         
-        if (this.requiredModelMemberEntities.size() == 0) {
-            Debug.logError("[new ModelViewEntity] there are no required member entities for the view-entity " + this.entityName + "; full joins are not supported so at least one required (non-optional) entity must be used");
-        }
-
         //when reading aliases, just read them into the alias list, there will be a pass
         // after loading all entities to go back and fill in all of the ModelField entries
         if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before aliases");
@@ -124,12 +114,6 @@ public class ModelViewEntity extends ModelEntity {
         return this.memberModelMemberEntities;
     }
     
-    public List getRequiredModelMemberEntities() {
-        return this.requiredModelMemberEntities;
-    }
-    public List getOptionalModelMemberEntities() {
-        return this.optionalModelMemberEntities;
-    }
     public List getAllModelMemberEntities() {
         return this.allModelMemberEntities;
     }
@@ -149,22 +133,12 @@ public class ModelViewEntity extends ModelEntity {
     public void addMemberModelMemberEntity(ModelMemberEntity modelMemberEntity) {
         this.memberModelMemberEntities.put(modelMemberEntity.getEntityAlias(), modelMemberEntity);
         this.allModelMemberEntities.add(modelMemberEntity);
-        if (modelMemberEntity.getOptional()) {
-            this.optionalModelMemberEntities.add(modelMemberEntity);
-        } else {
-            this.requiredModelMemberEntities.add(modelMemberEntity);
-        }
     }
 
     public void removeMemberModelMemberEntity(String alias) {
         ModelMemberEntity modelMemberEntity = (ModelMemberEntity) this.memberModelMemberEntities.remove(alias);
         if (modelMemberEntity == null) return;
         this.allModelMemberEntities.remove(modelMemberEntity);
-        if (modelMemberEntity.getOptional()) {
-            this.optionalModelMemberEntities.remove(modelMemberEntity);
-        } else {
-            this.requiredModelMemberEntities.remove(modelMemberEntity);
-        }
     }
 
     /** List of aliases with information in addition to what is in the standard field list */
@@ -317,12 +291,10 @@ public class ModelViewEntity extends ModelEntity {
     public static class ModelMemberEntity {
         protected String entityAlias = "";
         protected String entityName = "";
-        protected boolean optional = false;
 
-        public ModelMemberEntity(String entityAlias, String entityName, boolean optional) {
+        public ModelMemberEntity(String entityAlias, String entityName) {
             this.entityAlias = entityAlias;
             this.entityName = entityName;
-            this.optional = optional;
         }
 
         public String getEntityAlias() {
@@ -331,10 +303,6 @@ public class ModelViewEntity extends ModelEntity {
 
         public String getEntityName() {
             return this.entityName;
-        }
-
-        public boolean getOptional() {
-            return this.optional;
         }
     }
     
@@ -401,6 +369,7 @@ public class ModelViewEntity extends ModelEntity {
     public static class ModelViewLink {
         protected String entityAlias = "";
         protected String relEntityAlias = "";
+        protected boolean relOptional = false;
         protected List keyMaps = new ArrayList();
 
         protected ModelViewLink() { }
@@ -408,6 +377,8 @@ public class ModelViewEntity extends ModelEntity {
         public ModelViewLink(Element viewLinkElement) {
             this.entityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("entity-alias"));
             this.relEntityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("rel-entity-alias"));
+            //if anything but true will be false; ie defaults to false
+            this.relOptional = "true".equals(viewLinkElement.getAttribute("rel-optional"));
 
             NodeList keyMapList = viewLinkElement.getElementsByTagName("key-map");
 
@@ -433,6 +404,10 @@ public class ModelViewEntity extends ModelEntity {
             return this.relEntityAlias;
         }
 
+        public boolean isRelOptional() {
+            return this.relOptional;
+        }
+        
         public ModelKeyMap getKeyMap(int index) {
             return (ModelKeyMap) this.keyMaps.get(index);
         }

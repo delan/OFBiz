@@ -156,8 +156,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   while(meIter.hasNext()) {
     ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) meIter.next();
 %>
-      <member-entity entity-alias="<%=modelMemberEntity.getEntityAlias()%>" entity-name="<%=modelMemberEntity.getEntityName()%>"<%
-          if (modelMemberEntity.getOptional()) {%> optional="true"<%}%>/><%
+      <member-entity entity-alias="<%=modelMemberEntity.getEntityAlias()%>" entity-name="<%=modelMemberEntity.getEntityName()%>"/><%
   }
   for (int y = 0; y < viewEntity.getAliasesSize(); y++) {
     ModelViewEntity.ModelAlias alias = viewEntity.getAlias(y);%>
@@ -169,7 +168,8 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   }
   for (int r = 0; r < viewEntity.getViewLinksSize(); r++) {
     ModelViewEntity.ModelViewLink viewLink = viewEntity.getViewLink(r);%>
-      <view-link entity-alias="<%=viewLink.getEntityAlias()%>" rel-entity-alias="<%=viewLink.getRelEntityAlias()%>"><%for (int km = 0; km < viewLink.getKeyMapsSize(); km++){ ModelKeyMap keyMap = viewLink.getKeyMap(km);%>
+      <view-link entity-alias="<%=viewLink.getEntityAlias()%>" rel-entity-alias="<%=viewLink.getRelEntityAlias()%>"<%
+          if (viewLink.isRelOptional()) {%> optional="true"<%}%>><%for (int km = 0; km < viewLink.getKeyMapsSize(); km++){ ModelKeyMap keyMap = viewLink.getKeyMap(km);%>
         <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%>/><%}%>
       </view-link><%
   }

@@ -58,127 +58,93 @@ public class SqlJdbcUtil {
             if ("ansi".equals(joinStyle)) {
                 String firstMemberAlias = null;
                 
-                //FROM clause: very simple, just use the first required member entity
-                if (modelViewEntity.getRequiredModelMemberEntities().size() == 0) {
-                    throw new GenericModelException("The " + modelViewEntity.getEntityName() + " view-entity has no required member entities but must have at least one (ie full joins not supported)");
-                } else {
-                    ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) modelViewEntity.getRequiredModelMemberEntities().get(0);
-                    ModelEntity fromEntity = modelViewEntity.getMemberModelEntity(modelMemberEntity.getEntityAlias());
-                    sql.append(fromEntity.getTableName());
-                    sql.append(" ");
-                    sql.append(modelMemberEntity.getEntityAlias());
-                    
-                    firstMemberAlias = modelMemberEntity.getEntityAlias();
-                }
+                //FROM clause: in this case will be a bunch of joins that correspond with the view-links
                 
-                //JOIN clause(s): a bit more complex, must have join conditions, etc
+                //BIG NOTE on the JOIN clauses: the order of joins is determined by the order of the
+                //  view-links; for more flexible order we'll have to figure something else out and
+                //  extend the DTD for the nested view-link elements or something
 
-                //BIG NOTE on the JOIN clauses: not sure if all databases will support this syntax, may have
-                //  to build a tree of view-links and nest the JOINs appropriately...
+                //At this point it is assumed that in each view-link the left hand alias will
+                //  either be the first alias in the series or will already be in a previous
+                //  view-link and already be in the big join; SO keep a set of all aliases
+                //  in the join so far and if the left entity alias isn't there yet, and this
+                //  isn't the first one, throw an exception
+                Set joinedAliasSet = new TreeSet();
                 
-                //first required members, except the first one (JOIN)
-                Iterator requiredIter = modelViewEntity.getRequiredModelMemberEntities().iterator();
-                //skip the first, if no first an exception will be thrown above:
-                requiredIter.next();
-                while (requiredIter.hasNext()) {
-                    ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) requiredIter.next();
-                    ModelEntity fromEntity = modelViewEntity.getMemberModelEntity(modelMemberEntity.getEntityAlias());
-                    String currentMemberAlias = modelMemberEntity.getEntityAlias();
+                //TODO: at view-link read time make sure they are ordered properly so that each
+                //  left hand alias after the first view-link has already been linked before
+                
+                StringBuffer openParens = new StringBuffer();
+                StringBuffer restOfStatement = new StringBuffer();
+                for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
+                    //don't put starting parenthesis
+                    if (i > 0) openParens.append('(');
                     
-                    sql.append(" JOIN ");
-                    sql.append(fromEntity.getTableName());
-                    sql.append(" ");
-                    sql.append(currentMemberAlias);
-                    sql.append(" ON ");
-                    
-                    //get the view maps going from any other entity to this entity OR 
-                    //  between this member entity and the first/from member entity
-                    StringBuffer condBuffer = new StringBuffer();
-                    for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
-                        ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
+                    ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
 
-                        if (currentMemberAlias.equals(viewLink.getRelEntityAlias()) || 
-                                (currentMemberAlias.equals(viewLink.getEntityAlias()) && firstMemberAlias.equals(viewLink.getRelEntityAlias()))) {
+                    ModelEntity linkEntity = modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
+                    ModelEntity relLinkEntity = modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
+
+                    //ModelViewEntity.ModelMemberEntity linkMemberEntity = modelViewEntity.getMemberModelMemberEntity(viewLink.getEntityAlias());
+                    //ModelViewEntity.ModelMemberEntity relLinkMemberEntity = modelViewEntity.getMemberModelMemberEntity(viewLink.getRelEntityAlias());
+
+                    if (i == 0) {
+                        //this is the first referenced member alias, so keep track of it for future use...
+                        restOfStatement.append(linkEntity.getTableName());
+                        restOfStatement.append(" ");
+                        restOfStatement.append(viewLink.getEntityAlias());
                         
-                            ModelEntity linkEntity = modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
-                            ModelEntity relLinkEntity = modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
-
-                            for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
-                                ModelKeyMap keyMap = viewLink.getKeyMap(j);
-                                ModelField linkField = linkEntity.getField(keyMap.getFieldName());
-                                ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
-
-                                if (condBuffer.length() > 0) {
-                                    condBuffer.append(" AND ");
-                                }
-                                condBuffer.append(viewLink.getEntityAlias());
-                                condBuffer.append(".");
-                                condBuffer.append(linkField.getColName());
-                                condBuffer.append("=");
-                                condBuffer.append(viewLink.getRelEntityAlias());
-                                condBuffer.append(".");
-                                condBuffer.append(relLinkField.getColName());
-                            }
+                        joinedAliasSet.add(viewLink.getEntityAlias());
+                    } else {
+                        //make sure the left entity alias is already in the join...
+                        if (!joinedAliasSet.contains(viewLink.getEntityAlias())) {
+                            throw new GenericModelException("Tried to link the " + viewLink.getEntityAlias() + " alias to the " + viewLink.getRelEntityAlias() + " alias of the " + modelViewEntity.getEntityName() + " view-entity, but it is not the first view-link and has not been included in a previous view-link. In other words, the left/main alias isn't connected to the rest of the member-entities yet.");
                         }
                     }
+                    //now put the rel (right) entity alias into the set that is in the join
+                    joinedAliasSet.add(viewLink.getRelEntityAlias());
                     
-                    if (condBuffer.length() == 0) {
-                        throw new GenericModelException("No join conditions (view-links) found for the " + modelMemberEntity.getEntityAlias() + " aliased member-entity of the " + modelViewEntity.getEntityName() + " view-entity.");
+                    if (viewLink.isRelOptional()) {
+                        restOfStatement.append(" LEFT JOIN ");
+                    } else {
+                        restOfStatement.append(" JOIN ");
                     }
                     
-                    sql.append(condBuffer.toString());
-                }
-                
-                //then optional members (LEFT JOIN)
-                Iterator optionalIter = modelViewEntity.getOptionalModelMemberEntities().iterator();
-                while (optionalIter.hasNext()) {
-                    ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) optionalIter.next();
-                    ModelEntity fromEntity = modelViewEntity.getMemberModelEntity(modelMemberEntity.getEntityAlias());
-                    String currentMemberAlias = modelMemberEntity.getEntityAlias();
+                    restOfStatement.append(relLinkEntity.getTableName());
+                    restOfStatement.append(" ");
+                    restOfStatement.append(viewLink.getRelEntityAlias());
+                    restOfStatement.append(" ON ");
                     
-                    sql.append(" LEFT JOIN ");
-                    sql.append(fromEntity.getTableName());
-                    sql.append(" ");
-                    sql.append(currentMemberAlias);
-                    sql.append(" ON ");
-                    
-                    //get the view maps going from any other entity to this entity OR 
-                    //  between this member entity and the first/from member entity
                     StringBuffer condBuffer = new StringBuffer();
-                    for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
-                        ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
+                    for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
+                        ModelKeyMap keyMap = viewLink.getKeyMap(j);
+                        ModelField linkField = linkEntity.getField(keyMap.getFieldName());
+                        ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
 
-                        if (currentMemberAlias.equals(viewLink.getRelEntityAlias()) || 
-                                (currentMemberAlias.equals(viewLink.getEntityAlias()) && firstMemberAlias.equals(viewLink.getRelEntityAlias()))) {
-                        
-                            ModelEntity linkEntity = modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
-                            ModelEntity relLinkEntity = modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
-
-                            for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
-                                ModelKeyMap keyMap = viewLink.getKeyMap(j);
-                                ModelField linkField = linkEntity.getField(keyMap.getFieldName());
-                                ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
-
-                                if (condBuffer.length() > 0) {
-                                    condBuffer.append(" AND ");
-                                }
-                                condBuffer.append(viewLink.getEntityAlias());
-                                condBuffer.append(".");
-                                condBuffer.append(linkField.getColName());
-                                condBuffer.append("=");
-                                condBuffer.append(viewLink.getRelEntityAlias());
-                                condBuffer.append(".");
-                                condBuffer.append(relLinkField.getColName());
-                            }
+                        if (condBuffer.length() > 0) {
+                            condBuffer.append(" AND ");
                         }
+                        condBuffer.append(viewLink.getEntityAlias());
+                        condBuffer.append(".");
+                        condBuffer.append(linkField.getColName());
+                        
+                        condBuffer.append("=");
+                        
+                        condBuffer.append(viewLink.getRelEntityAlias());
+                        condBuffer.append(".");
+                        condBuffer.append(relLinkField.getColName());
                     }
-                    
                     if (condBuffer.length() == 0) {
-                        throw new GenericModelException("No join conditions (view-links) found for the " + modelMemberEntity.getEntityAlias() + " aliased member-entity of the " + modelViewEntity.getEntityName() + " view-entity.");
+                        throw new GenericModelException("No view-link/join key-maps found for the " + viewLink.getEntityAlias() + " and the " + viewLink.getRelEntityAlias() + " member-entities of the " + modelViewEntity.getEntityName() + " view-entity.");
                     }
+                    restOfStatement.append(condBuffer.toString());
                     
-                    sql.append(condBuffer.toString());
+                    //don't put ending parenthesis
+                    if (i < (modelViewEntity.getViewLinksSize() - 1)) restOfStatement.append(')');
                 }
+
+                sql.append(openParens.toString());
+                sql.append(restOfStatement.toString());
                 
             } else if ("theta-oracle".equals(joinStyle) || "theta-mssql".equals(joinStyle)) {
                 //FROM clause
@@ -283,8 +249,8 @@ public class SqlJdbcUtil {
                     ModelEntity linkEntity = modelViewEntity.getMemberModelEntity(viewLink.getEntityAlias());
                     ModelEntity relLinkEntity = modelViewEntity.getMemberModelEntity(viewLink.getRelEntityAlias());
 
-                    ModelViewEntity.ModelMemberEntity linkMemberEntity = modelViewEntity.getMemberModelMemberEntity(viewLink.getEntityAlias());
-                    ModelViewEntity.ModelMemberEntity relLinkMemberEntity = modelViewEntity.getMemberModelMemberEntity(viewLink.getRelEntityAlias());
+                    //ModelViewEntity.ModelMemberEntity linkMemberEntity = modelViewEntity.getMemberModelMemberEntity(viewLink.getEntityAlias());
+                    //ModelViewEntity.ModelMemberEntity relLinkMemberEntity = modelViewEntity.getMemberModelMemberEntity(viewLink.getRelEntityAlias());
                     
                     for (int j = 0; j < viewLink.getKeyMapsSize(); j++) {
                         ModelKeyMap keyMap = viewLink.getKeyMap(j);
@@ -304,10 +270,10 @@ public class SqlJdbcUtil {
                         
                         //NOTE: not testing if original table is optional, ONLY if related table is optional; otherwise things get really ugly...
                         //if (isOracleStyle && linkMemberEntity.getOptional()) whereString.append(" (+) ");
-                        if (isMssqlStyle && relLinkMemberEntity.getOptional()) whereString.append("*");
+                        if (isMssqlStyle && viewLink.isRelOptional()) whereString.append("*");
                         whereString.append("=");
                         //if (isMssqlStyle && linkMemberEntity.getOptional()) whereString.append("*");
-                        if (isOracleStyle && relLinkMemberEntity.getOptional()) whereString.append(" (+) ");
+                        if (isOracleStyle && viewLink.isRelOptional()) whereString.append(" (+) ");
                         
                         whereString.append(viewLink.getRelEntityAlias());
                         whereString.append(".");

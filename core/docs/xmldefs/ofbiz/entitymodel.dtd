@@ -69,8 +69,7 @@
     <!ELEMENT member-entity EMPTY>
     <!ATTLIST member-entity
 	entity-alias CDATA #REQUIRED
-	entity-name CDATA #REQUIRED
-	optional ( true | false ) "false" >
+	entity-name CDATA #REQUIRED >
     <!ELEMENT alias EMPTY>
     <!ATTLIST alias
 	entity-alias CDATA #REQUIRED
@@ -82,7 +81,8 @@
     <!ELEMENT view-link ( key-map+ )>
     <!ATTLIST view-link
 	entity-alias CDATA #REQUIRED
-	rel-entity-alias CDATA #REQUIRED >
+	rel-entity-alias CDATA #REQUIRED
+	rel-optional ( true | false ) "false" >
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field
 	name CDATA #REQUIRED
