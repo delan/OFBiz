@@ -322,8 +322,14 @@ public class UtilXml {
         Node textNode = element.getFirstChild();
 
         if (textNode == null) return null;
-        // should be of type text
-        return textNode.getNodeValue();
+
+        StringBuffer valueBuffer = new StringBuffer();
+        do {
+            if (textNode.getNodeType() == Node.CDATA_SECTION_NODE || textNode.getNodeType() == Node.TEXT_NODE) {
+                valueBuffer.append(textNode.getNodeValue());
+            }
+        } while ((textNode = textNode.getNextSibling()) != null);
+        return valueBuffer.toString();
     }
 
     public static String checkEmpty(String string) {
