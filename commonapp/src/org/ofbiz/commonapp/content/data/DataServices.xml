@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ * Copyright (c) 2001 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on April 2, 2002
+ -->
+<simple-methods>
+	<!-- Methods for DataResource -->
+    <simple-method method-name="createDataResource" short-description="Create a Data Resource">
+        <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createDataResource you must have the CONTENT_CREATE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="DataResource"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateDataResource" short-description="Update a Data Resource">
+        <check-permission permission="CONTENT" action="_UPDATE"><fail-message message="Security Error: to run updateDataResource you must have the CONTENT_UPDATE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataResource"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResource" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteDataResource" short-description="Delete a Data Resource">
+        <check-permission permission="CONTENT" action="_DELETE"><fail-message message="Security Error: to run updateDataResource you must have the CONTENT_DELETE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataResource"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResource" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+	<!-- Methods for DataCategory -->
+    <simple-method method-name="createDataCategory" short-description="Create a Data Category">
+        <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createDataCategory you must have the CONTENT_CREATE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="DataCategory"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateDataCategory" short-description="Update a Data Category">
+        <check-permission permission="CONTENT" action="_UPDATE"><fail-message message="Security Error: to run updateDataCategory you must have the CONTENT_UPDATE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataCategory"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataCategory" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteDataCategory" short-description="Delete a Data Category">
+        <check-permission permission="CONTENT" action="_DELETE"><fail-message message="Security Error: to run updateDataCategory you must have the CONTENT_DELETE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataCategory"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataCategory" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+	<!-- Methods for DataResourceMetaData -->
+    <simple-method method-name="createDataResourceMetaData" short-description="Create Data Resource Meta Data">
+        <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createDataResourceMetaData you must have the CONTENT_CREATE or PROC_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="DataResourceMetaData"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateDataResourceMetaData" short-description="Update Data Resource Meta Data">
+        <check-permission permission="CONTENT" action="_UPDATE"><fail-message message="Security Error: to run updateDataResourceMetaData you must have the CONTENT_UPDATE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataResourceMetaData"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourceMetaData" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeDataResourceMetaData" short-description="Remove Data Resource Meta Data">
+        <check-permission permission="CONTENT" action="_DELETE"><fail-message message="Security Error: to run removeDataResourceMetaData you must have the CONTENT_DELETE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataResourceMetaData"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourceMetaData" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>    
+    
+	<!-- Methods for DataResourcePurpose -->
+    <simple-method method-name="createDataResourcePurpose" short-description="Create Data Resource Purpose">
+        <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createDataResourcePurpose you must have the CONTENT_CREATE or PROC_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="DataResourcePurpose"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateDataResourcePurpose" short-description="Update Data Resource Purpose">
+        <check-permission permission="CONTENT" action="_UPDATE"><fail-message message="Security Error: to run updateDataResourcePurpose you must have the CONTENT_UPDATE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataResourcePurpose"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourcePurpose" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeDataResourcePurpose" short-description="Remove Data Resource Purpose">
+        <check-permission permission="CONTENT" action="_DELETE"><fail-message message="Security Error: to run removeDataResourcePurpose you must have the CONTENT_DELETE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataResourcePurpose"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourcePurpose" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>    
+    
+	<!-- Methods for DataResourceRole -->
+    <simple-method method-name="createDataResourceRole" short-description="Create Data Resource Role">
+        <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createDataResourceRole you must have the CONTENT_CREATE or PROC_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="DataResourceRole"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateDataResourceRole" short-description="Update Data Resource Role">
+        <check-permission permission="CONTENT" action="_UPDATE"><fail-message message="Security Error: to run updateDataResourceRole you must have the CONTENT_UPDATE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataResourceRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourceRole" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeDataResourceRole" short-description="Remove Data Resource Role">
+        <check-permission permission="CONTENT" action="_DELETE"><fail-message message="Security Error: to run removeDataResourceRole you must have the CONTENT_DELETE or CONTENT_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="DataResourceRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourceRole" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>    
+    
+</simple-methods>
