@@ -167,8 +167,8 @@ public class ItemConfigurationNode {
         }
         try {
             float percScrapFactor = node.getDouble("scrapFactor").floatValue();
-            if (percScrapFactor != 0) {
-                percScrapFactor = percScrapFactor / 100;
+            if (percScrapFactor != 0 && percScrapFactor < 100) {
+                percScrapFactor = 1 + percScrapFactor / 100;
             } else {
                 percScrapFactor = 1;
             }
