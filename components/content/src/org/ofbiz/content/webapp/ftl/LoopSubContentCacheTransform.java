@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.18 2004/06/02 17:50:10 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.19 2004/06/06 05:06:10 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -238,63 +238,62 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         try {
             val = FreeMarkerWorker.getCurrentContent(delegator, globalNodeTrail, userLogin, templateCtx, nullThruDatesOnly, null);
         } catch(GeneralException e) {
-            throw new RuntimeException("Error getting current content. " + e.toString());
+            Debug.logError(e, module);
         }
         final GenericValue view = val;
 
         if (view == null) {
-            throw new RuntimeException("No content found.");
+            templateCtx.put("contentId", null);
+            templateCtx.put("subContentId", null);
+    
+            String contentId = (String)view.get("contentId");
+            //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
+            final String contentIdTo = contentId;
+    
+            String thisMapKey = (String)templateCtx.get("mapKey");
+            //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), thisMapKey ." + thisMapKey, module);
+            Map results = null;
+            //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
+            String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
+            try {
+                results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId, orderBy);
+            } catch(MiniLangException e2) {
+                throw new RuntimeException(e2.getMessage());
+            } catch(GenericEntityException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+            List longList = (List) results.get("entityList");
+            //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
+            String viewSizeStr = (String)templateCtx.get("viewSize");
+            if (UtilValidate.isEmpty(viewSizeStr))
+                viewSizeStr = UtilProperties.getPropertyValue("content", "viewSize");
+            if (UtilValidate.isEmpty(viewSizeStr))
+                viewSizeStr = "10";
+            int viewSize = Integer.parseInt(viewSizeStr); 
+            String viewIndexStr = (String)templateCtx.get("viewIndex");
+            if (UtilValidate.isEmpty(viewIndexStr))
+                viewIndexStr = "0";
+            int viewIndex = Integer.parseInt(viewIndexStr); 
+            int lowIndex = viewIndex * viewSize;
+            int listSize = longList.size();
+            int highIndex = (viewIndex + 1) * viewSize;
+            if (highIndex > listSize)
+                highIndex = listSize;
+            if (Debug.infoOn()) Debug.logInfo("viewIndexStr(0):" + viewIndexStr + " viewIndex:" + viewIndex, "");
+            if (Debug.infoOn()) Debug.logInfo("viewSizeStr(0):" + viewSizeStr + " viewSize:" + viewSize, "");
+            if (Debug.infoOn()) Debug.logInfo("listSize(0):" + listSize , "");
+            if (Debug.infoOn()) Debug.logInfo("highIndex(0):" + highIndex , "");
+            if (Debug.infoOn()) Debug.logInfo("lowIndex(0):" + lowIndex , "");
+            Iterator it = longList.iterator();
+            //List entityList = longList.subList(lowIndex, highIndex);
+            List entityList = longList;
+            templateCtx.put("entityList", entityList);
+            templateCtx.put("viewIndex", new Integer(viewIndex));
+            templateCtx.put("viewSize", new Integer(viewSize));
+            templateCtx.put("lowIndex", new Integer(lowIndex));
+            templateCtx.put("highIndex", new Integer(highIndex));
+            templateCtx.put("listSize", new Integer(listSize));
         }
-        templateCtx.put("contentId", null);
-        templateCtx.put("subContentId", null);
-
-        String contentId = (String)view.get("contentId");
-        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
-        final String contentIdTo = contentId;
-
-        String thisMapKey = (String)templateCtx.get("mapKey");
-        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), thisMapKey ." + thisMapKey, module);
-        Map results = null;
-        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
-        String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
-        try {
-            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId, orderBy);
-        } catch(MiniLangException e2) {
-            throw new RuntimeException(e2.getMessage());
-        } catch(GenericEntityException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        List longList = (List) results.get("entityList");
-        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
-        String viewSizeStr = (String)templateCtx.get("viewSize");
-        if (UtilValidate.isEmpty(viewSizeStr))
-            viewSizeStr = UtilProperties.getPropertyValue("content", "viewSize");
-        if (UtilValidate.isEmpty(viewSizeStr))
-            viewSizeStr = "10";
-        int viewSize = Integer.parseInt(viewSizeStr); 
-        String viewIndexStr = (String)templateCtx.get("viewIndex");
-        if (UtilValidate.isEmpty(viewIndexStr))
-            viewIndexStr = "0";
-        int viewIndex = Integer.parseInt(viewIndexStr); 
-        int lowIndex = viewIndex * viewSize;
-        int listSize = longList.size();
-        int highIndex = (viewIndex + 1) * viewSize;
-        if (highIndex > listSize)
-            highIndex = listSize;
-        if (Debug.infoOn()) Debug.logInfo("viewIndexStr(0):" + viewIndexStr + " viewIndex:" + viewIndex, "");
-        if (Debug.infoOn()) Debug.logInfo("viewSizeStr(0):" + viewSizeStr + " viewSize:" + viewSize, "");
-        if (Debug.infoOn()) Debug.logInfo("listSize(0):" + listSize , "");
-        if (Debug.infoOn()) Debug.logInfo("highIndex(0):" + highIndex , "");
-        if (Debug.infoOn()) Debug.logInfo("lowIndex(0):" + lowIndex , "");
-        Iterator it = longList.iterator();
-        //List entityList = longList.subList(lowIndex, highIndex);
-        List entityList = longList;
-        templateCtx.put("entityList", entityList);
-        templateCtx.put("viewIndex", new Integer(viewIndex));
-        templateCtx.put("viewSize", new Integer(viewSize));
-        templateCtx.put("lowIndex", new Integer(lowIndex));
-        templateCtx.put("highIndex", new Integer(highIndex));
-        templateCtx.put("listSize", new Integer(listSize));
 
         return new LoopWriter(out) {
 
@@ -309,6 +308,10 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public int onStart() throws TemplateModelException, IOException {
+
+                if (view == null)
+                    return TransformControl.SKIP_BODY;
+
                 List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
                 String trailCsv = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
                 //if (Debug.infoOn()) Debug.logInfo("in Loop, onStart, trailCsv:" + trailCsv, "");
