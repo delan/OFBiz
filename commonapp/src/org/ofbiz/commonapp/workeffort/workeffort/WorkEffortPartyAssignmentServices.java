@@ -136,13 +136,14 @@ public class WorkEffortPartyAssignmentServices {
 
         GenericValue newWorkEffortPartyAssignment = (GenericValue) workEffortPartyAssignment.clone();              
 
+        // if necessary create new status entry, and set statusDateTime date
+        String lastStatusId = workEffortPartyAssignment.getString("statusId");
+        String statusId = (String) context.get("statusId");
+        
         Timestamp nowStamp = UtilDateTime.nowTimestamp();
         workEffortPartyAssignment.setNonPKFields(context);
-
-        // if necessary create new status entry, and set statusDateTime date
-        String statusId = (String) context.get("statusId");
-
-        if (statusId != null && !statusId.equals(workEffortPartyAssignment.getString("statusId"))) {
+        
+        if (statusId != null && !statusId.equals(lastStatusId)) {
             // set the current status & timestamp
             workEffortPartyAssignment.set("statusId", statusId);
             workEffortPartyAssignment.set("statusDateTime", nowStamp);
