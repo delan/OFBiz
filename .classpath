@@ -8,6 +8,7 @@
     <classpathentry kind="src" path="components/service/src"/>
     <classpathentry kind="src" path="components/entityext/src"/>
     <classpathentry kind="src" path="components/minilang/src"/>
+    <classpathentry kind="src" path="components/workflow/src"/>
     <classpathentry kind="src" path="components/content/src"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/carol.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/commons-cli.jar"/>
