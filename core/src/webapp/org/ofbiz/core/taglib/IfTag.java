@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/06 22:18:00  jonesde
+ * The getSize method now returns a String; Eric Pabst reported this problem, hopefully this will fix it for him.
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -166,9 +169,13 @@ public class IfTag extends BodyTagSupport {
       // Assume the object is a Boolean and compare to the Boolean value of value.
       try {
         Boolean b = (Boolean) object;
-        Boolean v = new Boolean(value);
-        if ( b.equals(v) )
-          return EVAL_BODY_AGAIN;
+        if(value != null) {
+          Boolean v = new Boolean(value);
+          if(b.equals(v)) return EVAL_BODY_AGAIN;
+        }
+        else {
+          if(b.booleanValue()) return EVAL_BODY_AGAIN;
+        }
       }
       catch ( RuntimeException e ) { return SKIP_BODY; }
     }

@@ -55,7 +55,7 @@
 
   <tag>
     <name>iteratorHasNext</name>
-    <tagclass>org.ofbiz.core.taglib.IterateHasNextTag</tagclass>
+    <tagclass>org.ofbiz.core.taglib.IteratorHasNextTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <info>Only process body if parent iterator tag has another entry.</info>
   </tag>	
@@ -109,5 +109,18 @@
     <info>Displays a properly formatted internationalized string entity field.</info>
     <attribute><name>attribute</name><required>true</required></attribute>
     <attribute><name>type</name><required>true</required></attribute>
+  </tag>
+
+  <tag>
+    <name>inputvalue</name>
+    <tagclass>org.ofbiz.core.taglib.InputValueTag</tagclass>
+    <bodycontent>NONE</bodycontent>
+    <info>Outputs a string for an input box from either an entity field or a request parameter. 
+          Decides which to use by checking to see if the entityattr exist and using the specified field if it does.
+          If the Boolean object referred to by the tryentityattr attribute is false, always tries to use the request parameter and ignores the entity field.</info>
+    <attribute><name>field</name><required>true</required></attribute>
+    <attribute><name>param</name><required>true</required></attribute>
+    <attribute><name>entityAttr</name><required>true</required></attribute>
+    <attribute><name>tryEntityAttr</name><required>false</required></attribute>
   </tag>
 </taglib>
