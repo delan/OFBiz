@@ -50,6 +50,9 @@ public class ModelViewEntity extends ModelEntity {
     /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
     protected Map memberModelEntities = null;
 
+    /** List of alias-alls which act as a shortcut for easily pulling over member entity fields */
+    protected List aliasAlls = new ArrayList();
+
     /** List of aliases with information in addition to what is in the standard field list */
     protected List aliases = new ArrayList();
 
@@ -66,40 +69,44 @@ public class ModelViewEntity extends ModelEntity {
         this.populateBasicInfo(entityElement, docElement, docElementValues);
 
         if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before \"member-entity\"s");
-        NodeList membEntList = entityElement.getElementsByTagName("member-entity");
-
-        for (int i = 0; i < membEntList.getLength(); i++) {
-            Element membEnt = (Element) membEntList.item(i);
-            String alias = UtilXml.checkEmpty(membEnt.getAttribute("entity-alias"));
-            String name = UtilXml.checkEmpty(membEnt.getAttribute("entity-name"));
-
+        List memberEntityList = UtilXml.childElementList(entityElement, "member-entity");
+        Iterator memberEntityIter = memberEntityList.iterator();
+        while (memberEntityIter.hasNext()) {
+            Element memberEntityElement = (Element) memberEntityIter.next();
+            String alias = UtilXml.checkEmpty(memberEntityElement.getAttribute("entity-alias"));
+            String name = UtilXml.checkEmpty(memberEntityElement.getAttribute("entity-name"));
             if (name.length() <= 0 || alias.length() <= 0) {
                 Debug.logError("[new ModelViewEntity] entity-alias or entity-name missing on member-entity element of the view-entity " + this.entityName, module);
             } else {
                 ModelMemberEntity modelMemberEntity = new ModelMemberEntity(alias, name);
-
                 this.addMemberModelMemberEntity(modelMemberEntity);
             }
         }
 
-        // when reading aliases, just read them into the alias list, there will be a pass
+        // when reading aliases and alias-alls, just read them into the alias list, there will be a pass
         // after loading all entities to go back and fill in all of the ModelField entries
-        if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before aliases");
-        NodeList aliasList = entityElement.getElementsByTagName("alias");
-
-        for (int i = 0; i < aliasList.getLength(); i++) {
-            Element aliasElement = (Element) aliasList.item(i);
-            ModelViewEntity.ModelAlias alias = new ModelAlias(aliasElement);
-
-            this.aliases.add(alias);
+        List aliasAllList = UtilXml.childElementList(entityElement, "alias-all");
+        Iterator aliasAllIter = aliasAllList.iterator();
+        while (aliasAllIter.hasNext()) {
+            Element aliasElement = (Element) aliasAllIter.next();
+            ModelViewEntity.ModelAliasAll aliasAll = new ModelAliasAll(aliasElement);
+            this.aliasAlls.add(aliasAll);
         }
 
-        NodeList viewLinkList = entityElement.getElementsByTagName("view-link");
-
-        for (int i = 0; i < viewLinkList.getLength(); i++) {
-            Element viewLinkElement = (Element) viewLinkList.item(i);
+        if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before aliases");
+        List aliasList = UtilXml.childElementList(entityElement, "alias");
+        Iterator aliasIter = aliasList.iterator();
+        while (aliasIter.hasNext()) {
+            Element aliasElement = (Element) aliasIter.next();
+            ModelViewEntity.ModelAlias alias = new ModelAlias(aliasElement);
+            this.aliases.add(alias);
+        }
+        
+        List viewLinkList = UtilXml.childElementList(entityElement, "view-link");
+        Iterator viewLinkIter = viewLinkList.iterator();
+        while (viewLinkIter.hasNext()) {
+            Element viewLinkElement = (Element) viewLinkIter.next();
             ModelViewLink viewLink = new ModelViewLink(viewLinkElement);
-
             this.addViewLink(viewLink);
         }
 
@@ -242,6 +249,8 @@ public class ModelViewEntity extends ModelEntity {
             memberModelEntities.put(entry.getKey(), aliasedEntity);
         }
 
+        expandAllAliasAlls(entityCache);
+
         for (int i = 0; i < aliases.size(); i++) {
             ModelAlias alias = (ModelAlias) aliases.get(i);
 
@@ -254,8 +263,7 @@ public class ModelViewEntity extends ModelEntity {
             ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
 
             if (aliasedEntity == null) {
-                Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " +
-                    aliasedEntityName, module);
+                Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " + aliasedEntityName, module);
                 continue;
             }
 
@@ -329,6 +337,64 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
+    /**
+     * Go through all aliasAlls and create an alias for each field of each member entity
+     */
+    private void expandAllAliasAlls(Map entityCache) {
+        List expandedAliasList = new ArrayList();
+
+        Iterator aliasAllIter = aliasAlls.iterator();
+        while (aliasAllIter.hasNext()) {
+            ModelAliasAll aliasAll = (ModelAliasAll) aliasAllIter.next();
+            String prefix = aliasAll.getPrefix();
+
+            ModelMemberEntity modelMemberEntity = (ModelMemberEntity) memberModelMemberEntities.get(aliasAll.getEntityAlias());
+            if (modelMemberEntity == null) {
+                Debug.logError("Member entity referred to in alias-all not found, ignoring: " + aliasAll.getEntityAlias(), module);
+                continue;
+            }
+
+            String aliasedEntityName = modelMemberEntity.getEntityName();
+            ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
+            if (aliasedEntity == null) {
+                Debug.logError("Entity referred to in member-entity " + aliasAll.getEntityAlias() + " not found, ignoring: " + aliasedEntityName, module);
+                continue;
+            }
+
+            List entFieldList = aliasedEntity.getAllFieldNames();
+            if (entFieldList == null) {
+                Debug.logError("Entity referred to in member-entity " + aliasAll.getEntityAlias() + " has no fields, ignoring: " + aliasedEntityName, module);
+                continue;
+            }
+
+            Iterator fieldnamesIterator = entFieldList.iterator();
+            while (fieldnamesIterator.hasNext()) {
+                // now merge the lists, leaving out any that duplicate an existing alias name
+                String aliasName = (String) fieldnamesIterator.next();
+                if (UtilValidate.isNotEmpty("prefix")) {
+                    StringBuffer newAliasBuffer = new StringBuffer(prefix);
+                    //make sure the first letter is uppercase to delineate the field name
+                    newAliasBuffer.append(aliasName.charAt(0));
+                    newAliasBuffer.append(aliasName.substring(1));
+                    aliasName = newAliasBuffer.toString();
+                }
+                
+                ModelAlias existingAlias = this.getAlias(aliasName);
+                if (existingAlias != null) {
+                    //already exists, oh well... probably an override, but logInfo just in case
+                    Debug.logInfo("Throwing out field alias in view entity " + this.getEntityName() + " because one already exists with the name: " + aliasName, module);
+                    continue;
+                }
+                
+                ModelAlias expandedAlias = new ModelAlias();
+                expandedAlias.name = aliasName;
+                expandedAlias.field = expandedAlias.name;
+                expandedAlias.entityAlias = aliasAll.getEntityAlias();
+                expandedAliasList.add(expandedAlias);
+            }
+        }
+    }
+
     public static class ModelMemberEntity {
         protected String entityAlias = "";
         protected String entityName = "";
@@ -347,6 +413,25 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 
+    public static class ModelAliasAll {
+        protected String entityAlias = "";
+        protected String prefix = "";
+
+        protected ModelAliasAll() {}
+
+        public ModelAliasAll(Element aliasAllElement) {
+            this.entityAlias = UtilXml.checkEmpty(aliasAllElement.getAttribute("entity-alias"));
+            this.prefix = UtilXml.checkEmpty(aliasAllElement.getAttribute("prefix"));
+        }
+
+        public String getEntityAlias() {
+            return this.entityAlias;
+        }
+
+        public String getPrefix() {
+            return this.prefix;
+        }
+    }
 
     public static class ModelAlias {
         protected String entityAlias = "";

@@ -89,7 +89,7 @@
 	name CDATA #REQUIRED >
 
 <!-- ================== view-entity ===================== -->
-<!ELEMENT view-entity ( description?, member-entity+, alias+, view-link*, relation* )>
+<!ELEMENT view-entity ( description?, member-entity+, alias-all*, alias+, view-link*, relation* )>
 <!-- see the children of entitymodel section for description, etc. -->
 <!ATTLIST view-entity
 	entity-name CDATA #REQUIRED
@@ -104,6 +104,10 @@
 <!ATTLIST member-entity
 	entity-alias CDATA #REQUIRED
 	entity-name CDATA #REQUIRED >
+<!ELEMENT alias-all EMPTY>
+<!ATTLIST alias-all
+	entity-alias CDATA #REQUIRED
+	prefix CDATA #IMPLIED>
 <!ELEMENT alias EMPTY>
 <!ATTLIST alias
 	entity-alias CDATA #REQUIRED
