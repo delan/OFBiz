@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/02 23:11:14  azeneski
+ * Some non-functional services implementation.
+ *
  */
 
 package org.ofbiz.core.scheduler;
@@ -139,7 +142,7 @@ public class JobScheduler implements Runnable {
                     queued = true;
                 }
                 catch ( JobSchedulerException e ) {
-                    firstJob.adjustRunTime();
+                    firstJob.adjustSeqNum();
                 }
             }
         }

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/02 23:11:14  azeneski
+ * Some non-functional services implementation.
+ *
  */
 
 package org.ofbiz.core.scheduler;
@@ -39,7 +42,6 @@ import org.ofbiz.core.util.*;
 
 public class Job implements Comparable, Serializable {
     
-    public static final int RUNTIME_ADJUSTMENT = 3000;  // Default adjustment is 3 seconds.
     public static final int INTERVAL_MINUTE = 1;
     public static final int INTERVAL_HOUR = 2;
     public static final int INTERVAL_DAY = 3;
@@ -48,6 +50,7 @@ public class Job implements Comparable, Serializable {
     private GenericValue job;
     private Map context;
     private long runTime;
+    private long seqNum;
     
     /* Entity Fields:
      * String jobName
@@ -67,6 +70,7 @@ public class Job implements Comparable, Serializable {
         this.job = job;
         this.context = context;
         this.runTime = -1;
+        this.seqNum = 0;
         updateRunTime();
         try {
             job.store();
@@ -93,8 +97,8 @@ public class Job implements Comparable, Serializable {
     }
     
     /** Adjusts the run time to not conflict with other Jobs. */
-    public void adjustRunTime() {
-        runTime += RUNTIME_ADJUSTMENT;
+    public void adjustSeqNum() {
+        this.seqNum++;
     }
     
     /** Receives notification when this Job is running. */
@@ -122,6 +126,11 @@ public class Job implements Comparable, Serializable {
         return runTime;
     }
     
+    /** Retuns the sequence number of this job. */
+    public long getSeqNum() {
+        return seqNum;
+    }
+    
     /** Retuns the last time the Job ran or 0 if never ran. */
     public long lastRunTime() {
         if ( job.getDate("lastRunTime") == null )
@@ -146,7 +155,7 @@ public class Job implements Comparable, Serializable {
     /** Evaluates if this Job is equal to another Job. */
     public boolean equals(Object obj) {
         Job testJob = (Job) obj;
-        if (this.runTime == testJob.getRunTime())
+        if (this.runTime == testJob.getRunTime() && this.seqNum == testJob.getSeqNum())
             return true;
         return false;
     }
@@ -154,10 +163,19 @@ public class Job implements Comparable, Serializable {
     /** Used by the comparable interface. */
     public int compareTo(Object obj) {
         Job testJob = (Job) obj;
-        if (this.runTime < testJob.getRunTime())
-            return -1;
-        if (this.runTime > testJob.getRunTime())
-            return 1;
+        if ( this.runTime == testJob.getRunTime()) {
+            if ( this.seqNum < testJob.getSeqNum())
+                return -1;
+            if ( this.seqNum > testJob.getSeqNum())
+                return 1;
+            return 0;
+        }
+        else {            
+            if (this.runTime < testJob.getRunTime())
+                return -1;
+            if (this.runTime > testJob.getRunTime())
+                return 1;
+        }
         return 0;
     }
     
