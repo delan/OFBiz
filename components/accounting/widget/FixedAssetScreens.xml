@@ -54,26 +54,26 @@
         </section>
     </screen>
     
-	<!-- list all assets in a tabular format -->
+    <!-- list all assets in a tabular format -->
     <screen name="ListFixedAssets">
         <section>
             <actions>
                 <set field="title" value="List Fixed Assets"/>
                 <set field="page.headerItem" value="ListFixedAssets"/>
                 <set field="page.tabButtonItem" value="ListFixedAssets"/>
-				<entity-condition entity-name="FixedAsset" list-name="fixedAssets" >
+                <entity-condition entity-name="FixedAsset" list-name="fixedAssets" >
                                     <condition-list>
-					<condition-expr field-name="fixedAssetId" operator="greater" value=" " />
+                    <condition-expr field-name="fixedAssetId" operator="greater" value=" " />
                                         <condition-expr field-name="fixedAssetTypeId" operator="not-equals" value="GROUP_EQUIPMENT"/>
                                     </condition-list>
-				</entity-condition>
-			</actions>
+                </entity-condition>
+            </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator">
                     <decorator-section name="body">
-						<container>
-                        	<label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
-                         	</container>
+                        <container>
+                            <label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
+                             </container>
                                 <container>
                                     <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                                 </container>
@@ -86,8 +86,8 @@
             </widgets>
         </section>
     </screen>
-	
-	<!-- create and/or update a fixed asset -->
+    
+    <!-- create and/or update a fixed asset -->
     <screen name="EditFixedAsset">
         <section>
             <actions>
@@ -95,14 +95,14 @@
                 <set field="page.headerItem" value="ListFixedAssets"/>
                 <set field="page.tabButtonItem" value="EditFixedAsset"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
-				<entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator">
                     <decorator-section name="body">
-						<container>
-                        	<label style="head1">${uiLabelMap.AccountingFixedAssetEdit}</label>
-                         	</container>
+                        <container>
+                            <label style="head1">${uiLabelMap.AccountingFixedAssetEdit}</label>
+                             </container>
                                 <container>
                                     <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                                 </container>
@@ -113,8 +113,8 @@
         </section>
     </screen>
 
-	<!-- provide a list and allow additions -->
-	<screen name="ListFixedAssetProducts">
+    <!-- provide a list and allow additions -->
+    <screen name="ListFixedAssetProducts">
         <section>
             <actions>
                 <set field="title" value="Edit Fixed Asset related Products"/>
@@ -125,26 +125,26 @@
 
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset">
-					<select-field field-name="fixedAssetName"/>
-					</entity-one>
-				<entity-condition entity-name="FixedAssetProduct" list-name="fixedAssetProducts" >
-					<condition-expr field-name="fixedAssetId" operator="equals" value="${fixedAssetId}" />
+                    <select-field field-name="fixedAssetName"/>
+                    </entity-one>
+                <entity-condition entity-name="FixedAssetProduct" list-name="fixedAssetProducts" >
+                    <condition-expr field-name="fixedAssetId" operator="equals" value="${fixedAssetId}" />
                     <order-by field-name="productId"/>
                     <order-by field-name="fixedAssetProductTypeId"/>
                     <order-by field-name="fromDate"/>
-				</entity-condition>
-				
+                </entity-condition>
+                
             </actions>
             <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator">
                     <decorator-section name="body">
-              	    	<container>
-                        	<label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
-                         	</container>
+                          <container>
+                            <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
+                             </container>
                         <include-form name="ListFixedAssetProducts" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
-						<container>
-                        	<label style="head1">${uiLabelMap.AccountingFixedAssetProductNew}</label>
-                         	</container>
+                        <container>
+                            <label style="head1">${uiLabelMap.AccountingFixedAssetProductNew}</label>
+                             </container>
                         <include-form name="AddFixedAssetProduct" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
