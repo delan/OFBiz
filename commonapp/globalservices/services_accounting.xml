@@ -97,4 +97,25 @@
         <attribute name="comments" type="String" mode="IN" optional="true"/>
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
     </service>
+    
+    <service name="authorizePayment" engine="java"
+        location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="authorizePayment" auth="false">
+        <description>Authorize Payment</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false" />
+        <attribute name="currency" type="String" mode="IN" optional="true" />
+        <attribute name="authResponse" type="String" mode="OUT" optional="false" />
+    </service>
+
+    <service name="capturePayment" engine="java"
+        location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="capturePayment" auth="false">
+        <description>Capture Payment</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false" />
+    </service>
+    
+    <service name="captureAll" engine="simple"
+                location="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="captureAll" auth="false">
+        <description>Capture all payments for orders with a given status</description>
+        <attribute name="orderStatusId" type="String" mode="IN" optional="false" />
+    </service>
+            
 </services>
