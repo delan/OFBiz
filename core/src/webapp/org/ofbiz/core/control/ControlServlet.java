@@ -23,19 +23,42 @@
  */
 package org.ofbiz.core.control;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
-import com.ibm.bsf.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.stats.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.security.Security;
+import org.ofbiz.core.security.SecurityConfigurationException;
+import org.ofbiz.core.security.SecurityFactory;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.WebAppDispatcher;
+import org.ofbiz.core.stats.ServerHitBin;
+import org.ofbiz.core.util.CachedClassLoader;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.StringUtil;
+import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilJ2eeCompat;
+import org.ofbiz.core.util.UtilTimer;
+import org.ofbiz.core.util.UtilValidate;
+
+import com.ibm.bsf.BSFManager;
 
 /**
  * ControlServlet.java - Master servlet for the web application.

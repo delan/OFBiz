@@ -66,7 +66,7 @@ public final class SiteDefs {
     public static final String CONTROL_PATH = "_CONTROL_PATH_";
 
     /** Used in request object to store the ServletConfig object */
-    public static final String SERVLET_CONTEXT = "_SERVLET_CONTEXT_";
+    public static final String SERVLET_CONTEXT = "servletContext";
 
     /** Used in request object to pass around the final view of the current request */
     public static final String CURRENT_VIEW = "_CURRENT_VIEW_";
