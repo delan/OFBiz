@@ -174,22 +174,62 @@
     <request-map uri="EditProductAssoc"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductAssoc"/>
     </request-map>
-   <request-map uri="EditProductAttributes"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditProductAttributes"/>
-    </request-map>
-
     <request-map uri="UpdateProductAssoc"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductAssoc"/>
     	<response name="success" type="view" value="EditProductAssoc"/>
         <response name="error" type="view" value="EditProductAssoc"/>
     </request-map>
-
+    
+    <request-map uri="EditProductAttributes"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductAttributes"/>
+    </request-map>
     <request-map uri="UpdateProductAttribute"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAttribute"/>
     	<response name="success" type="view" value="EditProductAttributes"/>
         <response name="error" type="view" value="EditProductAttributes"/>
     </request-map>
 
+    <request-map uri="EditProductFeatures"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductFeatures"/>
+    </request-map>
+    <request-map uri="ApplyFeatureToProduct"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="applyFeatureToProduct"/>
+    	<response name="success" type="view" value="EditProductFeatures"/>
+    	<response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
+    <request-map uri="UpdateFeatureToProductApplication"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFeatureToProductApplication"/>
+    	<response name="success" type="view" value="EditProductFeatures"/>
+    	<response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
+    <request-map uri="RemoveFeatureFromProduct"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeFeatureFromProduct"/>
+    	<response name="success" type="view" value="EditProductFeatures"/>
+    	<response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
+
+    <request-map uri="EditFeatureCategories"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditFeatureCategories"/>
+    </request-map>
+    <request-map uri="CreateFeatureCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFeatureCategory"/>
+    	<response name="success" type="view" value="EditFeatureCategories"/>
+    	<response name="error" type="view" value="EditFeatureCategories"/>
+    </request-map>
+    
+    <request-map uri="EditFeatureCategoryFeatures"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditFeatureCategoryFeatures"/>
+    </request-map>
+    <request-map uri="CreateProductFeature"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFeature"/>
+    	<response name="success" type="view" value="EditFeatureCategoryFeatures"/>
+    	<response name="error" type="view" value="EditFeatureCategoryFeatures"/>
+    </request-map>
+    <request-map uri="UpdateProductFeature"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductFeature"/>
+    	<response name="success" type="view" value="EditFeatureCategoryFeatures"/>
+    	<response name="error" type="view" value="EditFeatureCategoryFeatures"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -201,12 +241,18 @@
     <view-map name="keywordsearch" type="region"/>
     <view-map name="ChooseTopCategory" type="region"/>
     <view-map name="EditCategory" type="region"/>
+
     <view-map name="EditProduct" type="region"/>
-    <view-map name="EditProductAttributes" type="region"/>
     <view-map name="EditProductCategories" type="region"/>
     <view-map name="EditCategoryProducts" type="region"/>
     <view-map name="EditProductKeyword" type="region"/>
     <view-map name="EditProductAssoc" type="region"/>
+    <view-map name="EditProductAttributes" type="region"/>
+    <view-map name="EditProductFeatures" type="region"/>
+    
+    <view-map name="EditFeatureCategories" type="region"/>
+    <view-map name="EditFeatureCategoryFeatures" type="region"/>
+    
     <view-map name="UploadImage" type="region"/>
     <view-map name="UploadCategoryImage" type="region"/>
     <!-- end of view mappings -->
