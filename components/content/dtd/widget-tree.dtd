@@ -36,7 +36,7 @@
     name CDATA #REQUIRED
     root-node-name CDATA #REQUIRED
     default-render-style (simple | follow-trail | show-peers | expand-collapse) "simple"
-    default-wrap-style CDATA #REQUIRED
+    default-wrap-style CDATA #IMPLIED
     expand-collapse-request CDATA #IMPLIED
     trail-name CDATA #IMPLIED
     open-depth CDATA "0"
@@ -44,10 +44,10 @@
     entity-name CDATA "Content"
 >
 
-<!ELEMENT node ( condition?, (entity-one | service | script ), (include-screen | label | link )?, sub-node* )>
+<!ELEMENT node ( condition?, (entity-one | service | script )?, (include-screen | label | link )?, sub-node* )>
 <!ATTLIST node
     name CDATA #REQUIRED
-    wrap-style CDATA #REQUIRED
+    wrap-style CDATA #IMPLIED
     render-style (simple | follow-trail | show-peers | expand-collapse) #IMPLIED
 >
 
@@ -111,7 +111,7 @@
     <!ELEMENT entity-one ( field-map*, select-field* )>
     <!ATTLIST entity-one
         entity-name CDATA #REQUIRED
-        value-name CDATA #REQUIRED
+        value-name CDATA #IMPLIED
         use-cache ( true | false ) "false"
         auto-field-map ( true | false ) "true"
     >

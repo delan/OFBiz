@@ -703,6 +703,13 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(" enctype=\"multipart/form-data\"");
         }
 
+        String targetWindow = modelForm.getTargetWindow(context);
+        if (UtilValidate.isNotEmpty(targetWindow)) {
+            buffer.append(" target=\"");
+            buffer.append(targetWindow);
+            buffer.append("\"");
+        }
+
         buffer.append(" name=\"");
         buffer.append(modelForm.getCurrentFormName(context));
         buffer.append("\" style=\"margin: 0;\">");

@@ -48,6 +48,7 @@
     name CDATA #REQUIRED
     type ( single | list | multi | upload ) #REQUIRED
     target CDATA #IMPLIED
+    target-window CDATA #IMPLIED
     paginate-target CDATA #IMPLIED
     title CDATA #IMPLIED
     tooltip CDATA #IMPLIED

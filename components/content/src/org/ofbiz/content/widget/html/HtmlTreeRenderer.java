@@ -100,7 +100,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         }
         */
         boolean hasChildren = node.hasChildren(context, subNodeValues);
-            Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
+            //Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
 
         // check to see if this node needs to be expanded.
         if (hasChildren && node.isExpandCollapse()) {
@@ -109,8 +109,8 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             if (depth < targetNodeTrail.size()) {
                 targetEntityId = (String)targetNodeTrail.get(depth);
             }
-            Debug.logInfo("HtmlTreeExpandCollapseRenderer, targetEntityId(1):" + targetEntityId, module);
-            Debug.logInfo("HtmlTreeExpandCollapseRenderer, depth(1):" + depth, module);
+            //Debug.logInfo("HtmlTreeExpandCollapseRenderer, targetEntityId(1):" + targetEntityId, module);
+            //Debug.logInfo("HtmlTreeExpandCollapseRenderer, depth(1):" + depth, module);
     
             ModelTree.ModelNode.Image expandCollapseImage = new ModelTree.ModelNode.Image();
             expandCollapseImage.setBorder("0");
