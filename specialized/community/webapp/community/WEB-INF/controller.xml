@@ -39,28 +39,28 @@
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
         <description>Verify a user is logged in.</description>
-        <security https="true" auth="false"/>
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
 
     <request-map uri="login">
-        <security https="true" auth="false"/>
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="login"/>
     </request-map>
 
     <request-map uri="logout">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="logout"/>
         <response name="success" type="request" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
 
     <request-map uri="autoLogout">
-        <security https="true" auth="false"/>
+        <security https="false" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="autoLoginRemove"/>
         <response name="success" type="request" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
@@ -75,19 +75,19 @@
     </request-map>
 
     <request-map uri="authview">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
 
     <request-map uri="main">
-        <security https="true" auth="false"/>
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="main"/>
     </request-map>
 
 
     <request-map uri="changeLeafToNode">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="changeLeafToNode"/>
         <response name="success" type="view" value="EditArticleFrame"/>
         <response name="error" type="view" value="AddArticleFrame"/>
@@ -95,14 +95,14 @@
 
 
     <request-map uri="deactivateContent">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="deactivateContentAssoc"/>
         <response name="success" type="view" value="MainDoc"/>
         <response name="error" type="view" value="EditContent"/>
     </request-map>
 
     <request-map uri="deactivateArticle">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="deactivateContentAssoc"/>
         <response name="success" type="view" value="MainDoc"/>
         <response name="error" type="view" value="EditArticle"/>
@@ -130,55 +130,55 @@
     </request-map>
 
     <request-map uri="EditBlog">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="EditBlog"/>
     </request-map>
 
     <request-map uri="EditBlogImage">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="EditBlogImage"/>
     </request-map>
 
     <request-map uri="EditBlogText">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="EditBlogText"/>
     </request-map>
 
     <request-map uri="RespondBlog">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="RespondBlog"/>
     </request-map>
 
     <request-map uri="persistBlogAll">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="persistBlogAll"/>
         <response name="success" type="view" value="EditBlog"/>
         <response name="error" type="view" value="EditBlog"/>
     </request-map>
 
     <request-map uri="persistBlogSummary">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="persistContentAndAssoc"/>
         <response name="success" type="view" value="EditBlog"/>
         <response name="error" type="view" value="EditBlog"/>
     </request-map>
 
     <request-map uri="persistBlogText">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="persistContentAndAssoc"/>
         <response name="success" type="view" value="EditBlog"/>
         <response name="error" type="view" value="EditBlog"/>
     </request-map>
 
     <request-map uri="persistBlogImage">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="persistContentAndAssoc"/>
         <response name="success" type="view" value="EditBlog"/>
         <response name="error" type="view" value="EditBlog"/>
     </request-map>
 
     <request-map uri="persistBlogResponse">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="persistContentAndAssoc"/>
         <response name="success" type="view" value="ViewResponse"/>
         <response name="error" type="view" value="ViewResponse"/>
@@ -186,46 +186,46 @@
 
 
     <request-map uri="MainForum">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="MainForum"/>
     </request-map>
 
     <request-map uri="ViewForumResponse">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="ViewForumResponse"/>
     </request-map>
 
     <request-map uri="LatestForumResponses">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="LatestForumResponses"/>
     </request-map>
 
     <request-map uri="EditForumText">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="EditForumText"/>
     </request-map>
 
     <request-map uri="RespondForum">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <response name="success" type="view" value="RespondForum"/>
     </request-map>
 
     <request-map uri="persistForumText">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="persistContentAndAssoc"/>
         <response name="success" type="view" value="EditForum"/>
         <response name="error" type="view" value="EditForum"/>
     </request-map>
 
     <request-map uri="persistForumResponse">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="persistContentAndAssoc"/>
         <response name="success" type="view" value="ViewForumResponse"/>
         <response name="error" type="view" value="ViewForumResponse"/>
     </request-map>
 
     <request-map uri="addPublishStatus">
-        <security https="true" auth="true"/>
+        <security https="false" auth="true"/>
         <event type="service" path="" invoke="followNodeChildren"/>
     </request-map>
 
