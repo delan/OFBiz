@@ -123,7 +123,8 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     <tr bgcolor="#CCCCCC"> 
       <td colspan="5"> 
         <div align="center" class="titletext">ENTITY: <%=entityName%> | TABLE: <%=entity.getTableName()%></div>
-        <div align="center" class="entitytext"><b><%=entity.getTitle()%></b></div>
+        <div align="center" class="entitytext"><b><%=entity.getTitle()%></b>&nbsp;
+            <a target='main' href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName + "&find=true&VIEW_SIZE=50&VIEW_INDEX=0")%>">[view data]</a></div>
         <%if (entity.getDescription() != null && !entity.getDescription().equalsIgnoreCase("NONE") && !entity.getDescription().equalsIgnoreCase("")) {%>
         <div align="center" class="entitytext"><%=entity.getDescription()%></div>
         <%}%>
