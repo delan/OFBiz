@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.14 $
+ *@version    $Revision: 1.15 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -409,31 +409,35 @@ function addToList() {
                 </#list>
             </td>
             <td width="50%" valign="top" style="border-left: 1px solid grey">
-                <div class="tableheadtext">Products Used in Promotions:</div>
+                <div class="tableheadtext">Cart Item Use in Promotions:</div>
                 <#list shoppingCart.items() as cartLine>
                     <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
-                    <div class="tabletext">Line ${cartLineIndex+1} - ${cartLine.getPromoQuantityUsed()?string.number}/${cartLine.getQuantity()?string.number} Used - ${cartLine.getPromoQuantityAvailable()?string.number} Available</div>
-                    <#list cartLine.getQuantityUsedPerPromoActualIter() as quantityUsedPerPromoActualEntry>
-                        <#assign productPromoActualPK = quantityUsedPerPromoActualEntry.getKey()>
-                        <#assign actualQuantityUsed = quantityUsedPerPromoActualEntry.getValue()>
-                        <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
-                        <div class="tabletext">&nbsp;&nbsp;-&nbsp;${actualQuantityUsed} Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoActualPK.productPromoId}]</div>
-                        <!-- productPromoActualPK ${productPromoActualPK.toString()} -->
-                    </#list>
-                    <#list cartLine.getQuantityUsedPerPromoFailedIter() as quantityUsedPerPromoFailedEntry>
-                        <#assign productPromoFailedPK = quantityUsedPerPromoFailedEntry.getKey()>
-                        <#assign failedQuantityUsed = quantityUsedPerPromoFailedEntry.getValue()>
-                        <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
-                        <div class="tabletext">&nbsp;&nbsp;-&nbsp;Could be Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoFailedPK.productPromoId}]</div>
-                        <!-- Total times checked but failed: ${failedQuantityUsed}, productPromoFailedPK ${productPromoFailedPK.toString()} -->
-                    </#list>
-                    <#list cartLine.getQuantityUsedPerPromoCandidateIter() as quantityUsedPerPromoCandidateEntry>
-                        <#assign productPromoCandidatePK = quantityUsedPerPromoCandidateEntry.getKey()>
-                        <#assign candidateQuantityUsed = quantityUsedPerPromoCandidateEntry.getValue()>
-                        <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
-                        <!-- Left over not reset or confirmed, shouldn't happen: ${candidateQuantityUsed} Might be Used (Candidate) as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoCandidatePK.productPromoId}] -->
-                        <!-- productPromoCandidatePK ${productPromoCandidatePK.toString()} -->
-                    </#list>
+                    <#if cartLine.getIsPromo()>
+                        <div class="tabletext">Item #${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - Is a Promotional Item</div>
+                    <#else>
+                        <div class="tabletext">Item #${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${cartLine.getPromoQuantityUsed()?string.number}/${cartLine.getQuantity()?string.number} Used - ${cartLine.getPromoQuantityAvailable()?string.number} Available</div>
+                        <#list cartLine.getQuantityUsedPerPromoActualIter() as quantityUsedPerPromoActualEntry>
+                            <#assign productPromoActualPK = quantityUsedPerPromoActualEntry.getKey()>
+                            <#assign actualQuantityUsed = quantityUsedPerPromoActualEntry.getValue()>
+                            <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
+                            <div class="tabletext">&nbsp;&nbsp;-&nbsp;${actualQuantityUsed} Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoActualPK.productPromoId}]</div>
+                            <!-- productPromoActualPK ${productPromoActualPK.toString()} -->
+                        </#list>
+                        <#list cartLine.getQuantityUsedPerPromoFailedIter() as quantityUsedPerPromoFailedEntry>
+                            <#assign productPromoFailedPK = quantityUsedPerPromoFailedEntry.getKey()>
+                            <#assign failedQuantityUsed = quantityUsedPerPromoFailedEntry.getValue()>
+                            <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
+                            <div class="tabletext">&nbsp;&nbsp;-&nbsp;Could be Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoFailedPK.productPromoId}]</div>
+                            <!-- Total times checked but failed: ${failedQuantityUsed}, productPromoFailedPK ${productPromoFailedPK.toString()} -->
+                        </#list>
+                        <#list cartLine.getQuantityUsedPerPromoCandidateIter() as quantityUsedPerPromoCandidateEntry>
+                            <#assign productPromoCandidatePK = quantityUsedPerPromoCandidateEntry.getKey()>
+                            <#assign candidateQuantityUsed = quantityUsedPerPromoCandidateEntry.getValue()>
+                            <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
+                            <!-- Left over not reset or confirmed, shouldn't happen: ${candidateQuantityUsed} Might be Used (Candidate) as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoCandidatePK.productPromoId}] -->
+                            <!-- productPromoCandidatePK ${productPromoCandidatePK.toString()} -->
+                        </#list>
+                    </#if>
                 </#list>
             </td>
           </tr>
