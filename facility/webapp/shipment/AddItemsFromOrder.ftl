@@ -52,6 +52,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     </#if>
     <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
         <div class="head3">NOTE: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>
+    <#elseif "ORDER_COMPLETED" == orderHeader.statusId>
+        <div class="head3">NOTE: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}, there should be no items left to issue from this order.</div>
     <#else>
         <div class="head3" style="color: red;">WARNING: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; should generally be Approved before shipping.</div>
     </#if>
