@@ -313,9 +313,9 @@
 
     <request-map uri="checkout">
       <security https="true" auth="true"/>
-          <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
+      <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
       <response name="success" type="request" value="setOptions"/>
-          <response name="error" type="view" value="showcart"/>
+      <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="updateCheckoutOptions">
@@ -329,7 +329,7 @@
         <security https="true" auth="true" direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="setCheckOutOptions"/>
         <response name="success" type="request" value="calcShipping"/>
-        <response name="error" type="view" value="checkoutoptions"/>
+        <response name="error" type="view" value="quickcheckout"/>
     </request-map>
 
     <request-map uri="calcShipping">

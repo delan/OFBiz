@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.1
 -->
 
@@ -84,7 +84,7 @@ function toggleBillingAccount(box) {
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign cart = context.shoppingCart?if_exists>
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
-  <input type="hidden" name="DONE_PAGE" value="quickcheckout">
+  <input type="hidden" name="BACK_PAGE" value="quickcheckout">
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -35,7 +35,7 @@
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">
-        <a href="<@ofbizUrl>/${requestAttributes.DONE_PAGE?default("setBilling")}</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBackToOptions}]</a>
+        <a href="<@ofbizUrl>/${requestParameters.BACK_PAGE?default("setBilling")}</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.CommonBackToOptions}]</a>
       </td>
       <td align="right">
         <a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a>

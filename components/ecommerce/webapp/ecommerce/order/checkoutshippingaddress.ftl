@@ -1,38 +1,38 @@
 <#--
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
 <script language="javascript" type="text/javascript">
 <!--
-function submitForm(form, mode, value) {	
-    if (mode == "DN") {	
+function submitForm(form, mode, value) {
+    if (mode == "DN") {
         // done action; checkout
         form.action="<@ofbizUrl>/checkoutoptions</@ofbizUrl>";
         form.submit();
-    } else if (mode == "CS") {	
-        // continue shopping	
+    } else if (mode == "CS") {
+        // continue shopping
         form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
         form.submit();
     } else if (mode == "NA") {
@@ -64,16 +64,16 @@ function submitForm(form, mode, value) {
 
 function toggleBillingAccount(box) {
     var amountName = box.value + "_amount";
-    box.checked = true;   
+    box.checked = true;
     box.form.elements[amountName].disabled = false;
-    
+
     for (var i = 0; i < box.form.elements[box.name].length; i++) {
-        if (!box.form.elements[box.name][i].checked) {           
+        if (!box.form.elements[box.name][i].checked) {
             box.form.elements[box.form.elements[box.name][i].value + "_amount"].disabled = true;
         }
     }
 }
-        
+
 // -->
 </script>
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -113,7 +113,7 @@ function toggleBillingAccount(box) {
                            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                            <tr>
                              <td align="left" valign="top" width="1%" nowrap>
-                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"  <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId> checked</#if>>        
+                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"  <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId> checked</#if>>
                              </td>
                              <td align="left" valign="top" width="99%" nowrap>
                                <div class="tabletext">
@@ -124,7 +124,7 @@ function toggleBillingAccount(box) {
                                  <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
                                  <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
                                  <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
-                                 <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                            
+                                 <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>
                                  <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                                </div>
                              </td>
@@ -140,12 +140,6 @@ function toggleBillingAccount(box) {
           </tr>
         </table>
       </td>
-
-
-
-
-
-
     </tr>
   </table>
 </form>
