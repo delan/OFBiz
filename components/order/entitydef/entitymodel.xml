@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  */
 -->
 
@@ -1345,9 +1345,6 @@
       <field name="originContactMechId" type="id"></field>
       <field name="destinationFacilityId" type="id"></field>
       <prim-key field="returnId"/>
-      <relation type="many" rel-entity-name="ReturnItem">
-        <key-map field-name="returnId"/>
-      </relation>
       <relation type="one" fk-name="RTN_FROM_PARTY" rel-entity-name="Party">
         <key-map field-name="fromPartyId" rel-field-name="partyId"/>
       </relation>
@@ -1365,9 +1362,6 @@
       </relation>
       <relation type="one" fk-name="RTN_STTS_ITEM" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ReturnStatus">
-        <key-map field-name="returnId"/>
       </relation>
     </entity>
     <entity entity-name="ReturnItem"
@@ -1404,10 +1398,6 @@
       </relation>
       <relation type="one" fk-name="RTN_ITEM_STTSIT" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ReturnStatus">
-        <key-map field-name="returnId"/>
-        <key-map field-name="returnItemSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentReceipt">
         <key-map field-name="returnId"/>
@@ -1450,9 +1440,6 @@
       <field name="description" type="description"></field>
       <field name="sequenceId" type="id"></field>
       <prim-key field="returnReasonId"/>
-      <relation type="many" rel-entity-name="ReturnItem">
-        <key-map field-name="returnReasonId"/>
-      </relation>
     </entity>
     <entity entity-name="ReturnStatus"
             package-name="org.ofbiz.order.order"
@@ -2351,14 +2338,8 @@
       <relation type="one" fk-name="SHLIST_PARENT" title="Parent" rel-entity-name="ShoppingList">
         <key-map field-name="parentShoppingListId" rel-field-name="shoppingListId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="ShoppingList">
-        <key-map field-name="shoppingListId" rel-field-name="parentShoppingListId"/>
-      </relation>
       <relation type="many" title="Sibling" rel-entity-name="ShoppingList">
         <key-map field-name="parentShoppingListId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShoppingListItem">
-        <key-map field-name="shoppingListId"/>
       </relation>
       <relation type="one" fk-name="SHLIST_TYPE" rel-entity-name="ShoppingListType">
         <key-map field-name="shoppingListTypeId"/>
@@ -2407,9 +2388,6 @@
       <field name="shoppingListTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="shoppingListTypeId"/>
-      <relation type="many" rel-entity-name="ShoppingList">
-        <key-map field-name="shoppingListTypeId"/>
-      </relation>
     </entity>
 </entitymodel>
 

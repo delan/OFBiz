@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  */
 -->
 
@@ -183,9 +183,6 @@
       <field name="description" type="description"></field>
       <field name="inOut" type="indicator"></field>
       <prim-key field="inventoryEventPlanTypeId"/>
-      <relation type="many"  rel-entity-name="InventoryEventPlanned">
-        <key-map field-name="inventoryEventPlanTypeId"/>
-      </relation>
     </entity>
     <view-entity entity-name="MrpInventoryEventPlanned" package-name="org.ofbiz.manufacturing.mrp" 
         title="Inventory Event Planned view for MRP process" author="Olivier Heintz">

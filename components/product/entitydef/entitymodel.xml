@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.95 $
+ * @version    $Revision: 1.96 $
  */
 -->
 
@@ -1197,9 +1197,6 @@
       <field name="varianceReasonId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="varianceReasonId"/>
-      <relation type="many" rel-entity-name="InventoryItemVariance">
-        <key-map field-name="varianceReasonId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -1358,9 +1355,6 @@
       <field name="quantityBreakTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="quantityBreakTypeId"/>
-      <relation type="many" rel-entity-name="QuantityBreak">
-        <key-map field-name="quantityBreakTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="SaleType"
             package-name="org.ofbiz.product.price"

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -81,12 +81,6 @@
       <relation type="one" fk-name="PARTY_QUAL_TPAR" title="Parent" rel-entity-name="PartyQualType">
         <key-map field-name="parentTypeId" rel-field-name="partyQualTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="PartyQualType">
-        <key-map field-name="partyQualTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyQual">
-        <key-map field-name="partyQualTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="PartyResume"
             package-name="org.ofbiz.humanres.ability"
@@ -124,9 +118,6 @@
       <field name="perfRatingTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="perfRatingTypeId"/>
-      <relation type="many" rel-entity-name="PerfReviewItem">
-        <key-map field-name="perfRatingTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="PerfReview"
             package-name="org.ofbiz.humanres.ability"
@@ -183,11 +174,6 @@
         <key-map field-name="payHistoryPartyIdTo" rel-field-name="partyId"/>
         <key-map field-name="payHistoryRoleTypeIdTo" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="PerfReviewItem">
-        <key-map field-name="employeePartyId"/>
-        <key-map field-name="employeeRoleTypeId"/>
-        <key-map field-name="perfReviewId"/>
-      </relation>
     </entity>
     <entity entity-name="PerfReviewItem"
             package-name="org.ofbiz.humanres.ability"
@@ -228,9 +214,6 @@
       <field name="perfReviewItemTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="perfReviewItemTypeId"/>
-      <relation type="many" rel-entity-name="PerfReviewItem">
-        <key-map field-name="perfReviewItemTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="PerformanceNote"
             package-name="org.ofbiz.humanres.ability"
@@ -275,12 +258,6 @@
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="responsibilityTypeId"/>
-      <relation type="many" rel-entity-name="ValidResponsibility">
-        <key-map field-name="responsibilityTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPositionResponsibility">
-        <key-map field-name="responsibilityTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="SkillType"
             package-name="org.ofbiz.humanres.ability"
@@ -288,12 +265,6 @@
       <field name="skillTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="skillTypeId"/>
-      <relation type="many" rel-entity-name="QuoteItem">
-        <key-map field-name="skillTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortSkillStandard">
-        <key-map field-name="skillTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="TrainingClassType"
             package-name="org.ofbiz.humanres.ability"
@@ -301,9 +272,6 @@
       <field name="trainingClassTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="trainingClassTypeId"/>
-      <relation type="many" rel-entity-name="PersonTraining">
-        <key-map field-name="trainingClassTypeId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -318,9 +286,6 @@
       <field name="description" type="description"></field>
       <field name="employerPaidPercentage" type="floating-point"></field>
       <prim-key field="benefitTypeId"/>
-      <relation type="many" rel-entity-name="PartyBenefit">
-        <key-map field-name="benefitTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="Employment"
             package-name="org.ofbiz.humanres.employment"
@@ -441,12 +406,6 @@
       <field name="payGradeName" type="name"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="payGradeId"/>
-      <relation type="many" rel-entity-name="PayHistory">
-        <key-map field-name="payGradeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="SalaryStep">
-        <key-map field-name="payGradeId"/>
-      </relation>
     </entity>
     <entity entity-name="PayHistory"
             package-name="org.ofbiz.humanres.employment"
@@ -533,10 +492,6 @@
       <relation type="one" fk-name="SLRY_STP_PGRD" rel-entity-name="PayGrade">
         <key-map field-name="payGradeId"/>
       </relation>
-      <relation type="many" rel-entity-name="PayHistory">
-        <key-map field-name="salaryStepSeqId"/>
-        <key-map field-name="payGradeId"/>
-      </relation>
     </entity>
     <entity entity-name="TerminationReason"
             package-name="org.ofbiz.humanres.employment"
@@ -544,9 +499,6 @@
       <field name="terminationReasonId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="terminationReasonId"/>
-      <relation type="many" rel-entity-name="Employment">
-        <key-map field-name="terminationReasonId"/>
-      </relation>
     </entity>
     <entity entity-name="TerminationType"
             package-name="org.ofbiz.humanres.employment"
@@ -554,9 +506,6 @@
       <field name="terminationTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="terminationTypeId"/>
-      <relation type="many" rel-entity-name="Employment">
-        <key-map field-name="terminationTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="UnemploymentClaim"
             package-name="org.ofbiz.humanres.employment"
