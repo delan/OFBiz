@@ -101,7 +101,7 @@ public class ModelDataFileReader {
               if(curChild.getNodeType() == Node.ELEMENT_NODE && "data-file".equals(curChild.getNodeName())) {
                 i++;
                 Element curDataFile = (Element)curChild;
-                String dataFileName = checkEmpty(curDataFile.getAttribute("name"));
+                String dataFileName = UtilXml.checkEmpty(curDataFile.getAttribute("name"));
                 
                 //check to see if dataFile with same name has already been read
                 if(modelDataFiles.containsKey(dataFileName)) {
@@ -160,18 +160,18 @@ public class ModelDataFileReader {
     ModelDataFile dataFile = new ModelDataFile();
     String tempStr;
     
-    dataFile.name = checkEmpty(dataFileElement.getAttribute("name"));
-    dataFile.typeCode = checkEmpty(dataFileElement.getAttribute("type-code"));
-    dataFile.sender = checkEmpty(dataFileElement.getAttribute("sender"));
-    dataFile.receiver = checkEmpty(dataFileElement.getAttribute("receiver"));
+    dataFile.name = UtilXml.checkEmpty(dataFileElement.getAttribute("name"));
+    dataFile.typeCode = UtilXml.checkEmpty(dataFileElement.getAttribute("type-code"));
+    dataFile.sender = UtilXml.checkEmpty(dataFileElement.getAttribute("sender"));
+    dataFile.receiver = UtilXml.checkEmpty(dataFileElement.getAttribute("receiver"));
     
-    tempStr = checkEmpty(dataFileElement.getAttribute("record-length"));
+    tempStr = UtilXml.checkEmpty(dataFileElement.getAttribute("record-length"));
     if(tempStr != null && tempStr.length() > 0) dataFile.recordLength = Integer.parseInt(tempStr);
-    tempStr = checkEmpty(dataFileElement.getAttribute("delimiter"));
+    tempStr = UtilXml.checkEmpty(dataFileElement.getAttribute("delimiter"));
     if(tempStr != null && tempStr.length() == 1) dataFile.delimiter = tempStr.charAt(0);
     
-    dataFile.separatorStyle = checkEmpty(dataFileElement.getAttribute("separator-style"));
-    dataFile.description = checkEmpty(dataFileElement.getAttribute("description"));
+    dataFile.separatorStyle = UtilXml.checkEmpty(dataFileElement.getAttribute("separator-style"));
+    dataFile.description = UtilXml.checkEmpty(dataFileElement.getAttribute("description"));
     
     NodeList rList = dataFileElement.getElementsByTagName("record");
     for(int i=0; i<rList.getLength(); i++) {
@@ -202,17 +202,17 @@ public class ModelDataFileReader {
     ModelRecord record = new ModelRecord();
     String tempStr;
     
-    record.name = checkEmpty(recordElement.getAttribute("name"));
-    record.typeCode = checkEmpty(recordElement.getAttribute("type-code"));
+    record.name = UtilXml.checkEmpty(recordElement.getAttribute("name"));
+    record.typeCode = UtilXml.checkEmpty(recordElement.getAttribute("type-code"));
 
-    tempStr = checkEmpty(recordElement.getAttribute("tc-position"));
+    tempStr = UtilXml.checkEmpty(recordElement.getAttribute("tc-position"));
     if(tempStr != null && tempStr.length() > 0) record.tcPosition = Integer.parseInt(tempStr);
-    tempStr = checkEmpty(recordElement.getAttribute("tc-length"));
+    tempStr = UtilXml.checkEmpty(recordElement.getAttribute("tc-length"));
     if(tempStr != null && tempStr.length() > 0) record.tcLength = Integer.parseInt(tempStr);
 
-    record.description = checkEmpty(recordElement.getAttribute("description"));
-    record.parentName = checkEmpty(recordElement.getAttribute("parent-name"));
-    record.limit = checkEmpty(recordElement.getAttribute("limit"));
+    record.description = UtilXml.checkEmpty(recordElement.getAttribute("description"));
+    record.parentName = UtilXml.checkEmpty(recordElement.getAttribute("parent-name"));
+    record.limit = UtilXml.checkEmpty(recordElement.getAttribute("limit"));
     
     NodeList fList = recordElement.getElementsByTagName("field");
     for(int i=0; i<fList.getLength(); i++) {
@@ -229,73 +229,28 @@ public class ModelDataFileReader {
     ModelField field = new ModelField();
     String tempStr;
     
-    field.name = checkEmpty(fieldElement.getAttribute("name"));
+    field.name = UtilXml.checkEmpty(fieldElement.getAttribute("name"));
     
-    tempStr = checkEmpty(fieldElement.getAttribute("position"));
+    tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("position"));
     if(tempStr != null && tempStr.length() > 0) field.position = Integer.parseInt(tempStr);
-    tempStr = checkEmpty(fieldElement.getAttribute("length"));
+    tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("length"));
     if(tempStr != null && tempStr.length() > 0) field.length = Integer.parseInt(tempStr);
 
-    field.type = checkEmpty(fieldElement.getAttribute("type"));
-    field.format = checkEmpty(fieldElement.getAttribute("format"));
-    field.validExp = checkEmpty(fieldElement.getAttribute("valid-exp"));
-    field.description = checkEmpty(fieldElement.getAttribute("description"));
+    field.type = UtilXml.checkEmpty(fieldElement.getAttribute("type"));
+    field.format = UtilXml.checkEmpty(fieldElement.getAttribute("format"));
+    field.validExp = UtilXml.checkEmpty(fieldElement.getAttribute("valid-exp"));
+    field.description = UtilXml.checkEmpty(fieldElement.getAttribute("description"));
 
-    tempStr = checkEmpty(fieldElement.getAttribute("prim-key"));
+    tempStr = UtilXml.checkEmpty(fieldElement.getAttribute("prim-key"));
     if(tempStr != null && tempStr.length() == 1) field.isPk = Boolean.getBoolean(tempStr);
     
     return field;
   }
   
-  protected String childElementValue(Element element, String childElementName) {
-    if(element == null || childElementName == null) return null;
-    //get the value of the first element with the given name
-    Node node = element.getFirstChild();
-    if(node != null) {
-      do {
-        if(node.getNodeType() == Node.ELEMENT_NODE && childElementName.equals(node.getNodeName())) {
-          Element childElement = (Element)node;
-          return elementValue(childElement);
-        }
-      } while((node = node.getNextSibling()) != null);
-    }
-    return null;
-  }
-  
-  protected String elementValue(Element element) {
-    Node textNode = element.getFirstChild();
-    if(textNode == null) return null;
-    //should be of type text
-    return textNode.getNodeValue();
-  }
-  
-  protected String checkEmpty(String string) {
-    if(string != null && string.length() > 0) return string;
-    else return "";
-  }
-  
-  protected String checkEmpty(String string1, String string2) {
-    if(string1 != null && string1.length() > 0) return string1;
-    else if(string2 != null && string2.length() > 0) return string2;
-    else return "";
-  }
-  protected String checkEmpty(String string1, String string2, String string3) {
-    if(string1 != null && string1.length() > 0) return string1;
-    else if(string2 != null && string2.length() > 0) return string2;
-    else if(string3 != null && string3.length() > 0) return string3;
-    else return "";
-  }
-  
   protected Document getDocument(URL url) {
     if(url == null) return null;
     Document document = null;
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setValidating(true);
-    //factory.setNamespaceAware(true);
-    try {
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.parse(url.openStream());
-    }
+    try { document = UtilXml.readXmlDocument(url); }
     catch (SAXException sxe) {
       // Error generated during parsing)
       Exception  x = sxe;
