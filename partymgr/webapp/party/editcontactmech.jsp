@@ -90,6 +90,7 @@
         <form method="post" action='<ofbiz:url>/<ofbiz:print attribute="requestName"/></ofbiz:url>' name="editcontactmechform">
         <input type=hidden name='DONE_PAGE' value='<ofbiz:print attribute="donePage"/>'>
         <input type=hidden name='contactMechTypeId' value='<ofbiz:print attribute="contactMechTypeId"/>'>
+        <%if (UtilValidate.isNotEmpty(request.getParameter("preContactMechTypeId"))) {%><input type=hidden name='preContactMechTypeId' value='<%=request.getParameter("preContactMechTypeId")%>'><%}%>
         <input type=hidden name='partyId' value='<%=partyId%>'>
         <%=UtilFormatOut.ifNotEmpty(cmNewPurposeTypeId, "<input type='hidden' name='contactMechPurposeTypeId' value='", "'>")%>
     </ofbiz:unless>
