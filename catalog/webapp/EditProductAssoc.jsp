@@ -47,6 +47,7 @@ try {
   String fromDateStr = request.getParameter("FROM_DATE");
   Timestamp fromDate = null;
   if(fromDateStr != null && fromDateStr.length() > 0) fromDate = Timestamp.valueOf(fromDateStr);
+  if(fromDate == null) fromDate = (Timestamp)request.getAttribute("ProductAssocCreateFromDate");
 
   GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
   GenericValue productAssoc = delegator.findByPrimaryKey("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
@@ -54,6 +55,8 @@ try {
   if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
   if(productAssoc == null) useValues = false;
   boolean isCreate = true;
+
+  Collection assocTypes = delegator.findAll("ProductAssocType");
 %>
 
 <br>
@@ -74,7 +77,7 @@ try {
 
 <%if(productAssoc == null){%>
   <%if(productId != null || productIdTo != null || productAssocTypeId != null || fromDate != null){%>
-    <b>Could not find association with Product Id=<%=productId%>, Product Id To=<%=productIdTo%>, Association Type Id=<%=productAssocTypeId%>, From Date=<%=fromDate%>.</b>
+    <b>Could not find association with Product Id=<%=UtilFormatOut.checkNull(productId)%>, Product Id To=<%=UtilFormatOut.checkNull(productIdTo)%>, Association Type Id=<%=UtilFormatOut.checkNull(productAssocTypeId)%>, From Date=<%=UtilFormatOut.makeString(fromDate)%>.</b>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
       <td align=right><div class="tabletext">Product ID</div></td>
@@ -89,12 +92,31 @@ try {
     <tr>
       <td align=right><div class="tabletext">Association Type ID</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="PRODUCT_ASSOC_TYPE_ID" size="20" maxlength="40" value="<%=UtilFormatOut.checkNull(productAssocTypeId)%>"></td>
+      <td>
+        <%-- <input type="text" name="PRODUCT_ASSOC_TYPE_ID" size="20" maxlength="40" value="<%=UtilFormatOut.checkNull(productAssocTypeId)%>"> --%>
+        <select name="PRODUCT_ASSOC_TYPE_ID" size=1>
+          <%if(productAssocTypeId != null && productAssocTypeId.length() > 0) {%>
+            <%GenericValue curAssocType = delegator.findByPrimaryKey("ProductAssocType", UtilMisc.toMap("productAssocTypeId", productAssocTypeId));%>
+            <%if(curAssocType != null) {%>
+              <option selected value='<%=curAssocType.getString("productAssocTypeId")%>'><%=curAssocType.getString("description")%> [<%=curAssocType.getString("productAssocTypeId")%>]</option>
+            <%}%>
+          <%}%>
+          <option value=''>&nbsp;</option>
+          <%Iterator assocTypeIter = UtilMisc.toIterator(assocTypes);%>
+          <%while(assocTypeIter != null && assocTypeIter.hasNext()) {%>
+            <%GenericValue nextAssocType=(GenericValue)assocTypeIter.next();%>
+            <option value='<%=nextAssocType.getString("productAssocTypeId")%>'><%=nextAssocType.getString("description")%> [<%=nextAssocType.getString("productAssocTypeId")%>]</option>
+          <%}%>
+        </select>
+      </td>
     </tr>
     <tr>
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="FROM_DATE" size="30" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>">(YYYY-MM-DD HH:mm:SS.sss)</td>
+      <td>
+        <div class='tabletext'><input type="text" name="FROM_DATE" size="30" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>">(YYYY-MM-DD HH:mm:SS.sss)</div>
+        <div class='tabletext'>(Will be set to now if empty)</div>
+      </td>
     </tr>
   <%}else{%>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
@@ -111,12 +133,25 @@ try {
     <tr>
       <td align=right><div class="tabletext">Association Type ID</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="PRODUCT_ASSOC_TYPE_ID" size="20" maxlength="40" value=""></td>
+      <td>
+        <%-- <input type="text" name="PRODUCT_ASSOC_TYPE_ID" size="20" maxlength="40" value=""> --%>
+        <select name="PRODUCT_ASSOC_TYPE_ID" size=1>
+          <option value=''>&nbsp;</option>
+          <%Iterator assocTypeIter = UtilMisc.toIterator(assocTypes);%>
+          <%while(assocTypeIter != null && assocTypeIter.hasNext()) {%>
+            <%GenericValue nextAssocType=(GenericValue)assocTypeIter.next();%>
+            <option value='<%=nextAssocType.getString("productAssocTypeId")%>'><%=nextAssocType.getString("description")%> [<%=nextAssocType.getString("productAssocTypeId")%>]</option>
+          <%}%>
+        </select>
+      </td>
     </tr>
     <tr>
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="FROM_DATE" size="30" maxlength="40" value="">(YYYY-MM-DD HH:mm:SS.sss)</td>
+      <td>
+        <div class='tabletext'><input type="text" name="FROM_DATE" size="30" maxlength="40" value="">(YYYY-MM-DD HH:mm:SS.sss)</div>
+        <div class='tabletext'>(Will be set to now if empty)</div>
+      </td>
     </tr>
   <%}%>
 <%}else{%>
@@ -153,7 +188,10 @@ try {
     <%fieldName = "thruDate";%><%paramName = "THRU_DATE";%>    
     <td width="26%" align=right><div class="tabletext">Thru Date</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30">(YYYY-MM-DD HH:mm:SS.sss)</td>
+    <td width="74%">
+      <div class='tabletext'><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30">(YYYY-MM-DD HH:mm:SS.sss)</div>
+      <div class='tabletext'>(Will be set to now on delete)</div>
+    </td>
   </tr>
   <tr>
     <%fieldName = "reason";%><%paramName = "REASON";%>    
@@ -192,7 +230,7 @@ try {
 
 <%if(productId != null && product != null){%>
 <hr>
-<p class="head2">Product Associations from this Product to...</p>
+<p class="head2">Product Associations FROM this Product to...</p>
 
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>

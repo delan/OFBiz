@@ -439,6 +439,15 @@ public class ProductEvents {
     String fromDateStr = request.getParameter("FROM_DATE");
     Timestamp fromDate = null;
     
+    try {
+      if(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId)) == null)
+        errMsg += "<li>Product with id " + productId + " not found.";
+      if(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productIdTo)) == null)
+        errMsg += "<li>Product To with id " + productIdTo + " not found.";
+    }
+    //if there is an exception for either, the other probably wont work
+    catch(GenericEntityException e) { Debug.logWarning(e); }
+    
     if(UtilValidate.isNotEmpty(fromDateStr)) {
       try { fromDate = Timestamp.valueOf(fromDateStr); }
       catch(Exception e) { errMsg += "<li>From Date not formatted correctly."; }
@@ -446,7 +455,8 @@ public class ProductEvents {
     if(!UtilValidate.isNotEmpty(productId)) errMsg += "<li>Product ID is missing.";
     if(!UtilValidate.isNotEmpty(productIdTo)) errMsg += "<li>Product ID To is missing.";
     if(!UtilValidate.isNotEmpty(productAssocTypeId)) errMsg += "<li>Association Type ID is missing.";
-    if(!UtilValidate.isNotEmpty(fromDateStr)) errMsg += "<li>From Date is missing.";
+    //from date is only required if update mode is not CREATE
+    if(!updateMode.equals("CREATE") && !UtilValidate.isNotEmpty(fromDateStr)) errMsg += "<li>From Date is missing.";
     if(errMsg.length() > 0) {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
       request.setAttribute("ERROR_MESSAGE", errMsg);
@@ -498,6 +508,13 @@ public class ProductEvents {
     tempProductAssoc.set("quantity", quantity);
     
     if(updateMode.equals("CREATE")) {
+      //if no from date specified, set to now
+      if(fromDate == null) {
+        fromDate = new Timestamp(new java.util.Date().getTime());
+        tempProductAssoc.set("fromDate", fromDate);
+        request.setAttribute("ProductAssocCreateFromDate", fromDate);
+      }
+      
       GenericValue productAssoc = null;
       try { productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey()); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productAssoc = null; }
