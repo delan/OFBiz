@@ -20,14 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
 <#if security.hasEntityPermission("CONTENTMGR", "_VIEW", session)>
 
   ${pages.get("/survey/SurveyTabBar.ftl")}
-  <div class="head1">Survey Questions</div>
+  <div class="head1">Survey Questions - <span class="head2">ID: ${requestParameters.surveyId?if_exists}</div>
   <br><br>
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>

@@ -23,7 +23,7 @@
  *
  * @author <a href="mailto:patrick.lykins@gabes.net">Patrick Lykins</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 
+ * @version
  * @since 3.0
  -->
 <simple-methods>
@@ -60,7 +60,7 @@
         <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
-    
+
     <!-- Methods for SurveyApplType -->
     <simple-method method-name="createSurveyApplType" short-description="Create SurveyApplType">
         <check-permission action="_CREATE" permission="CONTENTMGR">
@@ -92,8 +92,8 @@
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-    </simple-method>        
-    
+    </simple-method>
+
     <!-- Methods for SurveyQuestion -->
     <simple-method method-name="createSurveyQuestion" short-description="Create Survey Question">
         <check-permission action="_CREATE" permission="CONTENTMGR">
@@ -126,8 +126,8 @@
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-    </simple-method>        
-    
+    </simple-method>
+
     <!-- Methods for SurveyQuestionAppl -->
     <simple-method method-name="createSurveyQuestionAppl" short-description="Create Survey Question Application">
         <check-permission action="_CREATE" permission="CONTENTMGR">
@@ -165,8 +165,8 @@
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-    </simple-method>        
-    
+    </simple-method>
+
     <!-- Methods for SurveyQuestionCategory -->
     <simple-method method-name="createSurveyQuestionCategory" short-description="Create Survey QuestionCategory">
         <check-permission action="_CREATE" permission="CONTENTMGR">
@@ -199,8 +199,8 @@
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-    </simple-method>        
-    
+    </simple-method>
+
     <!-- Methods for SurveyQuestionType -->
     <simple-method method-name="createSurveyQuestionType" short-description="Create SurveyQuestionType">
         <check-permission action="_CREATE" permission="CONTENTMGR">
@@ -233,7 +233,7 @@
         <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
-    
+
     <!-- Methods for SurveyTrigger -->
     <simple-method method-name="createSurveyTrigger" short-description="Create SurveyTrigger">
         <check-permission action="_CREATE" permission="CONTENTMGR">
@@ -265,5 +265,91 @@
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key entity-name="SurveyTrigger" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- Survey Response Methods -->
+    <simple-method method-name="createSurveyResponse" short-description="Create Survey Response">
+        <!-- lookup the survey -->
+        <make-value value-name="surveyLookup" entity-name="Survey"/>
+        <set-pk-fields value-name="surveyLookup" map-name="parameters"/>
+        <find-by-primary-key map-name="surveyLookup" value-name="survey"/>
+        <if-empty field-name="survey">
+            <add-error><fail-message message="No survey found for survey ID: ${surveyLookup.surveyId}"/></add-error>
+            <check-errors/>
+        </if-empty>
+
+        <!-- look up the applied questions -->
+        <field-to-field field-name="surveyId" map-name="survey" to-map-name="questionApplLookup"/>
+        <find-by-and list-name="questions" entity-name="SurveyQuestionAndAppl" map-name="questionApplLookup"/>
+        <if-empty field-name="questions">
+            <add-error><fail-message message="No questions found for survey ID: ${survey.surveyId}"/></add-error>
+            <check-errors/>
+        </if-empty>
+
+        <!-- check if anonymous is allowed and if not that we have a partyId -->
+        <if-compare field-name="isAnonymous" operator="not-equals" value="Y">
+            <if-empty field-name="partyId" map-name="parameters">
+                <add-error><fail-message message="Anonymous response to this survey is not allowed"/></add-error>
+                <check-errors/>
+            </if-empty>
+        </if-compare>
+
+        <!-- if this is a single use and we have a partyId check for existing responses -->
+        <if-compare field-name="allowMultiple" operator="not-equals" value="N">
+            <if-not-empty field-name="partyId" map-name="parameters">
+                <field-to-field field-name="partyId" map-name="parameters" to-map-name="responseLookup"/>
+                <field-to-field field-name="surveyId" map-name="survey" to-map-name="responseLookup"/>
+                <find-by-and list-name="existingResponses" entity-name="SurveyResponse" map-name="responseLookup"/>
+                <if-not-empty field-name="existingResponses">
+                    <add-error><fail-message message="You have already responsed to this survey; multiple responses is not allowed"/></add-error>
+                    <check-errors/>
+                </if-not-empty>
+            </if-not-empty>
+        </if-compare>
+
+        <!-- make sure we have answers to check -->
+        <if-empty field-name="answers" map-name="parameters">
+            <add-error><fail-message message="No answers were found for this survey response"/></add-error>
+            <check-errors/>
+        </if-empty>
+        <field-to-field field-name="answers" map-name="parameters" to-field-name="answers"/>
+
+        <!-- make sure all required fields were responded to -->
+        <iterate entry-name="question" list-name="questions">
+            <if-empty field-name="${question.surveyQuestionId}" map-name="answers">
+                <add-error><fail-message message="${question.question} is required"/></add-error>
+            </if-empty>
+        </iterate>
+        <check-errors/>
+
+        <!-- create the response -->
+        <make-value value-name="surveyResponse" entity-name="SurveyResponse"/>
+        <set-pk-fields value-name="surveyResponse" map-name="parameters"/>
+        <set-nonpk-fields value-name="surveyResponse" map-name="parameters"/>
+
+        <if-empty field-name="responseDate" map-name="surveyResponse">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="responseDate" map-name="surveyResponse"/>
+        </if-empty>
+        <create-value value-name="surveyResponse"/>
+
+        <!-- create the response answers -->
+        <iterate entry-name="question" list-name="questions">
+            <make-value value-name="responseAnswer" entity-name="SurveyResponseAnswer"/>
+            <field-to-field field-name="partyId" map-name="surveyResponse" to-map-name="responseAnswer"/>
+            <field-to-field field-name="surveyId" map-name="surveyResponse" to-map-name="responseAnswer"/>
+            <field-to-field field-name="responseDate" map-name="surveyResponse" to-map-name="responseAnswer"/>
+            <field-to-field field-name="surveyQuestionId" map-name="question" to-map-name="responseAnswer"/>
+            <if-compare field-name="surveyQuestionTypeId" operator="equals" value="BOOLEAN">
+                <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="booleanResponse" to-map-name="responseAnswer"/>
+            </if-compare>
+            <if-compare field-name="surveyQuestionTypeId" operator="equals" value="TEXT">
+                <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+            </if-compare>
+            <if-compare field-name="surveyQuestionTypeId" operator="equals" value="OPTION">
+                <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="surveyOptionSeqId" to-map-name="responseAnswer"/>
+            </if-compare>
+            <create-value value-name="responseAnswer"/>
+        </iterate>
     </simple-method>
 </simple-methods>
