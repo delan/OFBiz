@@ -221,26 +221,27 @@ ${productCategory.description?if_exists}
 </table>
 </form>
 <br>
-        <hr class="sepbar"/>
+  <#if productCategoryId?has_content>
+    <hr class="sepbar"/>
 
-        <SCRIPT language="JavaScript">
-            function setUploadUrl(newUrl) {
-            var toExec = 'document.imageUploadForm.action="' + newUrl + '";';
-            eval(toExec);
-            };
-        </SCRIPT>
-        <div class="head3">${uiLabelMap.CategoryUploadImage}</div>
-        <form method="POST" enctype="multipart/form-data" action="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId?if_exists}&upload_file_type=category</@ofbizUrl>" name="imageUploadForm">
-            <input type="file" class="inputBox" size="50" name="fname">
-            <br>
-            <span class="tabletext">
-                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="category" checked onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=category</@ofbizUrl>");'>${uiLabelMap.ProductCategoryImageUrl}
-                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkOne</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
-                <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkTwo</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
-            </span>
-            <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
-        </form>
-
+    <SCRIPT language="JavaScript">
+        function setUploadUrl(newUrl) {
+        var toExec = 'document.imageUploadForm.action="' + newUrl + '";';
+        eval(toExec);
+        };
+    </SCRIPT>
+    <div class="head3">${uiLabelMap.CategoryUploadImage}</div>
+    <form method="POST" enctype="multipart/form-data" action="<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId?if_exists}&upload_file_type=category</@ofbizUrl>" name="imageUploadForm">
+        <input type="file" class="inputBox" size="50" name="fname">
+        <br>
+        <span class="tabletext">
+            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="category" checked onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=category</@ofbizUrl>");'>${uiLabelMap.ProductCategoryImageUrl}
+            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="linkOne" onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkOne</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
+            <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="linkTwo"onclick='setUploadUrl("<@ofbizUrl>/UploadCategoryImage?productCategoryId=${productCategoryId}&upload_file_type=linkTwo</@ofbizUrl>");'>${uiLabelMap.ProductLinkOneImageUrl}
+        </span>
+        <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
+    </form>
+  </#if>
 <#else>
   <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>
