@@ -32,7 +32,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      3.0
  *
  * 
@@ -121,6 +121,13 @@ public class ContentManagementServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map permContext = new HashMap();
         String mapKey = (String) context.get("mapKey"); 
+        String deactivateExisting = (String) context.get("deactivateExisting"); 
+        if (UtilValidate.isEmpty(deactivateExisting)) {
+            if (UtilValidate.isEmpty(mapKey)) 
+                deactivateExisting = "false";
+            else 
+                deactivateExisting = "true";
+        }
         if (Debug.infoOn()) Debug.logInfo("in persist... mapKey(0):" + mapKey, null);
 
         List contentPurposeList = (List)context.get("contentPurposeList");
@@ -306,7 +313,7 @@ public class ContentManagementServices {
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
             if (Debug.infoOn()) Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
-            context.put("deactivateExisting", "true");
+            context.put("deactivateExisting", deactivateExisting);
             Debug.logVerbose("CREATING contentASSOC context:" +  context, null);
             Map thisResult = null;
             try {

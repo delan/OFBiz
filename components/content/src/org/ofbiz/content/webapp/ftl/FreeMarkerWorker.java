@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.14 2004/04/13 04:56:13 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.15 2004/04/14 05:34:42 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -509,7 +509,17 @@ public class FreeMarkerWorker {
         while (it.hasNext()) {
             String key = (String)it.next();
             Object o = saveValues.get(key);
-            context.put(key, saveValues.get(key));
+            if (o instanceof Map) {
+                Map map = new HashMap();
+                map.putAll((Map)o);
+                context.put(key, map);
+            } else if (o instanceof List) {
+                List list = new ArrayList();
+                list.addAll((List)o);
+                context.put(key, list);
+            } else {
+                context.put(key, o);
+            }
         }
         return;
     }
