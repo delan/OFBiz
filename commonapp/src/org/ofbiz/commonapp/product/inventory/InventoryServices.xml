@@ -416,8 +416,9 @@
         <field-to-field field-name="orderId" map-name="parameters" to-map-name="oiirListLookupMap"/>
         <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
         <iterate entry-name="orderItemInventoryRes" list-name="oiirList">
-            <make-value entity-name="OrderItemInventoryRes" value-name="cancelOiirMap"/>
-            <set-pk-fields map-name="orderItemInventoryRes" value-name="cancelOiirMap"/>
+        	<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
+   			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
+   			<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>
             <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
         </iterate>
     </simple-method>
@@ -453,33 +454,27 @@
     	<field-to-field field-name="productId" map-name="inventoryItem" to-map-name="lookupMap"/>
     	<find-by-and entity-name="InventoryItem" map-name="lookupMap" list-name="inventoryItems"/>
     	
-    	<!-- find all items which have a negative ATP; find their current reservations -->
-    	<log level="error" message="checking for negative items"/>
-    	<iterate list-name="inventoryItems" entry-name="item">
-    		<log level="error" message="found item : ${item}"/>
+    	<!-- find all items which have a negative ATP; find their current reservations -->    	
+    	<iterate list-name="inventoryItems" entry-name="item">    		
     		<if-compare field-name="availableToPromise" map-name="item" operator="less" value="0">
     			<get-related value-name="item" relation-name="OrderItemInventoryRes" list-name="relatedRes"/>
-    			<log level="error" message="got related : ${relatedRes}"/>
     			<list-to-list list-name="relatedRes" to-list-name="reservations"/>
-    			<log level="error" message="appended to list : ${reservations}"/>
     		</if-compare>
     	</iterate>
     	
-    	<!-- sort the list by date -->
-    	<log level="error" message="sorting reservations : ${reservations}"/>
+    	<!-- sort the list by date -->    	
     	<order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
     	
     	<!-- a counter to so we just loop for then needed amount -->
     	<field-to-env env-name="balanceAvailable" field-name="availableToPromise" map-name="inventoryItem"/>
     	
     	<!-- cancel the reservations -->    	
-    	<iterate list-name="reservations" entry-name="oiir">
-    		<log level="error" message="working with reservation : ${oiir}"/>
+    	<iterate list-name="reservations" entry-name="oiir">    	
     		<!-- only continue if we have enough quantity to work with -->
     		<if-compare field-name="balanceAvailable" operator="greater" value="0">    		
-    			<log level="error" message="doing the cancel"/>
-                <make-value entity-name="OrderItemInventoryRes" value-name="cancelOiirMap"/>
-                <set-pk-fields map-name="oiir" value-name="cancelOiirMap"/>
+    			<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
+    			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
+    			<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>    			                
                 <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
     			<!-- log the reservation to be re-reserved again -->
     			<field-to-list field-name="oiir" list-name="toReserve"/>
@@ -502,6 +497,7 @@
     		<field-to-field field-name="reservedDatetime" map-name="oiir" to-map-name="resMap"/>
     		<field-to-field field-name="reserveOrderEnumId" map-name="oiir" to-map-name="resMap"/>
     		<string-to-field field-name="requireInventory" map-name="resMap" string="N"/>
+    		<log level="error" message="calling re-reserve : ${resMap}"/>
     		<call-service service-name="reserveProductInventory" in-map-name="resMap"/>
     	</iterate>
     </simple-method>
