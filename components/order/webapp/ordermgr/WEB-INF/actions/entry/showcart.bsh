@@ -58,10 +58,12 @@ if (productStoreId != null) {
 	    storeReps = EntityUtil.filterByDate(storeReps);
 	    if (storeReps != null && storeReps.size() > 0) {
 	        shoppingCart.setProductStoreId(productStoreId);
+	        session.setAttribute("productStoreId", productStoreId);
 	    } else {
 	        request.setAttribute("_ERROR_MESSAGE_", "<li>You do not have permission to take orders for this store.");
 	        shoppingCart.clear();
 	        session.removeAttribute("orderMode");
+	        session.removeAttribute("productStoreId");
 	        return;
 	    }    
     } else {
@@ -94,6 +96,7 @@ if ("SALES_ORDER".equals(mode) && UtilValidate.isEmpty(shoppingCart.getProductSt
     request.setAttribute("_ERROR_MESSAGE_", "<li>A Product Store MUST be selected for a Sales Order.");
     shoppingCart.clear();
     session.removeAttribute("orderMode");
+    session.removeAttribute("productStoreId");
     return;
 }
     
