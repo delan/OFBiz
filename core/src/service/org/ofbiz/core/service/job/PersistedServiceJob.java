@@ -26,6 +26,7 @@ package org.ofbiz.core.service.job;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -133,18 +134,29 @@ public class PersistedServiceJob extends GenericServiceJob {
             GenericValue jobObj = getJob();
             GenericValue contextObj = jobObj.getRelatedOne("RuntimeData");
 
-            if (contextObj != null)
+            if (contextObj != null) {
                 context = (Map) XmlSerializer.deserialize(contextObj.getString("runtimeInfo"), delegator);
+            }
+            
+            if (context == null) {
+                context = new HashMap();
+            }
+            
+            // check the runAsUser
+            GenericValue runAsUser = jobObj.getRelatedOne("RunAsUserLogin");
+            if (runAsUser != null) {
+                context.put("userLogin", runAsUser);
+            }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, "PersistedServiceJob.getContext(): Entity Exception", module);
         } catch (SerializeException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, "PersistedServiceJob.getContext(): Serialize Exception", module);
         } catch (ParserConfigurationException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, "PersistedServiceJob.getContext(): Parse Exception", module);
         } catch (SAXException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, "PersistedServiceJob.getContext(): SAXException", module);
         } catch (IOException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, "PersistedServiceJob.getContext(): IOException", module);
         }
         if (context == null)
             Debug.logError("Job context is null", module);

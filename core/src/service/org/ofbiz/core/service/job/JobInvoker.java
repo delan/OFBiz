@@ -108,7 +108,7 @@ public class JobInvoker implements Runnable {
                 try {
                     wait(wait);
                 } catch (InterruptedException ie) {
-                    ie.printStackTrace();
+                    Debug.logError(ie, "JobInvoker.run() : InterruptedException", module);
                     stop();
                 }
             } else {
