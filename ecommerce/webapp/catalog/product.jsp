@@ -146,6 +146,7 @@
     
                 function getList(name, value) {
                     currentOrderIndex = findIndex(name);
+                    //alert(document.forms["addform"].elements[name].options[value].value);
                     if (currentOrderIndex < 0 || value == "")
                         return;
                     if (currentOrderIndex < (OPT.length - 1)) {
@@ -216,7 +217,7 @@
           <%-- ================= --%>
           <%-- Variant Selection --%>
           <%-- ================= --%>
-          <ofbiz:if name="variantTree" size="0">            
+          <ofbiz:if name="featureSet" size="0">            
             <ofbiz:iterator name="currentType" property="featureSet" type="java.lang.String">
               <%Debug.logInfo("CurrentType: " + currentType);%>
               <div class="tabletext">
@@ -228,7 +229,7 @@
               <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="product" field="productId"/>'>
               <input type='hidden' name="add_product_id" value='NULL'>
           </ofbiz:if>
-          <ofbiz:unless name="variantTree" size="0">
+          <ofbiz:unless name="featureSet" size="0">
             <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="product" field="productId"/>'>
             <input type='hidden' name="add_product_id" value='<ofbiz:entityfield attribute="product" field="productId"/>'>
           </ofbiz:unless>
@@ -246,7 +247,7 @@
         <%-- =========================== --%>
         <%-- Prefill The First Top Level --%>
         <%-- =========================== --%>
-        <ofbiz:if name="variantTree" size="0">
+        <ofbiz:if name="featureSet" size="0">
           <script language="JavaScript">eval("list" + "<%=featureOrder.get(0)%>" + "()");</script>
         </ofbiz:if>
                 
