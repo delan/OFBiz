@@ -1,5 +1,5 @@
 /*
- * $Id: GenericValue.java,v 1.4 2003/12/05 20:09:55 ajzeneski Exp $
+ * $Id: GenericValue.java,v 1.5 2004/04/23 15:05:06 doogie Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityUtil;
@@ -40,7 +41,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Eric Pabst
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      1.0
  */
 public class GenericValue extends GenericEntity {
@@ -242,6 +243,25 @@ public class GenericValue extends GenericEntity {
         if (byAndFields != null) col = EntityUtil.filterByAnd(col, byAndFields);
         if (UtilValidate.isNotEmpty(orderBy)) col = EntityUtil.orderBy(col, orderBy);
         return col;
+    }
+
+    public void removeRelatedEmbeddedCache(String relationName) {
+        if (relatedCache == null) return;
+        relatedCache.remove(relationName);
+    }
+
+    public void storeRelatedEmbeddedCache(String relationName, List col) {
+        if (relatedCache == null) relatedCache = new HashMap();
+        relatedCache.put(relationName, col);
+    }
+
+    public void storeRelatedEmbeddedCache(String relationName, GenericValue value) {
+        if (relatedCache == null) relatedCache = new HashMap();
+        relatedCache.put(relationName, UtilMisc.toList(value));
+    }
+
+    public void clearEmbeddedCache() {
+        relatedCache.clear();
     }
 
     /** Get the named Related Entity for the GenericValue from the persistent store
