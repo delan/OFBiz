@@ -27,6 +27,7 @@ package org.ofbiz.core.taglib;
 
 
 import java.util.*;
+import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
@@ -37,9 +38,11 @@ import org.ofbiz.core.util.*;
  * I18nBundleTag - JSP tag that the MessageTags will use when retrieving keys
  * for this page.
  *
- * @author  <a href="mailto:k3ysss@yahoo.com">Jian He</a>
- * @version 1.0
- * @created April 14, 2002
+ * @author     <a href="mailto:k3ysss@yahoo.com">Jian He</a>
+ * @author     <a href="mailto:">Quake Wang</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class I18nBundleTag extends TagSupport {
 
@@ -65,8 +68,7 @@ public class I18nBundleTag extends TagSupport {
 
     public int doStartTag() throws JspException {
         try {
-            this.bundle = ResourceBundle.getBundle(this.baseName,
-                        pageContext.getRequest().getLocale());
+            this.bundle = UtilProperties.getResourceBundle(this.baseName, UtilMisc.getLocale((HttpServletRequest) pageContext.getRequest()));
 
             if (this.getId() != null) {
                 pageContext.setAttribute(this.getId(), this.bundle);

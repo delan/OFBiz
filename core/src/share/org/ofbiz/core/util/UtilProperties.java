@@ -39,7 +39,8 @@ import java.net.*;
 public class UtilProperties {
 
     /** An instance of the generic cache for storing the FlexibleProperties 
-     *  corresponding to each properties file keyed by a String for the resource location
+     *  corresponding to each properties file keyed by a String for the resource location.
+     * This will be used for both non-locale and locale keyed FexibleProperties instances.
      */
     public static UtilCache resourceCache = new UtilCache("properties.UtilPropertiesResourceCache");
 
@@ -51,7 +52,7 @@ public class UtilProperties {
     /** An instance of the generic cache for storing the ResourceBundle 
      *  corresponding to each properties file keyed by a String for the resource location and the locale
      */
-    public static UtilCache resourceLocaleCache = new UtilCache("properties.UtilPropertiesResourceLocaleCache");
+    public static UtilCache bundleLocaleCache = new UtilCache("properties.UtilPropertiesBundleLocaleCache");
 
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
@@ -306,7 +307,13 @@ public class UtilProperties {
     
     // ========= Locale & Resource Based Methods ==========
 
-    /** Returns the value of the specified property name from the specified resource/properties file corresponding to the given locale
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding to the given locale.
+     *  <br>
+     *  <br> Two reasons why we do not use the FlexibleProperties class for this:
+     *  <ul>
+     *    <li>Doesn't support flexible locale based naming: try fname_locale (5 letter), then fname_locale (2 letter lang only), then fname</li>
+     *    <li>Does not support parent properties/bundles so that if the fname_locale5 file doesn't have it then fname_locale2 is tried, then the fname bundle</li>
+     *  </ul>
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
      * @param locale The locale that the given resource will correspond to
@@ -315,25 +322,9 @@ public class UtilProperties {
     public static String getMessage(String resource, String name, Locale locale) {
         if (resource == null || resource.length() <= 0) return "";
         if (name == null || name.length() <= 0) return "";
-        if (locale == null) locale = Locale.getDefault();
 
-        String resourceCacheKey = resource + "_" + locale.toString();        
-        ResourceBundle bundle = (ResourceBundle) resourceLocaleCache.get(resourceCacheKey);
-
-        if (bundle == null) {
-            try {
-                bundle = ResourceBundle.getBundle(resource, locale);
-                resourceLocaleCache.put(resourceCacheKey, bundle);
-            } catch (MissingResourceException e) {
-                Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString());
-                return "";
-            }
-        }
-        if (bundle == null) {
-            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString());
-            return "";
-        }
-
+        ResourceBundle bundle = getResourceBundle(resource, locale);
+        if (bundle == null) return "";
 
         String value = null;
         try {
@@ -384,5 +375,99 @@ public class UtilProperties {
             }   
             return value;
         }
+    }
+
+    /** Returns the specified resource/properties file as a ResourceBundle
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param locale The locale that the given resource will correspond to
+     * @return The ResourceBundle
+     */
+    public static ResourceBundle getResourceBundle(String resource, Locale locale) {
+        if (resource == null || resource.length() <= 0) return null;
+        if (locale == null) locale = Locale.getDefault();
+
+        String resourceCacheKey = resource + "_" + locale.toString();        
+        ResourceBundle bundle = (ResourceBundle) bundleLocaleCache.get(resourceCacheKey);
+
+        if (bundle == null) {
+            try {
+                bundle = ResourceBundle.getBundle(resource, locale);
+                bundleLocaleCache.put(resourceCacheKey, bundle);
+            } catch (MissingResourceException e) {
+                Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString());
+                return null;
+            }
+        }
+        if (bundle == null) {
+            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString());
+            return null;
+        }
+        
+        return bundle;
+    }
+    
+    /** Returns the specified resource/properties file
+     *
+     * NOTE: This is NOT fully implemented yet to fulfill all of the requirements
+     *  for i18n messages. Do NOT use.
+     *
+     * To be used in an i18n context this still needs to be extended quite 
+     *  a bit. The behavior needed is that for each getMessage the most specific 
+     *  locale (with fname_en_US for instance) is searched first, then the next 
+     *  less specific (fname_en for instance), then without the locale if it is
+     *  still not found (plain fname for example, not that these examples would
+     *  have .properties appended to them).
+     * This would be accomplished by returning the following structure:
+     *    1. Get "fname" FlexibleProperties object
+     *    2. Get the "fname_en" FlexibleProperties object and if the "fname" one 
+     *      is not null, set it as the default/parent of the "fname_en" object
+     *    3. Get the "fname_en_US" FlexibleProperties object and if the 
+     *      "fname_en" one is not null, set it as the default/parent of the 
+     *      "fname_en_US" object; if the "fname_en" one is null, but the "fname"
+     *      one is not, set the "fname" object as the default/parent of the 
+     *      "fname_en_US" object
+     * Then return the fname_en_US object if not null, else the fname_en, else the fname.
+     *
+     * To make this all more fun, the default locale should be the parent of 
+     *  the "fname" object in this example so that there is an even higher 
+     *  chance of finding something for each request.
+     *
+     * For efficiency all of these should be cached indendependently so the same
+     *  instance can be shared, speeding up loading time/efficiency.
+     *
+     * All of this should work with the setDefaultProperties method of the 
+     *  FlexibleProperties class, but it should be tested and updated as 
+     *  necessary. It's a bit tricky, so chances are it won't work as desired...
+     *
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param locale The locale that the given resource will correspond to
+     * @return The Properties class
+     */
+    public static Properties getProperties(String resource, Locale locale) {
+        if (resource == null || resource.length() <= 0) return null;
+        if (locale == null) locale = Locale.getDefault();
+        
+        String localeString = locale.toString();
+        String resourceLocale = resource + "_" + localeString;
+        Properties properties = (FlexibleProperties) resourceCache.get(resourceLocale);
+
+        if (properties == null) {
+            try {
+                URL url = UtilURL.fromResource(resourceLocale);
+                if (url == null) {
+                    properties = getProperties(resource);
+                } else {
+                    properties = FlexibleProperties.makeFlexibleProperties(url);
+                }
+            } catch (MissingResourceException e) {
+                Debug.log(e.getMessage());
+            }
+            resourceCache.put(resourceLocale, properties);
+        }      
+        
+        if (properties == null)
+            Debug.logInfo("[UtilProperties.getProperties] could not find resource: " + resource + ", locale: " + locale);
+
+        return properties;
     }
 }

@@ -273,7 +273,10 @@ public class UtilMisc {
     }
 
     /** 
-     * Given a request, returns the application name or "root" if deployed on root      * @param request     * @return String     */
+     * Given a request, returns the application name or "root" if deployed on root 
+     * @param request
+     * @return String
+     */
     public static String getApplicationName(HttpServletRequest request) {
         String appName = "root";
 
@@ -303,15 +306,10 @@ public class UtilMisc {
         return requestUrl;
     }
     
-    /**
-     * Get the Locale object from a session variable; if not found use the browser's default     * @param request HttpServletRequest object to use for lookup     * @return Locale The current Locale to use     */
-    public static Locale getLocale(HttpServletRequest request) {
-        if (request == null)
-            return Locale.getDefault();
-        Object localeObject = request.getSession().getAttribute("locale");
-        if (localeObject == null) {
-            localeObject = request.getLocale();
-        }
+    private static Locale getLocale(HttpServletRequest request, HttpSession  session) {
+        Object localeObject = session != null ? session.getAttribute("locale") : null;
+        if (localeObject == null) localeObject = request != null ? request.getLocale() : null;
+
         if (localeObject != null && localeObject instanceof String) {
             localeObject = UtilMisc.parseLocale((String) localeObject);
         } 
@@ -324,7 +322,31 @@ public class UtilMisc {
     }
     
     /**
-     * Parse a locale string Locale object     * @param localeString The locale string (en_US)     * @return Locale The new Locale object     */
+     * Get the Locale object from a session variable; if not found use the browser's default
+     * @param request HttpServletRequest object to use for lookup
+     * @return Locale The current Locale to use
+     */
+    public static Locale getLocale(HttpServletRequest request) {
+        if (request == null) return Locale.getDefault();
+        return getLocale(request, request.getSession());
+    }
+    
+    /**
+     * Get the Locale object from a session variable; if not found use the system's default.
+     * NOTE: This method is not recommended because it ignores the Locale from the browser not having the request object.
+     * @param session HttpSession object to use for lookup
+     * @return Locale The current Locale to use
+     */
+    public static Locale getLocale(HttpSession  session) {
+        if (session == null) return Locale.getDefault();
+        return getLocale(null, session);
+    }
+    
+    /**
+     * Parse a locale string Locale object
+     * @param localeString The locale string (en_US)
+     * @return Locale The new Locale object
+     */
     public static Locale parseLocale(String localeString) {
         if (localeString == null || localeString.length() == 0)
             return null;

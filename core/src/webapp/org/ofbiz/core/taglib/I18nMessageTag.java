@@ -36,6 +36,8 @@ import org.ofbiz.core.util.*;
  * content in a web page.
  *
  * @author     <a href="mailto:k3ysss@yahoo.com">Jian He</a>
+ * @author     <a href="mailto:">Quake Wang</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision$
  * @since      2.0
  */
@@ -76,17 +78,18 @@ public class I18nMessageTag extends BodyTagSupport {
     public int doStartTag() throws JspException {
         try {
             if (this.bundle == null) {
-                I18nBundleTag bundleTag = (I18nBundleTag) I18nMessageTag.findAncestorWithClass(this, I18nBundleTag.class);
+                I18nBundleTag bundleTag = (I18nBundleTag) this.findAncestorWithClass(this, I18nBundleTag.class);
 
                 if (bundleTag != null) {
                     this.bundle = bundleTag.getBundle();
                 }
             }
 
-            // this.value = this.bundle.getString(this.key);
-            String s = this.bundle.getString(this.key);
+            if (this.bundle != null) this.value = this.bundle.getString(this.key);
 
+            /* this is a bad assumption, it won't necessarily be an ISO8859_1 charset, much better to just use the string as is
             this.value = new String(s.getBytes("ISO8859_1"));
+             */
         } catch (Exception e) {
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
                 throw new JspException(e.getMessage(), e);
@@ -101,14 +104,14 @@ public class I18nMessageTag extends BodyTagSupport {
 
     public int doEndTag() throws JspException {
         try {
-            if (arguments != null) {
+            if (this.value != null && this.arguments != null && this.arguments.size() > 0) {
                 MessageFormat messageFormat = new MessageFormat(this.value);
 
                 messageFormat.setLocale(this.bundle.getLocale());
                 this.value = messageFormat.format(arguments.toArray());
             }
 
-            this.pageContext.getOut().print(this.value);
+            if (this.value != null) this.pageContext.getOut().print(this.value);
         } catch (Exception e) {
             if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
                 throw new JspException(e.getMessage(), e);

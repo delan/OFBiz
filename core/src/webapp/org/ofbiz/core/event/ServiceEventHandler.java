@@ -173,14 +173,13 @@ public class ServiceEventHandler implements EventHandler {
                 responseString = (String) result.get(ModelService.RESPONSE_MESSAGE);
 
             // Get the messages:
-
-            String errorPrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.error.prefix");
-            String errorSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.error.suffix");
-            String successPrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.success.prefix");
-            String successSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.success.suffix");
-            String messagePrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.message.prefix");
-            String messageSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.message.suffix");
-            String defaultMessageStr = UtilProperties.getPropertyValue("DefaultMessages", "service.default.message");
+            String errorPrefixStr = UtilProperties.getMessage("DefaultMessages", "service.error.prefix", locale);
+            String errorSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.error.suffix", locale);
+            String successPrefixStr = UtilProperties.getMessage("DefaultMessages", "service.success.prefix", locale);
+            String successSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.success.suffix", locale);
+            String messagePrefixStr = UtilProperties.getMessage("DefaultMessages", "service.message.prefix", locale);
+            String messageSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.message.suffix", locale);
+            String defaultMessageStr = UtilProperties.getMessage("DefaultMessages", "service.default.message", locale);
 
             String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
 
