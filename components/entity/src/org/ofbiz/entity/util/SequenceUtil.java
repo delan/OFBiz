@@ -1,5 +1,5 @@
 /*
- * $Id: SequenceUtil.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: SequenceUtil.java,v 1.2 2004/01/18 11:36:28 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * Uses a collision detection approach to safely get unique sequenced ids in banks from the database
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class SequenceUtil {
@@ -88,19 +88,19 @@ public class SequenceUtil {
         this.idColName = idField.getColName();
     }
 
-    public Long getNextSeqId(String seqName) {
+    public Long getNextSeqId(String seqName, long staggerMax) {
         SequenceBank bank = (SequenceBank) sequences.get(seqName);
 
         if (bank == null) {
             bank = new SequenceBank(seqName, this);
             sequences.put(seqName, bank);
         }
-        return bank.getNextSeqId();
+        return bank.getNextSeqId(staggerMax);
     }
 
     class SequenceBank {
 
-        public static final long bankSize = 10;
+        public static final long defaultBankSize = 10;
         public static final long startSeqId = 10000;
         public static final int minWaitNanos = 500000;   // 1/2 ms
         public static final int maxWaitNanos = 1000000;  // 1 ms
@@ -116,21 +116,25 @@ public class SequenceUtil {
             this.parentUtil = parentUtil;
             curSeqId = 0;
             maxSeqId = 0;
-            fillBank();
+            fillBank(1);
         }
 
-        public synchronized Long getNextSeqId() {
-            if (curSeqId < maxSeqId) {
+        public synchronized Long getNextSeqId(long staggerMax) {
+            long stagger = 1;
+            if (staggerMax > 1) {
+                stagger = Math.round(Math.random() * staggerMax);
+                if (stagger == 0) stagger = 1;
+            }
+            
+            if ((curSeqId + stagger) <= maxSeqId) {
                 Long retSeqId = new Long(curSeqId);
-
-                curSeqId++;
+                curSeqId += stagger;
                 return retSeqId;
             } else {
-                fillBank();
-                if (curSeqId < maxSeqId) {
+                fillBank(stagger);
+                if ((curSeqId + stagger) <= maxSeqId) {
                     Long retSeqId = new Long(curSeqId);
-
-                    curSeqId++;
+                    curSeqId += stagger;
                     return retSeqId;
                 } else {
                     Debug.logError("[SequenceUtil.SequenceBank.getNextSeqId] Fill bank failed, returning null", module);
@@ -139,10 +143,16 @@ public class SequenceUtil {
             }
         }
 
-        protected synchronized void fillBank() {
+        protected synchronized void fillBank(long stagger) {
+            long bankSize = defaultBankSize;
+            if (stagger > 1) {
+                // NOTE: could use staggerMax for this, but if that is done it would be easier to guess a valid next id without a brute force attack
+                bankSize = stagger * defaultBankSize;
+            }
+            
             // no need to get a new bank, SeqIds available
-            if (curSeqId < maxSeqId) return;
-
+            if ((curSeqId + stagger) <= maxSeqId) return;
+                
             long val1 = 0;
             long val2 = 0;
 
@@ -222,7 +232,7 @@ public class SequenceUtil {
                         Debug.logWarning(sqle, "Error closing result set in sequence util", module);
                     }
 
-                    sql = "UPDATE " + parentUtil.tableName + " SET " + parentUtil.idColName + "=" + parentUtil.idColName + "+" + SequenceBank.bankSize + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
+                    sql = "UPDATE " + parentUtil.tableName + " SET " + parentUtil.idColName + "=" + parentUtil.idColName + "+" + bankSize + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
                     if (stmt.executeUpdate(sql) <= 0) {
                         Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] update failed, no rows changes for seqName: " + seqName, module);
                         return;

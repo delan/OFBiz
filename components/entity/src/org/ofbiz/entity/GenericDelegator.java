@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.13 2003/12/12 05:11:30 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.14 2004/01/18 11:36:28 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -2192,18 +2192,27 @@ public class GenericDelegator implements DelegatorInterface {
      *@return Long with the next seq id for the given sequence name
      */
     public Long getNextSeqId(String seqName) {
+        return this.getNextSeqId(seqName, 1);
+    }
+    
+    /** Get the next guaranteed unique seq id from the sequence with the given sequence name;
+     * if the named sequence doesn't exist, it will be created
+     *@param seqName The name of the sequence to get the next seq id from
+     *@param staggerMax The maximum amount to stagger the sequenced ID, if 1 the sequence will be incremented by 1, otherwise the current sequence ID will be incremented by a value between 1 and staggerMax 
+     *@return Long with the next seq id for the given sequence name
+     */
+    public Long getNextSeqId(String seqName, long staggerMax) {
         if (sequencer == null) {
             synchronized (this) {
                 if (sequencer == null) {
                     String helperName = this.getEntityHelperName("SequenceValueItem");
                     ModelEntity seqEntity = this.getModelEntity("SequenceValueItem");
-
                     sequencer = new SequenceUtil(helperName, seqEntity, "seqName", "seqId");
                 }
             }
         }
         if (sequencer != null) {
-            return sequencer.getNextSeqId(seqName);
+            return sequencer.getNextSeqId(seqName, staggerMax);
         } else {
             return null;
         }

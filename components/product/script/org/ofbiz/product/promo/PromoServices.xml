@@ -156,7 +156,7 @@
 
         <make-value value-name="newEntity" entity-name="ProductPromoCode"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <sequenced-id-to-env sequence-name="ProductPromoCode" env-name="newEntity.productPromoCodeId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="ProductPromoCode" env-name="newEntity.productPromoCodeId" to-string="true" stagger-max="100"/>
         <field-to-result field-name="productPromoCodeId" map-name="newEntity"/>
 
         <now-timestamp-to-env env-name="nowTimestamp"/>

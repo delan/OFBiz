@@ -1,5 +1,5 @@
 /*
- * $Id: SequencedIdToEnv.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: SequencedIdToEnv.java,v 1.2 2004/01/18 11:36:28 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,16 +23,18 @@
  */
 package org.ofbiz.minilang.method.entityops;
 
-import org.w3c.dom.*;
-
-import org.ofbiz.minilang.*;
-import org.ofbiz.minilang.method.*;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.minilang.SimpleMethod;
+import org.ofbiz.minilang.method.ContextAccessor;
+import org.ofbiz.minilang.method.MethodContext;
+import org.ofbiz.minilang.method.MethodOperation;
+import org.w3c.dom.Element;
 
 /**
  * Gets a sequenced ID from the delegator and puts it in the env
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class SequencedIdToEnv extends MethodOperation {
@@ -40,6 +42,7 @@ public class SequencedIdToEnv extends MethodOperation {
     String seqName;
     ContextAccessor envAcsr;
     boolean toString;
+    long staggerMax = 1;
 
     public SequencedIdToEnv(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
@@ -47,11 +50,22 @@ public class SequencedIdToEnv extends MethodOperation {
         envAcsr = new ContextAccessor(element.getAttribute("env-name"));
         // default false, anything but true is false
         toString = "true".equals(element.getAttribute("to-string"));
+        String staggerMaxStr = element.getAttribute("stagger-max");
+        if (UtilValidate.isNotEmpty(staggerMaxStr)) {
+            try {
+                this.staggerMax = Long.parseLong(staggerMaxStr);
+                if (this.staggerMax < 1) {
+                    this.staggerMax = 1;
+                }
+            } catch (NumberFormatException e) {
+                this.staggerMax = 1;
+            }
+        }
     }
 
     public boolean exec(MethodContext methodContext) {
         String seqName = methodContext.expandString(this.seqName);
-        Long seqId = methodContext.getDelegator().getNextSeqId(seqName);
+        Long seqId = methodContext.getDelegator().getNextSeqId(seqName, staggerMax);
         
         if (toString) {
             envAcsr.put(methodContext, seqId.toString());
