@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
@@ -99,11 +99,11 @@
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <option value="">- Any Category -</option>
        <#list productCategories as productCategory>
-           <#assign displayDesc = productCategory.description>
+           <#assign displayDesc = productCategory.description?default("No Description")>
            <#if 28 < displayDesc?length>
                <#assign displayDesc = displayDesc[0..25] + "...">
            </#if>
-           <option value="${productCategory.productCategoryId}">${displayDesc}</option>
+           <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
        </#list>
     </select>
   <input type="hidden" name="clearSearch" value="N">
@@ -119,11 +119,11 @@
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <option value="">- Any Category -</option>
        <#list productCategories as productCategory>
-           <#assign displayDesc = productCategory.description>
+           <#assign displayDesc = productCategory.description?default("No Description")>
            <#if 28 < displayDesc?length>
                <#assign displayDesc = displayDesc[0..25] + "...">
            </#if>
-           <option value="${productCategory.productCategoryId}">${displayDesc}</option>
+           <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
        </#list>
     </select>
   Thru<input type="text" size="25" name="thruDate" class="inputBox"><a href="javascript:call_cal(document.searchExpireFromCategory.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
@@ -139,11 +139,11 @@
   <b>Add Results to </b> ${uiLabelMap.ProductCategory}:
     <select class="selectBox" name="SE_SEARCH_CATEGORY_ID">
        <#list productCategories as productCategory>
-           <#assign displayDesc = productCategory.description>
+           <#assign displayDesc = productCategory.description?default("No Description")>
            <#if 28 < displayDesc?length>
                <#assign displayDesc = displayDesc[0..25] + "...">
            </#if>
-           <option value="${productCategory.productCategoryId}">${displayDesc}</option>
+           <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
        </#list>
     </select>
   From<input type="text" size="25" name="fromDate" class="inputBox"><a href="javascript:call_cal(document.searchAddToCategory.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
@@ -167,11 +167,11 @@
     ${uiLabelMap.ProductCategoryId}:
     <select name='productFeatureApplTypeId' size='1' class='selectBox'>
        <#list applicationTypes as applicationType>
-           <#assign displayDesc = applicationType.description>
+           <#assign displayDesc = applicationType.description?default("No Description")>
            <#if 18 < displayDesc?length>
                <#assign displayDesc = displayDesc[0..15] + "...">
            </#if>
-           <option value="${applicationType.productFeatureApplTypeId}">${displayDesc}</option>
+           <option value="${applicationType.productFeatureApplTypeId}">${displayDesc} [${productCategory.productCategoryId}]</option>
        </#list>
   </select>
   <input type="hidden" name="clearSearch" value="N">
