@@ -1,2 +1,2 @@
 
-<%response.sendRedirect("/ecommerce/control/main");%>
+<%response.sendRedirect("control/main");%>
