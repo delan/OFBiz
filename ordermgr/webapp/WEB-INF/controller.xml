@@ -100,6 +100,13 @@
 		<response name="error" type="view" value="ordertasklist"/>
 	</request-map>  
 	
+	<request-map uri="holdorder">
+		<security https="true" auth="true"/>
+		<event type="service" path="" invoke="wfSuspendActivity"/>
+		<response name="success" type="view" value="ordertasklist"/>
+		<response name="error" type="view" value="ordertasklist"/>
+	</request-map>
+	
 	<request-map uri="releasehold">
 		<security https="true" auth="true"/>
 		<event type="service" path="" invoke="wfResumeActivity"/>

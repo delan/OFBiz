@@ -35,7 +35,11 @@
 	    if (wepa != null && wepa.get("statusId") != null && wepa.getString("statusId").equals("CAL_ACCEPTED")) {	    	
     		GenericValue workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));      		
     		workEffortStatus = workEffort.getString("currentStatusId");
-    		if (workEffortStatus != null) pageContext.setAttribute("workEffortStatus", workEffortStatus);
+    		if (workEffortStatus != null) {
+    			pageContext.setAttribute("workEffortStatus", workEffortStatus);
+    			if (workEffortStatus.equals("WF_RUNNING") || workEffortStatus.equals("WF_SUSPENDED"))
+    				pageContext.setAttribute("inProcess", new Boolean(true));
+    		}
     		if (workEffort != null) {
     			if ((delegate != null && delegate.equals("true")) || (workEffortStatus != null && workEffortStatus.equals("WF_RUNNING"))) {    				
     				Map actFields = UtilMisc.toMap("packageId", workEffort.getString("workflowPackageId"), "packageVersion", workEffort.getString("workflowPackageVersion"), "processId", workEffort.getString("workflowProcessId"), "processVersion", workEffort.getString("workflowProcessVersion"), "activityId", workEffort.getString("workflowActivityId"));
@@ -49,6 +53,67 @@
     	}
     }
 %>
+
+<ofbiz:if name="inProcess">
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Processing Status</div>
+          </td>         
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <!-- Suspended Processes -->
+            <ofbiz:if name="workEffortStatus" value="WF_SUSPENDED">
+            <form action="<ofbiz:url>/releasehold</ofbiz:url>" method="post" name="activityForm">
+              <input type="hidden" name="workEffortId" value="<%=workEffortId%>">                        
+              <table width="98%">
+                <tr>
+                  <td>
+                    <div class="tabletext">This order is currently in a 'Hold' state. The activity has been suspended.</div>
+                    <div class="tabletext">&nbsp;** Note: If this state is a result of an automated activity, releasing may not have an effect until all conditions are met.</div>                     
+                  </td>
+                  <td align="right" valign="center">                                        
+                    <a href="javascript:document.activityForm.submit()" class="buttontext">[Release Hold]</a>
+                  </td>
+                </tr>
+              </table>
+            </form> 
+            </ofbiz:if>  
+            <!-- Active Processes -->
+            <ofbiz:if name="workEffortStatus" value="WF_RUNNING">
+            <form action="<ofbiz:url>/holdorder</ofbiz:url>" method="post" name="activityForm">
+              <input type="hidden" name="workEffortId" value="<%=workEffortId%>">                        
+              <table width="98%">
+                <tr>
+                  <td>
+                    <div class="tabletext">This order is currently in a 'Active' state.</div>                    
+                  </td>
+                  <td align="right" valign="center">                                        
+                    <a href="javascript:document.activityForm.submit()" class="buttontext">[Hold Order]</a>
+                  </td>
+                </tr>
+              </table>
+            </form> 
+            </ofbiz:if>                                    
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>  
+</ofbiz:if>
+
+<br>
 
 <ofbiz:if name="wfTransitions">
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -68,7 +133,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <form action="<ofbiz:url>/completeassignment</ofbiz:url>" method="post" name="activityForm">
+            <form action="<ofbiz:url>/completeassignment</ofbiz:url>" method="post" name="transitionForm">
               <input type="hidden" name="workEffortId" value="<%=workEffortId%>">
               <input type="hidden" name="partyId" value="<%=assignPartyId%>">
               <input type="hidden" name="roleTypeId" value="<%=assignRoleTypeId%>">
@@ -86,7 +151,7 @@
                     </select> 
                   </td>
                   <td valign="center">                                        
-                    <a href="javascript:document.activityForm.submit()" class="buttontext">[Continue]</a>
+                    <a href="javascript:document.transitionForm.submit()" class="buttontext">[Continue]</a>
                   </td>
                 </tr>
               </table>
@@ -99,44 +164,3 @@
 </TABLE>
 </ofbiz:if>
 
-<ofbiz:unless name="wfTransitions">
-  <ofbiz:if name="workEffortStatus" value="WF_SUSPENDED">
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-    <TR>
-      <TD width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-          <tr>
-            <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Processing Status</div>
-            </td>         
-          </tr>
-        </table>
-      </TD>
-    </TR>
-    <TR>
-      <TD width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-          <tr>
-            <td>
-              <form action="<ofbiz:url>/releasehold</ofbiz:url>" method="post" name="activityForm">
-                <input type="hidden" name="workEffortId" value="<%=workEffortId%>">                        
-                <table width="98%">
-                  <tr>
-                    <td>
-                      <div class="tabletext">This order is currently in a 'Hold' state. The activity has been suspended.</div>
-                      <div class="tabletext">&nbsp;** Note: If this state is a result of an automated activity, releasing may not have an effect until all conditions are met.</div>                     
-                    </td>
-                    <td align="right" valign="center">                                        
-                      <a href="javascript:document.activityForm.submit()" class="buttontext">[Release Hold]</a>
-                    </td>
-                  </tr>
-                </table>
-              </form>                   
-            </td>
-          </tr>
-        </table>
-      </TD>
-    </TR>
-  </TABLE>  
-  </ofbiz:if>
-</ofbiz:unless>
