@@ -23,12 +23,15 @@
 					<a href="/" target="_parent"><img border="0" height="16" src="/admin/editors/images/home.gif" title="Home Page"/></a>
 					<img border="0" height="16" width="2" src="/admin/editors/images/verticalhr.gif" />
 					<a href="/admin/filemanager/" target="_parent"><img border="0" height="16" src="/admin/editors/images/filemanager.gif" title="File Manager"/></a>
-					<a href="/admin/usermanager/" target="_parent"><img border="0" height="16" src="/admin/editors/images/usermanager.gif" title="User Manager" /></a>
-					<img border="0" height="16" width="2" src="/admin/editors/images/verticalhr.gif" />
 					<a href="javascript:openUploadWindow();"><img border="0" height="16" src="/admin/editors/images/upload.gif" title="Upload New File" /></a>
 					<a href="javascript:openAddWindow();"><img border="0" height="16" src="/admin/editors/images/addpage.gif" title="Add New Page Wizard" /></a>
+					
 					<img border="0" height="16" width="2" src="/admin/editors/images/verticalhr.gif" />
+					#if ( $user.hasPermission( "wsp.administration" ) )
+					<a href="/admin/usermanager/" target="_parent"><img border="0" height="16" src="/admin/editors/images/usermanager.gif" title="User Manager" /></a>
 					<a href="/stats/" target="_parent"><img border="0" height="16" src="/admin/editors/images/stats.gif" title="Hit Count" /></a>
+					#end
+					
 					<a href="/admin/logout.html" target="_parent"><img border="0" height="16" src="/admin/editors/images/logout.gif" title="Log Out" /></a>
 					<img border="0" height="16" width="2" src="/admin/editors/images/verticalhr.gif" />
 					<a target="_parent" href="/admin/help/"><img border="0"  height="16" width="16" src="/admin/editors/images/help.gif" title="Help" /></a>

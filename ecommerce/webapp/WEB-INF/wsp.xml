@@ -287,7 +287,7 @@
             Protect the /admin directory from users that do not have the
             administrative privilege.
     -->
-    <path-action path="/admin/*" name="enforceAdminPrivilege">
+    <path-action path="/admin/*" name="enforcePrivilege">
         <!--
                 This is the path to which to redirect if the user does not have
                 the appropriate permission.  Defaults to /admin/logon.html.
@@ -298,7 +298,7 @@
                 This is the permission that is required in order to view the
                 specified pages.  Defaults to wsp.administration.
         -->
-        <permission>wsp.administration</permission>
+        <permission>wsp.edit</permission>
 
         <!--
                 These are the paths within /admin that are excluded from the
@@ -310,9 +310,11 @@
                         - images/*:     these are images required by editors, etc.
         -->
         <exclude>/admin/logon.html</exclude>
-        <exclude>/admin/dologon.html</exclude>
-        <exclude>/admin/editors/*</exclude>
         <exclude>/admin/images/*</exclude>
         <exclude>/admin/help/*</exclude>
+    </path-action>
+    <path-action path="/admin/usermanager/*" name="enforcePrivilege">
+        <login-path>/admin/logon.html</login-path>
+        <permission>wsp.administration</permission>
     </path-action>
 </wsp>

@@ -1067,8 +1067,9 @@ function viewsource(source){
   if (source) {
     var html = getEditDocument().createTextNode( getEditDocument().body.innerHTML);
     getEditDocument().body.innerHTML = "";
-    
-    getEditDocument().body.appendChild(html );
+    var pre = getEditDocument().createElement("PRE");
+    pre.appendChild( html );
+    getEditDocument().body.appendChild(pre );
     
     document.getElementById("toolbar1").style.visibility="hidden";
     document.getElementById("toolbar2").style.visibility="hidden";

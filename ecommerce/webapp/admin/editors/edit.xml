@@ -28,6 +28,7 @@
 	}
     #set ( $path = $request.getParameter( "path" ) )          
     #set( $editPage = $site.getPageManager().getPage( $path ) )
+    $request.setAttribute("inFileManager","true")
     </html:script>
 
     <dialog fill="yes">
@@ -44,8 +45,10 @@
 			
 				#if( $editPage.getMimeType() == "image/gif" || $editPage.getMimeType() == "image/jpeg" || $editPage.getMimeType() == "image/png")
 					<html:img src='$path' />
+				#elseif ( $editPage.getMimeType() == "text/css" )
+						$!pages.get( $path,false  )					
 				#else
-					$pages.get( $path  )
+					$!pages.get( $path, false  )
 				#end
         </box>
               

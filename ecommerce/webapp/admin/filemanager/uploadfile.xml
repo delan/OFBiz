@@ -53,7 +53,7 @@
         </content>
         <buttons>
           <html:input name="basePath" type="hidden" value="$basePath" />
-          <submit-button name="OK" href="uploadFile-finish.html?editingPath=$url_util.encode($editingPath)"/>
+          <submit-button name="OK" href="uploadfile-finish.html?editingPath=$url_util.encode($editingPath)"/>
           <cancel onclick="window.close()"/>
         </buttons>
       </dialog>

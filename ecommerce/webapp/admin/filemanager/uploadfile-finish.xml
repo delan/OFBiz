@@ -13,7 +13,7 @@
       	</box>
       </content>
       <buttons>
-        <submit-button name="Upload Another" href="/admin/uploadFile.html?editingPath=$url_util.encode( $editingPath )"/>
+        <submit-button name="Upload Another" href="/admin/filemanager/uploadfile.html?editingPath=$url_util.encode( $editingPath )"/>
         <cancel onclick="window.close()"/>
       </buttons>
     </dialog>
