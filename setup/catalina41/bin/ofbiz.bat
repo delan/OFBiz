@@ -52,14 +52,14 @@ rem ----- Set CATALINA_OPTS and Start Catalina ---------------------------------
 
 set CATALINA_OPTS=%CATALINA_OPTS% -Dofbiz.home=%OFBIZ_HOME%
 
-echo ofbiz.sh - Running Catalina with the following options:
+echo ofbiz.bat - Running Catalina with the following options:
 echo  JAVA_HOME=%JAVA_HOME%
 echo  CATALINA_HOME=%CATALINA_HOME%
 echo  OFBIZ_HOME=%OFBIZ_HOME%
 echo  CATALINA_OPTS=%CATALINA_OPTS%
-echo  -- RUNNING %CATALINA_HOME%/bin/catalina.sh %1 --
+echo  -- RUNNING %CATALINA_HOME%\bin\catalina.bat %1 --
 
-call %CATALINA_HOME%/bin/catalina.bat %1
+call %CATALINA_HOME%\bin\catalina.bat %1
 
 
 rem ----- Restore Environment Variables ---------------------------------------
