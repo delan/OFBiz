@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionFactory.java,v 1.3 2004/04/30 22:28:52 ajzeneski Exp $
+ * $Id: TransactionFactory.java,v 1.4 2004/07/17 07:05:10 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import javax.transaction.UserTransaction;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.CursorConnection;
 
@@ -38,7 +39,7 @@ import org.ofbiz.entity.jdbc.CursorConnection;
  * TransactionFactory - central source for JTA objects
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class TransactionFactory {
@@ -109,7 +110,7 @@ public class TransactionFactory {
     }
 
     public static Connection getCursorConnection(String helperName, Connection con) {
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
         if (datasourceInfo == null) {
             Debug.logWarning("Could not find configuration for " + helperName + " datasource.", module);
             return con;

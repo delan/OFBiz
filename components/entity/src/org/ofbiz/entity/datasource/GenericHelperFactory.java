@@ -1,5 +1,5 @@
 /*
- * $Id: GenericHelperFactory.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
+ * $Id: GenericHelperFactory.java,v 1.2 2004/07/17 07:05:07 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,13 +28,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 
 /**
  * Generic Entity Helper Factory Class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class GenericHelperFactory {
@@ -54,7 +55,7 @@ public class GenericHelperFactory {
                 helper = (GenericHelper) helperCache.get(helperName);
                 if (helper == null) {
                     try {
-                        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+                        DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
                         if (datasourceInfo == null) {
                             throw new IllegalStateException("Could not find datasource definition with name " + helperName);

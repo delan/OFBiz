@@ -1,5 +1,5 @@
 /*
- * $Id: JotmFactory.java,v 1.5 2003/10/14 02:49:51 ajzeneski Exp $
+ * $Id: JotmFactory.java,v 1.6 2004/07/17 07:05:10 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import org.objectweb.jotm.Jotm;
 import org.objectweb.transaction.jta.TMService;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
 
@@ -42,7 +43,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  * JotmFactory - Central source for JOTM JTA objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.1
  */
 public class JotmFactory implements TransactionFactoryInterface {
@@ -88,7 +89,7 @@ public class JotmFactory implements TransactionFactoryInterface {
     }
     
     public Connection getConnection(String helperName) throws SQLException, GenericEntityException {
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
         if (datasourceInfo != null && datasourceInfo.inlineJdbcElement != null) {
             // Use JOTM (xapool.jar) connection pooling

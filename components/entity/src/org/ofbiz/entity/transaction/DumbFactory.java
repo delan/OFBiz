@@ -1,5 +1,5 @@
 /*
- * $Id: DumbFactory.java,v 1.3 2004/04/22 22:42:15 doogie Exp $
+ * $Id: DumbFactory.java,v 1.4 2004/07/17 07:05:09 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,6 +39,7 @@ import javax.transaction.UserTransaction;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
 
@@ -47,7 +48,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  * 
  * @author     <a href="mailto:plightbo@hotmail.com">Pat Lightbody</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class DumbFactory implements TransactionFactoryInterface {
@@ -116,7 +117,7 @@ public class DumbFactory implements TransactionFactoryInterface {
     }
     
     public Connection getConnection(String helperName) throws SQLException, GenericEntityException {
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
         if (datasourceInfo.inlineJdbcElement != null) {
             Connection otherCon = ConnectionFactory.tryGenericConnectionSources(helperName, datasourceInfo.inlineJdbcElement);

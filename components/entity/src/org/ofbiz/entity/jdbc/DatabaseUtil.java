@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.20 2004/06/01 06:13:25 jonesde Exp $
+ * $Id: DatabaseUtil.java,v 1.21 2004/07/17 07:05:07 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -44,7 +44,7 @@ public class DatabaseUtil {
 
     protected String helperName;
     protected ModelFieldTypeReader modelFieldTypeReader;
-    protected EntityConfigUtil.DatasourceInfo datasourceInfo;
+    protected DatasourceInfo datasourceInfo;
 
     public DatabaseUtil(String helperName) {
         this.helperName = helperName;
@@ -58,7 +58,7 @@ public class DatabaseUtil {
         return connection;
     }
     
-    public EntityConfigUtil.DatasourceInfo getDatasourceInfo() {
+    public DatasourceInfo getDatasourceInfo() {
         return this.datasourceInfo;
     }
 

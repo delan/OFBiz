@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFieldTypeReader.java,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ * $Id: ModelFieldTypeReader.java,v 1.2 2004/07/17 07:05:08 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,8 @@ import java.util.Map;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
+import org.ofbiz.entity.config.DatasourceInfo;
+import org.ofbiz.entity.config.FieldTypeInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
@@ -43,7 +45,7 @@ import org.w3c.dom.Node;
  * Generic Entity - Field Type Definition Reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelFieldTypeReader {
@@ -62,7 +64,7 @@ public class ModelFieldTypeReader {
     public String entityFileName;
 
     public static ModelFieldTypeReader getModelFieldTypeReader(String helperName) {
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
         if (datasourceInfo == null) {
             throw new IllegalArgumentException("Could not find a datasource/helper with the name " + helperName);
         }
@@ -86,7 +88,7 @@ public class ModelFieldTypeReader {
 
     public ModelFieldTypeReader(String modelName) {
         this.modelName = modelName;
-        EntityConfigUtil.FieldTypeInfo fieldTypeInfo = EntityConfigUtil.getFieldTypeInfo(modelName);
+        FieldTypeInfo fieldTypeInfo = EntityConfigUtil.getFieldTypeInfo(modelName);
 
         if (fieldTypeInfo == null) {
             throw new IllegalStateException("Could not find a field-type definition with name \"" + modelName + "\"");

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityEcaUtil.java,v 1.3 2003/08/17 08:46:58 jonesde Exp $
+ * $Id: EntityEcaUtil.java,v 1.4 2004/07/17 07:05:11 doogie Exp $
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,9 @@ import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.entity.config.DelegatorInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.config.EntityEcaReaderInfo;
 import org.w3c.dom.Element;
 
 /**
@@ -45,7 +47,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class EntityEcaUtil {
@@ -70,7 +72,7 @@ public class EntityEcaUtil {
     }
     
     public static String getEntityEcaReaderName(String delegatorName) {
-        EntityConfigUtil.DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
+        DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
         if (delegatorInfo == null) {
             Debug.logError("BAD ERROR: Could not find delegator config with name: " + delegatorName, module);
             return null;
@@ -79,7 +81,7 @@ public class EntityEcaUtil {
     }
     
     protected static void readConfig(String entityEcaReaderName, Map ecaCache) {
-        EntityConfigUtil.EntityEcaReaderInfo entityEcaReaderInfo = EntityConfigUtil.getEntityEcaReaderInfo(entityEcaReaderName);
+        EntityEcaReaderInfo entityEcaReaderInfo = EntityConfigUtil.getEntityEcaReaderInfo(entityEcaReaderName);
         if (entityEcaReaderInfo == null) {
             Debug.logError("BAD ERROR: Could not find entity-eca-reader config with name: " + entityEcaReaderName, module);
             return;

@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.23 2004/07/07 06:33:23 doogie Exp $
+ * $Id: SqlJdbcUtil.java,v 1.24 2004/07/17 07:05:07 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.entity.GenericNotImplementedException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityConditionParam;
 import org.ofbiz.entity.condition.OrderByItem;
-import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.datasource.GenericDAO;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
@@ -68,7 +68,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -77,7 +77,7 @@ public class SqlJdbcUtil {
     public static final int CHAR_BUFFER_SIZE = 4096;
 
     /** Makes the FROM clause and when necessary the JOIN clause(s) as well */
-    public static String makeFromClause(ModelEntity modelEntity, EntityConfigUtil.DatasourceInfo datasourceInfo) throws GenericEntityException {
+    public static String makeFromClause(ModelEntity modelEntity, DatasourceInfo datasourceInfo) throws GenericEntityException {
         StringBuffer sql = new StringBuffer(" FROM ");
 
         if (modelEntity instanceof ModelViewEntity) {
@@ -363,11 +363,11 @@ public class SqlJdbcUtil {
         return "";
     }
 
-    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, EntityConfigUtil.DatasourceInfo datasourceInfo) {
+    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, DatasourceInfo datasourceInfo) {
         return makeOrderByClause(modelEntity, orderBy, false, datasourceInfo);
     }
 
-    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, boolean includeTablenamePrefix, EntityConfigUtil.DatasourceInfo datasourceInfo) {
+    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, boolean includeTablenamePrefix, DatasourceInfo datasourceInfo) {
         StringBuffer sql = new StringBuffer("");
         String fieldPrefix = includeTablenamePrefix ? (modelEntity.getTableName(datasourceInfo) + ".") : "";
 
@@ -408,7 +408,7 @@ public class SqlJdbcUtil {
         return sql.toString();
     }
 
-    public static String makeViewTable(ModelEntity modelEntity, EntityConfigUtil.DatasourceInfo datasourceInfo) throws GenericEntityException {
+    public static String makeViewTable(ModelEntity modelEntity, DatasourceInfo datasourceInfo) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
             StringBuffer sql = new StringBuffer("(SELECT ");
             List fields = modelEntity.getFieldsCopy();

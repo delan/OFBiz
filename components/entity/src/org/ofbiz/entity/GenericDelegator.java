@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.22 2004/07/09 16:11:16 ajzeneski Exp $
+ * $Id: GenericDelegator.java,v 1.23 2004/07/17 07:05:03 doogie Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -49,6 +49,8 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.config.DatasourceInfo;
+import org.ofbiz.entity.config.DelegatorInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.datasource.GenericHelper;
 import org.ofbiz.entity.datasource.GenericHelperFactory;
@@ -82,7 +84,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -93,7 +95,7 @@ public class GenericDelegator implements DelegatorInterface {
      * but the delegator will always be the same object for the given name */
     protected static Map delegatorCache = new HashMap();
     protected String delegatorName;
-    protected EntityConfigUtil.DelegatorInfo delegatorInfo = null;
+    protected DelegatorInfo delegatorInfo = null;
 
     protected Cache cache;
 
@@ -184,7 +186,7 @@ public class GenericDelegator implements DelegatorInterface {
                 // get the helper and if configured, do the datasource check
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
 
-                EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+                DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
                 if (datasourceInfo.checkOnStart) {
                     if (Debug.infoOn()) Debug.logInfo("Doing database check as requested in entityengine.xml with addMissing=" + datasourceInfo.addMissingOnStart, module);
                     try {
@@ -244,7 +246,7 @@ public class GenericDelegator implements DelegatorInterface {
         return this.delegatorName;
     }
 
-    protected EntityConfigUtil.DelegatorInfo getDelegatorInfo() {
+    protected DelegatorInfo getDelegatorInfo() {
         if (delegatorInfo == null) {
             delegatorInfo = EntityConfigUtil.getDelegatorInfo(this.delegatorName);
         }
