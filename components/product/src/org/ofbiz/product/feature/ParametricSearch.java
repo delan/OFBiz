@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.14 2004/01/26 22:13:25 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.15 2004/06/29 20:44:38 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -46,7 +46,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.1
  */
 public class ParametricSearch {
@@ -161,6 +161,7 @@ public class ParametricSearch {
                     featuresByType.add(productFeature);
                 }
             }
+            productFeatureEli.close();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error getting all features", module);
         }
