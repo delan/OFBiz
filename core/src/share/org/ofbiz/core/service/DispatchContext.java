@@ -8,6 +8,7 @@ import java.net.*;
 import java.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.security.*;
 
 /**
  * <p><b>Title:</b> Dispatcher Context
@@ -165,6 +166,13 @@ public class DispatchContext {
      */
     public GenericDelegator getDelegator() {
         return dispatcher.getDelegator();
+    }
+    
+    /** Gets the Security object associated with this dispatcher
+     *@return Security object associated with this dispatcher
+     */
+    public Security getSecurity() {
+        return dispatcher.getSecurity();
     }
     
     private Map addReaders(Collection readerURLs) {

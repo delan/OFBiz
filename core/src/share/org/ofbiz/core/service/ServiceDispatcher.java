@@ -8,6 +8,7 @@ import java.util.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.scheduler.*;
+import org.ofbiz.core.security.*;
 
 /**
  * <p><b>Title:</b> Global Service Dispatcher
@@ -40,6 +41,7 @@ public class ServiceDispatcher {
     
     protected static Map dispatchers = new HashMap();
     protected GenericDelegator delegator;
+    protected Security security;
     protected Map localContext;
     protected JobManager jm;
     
@@ -48,6 +50,8 @@ public class ServiceDispatcher {
         this.delegator = delegator;
         this.localContext = new HashMap();
         this.jm = new JobManager(this,this.delegator);
+        if ( delegator != null )
+            this.security = new Security(delegator);
     }
     
     /** Returns a pre-registered instance of the ServiceDispatcher associated with this delegator.
@@ -69,11 +73,16 @@ public class ServiceDispatcher {
      */
     public static ServiceDispatcher getInstance(String name, DispatchContext context, GenericDelegator delegator) {
         ServiceDispatcher sd = null;
-        if ( dispatchers.containsKey(delegator) )
-            sd = (ServiceDispatcher) dispatchers.get(delegator);
-        else
-            sd = new ServiceDispatcher(delegator);
-        dispatchers.put(delegator,sd);
+        sd = (ServiceDispatcher) dispatchers.get(delegator);
+        if (sd == null) {
+            synchronized(ServiceDispatcher.class) {
+                sd = (ServiceDispatcher) dispatchers.get(delegator);
+                if (sd == null) {
+                    sd = new ServiceDispatcher(delegator);
+                    dispatchers.put(delegator,sd);
+                }
+            }
+        }
         if ( name != null && context != null )
             sd.register(name,context);
         return sd;
@@ -145,11 +154,18 @@ public class ServiceDispatcher {
         return this.jm;
     }
     
-    /** Gets the GenericEntityDelegator associated with this dispatcher
-     *@return GenericEntityDelegator associated with this dispatcher
+    /** Gets the GenericDelegator associated with this dispatcher
+     *@return GenericDelegator associated with this dispatcher
      */
     public GenericDelegator getDelegator() {
         return this.delegator;
+    }
+    
+    /** Gets the Security object associated with this dispatcher
+     *@return Security object associated with this dispatcher
+     */
+    public Security getSecurity() {
+        return this.security;
     }
     
     /** Gets the local dispatcher from a name

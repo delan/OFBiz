@@ -8,6 +8,7 @@ import java.util.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.scheduler.*;
+import org.ofbiz.core.security.*;
 
 /**
  * <p><b>Title:</b> Generic Services Local Dispatcher
@@ -124,6 +125,13 @@ public class LocalDispatcher {
      */
     public GenericDelegator getDelegator() {
         return dispatcher.getDelegator();
+    }
+    
+    /** Gets the Security object associated with this dispatcher
+     *@return Security object associated with this dispatcher
+     */
+    public Security getSecurity() {
+        return dispatcher.getSecurity();
     }
     
     /** Returns the Name of this local dispatcher
