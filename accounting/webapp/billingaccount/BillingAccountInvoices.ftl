@@ -30,15 +30,17 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
   <tr>
     <td><div class="tableheadtext">Invoice #</div></td>
-    <td><div class="tableheadtext">Date</div></td>
+    <td><div class="tableheadtext">Invoice Date</div></td>
+    <td><div class="tableheadtext">Due Date</div><td>
     <td align="right"><div class="tableheadtext">Total</div></td>
     <td>&nbsp;</td>
   </tr> 
-  <tr><td colspan="4"><hr class="sepbar"></td></tr>
+  <tr><td colspan="5"><hr class="sepbar"></td></tr>
   <#list invoices as invoice>
   <tr>
     <td><div class="tabletext">${invoice.invoiceId?if_exists}</div></td>
     <td><div class="tabletext">${invoice.invoiceDate?if_exists}</div></td>
+    <td><div class="tabletext">${invoice.dueDate?if_exists}</div></td>
     <td align="right"><div class="tabletext">${invoice.invoiceTotal?string.currency}</div></td>
     <td align="right">
       <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext">[Edit]</a>

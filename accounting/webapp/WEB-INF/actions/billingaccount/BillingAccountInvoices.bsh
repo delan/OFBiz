@@ -27,6 +27,7 @@
  import java.util.*;
  import org.ofbiz.core.entity.*;
  import org.ofbiz.core.util.*;
+ import org.ofbiz.commonapp.accounting.invoice.*;
  
  billingAccountId = request.getParameter("billingAccountId");
  delegator = request.getAttribute("delegator");
@@ -35,19 +36,9 @@
  invoiceList = new ArrayList();
  invoiceIter = invoices.iterator();
  while (invoiceIter.hasNext()) {
-    invoice = invoiceIter.next();
-    invoiceItems = invoice.getRelated("InvoiceItem");
-    itemIter = invoiceItems.iterator();
-    invoiceTotal = 0.00;
-    while (itemIter.hasNext()) {
-        item = itemIter.next();
-        amount = item.getDouble("amount");
-        quantity = item.getDouble("quantity");
-        if (amount != null && quantity != null)
-            invoiceTotal += amount.doubleValue() * quantity.doubleValue();
-    }
+    invoice = invoiceIter.next();   
     inv = new HashMap(invoice);
-    inv.put("invoiceTotal", new Double(invoiceTotal));
+    inv.put("invoiceTotal", new Double(InvoiceWorker.getInvoiceTotal(invoice)));
     invoiceList.add(inv);
  }
  context.put("invoices", invoiceList);
