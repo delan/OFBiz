@@ -1,4 +1,4 @@
-package org.ofbiz.core.entity;
+package org.ofbiz.core.entity.transaction;
 
 import java.net.*;
 import java.util.*;
@@ -10,7 +10,7 @@ import org.ofbiz.core.util.*;
 import tyrex.tm.TransactionDomain;
 
 /**
- * <p><b>Title:</b> TyrexTransactionFactory.java
+ * <p><b>Title:</b> TyrexFactory.java
  * <p><b>Description:</b> TyrexTransactionFactory - central source for Tyrex JTA objects
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -35,10 +35,10 @@ import tyrex.tm.TransactionDomain;
  * @version 1.0
  * Created on July 1, 2001, 5:03 PM
  */
-public class TyrexTransactionFactory {
-    protected static TransactionDomain td = null;
+public class TyrexFactory implements TransactionFactoryInterface {
+    protected TransactionDomain td = null;
     
-    static {
+    public TyrexFactory() {
       /* For Tyrex version 0.9.8.5 */
         try {
             String resourceName = "tyrexdomain.xml";
@@ -63,14 +63,14 @@ public class TyrexTransactionFactory {
        */
     }
 
-    public static TransactionManager getTransactionManager() {
+    public TransactionManager getTransactionManager() {
         if (td != null)
             return td.getTransactionManager();
         else
             return null;
     }
     
-    public static UserTransaction getUserTransaction() {
+    public UserTransaction getUserTransaction() {
         if (td != null)
             return td.getUserTransaction();
         else

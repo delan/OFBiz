@@ -30,43 +30,62 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class GenericHelperFactory {
-  static UtilCache helperCache = new UtilCache("GenericHelpers", 0, 0);
-  
-  public static GenericHelper getHelper(String helperName) {
-    GenericHelper helper = (GenericHelper)helperCache.get(helperName);
-    if(helper == null) //don't want to block here
-    {
-      synchronized(GenericHelperFactory.class) {
-        //must check if null again as one of the blocked threads can still enter
-        helper = (GenericHelper)helperCache.get(helperName);
-        if(helper == null) {
-          try {
-            String helperClassName = UtilProperties.getPropertyValue("entityengine", helperName + ".helper.class", "org.ofbiz.core.entity.GenericHelperDAO");
-            Class helperClass = null;
-            if(helperClassName != null && helperClassName.length() > 0) {
-              try { helperClass = Class.forName(helperClassName); }
-              catch(ClassNotFoundException e) { Debug.logWarning(e); return null; }
+    static UtilCache helperCache = new UtilCache("GenericHelpers", 0, 0);
+    
+    public static GenericHelper getHelper(String helperName) {
+        GenericHelper helper = (GenericHelper)helperCache.get(helperName);
+        if(helper == null) //don't want to block here
+        {
+            synchronized(GenericHelperFactory.class) {
+                //must check if null again as one of the blocked threads can still enter
+                helper = (GenericHelper)helperCache.get(helperName);
+                if(helper == null) {
+                    try {
+                        String helperClassName = UtilProperties.getPropertyValue("entityengine", helperName + ".helper.class", "org.ofbiz.core.entity.GenericHelperDAO");
+                        Class helperClass = null;
+                        if(helperClassName != null && helperClassName.length() > 0) {
+                            try {
+                                helperClass = Class.forName(helperClassName);
+                            } catch(ClassNotFoundException e) {
+                                Debug.logWarning(e);
+                                throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
+                            }
+                        }
+                        
+                        Class[] paramTypes = new Class[] {String.class};
+                        Object[] params = new Object[] {helperName};
+                        
+                        java.lang.reflect.Constructor helperConstructor = null;
+                        if(helperClass != null) {
+                            try {
+                                helperConstructor = helperClass.getConstructor(paramTypes);
+                            } catch(NoSuchMethodException e) {
+                                Debug.logWarning(e);
+                                throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
+                            }
+                        }
+                        try {
+                            helper = (GenericHelper)helperConstructor.newInstance(params);
+                        } catch(IllegalAccessException e) {
+                            Debug.logWarning(e);
+                            throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
+                        } catch(InstantiationException e) {
+                            Debug.logWarning(e);
+                            throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
+                        } catch(java.lang.reflect.InvocationTargetException e) {
+                            Debug.logWarning(e);
+                            throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());
+                        }
+                        
+                        if(helper != null)
+                            helperCache.put(helperName, helper);
+                    } catch(SecurityException e) {
+                        Debug.logError(e);
+                        throw new IllegalStateException("Error loading GenericHelper class: " + e.getMessage());
+                    }
+                }
             }
-            
-            Class[] paramTypes = new Class[] {String.class};
-            Object[] params = new Object[] {helperName};
-            
-            java.lang.reflect.Constructor helperConstructor = null;
-            if(helperClass != null) {
-              try { helperConstructor = helperClass.getConstructor(paramTypes); }
-              catch(NoSuchMethodException e) { Debug.logWarning(e); return null; }
-            }
-            try { helper = (GenericHelper)helperConstructor.newInstance(params); }
-            catch(IllegalAccessException e) { Debug.logWarning(e); return null; }
-            catch(InstantiationException e) { Debug.logWarning(e); return null; }
-            catch(java.lang.reflect.InvocationTargetException e) { Debug.logWarning(e); return null; }
-            
-            if(helper != null) helperCache.put(helperName, helper);
-          }
-          catch(SecurityException e) { Debug.logError(e); }
         }
-      }
+        return helper;
     }
-    return helper;
-  }
 }

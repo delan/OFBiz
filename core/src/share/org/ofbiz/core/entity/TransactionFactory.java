@@ -5,6 +5,7 @@ import javax.naming.*;
 import javax.transaction.*;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.transaction.TransactionFactoryInterface;
 
 /**
  * <p><b>Title:</b> TransactionFactory.java
@@ -33,12 +34,50 @@ import org.ofbiz.core.util.*;
  * Created on July 1, 2001, 5:03 PM
  */
 public class TransactionFactory {
+    public static TransactionFactoryInterface transactionFactory = null;
+    
+    public static TransactionFactoryInterface getTransactionFactory() {
+        if(transactionFactory == null) { //don't want to block here
+            synchronized(TransactionFactory.class) {
+                //must check if null again as one of the blocked threads can still enter
+                if(transactionFactory == null) {
+                    try {
+                        String className = UtilProperties.getPropertyValue("entityengine", "transaction.factory.class", "org.ofbiz.core.entity.transaction.TyrexFactory");
+                        Class tfClass = null;
+                        if(className != null && className.length() > 0) {
+                            try {
+                                tfClass = Class.forName(className);
+                            } catch(ClassNotFoundException e) {
+                                Debug.logWarning(e);
+                                throw new IllegalStateException("Error loading TransactionFactory class \"" + className + "\": " + e.getMessage());
+                            }
+                        }
+                        
+                        try {
+                            transactionFactory = (TransactionFactoryInterface) tfClass.newInstance();
+                        } catch(IllegalAccessException e) {
+                            Debug.logWarning(e);
+                            throw new IllegalStateException("Error loading TransactionFactory class \"" + className + "\": " + e.getMessage());
+                        } catch(InstantiationException e) {
+                            Debug.logWarning(e);
+                            throw new IllegalStateException("Error loading TransactionFactory class \"" + className + "\": " + e.getMessage());
+                        }
+                    } catch(SecurityException e) {
+                        Debug.logError(e);
+                        throw new IllegalStateException("Error loading TransactionFactory class: " + e.getMessage());
+                    }
+                }
+            }
+        }
+        return transactionFactory;
+    }
+
     public static TransactionManager getTransactionManager() {
-        return TyrexTransactionFactory.getTransactionManager();
+        return getTransactionFactory().getTransactionManager();
     }
     
     public static UserTransaction getUserTransaction() {
-        return TyrexTransactionFactory.getUserTransaction();
+        return getTransactionFactory().getUserTransaction();
     }
 }
 
