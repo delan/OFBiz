@@ -101,11 +101,11 @@
 -->
     </form>
     <form 
-        name="lruLookupDataResource" 
+        name="mruLookupDataResource" 
         default-entity-name="DataResource"
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="lruList" 
+        list-name="mruList" 
         target="" title="" type="list">
         <field name="contentId" title="Id" widget-style="buttontext">
                 
