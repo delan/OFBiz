@@ -88,8 +88,25 @@ public class ProductWorker {
      *@param categoryId The keyword search group name for this search
      */
     public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId) {
+        getKeywordSearchProducts(pageContext, attributePrefix, categoryId, false, false, "AND");
+    }
+    
+    /**
+     * Puts the following into the pageContext attribute list with a prefix if specified:
+     *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
+     * Puts the following into the session attribute list:
+     *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
+     *@param pageContext The pageContext of the calling JSP
+     *@param attributePrefix A prefix to put on each attribute name in the pageContext
+     *@param categoryId The keyword search group name for this search
+     */
+    public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
+        if (UtilValidate.isEmpty(intraKeywordOperator)) {
+            intraKeywordOperator = "AND";
+        }
+        
         int viewIndex = 0;
         try {
             viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
@@ -115,7 +132,7 @@ public class ProductWorker {
             Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
             //sort by productId (only available sort for now...)
-            Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId);
+            Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, anyPrefix, anySuffix, intraKeywordOperator);
             if (unsortedIds != null && unsortedIds.size() > 0) {
                 TreeSet productIdTree = new TreeSet(unsortedIds);
                 productIds = new ArrayList(productIdTree);
