@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.11 2004/07/01 20:49:22 jonesde Exp $
+ * $Id: ProductServices.java,v 1.12 2004/07/07 08:18:03 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ProductServices {
@@ -373,7 +373,7 @@ public class ProductServices {
             Map fields = UtilMisc.toMap("productId", productId);
             List order = UtilMisc.toList("sequenceNum", "productFeatureTypeId");
 
-            if (distinct != null) fields.put("productFeatureType", distinct);
+            if (distinct != null) fields.put("productFeatureTypeId", distinct);
             if (type != null) fields.put("productFeatureApplTypeId", type);
             features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
             result.put("productFeatures", features);
