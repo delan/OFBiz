@@ -50,15 +50,13 @@ public class Start {
         }
         ClassLoader cl = classPath.getClassLoader();
         
-        /*
-        System.out.println("java.home = " + conf.javaHome);
-        System.out.println("java.version = " + conf.javaVersion);
-        System.out.println("ofbiz.home = " + conf.ofbizHome);
-        System.out.println("jetty.home = " + conf.jettyHome);
-        System.out.println("server.class = " + conf.serverClass);
-        System.out.println("config.file = " + conf.configFile);        
-        System.out.println("classpath = " + classPath.toString());
-        */
+        System.out.println("");       
+        System.out.println("java.home......: " + conf.javaHome);
+        System.out.println("java.version...: " + conf.javaVersion);
+        System.out.println("ofbiz.home.....: " + conf.ofbizHome);        
+        System.out.println("server.class...: " + conf.serverClass);
+        System.out.println("config.file....: " + conf.configFile);
+        System.out.println("");                       
         
         System.setProperty("java.class.path", classPath.toString());
         Thread.currentThread().setContextClassLoader(cl);   
