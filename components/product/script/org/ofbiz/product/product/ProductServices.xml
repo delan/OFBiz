@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  -->
 
@@ -150,6 +150,14 @@
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
+        <if-not-empty field-name="duplicateContent" map-name="parameters">
+            <find-by-and entity-name="ProductContent" map-name="productFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
         <if-not-empty field-name="duplicateCategoryMembers" map-name="parameters">
             <find-by-and entity-name="ProductCategoryMember" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
@@ -211,6 +219,9 @@
         </if-not-empty>
         <if-not-empty field-name="removeIDs" map-name="parameters">
             <remove-by-and entity-name="GoodIdentification" map-name="productFindContext"/>
+        </if-not-empty>
+        <if-not-empty field-name="removeContent" map-name="parameters">
+            <remove-by-and entity-name="ProductContent" map-name="productFindContext"/>
         </if-not-empty>
         <if-not-empty field-name="removeCategoryMembers" map-name="parameters">
             <remove-by-and entity-name="ProductCategoryMember" map-name="productFindContext"/>
