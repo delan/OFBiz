@@ -89,7 +89,7 @@ public class PayPalEvents {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get the order header for order: " + orderId, module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems getting order header.");
+            request.setAttribute("_ERROR_MESSAGE_", "Problems getting order header.");
             return "error";
         }
         
@@ -104,7 +104,7 @@ public class PayPalEvents {
 
         if (productStore == null) {
             Debug.logError("ProductStore is null", module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems getting merchant configuration, please contact customer service.");
+            request.setAttribute("_ERROR_MESSAGE_", "Problems getting merchant configuration, please contact customer service.");
             return "error";
         }
         
@@ -169,7 +169,7 @@ public class PayPalEvents {
             response.sendRedirect(redirectString);
         } catch (IOException e) {
             Debug.logError(e, "Problems redirecting to PayPal", module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems connecting with PayPal, please contact customer service.");
+            request.setAttribute("_ERROR_MESSAGE_", "Problems connecting with PayPal, please contact customer service.");
             return "error";
         }
         
@@ -203,8 +203,8 @@ public class PayPalEvents {
         String confirmUrl = UtilProperties.getPropertyValue(configString, "payment.paypal.confirm");
         if (confirmUrl == null) {
             Debug.logError("Payment properties is not configured properly, no confirm URL defined!", module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>PayPal has not been configured, please contact customer service.");
-            return "error";       
+            request.setAttribute("_ERROR_MESSAGE_", "PayPal has not been configured, please contact customer service.");
+            return "error";
         }
                 
         // first verify this is valid from PayPal
@@ -213,31 +213,30 @@ public class PayPalEvents {
         
         // send off the confirm request     
         String confirmResp = null;
-        
-        try {                
+
+        try {
             String str = UtilHttp.urlEncodeArgs(parametersMap);
             URL u = new URL("http://www.paypal.com/cgi-bin/webscr");
             URLConnection uc = u.openConnection();
             uc.setDoOutput(true);
-            uc.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+            uc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             PrintWriter pw = new PrintWriter(uc.getOutputStream());
             pw.println(str);
             pw.close();
-            
-            BufferedReader in = new BufferedReader(
-            new InputStreamReader(uc.getInputStream()));
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
             confirmResp = in.readLine();
-            in.close();                 
-            Debug.logError("PayPal Verification Response: " + confirmResp, module); 
+            in.close();
+            Debug.logError("PayPal Verification Response: " + confirmResp, module);
         } catch (IOException e) {
             Debug.logError(e, "Problems sending verification message", module);
         }
-          
+
         if (confirmResp.trim().equals("VERIFIED")) {
             // we passed verification
             Debug.logInfo("Got verification from PayPal, processing..", module);
         } else {
-            Debug.logError("###### PayPal did not verify this request, need investigation!", module);            
+            Debug.logError("###### PayPal did not verify this request, need investigation!", module);
             Set keySet = parametersMap.keySet();
             Iterator i = keySet.iterator();
             while (i.hasNext()) {
@@ -250,86 +249,95 @@ public class PayPalEvents {
         // get the user
         GenericValue userLogin = null;
         String userLoginId = request.getParameter("custom");
-        if (userLoginId == null) 
+        if (userLoginId == null)
             userLoginId = "admin";
         try {
             userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get UserLogin for: " + userLoginId + "; cannot continue", module);
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Problems getting authentication user.");
+            request.setAttribute("_ERROR_MESSAGE_", "Problems getting authentication user.");
             return "error";
         }
                                
         // get the orderId
         String orderId = request.getParameter("invoice");
+
+        // get the order header
+        GenericValue orderHeader = null;
         if (UtilValidate.isNotEmpty(orderId)) {
-            // get the order header
-            GenericValue orderHeader = null;
             try {
                 orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Cannot get the order header for order: " + orderId, module);
-                request.setAttribute("_ERROR_MESSAGE_", "<li>Problems getting order header.");
+                request.setAttribute("_ERROR_MESSAGE_", "Problems getting order header.");
                 return "error";
             }
+        } else {
+            Debug.logError("PayPal did not callback with a valid orderId!", module);
+            request.setAttribute("_ERROR_MESSAGE_", "No valid orderId returned with PayPal Callback.");
+            return "error";
+        }
 
-            // get payment data
-            String paymentCurrency = request.getParameter("mc_currency");
-            String paymentAmount = request.getParameter("mc_gross");
-            String paymentFee = request.getParameter("mc_fee");
-            String transactionId = request.getParameter("txn_id");
+        if (orderHeader == null) {
+            Debug.logError("Cannot get the order header for order: " + orderId, module);
+            request.setAttribute("_ERROR_MESSAGE_", "Problems getting order header; not a valid orderId.");
+            return "error";
+        }
 
-            // get the transaction status
-            String paymentStatus = request.getParameter("payment_status");
+        // get payment data
+        String paymentCurrency = request.getParameter("mc_currency");
+        String paymentAmount = request.getParameter("mc_gross");
+        String paymentFee = request.getParameter("mc_fee");
+        String transactionId = request.getParameter("txn_id");
 
-            // attempt to start a transaction
-            boolean beganTransaction = false;
+        // get the transaction status
+        String paymentStatus = request.getParameter("payment_status");
+
+        // attempt to start a transaction
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+        } catch (GenericTransactionException gte) {
+            Debug.logError(gte, "Unable to begin transaction", module);
+        }
+
+        boolean okay = false;
+        if (paymentStatus.equals("Completed")) {
+            okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+        } else if (paymentStatus.equals("Failed") || paymentStatus.equals("Denied")) {
+            okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
+        }
+
+        if (okay) {
+            // set the payment preference
+            okay = setPaymentPreferences(delegator, orderId, request);
+        }
+
+        if (okay) {
             try {
-                beganTransaction = TransactionUtil.begin();
+                TransactionUtil.commit(beganTransaction);
             } catch (GenericTransactionException gte) {
-                Debug.logError(gte, "Unable to begin transaction", module);
-            }
-
-            boolean okay = false;
-            if (paymentStatus.equals("Completed")) {
-                okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-            } else if (paymentStatus.equals("Failed") || paymentStatus.equals("Denied")) {
-                okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
-            }
-
-            if (okay) {
-                // set the payment preference
-                okay = setPaymentPreferences(delegator, orderId, request);
-            }
-
-            if (okay) {
-                try {
-                    TransactionUtil.commit(beganTransaction);
-                } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to commit transaction", module);
-                }
-            } else {
-                try {
-                    TransactionUtil.rollback(beganTransaction);
-                } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback transaction", module);
-                }
-            }
-
-            if (okay) {
-                // attempt to release the offline hold on the order (workflow)
-                OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
-
-                // call the email confirm service
-                Map emailContext = UtilMisc.toMap("orderId", orderId);
-                try {
-                    Map emailResult = dispatcher.runSync("sendOrderConfirmation", emailContext);
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, "Problems sending email confirmation", module);
-                }
+                Debug.logError(gte, "Unable to commit transaction", module);
             }
         } else {
-            Debug.logWarning("PayPal IPN Callback passed in an empty orderId!", module);
+            try {
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericTransactionException gte) {
+                Debug.logError(gte, "Unable to rollback transaction", module);
+            }
+        }
+
+        if (okay) {
+            // attempt to release the offline hold on the order (workflow)
+            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
+
+            // call the email confirm service
+            Map emailContext = UtilMisc.toMap("orderId", orderId);
+            try {
+                Map emailResult = dispatcher.runSync("sendOrderConfirmation", emailContext);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problems sending email confirmation", module);
+            }
         }
 
         return "success";
@@ -374,7 +382,7 @@ public class PayPalEvents {
         if (okay) 
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);  
             
-        request.setAttribute("_EVENT_MESSAGE_", "<li>Previous PayPal order has been cancelled.");                                            
+        request.setAttribute("_EVENT_MESSAGE_", "Previous PayPal order has been cancelled.");
         return "success";        
     }    
     
