@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.19 2004/06/07 16:03:15 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.20 2004/06/16 18:54:44 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -236,7 +236,7 @@ public class ContentPermissionServices {
         if (!(targetOperations == null) && userLoginId != null) {
             hasRoleOperation = checkHasRoleOperations(userLoginId, targetOperations, delegator);
         }
-        if (Debug.infoOn()) Debug.logInfo("hasRoleOperation:" + hasRoleOperation, module);
+        //if (Debug.infoOn()) Debug.logInfo("hasRoleOperation:" + hasRoleOperation, module);
         if( hasRoleOperation ) {
             result.put("permissionStatus", "granted");
             return result;
@@ -260,7 +260,7 @@ public class ContentPermissionServices {
         if (recorder.isOn()) recorder.setUserLogin(userLogin);
 
         if (targetOperations == null || targetOperations.size() == 0) {
-            Debug.logWarning("No targetOperations.", module);
+            //Debug.logWarning("No targetOperations.", module);
         }
 	List roleIds = null;
         String permissionStatus = null;
@@ -718,8 +718,8 @@ public class ContentPermissionServices {
 
     public static boolean checkHasRoleOperations(String userLoginId,  List targetOperations, GenericDelegator delegator) {
 
-        if (Debug.infoOn()) Debug.logInfo("targetOperations:" + targetOperations, module);
-        if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId, module);
+        //if (Debug.infoOn()) Debug.logInfo("targetOperations:" + targetOperations, module);
+        //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId, module);
         if (targetOperations == null)
             return false;
 
@@ -738,7 +738,7 @@ public class ContentPermissionServices {
                 int idx2 = roleOp1.indexOf("_ROLE");
                 if (idx2 == (roleOp1.length() - 5)) {
                     String roleOp2 = roleOp1.substring(0, roleOp1.indexOf("_ROLE") - 1); // lop off "_ROLE"
-                    if (Debug.infoOn()) Debug.logInfo("roleOp2:" + roleOp2, module);
+                    //if (Debug.infoOn()) Debug.logInfo("roleOp2:" + roleOp2, module);
                     newHasRoleList.add(roleOp2);
                     hasNeed = true;
                 }

@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.24 2004/06/11 00:32:52 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.25 2004/06/16 18:54:45 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -91,7 +91,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         String subContentIdSub = (String) view.get("contentId");
         //String contentAssocTypeId = (String) view.get("caContentAssocTypeId");
         //String mapKey = (String) view.get("caMapKey");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)ctx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -291,11 +291,11 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             int highIndex = (viewIndex + 1) * viewSize;
             if (highIndex > listSize)
                 highIndex = listSize;
-            if (Debug.infoOn()) Debug.logInfo("viewIndexStr(0):" + viewIndexStr + " viewIndex:" + viewIndex, "");
-            if (Debug.infoOn()) Debug.logInfo("viewSizeStr(0):" + viewSizeStr + " viewSize:" + viewSize, "");
-            if (Debug.infoOn()) Debug.logInfo("listSize(0):" + listSize , "");
-            if (Debug.infoOn()) Debug.logInfo("highIndex(0):" + highIndex , "");
-            if (Debug.infoOn()) Debug.logInfo("lowIndex(0):" + lowIndex , "");
+            //if (Debug.infoOn()) Debug.logInfo("viewIndexStr(0):" + viewIndexStr + " viewIndex:" + viewIndex, "");
+            //if (Debug.infoOn()) Debug.logInfo("viewSizeStr(0):" + viewSizeStr + " viewSize:" + viewSize, "");
+            //if (Debug.infoOn()) Debug.logInfo("listSize(0):" + listSize , "");
+            //if (Debug.infoOn()) Debug.logInfo("highIndex(0):" + highIndex , "");
+            //if (Debug.infoOn()) Debug.logInfo("lowIndex(0):" + lowIndex , "");
             Iterator it = longList.iterator();
             //List entityList = longList.subList(lowIndex, highIndex);
             List entityList = longList;
@@ -356,11 +356,11 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 env.setVariable("highIndex", FreeMarkerWorker.autoWrap(highIndexInteger, env));
                 env.setVariable("outputIndex", FreeMarkerWorker.autoWrap(outputIndexInteger, env));
                 env.setVariable("entityIndex", FreeMarkerWorker.autoWrap(outputIndexInteger, env));
-                if (Debug.infoOn()) Debug.logInfo( " viewIndex:" + viewIndex, "");
-                if (Debug.infoOn()) Debug.logInfo( " viewSize:" + viewSize, "");
-                if (Debug.infoOn()) Debug.logInfo("listSize(1):" + listSize , "");
-                if (Debug.infoOn()) Debug.logInfo("highIndex(1):" + highIndexInteger , "");
-                if (Debug.infoOn()) Debug.logInfo("lowIndex(1):" + lowIndexInteger , "");
+                //if (Debug.infoOn()) Debug.logInfo( " viewIndex:" + viewIndex, "");
+                //if (Debug.infoOn()) Debug.logInfo( " viewSize:" + viewSize, "");
+                //if (Debug.infoOn()) Debug.logInfo("listSize(1):" + listSize , "");
+                //if (Debug.infoOn()) Debug.logInfo("highIndex(1):" + highIndexInteger , "");
+                //if (Debug.infoOn()) Debug.logInfo("lowIndex(1):" + lowIndexInteger , "");
                 boolean inProgress = false;
                 if (outputIndex < highIndex) {
                     inProgress = getNextMatchingEntity(templateRoot, delegator, env);
@@ -384,7 +384,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 int highIndex = ((Integer)templateRoot.get("highIndex")).intValue(); 
                 Integer highIndexInteger = new Integer(highIndex);
                 env.setVariable("highIndex", FreeMarkerWorker.autoWrap(highIndexInteger, env));
-                if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndexInteger , "");
+                //if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndexInteger , "");
                 boolean inProgress = false;
                 if (outputIndex < highIndex) {
                     inProgress = getNextMatchingEntity(templateRoot, delegator, env);
@@ -404,18 +404,18 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 }
                 FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp, env);
                 int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
-                if (Debug.infoOn()) Debug.logInfo("outputIndex(3):" + outputIndex , "");
+                //if (Debug.infoOn()) Debug.logInfo("outputIndex(3):" + outputIndex , "");
                 int highIndex = ((Integer)templateRoot.get("highIndex")).intValue(); 
                 Integer highIndexInteger = new Integer(highIndex);
                 env.setVariable("highIndex", FreeMarkerWorker.autoWrap(highIndexInteger, env));
-                if (Debug.infoOn()) Debug.logInfo("highIndex(3):" + highIndexInteger , "");
+                //if (Debug.infoOn()) Debug.logInfo("highIndex(3):" + highIndexInteger , "");
                 if (outputIndex < highIndex) {
                     templateRoot.put("highIndex", new Integer(outputIndex));
-                    if (Debug.infoOn()) Debug.logInfo("highIndex(4):" + highIndex , "");
+                    //if (Debug.infoOn()) Debug.logInfo("highIndex(4):" + highIndex , "");
                     templateRoot.put("listSize", new Integer(outputIndex));
                 }
                 Object highIndexObj = FreeMarkerWorker.getWrappedObject("highIndex", env);
-                if (Debug.infoOn()) Debug.logInfo("highIndex(3b):" + highIndexObj , "");
+                //if (Debug.infoOn()) Debug.logInfo("highIndex(3b):" + highIndexObj , "");
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
                 //if (Debug.infoOn()) Debug.logInfo("in LoopSubContent, wrappedContent:" + wrappedContent, module);
