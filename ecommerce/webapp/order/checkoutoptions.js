@@ -27,17 +27,19 @@
 importPackage(Packages.java.lang);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
-importPackage(Packages.org.ofbiz.commonapp.party.contact.ContactHelper);
+importPackage(Packages.org.ofbiz.commonapp.party.contact);
 
+var delegator = request.getAttribute("delegator");
 var cart = session.getAttribute(SiteDefs.SHOPPING_CART);
 var userLogin = session.getAttribute("userLogin");
+var party = userLogin.getRelatedOne("Party");
 
 var checkOutPaymentId = "";
 if (cart != null) {
     if (cart.getPaymentMethodIds().size() > 0) {
-        checkOutPaymentId = (String) cart.getPaymentMethodIds().get(0);
+        checkOutPaymentId = cart.getPaymentMethodIds().get(0);
     } else if (cart.getPaymentMethodTypeIds().size() > 0) {
-        checkOutPaymentId = (String) cart.getPaymentMethodTypeIds().get(0);
+        checkOutPaymentId = cart.getPaymentMethodTypeIds().get(0);
     }
 }
 
