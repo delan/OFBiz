@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentTransform.java,v 1.2 2003/12/06 08:38:47 byersa Exp $
+ * $Id: EditRenderSubContentTransform.java,v 1.3 2003/12/15 11:52:07 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -85,7 +85,7 @@ import org.ofbiz.content.content.ContentWorker;
  * the contents that are placed within it.
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class EditRenderSubContentTransform implements TemplateTransformModel {
@@ -97,75 +97,45 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         return FreeMarkerWorker.getWrappedObject(varName, env);
     }
 
-    
-   /**
-    * Does a conditional search to return a value for a parameter with the passed name.
-    * Looks first to see if it was passed as an argument to the transform.
-    * Secondly, it looks to see if it is passed as an attribute in the request object.
-    * Then it looks to see if it is a parameter in the request object.
-    * <p>
-    * Note that this is different from the getArg method of RenderDataResourceTransform,
-    * which checks the template context object instead of the request object.
-    */
     public static String getArg(Map args, String key, Environment env ) {
-            SimpleScalar s = (SimpleScalar)args.get(key);
-            String returnVal = (s == null) ? null : s.toString();
-            if (returnVal == null) {
-                HttpServletRequest request = (HttpServletRequest)getWrappedObject("request", env);
-                returnVal = (String)request.getAttribute(key);
-                if (UtilValidate.isEmpty(returnVal)) {
-                    returnVal = (String)request.getParameter(key);
-                }
-                /*
-                if (returnVal == null) {
-                    SimpleScalar s2 = (SimpleScalar)args.get(key + "Default");
-                    returnVal = (s2 == null) ? null : s2.toString();
-                }
-                */
-            }
-            return returnVal;
+        return FreeMarkerWorker.getArg(args, key, env);
+    }
+
+    public static String getArg(Map args, String key, Map ctx ) {
+        return FreeMarkerWorker.getArg(args, key, ctx);
     }
 
     public Writer getWriter(final Writer out, Map args) {                      
         final StringBuffer buf = new StringBuffer();
         final Environment env = Environment.getCurrentEnvironment();
-        final String editTemplate = getArg(args, "editTemplate", env);
-        final String wrapTemplate = getArg(args, "wrapTemplate", env);
-        final String mapKey = getArg(args, "mapKey", env);
-        String subContentIdTemp = getArg(args, "subContentId", env);
-        final String subDataResourceTypeId = getArg(args, "subDataResourceTypeId", env);
-        final String contentId = getArg(args, "contentId", env);
-        final HttpServletRequest request = (HttpServletRequest)getWrappedObject("request", env);
-        final Locale locale = UtilHttp.getLocale(request);
-        final GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-        final LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
-        final Page page = (Page)getWrappedObject("page", env);
-        String mimeTypeIdTemp = getArg(args, "mimeTypeId", env);
-        //Debug.logInfo("in EditRenderSubContent, mapKey." + mapKey,"");
-        //Debug.logInfo("in EditRenderSubContent, subContentId(0)." + subContentIdTemp,"");
+        Map ctx = (Map)FreeMarkerWorker.getWrappedObject("context", env);
+        final String editTemplate = getArg(args, "editTemplate", ctx);
+        Debug.logInfo("in EditRenderSubContent, editTemplate:"+editTemplate,"");
+        final String wrapTemplateId = getArg(args, "wrapTemplateId", ctx);
+        final String mapKey = getArg(args, "mapKey", ctx);
+        Debug.logInfo("in EditRenderSubContent, mapKey:"+mapKey,"");
+        final String subContentId = getArg(args, "subContentId", ctx);
+        Debug.logInfo("in EditRenderSubContent, subContentId:"+subContentId,"");
+        String subDataResourceTypeIdTemp = getArg(args, "subDataResourceTypeId", ctx);
+        final String contentId = getArg(args, "contentId", ctx);
+        Debug.logInfo("in EditRenderSubContent, contentId:"+contentId,"");
+        final Locale locale = (Locale)FreeMarkerWorker.getWrappedObject("locale", env);
+        String mimeTypeIdTemp = getArg(args, "mimeTypeId", ctx);
+        final LocalDispatcher dispatcher = 
+                       (LocalDispatcher)FreeMarkerWorker.getWrappedObject("dispatcher", env);
+        final GenericDelegator delegator = 
+                       (GenericDelegator)FreeMarkerWorker.getWrappedObject("delegator", env);
+        final GenericValue userLogin = 
+                       (GenericValue)FreeMarkerWorker.getWrappedObject("userLogin", env);
+        final HttpServletRequest request = 
+                       (HttpServletRequest)FreeMarkerWorker.getWrappedObject("request", env);
 
-        Map ctx = (Map)getWrappedObject("context", env);
-        final TemplateHashModel dataRoot = env.getDataModel();
-        JPublishContext jpub = null;
-        try {
-            BeanModel jctx = (BeanModel) env.getVariable("jpublishContext");
-            jpub = (JPublishContext)jctx.getWrappedObject();
-        } catch(TemplateModelException e) {
-           throw new RuntimeException(e.getMessage());
-        }
-
-        if (jpub == null) {
-            throw new RuntimeException("JPublishContext object in environment cannot be null.");
-        }
-        jpub.put("mapKey", mapKey);
-        jpub.put("subDataResourceTypeId", subDataResourceTypeId);
-        jpub.put("contentId", contentId);
-        jpub.put("locale", locale);
-
+/*
         ctx.put("mapKey", mapKey);
-        ctx.put("subDataResourceTypeId", subDataResourceTypeId);
+        ctx.put("subDataResourceTypeIdTemp", subDataResourceTypeIdTemp);
         ctx.put("contentId", contentId);
         ctx.put("locale", locale);
+*/
 
         // This transform does not need information about the subContent until the
         // close action, but any embedded RenderDataResourceTransformation will need it
@@ -173,75 +143,73 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         // is gotten here and made available to underlying transforms to save overall
         // processing time.
         GenericValue parentContent = null;
-        HttpSession session = request.getSession();
-        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
-        ctx.put("userLogin", userLogin);
+        //ctx.put("userLogin", userLogin);
         List assocTypes = UtilMisc.toList("SUB_CONTENT");
         Timestamp fromDate = UtilDateTime.nowTimestamp();
         GenericValue subContentDataResourceView = null;
         try {
-            subContentDataResourceView = ContentWorker.getSubContent(dispatcher, delegator,
-                                 contentId, mapKey, subContentIdTemp, userLogin, assocTypes, fromDate);
+            subContentDataResourceView = ContentWorker.getSubContent( delegator,
+                                 contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
         } catch(IOException e) {
            throw new RuntimeException(e.getMessage());
         }
 
-        //Debug.logInfo("in EditRenderSubContent, subContentDataResourceView:" + subContentDataResourceView, "");
+        String dataResourceIdTemp = null;
+        String subContentIdSubTemp = null;
         if (subContentDataResourceView != null 
             && subContentDataResourceView.get("contentId") != null) {
 
-            String dataResourceId = (String)subContentDataResourceView.get("drDataResourceId");
-            subContentIdTemp = (String)subContentDataResourceView.get("contentId");
-              //Debug.logInfo("in EditRenderSubContent, mimeTypeIdTemp." + mimeTypeIdTemp,"");
+            Debug.logInfo("in EditRenderSubContent, subContentDataResourceView contentId/drDataResourceId:" 
+                      + subContentDataResourceView.get("contentId") 
+                      + " / " + subContentDataResourceView.get("drDataResourceId") , "");
+
+            dataResourceIdTemp =  (String)subContentDataResourceView.get("drDataResourceId");
+              Debug.logInfo("in EditRenderSubContent(0), dataResourceIdTemp ." + dataResourceIdTemp ,"");
+            subContentIdSubTemp = (String)subContentDataResourceView.get("contentId");
+              Debug.logInfo("in EditRenderSubContent(0), subContentIdSubTemp ." + subContentIdSubTemp ,"");
+              Debug.logInfo("in EditRenderSubContent(0), mimeTypeIdTemp." + mimeTypeIdTemp,"");
+            if (UtilValidate.isEmpty(subDataResourceTypeIdTemp)) {
+                subDataResourceTypeIdTemp = (String)subContentDataResourceView.get("drDataResourceTypeId");
+            }
             if (UtilValidate.isEmpty(mimeTypeIdTemp)) {
-                if (UtilValidate.isEmpty(wrapTemplate)) { // will need these below
+                mimeTypeIdTemp = (String)subContentDataResourceView.get("mimeTypeId");
+                if (UtilValidate.isEmpty(mimeTypeIdTemp) && UtilValidate.isNotEmpty(contentId)) { // will need these below
                     try {
                         parentContent = delegator.findByPrimaryKey("Content",
                                            UtilMisc.toMap("contentId", contentId));
-                        if (parentContent == null) {
-                            throw new RuntimeException("'Content' cannot be null if 'wrapTemplate' is.");
+                        if (parentContent != null) {
+                            mimeTypeIdTemp = (String)parentContent.get("mimeTypeIdTemp");
+              Debug.logInfo("in EditRenderSubContent, parentContentId: " + parentContent.get("contentId"),"");
                         }
                     } catch (GenericEntityException e) {
                         throw new RuntimeException(e.getMessage());
                     }
                 }
-                if (UtilValidate.isEmpty(mimeTypeIdTemp)) { 
-                    try {
-                        mimeTypeIdTemp = FreeMarkerWorker.determineMimeType(delegator, 
-                                     subContentDataResourceView, parentContent, subContentIdTemp,
-                                     dataResourceId, contentId );
-                    } catch(GenericEntityException e) {
-                        throw new RuntimeException(e.getMessage());
-                    }
-                }
             
             }
-            jpub.put("subContentId", subContentIdTemp);
-            jpub.put("drDataResourceId", dataResourceId);
-            jpub.put("subContentDataResourceView", subContentDataResourceView);
-            jpub.put("mimeTypeId", mimeTypeIdTemp);
-            ctx.put("subContentId", subContentIdTemp);
-            ctx.put("drDataResourceId", dataResourceId);
+              Debug.logInfo("in EditRenderSubContent(2), mimeTypeIdTemp." + mimeTypeIdTemp,"");
+              Debug.logInfo("in EditRenderSubContent, subContentId/Sub." + subContentIdSubTemp,"");
+            ctx.put("subContentId", subContentIdSubTemp);
+            ctx.put("drDataResourceId", dataResourceIdTemp);
             ctx.put("subContentDataResourceView", subContentDataResourceView);
             ctx.put("mimeTypeId", mimeTypeIdTemp);
-            request.setAttribute("drDataResourceId", subContentDataResourceView.get("drDataResourceId"));
+            //request.setAttribute("drDataResourceId", subContentDataResourceView.get("drDataResourceId"));
         } else {
-            jpub.put("subContentId", null);
-            jpub.put("drDataResourceId", null);
-            jpub.put("subContentDataResourceView", null);
-            jpub.put("mimeTypeId", null);
             ctx.put("subContentId", null);
             ctx.put("drDataResourceId", null);
             ctx.put("subContentDataResourceView", null);
             ctx.put("mimeTypeId", null);
-            request.setAttribute("drDataResourceId", null);
+            //request.setAttribute("drDataResourceId", null);
         }
  
-        final JPublishContext jpubContext = jpub;
+        final String dataResourceId= dataResourceIdTemp;
+        final String subContentIdSub= subContentIdSubTemp;
         final GenericValue finalSubContentView = subContentDataResourceView;
         final GenericValue content = parentContent;
+        final Map templateContext = ctx;
+        //Debug.logInfo("in EditRenderSubContent, templateContext:"+templateContext,"");
         final String mimeTypeId = mimeTypeIdTemp;
-        final String subContentId = subContentIdTemp;
+        final String subDataResourceTypeId = subDataResourceTypeIdTemp;
         
         return new Writer(out) {
 
@@ -256,45 +224,58 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
 
             public void close() throws IOException {  
 
+
                 String wrappedFTL = buf.toString();
-                String wrapTemplateTemp = wrapTemplate;
-                  ////Debug.logInfo("in EditRenderSubContent, wrappedFTL:"+wrappedFTL,"");
-                jpubContext.put("wrappedFTL", wrappedFTL);
-                Map ctx = (Map)getWrappedObject("context", env);
-                ctx.put("wrappedFTL", wrappedFTL);
-
+                  //Debug.logInfo("in EditRenderSubContent, wrappedFTL:"+wrappedFTL,"");
                 if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
-                  ////Debug.logInfo("in transform, wrapTemplateTemp(0):"+wrapTemplateTemp,"");
-                    GenericValue dataResource = null;
-                    if (UtilValidate.isEmpty(wrapTemplateTemp)) {
-                        if (UtilValidate.isEmpty(contentId)) {
-                            throw new IOException("'contentId' cannot be null if 'wrapTemplate' is.");
-                        }
-                        try {
-                            dataResource = content.getRelatedOne("DataResource");
-                        } catch (GenericEntityException e) {
-                            throw new IOException(e.getMessage());
-                        }
-                        if (dataResource != null) {
-                            wrapTemplateTemp = (String)dataResource.get("objectInfo");
-                        }
-                    }
-                    if (UtilValidate.isNotEmpty(wrapTemplateTemp)) {
-                        if (!wrapTemplateTemp.endsWith(".ftl") ) wrapTemplateTemp += ".ftl";
-                        SiteContext siteContext = (SiteContext)getWrappedObject("site", env);
+                    if (UtilValidate.isNotEmpty(wrapTemplateId)) {
+                        templateContext.put("wrappedFTL", wrappedFTL);
+                        ServletContext servletContext 
+                            = (ServletContext)request.getSession().getServletContext();
+                        String rootDir = servletContext.getRealPath("/");
+                        String webSiteId = (String)servletContext.getAttribute("webSiteId");
+                        String https = (String)servletContext.getAttribute("https");
+                  Debug.logInfo("in EditRenderSubContent, rootDir:"+rootDir,"");
+                        templateContext.put("webSiteId", webSiteId);
+                        templateContext.put("https", https);
+                        templateContext.put("rootDir", rootDir);
+                        TemplateHashModel oldRoot = env.getDataModel();
+                        SimpleHash templateRoot = FreeMarkerWorker.buildNewRoot(oldRoot);
+                        templateRoot.put("wrapDataResourceId", dataResourceId);
+        Debug.logInfo("in EditRenderSubContent, wrapDataResourceId:" + dataResourceId,"");
+                        templateRoot.put("wrapDataResourceTypeId", subDataResourceTypeId);
+        Debug.logInfo("in EditRenderSubContent, wrapDataResourceTypeId:" + subDataResourceTypeId,"");
+                        templateRoot.put("wrapContentIdTo", contentId);
+        Debug.logInfo("in EditRenderSubContent, wrapContentIdTo:" + contentId,"");
+                        templateRoot.put("wrapSubContentId", subContentIdSub);
+        Debug.logInfo("in EditRenderSubContent, wrapSubContentId:" + subContentIdSub,"");
+                        templateRoot.put("wrapMimeTypeId", mimeTypeId);
+        Debug.logInfo("in EditRenderSubContent, wrapMimeTypeId:" + mimeTypeId,"");
+                        templateRoot.put("wrapMapKey", mapKey);
+        //Debug.logInfo("in EditRenderSubContent, wrapMapKey:" + mapKey,"");
+                        templateRoot.put("context", templateContext);
+        Debug.logInfo("in EditRenderSubContent, calling renderContentAsText, wrapTemplateId:"+wrapTemplateId,"");
+                        ContentWorker.renderContentAsText(delegator, wrapTemplateId, out,
+                            templateRoot, null, locale, mimeTypeId);
+        Debug.logInfo("in EditRenderSubContent, after renderContentAsText","");
+        Map ctx = (Map)FreeMarkerWorker.getWrappedObject("context", env);
+        Debug.logInfo("in EditRenderSubContent, contentId:" + ctx.get("contentId"),"");
+                templateContext.put("contentId", contentId);
+                templateContext.put("locale", locale);
+                templateContext.put("mapKey", null);
+                templateContext.put("subContentId", null);
+                templateContext.put("subDataResourceTypeId", null);
+                templateContext.put("mimeTypeId", null);
+        Debug.logInfo("in EditRenderSubContent, after.","");
+        Debug.logInfo("in EditRenderSubContent, mapKey:" + mapKey,"");
+        Debug.logInfo("in EditRenderSubContent, subContentId:" + subContentId,"");
+        Debug.logInfo("in EditRenderSubContent, subDataResourceTypeId:" + subDataResourceTypeId,"");
+        Debug.logInfo("in EditRenderSubContent, contentId:" + contentId,"");
+        Debug.logInfo("in EditRenderSubContent, mimeTypeId:" + mimeTypeId,"");
+        Debug.logInfo("in EditRenderSubContent, locale:" + locale,"");
+        Debug.logInfo("in EditRenderSubContent, contentId2." + ctx.get("contentId"),"");
 
-                        try {
-                            Template template = siteContext.getTemplateManager().getTemplate(wrapTemplateTemp);
-                           //////Debug.logInfo("in transform, wrapTemplateTemp(1):"+wrapTemplateTemp,"");
-                            //checkForLoop(wrapTemplateTemp);
-                            template.merge(jpubContext, page, out);
-                        } catch (TemplateMergeException e) {
-                            throw new IOException(e.getMessage());
-                        } catch (Exception e) {
-                            throw new IOException(e.getMessage());
-                        }
                     }
-
                 } else {
                     out.write(wrappedFTL);
                 }
