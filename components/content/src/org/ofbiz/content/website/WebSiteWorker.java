@@ -1,5 +1,5 @@
 /*
- * $Id: WebSiteWorker.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id: WebSiteWorker.java,v 1.3 2003/12/14 10:14:19 jonesde Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.entity.GenericValue;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class WebSiteWorker {
@@ -53,6 +53,9 @@ public class WebSiteWorker {
     
     public static GenericValue getWebSite(ServletRequest request) {
         String webSiteId = getWebSiteId(request);
+        if (webSiteId == null) {
+            return null;
+        }
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         try {
