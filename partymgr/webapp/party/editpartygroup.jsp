@@ -50,7 +50,7 @@
         if (partyId != null) {
             GenericValue party = delegator.findByPrimaryKeyCache("Party", UtilMisc.toMap("partyId", partyId));
             GenericValue lookupGroup = party.getRelatedOneCache("PartyGroup");
-            if (lookupGroup != null) pageContext.setAttribute("partyGroup", lookupGroup);
+            if (lookupGroup != null) pageContext.setAttribute("lookupGroup", lookupGroup);
 
             boolean tryEntity = true;
             if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
@@ -65,11 +65,11 @@
 %>
 
 <br>
-<ofbiz:unless name="partyGroup">
+<ofbiz:unless name="lookupGroup">
   <p class="head1">Add New Group Information</p>
     <FORM method=POST action='<ofbiz:url>/createPartyGroup/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editgroupform">
 </ofbiz:unless>
-<ofbiz:if name="partyGroup">
+<ofbiz:if name="lookupGroup">
   <p class="head1">Edit Group Information</p>
     <FORM method=POST action='<ofbiz:url>/updatePartyGroup/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editgroupform">
 </ofbiz:if>
@@ -85,19 +85,19 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Group name</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="groupName" entityAttr="partyGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="groupName" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Federal Tax Number</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="federalTaxId" entityAttr="partyGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="federalTaxId" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Comment</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="comments" entityAttr="partyGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="comments" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
 </table>

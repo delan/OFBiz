@@ -56,7 +56,7 @@
     if (relationships != null && relationships.size() > 0) pageContext.setAttribute("relationships", relationships);
     System.out.println("Relationships::"+relationships);
 
-    PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "person", "partyGroup");
+    PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "lookupPerson", "lookupGroup");
 %>
 <%EntityField entityField = new EntityField(pageContext);%>
 
@@ -70,18 +70,18 @@
   <tr>
     <td align='left'>
       <div class="head1">The Profile of
-        <ofbiz:if name="person">
-          <%entityField.run("person", "personalTitle");%>
-          <%entityField.run("person", "firstName");%>
-          <%entityField.run("person", "middleName");%>
-          <%entityField.run("person", "lastName");%>
-          <%entityField.run("person", "suffix");%>
+        <ofbiz:if name="lookupPerson">
+          <%entityField.run("lookupPerson", "personalTitle");%>
+          <%entityField.run("lookupPerson", "firstName");%>
+          <%entityField.run("lookupPerson", "middleName");%>
+          <%entityField.run("lookupPerson", "lastName");%>
+          <%entityField.run("lookupPerson", "suffix");%>
         </ofbiz:if>
-        <ofbiz:unless name="person">
-          <ofbiz:if name="partyGroup">
-            <%entityField.run("partyGroup", "groupName");%>
+        <ofbiz:unless name="lookupPerson">
+          <ofbiz:if name="lookupGroup">
+            <%entityField.run("lookupGroup", "groupName");%>
           </ofbiz:if>
-          <ofbiz:unless name="partyGroup">"New User"</ofbiz:unless>
+          <ofbiz:unless name="lookupGroup">"New User"</ofbiz:unless>
        </ofbiz:unless>
       </div>
     </td>

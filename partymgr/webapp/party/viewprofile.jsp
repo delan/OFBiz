@@ -62,7 +62,7 @@
     Collection notes = delegator.findByAnd("PartyNoteView", UtilMisc.toMap("targetPartyId", partyId), UtilMisc.toList("-noteDateTime"));
     if (notes != null && notes.size() > 0) pageContext.setAttribute("notes", notes);
 
-    PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "person", "partyGroup");
+    PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "lookupPerson", "lookupGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
     pageContext.setAttribute("showOld", new Boolean(showOld));
     ContactMechWorker.getPartyContactMechValueMaps(pageContext, partyId, showOld, "partyContactMechValueMaps");
@@ -81,18 +81,18 @@
   <tr>
     <td align='left'>
       <div class="head1">The Profile of
-        <ofbiz:if name="person">
-          <%entityField.run("person", "personalTitle");%>
-          <%entityField.run("person", "firstName");%>
-          <%entityField.run("person", "middleName");%>
-          <%entityField.run("person", "lastName");%>
-          <%entityField.run("person", "suffix");%>
+        <ofbiz:if name="lookupPerson">
+          <%entityField.run("lookupPerson", "personalTitle");%>
+          <%entityField.run("lookupPerson", "firstName");%>
+          <%entityField.run("lookupPerson", "middleName");%>
+          <%entityField.run("lookupPerson", "lastName");%>
+          <%entityField.run("lookupPerson", "suffix");%>
         </ofbiz:if>
-        <ofbiz:unless name="person">
-          <ofbiz:if name="partyGroup">
-            <%entityField.run("partyGroup", "groupName");%>
+        <ofbiz:unless name="lookupPerson">
+          <ofbiz:if name="lookupGroup">
+            <%entityField.run("lookupGroup", "groupName");%>
           </ofbiz:if>
-          <ofbiz:unless name="partyGroup">"New User"</ofbiz:unless>
+          <ofbiz:unless name="lookupGroup">"New User"</ofbiz:unless>
        </ofbiz:unless>
       </div>
     </td>
@@ -116,22 +116,22 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <ofbiz:if name="person">
+          <ofbiz:if name="lookupPerson">
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;Personal Information</div>
             </td>
             <td valign="middle" align="right">
               <a href="<ofbiz:url>/editperson</ofbiz:url>" class="lightbuttontext">
-              [<ofbiz:if name="person">Update</ofbiz:if>]</a>&nbsp;&nbsp;
+              [<ofbiz:if name="lookupPerson">Update</ofbiz:if>]</a>&nbsp;&nbsp;
             </td>
           </ofbiz:if>
-          <ofbiz:if name="partyGroup">
+          <ofbiz:if name="lookupGroup">
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;Party Group Information</div>
             </td>
             <td valign="middle" align="right">
               <a href="<ofbiz:url>/editpartygroup</ofbiz:url>" class="lightbuttontext">
-              [<ofbiz:if name="partyGroup">Update</ofbiz:if>]</a>&nbsp;&nbsp;
+              [<ofbiz:if name="lookupGroup">Update</ofbiz:if>]</a>&nbsp;&nbsp;
             </td>
           </ofbiz:if>
         </tr>
@@ -143,40 +143,40 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-<ofbiz:if name="person">
+<ofbiz:if name="lookupPerson">
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr>
       <td align="right" width="10%"><div class="tabletext"><b>Name</b></div></td>
       <td width="5">&nbsp;</td>
       <td align="left" width="90%">
         <div class="tabletext">
-          <%entityField.run("person", "personalTitle");%>
-          <%entityField.run("person", "firstName");%>
-          <%entityField.run("person", "middleName");%>
-          <%entityField.run("person", "lastName");%>
-          <%entityField.run("person", "suffix");%>
+          <%entityField.run("lookupPerson", "personalTitle");%>
+          <%entityField.run("lookupPerson", "firstName");%>
+          <%entityField.run("lookupPerson", "middleName");%>
+          <%entityField.run("lookupPerson", "lastName");%>
+          <%entityField.run("lookupPerson", "suffix");%>
         </div>
       </td>
     </tr>
-    <%entityField.run("person", "nickname", "<tr><td align=right nowrap><div class='tabletext'><b>Nickname</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "gender", "<tr><td align=right nowrap><div class='tabletext'><b>Gender</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "birthDate", "<tr><td align=right nowrap><div class='tabletext'><b>Birth Date</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "height", "<tr><td align=right nowrap><div class='tabletext'><b>Height</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "weight", "<tr><td align=right nowrap><div class='tabletext'><b>Weight</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "mothersMaidenName", "<tr><td align=right nowrap><div class='tabletext'><b>Mothers Maiden Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "maritalStatus", "<tr><td align=right nowrap><div class='tabletext'><b>Marital Status</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "socialSecurityNumber", "<tr><td align=right nowrap><div class='tabletext'><b>Social Security Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "passportNumber", "<tr><td align=right nowrap><div class='tabletext'><b>Passport Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "passportExpireDate", "<tr><td align=right nowrap><div class='tabletext'><b>Passport Expire</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "totalYearsWorkExperience", "<tr><td align=right nowrap><div class='tabletext'><b>Years Work</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
-    <%entityField.run("person", "comments", "<tr><td align=right nowrap><div class='tabletext'><b>Comments</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "nickname", "<tr><td align=right nowrap><div class='tabletext'><b>Nickname</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "gender", "<tr><td align=right nowrap><div class='tabletext'><b>Gender</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "birthDate", "<tr><td align=right nowrap><div class='tabletext'><b>Birth Date</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "height", "<tr><td align=right nowrap><div class='tabletext'><b>Height</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "weight", "<tr><td align=right nowrap><div class='tabletext'><b>Weight</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "mothersMaidenName", "<tr><td align=right nowrap><div class='tabletext'><b>Mothers Maiden Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "maritalStatus", "<tr><td align=right nowrap><div class='tabletext'><b>Marital Status</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "socialSecurityNumber", "<tr><td align=right nowrap><div class='tabletext'><b>Social Security Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "passportNumber", "<tr><td align=right nowrap><div class='tabletext'><b>Passport Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "passportExpireDate", "<tr><td align=right nowrap><div class='tabletext'><b>Passport Expire</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "totalYearsWorkExperience", "<tr><td align=right nowrap><div class='tabletext'><b>Years Work</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
+    <%entityField.run("lookupPerson", "comments", "<tr><td align=right nowrap><div class='tabletext'><b>Comments</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>", "</div></td></tr>");%>
   </table>
 </ofbiz:if>
-<ofbiz:unless name="person">
-  <ofbiz:if name="partyGroup">
-    <div class="tabletext"><%entityField.run("partyGroup", "groupName");%></div>
+<ofbiz:unless name="lookupPerson">
+  <ofbiz:if name="lookupGroup">
+    <div class="tabletext"><%entityField.run("lookupGroup", "groupName");%></div>
   </ofbiz:if>
-  <ofbiz:unless name="partyGroup">
+  <ofbiz:unless name="lookupGroup">
     <div class="tabletext">Information Not Found</div>
   </ofbiz:unless>
 </ofbiz:unless>
@@ -304,7 +304,7 @@
     </table>
   </ofbiz:if>
   <ofbiz:unless name="partyContactMechValueMaps" size="0">
-    <p>No contact information on file.</p><br>
+    <div class="tabletext">No contact information on file.</div>
   </ofbiz:unless>
           </td>
         </tr>
@@ -339,10 +339,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
+              <ofbiz:if name="paymentMethodValueMaps" size="0">
               <table width="100%" border="0" cellpadding="1">
                 <tr>
                   <td align="left">
-                    <ofbiz:if name="paymentMethodValueMaps" size="0">
                       <table width="100%" cellpadding="2" cellspacing="0" border="0">
                         <ofbiz:iterator name="paymentMethodValueMap" property="paymentMethodValueMaps" type="java.util.Map" expandMap="true">
                             <%GenericValue paymentMethod = (GenericValue) pageContext.getAttribute("paymentMethod");%>
@@ -398,13 +398,14 @@
                             </tr>
                         </ofbiz:iterator>
                       </table>
-                    </ofbiz:if>
-                    <ofbiz:unless name="paymentMethodValueMaps" size="0">
-                      <p>No payment method information on file.</p>
-                    </ofbiz:unless>
+
                   </td>
                 </tr>
               </table>
+              </ofbiz:if>
+              <ofbiz:unless name="paymentMethodValueMaps" size="0">
+                <div class="tabletext">No payment method information on file.</div>
+              </ofbiz:unless>
           </td>
         </tr>
       </table>
@@ -412,7 +413,6 @@
   </TR>
 </TABLE>
 
-<ofbiz:if name="userLogins">
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -420,7 +420,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;User Name</div>
+            <div class="boxhead">&nbsp;User Name(s)</div>
           </td>
           <td valign="middle" align="right">&nbsp;
             <a href="<ofbiz:url>/createnewlogin</ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
@@ -475,7 +475,6 @@
     </TD>
   </TR>
 </TABLE>
-</ofbiz:if>
 
 <%-- Party Notes --%>
 <br>
@@ -518,7 +517,7 @@
             </table>
             </ofbiz:if>
             <ofbiz:unless name="notes">
-              <div class="tabletext">&nbsp;No notes for this party.</div>
+              <div class="tabletext">No notes for this party.</div>
             </ofbiz:unless>
           </td>
         </tr>

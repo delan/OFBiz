@@ -221,7 +221,7 @@
               <%
                   rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";
                   GenericValue party = (GenericValue) pageContext.getAttribute("party");
-                  if (party != null && pageContext.getAttribute("person") == null && pageContext.getAttribute("partyGroup") == null) {
+                  if (party != null && pageContext.getAttribute("lookupPerson") == null && pageContext.getAttribute("lookupGroup") == null) {
                       //this is a bit complicated, many inherited types, so use special method
                       GenericValue curPartyType = party.getRelatedOneCache("PartyType");
                       GenericValue partyPersonType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PERSON"));
@@ -229,7 +229,7 @@
                           GenericValue person = party.getRelatedOne("Person");
                           if (person != null) {
                               partyMap.put("person", person);
-                              pageContext.setAttribute("person", person);
+                              pageContext.setAttribute("lookupPerson", person);
                           }
                       } else {
                           GenericValue partyGroupType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PARTY_GROUP"));
@@ -237,7 +237,7 @@
                               GenericValue partyGroup = party.getRelatedOne("PartyGroup");
                               if (partyGroup != null) {
                                   partyMap.put("partyGroup", partyGroup);
-                                  pageContext.setAttribute("partyGroup", partyGroup);
+                                  pageContext.setAttribute("lookupGroup", partyGroup);
                               }
                           }
                       }
@@ -264,15 +264,15 @@
                     %>
                     <div class="tabletext"><%=userLoginString%></div>
                 </td>
-                <ofbiz:if name="person">
-                    <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="lastName"/></div></td>
-                    <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="firstName"/></div></td>
+                <ofbiz:if name="lookupPerson">
+                    <td><div class="tabletext"><ofbiz:entityfield attribute="lookupPerson" field="lastName"/></div></td>
+                    <td><div class="tabletext"><ofbiz:entityfield attribute="lookupPerson" field="firstName"/></div></td>
                 </ofbiz:if>
-                <ofbiz:unless name="person">
-                    <ofbiz:if name="partyGroup">
-                        <td colspan='2'><div class="tabletext"><ofbiz:entityfield attribute="partyGroup" field="groupName"/></div></td>
+                <ofbiz:unless name="lookupPerson">
+                    <ofbiz:if name="lookupGroup">
+                        <td colspan='2'><div class="tabletext"><ofbiz:entityfield attribute="lookupGroup" field="groupName"/></div></td>
                     </ofbiz:if>
-                    <ofbiz:unless name="partyGroup">
+                    <ofbiz:unless name="lookupGroup">
                         <td><div class="tabletext">&nbsp;</div></td>
                         <td><div class="tabletext">&nbsp;</div></td>
                     </ofbiz:unless>
@@ -283,8 +283,8 @@
                   <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View&nbsp;Profile]</a>&nbsp;<a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[Orders]</a>&nbsp;
                 </td>
               </tr>
-              <%pageContext.removeAttribute("person");%>
-              <%pageContext.removeAttribute("partyGroup");%>
+              <%pageContext.removeAttribute("lookupPerson");%>
+              <%pageContext.removeAttribute("lookupGroup");%>
             </ofbiz:iterator>
         </ofbiz:if>
         <ofbiz:unless name="parties">

@@ -119,6 +119,7 @@
         <input type="text" size="20" maxlength="30" <ofbiz:inputvalue field="cardNumber" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
+    <%-- Should not be storing this
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Card Security Code</div></td>
       <td width="5">&nbsp;</td>
@@ -126,8 +127,9 @@
         <input type="text" size="5" maxlength="10" <ofbiz:inputvalue field="cardSecurityCode" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
+    --%>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>        
+      <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <%String expMonth = "";%>
