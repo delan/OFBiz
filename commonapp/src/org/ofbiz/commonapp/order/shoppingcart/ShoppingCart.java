@@ -36,7 +36,7 @@ import org.ofbiz.commonapp.order.order.OrderReadHelper;
  * <p><b>Title:</b> ShoppingCart.java
  * <p><b>Description:</b> Shopping Cart Object.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    1.0
@@ -68,6 +68,30 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
+
+    /** Creates a new cloned ShoppingCart Object. */
+    public ShoppingCart(ShoppingCart cart, HttpSession session) {
+        this.delegator = cart.getDelegator();
+        this.delegatorName = delegator.getDelegatorName();
+        this.session = session;
+        this.paymentMethodIds = cart.getPaymentMethodIds();
+        this.paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
+        this.poNumber = cart.getPoNumber();
+        this.orderId = cart.getOrderId();
+        this.firstAttemptOrderId = cart.getFirstAttemptOrderId();
+        this.billingAccountId = cart.getBillingAccountId();
+        this.orderShipmentPreference = cart.getOrderShipmentPreference();
+        this.orderAdditionalEmails = cart.getOrderAdditionalEmails();
+        this.adjustments = new LinkedList(cart.getAdjustments());
+        this.contactMechIdsMap = new HashMap(cart.getOrderContactMechIds());
+        this.freeShippingProductPromoActions = new ArrayList(cart.getFreeShippingProductPromoActions());
+
+        // clone the items
+        List items = cart.items();
+        Iterator itIt = items.iterator();
+        while (itIt.hasNext())
+            cartLines.add(new ShoppingCartItem((ShoppingCartItem) itIt.next()));
+    }
 
     /** Creates new empty ShoppingCart object. */
     public ShoppingCart(GenericDelegator delegator, HttpSession session) {
@@ -346,6 +370,9 @@ public class ShoppingCart implements java.io.Serializable {
         return orderShipmentPreference.getBoolean("isGift");
     }
 
+    public GenericValue getOrderShipmentPreference() {
+        return this.orderShipmentPreference;
+    }
     public void setCarrierPartyId(String carrierPartyId) {
         orderShipmentPreference.set("carrierPartyId", carrierPartyId);
     }
@@ -448,7 +475,7 @@ public class ShoppingCart implements java.io.Serializable {
         return (String) contactMechIdsMap.remove(contactMechPurposeTypeId);
     }
     public Map getOrderContactMechIds() {
-        return contactMechIdsMap;
+        return this.contactMechIdsMap;
     }
 
     /** Get a List of adjustments on the order (ie cart) */
@@ -611,17 +638,70 @@ public class ShoppingCart implements java.io.Serializable {
         this.freeShippingProductPromoActions.add(productPromoAction);
     }
 
+    public List getFreeShippingProductPromoActions() {
+        return this.freeShippingProductPromoActions;
+    }
+
     // =======================================================================
     // Methods used for order creation
     // =======================================================================
 
-    /** Returns an collection of order items. */
+    private void explodeItems(LocalDispatcher dispatcher) {
+        synchronized (cartLines) {
+            if (dispatcher != null) {
+                List cartLineItems = new LinkedList(cartLines);
+                Iterator itemIter = cartLineItems.iterator();
+                while (itemIter.hasNext()) {
+                    ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+                    Debug.logInfo("Item qty: " + item.getQuantity());
+                    if (item.getQuantity() > 1) {
+                        List explodedItems = new ArrayList();
+                        for (int i = 1; i < item.getQuantity(); i++) {
+                            Debug.logInfo("Cloning item.. (" + i + ")" + item);
+                            int thisItemIndex = cartLineItems.indexOf(item);
+                            ShoppingCartItem newItem = item.cloneToCart(thisItemIndex, this, dispatcher, 1, false);
+                            if (newItem == null) {
+                                Debug.logError("Cannot clone item. See logs for details.");
+                                break;
+                            }
+                            else {
+                                explodedItems.add(newItem);
+                            }
+                        }
+                        double explodedSize = 0.0 + explodedItems.size();
+                        Debug.logInfo("Exploded Size: " + explodedSize);
+                        if (explodedSize == (item.getQuantity() - 1)) {
+                            try {
+                                Debug.logInfo("Setting item qty to 1: " + item);
+                                item.setQuantity(1, dispatcher, this, false);
+                            } catch (CartItemModifyException e) {
+                                Debug.logError(e, "Error trying to adjust main item's quantity. Not exploding!");
+                                cartLines.removeAll(explodedItems);
+                            }
+                        } else {
+                            Debug.logInfo("Invalid result; removing exploded items.");
+                            cartLines.removeAll(explodedItems);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public List makeOrderItems() {
+        return makeOrderItems(false, null);
+    }
+    public List makeOrderItems(boolean explodeItems, LocalDispatcher dispatcher) {
+        // do the explosion
+        if (explodeItems && dispatcher != null)
+            explodeItems(dispatcher);
+
+        // now build the lines
         synchronized (cartLines) {
             List result = new LinkedList();
-            Iterator itemIter = cartLines.iterator();
             long cartLineSize = cartLines.size();
             long seqId = 1;
+            Iterator itemIter = cartLines.iterator();
             while (itemIter.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
 
@@ -637,6 +717,7 @@ public class ShoppingCart implements java.io.Serializable {
                     //if it's more than 9999, something's up... hit the sky
                     nf.setMinimumIntegerDigits(18);
                 }
+
                 String orderItemSeqId = nf.format(seqId);
                 seqId++;
                 item.setOrderItemSeqId(orderItemSeqId);
@@ -827,9 +908,9 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Returns a Map of cart values to pass to the storeOrder service */
-    public Map makeCartMap() {
+    public Map makeCartMap(LocalDispatcher dispatcher, boolean explodeItems) {
         Map result = new HashMap();
-        result.put("orderItems", makeOrderItems());
+        result.put("orderItems", makeOrderItems(explodeItems, dispatcher));
         result.put("orderAdjustments", makeAllAdjustments());
         result.put("orderItemPriceInfos", makeAllOrderItemPriceInfos());
 

@@ -69,7 +69,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericDelegator delegator, String productId, double quantity, Map additionalProductFeatureAndAppls, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericDelegator delegator, String productId, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         GenericValue product = null;
         try {
             product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
@@ -88,12 +88,12 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         return makeItem(cartLocation, product, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart, true);
     }
 
     /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
-    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
         ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId);
 
         //check to see if product is virtual
@@ -137,6 +137,28 @@ public class ShoppingCartItem implements java.io.Serializable {
         return newItem;
     }
 
+    /** Clone an item. */
+    public ShoppingCartItem(ShoppingCartItem item) {
+        this.delegator = item.getDelegator();
+        this._product = item.getProduct();
+        this.delegatorName = delegator.getDelegatorName();
+        this.prodCatalogId = getProdCatalogId();
+        this.productId = item.getProductId();
+        this.itemComment = item.getItemComment();
+        this.quantity = item.getQuantity();
+        this.basePrice = item.getBasePrice();
+        this.listPrice = item.getListPrice();
+        this.isPromo = item.getIsPromo();
+        this.orderItemSeqId = item.getOrderItemSeqId();
+        this.orderShipmentPreference = item.getOrderShipmentPreference();
+        this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
+                null : new HashMap(item.getAdditionalProductFeatureAndAppls());
+        this.attributes = item.getAttributes() == null ? null : new HashMap(item.getAttributes());
+        this.contactMechIdsMap = item.getOrderItemContactMechIds() == null ? null : new HashMap(item.getOrderItemContactMechIds());
+        this.orderItemPriceInfos = item.getOrderItemPriceInfos() == null ? null : new LinkedList(item.getOrderItemPriceInfos());
+        this.itemAdjustments = item.getAdjustments() == null ? null : new LinkedList(item.getAdjustments());
+    }
+
     /** can't create shopping cart item with no parameters */
     protected ShoppingCartItem() {}
 
@@ -151,6 +173,10 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.delegatorName = _product.getDelegator().getDelegatorName();
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
         this.addAllProductFeatureAndAppls(additionalProductFeatureAndAppls);
+    }
+
+    public String getProdCatalogId() {
+        return this.prodCatalogId;
     }
 
     /** Sets the quantity for the item and validates the change in quantity, etc */
@@ -355,6 +381,10 @@ public class ShoppingCartItem implements java.io.Serializable {
         return oldAdditionalProductFeatureAndAppl;
     }
 
+    public Map getAdditionalProductFeatureAndAppls() {
+        return this.additionalProductFeatureAndAppls;
+    }
+
     /** Sets an item attribute. */
     public void setAttribute(String name, Object value) {
         if (attributes == null) attributes = new HashMap();
@@ -531,5 +561,25 @@ public class ShoppingCartItem implements java.io.Serializable {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
         }
         return delegator;
+    }
+
+    public ShoppingCartItem cloneToCart(ShoppingCart cart, LocalDispatcher dispatcher,
+            double quantity, boolean doPromotions) {
+        return cloneToCart(-1, cart, dispatcher, quantity, doPromotions);
+    }
+
+    public ShoppingCartItem cloneToCart(int index, ShoppingCart cart, LocalDispatcher dispatcher,
+            double quantity, boolean doPromotions) {
+        Integer placement = null;
+        if (index > -1)
+            placement = new Integer(index);
+        ShoppingCartItem item = null;
+        try {
+            item = ShoppingCartItem.makeItem(placement, _product, quantity, additionalProductFeatureAndAppls,
+                    attributes, prodCatalogId, dispatcher, cart, doPromotions);
+        } catch (CartItemModifyException e) {
+            Debug.logError(e);
+        }
+        return item;
     }
 }

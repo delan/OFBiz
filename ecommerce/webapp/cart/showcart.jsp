@@ -1,10 +1,11 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*,
-                 org.ofbiz.commonapp.product.promo.ProductPromoWorker, org.ofbiz.commonapp.order.order.OrderReadHelper" %>
-<%@ page import="java.util.*, org.ofbiz.commonapp.product.catalog.*" %>
+<%@ page import="java.util.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*,
+                 org.ofbiz.commonapp.product.promo.*, org.ofbiz.commonapp.order.order.*,
+                 org.ofbiz.commonapp.product.catalog.*, org.ofbiz.commonapp.order.shoppingcart.*" %>
+
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
-<ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.commonapp.order.shoppingcart.ShoppingCart" />
+<% ShoppingCart cart = ShoppingCartEvents.getCartObject(request); %>
 <%if(cart != null && cart.size() > 0) {%>
   <%pageContext.setAttribute("cartIter", cart.iterator());%>
   <%pageContext.setAttribute("cartAdjustments", cart.getAdjustments());%>

@@ -1,7 +1,6 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%@ page import="org.ofbiz.core.util.*,
-                 org.ofbiz.commonapp.order.shoppingcart.ShoppingCart" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.commonapp.order.shoppingcart.*" %>
 
 <%ShoppingCart microCart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART);%>

@@ -26,7 +26,7 @@
 --%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="java.util.*, org.ofbiz.commonapp.order.shoppingcart.ShoppingCart" %>
+<%@ page import="java.util.*, org.ofbiz.commonapp.order.shoppingcart.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.ecommerce.misc.*" %>

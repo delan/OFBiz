@@ -1,11 +1,9 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%@ page import="org.ofbiz.commonapp.order.shoppingcart.*,
-                 org.ofbiz.commonapp.order.shoppingcart.ShoppingCart,
-                 org.ofbiz.commonapp.order.shoppingcart.ShoppingCartItem" %>
+<%@ page import="org.ofbiz.commonapp.order.shoppingcart.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 
-<%ShoppingCart miniShoppingCart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART);%>
+<%ShoppingCart miniShoppingCart = ShoppingCartEvents.getCartObject(request);%>
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>

@@ -138,7 +138,13 @@ public class CheckOutEvents {
             errorMessage.append("<li>There are no items in the cart.");
         }
 
-        // TODO: run shipping/tax services here
+        if (request.getSession().getAttribute("backupCart") == null) {
+            ShoppingCart newCart = new ShoppingCart(cart, request.getSession());
+            if (newCart != null) {
+                request.getSession().setAttribute("backupCart", cart);
+                request.getSession().setAttribute(SiteDefs.SHOPPING_CART, newCart);
+            }
+        }
 
         if (errorMessage.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage.toString());
@@ -163,7 +169,7 @@ public class CheckOutEvents {
         String orderId = cart.getOrderId();
 
         // store the order - build the context
-        Map context = cart.makeCartMap();
+        Map context = cart.makeCartMap(dispatcher, explodeOrderItems(request));
         String distributorId = (String) session.getAttribute("_DISTRIBUTOR_ID_");
         String affiliateId = (String) session.getAttribute("_AFFILIATE_ID_");
         if (distributorId != null) context.put("distributorId", distributorId);
@@ -397,7 +403,7 @@ public class CheckOutEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
 
-        List items = cart.makeOrderItems();
+        List items = cart.makeOrderItems(explodeOrderItems(request), dispatcher);
         List adjs = cart.makeAllAdjustments();
         GenericValue shipAddress = cart.getShippingAddress();
         if (shipAddress == null) {
@@ -473,6 +479,18 @@ public class CheckOutEvents {
         List itemAdj = (List) serviceResult.get("itemAdjustments");
 
         return UtilMisc.toList(orderAdj, itemAdj);
+    }
+
+    public static boolean explodeOrderItems(HttpServletRequest request) {
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        // Load the order.properties file.
+        URL orderPropertiesUrl = null;
+        try {
+            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, module);
+        }
+        return UtilProperties.propertyValueEqualsIgnoreCase(orderPropertiesUrl, "order.item.explode", "Y");
     }
 
     // Event wrapper for processPayment.
