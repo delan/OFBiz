@@ -43,16 +43,9 @@ if(menuHistory == null){
 }
 String pageName		= page.getPageName();
 
-// This should not be necessary since Andy changed the logic, but it may get
-// changed back so that a trailing ".ftl" gets appended if there is no trailing "/"
-if(pageName.indexOf("/") != 0){
-    pageName	= "/" + pageName;
-}
 
 servletPath = request.getServletPath();
-org.ofbiz.core.util.Debug.logInfo("servletPath" + servletPath);
 queryString = request.getQueryString();
-org.ofbiz.core.util.Debug.logInfo("queryString" + queryString);
 if (queryString != null) queryString = "?" + queryString;
 else queryString = "";
 String thisPath		= request.getRequestURI();

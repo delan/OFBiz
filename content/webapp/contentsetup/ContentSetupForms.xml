@@ -23,17 +23,21 @@
 -->
 <forms>
     <!-- ContentType forms -->
-    <form default-title-style="tableheadtext"
+    <form
+        name="AddContentType" 
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        name="AddContentType" target="addContentType" title="" type="single">
+        target="addContentType" title="" type="single">
         <auto-fields-service service-name="createContentType"/>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    <form default-title-style="tableheadtext"
+    <form
+        name="UpdateContentType"
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" name="UpdateContentType"
+        list-name="contentList" 
         target="updateContentType" title="" type="list">
         <auto-fields-service service-name="updateContentType"/>
         <field name="contentTypeId" title="ContentTypeId" widget-style="buttontext">
@@ -48,9 +52,11 @@
     </form>
     
     <!-- ContentTypeAttr forms -->
-    <form default-title-style="tableheadtext"
+    <form
+        name="AddContentTypeAttr" 
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        name="AddContentTypeAttr" target="addContentTypeAttr" title="" type="single">
+        target="addContentTypeAttr" title="" type="single">
         <auto-fields-service service-name="createContentTypeAttr"/>
         <field entity-name="ContentType" name="contentTypeId">
             <drop-down allow-empty="false">
@@ -62,9 +68,11 @@
             <submit button-type="button"/>
         </field>
     </form>
-    <form default-title-style="tableheadtext"
+    <form
+        name="UpdateContentTypeAttr"
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" name="UpdateContentTypeAttr"
+        list-name="contentList" 
         target="updateContentTypeAttr" title="" type="list">
         <auto-fields-service service-name="createContentTypeAttr"/>
         <field name="contentTypeId" title="ContentTypeId" widget-style="buttontext">
@@ -79,17 +87,21 @@
     </form>
     
     <!-- ContentAssocType forms -->
-    <form default-title-style="tableheadtext"
+    <form
+        name="AddContentAssocType" 
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        name="AddContentAssocType" target="addContentAssocType" title="" type="single">
+        target="addContentAssocType" title="" type="single">
         <auto-fields-service service-name="createContentAssocType"/>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    <form default-title-style="tableheadtext"
+    <form
+        name="UpdateContentAssocType"
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" name="UpdateContentAssocType"
+        list-name="contentList" 
         target="updateContentAssocType" title="" type="list">
         <auto-fields-service service-name="updateContentAssocType"/>
         <field name="contentAssocTypeId" title="ContentAssocTypeId" widget-style="buttontext">
@@ -104,17 +116,21 @@
     </form>
     
     <!-- ContentPurposeType forms -->
-    <form default-title-style="tableheadtext"
+    <form
+        name="AddContentPurposeType" 
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        name="AddContentPurposeType" target="addContentPurposeType" title="" type="single">
+        target="addContentPurposeType" title="" type="single">
         <auto-fields-service service-name="createContentPurposeType"/>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    <form default-title-style="tableheadtext"
+    <form
+        name="UpdateContentPurposeType"
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" name="UpdateContentPurposeType"
+        list-name="contentList" 
         target="updateContentPurposeType" title="" type="list">
         <auto-fields-service service-name="updateContentPurposeType"/>
         <field name="contentPurposeTypeId" title="ContentPurposeTypeId" widget-style="buttontext">
@@ -129,7 +145,9 @@
     </form>
     
     <!-- ContentAssocPredicate forms -->
-    <form default-title-style="tableheadtext"
+    <form
+        
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         name="AddContentAssocPredicate" target="addContentAssocPredicate"
         title="" type="single">
@@ -138,9 +156,11 @@
             <submit button-type="button"/>
         </field>
     </form>
-    <form default-title-style="tableheadtext"
+    <form
+        name="UpdateContentAssocPredicate"
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" name="UpdateContentAssocPredicate"
+        list-name="contentList" 
         target="updateContentAssocPredicate" title="" type="list">
         <auto-fields-service service-name="updateContentAssocPredicate"/>
         <field name="contentAssocPredicateId"
@@ -156,17 +176,21 @@
     </form>
     
     <!-- ContentOperation forms -->
-    <form default-title-style="tableheadtext"
+    <form
+        name="AddContentOperation" 
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        name="AddContentOperation" target="addContentOperation" title="" type="single">
+        target="addContentOperation" title="" type="single">
         <auto-fields-service service-name="createContentOperation"/>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    <form default-title-style="tableheadtext"
+    <form
+        name="UpdateContentOperation"
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" name="UpdateContentOperation"
+        list-name="contentList" 
         target="updateContentOperation" title="" type="list">
         <auto-fields-service service-name="updateContentOperation"/>
         <field name="contentOperationId" title="ContentOperationId" widget-style="buttontext">
@@ -180,9 +204,11 @@
         </field>
     </form>
     <!-- ContentPurposeOperation forms -->
-    <form default-title-style="tableheadtext"
+    <form
+        name="AddContentPurposeOperation" 
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        name="AddContentPurposeOperation" target="addContentPurposeOperation" title="" type="single">
+        target="addContentPurposeOperation" title="" type="single">
         <auto-fields-service service-name="createContentPurposeOperation"/>
         <field name="contentPurposeTypeId">
             <drop-down allow-empty="true">
@@ -206,9 +232,11 @@
             <submit button-type="button"/>
         </field>
     </form>
-    <form default-title-style="tableheadtext"
+    <form
+        name="UpdateContentPurposeOperation"
+        default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" name="UpdateContentPurposeOperation"
+        list-name="contentList" 
         target="updateContentPurposeOperation" title="" type="list">
         <auto-fields-service service-name="updateContentPurposeOperation"/>
         <field name="contentPurposeOperationId" title="ContentPurposeOperationId" widget-style="buttontext">

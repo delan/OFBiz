@@ -363,6 +363,7 @@
         <response name="success" type="view" value="EditDataCategory"/>
         <response name="error" type="view" value="EditDataCategory"/>
     </request-map>
+
     <!-- ================ DataResourceType Requests ================= -->
     <request-map uri="EditDataResourceType">
         <security auth="true" https="true"/>
@@ -385,6 +386,78 @@
         <event invoke="removeDataResourceType" path="" type="service"/>
         <response name="success" type="view" value="EditDataResourceType"/>
         <response name="error" type="view" value="EditDataResourceType"/>
+    </request-map>
+
+    <!-- ================ DataResourceAttribute Requests ================= -->
+    <request-map uri="EditDataResourceAttribute">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceAttribute"/>
+    </request-map>
+    <request-map uri="addDataResourceAttribute">
+        <security auth="true" https="true"/>
+        <event invoke="createDataResourceAttribute" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceAttribute"/>
+        <response name="error" type="view" value="EditDataResourceAttribute"/>
+    </request-map>
+    <request-map uri="updateDataResourceAttribute">
+        <security auth="true" https="true"/>
+        <event invoke="updateDataResourceAttribute" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceAttribute"/>
+        <response name="error" type="view" value="EditDataResourceAttribute"/>
+    </request-map>
+    <request-map uri="removeDataResourceAttribute">
+        <security auth="true" https="true"/>
+        <event invoke="removeDataResourceAttribute" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceAttribute"/>
+        <response name="error" type="view" value="EditDataResourceAttribute"/>
+    </request-map>
+
+    <!-- ================ ElectronicText Requests ================= -->
+    <request-map uri="EditElectronicText">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditElectronicText"/>
+    </request-map>
+    <request-map uri="addElectronicText">
+        <security auth="true" https="true"/>
+        <event invoke="createElectronicText" path="" type="service"/>
+        <response name="success" type="view" value="EditElectronicText"/>
+        <response name="error" type="view" value="EditElectronicText"/>
+    </request-map>
+    <request-map uri="updateElectronicText">
+        <security auth="true" https="true"/>
+        <event invoke="updateElectronicText" path="" type="service"/>
+        <response name="success" type="view" value="EditElectronicText"/>
+        <response name="error" type="view" value="EditElectronicText"/>
+    </request-map>
+    <request-map uri="removeElectronicText">
+        <security auth="true" https="true"/>
+        <event invoke="removeElectronicText" path="" type="service"/>
+        <response name="success" type="view" value="EditElectronicText"/>
+        <response name="error" type="view" value="EditElectronicText"/>
+    </request-map>
+
+    <!-- ================ DataResourceRole Requests ================= -->
+    <request-map uri="EditDataResourceRole">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceRole"/>
+    </request-map>
+    <request-map uri="addDataResourceRole">
+        <security auth="true" https="true"/>
+        <event invoke="createDataResourceRole" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceRole"/>
+        <response name="error" type="view" value="EditDataResourceRole"/>
+    </request-map>
+    <request-map uri="updateDataResourceRole">
+        <security auth="true" https="true"/>
+        <event invoke="updateDataResourceRole" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceRole"/>
+        <response name="error" type="view" value="EditDataResourceRole"/>
+    </request-map>
+    <request-map uri="removeDataResourceRole">
+        <security auth="true" https="true"/>
+        <event invoke="removeDataResourceRole" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceRole"/>
+        <response name="error" type="view" value="EditDataResourceRole"/>
     </request-map>
 
     <!-- ================ DataResourceTypeAttr Requests ================= -->
@@ -490,9 +563,38 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FindDataResource"/>
     </request-map>
+    <request-map uri="LookupContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupContent"/>
+        <response name="error" type="view" value="LookupContent"/>
+    </request-map>
+    <request-map uri="LookupPerson">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupPerson"/>
+        <response name="error" type="view" value="LookupPerson"/>
+    </request-map>
+
     <request-map uri="LookupDataResource">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupDataResource"/>
+        <response name="error" type="view" value="LookupDataResource"/>
+    </request-map>
+
+    <request-map uri="gotoDataResource">
+        <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/lruaddDataResource.bsh" path="" type="bsf" />
+        <!--
+        <event invoke="org/ofbiz/content/clearCurrentDataResource.bsh" path="" type="bsf" />
+        <response name="success" type="request" value="gotoDataResourceP2"/>
+        -->
+        <response name="success" type="view" value="EditDataResource"/>
+        <response name="error" type="view" value="EditDataResource"/>
+    </request-map>
+    <request-map uri="gotoDataResourceP2">
+        <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/lruaddDataResource.bsh" path="" type="bsf" />
+        <response name="success" type="view" value="EditDataResource"/>
+        <response name="error" type="view" value="EditDataResource"/>
     </request-map>
 
 
@@ -518,6 +620,7 @@
     <request-map uri="EditContent">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditContent"/>
+        <response name="error" type="view" value="EditContent"/>
     </request-map>
     <request-map uri="UpdateContent">
         <security auth="true" https="true"/>
@@ -525,23 +628,93 @@
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="EditContent"/>
     </request-map>
+    <request-map uri="createContent">
+        <security auth="true" https="true"/>
+        <event invoke="createContent" path="" type="service"/>
+        <response name="success" type="request" value="addLRUContent"/>
+        <response name="error" type="view" value="AddContent"/>
+    </request-map>
+    <request-map uri="addLRUContent">
+        <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf"/>
+        <response name="success" type="view" value="EditContent"/>
+        <response name="error" type="view" value="AddContent"/>
+    </request-map>
+    <request-map uri="AddContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="AddContent"/>
+        <response name="error" type="view" value="AddContent"/>
+    </request-map>
     <request-map uri="gotoContent">
         <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf" />
+        <!--
         <event invoke="org/ofbiz/content/clearCurrentContent.bsh" path="" type="bsf" />
+        <response name="success" type="request" value="gotoContentP2"/>
+        -->
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="EditContent"/>
+    </request-map>
+    <request-map uri="gotoContentP2">
+        <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf" />
+        <response name="success" type="view" value="EditContent"/>
+        <response name="error" type="view" value="EditContent"/>
+    </request-map>
+
+	<!-- Content Assoc requests -->
+    <request-map uri="EditContentAssoc">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentAssoc"/>
+        <response name="error" type="view" value="EditContentAssoc"/>
+    </request-map>
+    <request-map uri="UpdateContentAssoc">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentAssoc" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssoc"/>
+        <response name="error" type="view" value="EditContentAssoc"/>
+    </request-map>
+    <request-map uri="AddContentAssoc">
+        <security auth="true" https="true"/>
+        <event invoke="createContentAssoc" path="" type="service"/>
+        <response name="success" type="request" value="addLRUContentAssoc"/>
+        <response name="error" type="view" value="EditContentAssoc"/>
+    </request-map>
+    <request-map uri="addLRUContentAssoc">
+        <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf"/>
+        <response name="success" type="view" value="EditContentAssoc"/>
+        <response name="error" type="view" value="EditContentAssoc"/>
     </request-map>
 
 	<!-- DataResource requests -->
     <request-map uri="EditDataResource">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditDataResource"/>
+        <response name="error" type="view" value="EditDataResource"/>
+    </request-map>
+    <request-map uri="AddDataResource">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="AddDataResource"/>
+        <response name="error" type="view" value="AddDataResource"/>
     </request-map>
     <request-map uri="UpdateDataResource">
         <security auth="true" https="true"/>
         <event invoke="updateDataResource" path="" type="service"/>
-        <response name="success" type="view" value="EditDataResource"/>
+        <response name="success" type="request" value="addLRUDataResource"/>
         <response name="error" type="view" value="EditDataResource"/>
+    </request-map>
+    <request-map uri="createDataResource">
+        <security auth="true" https="true"/>
+        <event invoke="createDataResource" path="" type="service"/>
+        <response name="success" type="request" value="addLRUDataResource"/>
+        <response name="error" type="view" value="EditDataResource"/>
+    </request-map>
+    <request-map uri="addLRUDataResource">
+        <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/lruaddDataResource.bsh" path="" type="bsf"/>
+        <response name="success" type="view" value="EditDataResource"/>
+        <response name="error" type="view" value="AddDataResource"/>
     </request-map>
 
     <!-- ================ ContentOperation Requests ================= -->
@@ -566,6 +739,55 @@
         <event invoke="removeContentOperation" path="" type="service"/>
         <response name="success" type="view" value="EditContentOperation"/>
         <response name="error" type="view" value="EditContentOperation"/>
+    </request-map>
+
+    <!-- ================ ContentAttribute Requests ================= -->
+    <request-map uri="EditContentAttribute">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentAttribute"/>
+    </request-map>
+    <request-map uri="addContentAttribute">
+        <security auth="true" https="true"/>
+        <event invoke="createContentAttribute" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAttribute"/>
+        <response name="error" type="view" value="EditContentAttribute"/>
+    </request-map>
+    <request-map uri="updateContentAttribute">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentAttribute" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAttribute"/>
+        <response name="error" type="view" value="EditContentAttribute"/>
+    </request-map>
+    <request-map uri="removeContentAttribute">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentAttribute" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAttribute"/>
+        <response name="error" type="view" value="EditContentAttribute"/>
+    </request-map>
+
+
+    <!-- ================ ContentMetaData Requests ================= -->
+    <request-map uri="EditContentMetaData">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentMetaData"/>
+    </request-map>
+    <request-map uri="addContentMetaData">
+        <security auth="true" https="true"/>
+        <event invoke="createContentMetaData" path="" type="service"/>
+        <response name="success" type="view" value="EditContentMetaData"/>
+        <response name="error" type="view" value="EditContentMetaData"/>
+    </request-map>
+    <request-map uri="updateContentMetaData">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentMetaData" path="" type="service"/>
+        <response name="success" type="view" value="EditContentMetaData"/>
+        <response name="error" type="view" value="EditContentMetaData"/>
+    </request-map>
+    <request-map uri="removeContentMetaData">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentMetaData" path="" type="service"/>
+        <response name="success" type="view" value="EditContentMetaData"/>
+        <response name="error" type="view" value="EditContentMetaData"/>
     </request-map>
 
 
@@ -632,12 +854,18 @@
     <view-map name="EditWebSiteProdCatalogs" page="/website/EditWebSiteProdCatalogs.ftl" type="jpublish"/>
     
     <view-map name="EditContentPurpose" page="/content/EditContentPurpose.ftl" type="jpublish"/>
+    <view-map name="EditContentRole" page="/content/EditContentRole.ftl" type="jpublish"/>
     <view-map name="FindContent" page="/content/FindContent.ftl" type="jpublish"/>
     <view-map name="EditContent" page="/content/EditContent.ftl" type="jpublish"/>
+    <view-map name="EditContentAssoc" page="/content/EditContentAssoc.ftl" type="jpublish"/>
+    <view-map name="AddContent" page="/content/AddContent.ftl" type="jpublish"/>
+    <view-map name="LookupContent" page="/content/LookupContent.ftl" type="jpublish"/>
     <view-map name="LookupDataResource" page="/data/LookupDataResource.ftl" type="jpublish"/>
+    <view-map name="LookupPerson" page="/content/LookupPerson.ftl" type="jpublish"/>
+    <view-map name="EditContentAttribute" page="/content/EditContentAttribute.ftl" type="jpublish"/>
+    <view-map name="EditContentMetaData" page="/content/EditContentMetaData.ftl" type="jpublish"/>
     <view-map name="EditContentType" page="/contentsetup/EditContentType.ftl" type="jpublish"/>
     <view-map name="EditContentAssocType" page="/contentsetup/EditContentAssocType.ftl" type="jpublish"/>
-    <view-map name="EditContentRole" page="/content/EditContentRole.ftl" type="jpublish"/>
     <view-map name="EditContentPurposeType" page="/contentsetup/EditContentPurposeType.ftl" type="jpublish"/>
     <view-map name="EditContentTypeAttr" page="/contentsetup/EditContentTypeAttr.ftl" type="jpublish"/>
     <view-map name="EditContentAssocPredicate" page="/contentsetup/EditContentAssocPredicate.ftl" type="jpublish"/>
@@ -646,6 +874,10 @@
     
     <view-map name="FindDataResource" page="/data/FindDataResource.ftl" type="jpublish"/>
     <view-map name="EditDataResource" page="/data/EditDataResource.ftl" type="jpublish"/>
+    <view-map name="AddDataResource" page="/data/AddDataResource.ftl" type="jpublish"/>
+    <view-map name="EditElectronicText" page="/data/EditElectronicText.ftl" type="jpublish"/>
+    <view-map name="EditDataResourceAttribute" page="/data/EditDataResourceAttribute.ftl" type="jpublish"/>
+    <view-map name="EditDataResourceRole" page="/data/EditDataResourceRole.ftl" type="jpublish"/>
     <view-map name="EditDataResourceType" page="/datasetup/EditDataResourceType.ftl" type="jpublish"/>
     <view-map name="EditDataResourceTypeAttr" page="/datasetup/EditDataResourceTypeAttr.ftl" type="jpublish"/>
     <view-map name="EditDataCategory" page="/datasetup/EditDataCategory.ftl" type="jpublish"/>

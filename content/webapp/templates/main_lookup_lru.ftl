@@ -31,10 +31,28 @@
 <head>
     <#assign layoutSettings = requestAttributes.layoutSettings>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${layoutSettings.companyName}: ${page.title}</title>
+    <title>${page.title}</title>
     <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
+
+<script language="JavaScript">
+
+
+var re_id = new RegExp('id=(\\d+)');
+var num_id = (re_id.exec(String(window.location))
+        ? new Number(RegExp.$1) : 0);
+var obj_caller = (window.opener ? window.opener.lookups[num_id] : null);
+
+
+// function passing selected value to calling window
+function set_value(value) {
+        if (!obj_caller) return;
+        window.close();
+        obj_caller.target.value = value;
+}
+</script>
+
 </head>
 
 <body>
@@ -73,11 +91,8 @@ ${pages.get("/includes/appbar.ftl")}
           <#if page.leftbar?exists>${pages.get(page.leftbar)}</#if>
           <td width='100%' valign='top' align='left'>
             ${pages.get("/includes/errormsg.ftl")}
-            <#if innerFtlName?exists>
-                ${pages.get(page.getProperty("innerFtlName"))}
-            <#else>
-                ${pages.get("/edit.ftl")}
-            </#if>
+            ${pages.get("/lru.ftl")}
+            ${pages.get("/find.ftl")}
           </td>
           <#if page.rightbar?exists>${pages.get(page.rightbar)}</#if>
         </tr>

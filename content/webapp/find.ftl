@@ -19,29 +19,19 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Al Byers
  *@version    $Revision$
  *@since      2.1
 -->
 
-<#if hasPermission>
 
 ${pages.get(page.getProperty("subMenu"))}
 
-<div class="head1">${page.getProperty("entityName")}</div>
+<div class="head1">Find ${page.getProperty("entityName")}</div>
 <br>
 <br>
-<#--
-<#assign queryWrapper = requestAttributes.queryWrapper />
--->
 ${queryWrapper.renderFormString()}
 <br>
-<#--
-<#assign listWrapper = requestAttributes.listWrapper />
--->
 ${listWrapper.renderFormString()}
 <br>
 
-<#else>
- <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
-</#if>

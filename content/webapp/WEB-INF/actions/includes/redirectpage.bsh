@@ -36,14 +36,11 @@
 //String pageName    = page.getPageName();
 String headerItem    = page.getProperty("headerItem");
 HashMap menuHistory    = session.getAttribute("menuHistory");
-org.ofbiz.core.util.Debug.logInfo("menuHistory:" + menuHistory);
 if (menuHistory == null){
     menuHistory	= new HashMap();
     session.setAttribute("menuHistory", menuHistory);
 }
 String reqPath    = menuHistory.get(headerItem);
-org.ofbiz.core.util.Debug.logInfo("headerItem:" + headerItem);
-org.ofbiz.core.util.Debug.logInfo("reqPath:" + reqPath);
 if (reqPath != null){
     context.put("redirect", reqPath);
 } else { 

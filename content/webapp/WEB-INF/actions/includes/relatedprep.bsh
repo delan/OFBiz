@@ -23,15 +23,7 @@
  *
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+
 
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.GeneralException;
@@ -47,37 +39,37 @@ import org.ofbiz.core.entity.model.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import java.sql.Timestamp;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @version    $Revision$
- * @since      2.1
+ * @since      2.2
 
- * This is a crude general script to find entity data based on the primary key.
- * It only works on entities with one primary key field and it relies on that being
- * in the pagedef config file.
- * It could get and interrogate a GenericEntity object
  */
 
-    
-security			= request.getAttribute("security");
+LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
+GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
 // Get permission from pagedef config file
 String permission		= page.getProperty("permission");
-String formDefFile		= page.getProperty("formDefFile");
-String singleFormName		= page.getProperty("singleFormName");
 String entityName		= page.getProperty("entityName");
-String priKeyName		= page.getProperty("priKeyName");
+String currentEntityName	= page.getProperty("currentEntityName");
+String formDefFile	= page.getProperty("formDefFile");
 String defaultMapName		= page.getProperty("defaultMapName");
 if( defaultMapName == null) defaultMapName	= "valueObject";
+
+security			= request.getAttribute("security");
 if(security.hasEntityPermission(permission, "_VIEW", session)) {
     	context.put("hasPermission", Boolean.TRUE);
 } else {
     	context.put("hasPermission", Boolean.FALSE);
 }
 
-LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
-GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-
+HtmlFormWrapper addWrapper	= null;
+HtmlFormWrapper listWrapper	= null;
+GenericValue relatedOne = null;
 
 HashMap currentEntityMap = (HashMap)session.getAttribute("currentEntityMap");
 if(currentEntityMap == null){
@@ -85,19 +77,33 @@ if(currentEntityMap == null){
     session.setAttribute("currentEntityMap", currentEntityMap);
 }
 
-GenericPK currentPK = currentEntityMap.get(entityName);
-genericValue = delegator.findByPrimaryKey(currentPK);
+GenericPK currentPK = currentEntityMap.get(currentEntityName);
+GenericValue currentValue = delegator.findByPrimaryKey(currentPK);
 
-HtmlFormWrapper editWrapper = new HtmlFormWrapper(formDefFile, 
-				singleFormName, request, response);
 
-editWrapper.putInContext(defaultMapName, genericValue);
-// The idea here is that by setting the map name here, dependency on the 
-        // widget-form config file could be eliminated.
-ModelForm modelForm	= editWrapper.getModelForm();
-modelForm.setDefaultMapName(defaultMapName);
-context.put("editWrapper", editWrapper);
-//context.put(priKeyName, priKeyValue);
 
-return "success";
+if(currentValue != null) {
+
+    List contentList =  currentValue.getRelated(entityName);
+    HtmlFormWrapper listWrapper = new HtmlFormWrapper(formDefFile, "List" + entityName, request, response);
+    listWrapper.putInContext("contentList", contentList);
+    context.put("listWrapper", listWrapper);
+}
+
+if(currentValue != null) {
+    addWrapper = new HtmlFormWrapper(formDefFile, 
+					"Add" + entityName, request, response);
+    context.put("singleTitle", "Create New");
+    keyColl = currentValue.getPrimaryKey().getAllKeys();
+    keyIt = keyColl.iterator();
+    while(keyIt.hasNext()) {
+            String ky = (String)keyIt.next();
+            addWrapper.putInContext(ky, currentValue.get(ky));
+    }
+} else {
+        context.put("singleTitle", "Create New");
+         addWrapper = new HtmlFormWrapper(formDefFile, 
+					"Add" + entityName, request, response);
+}
+context.put("addWrapper", addWrapper);
 

@@ -1,4 +1,4 @@
-/*
+<#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -19,35 +19,27 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
+ *@author     Al Byers
  *@version    $Revision$
- *@since      2.1
- */
+ *@since      2.2
+-->
 
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.widgetimpl.*;
+${pages.get(page.getProperty("subMenu"))}
 
+<div class="head1">ContentAssoc</div>
+<br>
+<br>
+<#if contentAssoc?exists>
+<div class="head1">Edit</div>
+${editWrapper.renderFormString()}
+<br>
+</#if>
+<div class="head1">From this content to ...</div>
+${listToWrapper.renderFormString()}
+<br>
+<div class="head1">To this content from ...</div>
+${listFromWrapper.renderFormString()}
+<br>
+<div class="head1">Create New</div>
+${addWrapper.renderFormString()}
 
-entityName	= page.getProperty("entityName");
-formDefFile	= page.getProperty("formDefFile");
-subMenu	= page.getProperty("subMenu");
-
-security = request.getAttribute("security");
-delegator = request.getAttribute("delegator");
-
-if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
-    List contentList = delegator.findAllCache(entityName);
-
-HtmlFormWrapper editWrapper = new HtmlFormWrapper(formDefFile, "Update" + entityName, request, response);
-editWrapper.putInContext("contentList", contentList);
-
-HtmlFormWrapper addWrapper = new HtmlFormWrapper(formDefFile, "Add" + entityName, request, response);
-context.put("contentList", contentList);
-context.put("editWrapper", editWrapper);
-context.put("addWrapper", addWrapper);

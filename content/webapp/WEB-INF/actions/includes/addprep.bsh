@@ -51,12 +51,8 @@ import javax.servlet.http.*;
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @version    $Revision$
- * @since      2.1
+ * @since      2.2
 
- * This is a crude general script to find entity data based on the primary key.
- * It only works on entities with one primary key field and it relies on that being
- * in the pagedef config file.
- * It could get and interrogate a GenericEntity object
  */
 
     
@@ -75,29 +71,11 @@ if(security.hasEntityPermission(permission, "_VIEW", session)) {
     	context.put("hasPermission", Boolean.FALSE);
 }
 
-LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
-GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
-
-HashMap currentEntityMap = (HashMap)session.getAttribute("currentEntityMap");
-if(currentEntityMap == null){
-    currentEntityMap     = new HashMap();
-    session.setAttribute("currentEntityMap", currentEntityMap);
-}
-
-GenericPK currentPK = currentEntityMap.get(entityName);
-genericValue = delegator.findByPrimaryKey(currentPK);
-
-HtmlFormWrapper editWrapper = new HtmlFormWrapper(formDefFile, 
+HtmlFormWrapper addWrapper = new HtmlFormWrapper(formDefFile, 
 				singleFormName, request, response);
 
-editWrapper.putInContext(defaultMapName, genericValue);
-// The idea here is that by setting the map name here, dependency on the 
-        // widget-form config file could be eliminated.
-ModelForm modelForm	= editWrapper.getModelForm();
-modelForm.setDefaultMapName(defaultMapName);
-context.put("editWrapper", editWrapper);
-//context.put(priKeyName, priKeyValue);
+context.put("editWrapper", addWrapper);
 
 return "success";
 

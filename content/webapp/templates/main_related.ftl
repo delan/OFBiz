@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     Al Byers (hacked from Andy Zeneski's work)
  *@version    $Revision$
  *@since      2.1
 -->
@@ -73,11 +73,7 @@ ${pages.get("/includes/appbar.ftl")}
           <#if page.leftbar?exists>${pages.get(page.leftbar)}</#if>
           <td width='100%' valign='top' align='left'>
             ${pages.get("/includes/errormsg.ftl")}
-            <#if innerFtlName?exists>
-                ${pages.get(page.getProperty("innerFtlName"))}
-            <#else>
-                ${pages.get("/edit.ftl")}
-            </#if>
+            ${pages.get("/related.ftl")}
           </td>
           <#if page.rightbar?exists>${pages.get(page.rightbar)}</#if>
         </tr>

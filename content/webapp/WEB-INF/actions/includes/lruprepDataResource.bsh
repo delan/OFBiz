@@ -51,53 +51,34 @@ import javax.servlet.http.*;
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @version    $Revision$
- * @since      2.1
-
- * This is a crude general script to find entity data based on the primary key.
- * It only works on entities with one primary key field and it relies on that being
- * in the pagedef config file.
- * It could get and interrogate a GenericEntity object
+ * @since      2.2
  */
-
-    
-security			= request.getAttribute("security");
-// Get permission from pagedef config file
-String permission		= page.getProperty("permission");
-String formDefFile		= page.getProperty("formDefFile");
-String singleFormName		= page.getProperty("singleFormName");
-String entityName		= page.getProperty("entityName");
-String priKeyName		= page.getProperty("priKeyName");
-String defaultMapName		= page.getProperty("defaultMapName");
-if( defaultMapName == null) defaultMapName	= "valueObject";
-if(security.hasEntityPermission(permission, "_VIEW", session)) {
-    	context.put("hasPermission", Boolean.TRUE);
-} else {
-    	context.put("hasPermission", Boolean.FALSE);
-}
 
 LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
 GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+UtilCache dataResourceLookupCache = (UtilCache)session.getAttribute("dataResourceLookupCache");
+if(dataResourceLookupCache == null){
+    dataResourceLookupCache	= new UtilCache("dataResourceLookupCache", 10, 0);
+    session.setAttribute("dataResourceLookupCache", dataResourceLookupCache);
+}    
 
+LinkedList lruList = new LinkedList();
+int sz = dataResourceLookupCache.keyLRUList.size();
+GenericValue gv	= null;
+Object dataResourceKey = null;
 
-HashMap currentEntityMap = (HashMap)session.getAttribute("currentEntityMap");
-if(currentEntityMap == null){
-    currentEntityMap     = new HashMap();
-    session.setAttribute("currentEntityMap", currentEntityMap);
+for(int i=(sz-1); i >= 0; i--){
+Object o = dataResourceLookupCache.keyLRUList.get(i);
+    contentIdKey = dataResourceLookupCache.keyLRUList.get(i);
+    pk = (GenericPK)dataResourceLookupCache.get(contentIdKey);
+    gv = delegator.findByPrimaryKey(pk);
+    lruList.add(gv);
 }
+String formDefFile		= page.getProperty("formDefFile");
+String lruFormName		= page.getProperty("lruFormName");
+HtmlFormWrapper lruWrapper = new HtmlFormWrapper(formDefFile, lruFormName, request, response);
+lruWrapper.putInContext("lruList", lruList);
 
-GenericPK currentPK = currentEntityMap.get(entityName);
-genericValue = delegator.findByPrimaryKey(currentPK);
-
-HtmlFormWrapper editWrapper = new HtmlFormWrapper(formDefFile, 
-				singleFormName, request, response);
-
-editWrapper.putInContext(defaultMapName, genericValue);
-// The idea here is that by setting the map name here, dependency on the 
-        // widget-form config file could be eliminated.
-ModelForm modelForm	= editWrapper.getModelForm();
-modelForm.setDefaultMapName(defaultMapName);
-context.put("editWrapper", editWrapper);
-//context.put(priKeyName, priKeyValue);
-
+context.put("lruWrapper", lruWrapper);
 return "success";
 

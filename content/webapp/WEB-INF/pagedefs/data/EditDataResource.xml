@@ -10,5 +10,6 @@
     <property name="permission">CONTENTMGR</property>    
     <property name="priKeyName">dataResourceId</property>    
     <property name="defaultMapName">valueObject</property>    
+    <page-action name="/includes/currentvalprep.bsh"/>
     <page-action name="/includes/editprep.bsh"/>
 </page>

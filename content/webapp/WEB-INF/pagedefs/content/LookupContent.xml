@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lookup_lru</template> 
+    <property name="title">Lookup Content</property>
+    <property name="formDefFile">/content/ContentForms.xml</property>    
+    <property name="singleFormName">lookupContent</property>    
+    <property name="listFormName">listLookupContent</property>    
+    <property name="lruFormName">lruLookupContent</property>    
+    <property name="subMenu">/content/content_menu.ftl</property>    
+    <property name="headerItem">Content</property>    
+    <property name="entityName">Content</property>    
+    <property name="listName">entityList</property>    
+    <property name="permission">CONTENTMGR</property>    
+    <page-action name="/includes/findprep.bsh"/>
+    <page-action name="/includes/lruprep.bsh"/>
+</page>

@@ -39,8 +39,8 @@ session = request.getSession();
 LocalDispatcher dispatcher      = (LocalDispatcher)request.getAttribute("dispatcher");
 GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
-priKeyValue     = request.getParameter("contentId");
-genericValue    = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", priKeyValue));
+priKeyValue     = request.getParameter("dataResourceId");
+genericValue    = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", priKeyValue));
 
 GenericPK pk	= null;
 if(genericValue != null) pk = genericValue.getPrimaryKey();
