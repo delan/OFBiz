@@ -501,6 +501,7 @@
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="POSITION_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="REQUIREMENT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="SYNCHRONIZE_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="UNEMPL_CLAIM_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFF_ASSET_STTS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="PARTY_ASSET_STATUS"/>
@@ -526,6 +527,8 @@
   <StatusItem description="Authorized" sequenceId="01" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusItem description="Settled" sequenceId="02" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="PAYMENT_DECLINED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Not-Synchronized" sequenceId="01" statusCode="NOT_SYNCHRONIZED" statusId="NOT_SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
+  <StatusItem description="Synchronized" sequenceId="02" statusCode="SYNCHRONIZED" statusId="SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
   <StatusItem description="Needs Action" sequenceId="01" statusCode="NEEDS ACTION" statusId="CAL_NEEDS_ACTION" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Sent" sequenceId="02" statusCode="SENT" statusId="CAL_SENT" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="CAL_DECLINED" statusTypeId="CALENDAR_STATUS"/>
