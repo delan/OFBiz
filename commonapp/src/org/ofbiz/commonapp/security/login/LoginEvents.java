@@ -43,6 +43,7 @@ import org.ofbiz.commonapp.party.contact.ContactHelper;
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
+ * @author     <a href="mailto:tom@tomherrick.com">Tom Herrick</a>
  * @version    1.0
  * @created    Oct 19, 2001
  */
@@ -69,6 +70,13 @@ public class LoginEvents {
             String username = request.getParameter("USERNAME");
             String password = request.getParameter("PASSWORD");
 
+            if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+                username = username.toLowerCase();
+            }
+            if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security", "password.lowercase")))) {
+                password = password.toLowerCase();
+            }
+            
             // save parameters into the session - so they can be used later, if needed
             if (username != null) session.setAttribute("USERNAME", username);
             if (password != null) session.setAttribute("PASSWORD", password);
@@ -108,6 +116,13 @@ public class LoginEvents {
             // check session attributes
             if (username == null) username = (String) session.getAttribute("USERNAME");
             if (password == null) password = (String) session.getAttribute("PASSWORD");
+
+            if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+                username = username.toLowerCase();
+            }
+            if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security", "password.lowercase")))) {
+                password = password.toLowerCase();
+            }
 
             if ((username == null) || (password == null) || ("error".equals(login(request, response)))) {
                 String queryString = null;
@@ -159,6 +174,13 @@ public class LoginEvents {
 
         if (username == null) username = (String) session.getAttribute("USERNAME");
         if (password == null) password = (String) session.getAttribute("PASSWORD");
+
+        if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+            username = username.toLowerCase();
+        }
+        if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security", "password.lowercase")))) {
+            password = password.toLowerCase();
+        }
 
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map result = null;
@@ -253,6 +275,10 @@ public class LoginEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         String userLoginId = request.getParameter("USERNAME");
+
+        if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+            userLoginId = userLoginId.toLowerCase();
+        }
 
         if (!UtilValidate.isNotEmpty(userLoginId)) {
             // the password was incomplete
