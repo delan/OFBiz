@@ -256,13 +256,13 @@ public class WfProcessMgrImpl implements WfProcessMgr {
             fields.put("processId", "_NA_");
             fields.put("processVersion", "_NA_");            
             List data1 = delegator.findByAnd("WorkflowDataField", fields);
-            dataFields.add(fields);
+            dataFields.addAll(data1);
             
             // now get all process fields
             fields.put("processId", processDef.get("processId"));
             fields.put("processVersion", processDef.get("processVersion"));
             List data2 = delegator.findByAnd("WorkflowDataField", fields);
-            dataFields.add(fields);                
+            dataFields.addAll(data2);                
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }

@@ -87,9 +87,9 @@ public class WorkflowEngine implements GenericEngine {
         boolean beganTransaction = false;
         try {
             try {
-                parentTrans = tm.suspend();
-                Debug.logVerbose("Suspended transaction.", module);
+                parentTrans = tm.suspend();                
                 beganTransaction = TransactionUtil.begin();
+                Debug.logInfo("Suspended transaction; began new: " + beganTransaction, module);
             } catch (SystemException se) {
                 Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
             } catch (GenericTransactionException e) {
@@ -120,11 +120,15 @@ public class WorkflowEngine implements GenericEngine {
             try {
                 mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(), packageId, packageVersion, processId, processVersion);
             } catch (WfException e) {
+                Debug.logError(e, "Process manager error", module);
                 try {
                     TransactionUtil.rollback(beganTransaction);
                 } catch (GenericTransactionException gte) {
                     Debug.logError(gte, "Unable to rollback nested exception.");
                 }
+                throw new GenericServiceException(e.getMessage(), e);
+            } catch (Exception e) {
+                Debug.logError(e, "Un-handled process manager error", module);
                 throw new GenericServiceException(e.getMessage(), e);
             }
 
@@ -160,6 +164,9 @@ public class WorkflowEngine implements GenericEngine {
                     Debug.logError(gte, "Unable to rollback nested exception.");
                 }
                 throw new GenericServiceException(wfe.getMessage(), wfe);
+            } catch (Exception e) {
+                Debug.logError(e, "Un-handled process exception", module);
+                throw new GenericServiceException(e.getMessage(), e);
             }
 
             // Set the service dispatcher for the workflow
@@ -246,8 +253,7 @@ public class WorkflowEngine implements GenericEngine {
             // Use the WorkflowRunner to start the workflow in a new thread                        
             try {
                 Job job = new WorkflowRunner(process, requester, startActivityId);
-                if (Debug.verboseOn()) 
-                    Debug.logVerbose("Created WorkflowRunner: " + job, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Created WorkflowRunner: " + job, module);
                 dispatcher.getJobManager().runJob(job);
             } catch (JobManagerException je) {
                 try {
@@ -261,14 +267,14 @@ public class WorkflowEngine implements GenericEngine {
             try {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericTransactionException e) {
-                Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage());
+                Debug.logError(e, "Cannot commit nested transaction: " + e.getMessage());
             }
         } finally {
             // Resume the parent transaction
             if (parentTrans != null) {
                 try {
                     tm.resume(parentTrans);
-                    Debug.logVerbose("Resumed the parent transaction.", module);
+                    Debug.logInfo("Resumed the parent transaction.", module);
                 } catch (InvalidTransactionException ite) {
                     throw new GenericServiceException("Cannot resume transaction", ite);
                 } catch (SystemException se) {
