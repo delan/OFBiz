@@ -359,12 +359,20 @@
         <attribute name="shipmentCostEstimateId" type="String" mode="IN" optional="false"/>
     </service>
     
-    <!-- Picklist Data Services -->    
+    <!-- Picking Related Services -->
+    <service name="findOrdersToPickMove" engine="simple"
+            location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="findOrdersToPickMove">
+        <description>Gets Picklist Data</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="pickMoveByShipmentMethodInfoList" type="List" mode="OUT" optional="true"/>
+    </service>
     <service name="getPicklistData" engine="simple"
             location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="getPicklistData">
         <description>Gets Picklist Data</description>
-        <attribute name="orderHeaderList" type="List" mode="IN" optional="true"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="maxNumberOfOrders" type="Long" mode="IN" optional="true"/>
         <attribute name="inventoryItemInfoList" type="List" mode="OUT" optional="true"/>
         <attribute name="orderHeaderInfoList" type="List" mode="OUT" optional="true"/>
         <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="true"/>
