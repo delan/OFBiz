@@ -1,5 +1,5 @@
 /*
- * $Id: XmlSerializer.java,v 1.2 2003/08/17 04:26:06 ajzeneski Exp $
+ * $Id: XmlSerializer.java,v 1.3 2004/01/20 15:55:18 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,6 +49,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
@@ -62,10 +63,12 @@ import org.xml.sax.SAXException;
  * <p><b>Description:</b> Simple XML serialization/deserialization routines with embedded type information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class XmlSerializer {
+    public static final String module = XmlSerializer.class.getName();
+
     private static WeakReference simpleDateFormatter;
 
     public static String serialize(Object object) throws SerializeException, FileNotFoundException, IOException {
@@ -80,17 +83,22 @@ public class XmlSerializer {
         throws SerializeException, SAXException, ParserConfigurationException, IOException {
         // readXmlDocument with false second parameter to disable validation
         Document document = UtilXml.readXmlDocument(content, false);
-        Element rootElement = document.getDocumentElement();
-        // find the first element below the root element, that should be the object
-        Node curChild = rootElement.getFirstChild();
+        if (document != null) {
+            Element rootElement = document.getDocumentElement();
+            // find the first element below the root element, that should be the object
+            Node curChild = rootElement.getFirstChild();
 
-        while (curChild != null && curChild.getNodeType() != Node.ELEMENT_NODE) {
-            curChild = curChild.getNextSibling();
+            while (curChild != null && curChild.getNodeType() != Node.ELEMENT_NODE) {
+                curChild = curChild.getNextSibling();
+            }
+            if (curChild == null) return null;
+            Element element = (Element) curChild;
+
+            return deserializeSingle(element, delegator);
+        } else {
+            Debug.logWarning("Serialized document came back null", module);
+            return null;
         }
-        if (curChild == null) return null;
-        Element element = (Element) curChild;
-
-        return deserializeSingle(element, delegator);
     }
 
     public static Element serializeSingle(Object object, Document document) throws SerializeException {
