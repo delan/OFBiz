@@ -92,7 +92,7 @@
   </div>
 <%}%>
 
-<div class="head1">Groups <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(facility==null?null:facility.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityId)%>]</span></div>
+<div class="head1">Groups <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(facility==null?null:facility.getString("facilityName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityId)%>]</span></div>
 <a href="<ofbiz:url>/EditFacility</ofbiz:url>" class="buttontext">[New Facility]</a>
 <%if (activeOnly) {%>
   <a href="<ofbiz:url>/EditFacilityGroups?facilityId=<%=facilityId%>&activeOnly=false</ofbiz:url>" class="buttontext">[Active and Inactive]</a>
