@@ -126,16 +126,18 @@ public class ProductServices {
     public static Map prodGetFeatures(DispatchContext dctx, Map context) {
         // * String productId      -- Product ID to fond
         // * String type           -- Type of feature (STANDARD_FEATURE, SELECTABLE_FEATURE)
+        // * String distinct       -- Distinct feature (SIZE, COLOR)
         GenericDelegator delegator = dctx.getDelegator();
         Map result = new HashMap();
         String productId = (String) context.get("productId");
+        String distinct = (String) context.get("distinct");
         String type = (String) context.get("type");
         Collection features = null;
         try {
             Map fields = UtilMisc.toMap("productId", productId);
             List order = UtilMisc.toList("sequenceNum", "featureTypeId");
-            if (type != null)
-                fields.put("productFeatureApplTypeId", type);
+            if (distinct != null) fields.put("productFeatureType", distinct);
+            if (type != null) fields.put("productFeatureApplTypeId", type);
             features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
             result.put("productFeatures", features);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -233,6 +235,7 @@ public class ProductServices {
     // Builds a product feature tree
     private static Map makeGroup(GenericDelegator delegator, List items, List order, int index)
             throws IllegalArgumentException, IllegalStateException {
+        List featureKey = new ArrayList();
         Map group = new HashMap();
         String orderKey = (String) order.get(index);
 
