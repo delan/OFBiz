@@ -198,41 +198,6 @@ if (orderHeader != null) {
     shipGroups = delegator.findByAnd("OrderItemShipGroup", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("shipGroupSeqId"));
     context.put("shipGroups", shipGroups);
     
-    /*
-    shipmentPreference = null;
-    carrierPartyId = null;
-    shipmentMethodTypeId = null;
-    shipmentMethodType = null;
-    shippingInstructions = null;
-    trackingNumber = null;
-    maySplit = null;
-    giftMessage = null;
-    isGift = null;
-
-
-    orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
-    if (orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
-        shipmentPreference = (GenericValue)orderShipmentPreferences.next();
-        carrierPartyId = shipmentPreference.getString("carrierPartyId");
-        shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
-        shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));
-        shippingInstructions = shipmentPreference.getString("shippingInstructions");
-        trackingNumber = shipmentPreference.getString("trackingNumber");
-        maySplit = shipmentPreference.getString("maySplit");
-        giftMessage = shipmentPreference.getString("giftMessage");
-        isGift = shipmentPreference.getString("isGift");
-    }
-    context.put("shipmentPreference", shipmentPreference);
-    context.put("carrierPartyId", carrierPartyId);
-    context.put("shipmentMethodTypeId", shipmentMethodTypeId);
-    context.put("shipmentMethodType", shipmentMethodType);
-    context.put("shippingInstructions", shippingInstructions);
-    context.put("trackingNumber", trackingNumber);
-    context.put("maySplit", maySplit);
-    context.put("giftMessage", giftMessage);
-    context.put("isGift", isGift);
-    */
-
     // get Shipment tracking info
     osisCond = new EntityFieldMap(UtilMisc.toMap("orderId", orderId), EntityOperator.AND);
     osisOrder = UtilMisc.toList("shipmentId", "shipmentRouteSegmentId", "shipmentPackageSeqId");

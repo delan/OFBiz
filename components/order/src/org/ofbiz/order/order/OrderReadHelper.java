@@ -214,30 +214,7 @@ public class OrderReadHelper {
 
     /** @deprecated */
     public String getShippingMethod() {
-        try {
-            GenericValue shipmentPreference = null;
-            Iterator tempIter = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
-
-            if (tempIter != null && tempIter.hasNext()) {
-                shipmentPreference = (GenericValue) tempIter.next();
-            }
-            if (shipmentPreference != null) {
-                GenericValue carrierShipmentMethod = shipmentPreference.getRelatedOne("CarrierShipmentMethod");
-
-                if (carrierShipmentMethod != null) {
-                    GenericValue shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType");
-
-                    if (shipmentMethodType != null) {
-                        return UtilFormatOut.checkNull(shipmentPreference.getString("carrierPartyId")) + " " + UtilFormatOut.checkNull(shipmentMethodType.getString("description"));
-                    }
-                }
-                return UtilFormatOut.checkNull(shipmentPreference.getString("carrierPartyId"));
-            }
-            return "";
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e, module);
-        }
-        return "";
+        throw new IllegalArgumentException("You must call the getShippingMethod method with the shipGroupdSeqId parameter, this is no londer supported since a single OrderShipmentPreference is no longer used.");
     }
 
     public String getShippingMethod(String shipGroupSeqId) {
@@ -266,30 +243,7 @@ public class OrderReadHelper {
 
     /** @deprecated */
     public String getShippingMethodCode() {
-        try {
-            GenericValue shipmentPreference = null;
-            Iterator tempIter = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
-
-            if (tempIter != null && tempIter.hasNext()) {
-                shipmentPreference = (GenericValue) tempIter.next();
-            }
-            if (shipmentPreference != null) {
-                GenericValue carrierShipmentMethod = shipmentPreference.getRelatedOne("CarrierShipmentMethod");
-
-                if (carrierShipmentMethod != null) {
-                    GenericValue shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType");
-
-                    if (shipmentMethodType != null) {
-                        return UtilFormatOut.checkNull(shipmentMethodType.getString("shipmentMethodTypeId")) + "@" + UtilFormatOut.checkNull(shipmentPreference.getString("carrierPartyId"));
-                    }
-                }
-                return UtilFormatOut.checkNull(shipmentPreference.getString("carrierPartyId"));
-            }
-            return "";
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e, module);
-        }
-        return "";
+        throw new IllegalArgumentException("You must call the getShippingMethodCode method with the shipGroupdSeqId parameter, this is no londer supported since a single OrderShipmentPreference is no longer used.");
     }
 
     public String getShippingMethodCode(String shipGroupSeqId) {
