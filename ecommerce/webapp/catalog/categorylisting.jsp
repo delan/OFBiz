@@ -117,25 +117,20 @@
 
 <center>
     <table width='100%' border='0' cellpadding='0' cellspacing='0'>
-        <tr><td colspan="6"><hr class='sepbar'></td></tr>
-        <tr>
         <%ArrayList productCategoryMembers = (ArrayList) pageContext.getAttribute("productCategoryMembers");%>
         <%for (int listIndex = (lowIndex.intValue() - 1); listIndex < highIndex.intValue(); listIndex++) {%>
             <%GenericValue productCategoryMember = (GenericValue) productCategoryMembers.get(listIndex);%>
             <%if (productCategoryMember != null) pageContext.setAttribute("productCategoryMember", productCategoryMember);%>
             <%GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productCategoryMember.get("productId")));%>
             <%if (product != null) pageContext.setAttribute("product", product);%>
-            <td>
-                <%@ include file="/catalog/productsummary.jsp" %>
-            </td>
-            <%if ((listIndex % 5 == 4) && (listIndex < (highIndex.intValue() - 1))) {%>
-                </tr>
-                <tr><td colspan="6"><hr class='sepbar'></td></tr>
-                <tr>
-            <%}%>
+            <tr><td><hr class='sepbar'></td></tr>
+            <tr>
+                <td>
+                    <%@ include file="/catalog/productsummary.jsp" %>
+                </td>
+            </tr>
         <%}%>
-        </tr>
-        <tr><td colspan="6"><hr class='sepbar'></td></tr>
+        <tr><td colspan="2"><hr class='sepbar'></td></tr>
     </table>
 </center>
 
