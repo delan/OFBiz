@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,41 +23,26 @@
  *
  */
 
-package org.ofbiz.core.event;
-
-import java.util.*;
-
-import org.ofbiz.core.control.*;
-import org.ofbiz.core.util.*;
+package org.ofbiz.core.view;
 
 /**
- * <p><b>Title:</b>EventFactory - Event Handler Factory
+ * ViewHandlerException - View Handler Exception
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    December 7, 2001
+ *@created    Feb 26, 2002
  *@version    1.0
  */
-public class EventFactory {
+public class ViewHandlerException extends org.ofbiz.core.util.GeneralException {
 
-    public static EventHandler getEventHandler(RequestManager mgr, String type) throws EventHandlerException {
-        String handlerClass = mgr.getHandlerClass(type, RequestManager.REQUEST_HANDLER_KEY);
-        if (handlerClass == null)
-            throw new EventHandlerException("Unknown handler");
+    public ViewHandlerException() {
+        super();
+    }
 
-        EventHandler handler = null;
-        try {
-            handler = (EventHandler) ObjectType.getInstance(handlerClass);
-        } catch (ClassNotFoundException cnf) {
-            throw new EventHandlerException("Cannot load handler class", cnf);
-        } catch (InstantiationException ie) {
-            throw new EventHandlerException("Cannot get instance of the handler", ie);
-        } catch (IllegalAccessException iae) {
-            throw new EventHandlerException(iae.getMessage(), iae);
-        }
+    public ViewHandlerException(String msg) {
+        super(msg);
+    }
 
-        return handler;
+    public ViewHandlerException(String msg, Throwable t) {
+        super(msg, t);
     }
 }
-
-
-

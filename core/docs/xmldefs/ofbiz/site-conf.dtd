@@ -36,6 +36,7 @@
 <!ELEMENT handler EMPTY>
 <!ATTLIST handler
 	name CDATA #REQUIRED
+    type (view|request) "request"
 	class CDATA #REQUIRED
 >
 <!ELEMENT preprocessor (event*)>

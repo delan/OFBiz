@@ -42,6 +42,8 @@ import org.ofbiz.core.util.*;
 public class RequestManager implements Serializable {
 
     public static final String module = RequestManager.class.getName();
+    public static final int VIEW_HANDLER_KEY = 1;
+    public static final int REQUEST_HANDLER_KEY = 0;
 
     private URL configFileUrl;
 
@@ -66,12 +68,17 @@ public class RequestManager implements Serializable {
     }
 
     /** Gets the class name of the named handler */
-    public String getHandlerClass(String name) {
+    public String getHandlerClass(String name, int type) {
         HashMap map = getHandlerMap();
-        if (!map.containsKey(name))
+        Map hMap = null;
+        if (type == 1)
+            hMap = (Map) map.get("view");
+        else
+            hMap = (Map) map.get("request");
+        if (!hMap.containsKey(name))
             return null;
         else
-            return (String) map.get(name);
+            return (String) hMap.get(name);
     }
 
     public HashMap getRequestMapMap(String uriStr) {

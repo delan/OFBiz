@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,41 +23,36 @@
  *
  */
 
-package org.ofbiz.core.event;
+package org.ofbiz.core.view;
 
-import java.util.*;
-
-import org.ofbiz.core.control.*;
-import org.ofbiz.core.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 /**
- * <p><b>Title:</b>EventFactory - Event Handler Factory
+ * ViewHandler - View Handler Interface
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    December 7, 2001
+ *@created    Feb 26, 2002
  *@version    1.0
  */
-public class EventFactory {
+public interface ViewHandler {
 
-    public static EventHandler getEventHandler(RequestManager mgr, String type) throws EventHandlerException {
-        String handlerClass = mgr.getHandlerClass(type, RequestManager.REQUEST_HANDLER_KEY);
-        if (handlerClass == null)
-            throw new EventHandlerException("Unknown handler");
+    /**
+     * Initializes the handler. Since handlers use the singleton pattern this method should only be called
+     * the first time the handler is used.
+     * @param context ServletContext This may be needed by the handler in order to lookup properties or XML
+     * definition files for rendering pages or handler options.
+     * @throws ViewHandlerException
+     */
+    public void init(ServletContext context) throws ViewHandlerException;
 
-        EventHandler handler = null;
-        try {
-            handler = (EventHandler) ObjectType.getInstance(handlerClass);
-        } catch (ClassNotFoundException cnf) {
-            throw new EventHandlerException("Cannot load handler class", cnf);
-        } catch (InstantiationException ie) {
-            throw new EventHandlerException("Cannot get instance of the handler", ie);
-        } catch (IllegalAccessException iae) {
-            throw new EventHandlerException(iae.getMessage(), iae);
-        }
+    /**
+     * Render the page.
+     * @param viewSource The source of the view; could be a page, url, etc depending on the type of handler.
+     * @param request The HttpServletRequest object used when requesting this page.
+     * @param response The HttpServletResponse object to be used to present the page.
+     * @throws ViewHandlerException
+     */
+    public void render(String viewSource, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException;
 
-        return handler;
-    }
 }
-
-
-

@@ -87,6 +87,7 @@ public class ConfigXMLReader {
     /** Handler Config Variables */
     public static final String HANDLER = "handler";
     public static final String HANDLER_NAME = "name";
+    public static final String HANDLER_TYPE = "type";
     public static final String HANDLER_CLASS = "class";
 
     /** Loads the XML file and returns the root element */
@@ -497,24 +498,47 @@ public class ConfigXMLReader {
         NodeList list = null;
 
         if (root != null) {
+            Map rMap = new HashMap();
+            Map vMap = new HashMap();
             list = root.getElementsByTagName(HANDLER);
             for (int i = 0; i < list.getLength(); i++) {
                 Element handler = (Element) list.item(i);
                 String hName = checkEmpty(handler.getAttribute(HANDLER_NAME));
                 String hClass = checkEmpty(handler.getAttribute(HANDLER_CLASS));
-                map.put(hName, hClass);
+                String hType = checkEmpty(handler.getAttribute(HANDLER_TYPE));
+                if (hType.equals("view"))
+                    vMap.put(hName, hClass);
+                else
+                    rMap.put(hName, hClass);
             }
+            map.put("view", vMap);
+            map.put("request", rMap);
         }
         /* Debugging */
         Debug.logVerbose("-------- Handler Mappings --------", module);
-        HashMap debugMap = map;
-        Set debugSet = debugMap.keySet();
-        Iterator i = debugSet.iterator();
-        while (i.hasNext()) {
-            Object o = i.next();
-            String handlerName = (String) o;
-            String className = (String) debugMap.get(o);
-            Debug.logVerbose("[H] : " + handlerName + " => " + className, module);
+        Map debugMap = (Map) map.get("request");
+        if (debugMap != null && debugMap.size() > 0) {
+            Debug.logVerbose("------------- REQUEST ------------", module);
+            Set debugSet = debugMap.keySet();
+            Iterator i = debugSet.iterator();
+            while (i.hasNext()) {
+                Object o = i.next();
+                String handlerName = (String) o;
+                String className = (String) debugMap.get(o);
+                Debug.logVerbose("[RH] : " + handlerName + " => " + className, module);
+            }
+        }
+        debugMap = (Map) map.get("view");
+        if (debugMap != null && debugMap.size() > 0) {
+            Debug.logVerbose("-------------- VIEW --------------", module);
+            Set debugSet = debugMap.keySet();
+            Iterator i = debugSet.iterator();
+            while (i.hasNext()) {
+                Object o = i.next();
+                String handlerName = (String) o;
+                String className = (String) debugMap.get(o);
+                Debug.logVerbose("[VH] : " + handlerName + " => " + className, module);
+            }
         }
         Debug.logVerbose("------ End Handler Mappings ------", module);
         /* End Debugging */
