@@ -24,7 +24,7 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1.1
 -->
 
@@ -161,7 +161,7 @@
 		<field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
 		<field-to-field field-name="webSiteId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
 		<field-to-field field-name="partyId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
-		<field-to-field field-name="facilityGroupId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
+		<field-to-field field-name="productStoreGroupId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
 		<field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
 		<field-to-field field-name="autoUserLogin" map-name="parameters" to-map-name="calcPriceInBaseMap"/>
 
