@@ -1439,6 +1439,7 @@
         location="org.ofbiz.content.ContentManagementServices" invoke="resetToOutlineMode">
     <description>Set content and kids to OUTLINE_NODE</description>
     <attribute mode="IN" name="contentId" optional="false" type="String"/>
+    <attribute mode="IN" name="pageMode" optional="true" type="String"/>
   </service>
 
   <service auth="true" engine="java" name="clearContentAssocViewCache" validate="true"

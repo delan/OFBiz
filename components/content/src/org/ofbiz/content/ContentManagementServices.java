@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -1002,8 +1004,14 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         
         GenericDelegator delegator = dctx.getDelegator();
         Map results = new HashMap();
+    	Set visitedSet = (Set)context.get("visitedSet");
+    	if (visitedSet == null) {
+            visitedSet = new HashSet();
+            context.put("visitedSet", visitedSet);
+        } 
     	String pageMode = (String)context.get("pageMode");
     	String contentId = (String)context.get("contentId");
+    	visitedSet.add(contentId);
         String contentTypeId = "PAGE_NODE";
         if (pageMode != null && pageMode.toLowerCase().indexOf("outline") >= 0)
         	contentTypeId = "OUTLINE_NODE";
@@ -1019,9 +1027,9 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             while (iter.hasNext()) {
             	GenericValue kidContent = (GenericValue)iter.next();
                 if (contentTypeId.equals("OUTLINE_NODE")) {
-                	updateOutlineNodeChildren(kidContent, false);
+                	updateOutlineNodeChildren(kidContent, false, context);
                 } else {
-                	updatePageNodeChildren(kidContent);
+                	updatePageNodeChildren(kidContent, context);
                 }
             }
         } catch(GenericEntityException e) {
@@ -1036,7 +1044,16 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         
         GenericDelegator delegator = dctx.getDelegator();
         Map results = new HashMap();
+    	Set visitedSet = (Set)context.get("visitedSet");
+    	if (visitedSet == null) {
+            visitedSet = new HashSet();
+            context.put("visitedSet", visitedSet);
+        } 
     	String contentId = (String)context.get("contentId");
+    	String pageMode = (String)context.get("pageMode");
+        String contentTypeId = "OUTLINE_NODE";
+        if (pageMode != null && pageMode.toLowerCase().indexOf("page") >= 0)
+        	contentTypeId = "PAGE_NODE";
         GenericValue thisContent = null;
         try {
             thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
@@ -1048,7 +1065,18 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
             	GenericValue kidContent = (GenericValue)iter.next();
-                	updateOutlineNodeChildren(kidContent, true);
+               	if (contentTypeId.equals("OUTLINE_NODE")) {
+              		updateOutlineNodeChildren(kidContent, true, context);
+               	} else {
+               		kidContent.put("contentTypeId", "PAGE_NODE");
+               		kidContent.store();
+               		List kids2 = ContentWorker.getAssociatedContent(kidContent, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
+            		Iterator iter2 = kids.iterator();
+            		while (iter2.hasNext()) {
+            			GenericValue kidContent2 = (GenericValue)iter2.next();
+               		    updatePageNodeChildren(kidContent2, context);
+                    }
+            	}
             }
         } catch(GenericEntityException e) {
         	Debug.logError(e, module);
@@ -1092,8 +1120,21 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         return results;
     }
     
-    public static void updatePageNodeChildren(GenericValue content) throws GenericEntityException {
+    public static void updatePageNodeChildren(GenericValue content, Map context) throws GenericEntityException {
         
+    	String contentId = content.getString("contentId");
+    	Set visitedSet = (Set)context.get("visitedSet");
+    	if (visitedSet == null) {
+            visitedSet = new HashSet();
+            context.put("visitedSet", visitedSet);
+        } else {
+        	if (visitedSet.contains(contentId)) {
+        		Debug.logWarning("visitedSet already contains:" + contentId, module);
+        		return;
+            } else {
+                visitedSet.add(contentId);   
+            }
+        }
     	String contentTypeId = content.getString("contentTypeId");
     	String newContentTypeId = "SUBPAGE_NODE";
 //        if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
@@ -1110,14 +1151,27 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
             	GenericValue kidContent = (GenericValue)iter.next();
-            	updatePageNodeChildren(kidContent);
+            	updatePageNodeChildren(kidContent, context);
             }
         //}
         return;
     }
 
-    public static void updateOutlineNodeChildren(GenericValue content, boolean forceOutline) throws GenericEntityException {
+    public static void updateOutlineNodeChildren(GenericValue content, boolean forceOutline, Map context) throws GenericEntityException {
     	
+    	String contentId = content.getString("contentId");
+    	Set visitedSet = (Set)context.get("visitedSet");
+    	if (visitedSet == null) {
+            visitedSet = new HashSet();
+            context.put("visitedSet", visitedSet);
+        } else {
+        	if (visitedSet.contains(contentId)) {
+        		Debug.logWarning("visitedSet already contains:" + contentId, module);
+        		return;
+            } else {
+                visitedSet.add(contentId);   
+            }
+        }
     	String contentTypeId = content.getString("contentTypeId");
     	String newContentTypeId = contentTypeId;
     	String dataResourceId = content.getString("dataResourceId");
@@ -1142,7 +1196,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
             	GenericValue kidContent = (GenericValue)iter.next();
-            	updateOutlineNodeChildren(kidContent, forceOutline);
+            	updateOutlineNodeChildren(kidContent, forceOutline, context);
             }
         }
         return;
