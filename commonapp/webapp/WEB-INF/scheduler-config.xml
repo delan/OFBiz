@@ -4,8 +4,8 @@
 <scheduler>
   <schedule>
     <name>MainTestJob</name>
-    <!-- <start-date>2001-07-19 15:08</start-date>
-    <end-date>2001-07-19 15:10</end-date> -->
+    <start-date>2001-07-19 15:08</start-date>
+    <end-date>2001-07-19 15:10</end-date>
     <interval>1</interval>
     <interval-type>minute</interval-type>
     <event-type>java</event-type>
