@@ -6,10 +6,13 @@
     <owner>The Open For Business Project (c) 2001 </owner>
     <errorpage>/error/error.jsp</errorpage>
     
-    <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
-    <handler name="soap" class="org.ofbiz.core.event.SOAPEventHandler"/>
-    <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
-    <handler name="simple" class="org.ofbiz.core.event.SimpleEventHandler"/>
+    <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
+    <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
+    <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
+
+    <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
+    <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
     
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
@@ -153,19 +156,19 @@
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map name="login" page="/login.jsp"/>
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" page="/main.jsp"/>
+    <view-map name="main" type="region"/>
+    <view-map name="login" type="region"/>
 
-    <view-map name="task" page="/task/task.jsp"/>
-    <view-map name="activity" page="/task/activity.jsp"/>
-    <view-map name="tasklist" page="/task/tasklist.jsp"/>
+    <view-map name="task" type="region"/>
+    <view-map name="activity" type="region"/>
+    <view-map name="tasklist" type="region"/>
 
-    <view-map name="event" page="/calendar/event.jsp"/>
-    <view-map name="day" page="/calendar/day.jsp"/>
-    <view-map name="week" page="/calendar/week.jsp"/>
-    <view-map name="month" page="/calendar/month.jsp"/>
-    <view-map name="upcoming" page="/calendar/upcoming.jsp"/>
+    <view-map name="event" type="region"/>
+    <view-map name="day" type="region"/>
+    <view-map name="week" type="region"/>
+    <view-map name="month" type="region"/>
+    <view-map name="upcoming" type="region"/>
     <!-- end of view mappings -->
 </site-conf>
 

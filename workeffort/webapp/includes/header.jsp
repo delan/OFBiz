@@ -1,88 +1,49 @@
-<html>
-<head>
 
-<title><%=companyName%>: <%=pageName%></title>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.commonapp.common.*" %>
+<%@ page import="java.util.*" %>
 
-<link rel="stylesheet" href="/commonapp/includes/maincss.css" type="text/css">
-<%-- <%@ include file="/includes/maincss.jsp"%> --%>
-
-<script language="javascript">
-function mOvr(src,clrOver){ 
-  if (!src.contains(event.fromElement)){ 
-          src.style.cursor = 'hand';
-          src.bgColor = clrOver; 
-  } 
-} 
-function mOut(src,clrIn){ 
-  if (!src.contains(event.toElement)){ 
-    src.style.cursor = 'default'; 
-    src.bgColor = clrIn; 
-  } 
-}
-function mClk(src){ 
-	if(event.srcElement.tagName=='TD')
-		src.children.tags('A')[0].click();
-}
-</script>
-</head>
-
-<body>
-<TABLE border=0 width='100%' cellpadding='<%=headerBoxBorderWidth%>' cellspacing='0' bgcolor='<%=headerBoxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding='<%=headerBoxTopPadding%>' cellspacing="0" bgcolor="<%=headerBoxTopColor%>">
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
-          <%if(headerImageUrl != null && headerImageUrl.length() > 0) {%>
-            <TD align=left width='1%'>
-              <IMG height='50' src='<%=headerImageUrl%>' alt='<%=companyName%>'>
-            </TD>
-          <%}%>
-          <TD align=left width='90%'>
-            <%if(companyName != null && companyName.length() > 0) {%>
-              <div class='headerCompanyName'><%=companyName%></div>
-            <%}%>
-            <%if(companySubtitle != null && companySubtitle.length() > 0) {%>
-              <div class='headerCompanySubtitle'><%=companySubtitle%></div>
-            <%}%>
+          <%EntityField.run("layoutSettings", "headerImageUrl", "<TD align=left width='1%'><IMG height='50' src='", "'></TD>", pageContext);%>
+          <TD>&nbsp;&nbsp;</TD>
+          <TD align=left width='98%' <%EntityField.run("layoutSettings", "headerMiddleBackgroundUrl", "background='", "'", pageContext);%>>
+              <%EntityField.run("layoutSettings", "companyName", "<div class='headerCompanyName'>", "</div>", pageContext);%>
+              <%EntityField.run("layoutSettings", "companySubtitle", "<div class='headerCompanySubtitle'>", "</div>", pageContext);%>
+              &nbsp;
           </TD>
-          <TD align=right width='9%'>&nbsp;</td>
+          <TD align=right width='1%' nowrap <%EntityField.run("layoutSettings", "headerRightBackgroundUrl", "background='", "'", pageContext);%>>
+            &nbsp;
+          </td>
         </tr>
       </table>
     </TD>
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding='<%=headerBoxBottomPadding%>' cellspacing=0 bgcolor='<%=headerBoxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
-    <%
-      String queryString = null;
-      Enumeration parameterNames = request.getParameterNames();
-      while(parameterNames != null && parameterNames.hasMoreElements())
-      {
-        String paramName = (String)parameterNames.nextElement();
-        if(paramName != null)
-        {
-          if(queryString == null) queryString = paramName + "=" + request.getParameter(paramName);
-          else queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
-        }
-      }
-      
-      String loginUrl = controlPath + "/checkLogin/" + UtilFormatOut.checkNull((String)request.getAttribute(SiteDefs.CURRENT_VIEW));
-      if(queryString != null) loginUrl = loginUrl  + "?" + UtilFormatOut.checkNull(queryString);
-    %>
-    <%if(userLogin==null){%>
-      <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<%=response.encodeURL(loginUrl)%>" class="buttontext">Login</a></td>
-    <%}else{%>
-      <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
-    <%}%>
-    <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-    <TD bgcolor="<%=headerBoxBottomColor%>" width="90%" align=center class='headerCenter'>Welcome!</TD>
-    <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/tasklist</ofbiz:url>" class="buttontext">Task&nbsp;List</a></td>
-    <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="<ofbiz:url>/month</ofbiz:url>" class="buttontext">Calendar</a></td>
-  </TR>
-</TABLE>
+          <ofbiz:unless name="userLogin">
+            <td class="headerButtonLeft"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
+          </ofbiz:unless>
+          <ofbiz:if name="userLogin">
+            <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
+          </ofbiz:if>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
+          <ofbiz:unless name="person">
+            <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
+          </ofbiz:unless>
+          <ofbiz:if name="person">
+            <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
+          </ofbiz:if>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/tasklist</ofbiz:url>" class="buttontext">Task&nbsp;List</a></td>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/month</ofbiz:url>" class="buttontext">Calendar</a></td>
+        </TR>
+      </TABLE>
     </TD>
   </TR>
 </TABLE>
-
-<%@ include file='/includes/appbar.jsp' %>

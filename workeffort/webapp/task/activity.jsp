@@ -28,6 +28,12 @@
  */
 %>
 
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%@ page import="org.ofbiz.commonapp.common.status.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
@@ -38,18 +44,11 @@
     }
 %>
 
-
-<%pageContext.setAttribute("PageName", "Activity Editor Page");%>
-
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
-
 <BR>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='40%' >
             <div class='boxhead'>&nbsp;Activity Detail</div>
@@ -64,7 +63,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <ofbiz:if name="canView" type="Boolean">
@@ -176,10 +175,10 @@
 <%-- ===================================================================== --%>
 <ofbiz:if name="partyAssigns" size="0">
     <BR>
-    <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+    <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
       <TR>
         <TD width='100%'>
-          <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
               <TD align=left width='40%' >
                 <div class='boxhead'>&nbsp;Party Assignments Detail</div>
@@ -193,7 +192,7 @@
       </TR>
       <TR>
         <TD width='100%'>
-          <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
             <tr>
               <td>
                 <ofbiz:iterator name="workEffortPartyAssignment" property="partyAssigns">
@@ -295,7 +294,3 @@
       </TR>
     </TABLE>
 </ofbiz:if>
-    
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
-

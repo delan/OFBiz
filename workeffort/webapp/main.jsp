@@ -1,5 +1,5 @@
 <%
-/**
+/*
  *  Title: Main Page
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
@@ -30,17 +30,13 @@
 
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.core.security.*" %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<% pageContext.setAttribute("PageName", "Main Page"); %> 
-
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
 <BR>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='90%' >
             <div class='boxhead'>&nbsp;Work Effort Manager Main Page</div>
@@ -52,20 +48,17 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-<%if(userLogin == null) {%>
-<DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
-<BR>
-<%}%>
-<DIV class='tabletext'>This application is primarily intended for those who maintain and use schedules, task lists, and other work effort related information.</DIV>
+            <ofbiz:unless name="userLogin">
+              <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
+              <BR>
+            </ofbiz:unless>
+            <DIV class='tabletext'>This application is meant for those who maintain and use calendar events, tasks and workflow activities.</DIV>
           </td>
         </tr>
       </table>
     </TD>
   </TR>
 </TABLE>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

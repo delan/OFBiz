@@ -28,8 +28,11 @@
  */
 %>
 
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.core.security.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%WorkEffortWorker.getWorkEffortAssignedTasks(pageContext, "tasks");%>
@@ -37,16 +40,11 @@
 <%WorkEffortWorker.getWorkEffortAssignedActivitiesByRole(pageContext, "roleActivities");%>
 <%WorkEffortWorker.getWorkEffortAssignedActivitiesByGroup(pageContext, "groupActivities");%>
 
-<% pageContext.setAttribute("PageName", "Task List Page"); %> 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
-
 <BR>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='40%' >
             <div class='boxhead'>&nbsp;Current Task List</div>
@@ -62,7 +60,7 @@
   <ofbiz:if name="activities" size="0">
       <TR>
         <TD width='100%'>
-          <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
             <tr>
               <td>
                   <div class='head3'>Workflow Activities Assigned to User</div>
@@ -106,7 +104,7 @@
   <ofbiz:if name="roleActivities" size="0">
       <TR>
         <TD width='100%'>
-          <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
             <tr>
               <td>
                   <div class='head3'>Workflow Activities Assigned to User Role</div>
@@ -150,7 +148,7 @@
   <ofbiz:if name="groupActivities" size="0">
       <TR>
         <TD width='100%'>
-          <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+          <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
             <tr>
               <td>
                   <div class='head3'>Workflow Activities Assigned to User Group</div>
@@ -193,7 +191,7 @@
   </ofbiz:if>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
               <div class='head3'>Assigned Tasks</div>
@@ -215,7 +213,7 @@
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
                     <TD><A class='buttontext' href='<ofbiz:url>/task?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
-                    <TD align=right width='1%'><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                    <TD align=right width='1%'><A class='buttontext' href='<ofbiz:url>/task?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         Edit&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
                   </TR>
                 </ofbiz:iterator>
@@ -226,7 +224,3 @@
     </TD>
   </TR>
 </TABLE>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
-

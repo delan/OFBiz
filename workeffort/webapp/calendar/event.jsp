@@ -28,22 +28,21 @@
  */
 %>
 
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%@ page import="org.ofbiz.commonapp.common.status.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%StatusWorker.getStatusItems(pageContext, "eventStatusItems", "EVENT_STATUS");%>
 
-<%pageContext.setAttribute("PageName", "Calendar Event Editor Page");%>
-
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
-
 <BR>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='40%' >
             <div class='boxhead'>&nbsp;Calendar Event Detail</div>
@@ -61,7 +60,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <ofbiz:if name="canView">
@@ -180,6 +179,3 @@
     </TD>
   </TR>
 </TABLE>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
