@@ -26,6 +26,7 @@ package org.ofbiz.content.widget.tree;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,9 +41,12 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.finder.ByAndFinder;
 import org.ofbiz.entity.finder.ByConditionFinder;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.w3c.dom.Element;
+import org.w3c.dom.Document;
+import org.ofbiz.base.util.ObjectType;
 
 /**
  * Widget Library - Tree model class
@@ -55,15 +59,26 @@ public abstract class ModelTreeAction {
     public static final String module = ModelTreeAction.class.getName();
 
     protected ModelTree modelTree;
+    protected ModelTree.ModelNode modelNode;
+    protected ModelTree.ModelNode.ModelSubNode modelSubNode;
 
-    public ModelTreeAction(ModelTree modelTree, Element actionElement) {
+    public ModelTreeAction(ModelTree.ModelNode modelNode, Element actionElement) {
         if (Debug.verboseOn()) Debug.logVerbose("Reading Tree action with name: " + actionElement.getNodeName(), module);
-        this.modelTree = modelTree;
+        this.modelNode = modelNode;
+        this.modelTree = modelNode.getModelTree();
+    }
+    
+    public ModelTreeAction(ModelTree.ModelNode.ModelSubNode modelSubNode, Element actionElement) {
+        if (Debug.verboseOn()) Debug.logVerbose("Reading Tree action with name: " + actionElement.getNodeName(), module);
+        this.modelSubNode = modelSubNode;
+        this.modelNode = this.modelSubNode.getNode();
+        this.modelTree = this.modelNode.getModelTree();
     }
     
     public abstract void runAction(Map context);
     
-    public static List readSubActions(ModelTree modelTree, Element parentElement) {
+/*
+    public static List readSubActions(ModelTree.ModelNode modelNode, Element parentElement) {
         List actions = new LinkedList();
         
         List actionElementList = UtilXml.childElementList(parentElement);
@@ -89,6 +104,7 @@ public abstract class ModelTreeAction {
         
         return actions;
     }
+    */
     
     public static void runSubActions(List actions, Map context) {
         Iterator actionIter = actions.iterator();
@@ -104,13 +120,15 @@ public abstract class ModelTreeAction {
         protected FlexibleMapAccessor fromField;
         protected FlexibleStringExpander valueExdr;
         protected FlexibleStringExpander globalExdr;
+        protected String type;
         
-        public SetField(ModelTree modelTree, Element setElement) {
-            super (modelTree, setElement);
+        public SetField(ModelTree.ModelNode modelNode, Element setElement) {
+            super (modelNode, setElement);
             this.field = new FlexibleMapAccessor(setElement.getAttribute("field"));
             this.fromField = UtilValidate.isNotEmpty(setElement.getAttribute("from-field")) ? new FlexibleMapAccessor(setElement.getAttribute("from-field")) : null;
             this.valueExdr = UtilValidate.isNotEmpty(setElement.getAttribute("value")) ? new FlexibleStringExpander(setElement.getAttribute("value")) : null;
             this.globalExdr = new FlexibleStringExpander(setElement.getAttribute("global"));
+            this.type = setElement.getAttribute("type");
             if (this.fromField != null && this.valueExdr != null) {
                 throw new IllegalArgumentException("Cannot specify a from-field [" + setElement.getAttribute("from-field") + "] and a value [" + setElement.getAttribute("value") + "] on the set action in a tree widget");
             }
@@ -126,6 +144,16 @@ public abstract class ModelTreeAction {
                 newValue = this.fromField.get(context);
             } else if (this.valueExdr != null) {
                 newValue = this.valueExdr.expandString(context);
+            }
+            if (UtilValidate.isNotEmpty(this.type)) {
+                try {
+                    newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, null);
+                } catch (GeneralException e) {
+                    String errMsg = "Could not convert field value for the field: [" + this.field.getOriginalName() + "] to the [" + this.type + "] type for the value [" + newValue + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new IllegalArgumentException(errMsg);
+                }
+         
             }
             this.field.put(context, newValue);
             
@@ -147,8 +175,8 @@ public abstract class ModelTreeAction {
     public static class Script extends ModelTreeAction {
         protected String location;
         
-        public Script(ModelTree modelTree, Element scriptElement) {
-            super (modelTree, scriptElement);
+        public Script(ModelTree.ModelNode modelNode, Element scriptElement) {
+            super (modelNode, scriptElement);
             this.location = scriptElement.getAttribute("location");
         }
         
@@ -171,13 +199,31 @@ public abstract class ModelTreeAction {
         protected FlexibleStringExpander serviceNameExdr;
         protected FlexibleMapAccessor resultMapNameAcsr;
         protected FlexibleStringExpander autoFieldMapExdr;
+        protected FlexibleStringExpander resultMapListNameExdr;
+        protected FlexibleStringExpander resultMapListIteratorNameExdr;
+        protected FlexibleStringExpander resultMapValueNameExdr;
+        protected FlexibleStringExpander valueNameExdr;
         protected Map fieldMap;
         
-        public Service(ModelTree modelTree, Element serviceElement) {
-            super (modelTree, serviceElement);
+        public Service(ModelTree.ModelNode modelNode, Element serviceElement) {
+            super (modelNode, serviceElement);
+            initService(serviceElement);
+        }
+        
+        public Service(ModelTree.ModelNode.ModelSubNode modelSubNode, Element serviceElement) {
+            super (modelSubNode, serviceElement);
+            initService(serviceElement);
+        }
+        
+        public void initService( Element serviceElement ) {
+            
             this.serviceNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("service-name"));
             this.resultMapNameAcsr = UtilValidate.isNotEmpty(serviceElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(serviceElement.getAttribute("result-map-name")) : null;
             this.autoFieldMapExdr = new FlexibleStringExpander(serviceElement.getAttribute("auto-field-map"));
+            this.resultMapListNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-name"));
+            this.resultMapListIteratorNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-iterator-name"));
+            this.resultMapValueNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-value-name"));
+            this.valueNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("value-name"));
             
             List fieldMapElementList = UtilXml.childElementList(serviceElement, "field-map");
             if (fieldMapElementList.size() > 0) {
@@ -227,6 +273,30 @@ public abstract class ModelTreeAction {
                 } else {
                     context.putAll(result);
                 }
+                String resultMapListName = resultMapListNameExdr.expandString(context);
+                String resultMapListIteratorName = resultMapListIteratorNameExdr.expandString(context);
+                String resultMapValueName = resultMapValueNameExdr.expandString(context);
+                String valueName = valueNameExdr.expandString(context);
+                
+                if (this.modelSubNode != null) {
+                    ListIterator iter = null;
+                    if (UtilValidate.isNotEmpty(resultMapListIteratorName)) {
+                        this.modelSubNode.setListIterator((ListIterator)result.get(resultMapListIteratorName));
+                    } else if (UtilValidate.isNotEmpty(resultMapListName)) {
+                	    List lst = (List)result.get(resultMapListName);
+                        if (lst != null ) {
+                            this.modelSubNode.setListIterator(lst.listIterator());
+                        }
+                    }
+                } else {
+                	if (UtilValidate.isNotEmpty(resultMapValueName)) {
+                		if (UtilValidate.isNotEmpty(valueName)) {
+                			context.put(valueName, result.get(resultMapValueName));
+                    	} else {
+                    		context.putAll((Map)result.get(resultMapValueName));
+                    	}
+                	}
+                }
             } catch (GenericServiceException e) {
                 String errMsg = "Error calling service with name " + serviceNameExpanded + ": " + e.toString();
                 Debug.logError(e, errMsg, module);
@@ -238,8 +308,8 @@ public abstract class ModelTreeAction {
     public static class EntityOne extends ModelTreeAction {
         protected PrimaryKeyFinder finder;
         
-        public EntityOne(ModelTree modelTree, Element entityOneElement) {
-            super (modelTree, entityOneElement);
+        public EntityOne(ModelTree.ModelNode modelNode, Element entityOneElement) {
+            super (modelNode, entityOneElement);
             finder = new PrimaryKeyFinder(entityOneElement);
         }
         
@@ -256,15 +326,32 @@ public abstract class ModelTreeAction {
 
     public static class EntityAnd extends ModelTreeAction {
         protected ByAndFinder finder;
+        boolean useCache = false;
         
-        public EntityAnd(ModelTree modelTree, Element entityAndElement) {
-            super (modelTree, entityAndElement);
+        public EntityAnd(ModelTree.ModelNode.ModelSubNode modelSubNode, Element entityAndElement) {
+            super (modelSubNode, entityAndElement);
+            String useCacheString = entityAndElement.getAttribute("use-cache");            
+            if ("true".equals(useCacheString)) {
+            	useCache = true;
+            }
+            Document ownerDoc = entityAndElement.getOwnerDocument();
+            if (!useCache)
+                UtilXml.addChildElement(entityAndElement, "use-iterator", ownerDoc);
+            entityAndElement.setAttribute( "list-name", "_LIST_ITERATOR_");
             finder = new ByAndFinder(entityAndElement);
         }
         
         public void runAction(Map context) {
             try {
+                context.put("_LIST_ITERATOR_", null);
                 finder.runFind(context, this.modelTree.getDelegator());
+                Object obj = context.get("_LIST_ITERATOR_");
+                if (obj != null && obj instanceof EntityListIterator) {
+                    this.modelSubNode.setListIterator((ListIterator)obj);
+                } else {
+                	if (obj instanceof List)
+                        this.modelSubNode.setListIterator(((List)obj).listIterator());
+                }
             } catch (GeneralException e) {
                 String errMsg = "Error doing entity query by condition: " + e.toString();
                 Debug.logError(e, errMsg, module);
@@ -275,15 +362,32 @@ public abstract class ModelTreeAction {
 
     public static class EntityCondition extends ModelTreeAction {
         ByConditionFinder finder;
+        boolean useCache = false;
         
-        public EntityCondition(ModelTree modelTree, Element entityConditionElement) {
-            super (modelTree, entityConditionElement);
+        public EntityCondition(ModelTree.ModelNode.ModelSubNode modelSubNode, Element entityConditionElement) {
+            super (modelSubNode, entityConditionElement);
+            Document ownerDoc = entityConditionElement.getOwnerDocument();
+            String useCacheString = entityConditionElement.getAttribute("use-cache");            
+            if ("true".equals(useCacheString)) {
+            	useCache = true;
+            }
+            if (!useCache)
+                UtilXml.addChildElement(entityConditionElement, "use-iterator", ownerDoc);
+            entityConditionElement.setAttribute( "list-name", "_LIST_ITERATOR_");
             finder = new ByConditionFinder(entityConditionElement);
         }
         
         public void runAction(Map context) {
             try {
+                context.put("_LIST_ITERATOR_", null);
                 finder.runFind(context, this.modelTree.getDelegator());
+                Object obj = context.get("_LIST_ITERATOR_");
+                if (obj != null && obj instanceof EntityListIterator) {
+                    this.modelSubNode.setListIterator((ListIterator)obj);
+                } else {
+                	if (obj instanceof List)
+                        this.modelSubNode.setListIterator(((List)obj).listIterator());
+                }
             } catch (GeneralException e) {
                 String errMsg = "Error doing entity query by condition: " + e.toString();
                 Debug.logError(e, errMsg, module);
