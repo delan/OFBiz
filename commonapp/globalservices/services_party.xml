@@ -311,7 +311,7 @@
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="getPerson">
         <description>Gets a person entity from the cache/database</description>
         <attribute name="partyId" type="String" mode="IN"/>
-        <attribute name="person" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+        <attribute name="lookupPerson" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
     </service>
 
     <service name="getPartyFromEmail" engine="java"

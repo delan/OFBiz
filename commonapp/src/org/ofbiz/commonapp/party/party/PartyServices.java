@@ -714,7 +714,7 @@ public class PartyServices {
             return ServiceUtil.returnError("Cannot get person entity (read failure): " + e.getMessage());
         }
         if (person != null) {
-            result.put("person", person);
+            result.put("lookupPerson", person);
         }
         return result;
     }
