@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.22 2003/11/30 00:42:11 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.23 2003/11/30 18:06:40 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -443,7 +443,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.quantityUsedPerPromoFailed.entrySet().iterator();
     }
 
-    public synchronized double addPromoQuantityCandidateUse(double quantityDesired, GenericValue productPromoCondAction) {
+    public synchronized double addPromoQuantityCandidateUse(double quantityDesired, GenericValue productPromoCondAction, boolean checkAvailableOnly) {
         if (quantityDesired == 0) return 0;
         double promoQuantityAvailable = this.getPromoQuantityAvailable();
         double promoQuantityToUse = quantityDesired;
@@ -452,18 +452,21 @@ public class ShoppingCartItem implements java.io.Serializable {
                 promoQuantityToUse = promoQuantityAvailable;
             }
 
-            // keep track of candidate promo uses on cartItem
-            GenericPK productPromoCondActionPK = productPromoCondAction.getPrimaryKey();
-            Double existingValue = (Double) this.quantityUsedPerPromoCandidate.get(productPromoCondActionPK);
-            if (existingValue == null) {
-                this.quantityUsedPerPromoCandidate.put(productPromoCondActionPK, new Double(promoQuantityToUse));
-            } else {
-                this.quantityUsedPerPromoCandidate.put(productPromoCondActionPK, new Double(promoQuantityToUse + existingValue.doubleValue()));
-            }
+            if (!checkAvailableOnly) {
+                // keep track of candidate promo uses on cartItem
+                GenericPK productPromoCondActionPK = productPromoCondAction.getPrimaryKey();
+                Double existingValue = (Double) this.quantityUsedPerPromoCandidate.get(productPromoCondActionPK);
+                if (existingValue == null) {
+                    this.quantityUsedPerPromoCandidate.put(productPromoCondActionPK, new Double(promoQuantityToUse));
+                } else {
+                    this.quantityUsedPerPromoCandidate.put(productPromoCondActionPK, new Double(promoQuantityToUse + existingValue.doubleValue()));
+                }
 
-            this.promoQuantityUsed += promoQuantityToUse;
-            //Debug.logInfo("promoQuantityToUse=" + promoQuantityToUse + ", quantityDesired=" + quantityDesired + ", for promoCondAction: " + productPromoCondAction, module);
-            //Debug.logInfo("promoQuantityUsed now=" + promoQuantityUsed, module);
+                this.promoQuantityUsed += promoQuantityToUse;
+                //Debug.logInfo("promoQuantityToUse=" + promoQuantityToUse + ", quantityDesired=" + quantityDesired + ", for promoCondAction: " + productPromoCondAction, module);
+                //Debug.logInfo("promoQuantityUsed now=" + promoQuantityUsed, module);
+            }
+            
             return promoQuantityToUse;
         } else {
             return 0;
