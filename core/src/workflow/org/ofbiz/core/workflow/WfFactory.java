@@ -29,6 +29,7 @@ import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.impl.*;
 import org.ofbiz.core.workflow.client.*;
 
@@ -42,12 +43,12 @@ import org.ofbiz.core.workflow.client.*;
 public class WfFactory {
 
     // a cache of loaded objects
-    private static Map manager = new HashMap();
-    private static Map process = new HashMap();
-    private static Map activity = new HashMap();
-    private static Map assign = new HashMap();
-    private static Map resource = new HashMap();
-    private static Map client = new HashMap();
+    private static UtilCache manager = new UtilCache("workflow.processmgr", 0, 0, true);
+    private static UtilCache process = new UtilCache("workflow.process", 0, 0, true);
+    private static UtilCache activity = new UtilCache("workflow.activity", 0, 0, true);
+    private static UtilCache assign = new UtilCache("workflow.assignment", 0, 0, true);
+    private static UtilCache resource = new UtilCache("workflow.resource", 0, 0, true);
+    private static UtilCache client = new UtilCache("workflow.client", 0, 0, true);
 
     /**
      * Creates a new {@link WfActivity} instance.
