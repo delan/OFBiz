@@ -1232,6 +1232,7 @@
     </service>
     -->
     <service name="persistContentAndAssoc" engine="java"
+        transaction-timout="72000" 
             location="org.ofbiz.content.ContentManagementServices" invoke="persistContentAndAssoc" auth="true">
         <description>Create a Content, DataResource and/or ContentAssoc</description>
         <auto-attributes entity-name="Content" include="all" mode="IN" optional="true">
