@@ -9,6 +9,7 @@
     <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
     <handler name="soap" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
+    <handler name="simple" class="org.ofbiz.core.event.SimpleEventHandler"/>
     
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
@@ -63,8 +64,18 @@
     <request-map uri="task"><security https="true" auth="true"/>
     	<response name="success" type="view" value="task"/>
     </request-map>
+    <request-map uri="createtask"><security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="createWorkEffort"/>
+    	<response name="success" type="view" value="task"/>
+        <response name="error" type="view" value="task"/>
+    </request-map>
     <request-map uri="updatetask"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortEvents" invoke="updateWorkEffort"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="updateWorkEffort"/>
+    	<response name="success" type="view" value="task"/>
+        <response name="error" type="view" value="task"/>
+    </request-map>
+    <request-map uri="deletetask"><security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="task"/>
         <response name="error" type="view" value="task"/>
     </request-map>
@@ -72,10 +83,20 @@
     <request-map uri="activity"><security https="true" auth="true"/>
     	<response name="success" type="view" value="activity"/>
     </request-map>
+    <request-map uri="createactivity"><security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="createWorkEffort"/>
+    	<response name="success" type="view" value="task"/>
+        <response name="error" type="view" value="task"/>
+    </request-map>
     <request-map uri="updateactivity"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortEvents" invoke="updateWorkEffort"/>
-    	<response name="success" type="view" value="activity"/>
-        <response name="error" type="view" value="activity"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="updateWorkEffort"/>
+    	<response name="success" type="view" value="task"/>
+        <response name="error" type="view" value="task"/>
+    </request-map>
+    <request-map uri="deleteactivity"><security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="deleteWorkEffort"/>
+    	<response name="success" type="view" value="task"/>
+        <response name="error" type="view" value="task"/>
     </request-map>
     <request-map uri="updateactivityassign"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortEvents" invoke="updateWorkEffortPartyAssignment"/>
@@ -90,8 +111,18 @@
     <request-map uri="event"><security https="true" auth="true"/>
     	<response name="success" type="view" value="event"/>
     </request-map>
+    <request-map uri="createevent"><security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="createWorkEffort"/>
+    	<response name="success" type="view" value="event"/>
+        <response name="error" type="view" value="event"/>
+    </request-map>
     <request-map uri="updateevent"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortEvents" invoke="updateWorkEffort"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="updateWorkEffort"/>
+    	<response name="success" type="view" value="event"/>
+        <response name="error" type="view" value="event"/>
+    </request-map>
+    <request-map uri="deleteevent"><security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="event"/>
         <response name="error" type="view" value="event"/>
     </request-map>

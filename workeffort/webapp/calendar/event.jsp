@@ -65,19 +65,19 @@
         <tr>
           <td>
             <ofbiz:if name="canView" type="Boolean">
-              <form action="<ofbiz:url>/updateevent</ofbiz:url>" method=POST style='margin: 0;'>
-              <table border='0' cellpadding='2' cellspacing='0'>
-                <ofbiz:if name="workEffort">
-                  <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
+              <ofbiz:if name="workEffort">
+                <form action="<ofbiz:url>/updateevent</ofbiz:url>" method=POST style='margin: 0;'>
+                <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortId' value='<ofbiz:print attribute="workEffortId"/>'>
-                </ofbiz:if>
-                <ofbiz:unless name="workEffort">
-                  <input type='hidden' name='UPDATE_MODE' value='CREATE'>
+              </ofbiz:if>
+              <ofbiz:unless name="workEffort">
+                <form action="<ofbiz:url>/createevent</ofbiz:url>" method=POST style='margin: 0;'>
+                <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='EVENT'>
                   <ofbiz:if name="workEffortId">
                     <DIV class='tabletext'>ERROR: Could not find Event with ID "<ofbiz:print attribute="workEffortId"/>"</DIV>
                   </ofbiz:if>
-                </ofbiz:unless>
+              </ofbiz:unless>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Event Name</div></td>
