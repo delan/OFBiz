@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 
@@ -122,7 +122,7 @@
                     </td>                    
                     <#if maySelectItems?default(false)>
                       <td>&nbsp;</td>
-                      <#if orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED">
+                      <#if (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED")>
                         <td><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}</@ofbizUrl>" class="buttontext">${requestAttributes.uiLabelMap.CommonCancel}</a></td>
                       <#else>
                         <td>&nbsp;</td>
