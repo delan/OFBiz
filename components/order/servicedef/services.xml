@@ -693,8 +693,11 @@
         <attribute name="totalPrice" type="Double" mode="OUT" optional="false"/>
     </service>
 
+    <service name="runShoppingListAutoReorder" engine="java" auth="true" use-transaction="false"
+            location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="createListReorders">
+    </service>
     <service name="createShoppingListRecurrence" engine="java" auth="true"
-            location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="splitShipmentMethodString">
+            location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="setShoppingListRecurrence">
         <description>Creates Recurrence Info For Auto-Reorder Lists</description>
         <attribute name="startDateTime" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="endDateTime" type="Timestamp" mode="IN" optional="true"/>
@@ -722,6 +725,7 @@
         <description>Create a shopping list item</description>
         <implements service="shoppingListItemInterface"/>
         <attribute name="shoppingListId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="INOUT" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="shoppingListItemSeqId" type="String" mode="OUT" optional="false"/>
     </service>

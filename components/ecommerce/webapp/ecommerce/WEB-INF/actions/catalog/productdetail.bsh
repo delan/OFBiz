@@ -157,8 +157,12 @@ if (product != null) {
         }
     }
 
+    // get the product store
+    productStore = ProductStoreWorker.getProductStore(request);
+    productStoreId = productStore.getString("productStoreId");    
+    context.put("productStoreId", productStoreId);
+
     // get a defined survey
-    productStoreId = ProductStoreWorker.getProductStoreId(request);
     productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");
     if (productSurvey != null && productSurvey.size() > 0) {
         survey = EntityUtil.getFirst(productSurvey);
@@ -195,8 +199,7 @@ if (product != null) {
     }
 
     // get the days to ship
-    productStore = ProductStoreWorker.getProductStore(request);
-    productStoreId = productStore.getString("productStoreId");
+
     facilityId = productStore.getString("inventoryFacilityId");
     productFacility = delegator.findByPrimaryKeyCache("ProductFacility", UtilMisc.toMap("productId", productId, "facilityId", facilityId));
     if (productFacility != null && productFacility.get("daysToShip") != null) {

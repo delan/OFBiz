@@ -34,6 +34,7 @@ import org.ofbiz.order.shoppinglist.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
+import org.ofbiz.service.calendar.*;
 
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");
@@ -166,11 +167,12 @@ if (shoppingListId != null) {
                 listCart = ShoppingListServices.makeShoppingListCart(dispatcher, shoppingListId, UtilHttp.getLocale(request));
 
                 // get customer's shipping & payment info
-                context.put("chosenShippingMethod", shoppingList.get("shipmentMethodTypeId") + '@' + shoppingList.get("carrierPartyId"));                
+                context.put("chosenShippingMethod", shoppingList.getString("shipmentMethodTypeId") + "@" + shoppingList.getString("carrierPartyId"));
                 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
                 context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, UtilMisc.toList("paymentMethodTypeId")), true));
 
                 shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shoppingList.get("contactMechId")));
+                Debug.log("SL - address : " + shipAddress);
                 if (shipAddress != null) {
                     listCart = ShoppingListServices.makeShoppingListCart(dispatcher, shoppingListId, UtilHttp.getLocale(request));
                     if (listCart != null) {
@@ -181,10 +183,19 @@ if (shoppingListId != null) {
                         context.put("carrierShipMethods", carrierShipMeths);
                     }
                 }
+
+                if (recurrenceVo != null) {
+                    RecurrenceInfo recInfo = new RecurrenceInfo(recurrenceVo);
+                    context.put("recInfo", recInfo);
+                    lastSlOrderDate = shoppingList.get("lastOrderedDate");
+                    context.put("lastSlOrderDate", lastSlOrderDate);
+                    if (lastSlOrderDate == null) {
+                        lastSlOrderDate = recurrenceVo.get("startDateTime");
+                    }
+                    context.put("lastSlOrderTime", lastSlOrderDate.getTime());                    
+                }
             }
         }
-
-
     }
 }
  

@@ -327,6 +327,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="productId" value="${requestParameters.product_id}">
           <input type="hidden" name="product_id" value="${requestParameters.product_id}">
+          <input type="hidden" name="productStoreId" value="${productStoreId}">
           <select name="shoppingListId" class="selectBox">
             <#if shoppingLists?has_content>
               <#list shoppingLists as shoppingList>

@@ -208,30 +208,35 @@
                   <tr>
                     <td><div class="tableheadtext">Recurrence</div></td>
                     <td>
+                      <#if recurrenceInfo?has_content>
+                        <#assign recurrenceRule = recurrenceInfo.getRelatedOne("RecurrenceRule")?if_exists>
+                      </#if>
                       <select name="intervalNumber" class="selectBox">
-                        <option value="1">Every</option>
-                        <option value="2">Every Other</option>
-                        <option value="3">Every 3rd</option>
-                        <option value="6">Every 6th</option>
-                        <option value="9">Every 9th</option>
+                        <option value="">Select Interval</option>
+                        <option value="1" <#if (recurrenceRule.intervalNumber)?default(0) == 1>selected</#if>>Every</option>
+                        <option value="2" <#if (recurrenceRule.intervalNumber)?default(0) == 2>selected</#if>>Every Other</option>
+                        <option value="3" <#if (recurrenceRule.intervalNumber)?default(0) == 3>selected</#if>>Every 3rd</option>
+                        <option value="6" <#if (recurrenceRule.intervalNumber)?default(0) == 6>selected</#if>>Every 6th</option>
+                        <option value="9" <#if (recurrenceRule.intervalNumber)?default(0) == 9>selected</#if>>Every 9th</option>
                       </select>
                       &nbsp;
                       <select name="frequency" class="selectBox">
-                        <option value="5">Week</option>
-                        <option value="6">Month</option>
-                        <option value="7">Year</option>
+                        <option value="">Select Frequency</option>
+                        <option value="5" <#if (recurrenceRule.frequency)?default("") == "WEEKLY">selected</#if>>Week</option>
+                        <option value="6" <#if (recurrenceRule.frequency)?default("") == "MONTHLY">selected</#if>>Month</option>
+                        <option value="7" <#if (recurrenceRule.frequency)?default("") == "YEARLY">selected</#if>>Year</option>
                       </select>
                     </td>
                     <td>&nbsp;</td>
                     <td><div class="tableheadtext">Start-Date</div></td>
                     <td>
-                      <input type="text" class="textBox" name="startDateTime" size="20">
+                      <input type="text" class="textBox" name="startDateTime" size="20" value="${(recurrenceInfo.startDateTime)?if_exists}">
                       <a href="javascript:call_cal(document.reorderinfo.startDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                     </td>
                     <td>&nbsp;</td>
                     <td><div class="tableheadtext">End-Date</div></td>
                     <td>
-                      <input type="text" class="textBox" name="endDateTime" size="20">
+                      <input type="text" class="textBox" name="endDateTime" size="20" value="${(recurrenceRule.untilDateTime)?if_exists}">
                       <a href="javascript:call_cal(document.reorderinfo.endDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                     </td>
                     <td>&nbsp;</td>
@@ -245,7 +250,7 @@
                         <#if shippingContactMechList?has_content>
                           <#list shippingContactMechList as shippingContactMech>
                             <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
-                            <option value="${shippingContactMech.contactMechId}"<#if (listCart.getShippingContactMechId())?default("") == shippingAddress.contactMechId> selected</#if>>${shippingAddress.address1}</option>
+                            <option value="${shippingContactMech.contactMechId}"<#if (shoppingList.contactMechId)?default("") == shippingAddress.contactMechId> selected</#if>>${shippingAddress.address1}</option>
                           </#list>
                         <#else>
                           <option value="">No Addresses Available</option>
@@ -289,7 +294,7 @@
                         <#list paymentMethodList as paymentMethod>
                           <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                             <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
-                            <option value="${paymentMethod.paymentMethodId}" <#if (listCart.isPaymentSelected(paymentMethod.paymentMethodId))?default(false)>selected</#if>>CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</option>
+                            <option value="${paymentMethod.paymentMethodId}" <#if (shoppingList.paymentMethodId)?default("") == paymentMethod.paymentMethodId>selected</#if>>CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</option>
                           <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                             <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                             <option value="${paymentMethod.paymentMethodId}">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</option>
@@ -310,6 +315,37 @@
                       </div>
                     </td>
                   </tr>
+                  <#if shoppingList.isActive?default("N") == "Y">
+                    <tr><td colspan="9"><hr class="sepbar"></td></tr>
+                    <tr>
+                      <td align="left" colspan="9">
+                        <#assign nextTime = recInfo.next(lastSlOrderTime)?if_exists>
+                        <#if nextTime?has_content>
+                          <#assign nextTimeStamp = Static["org.ofbiz.base.util.UtilDateTime"].getTimestamp(nextTime)?if_exists>
+                          <#if nextTimeStamp?has_content>
+                            <#assign nextTimeString = Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(nextTimeStamp)?if_exists>
+                          </#if>
+                        </#if>
+                        <#if lastSlOrderDate?has_content>
+                          <#assign lastOrderedString = Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(lastSlOrderDate)?if_exists>
+                        </#if>
+                        <div class="tabletext">
+                          <table cellspacing="2" cellpadding="2" border="0">
+                            <tr>
+                              <td><div class="tableheadtext">Last Ordered Date</div></td>
+                              <td><div class="tableheadtext">:</div></td>
+                              <td><div class="tabletext">${lastOrderedString?default("Not Yet Ordered")}</div></td>
+                            </tr>
+                            <tr>
+                              <td><div class="tableheadtext">Estimate Next Order Date</div></td>
+                              <td><div class="tableheadtext">:</div></td>
+                              <td><div class="tabletext">${nextTimeString?default("Not Yet Known")}</div></td>
+                            </tr>
+                          </table>
+                        </div>
+                      </tr>
+                    </tr>
+                  </#if>
                 </table>
               </form>
             </td>
